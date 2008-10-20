@@ -162,7 +162,7 @@
 	<!-- ==================================================================== -->
 	<!--          Create the snippets necessary for programlistings           -->
 	<!-- ==================================================================== -->
-	<target name="-snippetscreation" depends="compile.util">
+	<target name="-snippetscreation" depends="compile.doc.utils">
 		<delete quiet="true">
 			<fileset dir="${snippets.location}"/>
 		</delete>
@@ -181,7 +181,7 @@
 	<!-- ==================================================================== -->
 	<!--    Add some highlighting information to the docbook source code      -->
 	<!-- ==================================================================== -->
-	<target name="-docbookBeautify" depends="compile.util">
+	<target name="-docbookBeautify" depends="compile.doc.utils">
 		
 		<java classname="doc.DocBookize" fork="true">
 			<classpath refid="docs.utils.classpath"/>
@@ -193,14 +193,14 @@
 			<!-- FIXME  ***************************** -->
 			<arg value="ProActive_src_html/${proactive.path}/" />
 			
-			<!-- the path for java file inclusion -->
+			<!-- the path for java file inclusion 
 			<arg value="${src.proactive.dir}/${proactive.path}/" />
-			<arg value="${src.examples.dir}/${proactive.path}/" />
+			<arg value="${src.examples.dir}/${proactive.path}/" />-->
 			<!-- FIXME  ***************************** -->
 
 
-			<!-- the path for xml file inclusion -->
-			<arg value="${descriptors.dir}/" />
+			<!-- the path for xml file inclusion 
+				<arg value="${descriptors.dir}/" />-->
 			
 		</java>
 
@@ -220,7 +220,7 @@
 	<!--    Checks if the XML is valid and if the manual can be built properly-->
 	<!--   this should catch if the XML is malformed  or files are missing    -->
 	<!-- ==================================================================== -->
-	<target name="-docbookBeautifyFailCheck" depends="compile.util">
+	<target name="-docbookBeautifyFailCheck" depends="compile.doc.utils">
 		
 		<java classname="doc.DocBookize" fork="true" failonerror="true">
 			<classpath refid="docs.utils.classpath"/>
