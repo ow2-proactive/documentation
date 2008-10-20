@@ -187,17 +187,10 @@
 			<classpath refid="docs.utils.classpath"/>
 			<!-- The xml file to parse -->
 			<arg value="${docs.tmp.dir}/${docbookInputFile}" />
-			<!-- The path to find java files in html -->
 			
+			<!-- the path for java file inclusion --> 
+			<arg value="${src.dir}" />
 			
-			<!-- FIXME  ***************************** -->
-			<arg value="ProActive_src_html/${proactive.path}/" />
-			
-			<!-- the path for java file inclusion 
-			<arg value="${src.proactive.dir}/${proactive.path}/" />
-			<arg value="${src.examples.dir}/${proactive.path}/" />-->
-			<!-- FIXME  ***************************** -->
-
 
 			<!-- the path for xml file inclusion 
 				<arg value="${descriptors.dir}/" />-->
@@ -226,15 +219,10 @@
 			<classpath refid="docs.utils.classpath"/>
 			<!-- The xml file to parse -->
 			<arg value="${docs.tmp.dir}/${docbookInputFile}" />
-			<!-- The path to find java files in html DEPRECATED-->
-			<arg value="ProActive_src_html/${proactive.path}/" />
+			<arg value="${src.dir}" />			
 			
-			<!-- the path for java file inclusion -->
-			<arg value="${src.proactive.dir}/${proactive.path}/" />
-			<arg value="${src.examples.dir}/${proactive.path}/" />
-			
-			<!-- the path for xml file inclusion -->
-			<arg value="${descriptors.dir}/" />
+			<!-- the path for xml file inclusion 
+			<arg value="${descriptors.dir}/" /> -->
 			
 		</java>
 
@@ -407,6 +395,7 @@
 	
 	<target name="compile.doc.utils" depends="-configurationCopy" description="Compile Documentation Utils ">
 		<mkdir dir="${docs.java.classes.dir}" />
+		<copy  file="${docs.log4j.properties}" todir="${docs.java.classes.dir}"/>
 		<javac srcdir="${docs.java.dir}" destdir="${docs.java.classes.dir}" includes="**" deprecation="on" source="${source}" debug="${debug}">
 			<classpath refid="docs.utils.classpath" />
 		</javac>

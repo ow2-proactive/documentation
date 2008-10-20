@@ -42,6 +42,8 @@
 		
 	</path>
 	
+	<property name="docs.log4j.properties"	value="${docs.lib.dir}/log4j.properties" />
+	
 	<property name="extra.format.dir" 		value=""/>
 	<!-- ================================================================ -->
 	<!--                Documentation files:   XSL,XML,PDF,etc            -->
