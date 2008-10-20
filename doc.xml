@@ -406,7 +406,7 @@
 	<!-- ==================================================================== -->
 	
 	<target name="compile.doc.utils" depends="-configurationCopy" description="Compile Documentation Utils ">
-		<!-- XXX Timer is in core.util.Profiling -->
+		<mkdir dir="${docs.java.classes.dir}" />
 		<javac srcdir="${docs.java.dir}" destdir="${docs.java.classes.dir}" includes="**" deprecation="on" source="${source}" debug="${debug}">
 			<classpath refid="docs.utils.classpath" />
 		</javac>

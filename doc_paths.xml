@@ -6,7 +6,7 @@
 	<!--  =============================================================== -->
 	<!--                   Doc directories paths                          -->
 	<!--  =============================================================== -->
-	<property name="docs.dir"      			value="${base.dir}/docs" />	
+	<property name="docs.dir"      			value="${base.dir}/doc" />	
 	<property name="docs.src.dir"       	value="${docs.dir}/src" />
 	<property name="docs.tmp.dir"  			value="${docs.dir}/tmp" />
 	<property name="docs.toolchain.dir"		value="${docs.dir}/toolchain" />
