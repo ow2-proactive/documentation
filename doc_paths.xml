@@ -25,8 +25,11 @@
 	<property name="docs.mainFile" 			value="main.xml" />
 	<property name="snippets.location"		value="${docs.tmp.dir}/automatic_snippets" />
 	
-	<!-- DocBook -->
-	<property name="docbook.version" 		value="ns-1.74.0" />
+	
+	
+	<!-- DocBook 
+	<property name="docbook.version" 		value="ns-1.74.0" /> -->
+	<property name="docbook.version" 		value="1.73.2" />	
 	<property name="docs.docbook.dir"		value="${docs.toolchain.dir}/docbook/" />
 	<property name="docs.docbook.lib.dir"	value="${docs.docbook.dir}/extensions/" />
 	<property name="docs.lib.dir"			value="${docs.toolchain.dir}/lib/" />
