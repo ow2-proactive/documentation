@@ -68,10 +68,7 @@
 			<param name="base.dir" expression="${docs.html.multiple.dir}"/>
 
 			<classpath>
-				<fileset dir="${lib.dir}">
-					<include name="**/*.jar" />
-				</fileset>
-				<fileset dir="${base.dir}/dev/lib">
+				<fileset dir="${docs.lib.dir}">
 					<include name="**/*.jar" />
 				</fileset>
 			</classpath>
@@ -108,10 +105,7 @@
 			<xmlcatalog refid="docbookcatalog" />
 
 			<classpath>
-				<fileset dir="${lib.dir}">
-					<include name="**/*.jar" />
-				</fileset>
-				<fileset dir="${base.dir}/dev/lib">
+				<fileset dir="${docs.lib.dir}">
 					<include name="**/*.jar" />
 				</fileset>
 			</classpath>
@@ -189,7 +183,7 @@
 			<arg value="${docs.tmp.dir}/${docbookInputFile}" />
 			
 			<!-- the path for java file inclusion --> 
-			<arg value="${src.dir}" />
+			<arg value="../../${src.dir}" />
 			
 
 			<!-- the path for xml file inclusion 
