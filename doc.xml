@@ -182,12 +182,15 @@
 			<!-- The xml file to parse -->
 			<arg value="${docs.tmp.dir}/${docbookInputFile}" />
 			
-			<!-- the path for java file inclusion --> 
-			<arg value="../../${src.dir}" />
-			
-
-			<!-- the path for xml file inclusion 
-				<arg value="${descriptors.dir}/" />-->
+			<!-- take from after or before properties
+			 - included through doc_paths.xml--> 
+			<arg value="${java.inclusion}" />
+			<arg value="${xml.inclusion}" />
+			<arg value="${otherpath1.inclusion}" />
+			<arg value="${otherpath2.inclusion}" />
+			<arg value="${otherpath3.inclusion}" />
+			<arg value="${otherpath4.inclusion}" />
+			<arg value="${otherpath5.inclusion}" />
 			
 		</java>
 
@@ -213,10 +216,14 @@
 			<classpath refid="docs.utils.classpath"/>
 			<!-- The xml file to parse -->
 			<arg value="${docs.tmp.dir}/${docbookInputFile}" />
-			<arg value="${src.dir}" />			
-			
-			<!-- the path for xml file inclusion 
-			<arg value="${descriptors.dir}/" /> -->
+
+			<!-- take from after or before properties
+				- included through doc_paths.xml--> 
+			<arg value="${java.inclusion}" />
+			<arg value="${xml.inclusion}" />
+			<arg value="${otherpath1.inclusion}" />
+			<arg value="${otherpath2.inclusion}" />
+			<arg value="${otherpath3.inclusion}" />
 			
 		</java>
 

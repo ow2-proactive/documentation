@@ -64,7 +64,7 @@
 	<property name="docs.html.single.zip"	value="${docs.built.dir}/${doc.name}ManualSingleHtml.zip" />
 	
 	
-	<property name="docs.html.multiple.output"	value="${docs.html.multiple.dir}/index.html" />
+	<property name="docs.html.multiple.output"	value="${docs.html.multiple.dir}/empty.html" />
 	<property name="docs.html.single.name"		value="${doc.name}Manual.html" />
 	<property name="docs.html.single.output"	value="${docs.html.single.dir}/${docs.html.single.name}" />
 	<property name="docs.pdf.output"			value="${docs.pdf.dir}/${docs.pdf.name}" />
