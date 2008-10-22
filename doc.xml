@@ -394,7 +394,7 @@
 	<!--            Compile the documentation java utils                      -->
 	<!-- ==================================================================== -->
 	
-	<target name="compile.doc.utils" depends="-configurationCopy" description="Compile Documentation Utils ">
+	<target name="compile.doc.utils" description="Compile Documentation Utils ">
 		<mkdir dir="${docs.java.classes.dir}" />
 		<copy  file="${docs.log4j.properties}" todir="${docs.java.classes.dir}"/>
 		<javac srcdir="${docs.java.dir}" destdir="${docs.java.classes.dir}" includes="**" deprecation="on" source="${source}" debug="${debug}">

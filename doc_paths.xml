@@ -72,7 +72,8 @@
 	
 	<property name="docs.docbook.dtd.name"		value="docbook.dtd" />
 	<property name="docs.docbook.dtd"			value="${docs.docbook.dir}/${docs.docbook.dtd.name}" />
-	<property name="docs.html.css.name"			value="${doc.name}.css" />
+	<!--//FIXME ? for html files this is defined in html.xsl -->
+	<property name="docs.html.css.name"			value="main.css" />
 	
 	<!-- ================================================================ -->
 	<!--                   Javadoc build properties                       -->
