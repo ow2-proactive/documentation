@@ -62,6 +62,8 @@
 	
 	<property name="docs.html.multiple.zip"	value="${docs.built.dir}/${doc.name}ManualMultipleHtml.zip" />
 	<property name="docs.html.single.zip"	value="${docs.built.dir}/${doc.name}ManualSingleHtml.zip" />
+	<property name="docs.javadoc.published.zip"	value="${docs.built.dir}/${doc.name}JavadocPublished.zip" />
+	<property name="docs.javadoc.complete.zip"	value="${docs.built.dir}/${doc.name}JavadocComplete.zip" />
 	
 	
 	<property name="docs.html.multiple.output"	value="${docs.html.multiple.dir}/empty.html" />

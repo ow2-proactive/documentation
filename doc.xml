@@ -4,10 +4,16 @@
 	<import file="doc_paths.xml" />
 	
 	
+	
 		<!-- ================================================================ -->
 		<!--            Create docs, which is the javadoc + manual            -->
 		<!--  =============================================================== -->
-		<target name="docs" depends="javadoc.all, manual" description="Construct the javadoc and the manual" />
+		<target name="docs" depends="javadoc.all, manual, doc.zips" description="Construct the javadoc, the manual, and the zip archives" />
+	
+	<!-- ================================================================ -->
+	<!--            Create docs, which is the javadoc + manual            -->
+	<!--  =============================================================== -->
+	<target name="doc.zips" depends="manualSingleHtmlZip, manualHtmlZip, javadoc.publishedZip, javadoc.completeZip" description="Construct the javadoc and the manual" />
 	
 	<!-- ==================================================================== -->
 	<!--      The following docbook* are sub-tasks to build the Manual        -->
@@ -378,16 +384,27 @@
 	</target>
 
 	<!-- ==================================================================== -->
+	<!--      Make an archive from the published javadoc       -->
+	<!-- ==================================================================== -->
+	<target name="javadoc.publishedZip" description="Create a zip from the published javadoc" depends="javadoc.published">
+		<zip destfile="${docs.javadoc.published.zip}" basedir="${docs.api.published.dir}" />
+	</target>
+	
+	<!-- ==================================================================== -->
+	<!--      Make an archive from the complete javadoc       -->
+	<!-- ==================================================================== -->
+	<target name="javadoc.completeZip" description="Create a zip from the complete javadoc" depends="javadoc.complete">
+		<zip destfile="${docs.javadoc.complete.zip}" basedir="${docs.api.complete.dir}" />
+	</target>
+	
+
+	<!-- ==================================================================== -->
 	<!-- Construct the manual from the XML files in {docs.src}                -->
 	<!-- ==================================================================== -->
 	<target name="manual" description="Build all the different manual version: html, pdf... " depends="manualSingleHtml,manualHtml,manualPdf">
 		<!-- The generation of the files is done by the depends clause -->
 		<!-- Once the doc files have been generated, do some cleaning up -->
 		<delete dir="${docs.tmp.dir}" />
-		<copy todir="${docs.dir}/examples">
-			<!-- XML descriptor examples also available -->
-			<fileset dir="${base.dir}/descriptors/examples" />
-		</copy>
 	</target>
 	
 	<!-- ==================================================================== -->
