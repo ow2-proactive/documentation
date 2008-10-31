@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Generic Documentation" basedir=".">
+<project basedir=".">
 	<!-- <import file="ic2d_paths.xml" /> -->
 	<import file="doc_paths.xml" />
 	
@@ -13,7 +13,7 @@
 	<!-- ================================================================ -->
 	<!--            Create docs, which is the javadoc + manual            -->
 	<!--  =============================================================== -->
-	<target name="doc.zips" depends="manualSingleHtmlZip, manualHtmlZip, javadoc.publishedZip, javadoc.completeZip" description="Construct the javadoc and the manual" />
+	<target name="doc.zips" depends="manualSingleHtmlZip, manualHtmlZip, javadoc.publishedZip, javadoc.completeZip" description="Construct the javadoc and manual zip archives" />
 	
 	<!-- ==================================================================== -->
 	<!--      The following docbook* are sub-tasks to build the Manual        -->
