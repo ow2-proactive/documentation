@@ -22,7 +22,7 @@
 			<!-- If a needed file doesn't exist, it will be fetched on the web -->
 
 			<classpath>
-				<pathelement location="${docs.docbook.dir}" />
+				<pathelement location="${docs.toolchain.dir}/${docbook.archive}" />
 			</classpath>
 
 			<dtd publicId="-//OASIS//DTD DocBook XML V5.0//EN" location="${docs.docbook.dtd}" />
@@ -52,9 +52,6 @@
 			<!--docbook.profile can be html, pdf or empty-->
 			<xmlcatalog refid="docbookcatalog" />
 			<classpath>
-				<fileset dir="${docs.docbook.lib.dir}">
-					<include name="**/*.jar" />
-				</fileset>
 				<fileset dir="${docs.lib.dir}">
 					<include name="**/*.jar" />
 				</fileset>
@@ -79,6 +76,7 @@
 			</classpath>
 		</xslt>
 	</target>
+	
 	
 	<!-- ==================================================================== -->
 	<!--          Generic task to transform docbook xml into pdf              -->
@@ -154,7 +152,7 @@
 		<java classname="doc.Validate" fork="true">
 			<classpath refid="docs.utils.classpath" />
 			<classpath>
-				<fileset dir="${docs.docbook.lib.dir}">
+				<fileset dir="${docs.lib.dir}">
 					<include name="*.jar" />
 				</fileset>
 			</classpath>
@@ -187,7 +185,7 @@
 		<java classname="doc.Validate" fork="true" failonerror="true">
 			<classpath refid="docs.utils.classpath" />
 			<classpath>
-				<fileset dir="${docs.docbook.lib.dir}">
+				<fileset dir="${docs.lib.dir}">
 					<include name="*.jar" />
 				</fileset>
 			</classpath>
