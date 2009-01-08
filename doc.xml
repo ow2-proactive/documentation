@@ -51,11 +51,8 @@
 			<param name="profile.os" expression="${docbook.profile}" />
 			<!--docbook.profile can be html, pdf or empty-->
 			<xmlcatalog refid="docbookcatalog" />
-			<classpath>
-				<fileset dir="${docs.lib.dir}">
-					<include name="**/*.jar" />
-				</fileset>
-			</classpath>
+			<classpath refid="docs.utils.classpath" />
+
 		</xslt>
 
 		<!-- Do the real conversion, docbook to pdf or html -->
@@ -68,12 +65,8 @@
 
 			<!-- Output dir for the chunked stylesheet-->
 			<param name="base.dir" expression="${docs.html.multiple.dir}"/>
+			<classpath refid="docs.utils.classpath" />
 
-			<classpath>
-				<fileset dir="${docs.lib.dir}">
-					<include name="**/*.jar" />
-				</fileset>
-			</classpath>
 		</xslt>
 	</target>
 	
@@ -93,12 +86,8 @@
 
 		<!-- declare how to transform fo xml file in pdf through a new 'fop' task -->
 		<taskdef name="fop" classname="org.apache.fop.tools.anttasks.Fop" description="Official way to translate .fo (result of xml docbook translation) into .pdf">
-			<classpath>
-				<fileset dir="${docs.lib.dir}">
-					<include name="*.jar" />
-				</fileset>
-				
-			</classpath>
+			<classpath refid="docs.utils.classpath" />
+
 		</taskdef>
 
 		<!-- Then use the newly defined fop task to translate fo into pdf -->
@@ -111,7 +100,7 @@
 	<!-- ==================================================================== -->
 	<!--          Create the snippets necessary for programlistings           -->
 	<!-- ==================================================================== -->
-	<target name="-snippetscreation" depends="compile.doc.utils">
+	<target name="-snippetscreation">
 		<delete quiet="true">
 			<fileset dir="${snippets.location}"/>
 		</delete>
@@ -130,7 +119,7 @@
 	<!-- ==================================================================== -->
 	<!--    Add some highlighting information to the docbook source code      -->
 	<!-- ==================================================================== -->
-	<target name="-docbookBeautify" depends="compile.doc.utils">
+	<target name="-docbookBeautify">
 		
 		<java classname="doc.DocBookize" fork="true">
 			<classpath refid="docs.utils.classpath"/>
@@ -151,11 +140,6 @@
 
 		<java classname="doc.Validate" fork="true">
 			<classpath refid="docs.utils.classpath" />
-			<classpath>
-				<fileset dir="${docs.lib.dir}">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
 			<arg value="${docs.tmp.dir}/${docbookInputFile}" />
 		</java>
 
@@ -165,7 +149,7 @@
 	<!--    Checks if the XML is valid and if the manual can be built properly-->
 	<!--   this should catch if the XML is malformed  or files are missing    -->
 	<!-- ==================================================================== -->
-	<target name="-docbookBeautifyFailCheck" depends="compile.doc.utils">
+	<target name="-docbookBeautifyFailCheck" >
 		
 		<java classname="doc.DocBookize" fork="true" failonerror="true">
 			<classpath refid="docs.utils.classpath"/>
@@ -184,11 +168,7 @@
 
 		<java classname="doc.Validate" fork="true" failonerror="true">
 			<classpath refid="docs.utils.classpath" />
-			<classpath>
-				<fileset dir="${docs.lib.dir}">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
+
 			<arg value="${docs.tmp.dir}/${docbookInputFile}" />
 		</java>
 
@@ -354,17 +334,5 @@
 		<!-- The generation of the files is done by the depends clause -->
 		<!-- Once the doc files have been generated, do some cleaning up -->
 		<delete dir="${docs.tmp.dir}" />
-	</target>
-	
-	<!-- ==================================================================== -->
-	<!--            Compile the documentation java utils                      -->
-	<!-- ==================================================================== -->
-	
-	<target name="compile.doc.utils" description="Compile Documentation Utils ">
-		<mkdir dir="${docs.java.classes.dir}" />
-		<copy  file="${docs.log4j.properties}" todir="${docs.java.classes.dir}"/>
-		<javac srcdir="${docs.java.dir}" destdir="${docs.java.classes.dir}" includes="**" deprecation="on" source="${source}" debug="${debug}">
-			<classpath refid="docs.utils.classpath" />
-		</javac>
 	</target>
 </project>

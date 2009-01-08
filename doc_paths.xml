@@ -29,13 +29,9 @@
 	<property name="docbook.archive"                value="docbook-xsl-${docbook.version}" />
 	<property name="docs.lib.dir"			value="${docs.toolchain.dir}/lib/" />
 
-	<property name="docs.java.dir"			value="${docs.toolchain.dir}/src/" />
-	<property name="docs.java.classes.dir"	value="${docs.toolchain.dir}/classes/" />
-	
 	<path id="docs.utils.classpath">
-		<pathelement location="${docs.java.classes.dir}" />
 		<fileset dir="${docs.lib.dir}">
-			<include name="log4j.jar"/>
+			<include name="**/*.jar"/>
 		</fileset>
 		
 	</path>
@@ -84,6 +80,6 @@
 
 	
 
-	<import file="../after_properties.xml"/>
+	<import file="../after_properties.xml" optional="true"/>
 	
 </project>
