@@ -1,3 +1,5 @@
+
+
 <project basedir=".">
         <property name="base.dir" 			value="../"/>  
         <property name="docs.lib.dir"                   value="${base.dir}/lib/" />
@@ -14,11 +16,19 @@
                 </fileset>
 
         </path>
-
+	<!-- set of files to be excluded from copy when creating the toolchain -->
 	<patternset id="toolchain.build.set">
 		<exclude name="classes/**"/>
 		<exclude name="compile/**"/>
 		<exclude name="src/**"/>
+		<exclude name="built/**"/>
+	</patternset>
+	<!-- set of files to be deleted when running clean -->
+	<!-- BACKUP YOUR WORK BEFORE CHANGING THIS !!!     -->
+	<patternset id="clean.set">
+		<include name="**/${jar.docs.utils}"/>
+		<include name="classes/**"/>
+		<include name="built/**"/>
 	</patternset>
         <property name="docs.log4j.properties"  value="${docs.lib.dir}/log4j.properties" />
 

@@ -19,11 +19,24 @@
 	<target name="jar.doc.utils" 	depends="compile.doc.utils" description="Builds a jar containing the documentation java helper classes">
 		<jar destfile="${docs.lib.dir}/${jar.docs.utils}" basedir="${docs.java.classes.dir}"/>
 	</target>
+        <!-- ==================================================================== -->
+        <!--        Copies in ../built the files that are part of the tooolchain -->
+        <!-- ==================================================================== -->
 	<target  name="toolchain" depends="jar.doc.utils" description="Builds and copies the toolchain in ./built">
 	 	<copy todir="${toolchain.build.dir}">
 			<fileset dir="${base.dir}">
 				<patternset refid="toolchain.build.set"/>
 			</fileset>
 		</copy>
+	</target>
+        <!-- ==================================================================== -->
+        <!--            Cleans the built toolchain files			  -->
+        <!-- ==================================================================== -->
+	<target  name="clean" description="Deletes the generated files">
+		<delete verbose="true" includeemptydirs="true">
+		     <fileset dir="${base.dir}">
+			<patternset refid="clean.set"/>
+		     </fileset>	
+		</delete>
 	</target>
 </project>
