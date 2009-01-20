@@ -140,7 +140,7 @@
 
 		<java classname="doc.Validate" fork="true">
 			<classpath refid="docs.utils.classpath" />
-			<arg value="${docs.tmp.dir}/${docbookInputFile}" />
+			<arg value="${docs.src.dir}/${docs.mainFile}" />
 		</java>
 
 	</target>
@@ -168,8 +168,7 @@
 
 		<java classname="doc.Validate" fork="true" failonerror="true">
 			<classpath refid="docs.utils.classpath" />
-
-			<arg value="${docs.tmp.dir}/${docbookInputFile}" />
+			<arg value="${docs.src.dir}/${docs.mainFile}" />
 		</java>
 
 	</target>
