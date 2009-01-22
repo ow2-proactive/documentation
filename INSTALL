@@ -10,19 +10,27 @@ placed in "built" in the main folder.
 2. See above
 
 3. Define the documentation title, source folder and other ant properties
-   in manual.xml. Bellow is a minimal file for the documentation.
+   in manual.xml. To create manual.xml modify doc.xml in the toolchain folder.
+   doc.xml defines a set of ant targets that can be used (manualHtml, manualSingleHtml,
+   manualPdf,etc). doc.xml does not define the basic javadoc targets. If there are no
+   javadoc targets in the documentation simple remove the relevant dependent targets 
+   in manual.xml.  The minimal properties that need to be defined are the folder for
+   the xml files, then name of the manual, and the name of the manual in the final files.
    
- ->  imports
+   The import sequence is the following:
+    -> means ant import
   
- build.xml -> manual.xml -> doc.xml -> doc_paths.xml
-                                    -> after_properties.xml
+   compile/build.xml -> doc/manual.xml  -> doc/toolchain/doc_macros.xml -> doc/toolchain/doc_paths.xml
+
+   Bellow is a minimal manual.xml file for the documentation.
+                                    
 
 Example: 
 
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="doc.IC2D">
-    <property name="doc.name"               value="IC2D" />
-    <property name="docs.src.dir"           value="../doc/src_ic2d" />
+<project name="doc.IC2D">   <!-- name of the manual -->
+    <property name="doc.name"               value="IC2D" /> <!-- name of the manual in the final targets -->
+    <property name="docs.src.dir"           value="../doc/src_ic2d" />  <!-- folder containing the xml files -->
 
      <!-- ##used for DocBookize## -->
     <!-- the path for java file inclusion -->
@@ -38,16 +46,21 @@ Example:
     <property name="otherpath4.inclusion" value="./"/>
     <property name="otherpath5.inclusion" value="./"/>
 
-    <import file="toolchain/doc.xml"/>
-</project>
+	<import file="toolchain/doc_macros.xml" />	
+	<!-- ================================================================ -->
+	<!--            Create docs, which is the javadoc + manual            -->
+	<!--  =============================================================== -->
+	<target name="docs" depends="javadoc.all, manual, doc.zips" description="Construct the javadoc, the manual, and the zip archives" />
+	
+	<!-- ================================================================ -->
+	<!--            Create docs, which is the javadoc + manual            -->
+	<!--  =============================================================== -->
+	<target name="doc.zips" depends="manualSingleHtmlZip, manualHtmlZip, javadoc.completeZip" description="Construct the javadoc and manual zip archives" />
+          
+         ........................
+         ........................	
 
     
-   
-4. Create after_properties.xml for properties or targets that need previous defined properties
-   or targets as for example javadoc targets. 
-
-    
-Several documentation projects can coexist at the same time in the same project by dynamically changing
-the ant properties in manual.xml and after_properties.xml (project name, source folder, etc).  One way
-to set several documentations is creating ant tasks that copy predefined settings files to manual.xml
-and after_properties.xml.
+Several documentation projects can coexist at the same time in the same project by importing
+more than one target definition file (manual.xml) in build.xml. The files need to define different
+manual names (the name property of the project tag), different xml folders, and different  manual file names. 

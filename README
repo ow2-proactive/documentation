@@ -1,7 +1,25 @@
+Version 0.3
+
+=Changes=
+Added a file (doc_macros.xml)  containing  target macros. Replaced
+the contents of doc.xml with a generic installation file which needs
+to be edited when creating a new manual (see INSTALL).
+Java XML validation (Validate class) was replaced  with ant XML 
+validation. For this  ant-nodeps.jar was added in the lib folder and the
+Validate class was removed from doc-utils.jar.  The validation now shows
+the file with the error (line, column) instead of a line and column in
+tmp/main.xml. Also, the build stops if the XML file is invalid.  
+
+
+Fixes for 
+http://bugs.activeeon.com/browse/DOC-33
+http://bugs.activeeon.com/browse/DOC-9
+
+
+Version 0.2
 =Changes=
 
 Ant targets added
-
  clean              Deletes the generated files
  compile.doc.utils  Compile Documentation Utils
  jar.doc.utils      Builds a jar containing the documentation java helper classes

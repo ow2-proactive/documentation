@@ -9,7 +9,7 @@
 	<property name="docs.tmp.dir"  			value="${docs.dir}/tmp" />
 	<property name="docs.toolchain.dir"		value="${docs.dir}/toolchain" />
 	<property name="docs.xsl.dir"			value="${docs.toolchain.dir}/xsl" />
-	<property name="docs.built.dir"                 value="${docs.dir}/built/${doc.name}" />
+	<property name="docs.built.dir"			value="${docs.dir}/built/${doc.name}" />
 	
 	<property name="docs.api.complete.dir"	value="${docs.built.dir}/api_complete" />
 	<property name="docs.api.published.dir"	value="${docs.built.dir}/api_published" />
@@ -77,9 +77,5 @@
 	<property name="docs.fractal.link"			value="http://fractal.objectweb.org/current/doc/javadoc/fractal/"/>
 	<property name="docs.java.api.link" 		value="http://java.sun.com/j2se/1.5.0/docs/api/"/>
 	<property name="docs.javadoc.window.title" 	value="${doc.name}"/>
-
-	
-
-	<import file="../after_properties.xml" optional="true"/>
 	
 </project>
