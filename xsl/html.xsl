@@ -5,6 +5,9 @@
 
  <xsl:import href="common.xsl" />
 
+ <!-- Import profiled highlighting color -->
+ <xsl:import href="../highlighting/xsl/html-hl.xsl" />
+
  <!-- Configure the html stylesheet to use -->
  <xsl:param name="html.stylesheet" select="'main.css'" />
  <!-- Just use the image size for the html output. Width=... has no effect. -->

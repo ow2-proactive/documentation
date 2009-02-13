@@ -1,43 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- change the project name to the name of the manual -->
-<project name="CHANGE_ME">
-	
-	<!-- Change the source folder (where the xml files are)
-	     and the name of the manual in the final files(do not
-	     use spaces).  -->
-	<!-- 
-	<property name="doc.name"               value="IC2D" />
-	<property name="docs.src.dir"           value="../doc/src_ic2d" />  
-	-->
-	
-	<!-- ##used for DocBookize## -->
-	<!-- the path for java file inclusion -->
-	<!--
-	<property name="java.inclusion" value="${src.proactive.dir}/${proactive.path}" />
-	<property name="xml.inclusion" value="${descriptors.dir}/" />
-	-->
-	
-	
+<project>
 	
 	<import file="doc_macros.xml" />
 	
-	<!-- Customize the targets here (add or remove). -->
 	<!-- ================================================================ -->
 	<!--            Create docs, which is the javadoc + manual            -->
 	<!--  =============================================================== -->
-	<target name="docs" depends="javadoc.all, manual, doc.zips" description="Construct the javadoc, the manual, and the zip archives" />
+	<target name="docs" depends="manual, doc.zips" description="Construct the manual and the zip archives" />
 	
 	<!-- ================================================================ -->
 	<!--            Create docs, which is the javadoc + manual            -->
 	<!--  =============================================================== -->
-	<target name="doc.zips" depends="manualSingleHtmlZip, manualHtmlZip, javadoc.publishedZip, javadoc.completeZip" description="Construct the javadoc and manual zip archives" />
+	<target name="doc.zips" depends="manualSingleHtmlZip, manualHtmlZip" description="Construct the manual zip archives" />
 	
 	
-	<!-- ================================================================ -->
-	<!--                     Create javadoc                               -->
-	<!-- ================================================================ -->
-	
-	<target name="javadoc.all" depends="javadoc.published,javadoc.complete"/>
 	
 	<!-- ==================================================================== -->
 	<!--          Make just the html files for the manual                     -->
@@ -72,31 +49,25 @@
 		<manualSingleHtmlZip  include.files="${docs.html.css.name} ${docs.html.single.name} **/*.gif **/*.png **/*.jpg" />
 	</target>
 
+
+	<!-- ==================================================================== -->
+	<!-- Construct the manual from the XML files in {docs.src}                -->
+	<!-- ==================================================================== -->
+	<target name="manual" description="Build all the different manual version: html, pdf... " depends="manualSingleHtml,manualHtml,manualPdf" >
+	</target>
+	
 	<!-- ==================================================================== -->
 	<!--      Make an archive from the published javadoc       -->
 	<!-- ==================================================================== -->
-	<target name="javadoc.publishedZip" description="Create a zip from the published javadoc" depends="javadoc.published">
+	<target name="javadoc.publishedZip">
 		<javadoc.publishedZip /> 
 	</target>
 	
 	<!-- ==================================================================== -->
 	<!--      Make an archive from the complete javadoc       -->
 	<!-- ==================================================================== -->
-	<target name="javadoc.completeZip" description="Create a zip from the complete javadoc" depends="javadoc.complete">
+	<target name="javadoc.completeZip"> 
 		<javadoc.completeZip /> 
 	</target>
-	
 
-	<!-- ==================================================================== -->
-	<!-- Construct the manual from the XML files in {docs.src}                -->
-	<!-- ==================================================================== -->
-	<target name="manual" description="Build all the different manual version: html, pdf... " depends="manualSingleHtml,manualHtml,manualPdf" >
-		<!-- The generation of the files is done by the depends clause -->
-		<!-- Once the doc files have been generated, do some cleaning up -->
-		<manual/>
-	</target>
-	
-	
-	<!-- Add other targets-->
-	
 </project>
