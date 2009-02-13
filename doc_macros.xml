@@ -53,34 +53,6 @@
 			<zip destfile="${docs.html.multiple.zip}" basedir="${docs.html.multiple.dir}"/>
 		</sequential>
 	</macrodef>
-
-	
-	<!-- ==================================================================== -->
-	<!--    Add some highlighting information to the docbook source code      -->
-	<!-- ==================================================================== -->
-	<macrodef name="docbookBeautify">
-		<attribute name="docbookInputFile"/>
-		<sequential>
-			<java classname="doc.DocBookize" fork="true">
-				<classpath refid="docs.utils.classpath"/>
-				<!-- The xml file to parse -->
-				<arg value="${docs.tmp.dir}/@{docbookInputFile}" />
-				
-				<arg value="${java.inclusion}" />
-				<arg value="${xml.inclusion}" />
-				<!-- use to add other paths for file inclusion -->
-				<arg value="${otherpath1.inclusion}" />
-				<arg value="${otherpath2.inclusion}" />
-				<arg value="${otherpath3.inclusion}" />
-				<arg value="${otherpath4.inclusion}" />
-				<arg value="${otherpath5.inclusion}" />
-			</java>
-			<xmlvalidate file="${docs.src.dir}/${docs.mainFile}" 
-				     warn="true" />
-		</sequential>
-	</macrodef>
-
-	
 	<!-- ==================================================================== -->
 	<!--          Create the snippets necessary for programlistings           -->
 	<!-- ==================================================================== -->
@@ -114,10 +86,19 @@
 		<attribute name="docbookOutputDir"/>
 
 		<sequential>
+			<taskdef name="xml_validate" classname="org.apache.tools.ant.taskdefs.optional.XMLValidateTask" description="XML Validation">
+				<classpath refid="docs.utils.classpath" />
+			</taskdef>
+			<xml_validate file="${docs.src.dir}/${docs.mainFile}"  warn="true" />
 			<!-- Profiling step: keep only the tags which have the attribute os="${docbook.profile}" or no os attribute -->
 			<xslt basedir="${docs.src.dir}"  in="${docs.tmp.dir}/@{docbookInputFile}" out="${docs.tmp.dir}/profiled.xml" style="${docs.xsl.profiling}" force="yes">
 				<param name="profile.os" expression="@{docbook.profile}" />
 				<param name="tmp.dir" expression="${docs.tmp.dir}/" />
+				<!-- the date for the first page --> 
+				<param name="TODAY" expression="${TODAY}" />
+				<!-- the version number, for the first page-->
+				<param name="VERSION" expression="${version}" />
+
 				<!--docbook.profile can be html, pdf or empty-->
 				<xmlcatalog refid="docbookcatalog" />
 				<classpath refid="docs.utils.classpath" />
