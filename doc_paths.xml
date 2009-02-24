@@ -5,7 +5,7 @@
 	<!--                   Doc directories paths                          -->
 	<!--  =============================================================== -->
 	<property name="base.dir"      			value="${basedir}" /> <!-- doc/toolchain folder -->		
-	<property name="docs.dir"      			value="${base.dir}/../" /> <!-- doc folder -->	
+	<property name="docs.dir"      			value="${base.dir}/doc/" /> <!-- doc folder -->	
 	<property name="docs.src.dir"       		value="${docs.dir}/src" /> <!-- doc/src folder -->	
 	<property name="docs.tmp.dir"  			value="${docs.dir}/tmp" /> <!-- doc/tmp folder -->
 	<property name="docs.toolchain.dir"		value="${docs.dir}/toolchain" /> <!-- doc/toolchain folder -->
@@ -28,8 +28,8 @@
 	
 	
 	<!-- DocBook --> 
-	<property name="docbook.version" 		value="ns-1.74.0" />
-	<property name="docbook.archive"                value="docbook-xsl-${docbook.version}" />
+	<property name="docbook.version" 		value="1.74.0" />
+	<property name="docbook.archive"                value="docbook-xsl-ns-${docbook.version}" />
 	<property name="docs.lib.dir"			value="${docs.toolchain.dir}/lib/" />
 
 	<path id="docs.utils.classpath">

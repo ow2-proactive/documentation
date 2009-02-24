@@ -6,7 +6,9 @@
 	exclude-result-prefixes="date" version="1.0">
 
 	<xsl:import
-		href="http://docbook.sourceforge.net/release/xsl/1.73.2/fo/docbook.xsl" />
+			href="http://docbook.sourceforge.net/release/xsl/1.73.2/fo/docbook.xsl" />
+<!-- 		href="http://docbook.sourceforge.net/release/xsl-ns/1.74.0/fo/docbook.xsl"  -->
+
 	<xsl:import href="common.xsl" />
 
    <!-- Import profiled highlighting color -->
@@ -356,11 +358,10 @@
 							<fo:block>
 								<fo:external-graphic>
 									<xsl:attribute name="src">
-         <xsl:call-template name="fo-external-image">
-          <xsl:with-param name="filename"
-												select="$header.image.filename" />
-         </xsl:call-template>
-        </xsl:attribute>
+									  <xsl:call-template name="fo-external-image">
+									    <xsl:with-param name="filename" select="$header.image.filename" />
+									  </xsl:call-template>
+									</xsl:attribute>
 									<xsl:attribute
 										name="content-height">14pt</xsl:attribute>
 									<xsl:attribute

@@ -23,7 +23,7 @@
 <!--- - - - - - - - - - - - - - - - - - - - - - - - - - -->
  <xsl:template name="user.footer.content">
   <P class="copyright" align="right">
-   © 1997-2008
+   © 1997-2009
    <A href="http://www-sop.inria.fr/">
     INRIA Sophia Antipolis
    </A>
