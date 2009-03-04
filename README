@@ -1,3 +1,13 @@
+Version 0.4
+=Changes=
+Replaced the  Java highlighting (DocBookize and related classes) with XSLT highlighting. 
+ 
+fixes for 
+
+http://bugs.activeeon.com/browse/DOC-92
+http://bugs.activeeon.com/browse/DOC-93
+http://bugs.activeeon.com/browse/DOC-95
+
 Version 0.3
 
 =Changes=
