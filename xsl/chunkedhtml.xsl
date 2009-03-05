@@ -20,8 +20,8 @@
  <xsl:param name="chunk.separate.lots">1</xsl:param>
  <!--  Indent html output -->
  <xsl:param name="chunker.output.indent">yes</xsl:param>
- <!-- Make the legal notice appear, but only as a link - no need for everyone to see it -->
- <xsl:param name="generate.legalnotice.link">1</xsl:param>
+ <!-- do not generate the html link, the copyright notice appears in the footer  -->
+ <xsl:param name="generate.legalnotice.link">0</xsl:param>
 
  <!-- Replace the standard home button (bottom line, middle) by 'Table of Content' -->
  <xsl:param name="local.l10n.xml" select="document('')" />

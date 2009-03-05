@@ -29,6 +29,9 @@
   </P>
  </xsl:template>
 
+ <!-- do not generate the html link, the copyright notice appears in the footer  -->
+ <xsl:param name="generate.legalnotice.link">0</xsl:param>
+
 
 
  <!-- Just use the image size for the html output. Width=... has no effect. -->
