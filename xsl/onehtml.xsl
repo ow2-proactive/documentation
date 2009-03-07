@@ -6,7 +6,7 @@
 
  <!-- Say we need the "one single html file" style -->
  <xsl:import
-  href="http://docbook.sourceforge.net/release/xsl-ns/1.74.0/html/docbook.xsl" />
+  href="../docbook-xsl/html/docbook.xsl" />
  <xsl:import href="html.xsl" />
 
  <!--  Changing font sizes -->
@@ -28,9 +28,6 @@
    All Rights Reserved
   </P>
  </xsl:template>
-
- <!-- do not generate the html link, the copyright notice appears in the footer  -->
- <xsl:param name="generate.legalnotice.link">0</xsl:param>
 
 
 
