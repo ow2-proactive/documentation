@@ -1,3 +1,20 @@
+Version 0.5
+
+=Changes=
+Upgraded the DocBook version to the latest 1.74.3 version  and
+removed any unnecessary xsl stylesheets from the DocBook distribution. The
+resulting folder is 2.6 Mb in size. Also some unused jar files were removed
+with the purpose of making the toolchain smaller. The XML catalog was removed in order 
+to simplify the toolchain as the XSL transformations are done both through
+Java and Ant XSL and the configuration is more complex than necessary when
+using catalogs. 
+The DocBook zip file was removed and replaced with the docbook-xsl folder. The 
+necessary XSL files are now included from the docbook-xsl folder through 
+regular <xsl:import>.  
+
+fixes for:
+http://bugs.activeeon.com/browse/DOC-6
+
 Version 0.4
 =Changes=
 Replaced the  Java highlighting (DocBookize and related classes) with XSLT highlighting. 
