@@ -28,9 +28,9 @@
   <module name="TreeWalker">
 
 
-<!--    <module name="RegexpHeader">
+   <module name="RegexpHeader">
       <property name="headerFile" value="${checkstyle.header.file}"/>
-    </module>-->
+    </module>
 
 
   <module name="JavadocType"/>
@@ -42,7 +42,7 @@
 
     <module name="JavadocStyle">
       <property name="checkEmptyJavadoc" value="true"/>
-      <property name="checkFirstSentence" value="false"/>
+      <property name="checkFirstSentence" value="true"/>
     </module>
     <module name="JavadocVariable"/>
   </module>

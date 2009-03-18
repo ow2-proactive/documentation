@@ -99,7 +99,6 @@
 	<property name="checkstyle.header.file" 	value="${checkstyle.path}/proactive.header"/>
 	<property name="checkstyle.importcontrol.file" 	value="${checkstyle.path}/import-control.xml"/>
 	<property name="checkstyle.config" 		value="${checkstyle.path}/proactive_checks.xml"/>
-	<property name="checkstyle.jar" 		value="${checkstyle.path}/checkstyle-all-5.0-beta01.jar"/>
   <!-- Directory of xml configuration files for highlighting -->
    <property name="docs.highlighting.dir" value="${docs.toolchain.dir}/highlighting"/>
 
