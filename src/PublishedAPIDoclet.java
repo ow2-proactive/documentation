@@ -102,5 +102,5 @@ public class PublishedAPIDoclet {
             reporter.printError("Usage: javadoc " + OPT_FILE + " mytag -doclet ListTags ...");
         }
         return foundTagOption;
-    }
+	}
 }

@@ -563,17 +563,17 @@ public abstract class SnippetExtractor {
 	}    
      }
 
-    /**
-     * This method is to be implemented by the subclasses responsible for
-     * parsing different types of file. The way the snippet name is extracted is
-     * left at the discretion of those classes.
-     * 
-     * @param line
-     *            The line from which the snippet name will be extracted
-     * @param annotation
-     *            the annotation tag
-     * @return the snippet name
-     */
-    public abstract String extractAnnotation(String line, String annotation);
+	/**
+	 * This method is to be implemented by the subclasses responsible for
+	 * parsing different types of file. The way the snippet name is extracted is
+	 * left at the discretion of those classes.
+	 *
+	 * @param line
+	 *            The line from which the snippet name will be extracted
+	 * @param annotation
+	 *            the annotation tag
+	 * @return the snippet name
+	 */
+	public abstract String extractAnnotation(String line, String annotation);
 
 }

@@ -93,6 +93,6 @@ public class XMLSnippetExtractor extends SnippetExtractor {
         name = name.trim();
         logger.debug("Extracted the " + name + " snippet from " + target);
         return name;
-    }
+	}
 
 }

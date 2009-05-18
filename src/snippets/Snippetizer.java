@@ -135,7 +135,8 @@ public class Snippetizer {
             + "and every file with the specified "
             + "extensions (check SnippetExtractorFactory.java"
             + " will be parsed for snippet parts");
-        Snippetizer.logger.error("Not enough arguments or arguments are not directories.");
-    }
+        Snippetizer.logger
+				.error("Not enough arguments or arguments are not directories.");
+	}
 
 }
