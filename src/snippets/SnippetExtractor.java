@@ -58,9 +58,9 @@ public abstract class SnippetExtractor {
 
     private final String startAnnotation;
     private final String endAnnotation;
-    // TODO implement areas that are excluded from snippets
-    private final String startExclusion;
-    private final String endExclusion;
+
+    private final String breakAnnotation;
+    private final String resumeAnnotation;
 
     protected final File target;
     protected final File targetDirectory;
@@ -78,21 +78,20 @@ public abstract class SnippetExtractor {
      *            snippet start tag
      * @param endA
      *            snippet end tag
-     * @param startE
-     *            start area of exclusion form snippet start tag (not
-     *            implemented)
-     * @param endE
-     *            end are of exclusion from snippet end tag (not implemented)
+     * @param breakA
+     * 			  snippet break tag
+     * @param resumeA
+     * 			  snippet resume tag
      */
     public SnippetExtractor(final File file, final File targetDir, final String startA, final String endA,
-            final String startE, final String endE) {
+            final String breakA, final String resumeA) {
         // TODO configure externally
         SnippetExtractor.logger.setLevel(Level.INFO);
         this.target = file;
         this.startAnnotation = startA;
         this.endAnnotation = endA;
-        this.startExclusion = startE;
-        this.endExclusion = endE;
+        this.breakAnnotation = breakA;
+        this.resumeAnnotation = resumeA;
         this.targetDirectory = targetDir;
     }
 
@@ -113,14 +112,11 @@ public abstract class SnippetExtractor {
         this(file, targetDir, startA, endA, null, null);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Runnable#run()
-     */
     /**
-     * Checks if the file supplied is valid and contains tags
-     * and if so tries to extract the snippets.
+     * @see java.lang.Runnable#run()
+     *
+     * Checks if the supplied file is valid and contains tags.
+     * If so, tries to extract the snippets.
      */
     public void run() {
 
@@ -145,18 +141,30 @@ public abstract class SnippetExtractor {
             ioExcep.printStackTrace();
             SnippetExtractor.logger.error("Extraction error for file: " + this.target + " " +
                 ioExcep.getMessage());
-	}
+        }
     }
 
     /**
      * Checks that for each start tag there is a corresponding end tag and there
      * are no stop tags before end tags. Tags can be imbricated.
+     * Also checks whether break and resume tags are well-formed (see
+     * Validity condition)
+     *
+     * Validity conditions for start and end tags:
+     * 1. same number of start and end tags
+     * 2. start tags always have a higher index then corresponding end tags (are before)
+     * 3. no duplicate start or end tags (should be checked globally somehow)
+     * 4. an end tag has a corresponding start tag and vice versa 5. check for empty tags
      * 
-     * Validity conditions 1. same number of start and end tags 2. start tags
-     * always have a higher index then corresponding end tags (are before) 3. no
-     * duplicate start or end tags (should be checked globally somehow) 4. an
-     * end tag has a corresponding start tag and vice versa 5. check for empty
-     * tags
+     * Validity conditions for break and resume tags:
+     * 1. Before each break tag, there is a corresponding start tag
+     * 2. Before each break tag, there is no corresponding end tag
+     * => 1 & 2: break tags are between there corresponding start and end tags
+     * 3. Each break tag si followee by a resume tag before the end tag
+     * 4. Before each break tag, there is no such a break tag already read without
+     * its corresponding resume tag
+     * => 4: break blocks cannot be imbricated.
+     * 5. Before each resume tag, there is a corresponding break tag
      * 
      * @return a boolean value saying if the file is valid or not
      * @throws IOException file error
@@ -173,9 +181,12 @@ public abstract class SnippetExtractor {
         String line;
         final HashMap<String, Integer> startTags = new HashMap<String, Integer>();
         final HashMap<String, Integer> endTags = new HashMap<String, Integer>();
+        final HashMap<String, Integer> breakTags = new HashMap<String, Integer>();
         boolean fileValid = true;
         String endA;
         String startA;
+        String breakA;
+        String resumeA;
         // counts the line number of the tag in the file
         int lineCounter = 1;
         // counts the tags in the file 0 means the file has no tags and will not
@@ -226,6 +237,74 @@ public abstract class SnippetExtractor {
                 }
                 startTags.put(startA, lineCounter);
             }
+            if (line.contains(this.breakAnnotation)) {
+                // get the break id
+                breakA = this.extractAnnotation(line, this.breakAnnotation);
+                SnippetExtractor.logger.debug("Found break tag [" + breakA + "]" + "at line " + lineCounter);
+                if (breakA.length() == 0) {
+                    SnippetExtractor.logger.error("[" + lineCounter + "]  Empty tag found at " + "[" +
+                        lineCounter + "]. File [" + this.target +
+                        "] will not be parsed and some code parts may" + " not appear in the final document");
+                    fileValid = false;
+                }
+                if (breakTags.containsKey(breakA)) {
+			// Such a break tag has already been read (and no corresponding resume tag has been read)
+                    SnippetExtractor.logger.error("[" + lineCounter + "]  Imbricated break tags [" + breakA +
+                        "] at " + "[" + lineCounter + "] and [" + breakTags.get(breakA) + "] " + ". File [" +
+                        this.target + "] will not be parsed and some code parts may" +
+                        " not appear in the final document");
+                    fileValid = false;
+                }
+                if (!startTags.containsKey(breakA)) {
+			// There is no corresponding start tag
+                    SnippetExtractor.logger.error("[" + lineCounter + "]  Present break tag [" + breakA +
+                        "] at " + "[" + lineCounter + "] whereas there is no corresponding start tag before" + ". File [" +
+                        this.target + "] will not be parsed and some code parts may" +
+                        " not appear in the final document");
+                    fileValid = false;
+                }
+                if (endTags.containsKey(breakA)) {
+			// A corresponding end tag has been read
+                    SnippetExtractor.logger.error("[" + lineCounter + "]  Present break tag [" + breakA +
+                        "] at " + "[" + lineCounter + "] whereas there is a corresponding end tag before" + ". File [" +
+                        this.target + "] will not be parsed and some code parts may" +
+                        " not appear in the final document");
+                    fileValid = false;
+                }
+                // Id is inserted in the breakTags hashmap and will be removed only if
+                // a corresponding resume tag has been read
+                breakTags.put(breakA, lineCounter);
+            }
+            if (line.contains(this.resumeAnnotation)) {
+                // get the resume id
+                resumeA = this.extractAnnotation(line, this.resumeAnnotation);
+                SnippetExtractor.logger.debug("Found break tag [" + resumeA + "]" + "at line " + lineCounter);
+                if (resumeA.length() == 0) {
+                    SnippetExtractor.logger.error("[" + lineCounter + "]  Empty tag found at " + "[" +
+                        lineCounter + "]. File [" + this.target +
+                        "] will not be parsed and some code parts may" + " not appear in the final document");
+                    fileValid = false;
+                }
+                if (!breakTags.containsKey(resumeA)) {
+			// There is no corresponding break tag
+                    SnippetExtractor.logger.error("[" + lineCounter + "]  Present resume tags [" + resumeA +
+                        "] at " + "[" + lineCounter + "] whereas there is no corresponding break tag before" + ". File [" +
+                        this.target + "] will not be parsed and some code parts may" +
+                        " not appear in the final document");
+                    fileValid = false;
+                }
+                if (endTags.containsKey(resumeA)) {
+			// A corresponding end tag has been read
+                    SnippetExtractor.logger.error("[" + lineCounter + "]  Present resume tag [" + resumeA +
+                        "] at " + "[" + lineCounter + "] whereas there is a corresponding end tag before" + ". File [" +
+                        this.target + "] will not be parsed and some code parts may" +
+                        " not appear in the final document");
+                    fileValid = false;
+                }
+                // Removes the id from the breakTags hasmap. This enables
+                // to have several exclusion blocks
+                breakTags.remove(resumeA);
+            }
             lineCounter++;
             line = this.reader.readLine();
         }
@@ -233,6 +312,14 @@ public abstract class SnippetExtractor {
             SnippetExtractor.logger.debug("Start tags extracted :" + startTags.keySet().toString());
         if (endTags.size() > 0)
             SnippetExtractor.logger.debug("End tags extracted :" + endTags.keySet().toString());
+        if (breakTags.size() >0) {
+		// Missing resume tags
+		SnippetExtractor.logger.error("Missings resume tags");
+		for (final Map.Entry<String, Integer> tag : breakTags.entrySet()) {
+			SnippetExtractor.logger.error("Break tag [" + tag.getKey() + " present at line " + tag.getValue());
+		}
+		fileValid = false;
+        }
 
         // check if there are only pairs of tags (no extra single ones)
         // and start tags are before end tags
@@ -266,7 +353,6 @@ public abstract class SnippetExtractor {
                 if (endValue != null)
                     endTags.remove(endKey);
             }
-            line = this.reader.readLine();
         }
         // report the error lines for the orphaned end tags
         if (endTags.size() != 0)
@@ -288,9 +374,12 @@ public abstract class SnippetExtractor {
 
     }
 
-    // considers the file valid as it has been checked
-    // by fileIsValid before parsing
     /**
+     * Extracts snippets from the file this.target
+     * This file is considered to be valid as this method will
+     * be called if and only if the fileIsValid method has previously
+     * returned true.
+     *
      * @throws IOException
      */
     private void extractSnippets() throws IOException {
@@ -299,10 +388,15 @@ public abstract class SnippetExtractor {
         final HashMap<String, BufferedWriter> writers = new HashMap<String, BufferedWriter>();
         //holds the number of whitespace to be removed from a file
         final HashMap<String, Integer> whiteSpaceToRemove = new HashMap<String, Integer>();
+        //Indicates break annotations
+        final HashMap<String, Boolean> breaks = new HashMap<String, Boolean>();
         String endA;
         String startA;
+        String breakA;
+        String resumeA;
         line = this.reader.readLine();
         while (line != null) {
+
             //if we found an end annotation close the corresponding writer
             if ((writers.size() > 0) && (line.contains(this.endAnnotation))) {
                 // close the writer corresponding to the end annotation
@@ -318,19 +412,28 @@ public abstract class SnippetExtractor {
                 this.formatFile(endA, whiteSpaceToRemove.get(endA));
                 // remove the whitespace count form the whitespace count vector
                 whiteSpaceToRemove.remove(endA);
-            } //end end annotation if
-            // if writers still exist, eg the last end annotation
+                // remove entry from breaks hasmap
+                breaks.remove(endA);
+            } //end end annotation if/
+
+            // if writers still exist, e.g. the last end annotation
             // hasn't been reached add to the snippet files
             if ((writers.size() > 0) && (!line.contains(this.endAnnotation)) &&
-                (!line.contains(this.startAnnotation))) {
+                (!line.contains(this.startAnnotation)) && (!line.contains(this.breakAnnotation)) &&
+                (!line.contains(this.resumeAnnotation))) {
                 // iterate through all the writers and write in the files
                 // skip if the line contains an annotation (we might
                 // have imbricated or included annotations)
-                for (final BufferedWriter buffer : writers.values()) {
-                    if (!line.contains(this.startAnnotation) && !line.contains(this.endAnnotation)) {
-                        buffer.append(line);
-                    }
+                for (final Map.Entry<String, BufferedWriter> currentWriter : writers.entrySet()) {
+
+			// if a break block has been openned for this key, we do not treat this line
+                    if (breaks.get(currentWriter.getKey()))
+			continue;
+
+                    BufferedWriter buffer = currentWriter.getValue();
+			buffer.append(line);
                     buffer.newLine();
+
                     // choose the smallest value (closest to the left) between
                     // the currently recorded white space and the one in the current line
                     // the minimum from all the lines in one file is the amount we have to
@@ -342,6 +445,7 @@ public abstract class SnippetExtractor {
                     }
                 }
             } //end no annotation if
+
             // if new start annotation encountered add a new file and writer
             if (line.contains(this.startAnnotation)) {
                 // get only the id
@@ -365,7 +469,27 @@ public abstract class SnippetExtractor {
                 // create a new whitespace entry with a maximum
                 // value (we are looking for the minimum value)
                 whiteSpaceToRemove.put(startA, Integer.MAX_VALUE);
+
+                // create a new break entry with the false value
+                breaks.put(startA, false);
             } //end start annotation if
+
+            //If break annotation appears, then breaks HashMap
+            //is updated.
+            if (line.contains(this.breakAnnotation)) {
+		breakA = this.extractAnnotation(line, this.breakAnnotation);
+		assert breaks.containsKey(breakA);
+		breaks.put(breakA, true);
+            }
+
+            //If resume annotation appears, then breaks HashMap
+            //is updated.
+            if (line.contains(this.resumeAnnotation)) {
+		resumeA = this.extractAnnotation(line, this.resumeAnnotation);
+		assert breaks.containsKey(resumeA);
+		assert breaks.get(resumeA);
+		breaks.put(resumeA, false);
+            }
             line = this.reader.readLine();
         } //end while
     }

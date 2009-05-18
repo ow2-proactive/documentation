@@ -34,6 +34,7 @@ package doc.snippets;
 import java.io.File;
 
 
+
 /**
  * Extracts snippets from an XML file. 
  * @author vjuresch
@@ -76,10 +77,8 @@ public class XMLSnippetExtractor extends SnippetExtractor {
         super(file, targetDir, startA, endA, startE, endE);
     }
 
-    /* (non-Javadoc)
-     * @see doc.snippets.SnippetExtractor#extractAnnotation(java.lang.String, java.lang.String)
-     */
     /**
+     * @see doc.snippets.SnippetExtractor#extractAnnotation(java.lang.String, java.lang.String)
      * @param line the line from which to extract the snippet name
      * @param annotation the annotation on the line
      * 

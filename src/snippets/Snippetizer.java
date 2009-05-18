@@ -36,9 +36,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 
 /**
  * Entry point class for extracting snippets from code files.
@@ -53,6 +51,7 @@ import org.apache.log4j.PropertyConfigurator;
 public class Snippetizer {
 
     private static Logger logger = Logger.getLogger(Snippetizer.class.getName());
+
     /**
      * Files that are excluded from snippet checks. This is necessary as some files might contain
      * the tag strings for other purposes than extracting code. 
@@ -63,7 +62,8 @@ public class Snippetizer {
     private String[] fileTypes = { ".java", ".xml", ".fractal" };
 
     /**
-     * @param root  the directory from which to start parsing
+     * Constructor
+     *
      * @param targetDir the directory where to put the extracted snippets
      */
     public Snippetizer(final File targetDir) {
@@ -71,23 +71,27 @@ public class Snippetizer {
     }
 
     /**
-     * Extracts the snippets of code from all the java files
-     * in the directories and subdirectories
+     * Extracts code snippets from all the java files
+     * located into the specified directory or into its sub-directories
      * 
      * ** recursive method **
      * 
      * @param dir  the directory to start from - all the 
-     * subdirectories will be checked
+     * sub-directories will be checked
      */
     public void startExtraction(final File dir) {
-        // List the source directory. If the file is a dir recurse,
-        // if the file is a java file check for annotations
+
+        // List the source directory.
+	// If the current file is a directory,
+	// then applies this method to this directory.
+        // If the file is a java, xml or fractal file,
+	// then checks for annotations.
         // otherwise ignore
         final File[] elements = dir.listFiles();
         for (File file : elements) {
             if (file.isDirectory()) {
                 this.startExtraction(file);
-            } else
+            } else {
                 for (String extension : this.fileTypes) {
                     if (file.toString().endsWith(extension) && !EXCLUDED_FILES.contains(file.getName())) {
                         //get the correct extractor and start it 
@@ -97,16 +101,21 @@ public class Snippetizer {
                             logger.info("Only java, xml, and fractal can be parsed. " + "Trying to parse [" +
                                 file.getAbsolutePath() + "]   ", e);
                         }
-                    } // fi
+                    }
 
-                } //rof
-
-        } // rof
+                }
+            }
+        }
     }
 
+    /**
+     * main method
+     *
+     * @param args
+     */
     public static void main(String[] args) {
-        //TODO configure externally
-        //Snippetizer.logger.setLevel(Level.ALL);
+        // TODO configure externally
+        // Snippetizer.logger.setLevel(Level.ALL);
     	// PropertyConfigurator.configure("log4j.properties");
         if (args.length >= 2) {
             final File sourceDir = new File(args[0]);
