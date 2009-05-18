@@ -40,10 +40,10 @@ import org.apache.log4j.Logger;
 
 
 /**
- * This class is responsible with creating the 
- * appropriate snippet parser depending on the file. 
- * 
- * How the tags look like is also defined here. 
+ * This class is responsible with creating the
+ * appropriate snippet parser depending on the file.
+ *
+ * How the tags look like is also defined here.
  * @author The ProActive Team
  *
  */
@@ -69,14 +69,14 @@ public final class SnippetExtractorFactory {
     static String resumeAnnotationXML = "@snippet-resume";
 
     /**
-     * This class will not be instantiated 
+     * This class will not be instantiated
      */
     private SnippetExtractorFactory() {
     };
 
     /**
      * Returns an appropriate parser chosen according to the file type.
-     * 
+     *
      * @param file file to be parsed
      * @param targetDir where the snippets will be placed
      * @return a parser for the file

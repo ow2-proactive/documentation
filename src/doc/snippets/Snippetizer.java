@@ -41,10 +41,10 @@ import org.apache.log4j.Logger;
 /**
  * Entry point class for extracting snippets from code files.
  * Snippets will be identified by the id next to the tag check
- * SnippetExtractorFactory.java for tags) and placed in the 
+ * SnippetExtractorFactory.java for tags) and placed in the
  * ouput directory. To use in the docbook XML just use the
- * &lt;programlisting&gt;tag and include the needed snippet file. 
- * 
+ * &lt;programlisting&gt;tag and include the needed snippet file.
+ *
  * @author The ProActive Team
  *
  */
@@ -54,7 +54,7 @@ public class Snippetizer {
 
     /**
      * Files that are excluded from snippet checks. This is necessary as some files might contain
-     * the tag strings for other purposes than extracting code. 
+     * the tag strings for other purposes than extracting code.
      */
     private final List<String> EXCLUDED_FILES = Arrays.asList(new String[] { "SnippetExtractorFactory.java",
             "UpdateCopyrightAndVersion.java", "main.xml" , "profiled.xml" });
@@ -73,10 +73,10 @@ public class Snippetizer {
     /**
      * Extracts code snippets from all the java files
      * located into the specified directory or into its sub-directories
-     * 
+     *
      * ** recursive method **
-     * 
-     * @param dir  the directory to start from - all the 
+     *
+     * @param dir  the directory to start from - all the
      * sub-directories will be checked
      */
     public void startExtraction(final File dir) {
@@ -94,7 +94,7 @@ public class Snippetizer {
             } else {
                 for (String extension : this.fileTypes) {
                     if (file.toString().endsWith(extension) && !EXCLUDED_FILES.contains(file.getName())) {
-                        //get the correct extractor and start it 
+                        //get the correct extractor and start it
                         try {
                             SnippetExtractorFactory.getExtractor(file, this.targetDir).run();
                         } catch (IOException e) {
@@ -116,7 +116,7 @@ public class Snippetizer {
     public static void main(String[] args) {
         // TODO configure externally
         // Snippetizer.logger.setLevel(Level.ALL);
-    	// PropertyConfigurator.configure("log4j.properties");
+	// PropertyConfigurator.configure("log4j.properties");
         if (args.length >= 2) {
             final File sourceDir = new File(args[0]);
             final File targetDir = new File(args[1]);

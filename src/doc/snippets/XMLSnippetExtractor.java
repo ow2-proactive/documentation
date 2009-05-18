@@ -36,7 +36,7 @@ import java.io.File;
 
 
 /**
- * Extracts snippets from an XML file. 
+ * Extracts snippets from an XML file.
  * @author vjuresch
  *
  */
@@ -44,12 +44,12 @@ public class XMLSnippetExtractor extends SnippetExtractor {
 
     /**
      * Constructs a new XMLSnippetExtractor that
-     * will parse the file and output in the 
-     * target directory the parts of the code between 
+     * will parse the file and output in the
+     * target directory the parts of the code between
      * the annotations.
-     * 
-     * @param file  	file to extract from 
-     * @param targetDir	directory to save the file to 
+     *
+     * @param file  	file to extract from
+     * @param targetDir	directory to save the file to
      * @param startA	start annotation
      * @param endA		end annotation
      */
@@ -59,17 +59,17 @@ public class XMLSnippetExtractor extends SnippetExtractor {
 
     /**
      * Constructs a new XMLSnippetExtractor that
-     * will parse the file and output in the 
-     * target directory the parts of the code between 
+     * will parse the file and output in the
+     * target directory the parts of the code between
      * the annotations. It will not include the
      * code between the exclude tags.
-     * 
-     * @param file  	file to extract from 
-     * @param targetDir	directory to save the file to 
+     *
+     * @param file  	file to extract from
+     * @param targetDir	directory to save the file to
      * @param startA	start annotation
-     * @param endA		end annotation		
+     * @param endA		end annotation
      * @param startE	start exclusion annotation (not implemented) - beginning of exclusion from
-     * 						included part  
+     * 						included part
      * @param endE		end exclusion annotation - ending of exclusion from included part
      */
     public XMLSnippetExtractor(final File file, final File targetDir, final String startA, final String endA,
@@ -81,8 +81,8 @@ public class XMLSnippetExtractor extends SnippetExtractor {
      * @see doc.snippets.SnippetExtractor#extractAnnotation(java.lang.String, java.lang.String)
      * @param line the line from which to extract the snippet name
      * @param annotation the annotation on the line
-     * 
-     * @return returns only the name of the snippet 
+     *
+     * @return returns only the name of the snippet
      */
     @Override
     public String extractAnnotation(final String line, final String annotation) {

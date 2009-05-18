@@ -47,9 +47,9 @@ import org.apache.log4j.Logger;
 
 /**
  * This class is responsible with the actual parsing of the files.
- * 
+ *
  * @author vjuresch
- * 
+ *
  */
 public abstract class SnippetExtractor {
     private static final String FILE_EXTENSION = ".snip";
@@ -69,7 +69,7 @@ public abstract class SnippetExtractor {
 
     /**
      * Creates a snippet extractor with the corresponding tags
-     * 
+     *
      * @param file
      *            file to be parsed
      * @param targetDir
@@ -97,7 +97,7 @@ public abstract class SnippetExtractor {
 
     /**
      * Creates a snippet extractor with the corresponding tags
-     * 
+     *
      * @param file
      *            file to be parsed
      * @param targetDir
@@ -106,7 +106,7 @@ public abstract class SnippetExtractor {
      *            snippet start tag
      * @param endA
      *            snippet end tag
-     * 
+     *
      */
     public SnippetExtractor(final File file, final File targetDir, final String startA, final String endA) {
         this(file, targetDir, startA, endA, null, null);
@@ -124,17 +124,17 @@ public abstract class SnippetExtractor {
             this.reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.target)));
             try {
 	        // check if the file is valid and then parse
-            	if (this.fileIsValid()) {
-                	SnippetExtractor.logger.debug("File is valid, trying to extract: " + this.target);
+		if (this.fileIsValid()) {
+			SnippetExtractor.logger.debug("File is valid, trying to extract: " + this.target);
 			this.reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.target)));
-	            	try {	
+			try {
 			   this.extractSnippets();
-                	} finally {
+			} finally {
 			   this.reader.close();
 			}
-            	}
+		}
             } finally {
-   	       this.reader.close();
+	       this.reader.close();
 	    }
 
         } catch (final IOException ioExcep) {
@@ -155,7 +155,7 @@ public abstract class SnippetExtractor {
      * 2. start tags always have a higher index then corresponding end tags (are before)
      * 3. no duplicate start or end tags (should be checked globally somehow)
      * 4. an end tag has a corresponding start tag and vice versa 5. check for empty tags
-     * 
+     *
      * Validity conditions for break and resume tags:
      * 1. Before each break tag, there is a corresponding start tag
      * 2. Before each break tag, there is no corresponding end tag
@@ -165,7 +165,7 @@ public abstract class SnippetExtractor {
      * its corresponding resume tag
      * => 4: break blocks cannot be imbricated.
      * 5. Before each resume tag, there is a corresponding break tag
-     * 
+     *
      * @return a boolean value saying if the file is valid or not
      * @throws IOException file error
      */
@@ -495,8 +495,8 @@ public abstract class SnippetExtractor {
     }
 
     /**
-     * Creates a new file with the specified name 
-     * 
+     * Creates a new file with the specified name
+     *
      * @param file the file name to be created
      * @return a BufferedWriter representing the created file
      */
@@ -520,7 +520,7 @@ public abstract class SnippetExtractor {
      * beginning of all the lines. The number of whitespaces removed is equal to
      * the smallest number of whitespace that can be found on a beginning of a
      * line (e.g. on the line closest to the left edge of the screen).
-     * 
+     *
      * @param file  the file to be formated
      * @param blanksToRemove the number of whitespace to remove from each line
      */
@@ -560,7 +560,7 @@ public abstract class SnippetExtractor {
         } catch (final IOException ioExcep) {
             SnippetExtractor.logger.error("File I/O exception");
             SnippetExtractor.logger.error(ioExcep.getMessage());
-	}    
+	}
      }
 
 	/**
