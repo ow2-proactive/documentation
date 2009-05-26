@@ -59,7 +59,7 @@ public class Snippetizer {
     private final List<String> EXCLUDED_FILES = Arrays.asList(new String[] { "SnippetExtractorFactory.java",
             "UpdateCopyrightAndVersion.java", "main.xml" , "profiled.xml" });
     private final File targetDir;
-    private String[] fileTypes = { ".java", ".xml", ".fractal" };
+    private String[] fileTypes = { ".java", ".xml", ".fractal", ".c" };
 
     /**
      * Constructor
@@ -98,7 +98,7 @@ public class Snippetizer {
                         try {
                             SnippetExtractorFactory.getExtractor(file, this.targetDir).run();
                         } catch (IOException e) {
-                            logger.info("Only java, xml, and fractal can be parsed. " + "Trying to parse [" +
+                            logger.info("Only Java, XML, Fractal and C can be parsed. " + "Trying to parse [" +
                                 file.getAbsolutePath() + "]   ", e);
                         }
                     }

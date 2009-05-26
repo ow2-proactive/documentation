@@ -128,6 +128,20 @@ public final class SnippetExtractorFactory {
 			SnippetExtractorFactory.breakAnnotationFractal,
 			SnippetExtractorFactory.resumeAnnotationFractal);
         }
+        //return a JavaSnippetExtractor for parsing C files (java comments)
+        if (file.toString().endsWith(".c")) {
+            SnippetExtractorFactory.logger.debug("C snippet parser started for file: " + file +
+                " and target directory " + targetDir + ". The annotations used are: " +
+                SnippetExtractorFactory.startAnnotationFractal + ", " +
+                SnippetExtractorFactory.endAnnotationFractal+ ", " +
+                SnippetExtractorFactory.breakAnnotationFractal + " and " +
+                SnippetExtractorFactory.resumeAnnotationFractal);
+            return new JavaSnippetExtractor(file, targetDir,
+			SnippetExtractorFactory.startAnnotationFractal,
+			SnippetExtractorFactory.endAnnotationFractal,
+			SnippetExtractorFactory.breakAnnotationFractal,
+			SnippetExtractorFactory.resumeAnnotationFractal);
+        }
         throw new IOException();
     }
 
