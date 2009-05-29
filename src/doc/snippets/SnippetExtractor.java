@@ -374,6 +374,17 @@ public abstract class SnippetExtractor {
 
     }
 
+    private boolean isAnnotatedLine(String line) {
+    	return (line.contains(this.endAnnotation)) ||
+    		   (line.contains(this.startAnnotation)) || 
+    		   (line.contains(this.breakAnnotation)) ||
+    		   (line.contains(this.resumeAnnotation)) ||
+    		   (line.contains("@tutorial-start")) ||
+    		   (line.contains("@tutorial-end")) ||
+    		   (line.contains("@tutorial-break")) ||
+    		   (line.contains("@tutorial-resume"));
+    }
+    
     /**
      * Extracts snippets from the file this.target
      * This file is considered to be valid as this method will
@@ -418,20 +429,18 @@ public abstract class SnippetExtractor {
 
             // if writers still exist, e.g. the last end annotation
             // hasn't been reached add to the snippet files
-            if ((writers.size() > 0) && (!line.contains(this.endAnnotation)) &&
-                (!line.contains(this.startAnnotation)) && (!line.contains(this.breakAnnotation)) &&
-                (!line.contains(this.resumeAnnotation))) {
+            if ((writers.size() > 0) && (!this.isAnnotatedLine(line))) {
                 // iterate through all the writers and write in the files
                 // skip if the line contains an annotation (we might
                 // have imbricated or included annotations)
                 for (final Map.Entry<String, BufferedWriter> currentWriter : writers.entrySet()) {
 
-			// if a break block has been openned for this key, we do not treat this line
+                	// if a break block has been openned for this key, we do not treat this line
                     if (breaks.get(currentWriter.getKey()))
-			continue;
+                    	continue;
 
                     BufferedWriter buffer = currentWriter.getValue();
-			buffer.append(line);
+                    buffer.append(line);
                     buffer.newLine();
 
                     // choose the smallest value (closest to the left) between
@@ -477,18 +486,18 @@ public abstract class SnippetExtractor {
             //If break annotation appears, then breaks HashMap
             //is updated.
             if (line.contains(this.breakAnnotation)) {
-		breakA = this.extractAnnotation(line, this.breakAnnotation);
-		assert breaks.containsKey(breakA);
-		breaks.put(breakA, true);
+				breakA = this.extractAnnotation(line, this.breakAnnotation);
+				assert breaks.containsKey(breakA);
+				breaks.put(breakA, true);
             }
 
             //If resume annotation appears, then breaks HashMap
             //is updated.
             if (line.contains(this.resumeAnnotation)) {
-		resumeA = this.extractAnnotation(line, this.resumeAnnotation);
-		assert breaks.containsKey(resumeA);
-		assert breaks.get(resumeA);
-		breaks.put(resumeA, false);
+				resumeA = this.extractAnnotation(line, this.resumeAnnotation);
+				assert breaks.containsKey(resumeA);
+				assert breaks.get(resumeA);
+				breaks.put(resumeA, false);
             }
             line = this.reader.readLine();
         } //end while
@@ -551,7 +560,7 @@ public abstract class SnippetExtractor {
             }
 	 } finally {
 	     fileReader.close();
-             writer.close();
+         writer.close();
 	 }
 
             // remove temporary file
