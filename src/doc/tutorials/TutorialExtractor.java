@@ -286,6 +286,11 @@ public class TutorialExtractor {
     		   (line.contains("@snippet-resume"));
     }
     
+    private boolean isXmlFormat() {
+		return target.getName().endsWith(".xml") ||
+			   target.getName().endsWith(".fractal");
+    }
+
     /**
      * Extracts tutorial from the file this.target
      * This file is considered to be valid as this method will
@@ -300,10 +305,21 @@ public class TutorialExtractor {
         boolean broken = false;
         boolean started = false;
         boolean ended = false;
+        String xmlRoot = "";
         line = this.reader.readLine();
         while (line != null) {
         	
-            //if we found an end annotation close the writer
+            // For .xml and .fractal files, we cannot write the start annotation before
+            // the <?xml> tag. Thus, if we are extracted a tutorial from such a file,
+            // we have to add the first line describing the xml version as well as the
+            // encoding attribute.
+            // For this, we have to retrieve the <?xml> line which should be read before
+            // the tutorial starts.
+			if (!started && this.isXmlFormat() && line.contains("<?xml")) {
+				xmlRoot = line;
+			}
+
+            // if we found an end annotation close the writer
             if (line.contains(this.endAnnotation)) {
             	assert started;
             	assert !ended;
@@ -343,6 +359,11 @@ public class TutorialExtractor {
                 } else {
                     writer = this.createFile(targetFile);
                     started = true;
+
+                    if (isXmlFormat() && (xmlRoot.length() > 0)) {
+	                    writer.append(xmlRoot);
+	                    writer.newLine();
+                    }
                     TutorialExtractor.logger.info("File [" + this.target.getName() + "] created.");
                 }
             }
