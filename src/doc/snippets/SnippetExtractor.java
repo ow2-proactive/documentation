@@ -4,7 +4,7 @@
  * ProActive: The Java(TM) library for Parallel, Distributed,
  *            Concurrent computing with Security and Mobility
  *
- * Copyright (C) 1997-2008 INRIA/University of Nice-Sophia Antipolis
+ * Copyright (C) 1997-2009 INRIA/University of Nice-Sophia Antipolis
  * Contact: proactive@ow2.org
  *
  * This library is free software; you can redistribute it and/or
@@ -219,8 +219,16 @@ public abstract class SnippetExtractor {
                 // we count for tags only here since end annotation
                 // are invalid without start annotations
                 tagCounter++;
+                
                 // get the start id
-                startA = this.extractAnnotation(line, this.startAnnotation);
+                boolean isHeaded = false;
+            	if (this.isXmlFormat()) {
+            		isHeaded = line.contains(this.startAnnotation+"-with-header");
+            	}
+
+            	String startAnnotationHeader = (isHeaded) ? this.startAnnotation+"-with-header" : this.startAnnotation;
+        		startA = this.extractAnnotation(line, startAnnotationHeader);
+        		
                 SnippetExtractor.logger.debug("Found start tag [" + startA + "]" + "at line " + lineCounter);
                 if (startA.length() == 0) {
                     SnippetExtractor.logger.error("[" + lineCounter + "]  Empty tag found at " + "[" +
@@ -378,11 +386,12 @@ public abstract class SnippetExtractor {
     	return (line.contains(this.endAnnotation)) ||
     		   (line.contains(this.startAnnotation)) || 
     		   (line.contains(this.breakAnnotation)) ||
-    		   (line.contains(this.resumeAnnotation)) ||
-    		   (line.contains("@tutorial-start")) ||
-    		   (line.contains("@tutorial-end")) ||
-    		   (line.contains("@tutorial-break")) ||
-    		   (line.contains("@tutorial-resume"));
+    		   (line.contains(this.resumeAnnotation));
+    }
+    
+    private boolean isXmlFormat() {
+		return target.getName().endsWith(".xml") ||
+			   target.getName().endsWith(".fractal");
     }
     
     /**
@@ -405,9 +414,23 @@ public abstract class SnippetExtractor {
         String startA;
         String breakA;
         String resumeA;
+        boolean isStarted = false;
+        String xmlRoot = "";
         line = this.reader.readLine();
         while (line != null) {
 
+        	// For .xml and .fractal files, we cannot write the start annotation before
+            // the <?xml> tag. Thus, if we are extracting a snippet from such a file,
+            // we may want to add the first line describing the xml version as well as the
+            // encoding attribute.
+            // For this, we have to retrieve the <?xml> line which should be read before
+            // the tutorial starts.
+        	// In that case, start annotation of the form @snippet-start-with-header is used
+        	// to precise that we want the xml header.
+			if (!isStarted && this.isXmlFormat() && line.contains("<?xml")) {
+				xmlRoot = line;
+			}
+        	
             //if we found an end annotation close the corresponding writer
             if ((writers.size() > 0) && (line.contains(this.endAnnotation))) {
                 // close the writer corresponding to the end annotation
@@ -457,8 +480,15 @@ public abstract class SnippetExtractor {
 
             // if new start annotation encountered add a new file and writer
             if (line.contains(this.startAnnotation)) {
-                // get only the id
-                startA = this.extractAnnotation(line, this.startAnnotation);
+            	// get only the id
+            	boolean isHeaded = false;
+            	if (this.isXmlFormat()) {
+            		isHeaded = line.contains(this.startAnnotation+"-with-header");
+            	}
+
+            	String startAnnotationHeader = (isHeaded) ? this.startAnnotation+"-with-header" : this.startAnnotation;
+        		startA = this.extractAnnotation(line, startAnnotationHeader);
+        		
                 // TODO check if startA can be a valid file name
                 final File targetFile = new File(this.targetDirectory, startA);
                 //if file exist log a warning, otherwise proceed as normal
@@ -471,7 +501,13 @@ public abstract class SnippetExtractor {
                 } else {
                     SnippetExtractor.logger.debug("Adding ----" + startA + " line --- " + line);
                     assert startA != null;
-                    writers.put(startA, this.createFile(startA));
+                    BufferedWriter buffer = this.createFile(startA);
+                    writers.put(startA, buffer);
+                    if (isHeaded) {
+                        buffer.append(xmlRoot);
+                        buffer.newLine();
+                    }
+                    
                     SnippetExtractor.logger.info("File [" + startA + "] created.");
                     SnippetExtractor.logger.debug("++++ Writers after adding:" + writers);
                 }
@@ -481,6 +517,10 @@ public abstract class SnippetExtractor {
 
                 // create a new break entry with the false value
                 breaks.put(startA, false);
+                
+                // after the first read start annotation, there is no need to keep on looking for
+                // xml header.
+                isStarted = true;
             } //end start annotation if
 
             //If break annotation appears, then breaks HashMap
