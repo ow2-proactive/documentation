@@ -116,18 +116,22 @@ public class Snippetizer {
     public static void main(String[] args) {
         // TODO configure externally
         // Snippetizer.logger.setLevel(Level.ALL);
-	// PropertyConfigurator.configure("log4j.properties");
+    	// PropertyConfigurator.configure("log4j.properties");
         if (args.length >= 2) {
-            final File sourceDir = new File(args[0]);
+			String sourceArgs = args[0];
+			String[] sourcePaths = sourceArgs.split(":");
             final File targetDir = new File(args[1]);
-            if (sourceDir.isDirectory() && targetDir.isDirectory()) {
-                Snippetizer.logger.info("Processing starting from: " + sourceDir + ", outputting to: " +
-                    targetDir);
-                final Snippetizer parser = new Snippetizer(targetDir);
-                parser.startExtraction(sourceDir);
-                Snippetizer.logger.info("Snippet parsing completed.");
-                return;
+            for ( String sourcePath : sourcePaths) {
+	            final File sourceDir = new File(sourcePath);
+	            if (sourceDir.isDirectory() && targetDir.isDirectory()) {
+	                Snippetizer.logger.info("Processing starting from: " + sourceDir + ", outputting to: " +
+	                    targetDir);
+	                final Snippetizer parser = new Snippetizer(targetDir);
+	                parser.startExtraction(sourceDir);
+	            }
             }
+            Snippetizer.logger.info("Snippet parsing completed.");
+            return;
         }
         Snippetizer.logger.error("The snippet parser takes "
             + "two parameters. The first one is the source directory and the second "
