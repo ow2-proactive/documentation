@@ -40,6 +40,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -64,6 +66,8 @@ public abstract class SnippetExtractor {
 
     protected final File target;
     protected final File targetDirectory;
+    
+    protected final String tabSubstitute = "    ";
 
     private BufferedReader reader;
 
@@ -386,7 +390,11 @@ public abstract class SnippetExtractor {
     	return (line.contains(this.endAnnotation)) ||
     		   (line.contains(this.startAnnotation)) || 
     		   (line.contains(this.breakAnnotation)) ||
-    		   (line.contains(this.resumeAnnotation));
+               (line.contains(this.resumeAnnotation)) ||
+               (line.contains("@tutorial-start")) ||
+               (line.contains("@tutorial-end")) ||
+               (line.contains("@tutorial-break")) ||
+               (line.contains("@tutorial-resume"));
     }
     
     private boolean isXmlFormat() {
@@ -453,6 +461,11 @@ public abstract class SnippetExtractor {
             // if writers still exist, e.g. the last end annotation
             // hasn't been reached add to the snippet files
             if ((writers.size() > 0) && (!this.isAnnotatedLine(line))) {
+                Pattern p = Pattern.compile("\t");
+                Matcher m = p.matcher(line);
+                if (m.find()) {
+                	line = m.replaceAll(tabSubstitute);
+                }
                 // iterate through all the writers and write in the files
                 // skip if the line contains an annotation (we might
                 // have imbricated or included annotations)
