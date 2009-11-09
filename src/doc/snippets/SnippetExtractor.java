@@ -198,7 +198,8 @@ public abstract class SnippetExtractor {
         int tagCounter = 0;
         line = this.reader.readLine();
         while ((line != null) && fileValid) {
-            if (line.contains(this.endAnnotation)) {
+
+			if (line.contains(this.endAnnotation)) {
                 // get the end id
                 endA = this.extractAnnotation(line, this.endAnnotation);
                 SnippetExtractor.logger.debug("Found end tag [" + endA + "]" + "at line " + lineCounter);
@@ -223,16 +224,18 @@ public abstract class SnippetExtractor {
                 // we count for tags only here since end annotation
                 // are invalid without start annotations
                 tagCounter++;
-                
-                // get the start id
-                boolean isHeaded = false;
-            	if (this.isXmlFormat()) {
-            		isHeaded = line.contains(this.startAnnotation+"-with-header");
-            	}
 
-            	String startAnnotationHeader = (isHeaded) ? this.startAnnotation+"-with-header" : this.startAnnotation;
-        		startA = this.extractAnnotation(line, startAnnotationHeader);
-        		
+                boolean isHeaded = this.isXmlSnippetExtractor() && line.contains(this.startAnnotation+"-with-header");
+            	boolean isCopyrighted = this.isJavaSnippetExtractor() && line.contains(this.startAnnotation+"-with-copyright");
+
+            	String annotation = this.startAnnotation;
+            	if (isHeaded)
+            		annotation += "-with-header";
+            	if (isCopyrighted)
+            		annotation += "-with-copyright";
+
+        		startA = this.extractAnnotation(line, annotation);
+
                 SnippetExtractor.logger.debug("Found start tag [" + startA + "]" + "at line " + lineCounter);
                 if (startA.length() == 0) {
                     SnippetExtractor.logger.error("[" + lineCounter + "]  Empty tag found at " + "[" +
@@ -397,11 +400,14 @@ public abstract class SnippetExtractor {
                (line.contains("@tutorial-resume"));
     }
     
-    private boolean isXmlFormat() {
-		return target.getName().endsWith(".xml") ||
-			   target.getName().endsWith(".fractal");
+    private boolean isXmlSnippetExtractor() {
+    	return this instanceof XMLSnippetExtractor;
     }
     
+    private boolean isJavaSnippetExtractor() {
+    	return this instanceof JavaSnippetExtractor;
+    }
+
     /**
      * Extracts snippets from the file this.target
      * This file is considered to be valid as this method will
@@ -423,7 +429,9 @@ public abstract class SnippetExtractor {
         String breakA;
         String resumeA;
         boolean isStarted = false;
+        boolean hasReadPackage = false;
         String xmlRoot = "";
+        String copyright = "";
         line = this.reader.readLine();
         while (line != null) {
 
@@ -435,8 +443,18 @@ public abstract class SnippetExtractor {
             // the tutorial starts.
         	// In that case, start annotation of the form @snippet-start-with-header is used
         	// to precise that we want the xml header.
-			if (!isStarted && this.isXmlFormat() && line.contains("<?xml")) {
+			if (!isStarted && this.isXmlSnippetExtractor() && line.contains("<?xml")) {
 				xmlRoot = line;
+			}
+			
+			Pattern pattern = Pattern.compile("^\\s*package");
+			Matcher matcher = pattern.matcher(line);
+			if (this.isJavaSnippetExtractor() && matcher.find()) {
+				hasReadPackage = true;
+			}
+			
+			if (this.isJavaSnippetExtractor() && !hasReadPackage && !isAnnotatedLine(line)) {
+				copyright += line + "\n";
 			}
         	
             //if we found an end annotation close the corresponding writer
@@ -493,14 +511,17 @@ public abstract class SnippetExtractor {
 
             // if new start annotation encountered add a new file and writer
             if (line.contains(this.startAnnotation)) {
-            	// get only the id
-            	boolean isHeaded = false;
-            	if (this.isXmlFormat()) {
-            		isHeaded = line.contains(this.startAnnotation+"-with-header");
-            	}
 
-            	String startAnnotationHeader = (isHeaded) ? this.startAnnotation+"-with-header" : this.startAnnotation;
-        		startA = this.extractAnnotation(line, startAnnotationHeader);
+            	boolean isHeaded = this.isXmlSnippetExtractor() && line.contains(this.startAnnotation+"-with-header");
+            	boolean isCopyrighted = this.isJavaSnippetExtractor() && line.contains(this.startAnnotation+"-with-copyright");
+
+            	String annotation = this.startAnnotation;
+            	if (isHeaded)
+            		annotation += "-with-header";
+            	if (isCopyrighted)
+            		annotation += "-with-copyright";
+            	
+        		startA = this.extractAnnotation(line, annotation);
         		
                 // TODO check if startA can be a valid file name
                 final File targetFile = new File(this.targetDirectory, startA);
@@ -519,6 +540,9 @@ public abstract class SnippetExtractor {
                     if (isHeaded) {
                         buffer.append(xmlRoot);
                         buffer.newLine();
+                    }
+                    if (isCopyrighted) {
+                        buffer.append(copyright);
                     }
                     
                     SnippetExtractor.logger.info("File [" + startA + "] created.");

@@ -38,6 +38,8 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -287,8 +289,13 @@ public class TutorialExtractor {
     }
     
     private boolean isXmlFormat() {
-		return target.getName().endsWith(".xml") ||
-			   target.getName().endsWith(".fractal");
+		return target.getName().toLowerCase().endsWith(".xml") ||
+			   target.getName().toLowerCase().endsWith(".fractal");
+    }
+    
+    private boolean isJavaFormat() {
+		return target.getName().toLowerCase().endsWith(".java") ||
+			   target.getName().toLowerCase().endsWith(".c");
     }
 
     /**
@@ -305,7 +312,9 @@ public class TutorialExtractor {
         boolean broken = false;
         boolean started = false;
         boolean ended = false;
+        boolean hasReadPackage = false;
         String xmlRoot = "";
+        String copyright = "";
         line = this.reader.readLine();
         while (line != null) {
         	
@@ -319,6 +328,16 @@ public class TutorialExtractor {
 				xmlRoot = line;
 			}
 
+			Pattern pattern = Pattern.compile("^\\s*package");
+			Matcher matcher = pattern.matcher(line);
+			if (this.isJavaFormat() && matcher.find()) {
+				hasReadPackage = true;
+			}
+			
+			if (this.isJavaFormat() && !hasReadPackage && !isAnnotatedLine(line)) {
+				copyright += line + "\n";
+			}
+			
             // if we found an end annotation close the writer
             if (line.contains(this.endAnnotation)) {
             	assert started;
@@ -364,6 +383,10 @@ public class TutorialExtractor {
 	                    writer.append(xmlRoot);
 	                    writer.newLine();
                     }
+                    if (isJavaFormat() && (copyright.length() > 0)) {
+	                    writer.append(copyright);
+                    }
+                    
                     TutorialExtractor.logger.info("File [" + this.target.getName() + "] created.");
                 }
             }
