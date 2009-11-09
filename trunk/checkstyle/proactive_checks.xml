@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+	  "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
+	  "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+
+<module name="Checker">
+
+  <metadata name="com.atlas-sw.eclipse" value="I like Sydney"/>
+
+  <property name="severity" value="error"/>
+
+  <module name="SuppressionFilter">
+    <property name="file" value="${checkstyle.suppressions.file}"/>
+  </module>
+
+  <module name="JavadocPackage">
+    <property name="allowLegacy" value="true"/>
+  </module>
+  <!-- bug -->
+<!-- <module name="PackageHtml"/> --> 
+
+	
+
+  <module name="Translation">
+    <property name="severity" value="${translation.severity}"/>
+  </module>
+
+  <module name="TreeWalker">
+
+
+   <module name="RegexpHeader">
+      <property name="headerFile" value="${checkstyle.header.file}"/>
+    </module>
+
+
+  <module name="JavadocType"/>
+    <module name="JavadocMethod">
+      <property name="allowUndeclaredRTE" value="true"/>
+      <property name="allowThrowsTagsForSubclasses" value="true"/>
+    </module>
+
+
+    <module name="JavadocStyle">
+      <property name="checkEmptyJavadoc" value="true"/>
+      <property name="checkFirstSentence" value="true"/>
+    </module>
+    <module name="JavadocVariable"/>
+  </module>
+</module>
