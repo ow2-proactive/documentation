@@ -137,6 +137,11 @@
      <td>
       <b>Version<xsl:call-template name="gentext.space" />
        <xsl:copy-of select="$VERSION" />          <!--This variable is passed as a parameter in the ant task-->
+      </b>
+     </td>
+     <td style="width: 50px;"/>   <!--Empty cell to leave room between cells-->
+	 <td>
+      <b>Generated<xsl:call-template name="gentext.space" />on
        <xsl:call-template name="gentext.space" />
        <xsl:copy-of select="$TODAY" />            <!--This variable is passed as a parameter in the ant task-->
       </b>

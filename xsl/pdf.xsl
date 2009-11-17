@@ -707,17 +707,12 @@
 								<xsl:call-template name="gentext.space" />
 								<xsl:copy-of select="$VERSION" />
 								<!--This variable is passed as a parameter in the ant task-->
-								<xsl:call-template name="gentext.space" />
-								<xsl:call-template name="gentext.space" />
-								<xsl:call-template name="gentext.space" />
-								<xsl:copy-of select="$TODAY" />
-								<!--This variable is passed as a parameter in the ant task-->
 							</fo:block>
 
 						</fo:table-cell>
 
 						<!-- The ObjectWeb Logo -->
-						<fo:table-cell>			
+						<fo:table-cell number-rows-spanned="2" >			
 								<fo:block text-align="center" space-after="15mm">
 									<fo:external-graphic>
 										<xsl:attribute name="src">images/logoOW2.png</xsl:attribute>
@@ -727,11 +722,23 @@
 								</fo:block>
 						</fo:table-cell>
 						
-						<fo:table-cell>
+						<fo:table-cell number-rows-spanned="2" >
 							<fo:block text-align="right"
 								font-size="12pt" font-weight="bold">
 								<xsl:apply-templates
 									mode="book.titlepage.recto.mode" select="bookinfo/copyright" />
+							</fo:block>
+						</fo:table-cell>
+					</fo:table-row>
+					<fo:table-row>
+						<fo:table-cell>
+							<fo:block text-align="left" font-size="10pt" font-style="italic">
+								<xsl:text>Generated</xsl:text>
+								<xsl:call-template name="gentext.space" />
+								<xsl:text>on</xsl:text>
+								<xsl:call-template name="gentext.space" />
+								<xsl:copy-of select="$TODAY" />
+								<!--This variable is passed as a parameter in the ant task-->
 							</fo:block>
 						</fo:table-cell>
 					</fo:table-row>
