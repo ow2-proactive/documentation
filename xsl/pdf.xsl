@@ -67,10 +67,18 @@
 	  <xsl:attribute name="font-size">8pt</xsl:attribute>
 	</xsl:attribute-set>
 
+	<!-- xref.properties definition -->
+	<!-- This attribute set defines how links will look in the pdf version -->
+	<xsl:attribute-set name="xref.properties">
+		<xsl:attribute name="color">blue</xsl:attribute>
+		<xsl:attribute name="text-decoration">underline</xsl:attribute>
+	</xsl:attribute-set>
+
 	<!--  Changing font sizes -->
 	<xsl:param name="monospace.font.family">Helvetica</xsl:param>
 
-
+	<xsl:param name="ulink.show">1</xsl:param>
+	<xsl:param name="ulink.footnotes">1</xsl:param>
 
 	<!-- This avoids having "Draft" mode set on. Avoids the other two lines -->
 	<xsl:param name="fop1.extensions" select="'1'" />
@@ -1299,11 +1307,10 @@
 
 			<!-- Hacking the question toc line indent, to skip the qandaset gap -->
 			<xsl:attribute name="margin-left">
-        <xsl:call-template name="set.toc.indent">
-          <xsl:with-param name="reldepth" select="3" />
-        </xsl:call-template>
-      </xsl:attribute>
-
+				<xsl:call-template name="set.toc.indent">
+					<xsl:with-param name="reldepth" select="3" />
+				</xsl:call-template>
+			</xsl:attribute>
 
 			<fo:inline keep-with-next.within-line="always">
 				<fo:basic-link internal-destination="{$id}">
@@ -1569,10 +1576,10 @@
 	<xsl:template match="ulink" name="ulink">
 		<fo:basic-link xsl:use-attribute-sets="xref.properties">
 			<xsl:attribute name="external-destination">
-      <xsl:call-template name="fo-external-image">
-        <xsl:with-param name="filename" select="@url" />
-      </xsl:call-template>
-    </xsl:attribute>
+				<xsl:call-template name="fo-external-image">
+					<xsl:with-param name="filename" select="@url" />
+				</xsl:call-template>
+			</xsl:attribute>
 
 			<xsl:choose>
 				<xsl:when test="count(child::node())=0">
