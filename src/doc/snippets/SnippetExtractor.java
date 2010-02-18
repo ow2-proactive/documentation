@@ -494,6 +494,16 @@ public abstract class SnippetExtractor {
                     	continue;
 
                     BufferedWriter buffer = currentWriter.getValue();
+                    
+                    // If the line only consists of white space, then 
+                    // it replaces it by a new line.
+                    Pattern emptyLinePattern = Pattern.compile("^\\s*$");
+                	Matcher emptyLineMatcher = emptyLinePattern.matcher(line);
+                	if (emptyLineMatcher.find()) {
+                        buffer.newLine();
+                        continue;
+                	}
+                    
                     buffer.append(line);
                     buffer.newLine();
 
@@ -503,7 +513,21 @@ public abstract class SnippetExtractor {
                     // move the text to the left
                     Integer value;
                     for (final Map.Entry<String, Integer> currentWhiteSpace : whiteSpaceToRemove.entrySet()) {
-                        value = Math.min(line.length() - line.trim().length(), currentWhiteSpace.getValue());
+
+                    	// Matches the white spaces at the beginning of the line. 
+                    	Pattern whiteSpacePattern = Pattern.compile("^\\s*");
+                    	Matcher whiteSpaceMatcher = whiteSpacePattern.matcher(line);
+                        
+                    	// Gets the line without the white spaces at the beginning.
+                    	String lineWithoutWhiteSpace = "";
+                    	if (whiteSpaceMatcher.find()) {
+                        	lineWithoutWhiteSpace = whiteSpaceMatcher.replaceFirst("");
+                        }
+                    	
+                        // Computes the new number of white spaces to remove to the snippet
+                    	int nbWhiteSpaces = line.length() - lineWithoutWhiteSpace.length();
+                    	value = Math.min(nbWhiteSpaces, currentWhiteSpace.getValue());
+                        
                         whiteSpaceToRemove.put(currentWhiteSpace.getKey(), value);
                     }
                 }
@@ -611,43 +635,56 @@ public abstract class SnippetExtractor {
      * @param blanksToRemove the number of whitespace to remove from each line
      */
     private void formatFile(final String file, final int blanksToRemove) {
-      try {
-        final File parsedFile = new File(this.targetDirectory, file);
-        final BufferedReader fileReader = new BufferedReader(new InputStreamReader(new FileInputStream(
-                parsedFile)));
-        final File outFile = new File(this.targetDirectory, file + SnippetExtractor.FILE_EXTENSION);
-        final BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
-        try {
-            String line = null;
-            String whiteSpaceToAdd;
-            SnippetExtractor.logger.debug("Input file :" + parsedFile + " output file " + outFile +
-                " to remove " + blanksToRemove);
-            int whiteSpacelength;
-            while ((line = fileReader.readLine()) != null) {
-                // calculate the white space on this line
-                whiteSpacelength = line.length() - line.trim().length();
-                whiteSpaceToAdd = "";
-                for (int i = 1; i < whiteSpacelength - blanksToRemove; i++)
-                    // create a string of whitespace length - the amount to be
-                    // removed
-                    whiteSpaceToAdd = whiteSpaceToAdd.concat(" ");
-                // add the trimmed line to the whitespace and write to the file
-                writer.write(whiteSpaceToAdd.concat(line.trim()));
-                writer.newLine();
-            }
-	 } finally {
-	     fileReader.close();
-         writer.close();
-	 }
+    	BufferedReader fileReader = null;
+    	BufferedWriter writer = null;
+    	try {
+    		final File parsedFile = new File(this.targetDirectory, file);
+    		fileReader = new BufferedReader(
+    				new InputStreamReader(
+    						new FileInputStream(parsedFile)
+    				));
+    		final File outFile = new File(this.targetDirectory, file + SnippetExtractor.FILE_EXTENSION);
+    		writer = new BufferedWriter(new FileWriter(outFile));
+			
+    		SnippetExtractor.logger.debug("Input file :" + parsedFile + " output file " + outFile +
+					" to remove " + blanksToRemove);
+			
+			// Computes the String of whitespaces to be removed.
+			StringBuilder whiteSpacesString = new StringBuilder();    			
+			for (int i = 0; i < blanksToRemove; i++)
+				whiteSpacesString.append(" ");
+			
+			String line = null;
+			while ((line = fileReader.readLine()) != null) {
+				Pattern p = Pattern.compile("^" + whiteSpacesString);
+				Matcher m = p.matcher(line);
+				if (m.find())
+					line = m.replaceFirst("");
+				
+				writer.write(line);
+				writer.newLine();
+			}
 
-            // remove temporary file
-            if (!parsedFile.delete())
-                throw new IOException("Temporary files could not be deleted");
-        } catch (final IOException ioExcep) {
-            SnippetExtractor.logger.error("File I/O exception");
+    		// remove temporary file
+    		if (!parsedFile.delete())
+    			throw new IOException("Temporary files could not be deleted");
+    	
+    	} catch (final IOException ioExcep) {
+    		SnippetExtractor.logger.error("File I/O exception");
             SnippetExtractor.logger.error(ioExcep.getMessage());
-	}
-     }
+    	} finally {
+			try {
+				if (fileReader != null)
+					fileReader.close();
+				
+				if (writer != null)
+					writer.close();
+			} catch (IOException e) {
+				SnippetExtractor.logger.error("I/O exception while closing streams");
+	            SnippetExtractor.logger.error(e.getMessage());
+			}
+		}
+    }
 
 	/**
 	 * This method is to be implemented by the subclasses responsible for
