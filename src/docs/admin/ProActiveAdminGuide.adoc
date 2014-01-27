@@ -3,13 +3,422 @@ include::../common.adoc[]
 
 The administration guide covers cluster setup and cluster administration.
 
-== Getting started
+== Overview
 
+The ProActive Scheduler is the software for coupling distributed resources in order to solve large-scale problems.
+The distributed resources are represented by Java virtual machines (JVM) which can be launched on desktop computers, clusters or clouds.
+The Proactive Scheduler provides a single point of access to all resources enabling an effective way of selecting them for computations with the criteria you need.
+
+More precisely, the Proactive Scheduler does the following:
+
+* Deploys nodes automatically to different types of infrastructure (i.e. grid, cloud, another resource manager, etc).
+* Provides a single entry point to all resources it manages.
+* Schedules computations finding appropriate resources for them.
+
+== Getting started
 === Prerequisites
 
-== Installation
+* Java Development Kit (JDK) 1.6 or higher
+
+TIP: The Proactive Scheduler works with OpenJDK but it is recommended to use JDK from Oracle.
+
+=== Installation Linux/MacOS/Windows
+
+* http://www.activeeon.com/community-downloads[Download] Proactive Scheduler
+* Unzip the archive
+* That's it. You are ready to go!
+
+The distribution contains sources and binaries with all dependencies.
+
+=== Running the Proactive Scheduler
+
+First of all, start a command shell and go into the *bin* directory into your installed scheduler home path.
+
+----
+$ cd bin
+----
+
+----
+$ jrunscript start-server.js
+----
+If everything goes well the output should be the following
+----
+---------------------------------
+    Starting server processes
+---------------------------------
+
+Running Resource Manager process ...
+> Starting the resource manager...
+> The resource manager with 4 local nodes created on pnp://hostname.local:64738/
+Resource Manager stdout/stderr redirected into /home/user/proactive_scheduling/.logs/RM-stdout.log
+
+Running Scheduler process ...
+> RM URL : pnp://localhost:64738
+> Starting the scheduler...
+> Connecting to the resource manager on pnp://localhost:64738
+> The scheduler created on pnp://hostname.local:52845/
+Scheduler stdout/stderr redirected into /home/user/proactive_scheduling/.logs/Scheduler-stdout.log
+
+Running Jetty process ...
+Unable to locate /home/user/proactive_scheduling/dist/war directory, jetty will not be started
+Preparing to wait for processes to exit ...
+Hit CTRL+C or enter 'exit' to terminate all server processes and exit
+----
+
+
+It creates a database to store ProActive Scheduler jobs and nodes. Then it launches
+several processes for difference purposes
+
+ * *Resource Manager* process that handles all nodes on a cluster
+ * *Scheduler* that accepts jobs from users and orders them
+ * Jetty process with RM's and Scheduler's *REST API* and *web interfaces*.
+ * Jetty provides an access to the *Workflow Studio* that is the web interface for designing you distributed computations.
+ * 4 local executors (ProActive Nodes) that can be used for computations
+
+Now you the Proactive Scheduler is ready to be used!
+
+
+== Configure and run a ProActive Scheduler
+
+The *ProActive Resource Manager (RM)* helps to deploy, administrate and monitor worker nodes.
+A worker node, also known as *Resource Manager Node (RM-Node)* is a Java Virtual Machine process which can be launched on a
+variety of computing resources such as desktop computers, computer clusters or clouds.
+These worker nodes are used by the *ProActive Scheduler* to execute *job tasks*. It is also possible to launch multiple RM-nodes on the same host.
+It will allow the Scheduler to execute several job tasks in parallel on the host.
+
+*Basic* configuration files of Proactive Scheduler can be found inside the distribution.
+
+* job scheduling configuration
+----
+$ config/scheduler/settings.ini
+----
+* node management configuration
+----
+$ config/rm/settings.ini
+----
+* users authentication
+----
+$ config/authentication/login.cfg
+$ config/authentication/group.cfg
+----
+* users permissions
+----
+$ config/security.java.policy-server
+----
+
+*Advanced* configuration involving protocols setups, firewall, ldap.
+
+* network, firewall, protocols configuration
+----
+$ config/proactive/ProActiveConfiguration.xml
+----
+* ldap user authentication parameters
+----
+$ config/authentication/ldap.cfg
+----
+
+
+=== Installation on a cluster
+
+Adding machines of a cluster to the ProActive Scheduler, typically involves unpacking the software on all those host machines.
+Once it's done you need to run a RM-Node on the target machine and connect it to the scheduler. There are two principal ways of
+doing that
+
+* by manually launching a process on the remote side and adding it to the server
+* by initiating the deployment from the server side - http://tbd[node source creation]
+
+If you are not familiar with Proactive Scheduler you may want to try the *first method* as it's easier to understand.
+With the combination of http://tbd[Proactive Agent] it gives you the same result.
+
+The *second method* implies that you have an access to remote hosts (e.g. ssh access) and you want to start/stop RM-nodes
+by launching commands over one of protocols we support. For instance it can be useful when before launching an RM-node you'd
+like to deploy a virtual machine.
+
+==== Running a node
+
+Lets take a closer look at two methods described above. To deploy a node from the remote machine you need
+
+* access this machine (remote desktop, ssh or just go to the lab)
+* go to the folder of the Proactive Scheduler
+* run the following command
+----
+$ bin/unix/rm-start-node -r pnp://localhost:64738
+----
+*-r* options is used to specify the url of the *resource manager*. You can find this url in the output of the server launcher.
+
+Node Source - A node source is defined by an infrastructure and a policy. All the nodes belonging to the same node source will be launched on the same infrastructure, with the same manner (protocol, job submission, ...) and at the time defined by the policy (for details see Section 4.3, “Organizing your nodes”).
+
+Infrastructure manager - The part of node source responsible for node deployment to the particular infrastructure. For instance, it may launch JVM over ssh or by submitting a specific job to the native scheduler of the system.
+
+Policy - The part of node source defining rules and limitations of node source utilization. All policies require to define administrator of the node source and a set of its users, so that you can limit nodes utilization. Beside, the policy defines rules of nodes deployment, like static deployment (all nodes are launched at the moment of node source creation and never removed) or time slot deployment (nodes are deployed for particular time) or others.
+
+==== Scripts
+==== SSH
+==== Agents
+=== Installation on a cluster with remote external nodes
+==== Running nodes across firewalls
+
+== User authentication & Permissions
+Clients of the scheduler are authenticated at connection time by providing their credentials incapsulating encripted login and a password.
+
+The Keypair can be generated with the key-gen[.bat] script:
+
+----
+bin/unix $ ./key-gen -p $HOME/.proactive/priv.key -P $HOME/.proactive/pub.key
+----
+Accordingly, the Resource Manager configuration must be set so that, when started:
+
+* pa.rm.auth.privkey.path=$HOME/.proactive/priv.key
+* pa.rm.auth.pubkey.path=$HOME/.proactive/pub.key
+
+Although no encryption should be performed on server side, the public key should be known from the Resource Manager:
+indeed, a client can request the public key to the Resource Manager so that it may encrypt its credentials to perform
+authentication. This method does not require the Resource Manager's administrator to manually propagate public
+keys to all its users. Users can encrypt their credentials with the create-cred[.bat] script.
+See Section 4.4.1, “Start and stop the resource manager” for client-side configuration.
+
+==== Select authentication method
+
+The resource manager manages users authentication and authorization, it has to store users account/password, and check
+login and password at connection. This storage of users accounts can be managed in two ways: by files, or by LDAP.
+A Resource Manager property (in config/rm/settings.ini) specifies which kind of authentication will be used:
+
+----
+#Property that defines the method that has to be used for logging users to the Resource Manager
+#It can be one of the following values:
+#    - "RMFileLoginMethod" to use file login and group management
+#    - "RMLDAPLoginMethod" to use LDAP login management
+pa.rm.authentication.loginMethod=RMFileLoginMethod
+----
+
+==== File
+
+By default, the resource manager stores users accounts, passwords, and group memberships (user or admin), in two files:
+
+*config/authentication/login.cfg stores users and passwords accounts. Each line has to look like user:passwd. The default login.cfg file is given hereafter:
+----
+admin:admin
+user:pwd
+demo:demo
+----
+
+*config/authentication/group.cfg stores users membership. For each user registered in login.cfg, a group membership has to be defined in this file. Each line has to look like user:group. Group has to be user to have user rights, or admin to have administrator rights. Default group.cfg is like this:
+----
+admin:admin
+demo:admin
+user:user
+----
+
+You can change the default paths of these two files. Edit file config/rm/settings.ini and change the two properties:
+
+* pa.rm.defaultloginfilename - To define a user/password file, change this line as follows: pa.rm.defaultloginfilename=/etc/rm/mylogins.cfg
+* pa.rm.defaultgroupfilenamee - To define a group membership file, change the line as follows: pa.rm.defaultloginfilename=/etc/rm/mygroups.cfg
+
+==== LDAP
+
+The resource manager is able to connect to an existing LDAP, to check users login/password and verify users group
+membership. This authentication method can be used with existing LDAP server which is already configured.
+In order to use it, few parameters have to be configured, such as path in LDAP tree users, LDAP groups that define
+user and admin group membership, URL of the LDAP server, LDAP binding method used by connection and configuration
+of SSL/TLS if you want a secured connection between the resource manager and LDAP.
+
+We assume that LDAP server is configured in the way that:
+
+* all existing users and groups are located under single domain
+* users have object class specified in parameter "pa.ldap.user.objectclass"
+* groups have object class specified in parameter "pa.ldap.group.objectclass"
+* user and group name is defined in cn (Common Name) attribute
+
+----
+# EXAMPLE of user entry
+#
+# dn: cn=jdoe,dc=example,dc=com
+# cn: jdoe
+# firstName: John
+# lastName: Doe
+# objectClass: inetOrgPerson
+
+# EXAMPLE of group entry
+#
+# dn: cn=mygroup,dc=example,dc=com
+# cn: mygroup
+# firstName: John
+# lastName: Doe
+# uniqueMember: cn=djoe,dc=example,dc=com
+# objectClass: groupOfUniqueNames
+----
+
+*settings.ini* in *config/rm* directory, defines a path to a configuration file that contains all LDAP connection and authentication properties. Default value for this property defines a default configuration file: config/authentication/ldap.cfg. Specify your LDAP properties in this file. Properties are explained below.
+
+. Set LDAP url
++
+First, you have to define the LDAP's URL of your organisation. This address corresponds to the property: pa.ldap.url. You have to put a standard LDAP-like URL, for example ldap://myLdap. You can also set an URL with secure access: ldaps://myLdap:636. See Section 4.1.2.4.4, “Set SSL/TLS parameters” for SSL/TLS configuration.
++
+. Define object class of user and group entities
++
+Then you need to define how to differ user and group entities in LDAP tree. The users object class is defined by property pa.ldap.user.objectclass and by default is "inetOrgPerson". For groups, the property pa.ldap.group.objectclass has a default value "groupOfUniqueNames" which could be changed.
+
+. Configure LDAP authentication parameters
++
+By default, the resouce manager binds to LDAP in anonymous mode. You can change this authentication method by modifying the property pa.ldap.authentication.method. This property can have several values:
++
+* none (default value) - the resource manager performs connection to LDAP in anonymous mode.
+* simple - the resource manager performs connection to LDAP with a specified login/password (see below for user password setting).
++
+You can also specify a SASL mechanism for LDAPv3. There are many SASL available mechanisms: cram-md5, digest-md5, kerberos4... Just put sasl to this property to let the resource manager JVM choose SASL authentication mechanism.
+If you specify an authentication method different from 'none' (anonymous connection to LDAP), you must specify a login/password for authentication. There are two properties to set in LDAP configuration file:
++
+* pa.ldap.bind.login - sets user name for authentication.
+* pa.ldap.bind.pwd - sets password for authentication.
++
+. Set SSL/TLS parameters
++
+The ProActive Resource Manager is able to communicate with LDAP with a secured SSL/TLS layer. It can be useful if your network is not trusted, and critical information are transmitted between the rm server and LDAP, such as user passwords. First, set the LDAP URL property pa.ldap.url to a URL of type ldaps://myLdap. Then set pa.ldap.authentication.method to none so as to delegate authentication to SSL.
++
+For using SSL properly, you have to specify your certificate and public keys for SSL handshake. Java stores certificates in a keyStore and public keys in a trustStore. In most of the cases, you just have to define a trustStore with public key part of LDAP's certificate. Put certificate in a keyStore, and public keys in a trustStore with the keytool command (keytool command is distributed with standard java platforms):
++
+* keytool -import -alias myAlias -file myCertificate -keystore myKeyStore
+myAlias is the alias name of your certificate, myCertificate is your private certificate file and myKeyStore is the new keyStore file produced in output. This command asks you to enter a password for your keyStore.
++
+Put LDAP certificate's public key in a trustStore, with the keytool command:
++
+* keytool -import -alias myAlias -file myPublicKey -keystore myTrustStore
+myAlias is the alias name of your certificate's public key, myPublicKey is your certificate's public key file and myTrustore is the new trustStore file produced in output. This command asks you to enter a password for your trustStore.
++
+Finally, in config/authentication/ldap.cfg, set keyStore and trustStore created before to their respective passwords:
++
+* Set pa.ldap.keystore.path to the path of your keyStore.
+* Set pa.ldap.keystore.passwd to the password defined previously for keyStore.
+* Set pa.ldap.truststore.path to the path of your trustStore.
+* Set pa.ldap.truststore.passwd to the password defined previously for trustStore.
+
+. Use fall back to file authentication
++
+You can use simultaneously file-based authentication and LDAP-based authentication. Then Resource Manager can check user password and group membership in login and group files, as performed in FileLogin method, if user or group is not found in LDAP. It uses pa.rm.defaultloginfilename and pa.rm.defaultgroupfilename files to authenticate user and check group membership. There are two rules:
+
+If LDAP group membership checking fails, fall back to group membership checking with group file. To activate this behavior set pa.ldap.group.membership.fallback to true, in LDAP configuration file.
+If a user is not found in LDAP, fall back to authentication and group membership checking with login and group files. To activate this behavior, set pa.ldap.authentication.fallback to true, in LDAP configuration file.
+
+==== Permissions
+
+All users authenticated in the resource manager have they own role according to granted permissions. In the resource manager, we use standard Java Authentication and Authorization Service (JAAS) to address these needs. Security support on the method call level is provided by ProActive programming. This mechanism will not be discussed here and is described in details in the ProActive Programming documentation.
+
+On the resource manager, level permissions allow to:
+
+* perform user actions, like get/release nodes, add/remove node, etc.
+* access node sources and limit nodes utilization to particular user/group
+
+Users are organized in groups and after authentication each of them has a single UserPrincipal and some GroupPrincipals
+(may not have them). Using this principals, the permissions are granted in the security policy file, like the following:
+
+----
+grant principal org.ow2.proactive.authentication.principals.UserNamePrincipal "john" {
+    permission org.ow2.proactive.permissions.MethodCallPermission "org.ow2.proactive.resourcemanager.core.RMCore.getAtMostNodes";
+    permission org.ow2.proactive.permissions.MethodCallPermission "org.ow2.proactive.resourcemanager.core.RMCore.releaseNodes";
+};
+----
+
+This means that user "john" can request nodes for computations and release them. It cannot perform any administrative
+actions (they have to be listed explicitly).
+
+Permissions could be granted to groups and in this case will be applicable to all group members. For example, we may
+define a group of users who provides computing resourses. We allow them to call add/remove nodes methods, so that they
+will be able to add their nodes to the resource manager.
+
+----
+grant principal org.ow2.proactive.authentication.principals.GroupNamePrincipal "providers" {
+    permission org.ow2.proactive.permissions.MethodCallPermission "org.ow2.proactive.resourcemanager.core.RMCore.getAtMostNodes";
+    permission org.ow2.proactive.permissions.MethodCallPermission "org.ow2.proactive.resourcemanager.core.RMCore.getExactlyNodes";
+    permission org.ow2.proactive.permissions.MethodCallPermission "org.ow2.proactive.resourcemanager.core.RMCore.releaseNode";
+    permission org.ow2.proactive.permissions.MethodCallPermission "org.ow2.proactive.resourcemanager.core.RMCore.releaseNodes";
+
+    permission org.ow2.proactive.permissions.MethodCallPermission "org.ow2.proactive.resourcemanager.core.RMCore.addNode";
+    permission org.ow2.proactive.permissions.MethodCallPermission "org.ow2.proactive.resourcemanager.core.RMCore.removeNode";
+
+    permission org.ow2.proactive.permissions.MethodCallPermission "org.ow2.proactive.resourcemanager.core.RMCore.getNodesList";
+    permission org.ow2.proactive.permissions.MethodCallPermission "org.ow2.proactive.resourcemanager.core.RMCore.getNodeSourcesList";
+    permission org.ow2.proactive.permissions.MethodCallPermission "org.ow2.proactive.resourcemanager.core.RMCore.getFreeNodesNumber";
+    permission org.ow2.proactive.permissions.MethodCallPermission "org.ow2.proactive.resourcemanager.core.RMCore.getTotalNodesNumber";
+    permission org.ow2.proactive.permissions.MethodCallPermission "org.ow2.proactive.resourcemanager.core.RMCore.getTotalAliveNodesNumber";
+    permission org.ow2.proactive.permissions.MethodCallPermission "org.ow2.proactive.resourcemanager.core.RMCore.getRMState";
+    permission org.ow2.proactive.permissions.MethodCallPermission "org.ow2.proactive.resourcemanager.core.RMCore.getState";
+    permission org.ow2.proactive.permissions.MethodCallPermission "org.ow2.proactive.resourcemanager.core.RMCore.isActive";
+    permission org.ow2.proactive.permissions.MethodCallPermission "org.ow2.proactive.resourcemanager.core.RMCore.isAlive";
+    permission org.ow2.proactive.permissions.MethodCallPermission "org.ow2.proactive.resourcemanager.core.RMCore.getMonitoring";
+
+    permission org.ow2.proactive.permissions.MethodCallPermission "org.ow2.proactive.resourcemanager.core.RMCore.disconnect";
+};
+----
+
+But having the permission of add/remove method call is not enough to actually add nodes. As all the nodes in the resource
+manager are organized in node sources user has to have the node source administration permission. This permission cannot
+be granted in java security policy file and defines at node source creation time by specifying which group or user will
+use nodes from this source and administrate them.
+
+There is a permission which authorized to perform any actions. For this needs, we have implemented custom
+org.ow2.proactive.permissions.AllPermission to seperate an absulute freedom inside the resource manager from JVM.
+The following is the usage of this permission in group of administrators:
+
+----
+grant principal org.ow2.proactive.authentication.principals.GroupNamePrincipal "admin" {
+    permission org.ow2.proactive.permissions.AllPermission;
+};
+----
+
+The longest security check is at the moment of removing node. Here we verify that the user
+
+* can call removeNode method
+* can administrate the node source where the node is
+* is the one who added the node (or has AllPermission)
+
+In order to use JMX monotoring interface, the standart javax.management.MBeanPermission has to be granted.
+Through JMX, we expose an account data as well and for non-admin users we show them only their accounts
+
+----
+grant principal org.ow2.proactive.authentication.principals.GroupNamePrincipal "user" {
+    ...
+    // AuthPermission is requires for those who would like to access any mbean
+    permission javax.security.auth.AuthPermission "getSubject";
+    permission javax.management.MBeanPermission "-#-[-]", "queryNames";
+    permission javax.management.MBeanPermission "javax.management.MBeanServerDelegate#-[JMImplementation:type=MBeanServerDelegate]", "addNotificationListener";
+    permission javax.management.MBeanPermission "org.ow2.proactive.scheduler.core.jmx.mbean.MyAccountMBeanImpl#*[*:*]", "*";
+    permission javax.management.MBeanPermission "org.ow2.proactive.resourcemanager.core.jmx.mbean.MyAccountMBeanImpl#*[*:*]", "*";
+    permission javax.management.MBeanPermission "org.ow2.proactive.resourcemanager.core.jmx.mbean.RuntimeDataMBeanImpl#*[*:*]", "*";
+    ...
+};
+----
+
+The default java security file used with the resource manager is located in config directory *$SCHEDULER_HOME/config/security.java.policy-server*.
+
+== Control the resource usage
+=== Policies
+=== Agents schedule
+
+== Monitor the cluster state
+=== Nodes
+==== States
+
+In order to provide an access to shared resources, the resource manager maintains different node states:
+
+* Deploying - The deployment of the node has been triggered by the resource manager but it has not yet been added.
+* Lost - The deployment of the node has failed for some reason. The node has never been added to the resource manager and won't be usable.
+* Configuring - Node has been added to the resource manager and is under configuration. The resource manager computes several information about the node. This step can be time consuming depending.
+* Free - Node is available for computations.
+* Busy - Node has been given to user to execute computations.
+* Locked - Node is under maintenance and cannot be used for computations.
+* To be removed - Node is busy but requested to be removed. So it will be removed once the client will release it.
+* Down - Node is unreachable or down and cannot be used anymore.
+
+==== JMX
+
+=== Accounting
+
+== Troubleshooting
+=== Logs
 
 == References
+=== Scheduler/RM properties
+=== CLI tools
 
 [appendix]
 === Properties reference
