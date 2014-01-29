@@ -2,39 +2,36 @@
 include::../common.adoc[]
 :imagesdir: src/docs/admin/images
 
-The administration guide covers cluster setup and cluster administration.
+=== Overview
 
-== Overview
+The administration guide covers cluster setup and cluster administration. Cluster setup includes two main steps
 
-The ProActive Scheduler is the software for coupling distributed resources in order to solve large-scale problems.
-The distributed resources are represented by Java virtual machines (JVM) which can be launched on desktop computers, clusters or clouds.
-The Proactive Scheduler provides a single point of access to all resources enabling an effective way of selecting them for computations with the criteria you need.
+* the installation and configuration of the *scheduler server*
+* *computing nodes* setup
 
-More precisely, the Proactive Scheduler does the following:
 
-* Deploys nodes automatically to different types of infrastructure (i.e. grid, cloud, another resource manager, etc).
-* Provides a single entry point to all resources it manages.
-* Schedules computations finding appropriate resources for them.
+=== What you will need
 
-== Getting started
-=== Prerequisites
-
-* Java Development Kit (JDK) 1.6 or higher
-
+* http://www.oracle.com/technetwork/java/javase/downloads/index.html[JDK 1.6] or later
++
 TIP: The Proactive Scheduler works with OpenJDK but it is recommended to use JDK from Oracle.
+* http://www.activeeon.com/community-downloads[Proactive Scheduler]
 
-=== Installation Linux/MacOS/Windows
+=== Set up the server
 
-* http://www.activeeon.com/community-downloads[Download] Proactive Scheduler
-* Unzip the archive
+To *start from scratch*
+
+* http://www.activeeon.com/community-downloads[Download] Proactive scheduler and unzip the archive
+* cd into the ProActiveScheduling-version
 * That's it. You are ready to go!
 
 The distribution contains sources and binaries with all dependencies.
 
-=== Running the Proactive Scheduler
+=== Running Proactive Scheduler
 
-First of all, start a command shell and go into the *bin* directory into your installed scheduler home path.
+Proactive Scheduler is ready to be started without an extra configuration.
 
+[source]
 ----
 $ cd bin
 ----
@@ -43,6 +40,7 @@ $ cd bin
 $ jrunscript start-server.js
 ----
 If everything goes well the output should be the following
+[source]
 ----
 ---------------------------------
     Starting server processes
@@ -77,14 +75,14 @@ several processes for difference purposes
 
  * *Resource Manager* process that handles all nodes on a cluster
  * *Scheduler* that accepts jobs from users and orders them
- * Jetty process with RM's and Scheduler's *REST API* and *web interfaces*.
- * Jetty provides an access to the *Workflow Studio* that is the web interface for designing you distributed computations.
- * 4 local executors (ProActive Nodes) that can be used for computations
+ * A web server with RM's and Scheduler's *REST API* and *web interfaces*.
+ * *Workflow Studio* that is the web interface for designing you distributed computations.
+ * 4 local *computing nodes* (JVM)
 
 Now you the Proactive Scheduler is ready to be used!
 
 
-== Configure and run a ProActive Scheduler
+=== Configuring the server
 
 The *ProActive Resource Manager (RM)* helps to deploy, administrate and monitor worker nodes.
 A worker node, also known as *Resource Manager Node (RM-Node)* is a Java Virtual Machine process which can be launched on a
@@ -695,6 +693,7 @@ The ProActive Resource Manager supports nodes aggregation from heterogeneous env
 *Infrastructure manager* is responsible for communicating with an infrastructure. When a new node has to be deployed, an infrastructure manager will launch new JVM or just request an already existing nodes running somewhere. All these details are specific to the infrastructure manager implementation.
 
 ==== Node Source Policy
+
 
 *Node source policy* is a set of rules and conditions which describes when and how many nodes have to be acquired or released. Policies use node source API to manage the node acquisition.
 
