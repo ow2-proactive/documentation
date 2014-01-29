@@ -22,7 +22,7 @@ TIP: The Proactive Scheduler works with OpenJDK but it is recommended to use JDK
 To *start from scratch*
 
 * http://www.activeeon.com/community-downloads[Download] Proactive scheduler and unzip the archive
-* cd into the ProActiveScheduling-version
+* cd into the +ProActiveScheduling-version+
 * That's it. You are ready to go!
 
 The distribution contains sources and binaries with all dependencies.
@@ -79,28 +79,15 @@ several processes for difference purposes
  * *Workflow Studio* that is the web interface for designing you distributed computations.
  * 4 local *computing nodes* (JVM)
 
-Now you the Proactive Scheduler is ready to be used!
+Now your Proactive Scheduler is ready to execute jobs!
 
 
 === Configuring the server
 
-The *ProActive Resource Manager (RM)* helps to deploy, administrate and monitor worker nodes.
-A worker node, also known as *Resource Manager Node (RM-Node)* is a Java Virtual Machine process which can be launched on a
-variety of computing resources such as desktop computers, computer clusters or clouds.
-These worker nodes are used by the *ProActive Scheduler* to execute *job tasks*. It is also possible to launch multiple RM-nodes on the same host.
-It will allow the Scheduler to execute several job tasks in parallel on the host.
+All configuration files of Proactive Scheduler can be found inside the distribution. First you need tu set up
+*users and permissions*
 
-*Basic* configuration files of Proactive Scheduler can be found inside the distribution.
-
-* job scheduling configuration
-----
-$ config/scheduler/settings.ini
-----
-* node management configuration
-----
-$ config/rm/settings.ini
-----
-* users authentication
+* user and group configs
 ----
 $ config/authentication/login.cfg
 $ config/authentication/group.cfg
@@ -110,7 +97,18 @@ $ config/authentication/group.cfg
 $ config/security.java.policy-server
 ----
 
-*Advanced* configuration involving protocols setups, firewall, ldap.
+To change *server parameters* you may want to look into
+
+* job scheduling configuration
+----
+$ config/scheduler/settings.ini
+----
+* node management configuration
+----
+$ config/rm/settings.ini
+----
+
+*Advanced* configuration involves protocols setup, firewall and ldap configuration.
 
 * network, firewall, protocols configuration
 ----
