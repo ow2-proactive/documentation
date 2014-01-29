@@ -1,24 +1,24 @@
 buildscript {
     repositories {
-        mavenLocal()
-        maven {
-            name 'Bintray Asciidoctor repo'
-            url 'http://dl.bintray.com/content/aalmiray/asciidoctor'
-        }
-        jcenter()
+        mavenCentral()
+        maven { url 'http://repo.activeeon.com/content/repositories/thirdparty/' }
     }
 
     dependencies {
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:0.8.0-SNAPSHOT'
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:0.8.0'
     }
 }
 
 apply plugin: 'asciidoctor'
 
+//def outputFormats = ['fopub','html5']
+def outputFormats = ['html5']
+
 task('user', type: org.asciidoctor.gradle.AsciidoctorTask) {
     sourceDocumentName file('src/docs/user/ProActiveUserGuide.adoc')
     sourceDir = sourceDocumentName.parentFile
     baseDir = sourceDocumentName.parentFile
+    backends = outputFormats
     options = [
             stylesheet: 'src/docs/activeeon.css'
     ]
@@ -28,6 +28,7 @@ task admin(type: org.asciidoctor.gradle.AsciidoctorTask) {
     sourceDocumentName file('src/docs/admin/ProActiveAdminGuide.adoc')
     sourceDir = sourceDocumentName.parentFile
     baseDir = sourceDocumentName.parentFile
+    backends = outputFormats
     options = [
             stylesheet: 'src/docs/activeeon.css'
     ]
@@ -37,6 +38,7 @@ task developer(type: org.asciidoctor.gradle.AsciidoctorTask) {
     sourceDocumentName file('src/docs/developer/ProActiveDeveloperGuide.adoc')
     sourceDir = sourceDocumentName.parentFile
     baseDir = sourceDocumentName.parentFile
+    backends = outputFormats
     options = [
             stylesheet: 'src/docs/activeeon.css'
     ]
