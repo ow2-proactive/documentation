@@ -1,1 +1,132 @@
-TODO
+= User guide
+include::../common.adoc[]
+
+== Overview
+
+The *Scheduler* allows users to run link:#tasks[tasks] on link:ProActiveAdminGuide.html#nodes[distributed resources].
+Tasks are provided the user and can range from simple commands to complex link:#workflows[workflows].
+
+Resources can be of various forms, desktop machines, servers, virtual machines or clouds.
+They are all managed as link:ProActiveAdminGuide.html#nodes[nodes] by the *Scheduler*.
+When the user submits tasks, the *Scheduler* will select
+nodes to run them.
+
+With the help of the Workflow Studio, users can easily run tasks in parallel on heterogeneous resources.
+
+== Get started
+
+The first thing you need is a Scheduler running either:
+
+- Locally on your machine, see the link:ProActiveAdminGuide.html#_getting_started[Administration guide] to help you with a local installation
+- On http://try.activeeon.com[try.activeeon.com], our free demo platform
+- On an existing installation
+
+Then to use the Scheduler, web interfaces are available to:
+
+- Create workflows
+- Submit workflows, monitor their execution and retrieve the tasks results
+- Add resources and monitor them
+
+We also provide REST and command line interfaces for advanced users.
+
+== Create and run your computation
+
+=== Jobs, workflows and tasks
+
+A **Job** is the entity to be submitted to the scheduler. It is composed
+of one or more **tasks**, the workflow. Tasks can be of different nature:
+
+* Native, an executable with eventual parameters to be executed
+* Script, a script writen in Groovy, Ruby, Python and other languages supported by the JSR-223
+* Java, a task written in Java extending the Scheduler API
+
+A *workflow* is a set of tasks which can be executed either in parallel
+or according to a dependency tree. When you build your job, you create a graph of tasks,
+with a definition of predecessor/successor between tasks:
+
+TODO image workflow
+
+In this tasks graph, we see that task 4 is preceded by task 1, that
+means scheduler waits the end of task 1 execution before launching task
+4. In a more concrete way, task 1 could be the calculation of a part of
+the problem to solve, and task 4 takes result provided by task 1 and
+compute another step of the calculation. We introduce here the concept
+of **result passing** between tasks, explained later. This relation is
+called a dependence, and we say that task 4 **depends** on task 1.
+
+We see that task 1, 2 and 3 are not linked, so these three tasks can be
+executed in **parallel**, because there are independent from each other.
+
+Definition of the workflow graph is made at job definition, before
+scheduling, and cannot be modified during the job execution
+
+A *finished job* contains the results and logs of each task. Upon failure,
+a task can be restarted automatically or cancelled.
+
+=== A simple example
+
+The http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial] on http://try.activeeon.com[try.activeeon.com]
+shows you how to build a simple workflow using script tasks.
+
+=== More examples
+
+==== Native application
+
+Using native tasks you can easily reuse existing applications and embed them in a workflow. For instance let's imagine
+Concrete example
+
+Native application by nature can be tied to a given operating system so
+if you have different nodes at your disposal, you might need to select a suitable node to run your native task.
+This can be achieved using selection script.
+
+==== Scripts (more languages example ruby, python)
+
+Scripts are for debug/small tasks
+
+==== MPI application
+
+mpirun example
+
+=== Run a workflow
+
+submission
+
+==== Job/Task states
+==== Retrieve results
+
+== Data Management
+
+Passing data between tasks
+parameters / results
+variable / properties (example: native task with env variables, using pre script XOR forkenv)
+Input/Output data (introduce NFS, dataspaces, global and user spaces)
+A job that reads data from files and outputs in a file
+
+== Workflow concepts
+
+Control flow
+If
+Replicate
+Example: Solving a Parameter sweeping/Embarrassingly parallel problem (Link to tutorial)
+Loop
+
+== Job/Task customization
+
+Workflow scripts
+Selection
+Pre/Post/Clean
+Control execution
+Run computation on a particular node (Selection?)
+Run computation with your system account
+Reserve more than one node for a task (parallel environment)
+Handling failures (retry on error, max number of exec, cancel on error, ...)
+Planification
+
+
+== References
+
+[appendix]
+=== Job and task specification
+
+[appendix]
+=== CLI tools
