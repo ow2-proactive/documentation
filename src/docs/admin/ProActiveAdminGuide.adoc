@@ -9,25 +9,22 @@ The administration guide covers cluster setup and cluster administration. Cluste
 * the installation and configuration of the *scheduler server*
 * *computing nodes* setup
 
-PIC MISSING
+image::architecture.png[]
 
 === Getting Started
 
 ==== What you will need
 
 * http://www.oracle.com/technetwork/java/javase/downloads/index.html[JDK 1.6] or later
-+
-TIP: The Proactive Scheduler works with OpenJDK but it is recommended to use JDK from Oracle.
 * http://www.activeeon.com/community-downloads[Proactive Scheduler]
+
+NOTE: The Proactive Scheduler works with OpenJDK but it is recommended to use JDK from Oracle.
 
 ==== Set up from scratch
 
-* choose one *head node* in your cluster
-* http://www.activeeon.com/community-downloads[Download] Proactive Scheduler and unzip the archive
-* put the distribution on every *computing nodes* in your cluster
-* Optionally http://www.activeeon.com/community-downloads[download] Proactive Agents if you need to set up Proactive
-as a service on computing nodes or limit the resource consumptions of Proactive on nodes
+http://www.activeeon.com/community-downloads[Download] Proactive Scheduler and *unzip* the archive.
 
+The extracted folder will be referenced as +PROACTIVE_HOME+ in the rest of the documentation
 The distribution contains all required dependencies.
 
 ==== Running Proactive Scheduler
@@ -36,13 +33,17 @@ Proactive Scheduler is ready to be started without an extra configuration.
 
 [source]
 ----
-$ cd bin
+$ cd PROACTIVE_HOME/bin
 ----
 
 ----
 $ jrunscript start-server.js
 ----
-If everything goes well the output should be the following
+
+TIP: If the command +jrunscript+ cannot be found, http://docs.oracle.com/javase/7/docs/webnotes/install/windows/jdk-installation-windows.html#path[check that the +PATH+ environment variable contains the JDK executables].
+
+When started, Scheduler, Resource Manager and Web portals URLs are displayed.
+
 [source]
 ----
 ---------------------------------
@@ -72,13 +73,12 @@ Preparing to wait for processes to exit ...
 Hit CTRL+C or enter 'exit' to terminate all server processes and exit
 ----
 
+As presented in the <<_overview>>, all the ProActive Scheduler components are started :
 
-It creates a database to store ProActive Scheduler jobs and nodes. Then it launches
-several processes for difference purposes
-
- * *Resource Manager* process that handles all nodes on a cluster
+ * *Resource Manager* that handles all nodes on a cluster
  * *Scheduler* that accepts jobs from users and orders them
- * A web server with RM's and Scheduler's *REST API* and *web interfaces*.
+ * *REST API* for the Resource Manager and Scheduler
+ * *Web portals* for the Resource Manager and Scheduler
  * *Workflow Studio* that is the web interface for designing you distributed computations.
  * 4 local *computing nodes* (JVM)
 
@@ -86,6 +86,28 @@ Now your Proactive Scheduler is ready to execute jobs!
 
 
 === Configuring the Server
+
+
+.ProActive configuration files
+|===
+|Component | Description|File |Reference
+
+.1+^.^|Scheduler
+|Scheduling Properties|config/scheduler/settings.ini|<<TODO>>
+
+.1+^.^|Resource Manager
+|Node management configuration|config/scheduler/settings.ini|<<TODO>>
+
+.1+^.^|Networking
+|Network, firewall, protocols configuration|config/proactive/ProActiveConfiguration.xml|<<TODO>>
+
+.4+^.^|Security
+|User logins and passwords|config/authentication/login.cfg|<<TODO>>
+|User group assignments|config/authentication/group.cfg|<<TODO>>
+|User permissions|config/security.java.policy-server|<<TODO>>
+|LDAP configuration|config/authentication/ldap.cfg|<<TODO>>
+
+|===
 
 All configuration files of Proactive Scheduler can be found inside the distribution. First you need tu set up
 *users and permissions*
