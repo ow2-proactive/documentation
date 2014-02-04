@@ -87,6 +87,7 @@ Now your Proactive Scheduler is ready to execute jobs!
 
 === Configuring the Server
 
+All configuration files of Proactive Scheduler can be found inside the distribution.
 
 .ProActive configuration files
 |===
@@ -108,41 +109,6 @@ Now your Proactive Scheduler is ready to execute jobs!
 |LDAP configuration|config/authentication/ldap.cfg|<<TODO>>
 
 |===
-
-All configuration files of Proactive Scheduler can be found inside the distribution. First you need tu set up
-*users and permissions*
-
-* user and group configs
-----
-$ config/authentication/login.cfg
-$ config/authentication/group.cfg
-----
-* users permissions
-----
-$ config/security.java.policy-server
-----
-
-To change *server parameters* you may want to look into
-
-* job scheduling configuration
-----
-$ config/scheduler/settings.ini
-----
-* node management configuration
-----
-$ config/rm/settings.ini
-----
-
-*Advanced* configuration involves protocols setup, firewall and ldap configuration.
-
-* network, firewall, protocols configuration
-----
-$ config/proactive/ProActiveConfiguration.xml
-----
-* ldap user authentication parameters
-----
-$ config/authentication/ldap.cfg
-----
 
 
 === Installation on a Cluster
@@ -206,7 +172,29 @@ To create a node source you can either
 * use the http://tbd[rest api]
 * use the http://tbd[command line client] inside the distribution
 
-MISSING
+In order to create ssh node source you should first configure an *ssh access* from the head node to computing nodes
+that http://www.linuxproblem.org/art_9.html[does not require password]. Then create a text file where you list all
+your computing nodes and number of jobs that can be launch in parallel, e.g.
+
+[source]
+----
+# you can use network names
+host1.mydomain.com 2
+host2.mydomain.com 4
+# or ip addresses
+192.168.0.10 8
+192.168.0.11 16
+----
+
+Then using this file create a node source either from the *Resource Manager web interface* or from the "command line"
+[source]
+----
+$ cd SCHEDULER_HOME
+$ ./bin/unix/rm-client -createns ssh_node_source --infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.SSHInfrastructure rmi://hostname:1099/ hosts_file 60000 3 \"\" /home/user/jdk/bin/java /home/user/scheduling Linux \"\" config/authentication/rm.cred
+----
+
+In this command line you specify a path to JDK scheduler distribution on remote hosts. They should be the same on
+all computing nodes.
 
 ==== Agents
 
@@ -330,20 +318,162 @@ The main troubles you may have to face are the following ones:
 * You get an *authentication error*: this is probably due to your default credentials file which cannot be found. In the "Connection" tab of the Configuration Editor (Figure 5.4, “Configuration Editor window - Connection Tab (Resource Manager Registration)”), you can choose the credentials file you want. You can select, for instance, the credentials file located at <scheduler directory>/config/authentication/scheduler.cred or your own credentials file.
 * The node seems to be well started but you cannot see it in the Resource Manager interface : in this case, make sure that the *port number* is the good one. Do not forget that the runtime port number is incremented from the initial resource manager port number. You can see exactly on which port your runtime has been started looking at the log file describing above.
 
-===== Install Agents on Linux
 
-MISSING
+===== Linux Agent
+
+To install proactive agent on linux
+
+
+* download the debian installer from the download page of http://www.activeeon.com/community-downloads[ActiveEon website]
+
+* install the package
+
+    sudo dpkg -i proactive-agent-standalone.deb
+
+By default the Linux Agent will launch locally a single worker process (a.k.a. RM-Node) but will not register it
+in the ProActive Resource Manager. The user has to configure the agent explicitly by specifying the required
+parameters in the “config.xml” file.
+
+
+===== Configuring Linux Agent
+
+To configure the agent bahavior
+
+* stop the Linux Agent
+
+    sudo /etc/init.d/proactive-agent stop
+
+* update the *config.xml* file in +/opt/proactive-agent+ folder
++
+In case there is no such file directory, create the directory. Create a the *config.xml* file or create a symbolic link
+
+    sudo mkdir -p /opt/proactive-agent
+    sudo ln -f -s <path-to-config-file> /opt/proactive-agent/config.xml
+
+* change the ownership of the “config.xml” file
+
+    sudo chown -Rv proactive:proactivegroup config.xml
+
+If the “proactiveuser” group does not exist, create the group and add “proactive” user to the group:
+
+sudo groupadd proactivegroup
+sudo usermod -g proactivegroup proactive
+
+* start the Linux Agent
+
+    sudo /etc/init.d/proactive-agent start
+
+To *uninstall*
+
+    sudo dpkg -r proactive-agent
+
+In case of *problems* take a look at
+
+    /var/log/proactive/agent/agent.log
+
 
 === Installation on a Cluster with Firewall
 
-MISSING
+When the configuration of the network is unfriendly proactive has a special protocol that help to connect machines
+to Proactive Scheduler without signitican change in your network firewall configuration. This protocol is
+called *PAMR* (Proactive Message Routing Protocol). It has the weakest expectations on how the network is configured.
+
+Unlike all the other communication protocols, PAMR does *not* expect *bidirectional* TCP connections.
+It has been designed to work when only outgoing TCP connections are available. Such environments can be encountered due to
+
+* Network address translation devices
+* Firewalls allowing only outgoing connection (this is the default setup of many personal firewall)
+* Virtual Machines with a virtualized network stack
+
+image::firewall.png[]
+
+When PAMR is activated, each ProActive Scheduler connects to a PAMR router. This connection is kept open, and used
+as a tunnel to receive incoming messages. If the tunnel goes down, it is automatically reopened by nodes.
+
+The biggest drawback of PAMR is that a centralized PAMR router is in charge of routing message between all the PAMR clients.
+To soften this limitation PAMR can be used with other communication protocol. This way, PAMR is used only when needed.
+See http://hudson.activeeon.com/job/ProActive_5.4.x/lastSuccessfulBuild/artifact/doc/built/Programming/ReferenceManual/single_html/ProActiveProgrammingReferenceManual.html#netconfig-multiprotocol[Enabling several communication protocols].
+
+To enable this protocol edit proactive configuration file inside the scheduler distribution
+
+    config/proactive/ProActiveConfiguration.xml
+
+The config file should look like the following
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<ProActiveUserProperties>
+    <properties>
+        <prop key="proactive.net.nolocal" value="true"/>
+        <prop key="proactive.hostname" value="hostname"/>
+        <prop key="proactive.communication.protocol" value="pamr"/>
+        <prop key="proactive.net.router.address" value="router.hostname"/>
+        <prop key="proactive.net.router.port" value="8090"/>
+    </properties>
+    <javaProperties>
+    </javaProperties>
+</ProActiveUserProperties>
+----
+
+Put the same file for all computing nodes. Typically you run the scheduler server on the *same machine* where the router is
+launched. This sample configuration requires to open only one port +8090+ for *incoming connections* on the server host
+and all the computing nodes will be able to connect to the server.
+
+Now in order to run the scheduler you should first run Proactive Router
+
+    $ cd SCHEDULER_HOME/bin
+    $ bash unix/start-router &
+    $ jrunscript start-server.js
 
 === Control the resource usage
-=== Policies
-MISSING
-=== Agents schedule
-MISSING
+==== Policies
 
+You can limit the utilization of resources connected to the Proactive Scheduler in different ways. When you create node
+sources you can use a node source *policy*.
+
+TIP: *Node source policy* is a set of rules and conditions which describes when and how many nodes have to be selected for computations.
+
+Each node source policy regardless it specificity has a common part where you describe users and group permission.
+When you create a policy you must specify them
+
+* *nodeUsers* - utilization permission that defines who can get nodes for computations from this node source. It has to take one of the following values:
+** +ME+ - only the node source creator
+** +users=user1,user2;groups=group1,group2;tokens=t1,t2+ - only specific users, groups or tokens. I.e. users=user1 - node access is limited to user1; users=user1;groups=group1 - node access is limited to user1 and all users from group group1; users=user1;tokens=t1 - node access is limited to user1 or anyone who specified token t1. If node access is protected by a token, node will not be found by the resource manager (getNodes request) unless the corresponding token is specified.
+** +ALL+ - everybody can use nodes from this node source
+
+* *nodeProviders* - provider permission defines who can add nodes to this node source. It should take one of the following values:
+** +ME+ - pnly the node source creator
+** +users=user1,user2;groups=group1,group2+ - only specific users or groups (for our example user1, user2, group1 and group2). It is possible to specify only groups or only users.
+** +ALL+ - everybody can add nodes to this node source
+
+The user created the node source is the administrator of this node source. It can add and removed nodes to it, remove the node source itself,
+but cannot use nodes if usage policy is set to *PROVIDER* or *PROVIDER_GROUPS* (unless it's granted *AllPermissions*).
+
+New infrastructure manager or node source policy can be *dynamically plugged* into Proactive Resource Manager.
+In order to do that, it is just required to add new implemented classes in the class path and update corresponding list in the
+configuration file
+
+    config/rm/nodesource/policies
+
+In the resource manager, there is always a default node source consisted of *DefaultInfrastrucureManager* and *Static policy*.
+It is not able to deploy nodes anywhere but makes it possible to add existing nodes to the scheduler.
+
+Out of the box we support time slot policies, cron policies and many others. Please see deatiled information about policies in http://tbs[References section].
+
+==== Agents schedule
+
+*Node source policies* limit computing nodes utilization on the level of Proactive Scheduler. As the same time
+ if you need fine-grained limits on machine level you need to use *Proactive Agents*.
+
+TIP: The typical scenario is when you use desktop workstation for computations during working hours.
+
+Both linux and windows agents has an ability to
+
+* run node daemons according to the schedule
+* limit resources utilization for these daemons (e.g CPU, memory)
+
+Please see details on http://tbd[agent configuration page]
 
 === User Authentication
 
@@ -592,33 +722,138 @@ grant principal org.ow2.proactive.authentication.principals.GroupNamePrincipal "
 
 
 === Monitor the cluster state
+
+Cluster monitoring typically means checking that all nodes that were added to *Proactive Scheduler*
+are up and running. We don't track for example the free disk space or software upgrade which can be
+better achieved with tolls like http://www.nagios.org[Nagios].
+
+In the *resource management* interface of Proactive Scheduler you can see how many nodes are added to the
+scheduler, which node sources were created and how are using nodes right now.
+
+image::admin_web.png[]
+
+The same info can be seen using the command line
+
+[source]
+----
+$ cd SCHEDULER_HOME
+$ ./bin/unix/rm-client --listnodes
+----
+
+
 ==== Nodes States
 
-In order to provide an access to shared resources, the resource manager maintains different node states:
+When you look at your cluster computing nodes can be in one of the following states
 
-* Deploying - The deployment of the node has been triggered by the resource manager but it has not yet been added.
-* Lost - The deployment of the node has failed for some reason. The node has never been added to the resource manager and won't be usable.
-* Configuring - Node has been added to the resource manager and is under configuration. The resource manager computes several information about the node. This step can be time consuming depending.
-* Free - Node is available for computations.
-* Busy - Node has been given to user to execute computations.
-* Locked - Node is under maintenance and cannot be used for computations.
-* To be removed - Node is busy but requested to be removed. So it will be removed once the client will release it.
-* Down - Node is unreachable or down and cannot be used anymore.
+* +Deploying+ - The deployment of the node has been triggered by the resource manager but it has not yet been added.
+* +Lost+ - The deployment of the node has failed for some reason. The node has never been added to the resource manager and won't be usable.
+* +Configuring+ - Node has been added to the resource manager and is under configuration. The resource manager computes several information about the node. This step can be time consuming depending.
+* +Free+ - Node is available for computations.
+* +Busy+ - Node has been given to user to execute computations.
+* +Locked+ - Node is under maintenance and cannot be used for computations.
+* +To be removed+ - Node is busy but requested to be removed. So it will be removed once the client will release it.
+* +Down+ - Node is unreachable or down and cannot be used anymore.
 
-MISSING
 
 ==== JMX
 
-MISSING
+The JMX interface for remote management and monitoring provides information about the running ProActive Resource Manager and allows the user to modify its configuration.
+For more details about JMX concepts, please refer to official documentation about the http://java.sun.com/j2se/1.5.0/docs/guide/jmx/overview/architecture.html[JMX architecture].
+
+image::jmx_archi.png[]
+
+The following aspects (or services) of the *Proactive Scheduler* are instrumented using MBeans that are managed through a JMX agent.
+
+* *Server status* is exposed using the RuntimeDataMBean
+** The Resource Manager status
+** Available/Free/Busy/Down nodes count
+** Average activity/inactivity percentage
+* The *Accounts Manager* exposes accounting information using the MyAccountMBean and AllAccountsMBean
+** The used node time
+** The provided node time
+** The provided node count
+* Various *management operations* are exposed using the ManagementMBean
+** Setting the accounts refresh rate
+** Refresh all accounts
+** Reload the permission policy file
+
+MBean server can be accessed by remote applications using one of the two available connectors
+
+* The standard solution based on Remote Method Invocation (RMI) protocol is the RMI Connector accessible at the following url:
++service:jmx:rmi:///jndi/rmi://HOSTNAME:PORT/JMXRMAgent+ where
+** *HOSTNAME* is the hostname on which the RM is started
+** *PORT* (5822 by default) is the port number on which the JMX RMI connector server has been started. It is defined by the property pa.rm.jmx.port .
+* The ProActive Remote Objects Connector provides ProActive protocol aware connector accessible at the following url:
++service:jmx:ro:///jndi/PA_PROTOCOL://HOSTNAME:PORT/JMXRMAgent+ where
+** *PA_PROTOCOL* is the protocol defined by the proactive.communication.protocol property
+** *HOSTNAME* is the hostname on which the RM is started
+** *PORT* is the protocol dependent port number usually defined by the property proactive.PA_PROTOCOL.port
+
+The name of the connector (JMXRMAgent by default) is defined by the property *rm.jmx.connectorname*.
+
+The JMX url on which to connect can be obtained from the Authentication API of the RM or by reading the log file located in $SCHEDULER_HOME/.logs/RM.log.
+In that log file, the address you have to retrieve is the one where the JMX RMI connector server has been started
+
+[source]
+----
+[INFO 2010-06-17 10:23:27,813] [RM.AbstractJMXHelper.boot] Started JMX RMI connector server at service:jmx:rmi:///jndi/rmi://kisscool.inria.fr:5822/JMXRMAgent
+----
+
+Once connected, you'll get an access to RM statistics and accounting.
+
+For example, to connect to the Proactive Scheduler JMX Agent with JConsole tool, just enter the url of the standard RMI
+Connector, as well as the username and the password.
+
+image::jmx_jconsole_connect.png[]
+
+Then depending on the allowed permissions browse the attributes of the MBeans.
+
+image::jmx_jconsole.png[]
 
 ==== Accounting
 
-MISSING
+The users of Proactive Scheduler request and offer nodes for computation. To keep track on how much node time was
+consumed or contributed by a particular user, Proactive Scheduler associates a user to an account.
+
+More precisely, the nodes can be manipulated by the following basic operations available to the users
+
+* The +ADD+ operation is a registration of a node into the Resource Manager initiated by a user considered as a node provider.
+A node can be added, through the API, as a result of a deployment process, through an agent or manually from the command line interface.
+* The +REMOVE+ operation is the unregistration of a node from the Resource Manager.
+A node can be removed, through the API, by a user or automatically if it is unreachable by the Resource Manager.
+* The +GET+ operation is a node reservation, for an unknown amount of time, by a user considered as a node owner.
+For example, the ProActive Scheduler can be considered as a user that reserves a node for a task computation.
+* The +RELEASE+ operation on a reserved node by any user.
+
+The following accounting data is gathered by the Resource Manager
+
+* *The used node time*: The amount of time other users have spent in using the resources of a particular user.
+More precisely, for a specific node owner, it is the sum of all time intervals from +GET+ to +RELEASE+.
+* *The provided node time*: The amount of time a user has offered resources to the Resource Manager.
+More precisely, for a specific node provider, it is the sum of all time intervals from +ADD+ to +REMOVE+.
+* *The provided node count*: The number of provided nodes.
+
+The accounting information can be accessed only through a *JMX client* or the resource manager *command line*.
+
 
 === Troubleshooting
 ==== Logs
 
-MISSING
+If something goes wrong the first place to look for the problem are server logs. By default all logs are in
++SCHEDULER_HOME/.logs+ directory.
+
+[source]
+----
+# for problems related to nodes deployment or permissions please check
+SCHEDULER_HOME/.logs/RM.log
+
+# for the problems related to jobs execution check
+SCHEDULER_HOME/.logs/Scheduler.log
+----
+
+Users also have access to server logs of their jobs through the *scheduler web interface*
+
+image::server_logs.png[]
 
 === References
 
