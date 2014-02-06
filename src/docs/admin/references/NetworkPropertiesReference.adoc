@@ -1,0 +1,115 @@
+
+- +proactive.communication.protocol+: Represents the communication protocol, i.e. the protocol used to export
+ objects on remote JVMs. At this stage, several protocols are supported: RMI(rmi), HTTP(http), IBIS/RMI(ibis),
+  SSH tunneling for RMI/HTTP(rmissh), ProActive Message Routing(pamr). It means that once the JVM starts,
+  nodes and active objects that will be created on this JVM will export themselves using the protocol
+  specified in proactive.communication.protocol property. They will be reachable transparently through
+  the given protocol.
+
+The Scheduler is only able to bind to one and only one address. Usually, this limitation is not
+seen by the user and no special configuration is required. The Scheduler tries to use the most suitable network
+address available. But sometimes, the Scheduler fails to elect the right IP address or the user wants to use
+ a given IP address. In such case, you can specify the IP address to use by using theses properties:
+ +proactive.hostname+, +proactive.net.interface+, +proactive.net.netmask+, +proactive.net.nolocal+, +proactive.net.noprivate+.
+
+IPv6 can be enabled by setting the +proactive.net.disableIPv6+ property to false . By default,
+the Scheduler does not use IPv6 addresses.
+
+If none of the +proactive.hostname+ , +proactive.net.interface+ , +proactive.net.netmask+ ,
++proactive.net.nolocal+ , +proactive.net.noprivate+ properties is defined, then the following algorithm is used to elect an IP address:
+
+- If a public IP address is available, then use it. If several ones are available, one is randomly chosen.
+- If a private IP address is available, then use it. If several ones are available, one is randomly chosen.
+- If a loopback IP address is available, then use it. If several ones are available, one is randomly chosen.
+- If no IP address is available at all, then the runtime exits with an error message.
+- If +proactive.hostname+ is set, then the value returned by InetAddress.getByName(+proactive.hostname+)
+ is elected. If no IP address is found, then the runtime exits with an error message.
+
+If +proactive.hostname+ is not set, and at least one of the +proactive.net.interface+ , +proactive.net.netmask+ , +proactive.net.nolocal+ , +proactive.net.noprivate+ is set, then one of the addresses matching all the requirements is elected. Requirements are:
+
+- If +proactive.net.interface+ is set, then the IP address must be bound to the given network interface.
+- If +proactive.net.netmask+ is set, then the IP address must match the given netmask.
+- If +proactive.net.nolocal+ is set, then the IP address must not be a loopback address.
+- If +proactive.net.noprivate+ is set, then the IP address must not be a private address.
+
+- +proactive.useIPaddress+: If set to true, IP addresses will be used instead of machines names.
+ This property is particularly useful to deal with sites that do not host a DNS.
+
+- ++proactive.hostname++: When this property is set, the host name on which the JVM is started
+is given by the value of the property. This property is particularly useful to deal with
+machines with two network interfaces.
+
+
+==== RMI Protocol Properties
+
+- +proactive.rmi.port+: Represents the port number on which to start the RMIRegistry. Default is 1099.
+If an RMIRegistry is already running on the given port, JMS uses the existing registry.
+
+- +proactive.rmi.connect_timeout+: The amount of time in millisecond to way wait while establishing a
+ TCP connection before reporting it as failed. This option allows to not wait the TCP timeout when
+  a machine is firewalled and drop the packets (default Windows firewall behavior).
+
+==== PNP Protocol Properties
+
+The property +proactive.communication.protocol+ must be set to *pnp*.
+
+- +proactive.pnp.port+: The TCP port to bind to. If not set PNP uses a random free port. If the specified
+TCP port is already used PNP will not start and an error message is displayed.
+
+- +proactive.pnp.default_heartbeat+: PNP uses heartbeat messages to monitor TCP socket and
+discover network failures. This value determines how long PNP will wait before the connection
+is considered broken. Heartbeat messages are usually sent every default_heartbeat/2 ms. This value is
+ in milliseconds. This value is a trade-off between fast error discovery and network overhead. The default
+ value is 9000 ms. Setting this value to 0 disable the heartbeat mechanism and client will not be advertised of
+  network failure before the TCP timeout (which can be really long).
+
+- +proactive.pnp.idle_timeout+: PNP channels are closed when unused to free system resources. Establishing a
+ TCP connection is costly (at least 3 RTT) so PNP connections are not closed immediately but after a grace
+  time. By default the grace time is 60 000 ms. Setting this value to 0 disable the autoclosing mechanism,
+  connections are kept open forever.
+
+==== PAMR Protocol Properties
+
+- +proactive.pamr.router.address+: The address of the router to use. Must be set if message routing is enabled.
+ It can be FQDN or an IP address.
+
+- +proactive.pamr.router.port+: The port of the router to use. Must be set if message routing is enabled.
+
+- +proactive.pamr.socketfactory+: The Socket Factory to use by the message routing protocol
+
+- +proactive.pamr.connect_timeout+: Sockets used by the PAMR remote object factory connect to the remote server
+with a specified timeout value. A timeout of zero is interpreted as an infinite timeout.
+The connection will then block until established or an error occurs.
+
+- +proactive.pamr.agent.id+: This property can be set to obtain a given (and fixed) agent ID. This id must be declared
+in the router configuration and must be between 0 and 4096.
+
+- +proactive.pamr.agent.magic_cookie+: The Magic cookie to submit to the router.
+If +proactive.pamr.agent.id+ is set, then this property must also be set to be able
+to use a reserved agent ID.
+
+==== Enabling several communication protocols
+
+- +proactive.communication.additional_protocols+: The set of protocol to use separated by commas.
+
+- +proactive.communication.benchmark.parameter+:  This property is used pass parameters to the benchmark.
+This could be a duration time, a size, ...
+This property is expressed as a String.
+
+- +proactive.communication.protocols.order+: A fixed order could be specified if protocol's
+performance is known in advance and won't change.
+This property explain a preferred order for a subset of protocols declared in the property
+proactive.communication.additional_protocols. If one of the specified protocol isn't exposed,
+it is ignored. If there are protocols that are not declared in this property but which are exposed,
+they are used in the order choose by the benchmark mechanism.
+
+    Example :
+    Exposed protocols : http,pnp,rmi
+    Benchmark Order : rmi > pnp > http
+    Order : pnp
+    This will give the order of use : pnp > rmi > http
+
+- +proactive.communication.protocols.order+: A fixed order could be specified if protocol's performance
+is known in advance and won't change.
+This automatically disabled	RemoteObject's Benchmark.
+

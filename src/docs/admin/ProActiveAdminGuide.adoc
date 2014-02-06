@@ -34,9 +34,6 @@ Proactive Scheduler is ready to be started without an extra configuration.
 [source]
 ----
 $ cd PROACTIVE_HOME/bin
-----
-
-----
 $ jrunscript start-server.js
 ----
 
@@ -94,19 +91,19 @@ All configuration files of Proactive Scheduler can be found inside the distribut
 |Component | Description|File |Reference
 
 .1+^.^|Scheduler
-|Scheduling Properties|config/scheduler/settings.ini|<<TODO>>
+|Scheduling Properties|config/scheduler/settings.ini|<<_scheduler_properties>>
 
 .1+^.^|Resource Manager
-|Node management configuration|config/scheduler/settings.ini|<<TODO>>
+|Node management configuration|config/scheduler/settings.ini|<<_resources_manager_properties>>
 
 .1+^.^|Networking
-|Network, firewall, protocols configuration|config/proactive/ProActiveConfiguration.xml|<<TODO>>
+|Network, firewall, protocols configuration|config/proactive/ProActiveConfiguration.xml|<<_network_properties>>
 
 .4+^.^|Security
-|User logins and passwords|config/authentication/login.cfg|<<TODO>>
-|User group assignments|config/authentication/group.cfg|<<TODO>>
-|User permissions|config/security.java.policy-server|<<TODO>>
-|LDAP configuration|config/authentication/ldap.cfg|<<TODO>>
+|User logins and passwords|config/authentication/login.cfg|<<_file>>
+|User group assignments|config/authentication/group.cfg|<<_file>>
+|User permissions|config/security.java.policy-server|<<_user_permissions>>
+|LDAP configuration|config/authentication/ldap.cfg|<<_ldap>>
 
 |===
 
@@ -135,7 +132,7 @@ to run the following command
 ----
 $ PROACTIVE_HOME/bin/unix/rm-start-node -r pnp://localhost:64738
 ----
-where +-r+ option is used to specify the url of the *resource manager*. You can find this url in the output of the server launcher.
+where +-r+ option is used to specify the URL of the *resource manager*. You can find this URL in the output of the server launcher.
 
 It is also possible to launch a node without even copying proactive on a remote machine. To to is you need to:
 
@@ -158,7 +155,7 @@ node process allows to execute one task at the same time.
 The second way of deploying nodes is to create *node sources* on the server side.
 
 NOTE: A *Node Source* is a set of nodes running on the same infrastructure and having the same access policy.
-E.g. a cluster with ssh access where nodes are available from 9 a.m. to 9 p.m. Or another example: nodes
+E.g. a cluster with SSH access where nodes are available from 9 a.m. to 9 p.m. Or another example: nodes
 from Amazon EC2 available permanently for users from group 'cloud'.
 
 When a node source is created you can choose an *infrastructure manager* from one of supported http://tbd[infrastructures]
@@ -188,10 +185,10 @@ Then using this file create a node source either from the *Resource Manager web 
 [source]
 ----
 $ cd PROACTIVE_HOME
-$ ./bin/unix/rm-client -createns ssh_node_source --infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.SSHInfrastructure rmi://hostname:1099/ hosts_file 60000 3 \"\" /home/user/jdk/bin/java /home/user/scheduling Linux \"\" config/authentication/rm.cred
+$ ./bin/unix/rm-client -createns SSH_node_source --infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.SSHInfrastructure rmi://hostname:1099/ hosts_file 60000 3 \"\" /home/user/jdk/bin/java /home/user/scheduling Linux \"\" config/authentication/rm.cred
 ----
 
-TODO link to reference to explain parameters
+See <<_ssh_infrastructure>> reference for details on each parameter.
 
 === Agents
 
@@ -290,7 +287,7 @@ image::config_editor_connection.png[]
 In the 'Connection' tab, the user can select between three types of connections:
 
 * *Local Registration* - creates a local ProActive node and registers (advertises) it in a local RMI registry. The node name is optional.
-* *Resource Manager Registration* - creates a local ProActive node and registers it in the specified Resource Manager. The mandatory Resource Manager's url must be like *protocol://host:port/*. The node name and the node source name are optional. Since the Resource Manager requires an authentication, the user specifies the file that contains the credential. If no file is specified the default one	usually located in +%USERPROFILE%\.proactive\security+ folder is used.
+* *Resource Manager Registration* - creates a local ProActive node and registers it in the specified Resource Manager. The mandatory Resource Manager's URL must be like *protocol://host:port/*. The node name and the node source name are optional. Since the Resource Manager requires an authentication, the user specifies the file that contains the credential. If no file is specified the default one	usually located in +%USERPROFILE%\.proactive\security+ folder is used.
 * *Custom* - the user specifies its own java starter class and the arguments to be given to the main method. The java starter class must be in the classpath when the JVM process is started.
 
 Finally, clicking on the "Planning" tab, the windows will look like this:
@@ -395,8 +392,6 @@ as a tunnel to receive incoming messages. If the tunnel goes down, it is automat
 
 The biggest drawback of PAMR is that a centralized PAMR router is in charge of routing message between all the PAMR clients.
 To soften this limitation PAMR can be used with other communication protocol. This way, PAMR is used only when needed.
-See http://hudson.activeeon.com/job/ProActive_5.4.x/lastSuccessfulBuild/artifact/doc/built/Programming/ReferenceManual/single_html/ProActiveProgrammingReferenceManual.html#netconfig-multiprotocol[Enabling several communication protocols].
-TODO avoid link to external doc
 
 To enable this behavior, you need to edit +PROACTIVE_HOME/config/proactive/ProActiveConfiguration.xml+.
 The config file should look like the following:
@@ -427,6 +422,8 @@ Now in order to run the Scheduler you should first run Proactive Router:
     $ bash unix/start-router &
     $ jrunscript start-server.js
 
+See <<_pamr_protocol_properties>> reference for a detailed explanation of each property.
+
 == Control the resource usage
 === Policies
 
@@ -455,7 +452,7 @@ In the resource manager, there is always a default node source configured with a
 It is not able to deploy nodes anywhere but makes it possible to add existing nodes to the scheduler (see <<run_node_manually>>)
 
 Out of the box the Scheduler support time slot policies, cron policies, load based policies and many others.
-Please see detailed information about policies in http://tbs[References section]. TODO
+Please see detailed information about policies in <<_node_source_policy>>.
 
 === Agents schedule
 
@@ -575,7 +572,7 @@ The LDAP configuration is defined in +PROACTIVE_HOME/config/authentication/ldap.
 
 . *Set the LDAP server URL*
 +
-First, you have to define the LDAP's URL of your organisation. This address corresponds to the property: +pa.ldap.url+. You have to put a standard LDAP-like URL, for example *ldap://myLdap*. You can also set an URL with secure access: *ldaps://myLdap:636*.
+First, you have to define the LDAP's URL of your organisation. This address corresponds to the property: +pa.ldap.URL+. You have to put a standard LDAP-like URL, for example *ldap://myLdap*. You can also set an URL with secure access: *ldaps://myLdap:636*.
 +
 . *Define object class of user and group entities*
 +
@@ -602,7 +599,7 @@ There are two properties to set in LDAP configuration file:
 . *Set SSL/TLS parameters*
 +
 A secured SSL/TLS layer can be useful if your network is not trusted, and critical information are transmitted between the rm server and LDAP, such as user passwords.
-First, set the LDAP URL property +pa.ldap.url+ to a URL of type *ldaps://myLdap*. Then set +pa.ldap.authentication.method+ to none so as to delegate authentication to SSL.
+First, set the LDAP URL property +pa.ldap.URL+ to a URL of type *ldaps://myLdap*. Then set +pa.ldap.authentication.method+ to none so as to delegate authentication to SSL.
 +
 For using SSL properly, you have to specify your certificate and public keys for SSL handshake. Java stores certificates in a keyStore and public keys in a trustStore. In most of the cases, you just have to define a trustStore with public key part of LDAP's certificate. Put certificate in a keyStore, and public keys in a trustStore with the keytool command (keytool command is distributed with standard java platforms):
 +
@@ -707,11 +704,11 @@ The following aspects (or services) of the *Proactive Scheduler* are instrumente
 
 MBean server can be accessed by remote applications using one of the two available connectors
 
-* The standard solution based on Remote Method Invocation (RMI) protocol is the RMI Connector accessible at the following url:
+* The standard solution based on Remote Method Invocation (RMI) protocol is the RMI Connector accessible at the following URL:
 +service:jmx:rmi:///jndi/rmi://HOSTNAME:PORT/JMXRMAgent+ where
 ** *HOSTNAME* is the hostname on which the RM is started
 ** *PORT* (5822 by default) is the port number on which the JMX RMI connector server has been started. It is defined by the property pa.rm.jmx.port .
-* The ProActive Remote Objects Connector provides ProActive protocol aware connector accessible at the following url:
+* The ProActive Remote Objects Connector provides ProActive protocol aware connector accessible at the following URL:
 +service:jmx:ro:///jndi/PA_PROTOCOL://HOSTNAME:PORT/JMXRMAgent+ where
 ** *PA_PROTOCOL* is the protocol defined by the proactive.communication.protocol property
 ** *HOSTNAME* is the hostname on which the RM is started
@@ -719,7 +716,7 @@ MBean server can be accessed by remote applications using one of the two availab
 
 The name of the connector (JMXRMAgent by default) is defined by the property +rm.jmx.connectorname+.
 
-The JMX url on which to connect can be obtained from the Authentication API of the RM or by reading the log file located in $PROACTIVE_HOME/.logs/RM.log.
+The JMX URL on which to connect can be obtained from the Authentication API of the RM or by reading the log file located in $PROACTIVE_HOME/.logs/RM.log.
 In that log file, the address you have to retrieve is the one where the JMX RMI connector server has been started
 
 [source]
@@ -729,7 +726,7 @@ In that log file, the address you have to retrieve is the one where the JMX RMI 
 
 Once connected, you'll get an access to RM statistics and accounting.
 
-For example, to connect to the Proactive Scheduler JMX Agent with JConsole tool, just enter the url of the standard RMI
+For example, to connect to the Proactive Scheduler JMX Agent with JConsole tool, just enter the URL of the standard RMI
 Connector, as well as the username and the password.
 
 image::jmx_jconsole_connect.png[align="center"]
@@ -767,7 +764,7 @@ The accounting information can be accessed only through a *JMX client* or the re
 == Troubleshooting
 === Logs
 
-If something goes wrong the first place to look for the problem are server logs. By default all logs are in
+If something goes wrong the first place to look for the problem are the Scheduler logs. By default all logs are in
 +PROACTIVE_HOME/.logs+ directory :
 
 * for problems related to nodes deployment or permissions please check
@@ -782,468 +779,36 @@ image::server_logs.png[align="center"]
 
 === Scheduler Properties
 
-[source]
-----
-# Scheduler home directory (this default value should be proper in most cases)
-pa.scheduler.home=.
-
-# Timeout for the scheduling loop (in millisecond)
-pa.scheduler.core.timeout=2000
-
-# Auto-reconnection to the Resource Manger
-pa.scheduler.core.rmconnection.autoconnect = true
-pa.scheduler.core.rmconnection.timespan = 5000
-pa.scheduler.core.rmconnection.attempts = 20
-
-# Number of threads used to execute client requests
-pa.scheduler.core.clientpoolnbthreads=5
-
-# Number of threads used to execute internal scheduling operations
-pa.scheduler.core.internalpoolnbthreads=5
-
-# Check for failed node frequency (in second)
-pa.scheduler.core.nodepingfrequency=20
-
-# Cache classes definition in task class servers
-pa.scheduler.classserver.usecache=true;
-
-# Temporary directory for jobclasspathes
-# pa.scheduler.classserver.tmpdir=TO/BE/SET;
-
-# Scheduler default policy full name
-pa.scheduler.policy=org.ow2.proactive.scheduler.policy.DefaultPolicy
-
-# Defines the maximum number of tasks to be scheduled in each scheduling loop.
-pa.scheduler.policy.nbtaskperloop=10
-
-# Forked java task default security policy path (use to define the policy of the forked task)
-pa.scheduler.forkedtask.security.policy=config/scheduler/forkedJavaTask/forkedTask.java.policy
-
-# Log4J forked java task default file path
-pa.scheduler.forkedtask.log4j=config/scheduler/forkedJavaTask/forkedTask-log4j
-
-# ProActiveConfiguration forked java task default file path
-pa.scheduler.forkedtask.paconfig=config/scheduler/forkedJavaTask/forkedTask-paconf.xml
-
-#Name of the JMX MBean for the scheduler
-pa.scheduler.core.jmx.connectorname=JMXSchedulerAgent
-
-# port of the JMX service for the Scheduler.
-pa.scheduler.core.jmx.port=5822
-
-# Accounting refresh rate from the database in seconds
-pa.scheduler.account.refreshrate=180
-
-# RRD data base with statistic history
-pa.scheduler.jmx.rrd.name=scheduler_statistics.rrd
-
-# RRD data base step in seconds
-pa.scheduler.jmx.rrd.step=4
-
-# User session time (user is automatically disconnect after this time if no request is made to the scheduler)
-# negative number indicates that session is infinite (value specified in second)
-pa.scheduler.core.usersessiontime=3600
-
-# Timeout for the start task action. Time during which the scheduling could be waiting (in millis)
-# this value relies on the system and network capacity
-pa.scheduler.core.starttask.timeout=5000
-
-# Maximum number of threads used for the start task action. This property define the number of blocking resources
-# until the scheduling loop will block as well.
-# As it is related to the number of nodes, this property also define the number of threads used to terminate taskLauncher
-pa.scheduler.core.starttask.threadnumber=5
-
-# Maximum number of threads used to send events to clients. This property defines the number of clients
-# than can block at the same time. If this number is reached, every clients won't receive events until
-# a thread unlock.
-pa.scheduler.core.listener.threadnumber=5
-
-#-------------------------------------------------------
-#----------------   JOBS PROPERTIES   ------------------
-#-------------------------------------------------------
-
-# Job multiplicative factor. (Task id will be jobId*this_factor+taskId)
-pa.scheduler.job.factor=10000
-
-# Remove job delay (in second). (The time between getting back its result and removing it from the scheduler)
-# Set this time to 0 if you don't want the job to be remove.
-pa.scheduler.core.removejobdelay=0
-
-# Automatic remove job delay (in second). (The time between the termination of the job and removing it from the scheduler)
-# Set this time to 0 if you don't want the job to be remove automatically.
-pa.scheduler.core.automaticremovejobdelay=0
-
-# Remove job in dataBase when removing it from scheduler.
-pa.scheduler.job.removeFromDataBase=false
-
-#-------------------------------------------------------
-#---------------   TASKS PROPERTIES   ------------------
-#-------------------------------------------------------
-# Initial time to wait before the re-execution of a task. (in millisecond)
-pa.scheduler.task.initialwaitingtime=1000
-
-# Maximum number of execution for a task in case of failure (node down)
-pa.scheduler.task.numberofexecutiononfailure=2
-
-# If false user cannot execute java tasks in nodes and must use either forked java tasks of native tasks
-pa.scheduler.task.allowjavatasks=true
-# If true script tasks are ran in a forked JVM, if false they are ran in the node's JVM
-pa.scheduler.task.scripttasks.fork=true
-
-#-------------------------------------------------------
-#-------------   DATASPACES PROPERTIES   ---------------
-#-------------------------------------------------------
-
-# Default INPUT space URL. The default INPUT space is used inside each job that does not define an INPUT space.
-# Normally, the scheduler will start a FileSystemServer on a default location based on the TEMP directory.
-# If the following property is specified, this FileSystemServer will be not be started and instead the provided dataspace
-# url will be used
-#pa.scheduler.dataspace.defaultinput.url=
-
-# The following property can be used in two ways.
-# 1) If a "pa.scheduler.dataspace.defaultinput.url" is provided, the defaultinput.path property
-#   tells the scheduler where the actual file system is (provided that he has access to it). If the scheduler does not have
-#   access to the file system where this dataspace is located then this property must not be set.
-#       - On windows, use double backslash in the path, i.e. c:\\users\\...
-#       - you can provide a list of urls separated by spaces , i.e. : http://myserver/myspace file:/path/to/myspace
-#       - if one url contain spaces, wrap all urls in the list between deouble quotes :
-#               "http://myserver/myspace"  "file:/path/to/my space"
-# 2) If a "pa.scheduler.dataspace.defaultinput.url" is not provided, the defaultinput.path property will tell the scheduler
-#   to start a FileSystemServer on the provided defaultinput.path instead of its default location
-
-### the default location is TEMP/scheduling/defaultinput
-#pa.scheduler.dataspace.defaultinput.localpath=
-
-# Host name from which the localpath is accessible, it must be provided if the localpath property is provided
-#pa.scheduler.dataspace.defaultinput.hostname=
-
-# The same for the OUPUT (see above explanations in the INPUT SPACE section)
-# (concerning the syntax, see above explanations in the INPUT SPACE section)
-#pa.scheduler.dataspace.defaultoutput.url=
-### the default location is TEMP/scheduling/defaultoutput
-#pa.scheduler.dataspace.defaultoutput.localpath=
-#pa.scheduler.dataspace.defaultoutput.hostname=
-
-# The same for the GLOBAL space. The GLOBAL space is shared between each users and each jobs.
-# (concerning the syntax, see above explanations in the INPUT SPACE section)
-#pa.scheduler.dataspace.defaultglobal.url=
-### the default location is TEMP/scheduling/defaultglobal
-#pa.scheduler.dataspace.defaultglobal.localpath=
-#pa.scheduler.dataspace.defaultglobal.hostname
-
-# The same for the USER spaces. A USER space is a per-user global space. An individual space will be created for each user in subdirectories of the defaultuser.localpath.
-# Only one file server will be created (if not provided)
-# (concerning the syntax, see above explanations in the INPUT SPACE section)
-#pa.scheduler.dataspace.defaultuser.url=
-### the default location is TEMP/scheduling/defaultuser
-#pa.scheduler.dataspace.defaultuser.localpath=
-#pa.scheduler.dataspace.defaultuser.hostname=
-
-#-------------------------------------------------------
-#----------------   LOGS PROPERTIES   ------------------
-#-------------------------------------------------------
-# Logs forwarding method
-# Possible methods are :
-# Simple socket : org.ow2.proactive.scheduler.common.util.logforwarder.providers.SocketBasedForwardingProvider
-# SSHTunneled socket : org.ow2.proactive.scheduler.common.util.logforwarder.providers.SocketWithSSHTunnelBasedForwardingProvider
-# ProActive communication : org.ow2.proactive.scheduler.common.util.logforwarder.providers.ProActiveBasedForwardingProvider
-#
-# set this property to empty string to disable log forwarding alltogether
-pa.scheduler.logs.provider=org.ow2.proactive.scheduler.common.util.logforwarder.providers.ProActiveBasedForwardingProvider
-# Location of server jobs logs (comment to disable job logging to separate files). Can be an absolute path.
-pa.scheduler.job.logs.location=.logs/jobs/
-
-#-------------------------------------------------------
-#-----------   AUTHENTICATION PROPERTIES   -------------
-#-------------------------------------------------------
-
-# path to the Jaas configuration file which defines what modules are available for internal authentication
-pa.scheduler.auth.jaas.path=config/authentication/jaas.config
-
-# path to the private key file which is used to encrypt credentials for authentication
-pa.scheduler.auth.privkey.path=config/authentication/keys/priv.key
-
-# path to the public key file which is used to encrypt credentials for authentication
-pa.scheduler.auth.pubkey.path=config/authentication/keys/pub.key
-
-# LDAP Authentication configuration file path, used to set LDAP configuration properties
-# If this file path is relative, the path is evaluated from the Scheduler dir (ie application's root dir)
-# with the variable defined below : pa.scheduler.home.
-# else, (if the path is absolute) it is directly interpreted
-pa.scheduler.ldap.config.path=config/authentication/ldap.cfg
-
-# LDAP2 Authentication configuration file path, used to set LDAP configuration properties
-# If this file path is relative, the path is evaluated from the Scheduler dir (ie application's root dir)
-# with the variable defined below : pa.scheduler.home.
-# else, (if the path is absolute) it is directly interpreted
-pa.scheduler.ldap2.config.path=config/authentication/ldap2.cfg
-
-
-# Login file name for file authentication method
-# If this file path is relative, the path is evaluated from the Scheduler dir (ie application's root dir)
-# with the variable defined below : pa.scheduler.home.
-# else, the path is absolute, so the path is directly interpreted
-pa.scheduler.core.defaultloginfilename=config/authentication/login.cfg
-
-# Group file name for file authentication method
-# If this file path is relative, the path is evaluated from the Scheduler dir (ie application's root dir)
-# with the variable defined below : pa.scheduler.home.
-# else, the path is absolute, so the path is directly interpreted
-pa.scheduler.core.defaultgroupfilename=config/authentication/group.cfg
-
-#Property that define the method that have to be used for logging users to the Scheduler
-#It can be one of the following values :
-#	- "SchedulerFileLoginMethod" to use file login and group management
-#	- "SchedulerLDAPLoginMethod" to use LDAP login management
-#	- "SchedulerLDAP2LoginMethod" to use improved LDAP login management
-pa.scheduler.core.authentication.loginMethod=SchedulerFileLoginMethod
-
-#-------------------------------------------------------
-#------------------   RM PROPERTIES   ------------------
-#-------------------------------------------------------
-# Path to the Scheduler credentials file for RM authentication
-pa.scheduler.resourcemanager.authentication.credentials=config/authentication/scheduler.cred
-
-# Use single or multiple connection to RM :
-# (If true)  the scheduler user will do the requests to rm
-# (If false) each Scheduler users have their own connection to RM using their scheduling credentials
-pa.scheduler.resourcemanager.authentication.single=true
-
-# Set a timeout for initial connection to the RM connection (in ms)
-pa.scheduler.resourcemanager.connection.timeout=120000
-
-#-------------------------------------------------------
-#--------------   HIBERNATE PROPERTIES   ---------------
-#-------------------------------------------------------
-# Hibernate configuration file (relative to home directory)
-pa.scheduler.db.hibernate.configuration=config/scheduler/database/hibernate/hibernate.cfg.xml
-
-# Drop database before creating a new one
-# If this value is true, the database will be dropped and then re-created
-# If this value is false, database will be updated from the existing one.
-pa.scheduler.db.hibernate.dropdb=false
-
-# This property is used to limit number of finished jobs loaded from the database
-# at scheduler startup. For example setting this property to '10d' means that
-# scheduler should load only finished jobs which were submitted during last
-# 10 days. In the period expression it is also possible to use symbols 'h' (hours)
-# and 'm' (minutes).
-# If property isn't set then all finished jobs are loaded.
-pa.scheduler.db.load.job.period=
-
-# Set to true to enable email notificaions about finished jobs. Emails
-# are sent to the address specified in the generic information of a
-# job with the key EMAIL; example:
-#    <genericInformation>
-#        <info name="EMAIL" value="user@example.com"/>
-#    </genericInformation>
-pa.scheduler.notifications.email.enabled=false
-# From address for notificaions emails (set it to a valid address if
-# you would like email notifications to work)
-pa.scheduler.notifications.email.from=
-----
+include::./references/SchedulerPropertiesReference.adoc[]
 
 === Resources Manager Properties
 
-[source]
-----
-# definition of all java properties used by resource manager
-# warning : definition of these variables can be override by user at JVM startup,
-# using for example -Dpa.rm.home=/foo, in the java command
+include::./references/RMPropertiesReference.adoc[]
 
-# name of the ProActive Node containing RM's active objects
-pa.rm.node.name=RM_NODE
+=== Network Properties
 
-# ping frequency used by node source for keeping a watch on handled nodes (in ms)
-pa.rm.node.source.ping.frequency=45000
-
-# ping frequency used by resource manager to ping connected clients (in ms)
-pa.rm.client.ping.frequency=45000
-
-# The period of sending "alive" event to resource manager's listeners (in ms)
-pa.rm.aliveevent.frequency=300000
-
-# timeout for selection script result
-pa.rm.select.script.timeout=30000
-
-# number of selection script digests stored in the cache to predict the execution results
-pa.rm.select.script.cache=10000
-
-# The time period when a node has the same dynamic characteristics (in ms).
-# It needs to pause the permanent execution of dynamic scripts on nodes.
-# Default is 5 mins, which means that if any dynamic selection scripts returns
-# false on a node it won't be executed there at least for this time.
-pa.rm.select.node.dynamicity=300000
-
-# The full class name of the policy selected nodes
-pa.rm.selection.policy=org.ow2.proactive.resourcemanager.selection.policies.ShufflePolicy
-
-# Timeout for remote script execution (in ms)
-pa.rm.execute.script.timeout=180000
-
-# If set to non-null value the resource manager executes only scripts from this directory.
-# All other selection scripts will be rejected.
-pa.rm.select.script.authorized.dir=
-
-# timeout for node lookup
-pa.rm.nodelookup.timeout=30000
-
-# GCM application (GCMA) file path, used to perform GCM deployments
-# If this file path is relative, the path is evaluated from the Resource manager dir (ie application's root dir)
-# defined by the "pa.rm.home" JVM property
-# else, the path is absolute, so the path is directly interpreted
-pa.rm.gcm.template.application.file=config/rm/deployment/GCMNodeSourceApplication.xml
-
-# java property string defined in the GCMA defined above, which is dynamically replaced
-# by a GCM deployment descriptor file path to deploy
-pa.rm.gcmd.path.property.name=gcmd.file
-
-# Resource Manager home directory
-pa.rm.home=.
-
-# Lists of supported infrastructures in the resource manager
-pa.rm.nodesource.infrastructures=config/rm/nodesource/infrastructures
-
-# Lists of supported node acquisition policies in the resource manager
-pa.rm.nodesource.policies=config/rm/nodesource/policies
-
-# Max number of threads in node source for parallel task execution
-pa.rm.nodesource.maxthreadnumber=50
-
-# Max number of threads in selection manager
-pa.rm.selection.maxthreadnumber=50
-
-# Max number of threads in monitoring
-pa.rm.monitoring.maxthreadnumber=5
-
-# Number of threads in the node cleaner thread pool
-pa.rm.cleaning.maxthreadnumber=5
-
-#Name of the JMX MBean for the RM
-pa.rm.jmx.connectorname=JMXRMAgent
-
-#port of the JMX service for the RM.
-pa.rm.jmx.port=5822
-
-#Accounting refresh rate from the database in seconds (0 means disabled)
-pa.rm.account.refreshrate=180
-
-# RRD data base with statistic history
-pa.rm.jmx.rrd.name=rm_statistics.rrd
-
-# RRD data base step in seconds
-pa.rm.jmx.rrd.step=4
-
-# path to the Amazon EC2 account credentials properties file,
-# mandatory when using the EC2 Infrastructure
-pa.rm.ec2.properties=config/rm/deployment/ec2.properties
-
-#-------------------------------------------------------
-#---------------   AUTHENTICATION PROPERTIES   ------------------
-#-------------------------------------------------------
-
-# path to the Jaas configuration file which defines what modules are available for internal authentication
-pa.rm.auth.jaas.path=config/authentication/jaas.config
-
-# path to the private key file which is used to encrypt credentials for authentication
-pa.rm.auth.privkey.path=config/authentication/keys/priv.key
-
-# path to the public key file which is used to encrypt credentials for authentication
-pa.rm.auth.pubkey.path=config/authentication/keys/pub.key
-
-# LDAP Authentication configuration file path, used to set LDAP configuration properties
-# If this file path is relative, the path is evaluated from the resource manager dir (ie application's root dir)
-# with the variable defined below : pa.rm.home.
-# else, (if the path is absolute) it is directly interpreted
-pa.rm.ldap.config.path=config/authentication/ldap.cfg
-
-# LDAP2 Authentication configuration file path, used to set LDAP configuration properties
-# If this file path is relative, the path is evaluated from the resource manager dir (ie application's root dir)
-# with the variable defined below : pa.rm.home.
-# else, (if the path is absolute) it is directly interpreted
-pa.rm.ldap2.config.path=config/authentication/ldap2.cfg
-
-# Login file name for file authentication method
-# If this file path is relative, the path is evaluated from the resource manager dir (ie application's root dir)
-# with the variable defined below : pa.rm.home.
-# else, the path is absolute, so the path is directly interpreted
-pa.rm.defaultloginfilename=config/authentication/login.cfg
-
-# Group file name for file authentication method
-# If this file path is relative, the path is evaluated from the resource manager dir (ie application's root dir)
-# with the variable defined below : pa.rm.home.
-# else, the path is absolute, so the path is directly interpreted
-pa.rm.defaultgroupfilename=config/authentication/group.cfg
-
-#Property that define the method that have to be used for logging users to the resource manager
-#It can be one of the following values :
-#	- "RMFileLoginMethod" to use file login and group management
-#	- "RMLDAPLoginMethod" to use LDAP login management
-#	- "RMLDAP2LoginMethod" to use improved LDAP login management
-pa.rm.authentication.loginMethod=RMFileLoginMethod
-
-# Path to the rm credentials file for authentication
-pa.rm.credentials=config/authentication/rm.cred
-
-#-------------------------------------------------------
-#--------------   HIBERNATE PROPERTIES   ---------------
-#-------------------------------------------------------
-# Hibernate configuration file (relative to home directory)
-pa.rm.db.hibernate.configuration=config/rm/database/hibernate/hibernate.cfg.xml
-
-# Drop database before creating a new one
-# If this value is true, the database will be dropped and then re-created
-# If this value is false, database will be updated from the existing one.
-pa.rm.db.hibernate.dropdb=false
-
-# Drop only node sources from the data base
-pa.rm.db.hibernate.dropdb.nodesources=false
-
-#-------------------------------------------------------
-#--------------   TOPOLOGY  PROPERTIES   ---------------
-#-------------------------------------------------------
-pa.rm.topology.enabled=true
-
-# Pings hosts using standard InetAddress.isReachable() method.
-pa.rm.topology.pinger.class=org.ow2.proactive.resourcemanager.frontend.topology.pinging.HostsPinger
-# Pings ProActive nodes using Node.getNumberOfActiveObjects().
-#pa.rm.topology.pinger.class=org.ow2.proactive.resourcemanager.frontend.topology.pinging.NodesPinger
-
-# Location of selection scripts logs (comment to disable job logging to separate files). Can be an absolute path.
-pa.rm.logs.selection.location=.logs/jobs/
-----
+include::./references/NetworkPropertiesReference.adoc[]
 
 === Node Sources
 
-The ProActive Resource Manager supports nodes aggregation from heterogeneous environments. As a node is just a JVM running somewhere, the process of communication to such nodes is unified and defined by ProActive library. The only part which has to be defined is the procedure of nodes deployment which could be quite different depending on infrastructures and their limitations. After installation of the server and node parts it is possible to configure an automatic nodes deployment. Basically, you can say to the resource manager how to launch JVMs with ProActive nodes and when.
+The ProActive Resource Manager supports nodes aggregation from heterogeneous environments.
+As a node is just a process running somewhere, the process of communication to such nodes is unified.
+The only part which has to be defined is the procedure of nodes deployment which could be quite
+different depending on infrastructures and their limitations. After installation of the server and node parts it is
+possible to configure an automatic nodes deployment. Basically, you can say to the Resource Manager how to
+launch nodes and when.
+
+In the resource manager, there is always a default node source consisted of DefaultInfrastructureManager
+and Static policy. It is not able to deploy nodes anywhere but makes it possible to add existing nodes to the RM.
+
 
 ==== Node Source Infrastructure
 
-*Infrastructure manager* is responsible for communicating with an infrastructure. When a new node has to be deployed, an infrastructure manager will launch new JVM or just request an already existing nodes running somewhere. All these details are specific to the infrastructure manager implementation.
+include::./references/NodeSourceInfrastructureReference.adoc[]
 
 ==== Node Source Policy
 
-
-*Node source policy* is a set of rules and conditions which describes when and how many nodes have to be acquired or released. Policies use node source API to manage the node acquisition.
-
-Node sources were designed in a way that:
-
-* All logic related to node acquisition is encapsulated in the infrastructure manager.
-* Conditions and rules of node acquisition is described in the node source policy.
-* Permissions to the node source. Each policy has two parameters:
-* nodeUsers - utilization permission defined who can get nodes for computations from this node source. It has to take one of the following values:
-** "ME" - Only the node source creator
-** "users=user1,user2;groups=group1,group2;tokens=t1,t2" - Only specific users, groups or tokens. I.e. users=user1 - node access is limited to user1; users=user1;groups=group1 - node access is limited to user1 and all users from group group1; users=user1;tokens=t1 - node access is limited to user1 or anyone who specified token t1. If node access is protected by a token, node will not be found by the resource manager (getNodes request) unless the corresponding token is specified.
-** "ALL" - Everybody
-* nodeProviders - Provider permission defines who can add nodes to this node source. It should take one of the following values:
-** "ME" - Only the node source creator
-** "users=user1,user2;groups=group1,group2" - Only specific users or groups (for our example user1, user2, group1 and group2). It is possible to specify only groups or only users.
-** "ALL" - Everybody
-* The user created the node source is the administrator of this node source. It can add and removed nodes to it, remove the node source itself, but cannot use nodes if usage policy is set to PROVIDER or PROVIDER_GROUPS (unless it's granted AllPermissions).
-* New infrastructure manager or node source policy can be dynamically plugged into the Resource Manager. In order to do that, it is just required to add new implemented classes in the class path and update corresponding list in the configuration file ([RM_HOME]/config/rm/nodesource).
-
-
-In the resource manager, there is always a default node source consisted of DefaultInfrastrucureManager and Static policy. It is not able to deploy nodes anywhere but makes it possible to add existing nodes to the RM.
+include::./references/NodeSourcePolicyReference.adoc[]
 
 === CLI tools
 
