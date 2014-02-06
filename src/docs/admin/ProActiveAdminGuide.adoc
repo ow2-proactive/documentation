@@ -1,5 +1,6 @@
 = ProActive Administration Guide
 include::../common.adoc[]
+:toc-title: Administration Guide
 :imagesdir: src/docs/admin/images
 
 == Overview
@@ -166,8 +167,7 @@ To create a node source you can either:
 * Use the web interface of the *resource manager* ('Add Nodes' menu)
 * Use the REST API
 //// TODO add link dev
-* Use the command line client inside the distribution
-//// TODO CLI ref
+* Use the <<_resource_manager_command_line>>
 
 In order to create an SSH node source you should first configure an *SSH access* from the server to the computing nodes
 that http://www.linuxproblem.org/art_9.html[does not require password]. Then create a text file where you list all
@@ -682,7 +682,6 @@ The resource manager computes several pieces information about the node. This st
 * +To be removed+ - Node is busy but requested to be removed. So it will be removed once the client will release it.
 * +Down+ - Node is unreachable or down and cannot be used anymore.
 
-
 === JMX
 
 The JMX interface for remote management and monitoring provides information about the running ProActive Resource Manager and allows the user to modify its configuration.
@@ -814,6 +813,9 @@ include::./references/NodeSourceInfrastructureReference.adoc[]
 
 include::./references/NodeSourcePolicyReference.adoc[]
 
-=== CLI tools
+=== Command Line Tools
+
+==== Resource Manager Command Line
+include::./references/RMCLI.adoc[]
 
 include::../dedication.adoc[]
