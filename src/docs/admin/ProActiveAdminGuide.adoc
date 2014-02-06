@@ -15,14 +15,14 @@ image::architecture.png[]
 
 === What you will need
 
-* http://www.oracle.com/technetwork/java/javase/downloads/index.html[JDK 1.6] or later
-* http://www.activeeon.com/community-downloads[Proactive Scheduler]
+* http://www.oracle.com/technetwork/java/javase/downloads/index.html[JDK 1.6^] or later
+* http://www.activeeon.com/community-downloads[Proactive Scheduler^]
 
 NOTE: The Proactive Scheduler works with OpenJDK but it is recommended to use JDK from Oracle.
 
 === Set up from scratch
 
-http://www.activeeon.com/community-downloads[Download] Proactive Scheduler and *unzip* the archive.
+http://www.activeeon.com/community-downloads[Download^] Proactive Scheduler and *unzip* the archive.
 
 The extracted folder will be referenced as +PROACTIVE_HOME+ in the rest of the documentation.
 The distribution contains all required dependencies.
@@ -37,7 +37,7 @@ $ cd PROACTIVE_HOME/bin
 $ jrunscript start-server.js
 ----
 
-TIP: If the command +jrunscript+ cannot be found, http://docs.oracle.com/javase/7/docs/webnotes/install/windows/jdk-installation-windows.html#path[check that the +PATH+ environment variable contains the JDK executables].
+TIP: If the command +jrunscript+ cannot be found, http://docs.oracle.com/javase/7/docs/webnotes/install/windows/jdk-installation-windows.html#path[check that the +PATH+ environment variable contains the JDK executables^].
 
 When started, Scheduler, Resource Manager and Web portals URLs are displayed.
 
@@ -111,14 +111,14 @@ All configuration files of Proactive Scheduler can be found inside the distribut
 == Installation on a Cluster
 
 Adding machines of a cluster to the ProActive Scheduler typically involves unpacking the software on all those host machines.
-Once it's done you need to run a computing node on the target machine and connect it to the scheduler. There are two principal ways of
+Once it's done you need to run a computing node on the target machine and connect it to the Scheduler. There are two principal ways of
 doing that:
 
 * Launch a process on the remote side and connect it to the server
-* Initiate the deployment from the server side - http://tbd[node source creation]
+* Initiate the deployment from the server side - <<_deploy_nodes_through_ssh,node source creation>>
 
 If you are not familiar with Proactive Scheduler you may want to try the *first method* as it's easier to understand.
-With the combination of http://tbd[Proactive Agent] it gives you the same result.
+With the combination of <<_agents> it gives you the same result.
 
 The *second method* implies that you have an access to remote hosts (e.g. SSH access) and you want to start and stop computing nodes
 by launching commands over one of the protocols we support. For instance it can be useful when before launching a computing node you'd
@@ -145,7 +145,7 @@ It is also possible to launch a node without even copying proactive to a remote 
 $ java -jar node.jar
 ----
 
-It should connect to the scheduler automatically.
+It should connect to the Scheduler automatically.
 
 TIP: Launch several processes if you would like to execute several computations at the same time on one host. Each
 node process allows to execute one task at the same time.
@@ -158,14 +158,16 @@ NOTE: A *Node Source* is a set of nodes running on the same infrastructure and h
 E.g. a cluster with SSH access where nodes are available from 9 a.m. to 9 p.m. Or another example: nodes
 from Amazon EC2 available permanently for users from group 'cloud'.
 
-When a node source is created you can choose an *infrastructure manager* from one of supported http://tbd[infrastructures]
- and a http://tbd[policy] that defines rules and limitations of nodes' utilization.
+When a node source is created you can choose an *infrastructure manager* from one of supported <<_node_source_infrastructure>>
+ and a <<_node_source_policy>> that defines rules and limitations of nodes' utilization.
 
 To create a node source you can either:
 
 * Use the web interface of the *resource manager* ('Add Nodes' menu)
-* Use the http://tbd[REST API]
-* Use the http://tbd[command line client] inside the distribution
+* Use the REST API
+//// TODO add link dev
+* Use the command line client inside the distribution
+//// TODO CLI ref
 
 In order to create an SSH node source you should first configure an *SSH access* from the server to the computing nodes
 that http://www.linuxproblem.org/art_9.html[does not require password]. Then create a text file where you list all
@@ -224,7 +226,7 @@ to note that a JVM process running tasks can potentially spawn child processes.
 
 ==== Install Agents on Windows
 
-The ProActive Windows Agent installation pack is available on the official http://proactive.inria.fr/[ProActive website].
+The ProActive Windows Agent installation pack is available on the official http://proactive.inria.fr/[ProActive website^].
 Run the +setup.exe+ file and follow instructions. When the following dialog appears:
 
 image::install_config.png[align="center"]
@@ -320,7 +322,7 @@ The main troubles you may have to face are the following ones:
 
 To install the ProActive Agent on Linux Debian based distributions:
 
-* Download the package from our http://www.activeeon.com/community-downloads[website]
+* Download the package from our http://www.activeeon.com/community-downloads[website^]
 * Install the package
 
     sudo dpkg -i proactive-agent-standalone.deb
@@ -412,7 +414,7 @@ The config file should look like the following:
 </ProActiveUserProperties>
 ----
 
-Use the same configuration file for all computing nodes. Typically you will run the scheduler server on the *same machine* where the router is
+Use the same configuration file for all computing nodes. Typically you will run the Scheduler server on the *same machine* where the router is
 launched. This sample configuration requires to open only one port +8090+ for *incoming connections* on the router host
 and all the computing nodes will be able to connect to the Scheduler.
 
@@ -449,7 +451,7 @@ The user who created the node source is the administrator of this node source. H
 but cannot use nodes if usage policy is set to *PROVIDER* or *PROVIDER_GROUPS*.
 
 In the resource manager, there is always a default node source configured with a *DefaultInfrastructureManager* and a *Static policy*.
-It is not able to deploy nodes anywhere but makes it possible to add existing nodes to the scheduler (see <<run_node_manually>>)
+It is not able to deploy nodes anywhere but makes it possible to add existing nodes to the Scheduler (see <<run_node_manually>>)
 
 Out of the box the Scheduler supports time slot policies, cron policies, load based policies and many others.
 Please see detailed information about policies in <<_node_source_policy>>.
@@ -636,24 +638,24 @@ and group files. To activate this behavior, set +pa.ldap.authentication.fallback
 
 All users authenticated in the resource manager have they own role according to granted permissions.
 In Proactive Scheduler, we use the standard
-http://www.oracle.com/technetwork/java/javase/jaas/index.html[Java Authentication and Authorization Service (JAAS)]
+http://www.oracle.com/technetwork/java/javase/jaas/index.html[Java Authentication and Authorization Service (JAAS)^]
 to address these needs.
 
 The file +PROACTIVE_HOME/config/security.java.policy-server+ allows to configure fine-grained access for all users, e.g. who has the right to:
 
 * Deploy nodes
 * Execute jobs
-* Pause the scheduler
+* Pause the Scheduler
 * etc
 
 == Monitor the cluster state
 
 Cluster monitoring typically means checking that all nodes that were added to *Proactive Scheduler*
 are up and running. We don't track for example the free disk space or software upgrade which can be
-better achieved with tools like http://www.nagios.org[Nagios].
+better achieved with tools like http://www.nagios.org[Nagios^].
 
 In the *resource management* interface of Proactive Scheduler you can see how many nodes were added to the
-scheduler and their usage.
+Scheduler and their usage.
 
 image::admin_web.png[]
 
@@ -670,8 +672,10 @@ $ ./bin/unix/rm-client --listnodes
 When you look at your cluster computing nodes can be in one of the following states
 
 * +Deploying+ - The deployment of the node has been triggered by the resource manager but it has not yet been added.
-* +Lost+ - The deployment of the node has failed for some reason. The node has never been added to the resource manager and won't be usable.
-* +Configuring+ - Node has been added to the resource manager and is being configured. The resource manager computes several pieces information about the node. This step can be time consuming depending TODO finish the sentence.
+* +Lost+ - The deployment of the node has failed for some reason.
+The node has never been added to the resource manager and won't be usable.
+* +Configuring+ - Node has been added to the resource manager and is being configured.
+The resource manager computes several pieces information about the node. This step can be time consuming depending TODO finish the sentence.
 * +Free+ - Node is available for computations.
 * +Busy+ - Node has been given to user to execute computations.
 * +Locked+ - Node is under maintenance and cannot be used for computations.
@@ -683,7 +687,7 @@ When you look at your cluster computing nodes can be in one of the following sta
 
 The JMX interface for remote management and monitoring provides information about the running ProActive Resource Manager and allows the user to modify its configuration.
 For more details about JMX concepts, please refer to official documentation about
-the http://www.oracle.com/technetwork/java/javase/tech/javamanagement-140525.html[JMX architecture].
+the http://www.oracle.com/technetwork/java/javase/tech/javamanagement-140525.html[JMX architecture^].
 
 image::jmx_archi.png[align="center"]
 
