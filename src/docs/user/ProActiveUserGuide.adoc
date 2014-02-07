@@ -2,16 +2,9 @@
 include::../common.adoc[]
 
 == Overview
+*ProActive Parallel Suite* is an open source software middleware which facilitates distributed and parallel computations on clusters of computation resources which can vary from commodity hardware such as laptops, desktops to high-end servers. It incorporates numerous features such as dynamical resource acquisition and management, distributed workflows, cloudbursting on public/private clouds etc,, to cater a wide spectrum of organizational requirements.
 
-The *Scheduler* allows users to run link:#tasks[tasks] on link:ProActiveAdminGuide.html#nodes[distributed resources].
-Tasks are provided the user and can range from simple commands to complex link:#workflows[workflows].
-
-Resources can be of various forms, desktop machines, servers, virtual machines or clouds.
-They are all managed as link:ProActiveAdminGuide.html#nodes[nodes] by the *Scheduler*.
-When the user submits tasks, the *Scheduler* will select
-nodes to run them.
-
-With the help of the Workflow Studio, users can easily run tasks in parallel on heterogeneous resources.
+In a nutshell, ProActive Parallel Suite framework consists of two main components, a *Scheduler* and a *Resource Manager*. The user specifies the computation that he/she desires in terms of series computation steps along with their execution and data dependencies. The scheduler executes this computation on a cluster of computation resources, each step on the best-fit resource and in parallel wherever its possible. 
 
 == Get started
 
@@ -33,16 +26,15 @@ We also provide REST and command line interfaces for advanced users.
 
 === Jobs, workflows and tasks
 
-A **Job** is the entity to be submitted to the scheduler. It is composed
-of one or more **tasks**, the workflow. Tasks can be of different nature:
+In order to use Scheduler for executing various computations, one needs to write the execution definition also known as the Job definition. A job definition is an XML file that adheres to XML Schema for ProActive Jobs. It specifies a number of XML tags for specifying execution steps, their sequence and dependencies. Each execution step corresponds to a task which is the smallest unit of execution that can be performed on a computation resources. There are several types of tasks which caters different usecases. For instance, a script task can be used to execute an inline script definition or a script file as an execution step whereas a native task can be used to execute a native executable file. It also possible to package an job definition along with its dependencies (libraries, executables etc) into a self-contained archive. 
 
-* Native, an executable with eventual parameters to be executed
-* Script, a script writen in Groovy, Ruby, Python and other languages supported by the JSR-223
-* Java, a task written in Java extending the Scheduler API
+ProActive Parallel Suite currently supports three main types of tasks: 
 
-A *workflow* is a set of tasks which can be executed either in parallel
-or according to a dependency tree. When you build your job, you create a graph of tasks,
-with a definition of predecessor/successor between tasks:
+- Native Task,, an executable with eventual parameters to be executed
+- Script Task, a script writen in Groovy, Ruby, Python and other languages supported by the JSR-223
+- Java Task,, a task written in Java extending the Scheduler API
+
+One can use **ProActive Workflow Studio**  to create and submit jobs graphically . They  can simply drag-and-drop various task constructs and draw their dependencies to form complex jobs. It also provides various flow control widgets such as conditional branch, loop., replicate etc to construct complex workflows. 
 
 TODO image workflow
 
@@ -122,6 +114,7 @@ Reserve more than one node for a task (parallel environment)
 Handling failures (retry on error, max number of exec, cancel on error, ...)
 Planification
 
+== Other
 
 == References
 
