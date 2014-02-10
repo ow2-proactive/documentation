@@ -1,17 +1,25 @@
-= User guide
+= ProActive User Guide
 include::../common.adoc[]
 
 == Overview
-*ProActive Parallel Suite* is an open source software middleware which facilitates distributed and parallel computations on clusters of computation resources which can vary from commodity hardware such as laptops, desktops to high-end servers. It incorporates numerous features such as dynamical resource acquisition and management, distributed workflows, cloudbursting on public/private clouds etc,, to cater a wide spectrum of organizational requirements.
+*ProActive Parallel Suite* is an open source software middleware which facilitates distributed and parallel
+ computations on clusters of computation resources which can vary from commodity hardware such as laptops,
+ desktops to high-end servers. It incorporates numerous features such as dynamical resource acquisition and
+ management, distributed workflows, cloud bursting on public/private clouds etc,, to cater a wide spectrum of
+ organizational requirements.
 
-In a nutshell, ProActive Parallel Suite framework consists of two main components, a *Scheduler* and a *Resource Manager*. The user specifies the computation that he/she desires in terms of series computation steps along with their execution and data dependencies. The scheduler executes this computation on a cluster of computation resources, each step on the best-fit resource and in parallel wherever its possible. 
+In a nutshell, ProActive Parallel Suite framework consists of two main components, a *Scheduler* and a
+*Resource Manager*. The user specifies the computation that he/she desires in terms of series computation
+ steps along with their execution and data dependencies. The scheduler executes this computation on a cluster
+ of computation resources, each step on the best-fit resource and in parallel wherever its possible.
 
 == Get started
 
 The first thing you need is a Scheduler running either:
 
-- Locally on your machine, see the link:ProActiveAdminGuide.html#_getting_started[Administration guide] to help you with a local installation
-- On http://try.activeeon.com[try.activeeon.com], our free demo platform
+- Locally on your machine, see the link:ProActiveAdminGuide.html#_getting_started[Administration guide] to
+help you with a local installation
+- On http://try.activeeon.com[try.activeeon.com^], our free demo platform
 - On an existing installation
 
 Then to use the Scheduler, web interfaces are available to:
@@ -26,17 +34,24 @@ We also provide REST and command line interfaces for advanced users.
 
 === Jobs, workflows and tasks
 
-In order to use Scheduler for executing various computations, one needs to write the execution definition also known as the Job definition. A job definition is an XML file that adheres to XML Schema for ProActive Jobs. It specifies a number of XML tags for specifying execution steps, their sequence and dependencies. Each execution step corresponds to a task which is the smallest unit of execution that can be performed on a computation resources. There are several types of tasks which caters different usecases. For instance, a script task can be used to execute an inline script definition or a script file as an execution step whereas a native task can be used to execute a native executable file. It also possible to package an job definition along with its dependencies (libraries, executables etc) into a self-contained archive. 
+In order to use Scheduler for executing various computations, one needs to write the execution definition
+also known as the Workflow definition. A workflow definition is an XML file that adheres to XML Schema for ProActive
+Workflows. It specifies a number of XML tags for specifying execution steps, their sequence and dependencies.
+Each execution step corresponds to a task which is the smallest unit of execution that can be performed on a
+ computation resources. There are several types of tasks which caters different use cases. For instance, a script
+  task can be used to execute an inline script definition or a script file as an execution step whereas a
+  native task can be used to execute a native executable file. It also possible to package an workflow definition
+  along with its dependencies (libraries, executables etc) into a self-contained archive.
 
 ProActive Parallel Suite currently supports three main types of tasks: 
 
-- Native Task,, an executable with eventual parameters to be executed
+- Native Task, an executable with eventual parameters to be executed
 - Script Task, a script writen in Groovy, Ruby, Python and other languages supported by the JSR-223
-- Java Task,, a task written in Java extending the Scheduler API
+- Java Task, a task written in Java extending the Scheduler API
 
-One can use **ProActive Workflow Studio**  to create and submit jobs graphically . They  can simply drag-and-drop various task constructs and draw their dependencies to form complex jobs. It also provides various flow control widgets such as conditional branch, loop., replicate etc to construct complex workflows. 
+One can use **ProActive Workflow Studio**  to create and submit workflows graphically . They  can simply drag-and-drop various task constructs and draw their dependencies to form complex jobs. It also provides various flow control widgets such as conditional branch, loop., replicate etc to construct complex workflows.
 
-TODO image workflow
+// TODO image workflow
 
 In this tasks graph, we see that task 4 is preceded by task 1, that
 means scheduler waits the end of task 1 execution before launching task
@@ -60,31 +75,124 @@ a task can be restarted automatically or cancelled.
 The http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial] on http://try.activeeon.com[try.activeeon.com]
 shows you how to build a simple workflow using script tasks.
 
-=== More examples
+=== Native application
 
-==== Native application
+Using native tasks you can easily reuse existing applications and embed them in a workflow.
+The Scheduler lets you define a native task that takes the name of the executable and list of parameters.
+Once the executable is wrapped as a task you can easily leverage some of the workflow constructs to run your
+executable in parallel.
 
-Using native tasks you can easily reuse existing applications and embed them in a workflow. For instance let's imagine
-Concrete example
+TIP:  We advise you to test your application first, make sure that it works on a simple use on
+one machine and then embed it in a workflow.
+
+You can find an example of such integration in this
+link:examples/native_task.xml[XML workflow^] or you can also build it yourself using the
+*Workflow Studio*.
 
 Native application by nature can be tied to a given operating system so
 if you have different nodes at your disposal, you might need to select a suitable node to run your native task.
 This can be achieved using selection script.
+// TODO link
 
-==== Scripts (more languages example ruby, python)
+=== Scripts
 
-Scripts are for debug/small tasks
+The Scheduler supports an interesting type of task where you can directly write code, the script tasks.
+You can easily embed small scripts in your
+workflow.
+The nice thing is that the workflow will be self containing and will not require other files. However we
+recommend that you keep these scripts smalls to keep the workflow simple to understand.
 
-==== MPI application
+TIP: Use scripts to print debugging statements when you build a new workflow.
 
-mpirun example
+The Scheduler supports http://groovy.codehaus.org[Groovy^], http://www.jython.org[Python^], http://jruby.org[Ruby^] and
+http://docs.oracle.com/javase/6/docs/technotes/guides/scripting/programmer_guide/#jsengine[Javascript^] out of the box.
+Please note that the script execution relies on Java implementation of the cited languages thus it may come with
+some limitations.
+
+You can find an example of a script task in this
+link:examples/script_task.xml[XML workflow^] or you can also build it yourself using the
+*Workflow Studio*. The http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial]
+relies on script task and is a nice introduction to workflows.
+
+Scripts can also be used to decorate tasks with specific actions, we support pre/post/clean/selection scripts.
+
+=== MPI application
+
+http://en.wikipedia.org/wiki/Message_Passing_Interface[MPI^] is often used in the area of parallel computing.
+The Scheduler integrates with MPI with the concept of *multi node tasks*. This particular task will acquire several
+nodes and will expose these nodes to the MPI environment.
+
+Applications built with MPI are often executed using the http://linux.die.net/man/1/mpirun[mpirun^] command.
+It accepts several parameters to
+choose how many CPUs and how many machines will be used. One particular parameter is the machine file that is
+built by the Scheduler when using *multi node tasks*.
+Here is how a MPI application invocation would look like when executed with the Scheduler:
+
+    mpirun -hostfile $PAS_NODESFILE myApplication
+
+The variable +$PAS_NODESFILE+ contains the path to a machine file created by the Scheduler that will be similar to:
+
+    compute-host
+    compute-host
+    another-host
+
+Meaning that +myApplication+ will use 2 CPUs on +compute-host+ and 1 CPU on +another-host+.
+
+You can find an example of a script task in this
+link:examples/mpi_task.xml[XML workflow^] or you can also build it yourself using the
+*Workflow Studio*.
+
+The *multi node* acquisition is controlled by different strategies. One might want to select nodes that are as
+close as possible to obtain better network performance or nodes on different hosts to split the I/O load.
+// TODO link to ref
 
 === Run a workflow
 
-submission
+To run a workflow, you submit it to the Scheduler.
+The submission will perform some verifications to ensure that a workflow is
+correctly formed. Then, a job is created and inserted in the pending queue and
+waits for executions until free resources become available. Once done,
+the job will be started on the resources deployed by the Resource
+Manager. Finally, once finished, the job goes to the queue of finished
+jobs and will wait until the user retrieves his result.
+
+You can submit a workflow to the Scheduler using the *Workflow Studio*, the Scheduler Web interface or command
+line tools. For advanced users we also expose REST and JAVA APIs.
+// TODO link
+
+TIP: During the submission, you will be able to edit workflow's variables, so you can effectively use
+them to parametrize workflows executions and work with workflows as templates.
+// TODO link
 
 ==== Job/Task states
+
+During their execution, jobs and tasks goes through different states:
+
+* +PENDING+: The job is waiting to be scheduled.
+* +RUNNING+: The job is running. Actually at least one of its task has been scheduled.
+* +STALLED+: The job has been launched but no task are currently running.
+* +FINISHED+:The job is finished. Every tasks are finished.
+* +PAUSED+: The job is paused waiting for user to resume it.
+* +CANCELED+: The job has been canceled due to user exception and order.
+This status runs when a user exception occurs in a task
+and when the user has asked to cancel On exception.
+* +FAILED+: The job has failed. One or more tasks have failed (due to resources failure).
+There is no more executionOnFailure left for a task.
+* +KILLED+: The job has been killed by a user.
+Nothing can be done anymore on this job expect read execution information such as output, time, etc...
+
+// TODO state diagram
+
 ==== Retrieve results
+
+Once a job or a task is terminated, it is possible to get its result. You can only get the result of the job that you own.
+Results can be retrieved using the Scheduler web interface or the command line tools.
+
+Along with results you can also retrieve logs from the task executions (standard ouput and error output)
+as well as Scheduler logs that provide debugging information.
+
+NOTE: When running native application, the task result will be the exit code of the application. Results
+usually makes more sens when using script or Java tasks.
 
 == Data Management
 
@@ -116,10 +224,10 @@ Planification
 
 == Other
 
-== References
+== Reference
 
-[appendix]
 === Job and task specification
 
-[appendix]
-=== CLI tools
+=== Scheduler Command line
+include::./references/SchedulerCLI.adoc[]
+
