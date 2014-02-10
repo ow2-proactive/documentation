@@ -7,8 +7,10 @@ include::../common.adoc[]
 
 The administration guide covers cluster setup and cluster administration. Cluster setup includes two main steps
 
-* the installation and configuration of the *scheduler server*
-* *computing nodes* setup
+* the installation and configuration of the *Scheduler server*
+* *ProActive Nodes* setup
+
+// TODO define RM and all the PA terms
 
 image::architecture.png[]
 
@@ -26,7 +28,7 @@ NOTE: The Proactive Scheduler works with OpenJDK but it is recommended to use JD
 http://www.activeeon.com/community-downloads[Download^] Proactive Scheduler and *unzip* the archive.
 
 The extracted folder will be referenced as +PROACTIVE_HOME+ in the rest of the documentation.
-The distribution contains all required dependencies.
+The archive contains all required dependencies.
 
 === Run the Proactive Scheduler
 
@@ -40,7 +42,7 @@ $ jrunscript start-server.js
 
 TIP: If the command +jrunscript+ cannot be found, http://docs.oracle.com/javase/7/docs/webnotes/install/windows/jdk-installation-windows.html#path[check that the +PATH+ environment variable contains the JDK executables^].
 
-When started, Scheduler, Resource Manager and Web portals URLs are displayed.
+When started, Scheduler, Resource Manager and Web interfaces URLs are displayed.
 
 [source]
 ----
@@ -50,22 +52,22 @@ When started, Scheduler, Resource Manager and Web portals URLs are displayed.
 
 Running Resource Manager process ...
 > Starting the resource manager...
-> The resource manager with 4 local nodes created on pnp://hostname.local:64738/
+> The resource manager with 4 local nodes created on pnp://SCHEDULER_ADDRESS:64738/
 Resource Manager stdout/stderr redirected into /home/user/proactive_scheduling/.logs/RM-stdout.log
 
 Running Scheduler process ...
-> RM URL : pnp://localhost:64738
+> RM URL : pnp://SCHEDULER_ADDRESS:64738
 > Starting the scheduler...
-> Connecting to the resource manager on pnp://localhost:64738
-> The scheduler created on pnp://hostname.local:52845/
+> Connecting to the resource manager on pnp://SCHEDULER_ADDRESS:64738
+> The scheduler created on pnp://SCHEDULER_ADDRESS:52845/
 Scheduler stdout/stderr redirected into /home/user/proactive_scheduling/.logs/Scheduler-stdout.log
 
 Running Jetty process ...
 Jetty stdout/stderr redirected into /home/user/proactive_scheduling/.logs/Jetty-stdout.log
 Waiting for jetty to start ...
-Rest Server webapp deployed at      http://localhost:8080/rest
-Resource Manager webapp deployed at http://localhost:8080/rm
-Scheduler webapp deployed at        http://localhost:8080/scheduler
+Rest Server webapp deployed at      http://SCHEDULER_ADDRESS:8080/rest
+Resource Manager webapp deployed at http://SCHEDULER_ADDRESS:8080/rm
+Scheduler webapp deployed at        http://SCHEDULER_ADDRESS:8080/scheduler
 
 Preparing to wait for processes to exit ...
 Hit CTRL+C or enter 'exit' to terminate all server processes and exit
@@ -73,19 +75,19 @@ Hit CTRL+C or enter 'exit' to terminate all server processes and exit
 
 As presented in the <<_overview>>, all the ProActive Scheduler components are started :
 
- * *Resource Manager* that handles all nodes on a cluster
+ * *Resource Manager* that handles all ProActive Nodes on a cluster
  * *Scheduler* that accepts jobs from users and orders them
  * *REST API* for the Resource Manager and Scheduler
- * *Web portals* for the Resource Manager and Scheduler
+ * *Web interfaces* for the Resource Manager and Scheduler
  * *Workflow Studio* that is the web interface for designing you distributed computations.
- * 4 local *computing nodes* (JVM)
+ * 4 local *ProActive Nodes*
 
 Now your Proactive Scheduler is ready to execute jobs!
 
 
 == Scheduler configuration
 
-All configuration files of Proactive Scheduler can be found inside the distribution.
+All configuration files of Proactive Scheduler can be found inside the archive.
 
 .ProActive configuration files
 |===
@@ -111,35 +113,35 @@ All configuration files of Proactive Scheduler can be found inside the distribut
 
 == Installation on a Cluster
 
-Adding machines of a cluster to the ProActive Scheduler typically involves unpacking the software on all those host machines.
-Once it's done you need to run a computing node on the target machine and connect it to the Scheduler. There are two principal ways of
+Adding Compute Hosts of a cluster to the ProActive Scheduler typically involves unpacking the software on all those hosts.
+Once it's done you need to run a ProActive Node on the host and connect it to the Scheduler. There are two principal ways of
 doing that:
 
-* Launch a process on the remote side and connect it to the server
-* Initiate the deployment from the server side - <<_deploy_nodes_through_ssh,node source creation>>
+* Launch a process on the Compute Host and connect it to the Scheduler
+* Initiate the deployment from the ProActive Scheduler - <<_deploy_nodes_through_ssh,node source creation>>
 
 If you are not familiar with Proactive Scheduler you may want to try the *first method* as it's easier to understand.
 With the combination of <<_agents> it gives you the same result.
 
-The *second method* implies that you have an access to remote hosts (e.g. SSH access) and you want to start and stop computing nodes
-by launching commands over one of the protocols we support. For instance it can be useful when before launching a computing node you'd
+The *second method* implies that you have a remote access to Compute Hosts (e.g. SSH access) and you want to start and stop ProActive Nodes
+by launching commands over one of the protocols we support. For instance it can be useful when before launching a ProActive Nodes you'd
 like to deploy a virtual machine.
 
 [[run_node_manually]]
-=== Run a node manually
+=== Run a ProActive Node manually
 
-Let's take a closer look at the first method described above. To deploy a node from the remote machine you need
+Let's take a closer look at the first method described above. To deploy a ProActive Node from the Compute Host you need
 to run the following command
 ----
-$ PROACTIVE_HOME/bin/unix/rm-start-node -r pnp://localhost:64738
+$ PROACTIVE_HOME/bin/unix/rm-start-node -r pnp://SCHEDULER_ADDRESS:64738
 ----
-where +-r+ option is used to specify the URL of the *resource manager*. You can find this URL in the output of the server launcher.
+where +-r+ option is used to specify the URL of the *ProActive Resource Manager*. You can find this URL in the output of the Scheduler launcher.
 
-It is also possible to launch a node without even copying proactive to a remote machine. To to is you need to:
+It is also possible to launch a ProActive Node without even copying ProActive to a Compute Host. To to is you need to:
 
-* Open a browser on the remote host
-* Go to the http://SCHEDULER_ADDRESS:8080/rm[resource manager portal]
-* Use default demo/demo account to access the portal
+* Open a browser on the Compute Host
+* Go to the http://SCHEDULER_ADDRESS:8080/rm[ProActive Resource Manager Web Interface]
+* Use default demo/demo account to access the Web Interface
 * Click on 'Portal->Launch' to download *node.jar*
 * Run it
 ----
@@ -148,12 +150,12 @@ $ java -jar node.jar
 
 It should connect to the Scheduler automatically.
 
-TIP: Launch several processes if you would like to execute several computations at the same time on one host. Each
+TIP: Launch several processes if you would like to execute several tasks at the same time on one host. Each
 node process allows to execute one task at the same time.
 
 === Deploy nodes through SSH
 
-The second way of deploying nodes is to create *node sources* on the server side.
+The second way of deploying ProActive Nodes is to create *node sources* from the ProActive Scheduler.
 
 NOTE: A *Node Source* is a set of nodes running on the same infrastructure and having the same access policy.
 E.g. a cluster with SSH access where nodes are available from 9 a.m. to 9 p.m. Or another example: nodes
@@ -164,14 +166,14 @@ When a node source is created you can choose an *infrastructure manager* from on
 
 To create a node source you can either:
 
-* Use the web interface of the *resource manager* ('Add Nodes' menu)
+* Use the web interface of the *ProActive Resource Manager* ('Add Nodes' menu)
 * Use the REST API
-//// TODO add link dev
+// TODO add link dev
 * Use the <<_resource_manager_command_line>>
 
-In order to create an SSH node source you should first configure an *SSH access* from the server to the computing nodes
+In order to create an SSH node source you should first configure an *SSH access* from the server to the Compute Hosts
 that http://www.linuxproblem.org/art_9.html[does not require password]. Then create a text file where you list all
-your computing nodes and number of jobs that can be executed in parallel, e.g.
+your ProActive Nodes and number of tasks that can be executed in parallel, e.g.
 
 [source]
 ----
@@ -194,35 +196,35 @@ See <<_ssh_infrastructure>> reference for details on each parameter.
 
 === Agents
 
-In your production environment you might want to control and limit the resources utilization for all hosts in your network,
+In your production environment you might want to control and limit the resources utilization for all hosts in your cluster,
 especially if these are desktop machines where people perform their daily activities. Using *Proactive Agent* you can:
 
-* Control the number of ProActive nodes on each machine
-* Launch nodes automatically when a machine starts
-* Restart JVM processes if they fail by some reason and reconnect them to Proactive Scheduler
+* Control the number of ProActive nodes on each Compute Host
+* Launch nodes automatically when a Compute Host starts
+* Restart ProActive Nodes if they fail by some reason and reconnect them to Proactive Scheduler
 
 *Agents* exists for both +Linux+ and +Windows+ operating systems.
 
 ==== Windows Agent
 
 The ProActive Windows Agent is a *Windows Service*: a long-running executable that performs specific
-functions and which is designed to not require user intervention. The agent is able to create a ProActive
-computational resource on the local machine and to connect it to the *Proactive Resource Manager*.
+functions and which is designed to not require user intervention. The agent is able to create a ProActive Node
+ on the local machine and to connect it to the *Proactive Resource Manager*.
 
 After being installed, it:
 
 * Loads the user's configuration
 * Creates schedules according to the working plan specified in the configuration
-* Spawns a JVM process that will run a specified java class depending on the selected connection type. 3 types of connections are available:
-** *Local Registration* - The specified java class will create a ProActive local node as a computational resource and register it locally.
-** *Resource Manager Registration* - The specified java class will create a ProActive local node as a computational resource and register
+* Spawns a ProActive Node that will run a specified java class depending on the selected connection type. 3 types of connections are available:
+** *Local Registration* - The specified java class will create a ProActive Node and register it locally.
+** *Resource Manager Registration* - The specified java class will create a ProActive Node and register
 it in the specified Resource Manager, thus being able to execute java or native tasks received from the Scheduler.It is is important
-to note that a JVM process running tasks can potentially spawn child processes.
+to note that a ProActive Node running tasks can potentially spawn child processes.
 ** *Custom* - The user can specify his own java class.
-* Watches the spawned JVM process in order to comply with the following limitations:
-** *RAM limitation* - The user can specify a maximum amount of memory allowed for a JVM process and its children. If the limit is reached, then all processes are automatically killed.
-** *CPU limitation* - The user can specify a maximum CPU usage allowed for a JVM process and its children. If the limit is exceeded by the sum of CPU usages of all processes, they are automatically throttled to reach the given limit.
-* Restarts the spawned JVM process in case of failures with a timeout policy.
+* Watches the spawned ProActive Nodes in order to comply with the following limitations:
+** *RAM limitation* - The user can specify a maximum amount of memory allowed for a ProActive Node and its children. If the limit is reached, then all processes are automatically killed.
+** *CPU limitation* - The user can specify a maximum CPU usage allowed for a ProActive Node and its children. If the limit is exceeded by the sum of CPU usages of all processes, they are automatically throttled to reach the given limit.
+* Restarts the spawned ProActive Node in case of failures with a timeout policy.
 
 ==== Install Agents on Windows
 
@@ -233,7 +235,7 @@ image::install_config.png[align="center"]
 
 . Specify the directory that will contain the *configuration* file named +PAAgent-config.xml+, note that if this file already exists in the specified directory it will be re-used.
 . Specify the directory that will contain the *log files* of the ProActive Agent and the spawned runtimes.
-. Specify an existing, local *account* under which the ProActive Runtime(s) will be spawned. It is highly recommended to specify an account that is not part of the Administrators group to isolate the ProActive Runtime and reduce security risks.
+. Specify an existing, local *account* under which the ProActive Nodes will be spawned. It is highly recommended to specify an account that is not part of the Administrators group to isolate the ProActive Node and reduce security risks.
 . The *password* is encrypted using Microsoft AES Cryptographic Provider and only Administrators have access permissions to the keyfile (restrict.dat) this is done using the SubInACLtool.
 . If the specified account does not exist the installation program will prompt the user to create a non-admin account with the required privileges.
 +
@@ -261,7 +263,7 @@ image::agent_control.png[align="center"]
 From the ProActive Agent Control window, the user can load a configuration file, edit it, start/stop the service and view logs.
 A GUI for editing is provided (explained below). Even if it is not recommended, you can edit the configuration file by yourself with your favorite text editor.
 
-It is also possible to change the ProActive Runtime Account using the 'Change Account' button.
+It is also possible to change the ProActive Nodes Account using the 'Change Account' button.
 
 When you click on 'GUI Edit', the following window appears:
 
@@ -277,7 +279,7 @@ In the general tab, the user can specify:
 * The *On Runtime Exit* script. A script executed after a Runtime exits. This can be useful to perform additional cleaning operation.
 * Note that the script receives as parameter the PID of the Runtime.
 * The user can set a *memory limit* that will prevent the spawned processes to exceed a specified amount of RAM. If a spawned process or its child process requires more memory, it will be killed as well as its child processes.
-* Note that this limit is disabled by default (0 means no limit) and a ProActive Runtime will require at least 128 MBytes.
+* Note that this limit is disabled by default (0 means no limit) and a ProActive Node will require at least 128 MBytes.
 * It is possible to list all available *network interfaces* by clicking on the "Refresh" button and add the selected network interface name as a value of the +proactive.net.interface+ property by clicking on "Use" button. See the ProActive documentation for further information.
 * The user can specify the *protocol* (rmi or http) to be used by the Runtime for incoming communications.
 * To ensure that a unique port is used by a Runtime, the initial port value will be incremented for each node process and given as value of the +-Dproactive.SELECTED_PROTOCOL.port+ JVM property. If the port chosen for a runtime is already used, it is incremented until an available port number is found.
@@ -290,15 +292,15 @@ In the 'Connection' tab, the user can select between three types of connections:
 
 * *Local Registration* - creates a local ProActive node and registers (advertises) it in a local RMI registry. The node name is optional.
 * *Resource Manager Registration* - creates a local ProActive node and registers it in the specified Resource Manager. The mandatory Resource Manager's url must be like *protocol://host:port/*. The node name and the node source name are optional. Since the Resource Manager requires authentication, the user specifies the file that contains the credential. If no file is specified the default one located in +%USERPROFILE%\.proactive\security+ folder is used.
-* *Custom* - the user specifies his own java starter class and the arguments to be given to the main method. The java starter class must be in the classpath when the JVM process is started.
+* *Custom* - the user specifies his own java starter class and the arguments to be given to the main method. The java starter class must be in the classpath when the ProActive Node is started.
 
 Finally, clicking on the "Planning" tab, the window will look like this:
 
 image::config_editor_planning.png[]
 
-In the Planning Tab, depending on the selected connection type, the agent will initiate it according to a *weekly planning* where each plan specifies the connection start time as well as the working duration. The agent will end the connection as well as the ProActive Runtime process and its child processes when the plan duration has expired.
+In the Planning Tab, depending on the selected connection type, the agent will initiate it according to a *weekly planning* where each plan specifies the connection start time as well as the working duration. The agent will end the connection as well as the ProActive Nodes and its child processes when the plan duration has expired.
 
-Moreover, it is possible to specify the JVM process Priority and its *CPU usage* limit. The behavior of the CPU usage limit works as follows: if the JVM process spawns other processes, they will also be part of the limit so that if the sum of CPU% of all processes exceeds the user limit they will be throttled to reach the given limit. Note that if the Priority is set to RealTime the CPU % throttling will be disabled.
+Moreover, it is possible to specify the ProActive Node Priority and its *CPU usage* limit. The behavior of the CPU usage limit works as follows: if the ProActive Node spawns other processes, they will also be part of the limit so that if the sum of CPU% of all processes exceeds the user limit they will be throttled to reach the given limit. Note that if the Priority is set to RealTime the CPU % throttling will be disabled.
 
 The "Always available" makes the agent to run permanently with a Normal Priority and Max CPU usage at 100%.
 
@@ -315,7 +317,7 @@ The main troubles you may have to face are the following ones:
 -Djava.security.policy=PROACTIVE_HOME/config/security.java.policy-client
 ----
 * You get an *authentication error*: this is probably due to your default credentials file which cannot be found. In the "Connection" tab of the Configuration Editor (Figure 5.4, “Configuration Editor window - Connection Tab (Resource Manager Registration)”), you can choose the credentials file you want. You can select, for instance, the credentials file located at PROACTIVE_HOME/config/authentication/scheduler.cred or your own credentials file.
-* The node seems to be well started but you cannot see it in the Resource Manager interface : in this case, make sure that the *port number* is the good one. Do not forget that the runtime port number is incremented from the initial resource manager port number. You can see exactly on which port your runtime has been started looking at the log file described above.
+* The node seems to be well started but you cannot see it in the Resource Manager interface : in this case, make sure that the *port number* is the good one. Do not forget that the runtime port number is incremented from the initial ProActive Resource Manager port number. You can see exactly on which port your runtime has been started looking at the log file described above.
 
 
 ==== Linux Agent
@@ -414,9 +416,9 @@ The config file should look like the following:
 </ProActiveUserProperties>
 ----
 
-Use the same configuration file for all computing nodes. Typically you will run the Scheduler server on the *same machine* where the router is
+Use the same configuration file for all ProActive Nodes. Typically you will run the ProActive Scheduler on the *same machine* where the router is
 launched. This sample configuration requires to open only one port +8090+ for *incoming connections* on the router host
-and all the computing nodes will be able to connect to the Scheduler.
+and all the ProActive Nodes will be able to connect to the Scheduler.
 
 Now in order to run the Scheduler you should first run Proactive Router:
 
@@ -439,7 +441,7 @@ When you create a policy you must specify them:
 
 * *nodeUsers* - utilization permission that defines who can get nodes for computations from this node source. It has to take one of the following values:
 ** +ME+ - only the node source creator
-** +users=user1,user2;groups=group1,group2;tokens=t1,t2+ - only specific users, groups or tokens. I.e. users=user1 - node access is limited to user1; users=user1;groups=group1 - node access is limited to user1 and all users from group group1; users=user1;tokens=t1 - node access is limited to user1 or anyone who specified token t1. If node access is protected by a token, node will not be found by the resource manager (getNodes request) unless the corresponding token is specified.
+** +users=user1,user2;groups=group1,group2;tokens=t1,t2+ - only specific users, groups or tokens. I.e. users=user1 - node access is limited to user1; users=user1;groups=group1 - node access is limited to user1 and all users from group group1; users=user1;tokens=t1 - node access is limited to user1 or anyone who specified token t1. If node access is protected by a token, node will not be found by the ProActive Resource Manager (getNodes request) unless the corresponding token is specified.
 ** +ALL+ - everybody can use nodes from this node source
 
 * *nodeProviders* - provider permission defines who can add nodes to this node source. It should take one of the following values:
@@ -450,7 +452,7 @@ When you create a policy you must specify them:
 The user who created the node source is the administrator of this node source. He can add and removed nodes to it, remove the node source itself,
 but cannot use nodes if usage policy is set to *PROVIDER* or *PROVIDER_GROUPS*.
 
-In the resource manager, there is always a default node source configured with a *DefaultInfrastructureManager* and a *Static policy*.
+In the ProActive Resource Manager, there is always a default node source configured with a *DefaultInfrastructureManager* and a *Static policy*.
 It is not able to deploy nodes anywhere but makes it possible to add existing nodes to the Scheduler (see <<run_node_manually>>)
 
 Out of the box the Scheduler supports time slot policies, cron policies, load based policies and many others.
@@ -458,14 +460,14 @@ Please see detailed information about policies in <<_node_source_policy>>.
 
 === Agents schedule
 
-*Node source policies* limit computing nodes utilization on the level of the Proactive Scheduler.
+*Node source policies* limit ProActive Nodes utilization on the level of the Proactive Scheduler.
 If you need fine-grained limits on the node level *Proactive Agents* will help you achieve that.
 
 TIP: The typical scenario is when you use desktop workstation for computations during non working hours.
 
 Both linux and windows agents have an ability to:
 
-* Run node daemons according to the schedule
+* Run ProActive Nodes according to the schedule
 * Limit resources utilization for these daemons (e.g CPU, memory)
 
 Agents configuration is detailed in the section <<_agents>>.
@@ -510,7 +512,7 @@ pa.scheduler.core.authentication.loginMethod=SchedulerLDAPLoginMethod
 
 === File
 
-By default, the resource manager stores users accounts, passwords, and group memberships (user or admin), in two files:
+By default, the ProActive Resource Manager stores users accounts, passwords, and group memberships (user or admin), in two files:
 
 * users and passwords accounts are stored in +PROACTIVE_HOME/config/authentication/login.cfg+.
 Each line has to follow the format *user:passwd*. The default +login.cfg+ file is given hereafter:
@@ -535,13 +537,13 @@ user:user
 
 === LDAP
 
-The resource manager is able to connect to an existing *LDAP* server, to check users login/password and verify users group
+The ProActive Resource Manager is able to connect to an existing *LDAP* server, to check users login/password and verify users group
 membership. This authentication method can be used with existing LDAP server that is already configured.
 
 
 In order to use it, few parameters have to be configured, such as *path in LDAP tree users*, LDAP *groups* that define
 user and admin group membership, *URL* of the LDAP server, LDAP *binding method* used by connection and configuration
-of SSL/TLS if you want a secured connection between the resource manager and LDAP.
+of SSL/TLS if you want a secured connection between the ProActive Resource Manager and LDAP.
 
 We assume that LDAP server is configured in the way that:
 
@@ -587,10 +589,10 @@ has a default value _groupOfUniqueNames_ which could be changed.
 By default, the Proactive Scheduler binds to LDAP in anonymous mode. You can change this authentication
 method by modifying the property +pa.ldap.authentication.method+. This property can have several values:
 +
-* none (default value) - the resource manager performs connection to LDAP in anonymous mode.
-* simple - the resource manager performs connection to LDAP with a specified login/password (see below for user password setting).
+* none (default value) - the ProActive Resource Manager performs connection to LDAP in anonymous mode.
+* simple - the ProActive Resource Manager performs connection to LDAP with a specified login/password (see below for user password setting).
 +
-You can also specify a SASL mechanism for LDAPv3. There are many SASL available mechanisms: cram-md5, digest-md5, kerberos4. Just set this property to *sasl* to let the resource manager JVM choose SASL authentication mechanism.
+You can also specify a SASL mechanism for LDAPv3. There are many SASL available mechanisms: cram-md5, digest-md5, kerberos4. Just set this property to *sasl* to let the ProActive Resource Manager JVM choose SASL authentication mechanism.
 If you specify an authentication method different from 'none' (anonymous connection to LDAP), you must specify a login/password for authentication.
 +
 There are two properties to set in LDAP configuration file:
@@ -636,7 +638,7 @@ and group files. To activate this behavior, set +pa.ldap.authentication.fallback
 
 == User Permissions
 
-All users authenticated in the resource manager have they own role according to granted permissions.
+All users authenticated in the ProActive Resource Manager have they own role according to granted permissions.
 In Proactive Scheduler, we use the standard
 http://www.oracle.com/technetwork/java/javase/jaas/index.html[Java Authentication and Authorization Service (JAAS)^]
 to address these needs.
@@ -667,15 +669,14 @@ $ cd PROACTIVE_HOME
 $ ./bin/unix/rm-client --listnodes
 ----
 
-=== Node States
+=== ProActive Node States
 
-When you look at your cluster computing nodes can be in one of the following states
+When you look at your cluster ProActive Nodes can be in one of the following states
 
-* +Deploying+ - The deployment of the node has been triggered by the resource manager but it has not yet been added.
+* +Deploying+ - The deployment of the node has been triggered by the ProActive Resource Manager but it has not yet been added.
 * +Lost+ - The deployment of the node has failed for some reason.
-The node has never been added to the resource manager and won't be usable.
-* +Configuring+ - Node has been added to the resource manager and is being configured.
-The resource manager computes several pieces information about the node. This step can be time consuming depending TODO finish the sentence.
+The node has never been added to the ProActive Resource Manager and won't be usable.
+* +Configuring+ - Node has been added to the ProActive Resource Manager and is being configured.
 * +Free+ - Node is available for computations.
 * +Busy+ - Node has been given to user to execute computations.
 * +Locked+ - Node is under maintenance and cannot be used for computations.
@@ -761,7 +762,7 @@ More precisely, for a specific node owner, it is the sum of all time intervals f
 More precisely, for a specific node provider, it is the sum of all time intervals from +ADD+ to +REMOVE+.
 * *The provided node count*: The number of provided nodes.
 
-The accounting information can be accessed only through a *JMX client* or the resource manager *command line*.
+The accounting information can be accessed only through a *JMX client* or the ProActive Resource Manager *command line*.
 
 
 == Troubleshooting
@@ -794,14 +795,14 @@ include::./references/NetworkPropertiesReference.adoc[]
 
 === Node Sources
 
-The ProActive Resource Manager supports nodes aggregation from heterogeneous environments.
+The ProActive Resource Manager supports ProActive Nodes aggregation from heterogeneous environments.
 As a node is just a process running somewhere, the process of communication to such nodes is unified.
 The only part which has to be defined is the procedure of nodes deployment which could be quite
 different depending on infrastructures and their limitations. After installation of the server and node parts it is
 possible to configure an automatic nodes deployment. Basically, you can say to the Resource Manager how to
 launch nodes and when.
 
-In the resource manager, there is always a default node source consisted of DefaultInfrastructureManager
+In the ProActive Resource Manager, there is always a default node source consisted of DefaultInfrastructureManager
 and Static policy. It is not able to deploy nodes anywhere but makes it possible to add existing nodes to the RM.
 
 
@@ -815,7 +816,7 @@ include::./references/NodeSourcePolicyReference.adoc[]
 
 === Command Line Tools
 
-==== Resource Manager Command Line
+==== ProActive Resource Manager Command Line
 include::./references/RMCLI.adoc[]
 
 include::../dedication.adoc[]
