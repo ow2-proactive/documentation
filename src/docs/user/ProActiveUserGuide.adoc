@@ -4,27 +4,16 @@ include::../common.adoc[]
 :imagesdir: src/docs/user/images
 
 == Overview
-*ProActive Parallel Suite* is an open source software middleware which facilitates distributed and parallel
- computations on clusters of computation resources which can vary from commodity hardware such as laptops,
- desktops to high-end servers. It incorporates numerous features such as dynamical resource acquisition and
- management, distributed workflows, cloud bursting on public/private clouds etc,, to cater a wide spectrum of
- organizational requirements.
-
-In a nutshell, ProActive Parallel Suite framework consists of two main components, a *Scheduler* and a
-*Resource Manager*. The user specifies the computation that he/she desires in terms of series computation
+*ProActive Scheduler* is a free and open-source *job scheduler*. The user specifies the computation that he/she desires in terms of series computation
  steps along with their execution and data dependencies. The scheduler executes this computation on a cluster
  of computation resources, each step on the best-fit resource and in parallel wherever its possible.
 
 == Get started
 
-The first thing you need is a Scheduler running either:
+To submit your first computation to *ProActive Scheduler* link:ProActiveAdminGuide.html#_getting_started[install] it in
+your environment or just use our demo platform http://try.activeeon.com[try.activeeon.com^].
 
-- Locally on your machine, see the link:ProActiveAdminGuide.html#_getting_started[Administration guide] to
-help you with a local installation
-- On http://try.activeeon.com[try.activeeon.com^], our free demo platform
-- On an existing installation
-
-Then to use the Scheduler, web interfaces are available to:
+*ProActive Scheduler* provides comprehensive interfaces that allow to:
 
 - http://try.activeeon.com/studio[Create workflows^]
 - http://try.activeeon.com/scheduler[Submit workflows, monitor their execution and retrieve the tasks results^]
@@ -37,21 +26,27 @@ We also provide REST and command line interfaces for advanced users.
 === Jobs, workflows and tasks
 
 In order to use Scheduler for executing various computations, one needs to write the execution definition
-also known as the Workflow definition. A workflow definition is an XML file that adheres to XML Schema for ProActive
-Workflows. It specifies a number of XML tags for specifying execution steps, their sequence and dependencies.
+also known as the Workflow definition. A workflow definition is an XML file that adheres to XML schema for ProActive
+Workflows.
+
+It specifies a number of XML tags for specifying execution steps, their sequence and dependencies.
 Each execution step corresponds to a task which is the smallest unit of execution that can be performed on a
- computation resources. There are several types of tasks which caters different use cases. For instance, a script
-  task can be used to execute an inline script definition or a script file as an execution step whereas a
-  native task can be used to execute a native executable file. It also possible to package an workflow definition
-  along with its dependencies (libraries, executables etc) into a self-contained archive.
+ computation resources. There are several types of tasks which caters different use cases.
 
-ProActive Parallel Suite currently supports three main types of tasks: 
+For instance, a script
+task can be used to execute an inline script definition or a script file as an execution step whereas a
+native task can be used to execute a native executable file. It also possible to package an workflow definition
+along with its dependencies (libraries, executables etc) into a self-contained archive.
 
-- Native Task, an executable with eventual parameters to be executed
-- Script Task, a script writen in Groovy, Ruby, Python and other languages supported by the JSR-223
-- Java Task, a task written in Java extending the Scheduler API
+*ProActive Scheduler* currently supports three main types of tasks:
 
-One can use **ProActive Workflow Studio**  to create and submit workflows graphically . They  can simply drag-and-drop various task constructs and draw their dependencies to form complex jobs. It also provides various flow control widgets such as conditional branch, loop., replicate etc to construct complex workflows.
+- +Native Task+, an executable with eventual parameters to be executed
+- +Script Task+, a script writen in Groovy, Ruby, Python and other languages supported by the JSR-223
+- +Java Task+, a task written in Java extending the Scheduler API
+
+One can use **ProActive Workflow Studio**  to create and submit workflows graphically .
+They can simply drag-and-drop various task constructs and draw their dependencies to form complex jobs.
+It also provides various flow control widgets such as conditional branch, loop, replicate etc to construct complex workflows.
 
 // TODO image workflow
 
@@ -67,7 +62,7 @@ We see that task 1, 2 and 3 are not linked, so these three tasks can be
 executed in **parallel**, because there are independent from each other.
 
 Definition of the workflow graph is made at job definition, before
-scheduling, and cannot be modified during the job execution
+scheduling, and cannot be modified during the job execution.
 
 A *finished job* contains the results and logs of each task. Upon failure,
 a task can be restarted automatically or cancelled.
@@ -96,18 +91,19 @@ if you have different nodes at your disposal, you might need to select a suitabl
 This can be achieved using selection script.
 // TODO link
 
-=== Scripts
+=== Dynamic language support
 
-The Scheduler supports an interesting type of task where you can directly write code, the script tasks.
-You can easily embed small scripts in your
-workflow.
-The nice thing is that the workflow will be self containing and will not require other files. However we
+Proactive Scheduler supports tasks  written in languages other than Java, with the currently supported dynamic languages being
+http://groovy.codehaus.org[Groovy^], http://www.jython.org[Python^], http://jruby.org[Ruby^] and
+http://docs.oracle.com/javase/6/docs/technotes/guides/scripting/programmer_guide/#jsengine[Javascript^]
+.
+
+You can easily embed small scripts in your workflow.
+The nice thing is that the workflow will be self containing and will not require to compile your code before executing. However we
 recommend that you keep these scripts smalls to keep the workflow simple to understand.
 
 TIP: Use scripts to print debugging statements when you build a new workflow.
 
-The Scheduler supports http://groovy.codehaus.org[Groovy^], http://www.jython.org[Python^], http://jruby.org[Ruby^] and
-http://docs.oracle.com/javase/6/docs/technotes/guides/scripting/programmer_guide/#jsengine[Javascript^] out of the box.
 Please note that the script execution relies on Java implementation of the cited languages thus it may come with
 some limitations.
 
@@ -144,19 +140,19 @@ You can find an example of a script task in this
 link:examples/mpi_task.xml[XML workflow^] or you can also build it yourself using the
 *Workflow Studio*.
 
-The *multi node* acquisition is controlled by different strategies. One might want to select nodes that are as
+To achieve the best performance for MPI applications nodes can be selected taking into account their *network topology*. One might want to select nodes that are as
 close as possible to obtain better network performance or nodes on different hosts to split the I/O load.
 // TODO link to ref
 
 === Run a workflow
 
-To run a workflow, you submit it to the Scheduler.
+To run a workflow, you submit it to *ProActive Scheduler*.
 The submission will perform some verifications to ensure that a workflow is
 correctly formed. Then, a job is created and inserted in the pending queue and
 waits for executions until free resources become available. Once done,
-the job will be started on the resources deployed by the Resource
+the job will be started on the resources controlled by ProActive Resource
 Manager. Finally, once finished, the job goes to the queue of finished
-jobs and will wait until the user retrieves his result.
+jobs and will wait until the user retrieves its result.
 
 You can submit a workflow to the Scheduler using the *Workflow Studio*, the Scheduler Web interface or command
 line tools. For advanced users we also expose REST and JAVA APIs.
@@ -181,7 +177,7 @@ and when the user has asked to cancel On exception.
 * +FAILED+: The job has failed. One or more tasks have failed (due to resources failure).
 There is no more executionOnFailure left for a task.
 * +KILLED+: The job has been killed by a user.
-Nothing can be done anymore on this job expect read execution information such as output, time, etc...
+Nothing can be done anymore on this job expect read execution information such as output, time, etc.
 
 // TODO state diagram
 
@@ -206,17 +202,22 @@ A job that reads data from files and outputs in a file
 
 == Workflow concepts
 
-Workflows comes with construct to help you distribute your computation. The tutorial
+Workflows comes with constructs that help you distribute your computation. The tutorial
 http://try.activeeon.com/tutorials/adv.html[Advanced workflows^] is a nice introduction to workflows with
 ProActive.
 
 Three constructs are available:
 
+- *Dependency*
 - *Replicate*
 - *Branch*
 - *Loop*
 
 TIP: Use the *Workflow Studio* to create complex workflows, it is much easier than to write XML!
+
+=== Dependency
+
+MISSING
 
 === Replicate
 
