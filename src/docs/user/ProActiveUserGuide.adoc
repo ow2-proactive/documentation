@@ -1,5 +1,7 @@
 = ProActive User Guide
 include::../common.adoc[]
+:toc-title: User Guide
+:imagesdir: src/docs/user/images
 
 == Overview
 *ProActive Parallel Suite* is an open source software middleware which facilitates distributed and parallel
@@ -24,9 +26,9 @@ help you with a local installation
 
 Then to use the Scheduler, web interfaces are available to:
 
-- Create workflows
-- Submit workflows, monitor their execution and retrieve the tasks results
-- Add resources and monitor them
+- http://try.activeeon.com/studio[Create workflows^]
+- http://try.activeeon.com/scheduler[Submit workflows, monitor their execution and retrieve the tasks results^]
+- http://try.activeeon.com/rm[Add resources and monitor them^]
 
 We also provide REST and command line interfaces for advanced users.
 
@@ -204,11 +206,341 @@ A job that reads data from files and outputs in a file
 
 == Workflow concepts
 
-Control flow
-If
-Replicate
-Example: Solving a Parameter sweeping/Embarrassingly parallel problem (Link to tutorial)
-Loop
+Workflows comes with construct to help you distribute your computation. The tutorial
+http://try.activeeon.com/tutorials/adv.html[Advanced workflows^] is a nice introduction to workflows with
+ProActive.
+
+Three constructs are available:
+
+- *Replicate*
+- *Branch*
+- *Loop*
+
+TIP: Use the *Workflow Studio* to create complex workflows, it is much easier than to write XML!
+
+=== Replicate
+
+The *replication* allows the execution of multiple tasks in parallel when only one task
+is defined and the number of tasks to run could change.
+
+image::flow_spec_duplicate.png[align=center]
+
+-   The target is the direct child of the task initiator.
+
+-   The initiator can have multiple children; each child is replicated.
+
+-   If the target is a *start block*, the whole block is replicated.
+
+-   The target must have the initiator as only dependency: the action is
+    performed when the initiator task terminates. If the target has an
+    other pending task as dependency, the behaviour cannot be specified.
+
+-   There should always be a merge task after the target of a replicate:
+    if the target is not a start block, it should have at least one
+    child, if the target is a start block, the corresponding end block
+    should have at least one child.
+
+-   The last task of a replicated task block (or the replicated task if
+    there is no block) cannot perform a *branching* or *replicate*
+    action.
+
+-   The target of a *replicate* action can not be tagged as *end block*.
+
+TIP: If you are familiar with programming, you can see the replication as forking tasks.
+
+=== Branch
+
+The *branch* construct provides the ability to choose between two alternative task flows,
+with the possibility to merge back to a common flow.
+
+TIP: If you are a developer, you can see the replication as forking tasks
+
+image::flow_spec_if.png[align=center]
+
+-   There is no explicit dependency between the initiator and the
+    *if/else* targets. These are *optional links* (ie. A -> B or E ->
+    F) defined in the *if* task.
+
+-   The *if* and *else* flows can be merged by a *continuation* task
+    referenced in the *if* task, playing the role of an *endif*
+    construct. After the branching task, the flow will either be that of
+    the *if* or the *else* task, but it will be continued by the
+    *continuation* task.
+
+-   *If* and *else* targets are executed *exclusively*. The initiator
+    however can be the dependency of other tasks, which will be executed
+    normally along the *if* or the *else* target.
+
+-   A *task block* can be defined across *if*, *else* and *continuation*
+    links, and not just plain dependencies (i.e. with *A* as *start* and
+    *F* as *end*).
+
+-   If using no continuation task, the if and else targets, along with
+    their children, must be strictly distinct.
+
+-   If using a continuation task, the if and else targets must be
+    strictly distinct and valid task blocks.
+
+-   *if*, *else* and *continuation* tasks (B, D and F) cannot have
+    an explicit dependency.
+
+-   *if*, *else* and *continuation* tasks cannot be entry points for the
+    job, they must be triggered by the *if* control flow action.
+
+-   A task can be target of only one *if* or *else* action. A
+    *continuation* task can not merge two different *if* actions.
+
+TIP: If you are familiar with programming, you can see the branch as a if/then/else.
+
+=== Loop
+
+The loop provides the ability to repeat a set of tasks.
+
+image::flow_spec_loop.png[align=center]
+
+-   The target of a *loop* action must be a parent of the initiator
+    following the dependency chain; this action goes back to a
+    previously executed task.
+
+-   Every task is executed at least once; *loop* operates in a
+    *do...while* fashion.
+
+-   The target of a *loop* should have only one explicit dependency. It
+    will have different parameters (dependencies) depending if it is
+    executed for the first time or not. The cardinality should stay the
+    same.
+
+-   The *loop* scope should be a *task block*: the target is a *start
+    block* task, and the initiator its related *end block task*.
+
+TIP: If you are familiar with programming, you can see the loop as a do/while.
+
+=== Task Blocks
+
+Workflows often relies on *task blocks*. Task blocks are defined by pairs of *start* and *end* tags.
+
+-   Each task of the flow can be tagged either *start* or *end*
+
+-   Tags can be nested
+
+-   Each *start* tag needs to match a distinct *end* tag
+
+Task blocks are very similar to the parenthesis of most programming
+languages: anonymous and nested start/end tags. The only difference is
+that a parenthesis is a syntactical information, whereas task blocks are
+semantic.
+
+The role of task blocks is to restrain the expressiveness of the system
+so that a workflow can be statically checked and validated. A treatment
+that can be looped or iterated will be isolated in a well-defined task
+block.
+
+-   A *loop* flow action only applies on a task block: the initiator of
+ the loop must be the end of the block, and the target must be the
+ beginning.
+
+-   When using a *continuation* task in an *if* flow action, the *if*
+ and *else* branches must be task blocks.
+
+-   If the child of a *replicate* task is a task block, the whole block
+ will be replicated and not only the child of the initiator.
+
+=== Control Flow Scripts
+
+To perform a control flow action such as if, replicate or loop, a
+*Control Flow Script* is executed on the ProActive node. This script
+takes the result of the task as input; meaning a Java object if it was a
+Java or Script task, or nothing if it was a native task.
+
+The script is executed on the ProActive node, just after the task's
+executable. If the executable is a Java Executable and returns a result,
+the variable +result+ will be set in the script's environment so that
+dynamic decisions can be taken with the task's result as input. Native
+Java objects can be used in a Javascript script using the following
+syntax:
+
+``` {.java}
+importPackage(java.io);
+// the result variable is the TaskResult.value() if it exists
+var resFile = new File("/path/to/data/" + new java.lang.String(result));
+if (! resFile.exists()) {
+   loop = false;
+} else {
+   loop = true;
+   var input = new BufferedReader(new FileReader(f));
+   // this variable will determine the number of parallel runs
+   runs = java.lang.Integer.parseInt(input.readLine());
+   input.close()
+}
+```
+
+Similarly to how parameters are passed through the *result* variable to
+the script, the script needs to define variables specific to each action
+to determine what action the script will lead to.
+
+-   A *replicate* control flow action needs to define how many parallel
+    runs will be executed, by defining the variable +runs+:
+
+``` {.java}
+// assuming result is a java.lang.Integer
+runs = result % 4 + 1;
+```
+
+The assigned value needs be a strictly positive integer.
+
+-   An *if* control flow action needs to determine whether the if or the
+    else branch is selected, it does this by defining the boolean
+    variable +branch+:
+
+``` {.java}
+// assuming result is a java.lang.Integer
+if (result % 2) {
+  branch = "if";
+} else {
+  branch = "else";
+}
+```
+
+The assigned value needs to be the string value +"if"+ or +"else"+.
+
+-   The *loop* control flow action requires setting the +loop+, which
+    will determine whether looping to the statically defined target is
+    performed, or if the normal flow is executed as would a continue
+    instruction do in a programming language:
+
+``` {.java}
+loop = new java.lang.Boolean(result);
+```
+
+The assigned value needs to be a boolean.
+
+Failure to set the required variables or to provide a valid
+control flow script will not be treated gracefully and will result in
+the failure of the task.
+
+=== Loop and Replicate awareness
+
+When Control Flow actions such as *replicate* or *loop* are performed,
+some tasks are replicated. To be able to identify replicated tasks
+uniquely, each replicated task has an *iteration index* and *replication
+index*.
+
+==== Task name
+
+First, those indexes are reflected inside the names of the tasks
+themselves. Indeed, task names must be unique inside a job. The indexes
+are added to the original task name as a suffix, separated by a special
+character.
+
+-   If a task named _T_ is replicated after a *loop* action, the newly
+    created tasks will be named _T#1_, _T#2_, etc. The number
+    following the _#_ separator character represents the *iteration
+    index*.
+
+-   The same scheme is used upon *replicate* actions: newly created
+    tasks are named _T*1_, _T*2_, and so on. The number following the
+    \* separator represents the *replication index*.
+
+-   When combining both of the above, the resulting task names are of
+    the form: _T#1*1_, _T#2*4_, etc., in that precise order.
+
+==== Task definition
+
+Those indexes are also available when creating a task. They can be
+obtained using a special string that will be substituted with the actual
+iteration or replication index at runtime: *\$IT* for the iteration
+index, and *\$REP* for the replication index. Those macro can be used in
+the following locations:
+
+-   *Java Executable parameters:*
+
+    ``` {.xml}
+    <javaExecutable class="net.example.Executable">
+      <parameters>
+        <parameter name="images" value="/some/path/images/pic_$IT_$REP.jpg" />
+    ```
+
+    ``` {.java}
+    JavaTask t = new JavaTask();
+    t.setExecutableClassName("net.example.Executable");
+    t.addArgument("images","/some/path/images/pic_$IT_$REP.jpg");
+    ```
+
+-   *Native Executable arguments:*
+
+    ``` {.xml}
+    <staticCommand value="/path/to/bin.sh">
+      <arguments>
+        <argument value="/some/path/$IT/$REP.dat" />
+    ```
+
+    ``` {.java}
+    NativeTask nt = new NativeTask();
+    nt.setCommandLine(new String[] { "/path/to/bin.sh", "/path/to/$ID/$REP.dat" });
+    ```
+
+-   *Dataspace input and output:*
+
+    ``` {.xml}
+    <task name="t1" retries="2">
+      <inputFiles>
+        <files includes="foo_$IT_$REP.dat" accessMode="transferFromInputSpace"/>
+      </inputFiles><outputFiles>
+        <files includes="bar_$IT_$REP.res" accessMode="transferToOutputSpace"/>
+    ```
+
+    ``` {.java}
+    task.addInputFiles("foo_$IT_$REP.dat",OutputAccessMode.TransferToOutputSpace);
+    task.addOutputFiles("bar_$IT_$REP.res",OutputAccessMode.none);
+    ```
+
+-   *Script :*
+
+    ``` {.xml}
+    <task>
+      <pre><script><code language="javascript">
+            var f = new java.io.File(".lock_$IT_$REP");
+            f.createNewFile();
+      </code></script></pre>
+    ```
+
+    ``` {.java}
+    task.setPreScript(new SimpleScript("var f = new java.io.File(\".lock_$ID_$REP\"); f.createNewFile();", "javascript"));
+    ```
+
+    Scripts affected by the macro substitution are: Pre, Post, Command
+    generation and Control Flow. *No substitution will occur in
+    selection scripts.*
+
+==== Task executable
+
+The iteration and replication indexes are available inside the
+executables launched by tasks.
+
+In Java tasks, the indexes are exported through the following Java
+properties: *pas.task.iteration* and *pas.task.replication*.
+
+``` {.java}
+public Serializable execute(TaskResult... results) throws Throwable {
+  int it  = System.getProperty("pas.task.iteration");
+  int dup = System.getProperty("pas.task.replication");
+}
+```
+
+In a similar fashion, environment variables are set when launching a
+native executable: *PAS\_TASK\_ITERATION* and *PAS\_TASK\_REPLICATION*:
+
+``` {.sh}
+#!/bin/sh
+/path/to/bin.sh /path/to/file/${PAS_TASK_ITERATION}/${PAS_TASK_REPLICATION}.dat
+
+```
+
+
+=== Example: Embarrassingly Parallel problem
+
+ (Link to tutorial)
+
 
 == Job/Task customization
 
