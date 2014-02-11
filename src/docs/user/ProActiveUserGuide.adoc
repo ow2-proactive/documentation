@@ -566,31 +566,162 @@ native executable: *PAS\_TASK\_ITERATION* and *PAS\_TASK\_REPLICATION*:
 
 == Job/Task customization
 
-
+Now when your tasks are ready you can customize several aspects of the execution.
 
 === Workflow scripts
 
+*ProActive Scheduler* supports portable script execution through the +JSR-223+ Java
+Scripting capabilities. Scripts can be written in any language supported by the underlying
+Java Runtime Environment.
+
+They are used in the ProActive Scheduler to:
+
+* Execute some simple *pre*, *post* and *cleaning* processing (pre scripts, post scripts and cleaning scripts)
+* Select among available resources the node that *suits the execution* (selection scripts).
+
 ==== Selection
+
+A selection script provides an ability for the scheduler to execute tasks on particular ProActive nodes.
+E.g. you can specify that a task must be executed on a Unix/Linux system.
+
+A selection script is always executed before the task itself on any candidate node:
+the execution of a selection script must set the boolean variable selected,
+that indicates if the candidate node is suitable for the execution of the associated task.
+
+A java helper *org.ow2.proactive.scripting.helper.selection.SelectionUtils* is provided for allowing
+user to simply make some kind of selections. Some script samples are available in
+
+    PROACTIVE_HOME/samples/scripts/selection
+
+The following example selects only nodes running on Windows:
+
+[source]
+----
+importClass(org.ow2.proactive.scripting.helper.selection.SelectionUtils);
+
+/* Check if OS name is Windows */
+if (SelectionUtils.checkOSName("windows")) {
+	selected = true;
+} else {
+	selected = false;
+}
+----
 
 ==== Pre/Post/Clean
 
-=== Control execution
+Another functionality is the possibility to define pre and post scripts. For a given task (Java, Script or Native task),
+it is possible to launch a script before and after its execution. This possibility can be useful to copy files
+to a node, or clean a directory before or after task execution, for example.
 
-==== Run computation on a particular node (Selection?)
+This is a way to separate from business code the preparation of execution environment and its cleaning. A good example
+is a script that removes files from task working directory once the task is finished.
+
+[source]
+----
+importPackage(java.io);
+print("clean working directory \n");
+for(i=0; i<args.length;i++)
+{
+    var f= new File(args[i]);
+    if(f["delete"]()) {
+        print(args[i] +" deleted\n");
+    } else {
+        print("deleting "+ args[i] +" failed\n");
+    }
+}
+----
+
+=== Control execution
 
 ==== Run computation with your system account
 
+It is possible to start a task under the job owner if the system is configured for that purpose.
+There are 3 possible ways to run a task under user account (in any case, the administrator should have set computing hosts to authorize one of the 3 methods) :
+
+* Using your *scheduling login* : if computing hosts are configured and user is authorized to run a process under his login without password.
+* Using your *scheduling login and password* : if computing hosts are configured and user is authorized to run a process under his login and password.
+* Using an *ssh key* provided by the administrator : if computing hosts are configured, the administrator should have gave user a ssh key.
+
+User must first create a credential containing this key :
+
+----
+$ PROACTIVE_HOME/bin/unix/create-cred -F config/authentication/keys/pub.key -l username -p userpwd -k path/to/private/sshkey -o myCredentials.cred
+----
+
+This command will create a new credentials with *username* as login, *userpwd* as password, using scheduler public key at
++config/authentication/keys/pub.key+
+for credentials encryption and using the private ssh key at
++path/to/private/sshkey+
+provided by administrator. The new credential will be stored in *myCredentials.cred*
+
+Once created, user must connect the scheduler using this credential. Then in order to execute your task under your account
+set *runAsMe=true* in the task.
+
+
 ==== Reserve more than one node for a task (parallel environment)
 
-==== Handling failures (retry on error, max number of exec, cancel on error, ...)
+To create a http://tbd[multi-nodes] task often used for MPI applications you need to add a *parallel environment*
+to the task. Parallel environment describes how many nodes are needed for a task as well as where these nodes should be
+located. For example if you'd like to run 4 processes in parallel it a scope of one task you should specify it in your task
 
-Planification
+[source, xml]
+----
+<parallel numberOfNodes="4"/>
+----
 
-== Other
+===== Defining a Topology for Multi-Nodes Tasks
+
+In addision to the number of ProActive Nodes you can specify the *nodes network topology*, e.g
+the set of nodes within some latency threshold, nodes on the same host and many more.
+
+
+Here is the list of topologies we support:
+
+* *Arbitrary* topology does not imply any restrictions on nodes location
+* *Best proximity* - the set of closest nodes among those which are not executing other tasks.
+* *Threshold proximity* - the set of nodes within a threshold proximity (in microseconds).
+* *Single Host* - the set of nodes on a single host.
+* *Single Host Exclusive* - the set of nodes of a single host exclusively. The host with selected nodes will be reserved for the user.
+* *Multiple Hosts Exclusive* - the set of nodes filled in multiple hosts. Hosts with selected nodes will be reserved for the user.
+* *Different Hosts Exclusive* - the set of nodes each from a different host. All hosts with selected nodes will be reserved for the user.
+
+See the exact syntax in the http://tbd[topology reference].
+
+==== Handling failures
+
+It's possible to have errors when your workflow is executed. *ProActive Scheduler* provides several mechanisms to deal
+with exceptional situations in your workflows.
+
+To understand if a task is successfully finished or not the scheduler checks its *exit code* (for native tasks) or
+*exceptions* (for java/script tasks). Then it desides what to do next accodting to the following parameters:
+
+* *cancelJobOnError* (optional - false by default) - defines whether the job must continue when a user exception or
+error occurs during the job process. This property can also be defined in each task. If the value of this property
+is defined at the job level, each cancelJobOnError property of each task will have this value as the default one
+(excepted if this property has been set at the task level). 'True' implies for the job to immediately stop
+every remaining running tasks if an error occurs in one of the tasks. It is useful when there is no need to go further after a task failure.
+
+* *restartTaskOnError* (optional - anywhere by default) - defines whether tasks that have to be restarted will
+restart on an other resource. Defining this property will set the restartTaskOnError property of each task to this
+value as the default one (excepted if this property has been set at the task level). Possible values are 'anywhere'
+or 'elsewhere' meaning respectively that the concerned task will be restart on any available resources or especially
+on a different one. A task can be restarted when an exception occurred (Java Task) or an error code is returned (Native Task).
+
+* *maxNumberOfExecution* (optional - 1 by default) - defines how many times tasks are allowed to be restarted.
+Defining this property will set the nbMaxOfExecution property of each task to this value as the default one
+(excepted if this property has been set at the task level). The value has to be a non-negative and non-null integer.
+
+
+==== Planification
+
+MISSING
 
 == Reference
 
 === Job and task specification
+
+=== Topology Types
+include::./references/TopologyTypes.adoc[]
 
 === Scheduler Command line
 include::./references/SchedulerCLI.adoc[]
