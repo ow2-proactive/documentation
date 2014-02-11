@@ -217,7 +217,28 @@ TIP: Use the *Workflow Studio* to create complex workflows, it is much easier th
 
 === Dependency
 
-MISSING
+Dependencies can be set between tasks in a TaskFlow job. It provides a way to execute your tasks in a specified order,
+but also to forward result of an ancestor task to its children as parameter. Dependency between tasks is then
+both a temporal dependency and a data dependency.
+
+image::dependency.png[align=center]
+
+Dependencies between tasks can be added either in *ProActive Workflow Studio* or simply in workflow XML as shown below:
+
+[source, xml]
+----
+<taskFlow>
+    <task name="task1">
+	    <javaExecutable class="MyTask1"/>
+    </task>
+    <task name="task2">
+        <depends>
+            <task ref="task1"/>
+        </depends>
+		<javaExecutable class="MyTask2"/>
+    </task>
+</taskFlow>
+----
 
 === Replicate
 
@@ -545,14 +566,24 @@ native executable: *PAS\_TASK\_ITERATION* and *PAS\_TASK\_REPLICATION*:
 
 == Job/Task customization
 
-Workflow scripts
-Selection
-Pre/Post/Clean
-Control execution
-Run computation on a particular node (Selection?)
-Run computation with your system account
-Reserve more than one node for a task (parallel environment)
-Handling failures (retry on error, max number of exec, cancel on error, ...)
+
+
+=== Workflow scripts
+
+==== Selection
+
+==== Pre/Post/Clean
+
+=== Control execution
+
+==== Run computation on a particular node (Selection?)
+
+==== Run computation with your system account
+
+==== Reserve more than one node for a task (parallel environment)
+
+==== Handling failures (retry on error, max number of exec, cancel on error, ...)
+
 Planification
 
 == Other
