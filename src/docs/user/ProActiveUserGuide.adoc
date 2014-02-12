@@ -461,7 +461,7 @@ character.
 
 -   The same scheme is used upon *replicate* actions: newly created
     tasks are named _T*1_, _T*2_, and so on. The number following the
-    \* separator represents the *replication index*.
+    $$*$$ separator represents the *replication index*.
 
 -   When combining both of the above, the resulting task names are of
     the form: _T#1*1_, _T#2*4_, etc., in that precise order.
@@ -470,94 +470,75 @@ character.
 
 Those indexes are also available when creating a task. They can be
 obtained using a special string that will be substituted with the actual
-iteration or replication index at runtime: *\$IT* for the iteration
-index, and *\$REP* for the replication index. Those macro can be used in
+iteration or replication index at runtime: *$IT* for the iteration
+index, and *$REP* for the replication index. Those macro can be used in
 the following locations:
 
 -   *Java Executable parameters:*
 
-    ``` {.xml}
-    <javaExecutable class="net.example.Executable">
-      <parameters>
-        <parameter name="images" value="/some/path/images/pic_$IT_$REP.jpg" />
-    ```
-
-    ``` {.java}
-    JavaTask t = new JavaTask();
-    t.setExecutableClassName("net.example.Executable");
-    t.addArgument("images","/some/path/images/pic_$IT_$REP.jpg");
-    ```
+``` {.xml}
+<javaExecutable class="net.example.Executable">
+  <parameters>
+    <parameter name="images" value="/some/path/images/pic_$IT_$REP.jpg" />
+```
 
 -   *Native Executable arguments:*
 
-    ``` {.xml}
-    <staticCommand value="/path/to/bin.sh">
-      <arguments>
-        <argument value="/some/path/$IT/$REP.dat" />
-    ```
-
-    ``` {.java}
-    NativeTask nt = new NativeTask();
-    nt.setCommandLine(new String[] { "/path/to/bin.sh", "/path/to/$ID/$REP.dat" });
-    ```
+``` {.xml}
+<staticCommand value="/path/to/bin.sh">
+  <arguments>
+    <argument value="/some/path/$IT/$REP.dat" />
+```
 
 -   *Dataspace input and output:*
 
-    ``` {.xml}
-    <task name="t1" retries="2">
-      <inputFiles>
-        <files includes="foo_$IT_$REP.dat" accessMode="transferFromInputSpace"/>
-      </inputFiles><outputFiles>
-        <files includes="bar_$IT_$REP.res" accessMode="transferToOutputSpace"/>
-    ```
-
-    ``` {.java}
-    task.addInputFiles("foo_$IT_$REP.dat",OutputAccessMode.TransferToOutputSpace);
-    task.addOutputFiles("bar_$IT_$REP.res",OutputAccessMode.none);
-    ```
+``` {.xml}
+<task name="t1" retries="2">
+  <inputFiles>
+    <files includes="foo_$IT_$REP.dat" accessMode="transferFromInputSpace"/>
+  </inputFiles><outputFiles>
+    <files includes="bar_$IT_$REP.res" accessMode="transferToOutputSpace"/>
+```
 
 -   *Script :*
 
-    ``` {.xml}
-    <task>
-      <pre><script><code language="javascript">
+``` {.xml}
+<task>
+  <pre>
+    <script>
+        <code language="javascript">
             var f = new java.io.File(".lock_$IT_$REP");
             f.createNewFile();
-      </code></script></pre>
-    ```
+        </code>
+      </script>
+    </pre>
+```
 
-    ``` {.java}
-    task.setPreScript(new SimpleScript("var f = new java.io.File(\".lock_$ID_$REP\"); f.createNewFile();", "javascript"));
-    ```
-
-    Scripts affected by the macro substitution are: Pre, Post, Command
-    generation and Control Flow. *No substitution will occur in
-    selection scripts.*
+NOTE: Scripts affected by the macro substitution are: Pre, Post, Command
+generation and Control Flow. *No substitution will occur in
+selection scripts.*
 
 ==== Task executable
 
 The iteration and replication indexes are available inside the
 executables launched by tasks.
 
-In Java tasks, the indexes are exported through the following Java
-properties: *pas.task.iteration* and *pas.task.replication*.
+In Java and Script tasks, the indexes are exported through the following Java
+properties: +pas.task.iteration+ and +pas.task.replication+.
 
 ``` {.java}
-public Serializable execute(TaskResult... results) throws Throwable {
   int it  = System.getProperty("pas.task.iteration");
   int dup = System.getProperty("pas.task.replication");
-}
 ```
 
 In a similar fashion, environment variables are set when launching a
-native executable: *PAS\_TASK\_ITERATION* and *PAS\_TASK\_REPLICATION*:
+native executable: +PAS_TASK_ITERATION+ and +PAS_TASK_REPLICATION+:
 
 ``` {.sh}
 #!/bin/sh
 /path/to/bin.sh /path/to/file/${PAS_TASK_ITERATION}/${PAS_TASK_REPLICATION}.dat
 
 ```
-
 
 === Example: Embarrassingly Parallel problem
 
