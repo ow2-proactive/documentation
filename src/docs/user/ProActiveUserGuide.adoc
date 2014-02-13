@@ -194,11 +194,132 @@ usually makes more sens when using script or Java tasks.
 
 == Data Management
 
-Passing data between tasks
-parameters / results
-variable / properties (example: native task with env variables, using pre script XOR forkenv)
-Input/Output data (introduce NFS, dataspaces, global and user spaces)
-A job that reads data from files and outputs in a file
+One of the major questions after being able to submit and execute simple tasks is how to handle data.
+
+=== Workflow Variables
+
+Beside the big data that you might use for your computations there is an ability to pass some information
+from one task to another. On the job level you can defined *variables* that are available in all tasks.
+
+[source, xml]
+----
+<variables>
+    <variable name="variable" value="value"/>
+</variables>
+----
+
+Then anywhere in your task you can reference to it. For example in a *Groovy* script task do it in the following way
+
+[source]
+----
+String var = variables.get("variable");
+----
+
+If the a task depends of several tasks and each task modifies the same variable, the final value of the variable
+which is propagated down the execution chain, depends on the *order of task execution*.
+Therefore the users need to take appropriate measure to prevent any mal-effects of such raise conditions.
+
+You can set any Java serializable object as a variable value. They will be converted into strings using
+toString() method when required. For instance to make those values available as environment variables in *native* tasks.
+
+
+=== Passing data between tasks
+
+Another important mechanism of data exchange is the task *result*. Anywhere in a task (usually at the end) you a reserved
+variable *result* to any Java object and it will be available in tasks depending on it. Moreover in case of several
+dependencies results will be aggregated. E.g. for a task written in Groovy
+
+[source]
+----
+// task1
+result = "task1";
+----
+
+[source]
+----
+// task2
+result = "task2";
+----
+
+in *task3* that depends on tasks *task1* and *task2*
+
+[source]
+----
+// task3
+println(results[0]);
+// will print "task1"
+println(results[1]);
+// will print "task2"
+----
+
+TIP: The same as for variables *results* will be aggregated according to tasks termination, so results[0] can contain
+"task2" and results[1] can contain "task1".
+
+==== Job Result
+
+Once a Job is terminated, it is possible to get its result. You can only get the result of the job that you own.
+Job result is a serializable object and you can retrieve it either from Java API or command line (it will be converted to
+a string).
+
+Also it is available in the *ProActive Scheduler Portal* in the *Preview* tab.
+
+=== Input/Output Data in Shared Directory
+
+The easiest way to use your data on computing machines is to set up a *shared directory* available on all nodes. For
+Linux it's typically an NFS directory, for Windows it could be a Samba Directory. Than in tasks just read files as
+there where local
+
+[source]
+----
+File inputData = new File("/data/username/inputfile");
+----
+
+This approach has some limitations though
+
+* shared folder must be mounted *identically* on all computing hosts
+* cannot be used with *heterogeneous resources*, e.g. Linux and Windows hosts
+
+=== Data Spaces
+
+If a shared folder is not an option in your environment the scheduler provides a convenient way to access
+you data. It has:
+
+* a *global space* which is available to all users of the scheduler
+* a *user space* which is a personal user data storage
+
+Usually these are folders on the machine where "ProActive Scheduler" server is launched.
+
+Files that are stored there can be read from all computing nodes. In order to do it in a task set up the data management
+on a task or job level by specifying *input* and *output files*
+
+[source, xml]
+----
+        <task name="task1">
+            ...
+            <inputFiles>
+                <files includes="tata" accessMode="transferFromGlobalSpace"/>
+            </inputFiles>
+            <outputFiles>
+                <files includes="titi*" accessMode="transferToGlobalSpace"/>
+            </outputFiles>
+            ...
+        </task>
+----
+
+Then before executing this task Proactive Scheduler transfers all files to a host where task will be executed
+and put it to the special place called *local space*. Then file can be read normally like shown in example:
+
+[source]
+----
+File inputFile = new File(new URI(localspace.getRealURI()+"/tata"))
+----
+
+All the files produced by the task with the name "titi*" (e.g titi, titi2 etc) will be transferred back to global space
+automatically by the scheduler once the task is finished.
+
+Files can be also transferred from/to use space by specifying *transferFromUserSpace*/*transferToUserSpace*
+accordingly.
+
 
 == Workflow concepts
 
@@ -206,7 +327,7 @@ Workflows comes with constructs that help you distribute your computation. The t
 http://try.activeeon.com/tutorials/adv.html[Advanced workflows^] is a nice introduction to workflows with
 ProActive.
 
-Three constructs are available:
+The following constructs are available:
 
 - *Dependency*
 - *Replicate*
