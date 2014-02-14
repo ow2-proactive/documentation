@@ -48,7 +48,7 @@ One can use **ProActive Workflow Studio**  to create and submit workflows graphi
 They can simply drag-and-drop various task constructs and draw their dependencies to form complex jobs.
 It also provides various flow control widgets such as conditional branch, loop, replicate etc to construct complex workflows.
 
-// TODO image workflow
+image::flow_spec_dependency.png[align="center"]
 
 In this tasks graph, we see that task 4 is preceded by task 1, that
 means scheduler waits the end of task 1 execution before launching task
@@ -88,8 +88,7 @@ link:examples/native_task.xml[XML workflow^] or you can also build it yourself u
 
 Native application by nature can be tied to a given operating system so
 if you have different nodes at your disposal, you might need to select a suitable node to run your native task.
-This can be achieved using selection script.
-// TODO link
+This can be achieved using <<_selection,selection script>>.
 
 === Dynamic language support
 
@@ -142,7 +141,7 @@ link:examples/mpi_task.xml[XML workflow^] or you can also build it yourself usin
 
 To achieve the best performance for MPI applications nodes can be selected taking into account their *network topology*. One might want to select nodes that are as
 close as possible to obtain better network performance or nodes on different hosts to split the I/O load.
-// TODO link to ref
+Refer to the <<_topology_types>> for more details.
 
 === Run a workflow
 
@@ -154,13 +153,11 @@ the job will be started on the resources controlled by ProActive Resource
 Manager. Finally, once finished, the job goes to the queue of finished
 jobs and will wait until the user retrieves its result.
 
-You can submit a workflow to the Scheduler using the *Workflow Studio*, the Scheduler Web interface or command
-line tools. For advanced users we also expose REST and JAVA APIs.
-// TODO link
+You can submit a workflow to the Scheduler using the *Workflow Studio*, the Scheduler Web interface or <<_scheduler_command_line,command
+line tools>>. For advanced users we also expose REST and JAVA APIs.
 
-TIP: During the submission, you will be able to edit workflow's variables, so you can effectively use
+TIP: During the submission, you will be able to edit <<_workflow_variables>>, so you can effectively use
 them to parametrize workflows executions and work with workflows as templates.
-// TODO link
 
 ==== Job/Task states
 
@@ -199,7 +196,7 @@ One of the major questions after being able to submit and execute simple tasks i
 === Workflow Variables
 
 ProActive Scheduler provides a mechanism to propagate data down the execution chain.
-On the job level you can defined *variables* that are available in all tasks.
+On the job level you can define *variables* that are available in all tasks.
 
 [source, xml]
 ----
@@ -208,7 +205,7 @@ On the job level you can defined *variables* that are available in all tasks.
 </variables>
 ----
 
-Then anywhere in your task you can reference to it. For example in a *Groovy* script task do it in the following way
+Then anywhere in your task you can reference to it. For example in a *Groovy* script task, you can use:
 
 [source]
 ----
@@ -219,15 +216,19 @@ If the a task depends of several tasks and each task modifies the same variable,
 which is propagated down the execution chain, depends on the *order of task execution*.
 Therefore the users need to take appropriate measure to prevent any mal-effects of such raise conditions.
 
-You can set any Java serializable object as a variable value. They will be converted into strings using
-toString() method when required. For instance to make those values available as environment variables in *native* tasks.
+You can set any http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html[Java serializable object^]
+ as a variable value. They will be converted into strings using
+http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#toString()[toString()^]
+ method when required. For instance to make those values available as environment variables in *native* tasks.
+
+WARNING: In native tasks, the variables can be read but not written to.
 
 
 === Passing data between tasks
 
 Another important mechanism of data exchange is the task *result*. Anywhere in a task (usually at the end) you can set a reserved
 variable *result* to any Java object and it will be available in tasks depending on it. Moreover in case of several
-dependencies results will be aggregated. E.g. for a task written in Groovy
+dependencies results will be aggregated. E.g. for a task written in Groovy:
 
 [source]
 ----
@@ -241,7 +242,7 @@ result = "task1";
 result = "task2";
 ----
 
-in *task3* that depends on tasks *task1* and *task2*
+In *task3* that depends on tasks *task1* and *task2*:
 
 [source]
 ----
@@ -252,51 +253,51 @@ println(results[1]);
 // will print "task2"
 ----
 
-TIP: The same as for variables *results* will be aggregated according to tasks termination, so results[0] can contain
+TIP: Similar to variables, *results* will be aggregated according to tasks termination, so results[0] can contain
 "task2" and results[1] can contain "task1".
 
 ==== Job Result
 
 Once a Job is terminated, it is possible to get its result. You can only get the result of the job that you own.
-Job result is a serializable object and you can retrieve it either from Java API or command line (it will be converted to
+A Job result is the collection of the tasks results and you can retrieve it either from Java API or <<_scheduler_command_line,command line>>
+ (it will be converted to
 a string).
 
-Also it is available in the *ProActive Scheduler Portal* in the *Preview* tab.
+Also it is available in the *ProActive Scheduler Portal* in the _Preview_ tab.
 
 === Input/Output Data in Shared Directory
 
-The easiest way to use your data on computing machines is to set up a *shared directory* available on all nodes. For
-Linux it's typically an NFS directory, for Windows it could be a Samba Directory. Than in tasks just read files as
-there where local
+The easiest way to use your data on computing machines is to set up a *shared directory* available on all Compute Hosts. For
+Linux it's typically a NFS directory, for Windows it could be a Samba Directory. Then in tasks you can manipulate
+files seamlessly across ProActive Nodes.
 
 [source]
 ----
 File inputData = new File("/data/username/inputfile");
 ----
 
-This approach has some limitations though
+This approach has some limitations though:
 
-* shared folder must be mounted *identically* on all computing hosts
-* cannot be used with *heterogeneous resources*, e.g. Linux and Windows hosts
+* Shared folder must be mounted *identically* on all Compute Hosts
+* Can be difficult to use with *heterogeneous resources*, e.g. Linux and Windows hosts
 
 === Data Spaces
 
-If a shared folder is not an option in your environment the scheduler provides a convenient way to access
-you data. It has two types of storage on the host where the server is running:
+If a shared folder is not an option in your environment the ProActive Scheduler provides a convenient way to access
+your data. It has two types of storage on the host where the server is running:
 
-* a *global space* where anyone can read/write files
-* a *user space* which is a personal user data storage
+* A *Global Space* where anyone can read/write files
+* An *User Space* which is a personal user data storage
 
-By default these spaces are linked to folders in the *temp* directory
+By default these spaces are linked to folders in the *temporary* directory of the ProActive Scheduler host:
 
-    TEMP_DIR/scheduling/defaultglobal
-    TEMP_DIR/scheduling/defaultuser
+ * +TEMP_DIR/scheduling/defaultglobal+
+ * +TEMP_DIR/scheduling/defaultuser+
 
-But it can be changed in
+But it can be changed in +PROACTIVE_HOME/config/scheduler/settings.ini+.
 
-    PROACTIVE_HOME/config/scheduler/settings.ini
-
-All files that are stored in these spaces can be read from all computing nodes. In order to do it in a task set up the data management
+All files that are stored in these spaces can be read from all computing nodes.
+In order to do it in a task set up the data management
 on a task or job level by specifying *input* and *output files*
 
 [source, xml]
@@ -313,23 +314,23 @@ on a task or job level by specifying *input* and *output files*
         </task>
 ----
 
-Then before executing this task Proactive Scheduler automatically transfers all files to a host where task will be executed
-and put it to the special place called *local space*. Then file can be read normally like shown in example:
+Then before executing this task Proactive Scheduler automatically transfers all files to a ProActive Node where task will be executed
+and put it to the special place called *Local Space*. Then file can be read normally like shown in example:
 
 [source]
 ----
 File inputFile = new File(new URI(localspace.getRealURI()+"/tata"))
 ----
 
-All the files produced by the task with the name "titi*" (e.g titi, titi2 etc) will be transferred back to global space
+All the files produced by the task with the name "titi*" (e.g titi, titi2 etc) will be transferred back to Global Space
 automatically by the scheduler once the task is finished.
 
-Files can be also transferred from/to use space by specifying *transferFromUserSpace*/*transferToUserSpace*
+Files can be also transferred from/to User Space by specifying +transferFromUserSpace+/+transferToUserSpace+.
 accordingly.
 
-Before running your jobs you should first *upload* your files into either global or local space. To do it you can export folders linked to
+Before running your jobs you should first *upload* your files into either Global or Local Space. To do it you can export folders linked to
 these spaces by one of a standard protocols like *FTP*, *NFS* etc or use available web interfaces like
-http://pyd.io[Pydio/AjaXplorer].
+http://pyd.io[Pydio/AjaXplorer^].
 
 == Workflow concepts
 
@@ -352,7 +353,7 @@ Dependencies can be set between tasks in a TaskFlow job. It provides a way to ex
 but also to forward result of an ancestor task to its children as parameter. Dependency between tasks is then
 both a temporal dependency and a data dependency.
 
-image::dependency.png[align=center]
+image::flow_spec_dependency.png[align="center"]
 
 Dependencies between tasks can be added either in *ProActive Workflow Studio* or simply in workflow XML as shown below:
 
