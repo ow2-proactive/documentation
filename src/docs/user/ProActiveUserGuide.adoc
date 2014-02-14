@@ -832,6 +832,13 @@ MISSING
 
 === Job and task specification
 
+Workflows are written in XML and we provide a XSD grammar to help you write and validate them.
+The Workflows XSD is available http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.2/schedulerjob.xsd[here^]
+and you can also find the documentation link:schedulerjob.html[here^].
+
+TIP: Setup your IDE to use the http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.2/schedulerjob.xsd[Workflow XSD^],
+you will benefit from live validation and completion!
+
 === Topology Types
 include::./references/TopologyTypes.adoc[]
 

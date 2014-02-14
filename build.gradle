@@ -6,6 +6,7 @@ buildscript {
 
     dependencies {
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:0.8.0'
+        classpath 'xalan:xalan:2.7.1'
     }
 }
 
@@ -44,4 +45,13 @@ task developer(type: org.asciidoctor.gradle.AsciidoctorTask) {
     ]
 }
 
-task('build', dependsOn: ['user', 'admin', 'developer'])
+task xsdDoc(type: JavaExec) {
+    inputs.files file('src/xsd/schedulerjob.xsd'), file('src/xsd/xs3p.xsl')
+    outputs.files file("$buildDir/schedulerjob.html")
+
+    classpath buildscript.configurations.classpath
+    main 'org.apache.xalan.xslt.Process'
+    args '-IN', 'src/xsd/schedulerjob.xsd', '-XSL', 'src/xsd/xs3p.xsl', '-OUT', "$buildDir/asciidoc/schedulerjob.html"
+}
+
+task('build', dependsOn: ['user', 'admin', 'developer', 'xsdDoc'])
