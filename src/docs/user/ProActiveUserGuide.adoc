@@ -40,9 +40,9 @@ along with its dependencies (libraries, executables etc) into a self-contained a
 
 *ProActive Scheduler* currently supports three main types of tasks:
 
-- +Native Task+, an executable with eventual parameters to be executed
-- +Script Task+, a script writen in Groovy, Ruby, Python and other languages supported by the JSR-223
-- +Java Task+, a task written in Java extending the Scheduler API
+- *Native Task*, an executable with eventual parameters to be executed
+- *Script Task*, a script writen in Groovy, Ruby, Python and other languages supported by the JSR-223
+- *Java Task*, a task written in Java extending the Scheduler API
 
 One can use **ProActive Workflow Studio**  to create and submit workflows graphically .
 They can simply drag-and-drop various task constructs and draw their dependencies to form complex jobs.
@@ -61,7 +61,7 @@ called a dependence, and we say that task 4 **depends** on task 1.
 We see that task 1, 2 and 3 are not linked, so these three tasks can be
 executed in **parallel**, because there are independent from each other.
 
-Definition of the workflow graph is made at job definition, before
+Definition of the tasks graph is made at workflow definition, before
 scheduling, and cannot be modified during the job execution.
 
 A *finished job* contains the results and logs of each task. Upon failure,
@@ -360,13 +360,13 @@ Dependencies between tasks can be added either in *ProActive Workflow Studio* or
 ----
 <taskFlow>
     <task name="task1">
-	    <javaExecutable class="MyTask1"/>
+        <javaExecutable class="MyTask1"/>
     </task>
     <task name="task2">
         <depends>
             <task ref="task1"/>
         </depends>
-		<javaExecutable class="MyTask2"/>
+        <javaExecutable class="MyTask2"/>
     </task>
 </taskFlow>
 ----
@@ -673,8 +673,15 @@ native executable: +PAS_TASK_ITERATION+ and +PAS_TASK_REPLICATION+:
 
 === Example: Embarrassingly Parallel problem
 
- (Link to tutorial)
+An http://en.wikipedia.org/wiki/Embarrassingly_parallel[Embarrassingly Parallel problem^] is a problem that is easy
+to split into smaller independent tasks. With ProActive Scheduler you can tackle this type of problem with the
+<<_replicate>> construct.
 
+TIP: Familiar with http://en.wikipedia.org/wiki/MapReduce[MapReduce^]? Well, a workflow using replication
+uses similar concepts.
+
+The http://try.activeeon.com/tutorials/adv.html[Advanced workflows^] is an example of an embarrassingly parallel
+problem where the computation is easily distributed across ProActive Nodes.
 
 == Job/Task customization
 
@@ -682,7 +689,7 @@ Now when your tasks are ready you can customize several aspects of the execution
 
 === Workflow scripts
 
-*ProActive Scheduler* supports portable script execution through the +JSR-223+ Java
+*ProActive Scheduler* supports portable script execution through the *JSR-223* Java
 Scripting capabilities. Scripts can be written in any language supported by the underlying
 Java Runtime Environment.
 
@@ -702,8 +709,7 @@ that indicates if the candidate node is suitable for the execution of the associ
 
 A java helper *org.ow2.proactive.scripting.helper.selection.SelectionUtils* is provided for allowing
 user to simply make some kind of selections. Some script samples are available in
-
-    PROACTIVE_HOME/samples/scripts/selection
++PROACTIVE_HOME/samples/scripts/selection+.
 
 The following example selects only nodes running on Windows:
 
