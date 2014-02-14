@@ -830,9 +830,50 @@ Defining this property will set the nbMaxOfExecution property of each task to th
 (excepted if this property has been set at the task level). The value has to be a non-negative and non-null integer.
 
 
-==== Planification
+==== Cron Tasks
+*ProActive Scheduler* supports the execution of time-based tasks or cron tasks. The users can assign a cron expression to  the loop variable of a Control Flow Block in a ProActive Job. All tasks which belong that Control Flow Block will be executed iteratively and indefinitely. The start time of the next iteration is the next point of time specified by the cron expression. 
 
-MISSING
+===== Cron Expression Syntax
+The syntax of the follows the UNIX crontab pattern, a string consists of five space-separated segments.  Please refer http://www.sauronsoftware.it/projects/cron4j/manual.php#p02[cron4j documentation] for further details.
+
+===== Setting up Cron Tasks
+Setting up a cron task requires two steps:
+
+* Define a Control Flow Block with the desired cron tasks
+* Assign a cron expression as the loop variable value
+
+Example: 
+----
+<job name=”cron_job”>
+     <genericInformation>
+        <info name="START_AT" value="2014-01-01T00:00:00+01:00"/>
+    </genericInformation>
+    <task name=”cron_task”>
+         <controlFlow>
+             <loop target=”cron_task”>
+                 <script>
+                     loop = “10 * * * *”
+                 </script>
+             <loop>
+         </controlFlow>
+     </task>
+</job>
+----
+
+===== Notes
+
+* The default ProActive Scheduler policy does not support cron task executions. Therefore it is required to set 'org.ow2.proactive.scheduler.policy.ExtendedSchedulerPolicy' as the scheduler policy at ProActive Scheduler startup.
+
+* The execution of the first iteration occurs immediately and does not depend on the cron expression specified. However the user can specify a start time for the first iteration using 'START_AT' generic information. Its value should be ISO 8601 compliant.
+
+* Each iteration yields one or more task results and the user can query the job state and task states to retrieve information of each iteration. 
+
+* It is assumed that execution time of each iteration is less that time gap specified by the cron expression. If the execution time of an iteration is longer, the execution of the next iteration will occur at next point of time with respect to the current time. For instance it is possible to observe lesser number of iteration executed within a certain time period than number of expected iterations, if some iterations had take longer finish time. 
+
+* If the execution of a task fails within an iteration, the cron execution is terminated. In other words, the 'loop' breaks, in case of a failure of any task execution belong to the iteration. 
+
+* ProActive Scheduler executes any cron task indefinitely. Therefore the state of ProActive Job will remain 'unfinished' unless the cron task execution terminates either by the user (for instance by killing the job or the task) or due an error in the task execution. 
+
 
 == Reference
 
