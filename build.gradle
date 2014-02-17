@@ -15,7 +15,7 @@ apply plugin: 'asciidoctor'
 //def outputFormats = ['fopub','html5']
 def outputFormats = ['html5']
 
-task('user', type: org.asciidoctor.gradle.AsciidoctorTask) {
+task user(type: org.asciidoctor.gradle.AsciidoctorTask) {
     sourceDocumentName file('src/docs/user/ProActiveUserGuide.adoc')
     sourceDir = sourceDocumentName.parentFile
     baseDir = sourceDocumentName.parentFile
@@ -45,6 +45,16 @@ task developer(type: org.asciidoctor.gradle.AsciidoctorTask) {
     ]
 }
 
+task index(type: org.asciidoctor.gradle.AsciidoctorTask) {
+    sourceDocumentName file('src/docs/index.adoc')
+    sourceDir = sourceDocumentName.parentFile
+    baseDir = sourceDocumentName.parentFile
+    backends = outputFormats
+    options = [
+            stylesheet: 'src/docs/activeeon.css'
+    ]
+}
+
 task xsdDoc(type: JavaExec) {
     inputs.files file('src/xsd/schedulerjob.xsd'), file('src/xsd/xs3p.xsl')
     outputs.files file("$buildDir/schedulerjob.html")
@@ -54,4 +64,4 @@ task xsdDoc(type: JavaExec) {
     args '-IN', 'src/xsd/schedulerjob.xsd', '-XSL', 'src/xsd/xs3p.xsl', '-OUT', "$buildDir/asciidoc/schedulerjob.html"
 }
 
-task('build', dependsOn: ['user', 'admin', 'developer', 'xsdDoc'])
+task('build', dependsOn: ['user', 'admin', 'developer', 'index', 'xsdDoc'])
