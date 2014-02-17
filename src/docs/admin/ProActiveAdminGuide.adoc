@@ -203,7 +203,7 @@ If you are not familiar with ProActive Scheduler you may want to try the *first 
 Combined with <<_proactive_agents,*ProActive Agents*>>, it gives you the same result as the *second method*.
 
 The *second method* implies that you have a remote access to Compute Hosts (e.g. SSH access) and you want to start and stop ProActive Nodes
-by launching commands remotely on Compute Hosts. For instance, it can be useful when a virtual machine needs to be deployed prior to launching the ProActive Node.
+by launching commands remotely on Compute Hosts. For instance, it can be useful when a virtual machine needs to be deployed prior to launching a ProActive Node.
 
 [[run_node_manually]]
 === Run a ProActive Node manually
@@ -219,10 +219,10 @@ where +-r+ option is used to specify the URL of the *Resource Manager*. You can 
 
 ==== Using node.jar
 
-It is also possible to launch a ProActive Node without even copying the ProActive Scheduler to a Compute Host. To to is you need to:
+It is also possible to launch a ProActive Node without even copying the ProActive Scheduler to a Compute Host:
 
 * Open a browser on the Compute Host.
-* Navigate to the Resource Manager Web Interface. Again, you can find the URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler launcher>> (look for the string +Resource Manager webapp+).
+* Navigate to the Resource Manager Web Interface. You can find the URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler launcher>> (look for the string +Resource Manager webapp+).
 * Use default demo/demo account to access the Resource Manager Web Interface.
 * Click on 'Portal->Launch' to download *node.jar*.
 * Run it:
@@ -232,7 +232,7 @@ $ java -jar node.jar
 
 It should connect to the ProActive Scheduler automatically.
 
-TIP: Launch several processes if you would like to execute several tasks at the same time on one host. Each
+TIP: Launch several processes if you would like to execute several Tasks at the same time on one host. Each
 ProActive Node process allows to execute one Task at a time.
 
 [[_deploy_nodes_via_ssh]]
@@ -259,8 +259,13 @@ To create a Node Source you can do any of the following:
 * Use the <<_resource_manager_command_line>>
 
 In order to create an SSH Node Source you should first configure an *SSH access* from the server to the Compute Hosts
-that http://www.linuxproblem.org/art_9.html[does not require password]. Then create a text file where you list all
-your Compute Hosts and numbers of Tasks that can be executed in parallel, for example:
+that http://www.linuxproblem.org/art_9.html[does not require password]. Then create a text file (refered to as +HOSTS_FILE+ below) containig the hostnames of all your Compute Hosts.
+Each line shoud have the format:
+[source]
+----
+HOSTNAME NODES_COUNT
+----
+where NODES_COUNT is the number of ProActive Nodes to start (corresponds to the number of Tasks that can be executed in parallel) on the corresponding host. Lines beginning with +#+ are comments. Here is an example:
 
 [source]
 ----
@@ -272,20 +277,22 @@ host2.mydomain.com 4
 192.168.0.11 16
 ----
 
-Then using this file create a Node Source either from the *Resource Manager Web Interface* or from the command line
+Then using this file create a Node Source either from the *Resource Manager Web Interface* or from the command line:
 [source]
 ----
 $ cd PROACTIVE_HOME
-$ ./bin/unix/rm-client -createns SSH_node_source --infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.SSHInfrastructure rmi://hostname:1099/ hosts_file 60000 3 \"\" /home/user/jdk/bin/java /home/user/scheduling Linux \"\" config/authentication/rm.cred
+$ ./bin/unix/rm-client -createns SSH_node_source --infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.SSHInfrastructure rmi://SCHEDULER_ADDRESS:1099/ HOSTS_FILE 60000 3 \"\" /home/user/jdk/bin/java PROACTIVE_HOME Linux \"\" config/authentication/rm.cred
 ----
+
+Don't forget to replace +SCHEDULER_ADDRESS+, +HOSTS_FILE+ and +PROACTIVE_HOME+ with the corresponding values.
 
 See <<_ssh_infrastructure>> reference for details on each parameter.
 
 [[_proactive_agents]]
 === ProActive Agents
 
-In your production environment you might want to control and limit the resources utilization for all hosts in your cluster,
-especially if these are desktop machines where people perform their daily activities. Using *ProActive Agent* you can:
+In your production environment you might want to control and limit the resources utilization on some or all Compute Hosts,
+especially if those are desktop machines where people perform their daily activities. Using *ProActive Agent* you can:
 
 * Control the number of ProActive Nodes on each Compute Host
 * Launch ProActive Nodes automatically when a Compute Host starts
@@ -798,17 +805,17 @@ MBean server can be accessed by remote applications using one of the two availab
 
 * The standard solution based on Remote Method Invocation (RMI) protocol is the RMI Connector accessible at the following url:
 +service:jmx:rmi:///jndi/rmi://HOSTNAME:PORT/JMXRMAgent+ where
-** *HOSTNAME* is the hostname on which the RM is started
+** *HOSTNAME* is the hostname on which the Resource Manager is started
 ** *PORT* (5822 by default) is the port number on which the JMX RMI connector server has been started. It is defined by the property pa.rm.jmx.port .
 * The ProActive Remote Objects Connector provides ProActive protocol aware connector accessible at the following url:
 +service:jmx:ro:///jndi/PA_PROTOCOL://HOSTNAME:PORT/JMXRMAgent+ where
 ** *PA_PROTOCOL* is the protocol defined by the proactive.communication.protocol property
-** *HOSTNAME* is the hostname on which the RM is started
+** *HOSTNAME* is the hostname on which the Resource Manager is started
 ** *PORT* is the protocol dependent port number usually defined by the property proactive.PA_PROTOCOL.port
 
 The name of the connector (JMXRMAgent by default) is defined by the property +rm.jmx.connectorname+.
 
-The JMX url to connect to can be obtained from the Authentication API of the RM or by reading the log file located in +PROACTIVE_HOME/.logs/RM.log+.
+The JMX url to connect to can be obtained from the Authentication API of the Resource Manager or by reading the log file located in +PROACTIVE_HOME/.logs/RM.log+.
 In that log file, the address you have to retrieve is the one where the JMX RMI connector server has been started
 
 [source]
@@ -816,7 +823,7 @@ In that log file, the address you have to retrieve is the one where the JMX RMI 
 [INFO 2010-06-17 10:23:27,813] [RM.AbstractJMXHelper.boot] Started JMX RMI connector server at service:jmx:rmi:///jndi/rmi://kisscool.inria.fr:5822/JMXRMAgent
 ----
 
-Once connected, you'll get an access to RM statistics and accounting.
+Once connected, you'll get an access to Resource Manager statistics and accounting.
 
 For example, to connect to the ProActive Scheduler JMX Agent with JConsole tool, just enter the url of the standard RMI
 Connector, as well as the username and the password.
