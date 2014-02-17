@@ -41,7 +41,7 @@ along with its dependencies (libraries, executables etc) into a self-contained a
 *ProActive Scheduler* currently supports three main types of tasks:
 
 - *Native Task*, an executable with eventual parameters to be executed
-- *Script Task*, a script writen in Groovy, Ruby, Python and other languages supported by the JSR-223
+- *Script Task*, a script written in Groovy, Ruby, Python and other languages supported by the JSR-223
 - *Java Task*, a task written in Java extending the Scheduler API
 
 One can use **ProActive Workflow Studio**  to create and submit workflows graphically .
@@ -779,7 +779,7 @@ set *runAsMe=true* in the task.
 
 ==== Reserve more than one node for a task (parallel environment)
 
-To create a http://tbd[multi-nodes] task often used for MPI applications you need to add a *parallel environment*
+To create a <<_mpi_application,multi-nodes>> task often used for MPI applications you need to add a *parallel environment*
 to the task. Parallel environment describes how many nodes are needed for a task as well as where these nodes should be
 located. For example if you'd like to run 4 processes in parallel it a scope of one task you should specify it in your task
 
@@ -790,7 +790,7 @@ located. For example if you'd like to run 4 processes in parallel it a scope of 
 
 ===== Defining a Topology for Multi-Nodes Tasks
 
-In addision to the number of ProActive Nodes you can specify the *nodes network topology*, e.g
+In addition to the number of ProActive Nodes you can specify the *nodes network topology*, e.g
 the set of nodes within some latency threshold, nodes on the same host and many more.
 
 
@@ -812,7 +812,7 @@ It's possible to have errors when your workflow is executed. *ProActive Schedule
 with exceptional situations in your workflows.
 
 To understand if a task is successfully finished or not the scheduler checks its *exit code* (for native tasks) or
-*exceptions* (for java/script tasks). Then it desides what to do next accodting to the following parameters:
+*exceptions* (for java/script tasks). Then it decides what to do next according to the following parameters:
 
 * *cancelJobOnError* (optional - false by default) - defines whether the job must continue when a user exception or
 error occurs during the job process. This property can also be defined in each task. If the value of this property
@@ -832,18 +832,23 @@ Defining this property will set the nbMaxOfExecution property of each task to th
 
 
 ==== Cron Tasks
-*ProActive Scheduler* supports the execution of time-based tasks or cron tasks. The users can assign a cron expression to  the loop variable of a Control Flow Block in a ProActive Job. All tasks which belong that Control Flow Block will be executed iteratively and indefinitely. The start time of the next iteration is the next point of time specified by the cron expression. 
+*ProActive Scheduler* supports the execution of time-based tasks or cron tasks. The users can assign a
+cron expression to the +loop+ variable of a *Loop* in a ProActive Job. All tasks which belong
+that Loop will be executed iteratively and indefinitely. The start time of the next iteration
+is the next point of time specified by the cron expression.
 
 ===== Cron Expression Syntax
-The syntax of the follows the UNIX crontab pattern, a string consists of five space-separated segments.  Please refer http://www.sauronsoftware.it/projects/cron4j/manual.php#p02[cron4j documentation] for further details.
+The syntax of the follows the UNIX crontab pattern, a string consists of five space-separated segments.
+ Please refer http://www.sauronsoftware.it/projects/cron4j/manual.php#p02[cron4j documentation] for further details.
 
 ===== Setting up Cron Tasks
 Setting up a cron task requires two steps:
 
-* Define a Control Flow Block with the desired cron tasks
-* Assign a cron expression as the loop variable value
+* Define a *Loop* with the desired cron tasks
+* Assign a cron expression as the +loop+ variable value
 
-Example: 
+Example:
+[source, xml]
 ----
 <job name=”cron_job”>
      <genericInformation>
@@ -861,19 +866,32 @@ Example:
 </job>
 ----
 
+You can find a complete example running a simple task every minutes in this link:examples/cron_task.xml[XML workflow^].
+
 ===== Notes
 
-* The default ProActive Scheduler policy does not support cron task executions. Therefore it is required to set 'org.ow2.proactive.scheduler.policy.ExtendedSchedulerPolicy' as the scheduler policy at ProActive Scheduler startup.
+* The default ProActive Scheduler policy does not support cron task executions. Therefore it is required
+ to set +org.ow2.proactive.scheduler.policy.ExtendedSchedulerPolicy+ as the scheduler policy at ProActive Scheduler startup.
+ See the link:ProActiveAdminGuide.html#_scheduler_properties[Administration Guide] to configure the Scheduler.
 
-* The execution of the first iteration occurs immediately and does not depend on the cron expression specified. However the user can specify a start time for the first iteration using 'START_AT' generic information. Its value should be ISO 8601 compliant.
+* The execution of the first iteration occurs immediately and does not depend on the cron expression specified.
+ However the user can specify a start time for the first iteration using +START_AT+ generic information.
+ Its value should be http://en.wikipedia.org/wiki/ISO_8601[ISO 8601^] compliant.
 
-* Each iteration yields one or more task results and the user can query the job state and task states to retrieve information of each iteration. 
+* Each iteration yields one or more task results and the user can query the job state and task states to
+retrieve information of each iteration.
 
-* It is assumed that execution time of each iteration is less that time gap specified by the cron expression. If the execution time of an iteration is longer, the execution of the next iteration will occur at next point of time with respect to the current time. For instance it is possible to observe lesser number of iteration executed within a certain time period than number of expected iterations, if some iterations had take longer finish time. 
+* It is assumed that execution time of each iteration is less that time gap specified by the cron expression.
+ If the execution time of an iteration is longer, the execution of the next iteration will occur at next point
+  of time with respect to the current time. For instance it is possible to observe lesser number of iteration
+   executed within a certain time period than number of expected iterations, if some iterations had take longer finish time.
 
-* If the execution of a task fails within an iteration, the cron execution is terminated. In other words, the 'loop' breaks, in case of a failure of any task execution belong to the iteration. 
+* If the execution of a task fails within an iteration, the cron execution is terminated. In other words,
+ the *Loop* breaks, in case of a failure of any task execution belong to the iteration.
 
-* ProActive Scheduler executes any cron task indefinitely. Therefore the state of ProActive Job will remain 'unfinished' unless the cron task execution terminates either by the user (for instance by killing the job or the task) or due an error in the task execution. 
+* ProActive Scheduler executes any cron task indefinitely. Therefore the state of ProActive Job will remain
+ +RUNNING+ unless the cron task execution terminates either by the user (for instance by killing the job
+  or the task) or due an error in the task execution.
 
 
 == Reference
