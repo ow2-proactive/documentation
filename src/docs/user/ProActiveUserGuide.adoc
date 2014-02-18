@@ -4,13 +4,13 @@ include::../common.adoc[]
 :imagesdir: src/docs/user/images
 
 == Overview
-*ProActive Scheduler* is a free and open-source *job scheduler*. The user specifies the computation that he/she desires in terms of series computation
+*ProActive Scheduler* is a free and open-source *job scheduler*. The user specifies the computation in terms of a series of computation
  steps along with their execution and data dependencies. The scheduler executes this computation on a cluster
  of computation resources, each step on the best-fit resource and in parallel wherever its possible.
 
 == Get started
 
-To submit your first computation to *ProActive Scheduler* link:ProActiveAdminGuide.html#_getting_started[install] it in
+To submit your first computation to *ProActive Scheduler*, link:ProActiveAdminGuide.html#_getting_started[install] it in
 your environment or just use our demo platform http://try.activeeon.com[try.activeeon.com^].
 
 *ProActive Scheduler* provides comprehensive interfaces that allow to:
@@ -98,7 +98,7 @@ http://docs.oracle.com/javase/6/docs/technotes/guides/scripting/programmer_guide
 .
 
 You can easily embed small scripts in your workflow.
-The nice thing is that the workflow will be self containing and will not require to compile your code before executing. However we
+The nice thing is that the workflow will be self-contained and will not require to compile your code before executing. However we
 recommend that you keep these scripts smalls to keep the workflow simple to understand.
 
 TIP: Use scripts to print debugging statements when you build a new workflow.
@@ -191,7 +191,7 @@ usually makes more sens when using script or Java tasks.
 
 == Data Management
 
-One of the major questions after being able to submit and execute simple tasks is how to handle data.
+One of the major questions after having learned to submit and execute simple tasks is how to handle data.
 
 === Workflow Variables
 
@@ -212,14 +212,14 @@ Then anywhere in your task you can reference to it. For example in a *Groovy* sc
 String var = variables.get("variable");
 ----
 
-If the a task depends of several tasks and each task modifies the same variable, the final value of the variable
+If the a task depends on several tasks and each task modifies the same variable, the final value of the variable
 which is propagated down the execution chain, depends on the *order of task execution*.
-Therefore the users need to take appropriate measure to prevent any mal-effects of such raise conditions.
+Therefore the users need to take appropriate measures to prevent any undesired effects of such race conditions.
 
 You can set any http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html[Java serializable object^]
  as a variable value. They will be converted into strings using
 http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#toString()[toString()^]
- method when required. For instance to make those values available as environment variables in *native* tasks.
+ method when required: for instance, to make those values available as environment variables in *native* tasks.
 
 WARNING: In native tasks, the variables can be read but not written to.
 
@@ -259,16 +259,16 @@ TIP: Similar to variables, *results* will be aggregated according to tasks termi
 ==== Job Result
 
 Once a Job is terminated, it is possible to get its result. You can only get the result of the job that you own.
-A Job result is the collection of the tasks results and you can retrieve it either from Java API or <<_scheduler_command_line,command line>>
+A Job result is the collection of the tasks' results and you can retrieve it either from Java API or <<_scheduler_command_line,command line>>
  (it will be converted to
 a string).
 
-Also it is available in the *ProActive Scheduler Portal* in the _Preview_ tab.
+It is also available in the *ProActive Scheduler Portal* in the _Preview_ tab.
 
 === Input/Output Data in Shared Directory
 
 The easiest way to use your data on computing machines is to set up a *shared directory* available on all Compute Hosts. For
-Linux it's typically a NFS directory, for Windows it could be a Samba Directory. Then in tasks you can manipulate
+Linux it's typically an NFS directory, for Windows it could be an SMB network share. Then in tasks you can manipulate
 files seamlessly across ProActive Nodes.
 
 [source]
@@ -278,7 +278,7 @@ File inputData = new File("/data/username/inputfile");
 
 This approach has some limitations though:
 
-* Shared folder must be mounted *identically* on all Compute Hosts
+* The path to the shared folder should be *identical* on all Compute Hosts
 * Can be difficult to use with *heterogeneous resources*, e.g. Linux and Windows hosts
 
 === Data Spaces
