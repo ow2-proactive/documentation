@@ -1,12 +1,14 @@
 = ProActive User Guide
-include::../common.adoc[]
+include::../common-settings.adoc[]
 :toc-title: User Guide
-:imagesdir: src/docs/user/images
 
 == Overview
-*ProActive Scheduler* is a free and open-source *job scheduler*. The user specifies the computation in terms of a series of computation
- steps along with their execution and data dependencies. The scheduler executes this computation on a cluster
- of computation resources, each step on the best-fit resource and in parallel wherever its possible.
+
+include::../Overview.adoc[]
+
+=== Glossary
+
+include::../Glossary.adoc[]
 
 == Get started
 
@@ -907,3 +909,4 @@ include::./references/TopologyTypes.adoc[]
 === Scheduler Command line
 include::./references/SchedulerCLI.adoc[]
 
+include::../Dedication.adoc[]

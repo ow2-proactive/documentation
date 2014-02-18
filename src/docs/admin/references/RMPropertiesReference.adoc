@@ -1,3 +1,6 @@
+Resource Manager Properties are read when ProActive Scheduler is started therefore you need to restart it
+to apply changes.
+
 [source]
 ----
 # definition of all java properties used by resource manager

@@ -1,0 +1,74 @@
+The following terms are used throughout the documentation:
+
+[[_glossary_proactive_scheduler]]
+ProActive Scheduler::
+Can refer to any of the following:
+  * A complete set of ProAcrive components.
+  * An archive that contains a released version of ProActive components, for example +ProActiveScheduling-3.4.0_bin_full.zip+.
+  * A set of server-side ProActive components installed and running on a <<_glossary_server_host,*Server Host*>>.
+
+[[_glossary_resource_manager]]
+Resource Manager:: ProActive component that manages <<_glossary_proactive_node,*ProActive Nodes*>> running on <<_glossary_compute_host,*Compute Hosts*>>.
+
+[[_glossary_scheduler]]
+Scheduler:: ProActive component that accepts <<_glossary_job,*Jobs*>> from users, orders the constituent <<_glossary_task,*Tasks*>> according to priority and resource availability, and eventually executes them on the resources (<<_glossary_proactive_node,*ProActive Nodes*>>) provided by the <<_glossary_resource_manager,*Resource Manager*>>.
+
+NOTE: Please note the difference between *Scheduler* and <<_glossary_proactive_scheduler,*ProActive Scheduler*>>.
+
+[[_glossary_rest_api]]
+REST API:: ProActive component that provides RESTful API for the <<_glossary_resource_manager,*Resource Manager*>> and the <<_glossary_scheduler,*Scheduler*>>.
+
+[[_glossary_rm_web_interface]]
+Resource Manager Web Interface:: ProActive component that provides a web interface to the <<_glossary_resource_manager,*Resource Manager*>>.
+
+[[_glossary_scheduler_web_interface]]
+Scheduler Web Interface:: ProActive component that provides a web interface to the <<_glossary_scheduler,*Scheduler*>>.
+
+[[_glossary_workflow_studio]]
+Workflow Studio:: ProActive component that provides a web interface for designing <<_glossary_workflow,*Workflows*>>.
+
+[[_glossary_server_host]]
+Server Host::
+  The machine on which <<_glossary_proactive_scheduler,*ProActive Scheduler*>> is installed.
+
++SCHEDULER_ADDRESS+::
+  The IP address of the <<_glossary_server_host,*Server Host*>>.
+
+[[_glossary_proactive_node]]
+ProActive Node::
+  The Java process running on a <<_glossary_compute_host,*Compute Host*>> that <<_glossary_proactive_scheduler,*ProActive Scheduler*>> uses to communicate with the <<_glossary_compute_host,*Compute Host*>> and execute <<_glossary_task,*Tasks*>>. One *ProActive Node* can execute one <<_glossary_task,*Task*>> at a time.
+
+[[_glossary_compute_host]]
+Compute Host::
+  Any machine which is meant to provide computational resources to be managed by the <<_glossary_proactive_scheduler,*ProActive Scheduler*>>. One or more <<_glossary_proactive_node,*ProActive Nodes*>> need to be running on the machine for it to be managed by the <<_glossary_proactive_scheduler,*ProActive Scheduler*>>.
+
+[NOTE]
+====
+Examples of *Compute Hosts*:
+
+* All machines of a cluster managed by <<_glossary_proactive_scheduler,*ProActive Scheduler*>>, except <<_glossary_server_host,*Server Host*>>.
+* All desktop machines in an organisation that have <<_glossary_proactive_agent,*ProActive Agents*>> installed.
+====
+
++PROACTIVE_HOME+::
+  The path to the extracted archive of <<_glossary_proactive_scheduler,*ProActive Scheduler*>> release, either on the <<_glossary_server_host,*Server Host*>> or on a <<_glossary_compute_host,*Compute Host*>>.
+
+[[_glossary_workflow]]
+Workflow::
+  User-defined representation of a distributed computation. Consits of the definitions of one or more <<_glossary_task,*Tasks*>> and their dependencies.
+
+[[_glossary_job]]
+Job::
+  An instance of a <<_glossary_workflow,*Workflow*>> submitted to the <<_glossary_proactive_scheduler,*ProActive Scheduler*>>. Sometimes also used as a synonym for <<_glossary_workflow,*Workflow*>>.
+
+[[_glossary_task]]
+Task::
+  A unit of computation handled by <<_glossary_proactive_scheduler,*ProActive Scheduler*>>. Both <<_glossary_workflow,*Workflows*>> and <<_glossary_job,*Jobs*>> are made of *Tasks*.
+
+[[_glossary_node_source]]
+Node Source::
+  A set of <<_glossary_proactive_node,*ProActive Nodes*>> deployed using the same deployment mechanism and sharing the same access policy.
+
+[[_glossary_proactive_agent]]
+ProActive Agent::
+  A daemon installed on a <<_glossary_compute_host,*Compute Host*>> that starts and stops <<_glossary_proactive_node,*ProActive Nodes*>> according to a schedule, restarts <<_glossary_proactive_node,*ProActive Nodes*>> in case of failure and enforces resource limits for the <<_glossary_task,*Tasks*>>.
