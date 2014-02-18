@@ -61,8 +61,7 @@ called a dependence, and we say that task 4 **depends** on task 1.
 We see that task 1, 2 and 3 are not linked, so these three tasks can be
 executed in **parallel**, because there are independent from each other.
 
-Definition of the tasks graph is made at workflow definition, before
-scheduling, and cannot be modified during the job execution.
+The task graph is defined by the user at the time of workflow creation, but can also be modified during the job execution by control flow actions such as <<_replicate>>.
 
 A *finished job* contains the results and logs of each task. Upon failure,
 a task can be restarted automatically or cancelled.
@@ -79,11 +78,11 @@ The Scheduler lets you define a native task that takes the name of the executabl
 Once the executable is wrapped as a task you can easily leverage some of the workflow constructs to run your
 executable in parallel.
 
-TIP:  We advise you to test your application first, make sure that it works on a simple use on
+TIP:  We advise you to test your application first, make sure that it works with a simple use case on
 one machine and then embed it in a workflow.
 
 You can find an example of such integration in this
-link:examples/native_task.xml[XML workflow^] or you can also build it yourself using the
+link:examples/native_task.xml[XML workflow^] or you can also build one yourself using the
 *Workflow Studio*.
 
 Native application by nature can be tied to a given operating system so
@@ -92,14 +91,13 @@ This can be achieved using <<_selection,selection script>>.
 
 === Dynamic language support
 
-Proactive Scheduler supports tasks  written in languages other than Java, with the currently supported dynamic languages being
+Proactive Scheduler supports tasks  written in languages other than Java. The currently supported dynamic languages are
 http://groovy.codehaus.org[Groovy^], http://www.jython.org[Python^], http://jruby.org[Ruby^] and
-http://docs.oracle.com/javase/6/docs/technotes/guides/scripting/programmer_guide/#jsengine[Javascript^]
-.
+http://docs.oracle.com/javase/6/docs/technotes/guides/scripting/programmer_guide/#jsengine[Javascript^].
 
 You can easily embed small scripts in your workflow.
 The nice thing is that the workflow will be self-contained and will not require to compile your code before executing. However we
-recommend that you keep these scripts smalls to keep the workflow simple to understand.
+recommend that you keep these scripts smalls to keep the workflow easy to understand.
 
 TIP: Use scripts to print debugging statements when you build a new workflow.
 
@@ -107,7 +105,7 @@ Please note that the script execution relies on Java implementation of the cited
 some limitations.
 
 You can find an example of a script task in this
-link:examples/script_task.xml[XML workflow^] or you can also build it yourself using the
+link:examples/script_task.xml[XML workflow^] or you can also build one yourself using the
 *Workflow Studio*. The http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial]
 relies on script task and is a nice introduction to workflows.
 
@@ -123,7 +121,7 @@ Applications built with MPI are often executed using the http://linux.die.net/ma
 It accepts several parameters to
 choose how many CPUs and how many machines will be used. One particular parameter is the machine file that is
 built by the Scheduler when using *multi node tasks*.
-Here is how a MPI application invocation would look like when executed with the Scheduler:
+Here is how an MPI application invocation would look like when executed with the Scheduler:
 
     mpirun -hostfile $PAS_NODESFILE myApplication
 
@@ -136,45 +134,43 @@ The variable +$PAS_NODESFILE+ contains the path to a machine file created by the
 Meaning that +myApplication+ will use 2 CPUs on +compute-host+ and 1 CPU on +another-host+.
 
 You can find an example of a script task in this
-link:examples/mpi_task.xml[XML workflow^] or you can also build it yourself using the
+link:examples/mpi_task.xml[XML workflow^] or you can also build one yourself using the
 *Workflow Studio*.
 
-To achieve the best performance for MPI applications nodes can be selected taking into account their *network topology*. One might want to select nodes that are as
-close as possible to obtain better network performance or nodes on different hosts to split the I/O load.
-Refer to the <<_topology_types>> for more details.
+To achieve the best performance for MPI applications, nodes can be selected taking into account their *network topology*. One might want to select nodes that are as
+close to each other as possible to obtain better network performance or nodes on different hosts to split the I/O load.
+Refer to <<_topology_types>> for more details.
 
 === Run a workflow
 
-To run a workflow, you submit it to *ProActive Scheduler*.
-The submission will perform some verifications to ensure that a workflow is
-correctly formed. Then, a job is created and inserted in the pending queue and
-waits for executions until free resources become available. Once done,
-the job will be started on the resources controlled by ProActive Resource
-Manager. Finally, once finished, the job goes to the queue of finished
-jobs and will wait until the user retrieves its result.
+To run a workflow, the user submits it to *ProActive Scheduler*.
+A verification is performed to ensure the well-formedness of the workflow.
+Next, a job is created and inserted into the pending queue and
+waits until free resources become available.
+Once the required resources are provided by the ProActive Resource Manager, the job is started. Finally, once the job is finished, it goes to the queue of finished
+jobs and waits until the user retrieves its result.
 
 You can submit a workflow to the Scheduler using the *Workflow Studio*, the Scheduler Web interface or <<_scheduler_command_line,command
 line tools>>. For advanced users we also expose REST and JAVA APIs.
 
 TIP: During the submission, you will be able to edit <<_workflow_variables>>, so you can effectively use
-them to parametrize workflows executions and work with workflows as templates.
+them to parameterize workflow execution and use workflows as templates.
 
 ==== Job/Task states
 
-During their execution, jobs and tasks goes through different states:
+During their execution, jobs and tasks go through different states:
 
 * +PENDING+: The job is waiting to be scheduled.
-* +RUNNING+: The job is running. Actually at least one of its task has been scheduled.
-* +STALLED+: The job has been launched but no task are currently running.
-* +FINISHED+:The job is finished. Every tasks are finished.
+* +RUNNING+: The job is running. At least one of its task has been scheduled.
+* +STALLED+: The job has been launched but no task is currently running.
+* +FINISHED+:The job is finished. All tasks are finished.
 * +PAUSED+: The job is paused waiting for user to resume it.
-* +CANCELED+: The job has been canceled due to user exception and order.
-This status runs when a user exception occurs in a task
-and when the user has asked to cancel On exception.
+* +CANCELED+: The job has been canceled because of an exception.
+This status is used when an exception is thrown by the user code of a task
+and when the user has asked to cancel the job on exception.
 * +FAILED+: The job has failed. One or more tasks have failed (due to resources failure).
 There is no more executionOnFailure left for a task.
-* +KILLED+: The job has been killed by a user.
-Nothing can be done anymore on this job expect read execution information such as output, time, etc.
+* +KILLED+: The job has been killed by the user.
 
 // TODO state diagram
 
@@ -183,11 +179,11 @@ Nothing can be done anymore on this job expect read execution information such a
 Once a job or a task is terminated, it is possible to get its result. You can only get the result of the job that you own.
 Results can be retrieved using the Scheduler web interface or the command line tools.
 
-Along with results you can also retrieve logs from the task executions (standard ouput and error output)
+Along with results you can also retrieve logs of the tasks (standard ouput and error output)
 as well as Scheduler logs that provide debugging information.
 
 NOTE: When running native application, the task result will be the exit code of the application. Results
-usually makes more sens when using script or Java tasks.
+usually make more sens when using script or Java tasks.
 
 == Data Management
 
@@ -283,7 +279,7 @@ This approach has some limitations though:
 
 === Data Spaces
 
-If a shared folder is not an option in your environment the ProActive Scheduler provides a convenient way to access
+If a shared folder is not an option in your environment, the ProActive Scheduler provides a convenient way to access
 your data. It has two types of storage on the host where the server is running:
 
 * A *Global Space* where anyone can read/write files
@@ -326,10 +322,9 @@ All the files produced by the task with the name "titi*" (e.g titi, titi2 etc) w
 automatically by the scheduler once the task is finished.
 
 Files can be also transferred from/to User Space by specifying +transferFromUserSpace+/+transferToUserSpace+.
-accordingly.
 
-Before running your jobs you should first *upload* your files into either Global or Local Space. To do it you can export folders linked to
-these spaces by one of a standard protocols like *FTP*, *NFS* etc or use available web interfaces like
+Before running your jobs you should first *upload* your files into either Global or User Space. To do it you can export folders linked to
+these spaces by one of the standard protocols like *FTP*, *NFS*, or use available web interfaces like
 http://pyd.io[Pydio/AjaXplorer^].
 
 == Workflow concepts
@@ -372,6 +367,7 @@ Dependencies between tasks can be added either in *ProActive Workflow Studio* or
 </taskFlow>
 ----
 
+[[_replicate]]
 === Replicate
 
 The *replication* allows the execution of multiple tasks in parallel when only one task
