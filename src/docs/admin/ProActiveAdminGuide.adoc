@@ -17,7 +17,7 @@ include::../Glossary.adoc[]
 
 == Get Started
 
-=== What you will need
+=== Requirements
 
 * http://www.oracle.com/technetwork/java/javase/downloads/index.html[JDK 1.6^] or later
 * http://www.activeeon.com/community-downloads[*ProActive Scheduler*^]
@@ -130,7 +130,7 @@ The *second method* implies that you have a remote access to Compute Hosts (e.g.
 by launching commands remotely on Compute Hosts. For instance, it can be useful when a virtual machine needs to be deployed prior to launching a ProActive Node.
 
 [[run_node_manually]]
-=== Run a ProActive Node manually
+=== Deploy ProActive Nodes manually
 
 ==== Using PROACTIVE_HOME
 
@@ -160,7 +160,7 @@ TIP: Launch several processes if you would like to execute several Tasks at the 
 ProActive Node process allows to execute one Task at a time.
 
 [[_deploy_nodes_via_ssh]]
-=== Deploy nodes via SSH
+=== Deploy ProActive Nodes via SSH
 
 The second way of deploying ProActive Nodes is to create <<_glossary_node_source,*Node Sources*>> from the ProActive Scheduler.
 
@@ -213,7 +213,7 @@ Don't forget to replace +SCHEDULER_ADDRESS+, +HOSTS_FILE+ and +PROACTIVE_HOME+ w
 See <<_ssh_infrastructure>> reference for details on each parameter.
 
 [[_proactive_agents]]
-=== ProActive Agents
+=== Deploy ProActive Nodes via Agents
 
 In your production environment you might want to control and limit the resources utilization on some or all Compute Hosts,
 especially if those are desktop machines where people perform their daily activities. Using *ProActive Agent* you can:

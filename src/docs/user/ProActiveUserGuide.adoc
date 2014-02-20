@@ -28,23 +28,23 @@ We also provide REST and command line interfaces for advanced users.
 === Jobs, workflows and tasks
 
 In order to use Scheduler for executing various computations, one needs to write the execution definition
-also known as the Workflow definition. A workflow definition is an XML file that adheres to XML schema for ProActive
-Workflows.
+also known as the Workflow definition. A workflow definition is an XML file that adheres to
+<<_job_and_task_specification,XML schema for ProActive Workflows>>.
 
 It specifies a number of XML tags for specifying execution steps, their sequence and dependencies.
 Each execution step corresponds to a task which is the smallest unit of execution that can be performed on a
  computation resources. There are several types of tasks which caters different use cases.
-
-For instance, a script
-task can be used to execute an inline script definition or a script file as an execution step whereas a
-native task can be used to execute a native executable file. It also possible to package an workflow definition
-along with its dependencies (libraries, executables etc) into a self-contained archive.
 
 *ProActive Scheduler* currently supports three main types of tasks:
 
 - *Native Task*, an executable with eventual parameters to be executed
 - *Script Task*, a script written in Groovy, Ruby, Python and other languages supported by the JSR-223
 - *Java Task*, a task written in Java extending the Scheduler API
+
+For instance, a script
+task can be used to execute an inline script definition or a script file as an execution step whereas a
+native task can be used to execute a native executable file. It also possible to package an workflow definition
+along with its dependencies (libraries, executables etc) into a self-contained archive.
 
 One can use **ProActive Workflow Studio**  to create and submit workflows graphically .
 They can simply drag-and-drop various task constructs and draw their dependencies to form complex jobs.
@@ -57,20 +57,21 @@ means scheduler waits the end of task 1 execution before launching task
 4. In a more concrete way, task 1 could be the calculation of a part of
 the problem to solve, and task 4 takes result provided by task 1 and
 compute another step of the calculation. We introduce here the concept
-of **result passing** between tasks, explained later. This relation is
-called a dependence, and we say that task 4 **depends** on task 1.
+of <<_passing_data_between_tasks,result passing>> between tasks. This relation is
+called a <<_dependency>>, and we say that task 4 **depends** on task 1.
 
 We see that task 1, 2 and 3 are not linked, so these three tasks can be
 executed in **parallel**, because there are independent from each other.
 
-The task graph is defined by the user at the time of workflow creation, but can also be modified during the job execution by control flow actions such as <<_replicate>>.
+The task graph is defined by the user at the time of workflow creation, but can also be modified during
+ the job execution by control flow actions such as <<_replicate>>.
 
 A *finished job* contains the results and logs of each task. Upon failure,
 a task can be restarted automatically or cancelled.
 
 === A simple example
 
-The http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial] on http://try.activeeon.com[try.activeeon.com]
+The http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial^] on http://try.activeeon.com[try.activeeon.com^]
 shows you how to build a simple workflow using script tasks.
 
 === Native application
@@ -116,7 +117,8 @@ Scripts can also be used to decorate tasks with specific actions, we support pre
 === MPI application
 
 http://en.wikipedia.org/wiki/Message_Passing_Interface[MPI^] is often used in the area of parallel computing.
-The Scheduler integrates with MPI with the concept of *multi node tasks*. This particular task will acquire several
+The Scheduler integrates with MPI with the concept of <<_reserve_more_than_one_node_for_a_task_parallel_environment,multi node tasks>>.
+ This particular task will acquire several
 nodes and will expose these nodes to the MPI environment.
 
 Applications built with MPI are often executed using the http://linux.die.net/man/1/mpirun[mpirun^] command.
@@ -149,10 +151,11 @@ To run a workflow, the user submits it to *ProActive Scheduler*.
 A verification is performed to ensure the well-formedness of the workflow.
 Next, a job is created and inserted into the pending queue and
 waits until free resources become available.
-Once the required resources are provided by the ProActive Resource Manager, the job is started. Finally, once the job is finished, it goes to the queue of finished
-jobs and waits until the user retrieves its result.
+Once the required resources are provided by the ProActive Resource Manager, the job is started. Finally,
+once the job is finished, it goes to the queue of finished
+jobs where its result can be retrieved.
 
-You can submit a workflow to the Scheduler using the *Workflow Studio*, the Scheduler Web interface or <<_scheduler_command_line,command
+You can submit a workflow to the Scheduler using the *Workflow Studio*, the Scheduler Web Interface or <<_scheduler_command_line,command
 line tools>>. For advanced users we also expose REST and JAVA APIs.
 
 TIP: During the submission, you will be able to edit <<_workflow_variables>>, so you can effectively use
@@ -261,7 +264,7 @@ A Job result is the collection of the tasks' results and you can retrieve it eit
  (it will be converted to
 a string).
 
-It is also available in the *ProActive Scheduler Portal* in the _Preview_ tab.
+It is also available in the *Scheduler Web Interface* in the _Preview_ tab.
 
 === Input/Output Data in Shared Directory
 
@@ -591,7 +594,7 @@ character.
 
 -   The same scheme is used upon *replicate* actions: newly created
     tasks are named _T*1_, _T*2_, and so on. The number following the
-    $$*$$ separator represents the *replication index*.
+    $$*$$ separator represents the *replication index*.|
 
 -   When combining both of the above, the resulting task names are of
     the form: _T#1*1_, _T#2*4_, etc., in that precise order.
@@ -682,11 +685,7 @@ uses similar concepts.
 The http://try.activeeon.com/tutorials/adv.html[Advanced workflows^] is an example of an embarrassingly parallel
 problem where the computation is easily distributed across ProActive Nodes.
 
-== Job/Task customization
-
-Now when your tasks are ready you can customize several aspects of the execution.
-
-=== Workflow scripts
+== Workflow Execution Control
 
 *ProActive Scheduler* supports portable script execution through the *JSR-223* Java
 Scripting capabilities. Scripts can be written in any language supported by the underlying
@@ -697,7 +696,7 @@ They are used in the ProActive Scheduler to:
 * Execute some simple *pre*, *post* and *cleaning* processing (pre scripts, post scripts and cleaning scripts)
 * Select among available resources the node that *suits the execution* (selection scripts).
 
-==== Selection
+=== Selection of ProActive Nodes
 
 A selection script provides an ability for the scheduler to execute tasks on particular ProActive nodes.
 E.g. you can specify that a task must be executed on a Unix/Linux system.
@@ -724,7 +723,7 @@ if (SelectionUtils.checkOSName("windows")) {
 }
 ----
 
-==== Pre/Post/Clean
+=== Pre/Post/Clean Scripts
 
 Another functionality is the possibility to define pre and post scripts. For a given task (Java, Script or Native task),
 it is possible to launch a script before and after its execution. This possibility can be useful to copy files
@@ -748,9 +747,7 @@ for(i=0; i<args.length;i++)
 }
 ----
 
-=== Control execution
-
-==== Run computation with your system account
+=== Run computation with your system account
 
 It is possible to start a task under the job owner if the system is configured for that purpose.
 There are 3 possible ways to run a task under user account (in any case, the administrator should have set computing hosts to authorize one of the 3 methods) :
@@ -775,7 +772,7 @@ Once created, user must connect the scheduler using this credential. Then in ord
 set *runAsMe=true* in the task.
 
 
-==== Reserve more than one node for a task (parallel environment)
+=== Reserve more than one node for a task
 
 To create a <<_mpi_application,multi-nodes>> task often used for MPI applications you need to add a *parallel environment*
 to the task. Parallel environment describes how many nodes are needed for a task as well as where these nodes should be
@@ -786,7 +783,7 @@ located. For example if you'd like to run 4 processes in parallel it a scope of 
 <parallel numberOfNodes="4"/>
 ----
 
-===== Defining a Topology for Multi-Nodes Tasks
+==== Defining a Topology for Multi-Nodes Tasks
 
 In addition to the number of ProActive Nodes you can specify the *nodes network topology*, e.g
 the set of nodes within some latency threshold, nodes on the same host and many more.
@@ -804,7 +801,7 @@ Here is the list of topologies we support:
 
 See the exact syntax in the http://tbd[topology reference].
 
-==== Handling failures
+=== Handling failures
 
 It's possible to have errors when your workflow is executed. *ProActive Scheduler* provides several mechanisms to deal
 with exceptional situations in your workflows.
@@ -829,17 +826,17 @@ Defining this property will set the nbMaxOfExecution property of each task to th
 (excepted if this property has been set at the task level). The value has to be a non-negative and non-null integer.
 
 
-==== Cron Tasks
+=== Cron Tasks
 *ProActive Scheduler* supports the execution of time-based tasks or cron tasks. The users can assign a
 cron expression to the +loop+ variable of a *Loop* in a ProActive Job. All tasks which belong
 that Loop will be executed iteratively and indefinitely. The start time of the next iteration
 is the next point of time specified by the cron expression.
 
-===== Cron Expression Syntax
+==== Cron Expression Syntax
 The syntax of the follows the UNIX crontab pattern, a string consists of five space-separated segments.
  Please refer http://www.sauronsoftware.it/projects/cron4j/manual.php#p02[cron4j documentation] for further details.
 
-===== Setting up Cron Tasks
+==== Setting up Cron Tasks
 Setting up a cron task requires two steps:
 
 * Define a *Loop* with the desired cron tasks
@@ -866,7 +863,7 @@ Example:
 
 You can find a complete example running a simple task every minutes in this link:examples/cron_task.xml[XML workflow^].
 
-===== Notes
+==== Notes
 
 * The default ProActive Scheduler policy does not support cron task executions. Therefore it is required
  to set +org.ow2.proactive.scheduler.policy.ExtendedSchedulerPolicy+ as the scheduler policy at ProActive Scheduler startup.
