@@ -53,17 +53,17 @@ TIP: If the command +jrunscript+ cannot be found, http://docs.oracle.com/javase/
 Running Resource Manager process ...
 > Starting the resource manager...
 > The resource manager with 4 local nodes created on pnp://SCHEDULER_ADDRESS:64738/
-Resource Manager stdout/stderr redirected into /home/user/proactive_scheduling/.logs/RM-stdout.log
+Resource Manager stdout/stderr redirected into /home/user/proactive_scheduling/logs/RM-stdout.log
 
 Running Scheduler process ...
 > RM URL : pnp://SCHEDULER_ADDRESS:64738
 > Starting the scheduler...
 > Connecting to the resource manager on pnp://SCHEDULER_ADDRESS:64738
 > The scheduler created on pnp://SCHEDULER_ADDRESS:52845/
-Scheduler stdout/stderr redirected into /home/user/proactive_scheduling/.logs/Scheduler-stdout.log
+Scheduler stdout/stderr redirected into /home/user/proactive_scheduling/logs/Scheduler-stdout.log
 
 Running Jetty process ...
-Jetty stdout/stderr redirected into /home/user/proactive_scheduling/.logs/Jetty-stdout.log
+Jetty stdout/stderr redirected into /home/user/proactive_scheduling/logs/Jetty-stdout.log
 Waiting for jetty to start ...
 Rest Server webapp deployed at      http://SCHEDULER_ADDRESS:8080/rest
 Resource Manager webapp deployed at http://SCHEDULER_ADDRESS:8080/rm
@@ -739,7 +739,7 @@ MBean server can be accessed by remote applications using one of the two availab
 
 The name of the connector (JMXRMAgent by default) is defined by the property +rm.jmx.connectorname+.
 
-The JMX url to connect to can be obtained from the Authentication API of the Resource Manager or by reading the log file located in +PROACTIVE_HOME/.logs/RM.log+.
+The JMX url to connect to can be obtained from the Authentication API of the Resource Manager or by reading the log file located in +PROACTIVE_HOME/logs/RM.log+.
 In that log file, the address you have to retrieve is the one where the JMX RMI connector server has been started
 
 [source]
@@ -788,11 +788,11 @@ The accounting information can be accessed only through a *JMX client* or the Pr
 === Logs
 
 If something goes wrong the first place to look for the problem are the Scheduler logs. By default all logs are in
-+PROACTIVE_HOME/.logs+ directory :
++PROACTIVE_HOME/logs+ directory :
 
 * for problems related to nodes deployment or permissions please check
-+PROACTIVE_HOME/.logs/RM.log+
-* for the problems related to jobs execution please check +PROACTIVE_HOME/.logs/Scheduler.log+
++PROACTIVE_HOME/logs/RM.log+
+* for the problems related to jobs execution please check +PROACTIVE_HOME/logs/Scheduler.log+
 
 Users submitting jobs have access to server logs of their jobs through the *Scheduler Web interface*
 

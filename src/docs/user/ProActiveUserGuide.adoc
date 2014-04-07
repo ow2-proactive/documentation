@@ -165,24 +165,55 @@ them to parameterize workflow execution and use workflows as templates.
 
 During their execution, jobs and tasks go through different states:
 
-* +PENDING+: The job is waiting to be scheduled.
-* +RUNNING+: The job is running. At least one of its task has been scheduled.
-* +STALLED+: The job has been launched but no task is currently running.
-* +FINISHED+:The job is finished. All tasks are finished.
-* +PAUSED+: The job is paused waiting for user to resume it.
-* +CANCELED+: The job has been canceled because of an exception.
+.Job States
+[cols="1,10", options="header"]
+|===
+| State | Description |
+ +PENDING+| The job is waiting to be scheduled.|
+ +RUNNING+| The job is running. At least one of its task has been scheduled.|
+ +STALLED+| The job has been launched but no task is currently running.|
+ +FINISHED+|The job is finished. All tasks are finished.|
+ +PAUSED+| The job is paused waiting for user to resume it.|
+ +CANCELED+| The job has been canceled because of an exception.
 This status is used when an exception is thrown by the user code of a task
-and when the user has asked to cancel the job on exception.
-* +FAILED+: The job has failed. One or more tasks have failed (due to resources failure).
-There is no more executionOnFailure left for a task.
-* +KILLED+: The job has been killed by the user.
+and when the user has asked to cancel the job on exception.|
+ +FAILED+| The job has failed. One or more tasks have failed (due to resources failure).
+There is no more executionOnFailure left for a task.|
+ +KILLED+| The job has been killed by the user.|
+|===
+
+
+.Task States
+[cols="1,10", options="header"]
+|===
+| State | Description |
+ +SUBMITTED+| The task has just been submitted by the user.|
+ +PENDING+| The task is in the scheduler pending queue.|
+ +PAUSED+| The task is paused.|
+ +RUNNING+|The task is executing.|
+ +WAITING_ON_ERROR+| The task is waiting for restart after an error. (ie:native code != 0 or exception).|
+ +WAITING_ON_FAILURE+| The task is waiting for restart after a failure. (ie:node down). |
+ +FAILED+| The task is failed
+(only if max execution time has been reached and the node on which it was started is down).|
+ +NOT_STARTED+| The task could not be started.
+It means that the task could not be started due to
+ dependencies failure.|
+ +NOT_RESTARTED+ | The task could not be restarted.
+ It means that the task could not be restarted after an error
+ during the previous execution. |
+ +ABORTED+ | The task has been aborted by an exception on an other task while the task is running. (job is cancelOnError=true).
+ Can be also in this status if the job is killed while the concerned task was running. |
+ +FAULTY+ | The task has finished execution with error code (!=0) or exception. |
+ +FINISHED+ | The task has finished execution. |
+ +SKIPPED+ | The task was not executed: it was the non-selected branch of an IF/ELSE control flow action. |
+|===
 
 // TODO state diagram
 
 ==== Retrieve results
 
 Once a job or a task is terminated, it is possible to get its result. You can only get the result of the job that you own.
-Results can be retrieved using the Scheduler web interface or the command line tools.
+Results can be retrieved using the Scheduler Web Interface or the command line tools.
 
 Along with results you can also retrieve logs of the tasks (standard ouput and error output)
 as well as Scheduler logs that provide debugging information.
@@ -290,10 +321,10 @@ your data. It has two types of storage on the host where the server is running:
 * A *Global Space* where anyone can read/write files
 * An *User Space* which is a personal user data storage
 
-By default these spaces are linked to folders in the *temporary* directory of the ProActive Scheduler host:
+By default these spaces are linked to folders in the *data* directory of the ProActive Scheduler host:
 
- * +TEMP_DIR/scheduling/defaultglobal+
- * +TEMP_DIR/scheduling/defaultuser+
+ * +PROACTIVE_HOME/data/defaultglobal+
+ * +PROACTIVE_HOME/data/defaultuser+
 
 But it can be changed in +PROACTIVE_HOME/config/scheduler/settings.ini+.
 
