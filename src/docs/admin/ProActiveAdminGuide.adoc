@@ -38,39 +38,22 @@ ProActive Scheduler is ready to be started with no extra configuration.
 
 [source]
 ----
-$ cd PROACTIVE_HOME/bin
-$ jrunscript start-server.js
+$ PROACTIVE_HOME/bin/server
 ----
-
-TIP: If the command +jrunscript+ cannot be found, http://docs.oracle.com/javase/7/docs/webnotes/install/windows/jdk-installation-windows.html#path[check that the +PATH+ environment variable contains the JDK executables^].
 
 [source]
 ----
----------------------------------
-    Starting server processes
----------------------------------
-
-Running Resource Manager process ...
-> Starting the resource manager...
-> The resource manager with 4 local nodes created on pnp://SCHEDULER_ADDRESS:64738/
-Resource Manager stdout/stderr redirected into /home/user/proactive_scheduling/logs/RM-stdout.log
-
-Running Scheduler process ...
-> RM URL : pnp://SCHEDULER_ADDRESS:64738
-> Starting the scheduler...
-> Connecting to the resource manager on pnp://SCHEDULER_ADDRESS:64738
-> The scheduler created on pnp://SCHEDULER_ADDRESS:52845/
-Scheduler stdout/stderr redirected into /home/user/proactive_scheduling/logs/Scheduler-stdout.log
-
-Running Jetty process ...
-Jetty stdout/stderr redirected into /home/user/proactive_scheduling/logs/Jetty-stdout.log
-Waiting for jetty to start ...
-Rest Server webapp deployed at      http://SCHEDULER_ADDRESS:8080/rest
-Resource Manager webapp deployed at http://SCHEDULER_ADDRESS:8080/rm
-Scheduler webapp deployed at        http://SCHEDULER_ADDRESS:8080/scheduler
-
-Preparing to wait for processes to exit ...
-Hit CTRL+C or enter 'exit' to terminate all server processes and exit
+The router created on localhost:33647
+Starting the scheduler...
+Starting the resource manager...
+The resource manager with 4 local nodes created on pnp://localhost:41303/
+The scheduler created on pnp://localhost:41303/
+Starting the web applications...
+The web application /scheduler created on http://localhost:8080/scheduler
+The web application /rm created on http://localhost:8080/rm
+The web application /rest created on http://localhost:8080/rest
+The web application /studio created on http://localhost:8080/studio
+*** Get started at http://localhost:8080 ***
 ----
 
 The following ProActive Scheduler components are started:
@@ -103,7 +86,7 @@ All configuration files of ProActive Scheduler can be found under +PROACTIVE_HOM
 |Node management configuration|config/scheduler/settings.ini|<<_resources_manager_properties>>
 
 .1+^.^|Networking
-|Network, firewall, protocols configuration|config/proactive/ProActiveConfiguration.xml|<<_network_properties>>
+|Network, firewall, protocols configuration|config/network/ProActiveConfiguration.ini|<<_network_properties>>
 
 .4+^.^|Security
 |User logins and passwords|config/authentication/login.cfg|<<_file>>
@@ -137,16 +120,16 @@ by launching commands remotely on Compute Hosts. For instance, it can be useful 
 Let's take a closer look at the first method described above. To deploy a ProActive Node from the Compute Host you need
 to run the following command
 ----
-$ PROACTIVE_HOME/bin/unix/rm-start-node -r pnp://SCHEDULER_ADDRESS:64738
+$ PROACTIVE_HOME/bin/node -r pnp://SCHEDULER_ADDRESS:41303
 ----
-where +-r+ option is used to specify the URL of the *Resource Manager*. You can find this URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler launcher>> (look for the string +RM URL+).
+where +-r+ option is used to specify the URL of the *Resource Manager*. You can find this URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler>> (the Resource Manager URL).
 
 ==== Using node.jar
 
 It is also possible to launch a ProActive Node without even copying the ProActive Scheduler to a Compute Host:
 
 * Open a browser on the Compute Host.
-* Navigate to the Resource Manager Web Interface. You can find the URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler launcher>> (look for the string +Resource Manager webapp+).
+* Navigate to the Resource Manager Web Interface. You can find the URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler>> (the Resource Manager web application URL).
 * Use default demo/demo account to access the Resource Manager Web Interface.
 * Click on 'Portal->Launch' to download *node.jar*.
 * Run it:
@@ -204,8 +187,7 @@ host2.mydomain.com 4
 Then using this file create a Node Source either from the *Resource Manager Web Interface* or from the command line:
 [source]
 ----
-$ cd PROACTIVE_HOME
-$ ./bin/unix/rm-client -createns SSH_node_source --infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.SSHInfrastructure rmi://SCHEDULER_ADDRESS:1099/ HOSTS_FILE 60000 3 \"\" /home/user/jdk/bin/java PROACTIVE_HOME Linux \"\" config/authentication/rm.cred
+$ PROACTIVE_HOME/bin/client -createns SSH_node_source --infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.SSHInfrastructure SCHEDULER_ADDRESS HOSTS_FILE 60000 3 \"\" /home/user/jdk/bin/java PROACTIVE_HOME Linux \"\" config/authentication/rm.cred
 ----
 
 Don't forget to replace +SCHEDULER_ADDRESS+, +HOSTS_FILE+ and +PROACTIVE_HOME+ with the corresponding values.
@@ -416,34 +398,21 @@ as a tunnel to receive incoming messages. If the tunnel goes down, it is automat
 The biggest drawback of PAMR is that a centralized PAMR router is in charge of routing message between all the PAMR clients.
 To soften this limitation PAMR can be used with other communication protocols. This way, PAMR is used only when needed.
 
-To enable this behavior, you need to edit +PROACTIVE_HOME/config/proactive/ProActiveConfiguration.xml+.
-The config file should look like the following:
+By default, PNP and PAMR are enabled. PNP is the default protocol for better performance and nodes can also use PAMR if needed.
+The PAMR Router is started by default along with the ProActive Scheduler.
 
-[source,xml]
+For a node to connect to the ProActive Scheduler using PAMR, the following ProActive configuration file can be used
+(+PROACTIVE_HOME/config/network/ProActiveConfiguration.ini+).
+
+[source]
 ----
-<?xml version="1.0" encoding="UTF-8"?>
-<ProActiveUserProperties>
-    <properties>
-        <prop key="proactive.net.nolocal" value="true"/>
-        <prop key="proactive.hostname" value="hostname"/>
-        <prop key="proactive.communication.protocol" value="pamr"/>
-        <prop key="proactive.net.router.address" value="router.hostname"/>
-        <prop key="proactive.net.router.port" value="8090"/>
-    </properties>
-    <javaProperties>
-    </javaProperties>
-</ProActiveUserProperties>
+proactive.communication.protocol=pamr
+proactive.net.router.address=ROUTER_HOSTNAME
+proactive.net.router.port=8090
 ----
 
-Use the same configuration file for all ProActive Nodes. Typically you will run the ProActive Scheduler on the *same machine* where the router is
-launched. This sample configuration requires to open only one port +8090+ for *incoming connections* on the router host
+This sample configuration requires to open only one port +8090+ for *incoming connections* on the router host
 and all the ProActive Nodes will be able to connect to the Scheduler.
-
-Now in order to run the Scheduler you should first run ProActive Router:
-
-    $ cd PROACTIVE_HOME/bin
-    $ bash unix/start-router &
-    $ jrunscript start-server.js
 
 See <<_pamr_protocol_properties>> reference for a detailed explanation of each property.
 
@@ -489,7 +458,7 @@ Both linux and windows agents have an ability to:
 * Run ProActive Nodes according to the schedule
 * Limit resources utilization for these daemons (e.g CPU, memory)
 
-Agents configuration is detailed in the section <<_proac222tive_agents>>.
+Agents configuration is detailed in the section <<_proactive_agents>>.
 
 == User Authentication
 
@@ -684,8 +653,7 @@ The same information is accessible using the command line:
 
 [source]
 ----
-$ cd PROACTIVE_HOME
-$ ./bin/unix/rm-client --listnodes
+$ PROACTIVE_HOME/bin/client --listnodes
 ----
 
 === ProActive Node States
@@ -788,11 +756,7 @@ The accounting information can be accessed only through a *JMX client* or the Pr
 === Logs
 
 If something goes wrong the first place to look for the problem are the Scheduler logs. By default all logs are in
-+PROACTIVE_HOME/logs+ directory :
-
-* for problems related to nodes deployment or permissions please check
-+PROACTIVE_HOME/logs/RM.log+
-* for the problems related to jobs execution please check +PROACTIVE_HOME/logs/Scheduler.log+
++PROACTIVE_HOME/logs+ directory.
 
 Users submitting jobs have access to server logs of their jobs through the *Scheduler Web interface*
 

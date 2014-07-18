@@ -3,7 +3,7 @@ The client has an interactive mode started if you do not provided any command (_
 
 The client usage is also available using the +-h+ parameter as shown below:
 
-    $ PROACTIVE_HOME/unix/scheduler-client -h
+    $ PROACTIVE_HOME/bin/client -h
 
 [cols="1,2"]
 |===
