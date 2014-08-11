@@ -332,6 +332,27 @@ Before running your jobs you should first *upload* your files into either Global
 these spaces by one of the standard protocols like *FTP*, *NFS*, or use available web interfaces like
 http://pyd.io[Pydio/AjaXplorer^].
 
+=== Adding classpath
+
+If your tasks requires additional classpath the job definition accepts paths to jars or class directories located in the *User Space* or *Global Space*. All classes in this paths can be loaded by tasks contained in the job.
+
+[source, xml]
+----
+<job>
+     <jobClasspath>
+        <pathElement path="$USERSPACE/path/to/my/classes/" />
+        <pathElement path="$USERSPACE/path/to/my/jarfile.jar" />
+        <pathElement path="$GLOBALSPACE/mylib.jar" />
+     </jobClasspath>
+     <task>
+     ...
+     </task>
+</job>
+----
+
+The jobClasspath mechanism relies on the file transfer. The size of the jobClasspath files therefore has an impact on
+performances.
+
 == Workflow concepts
 
 Workflows comes with constructs that help you distribute your computation. The tutorial
