@@ -10,7 +10,7 @@ agent. It cannot perform an automatic deployment but any users
 create a node source with this infrastructure, run the following
 command:
 
-    $ PROACTIVE_HOME/bin/client --createns defaultns -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.DefaultInfrastructureManager rmURL
+    $ PROACTIVE_HOME/bin/proactive-client --createns defaultns -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.DefaultInfrastructureManager rmURL
 
 The only parameter to provide is the following one:
 
@@ -22,7 +22,7 @@ The only parameter to provide is the following one:
 on the host running the Resource Manager. In order to create a node
 source with this infrastructure, run the following command:
 
-    $ PROACTIVE_HOME/bin/client --createns localns -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.LocalInfrastructure rmURL credentialsPath numberOfNodes timeout javaProperties
+    $ PROACTIVE_HOME/bin/proactive-client --createns localns -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.LocalInfrastructure rmURL credentialsPath numberOfNodes timeout javaProperties
 
 -   *rmURL* - URL of the Resource Manager server (can leave it empty to
     use default value, i.e, the URL of the Resource Manager you connect
@@ -202,10 +202,10 @@ Note that you need to specify a different port for both configurations.
 Sample configurations can be found in */samples/ec2*.
 
 Using this configuration, you can start a Resource Manager and a
-Scheduler using the */bin/server* script. An EC2 NodeSource can
+Scheduler using the */bin/proactive-server* script. An EC2 NodeSource can
 now be added using the command line interface of the Resource Manager:
 
-    $ PROACTIVE_HOME/bin/client --createns ec2 -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.EC2Infrastructure ./config/rm/deployment/ec2.properties rmURL RMCredentialsPath nodeHttpPort
+    $ PROACTIVE_HOME/bin/proactive-client --createns ec2 -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.EC2Infrastructure ./config/rm/deployment/ec2.properties rmURL RMCredentialsPath nodeHttpPort
 
 You will need to specify:
 
@@ -231,7 +231,7 @@ You will need to specify:
     restrictive firewall rules for outgoing connections.
 
 Once the Resource Manager is up and running with its EC2 NodeSource, new
-jobs can be added by using */bin/client*, or the Scheduler
+jobs can be added by using */bin/proactive-client*, or the Scheduler
 GUI.
 
 ===== Load Sharing Facility (LSF) infrastructure
@@ -240,7 +240,7 @@ This infrastructure knows how to acquire nodes from LSF by submitting a
 corresponding job. It will be submitted through SSH from the RM to the
 LSF server.
 
-    $ PROACTIVE_HOME/bin/client --createns lsf -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.LSFInfrastructure rmURL javaPath SSHOptions schedulingPath javaOptions maxNodes nodeTimeout LSFServer RMCredentialsPath bsubOptions
+    $ PROACTIVE_HOME/bin/proactive-client --createns lsf -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.LSFInfrastructure rmURL javaPath SSHOptions schedulingPath javaOptions maxNodes nodeTimeout LSFServer RMCredentialsPath bsubOptions
 
 where:
 
@@ -289,7 +289,7 @@ This infrastructure knows how to acquire nodes from PBS (i.e. Torque) by
 submitting a corresponding job. It will be submitted through SSH from
 the RM to the PBS server.
 
-    $ PROACTIVE_HOME/bin/client --createns pbs -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.PBSInfrastructure rmURL javaPath SSHOptions schedulingPath javaOptions maxNodes nodeTimeout PBSServer RMCredentialsPath qsubOptions
+    $ PROACTIVE_HOME/bin/proactive-client --createns pbs -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.PBSInfrastructure rmURL javaPath SSHOptions schedulingPath javaOptions maxNodes nodeTimeout PBSServer RMCredentialsPath qsubOptions
 
 where:
 
@@ -343,7 +343,7 @@ Once you have written that implementation, you can create a node source
 which makes usage of this infrastructure by running the following
 command:
 
-    $ PROACTIVE_HOME/bin/client --createns pbs -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.GenericBatchJobInfrastructure rmURL javaPath SSHOptions schedulingPath javaOptions maxNodes nodeTimeout BatchJobServer RMCredentialsPath subOptions implementationName implementationPath
+    $ PROACTIVE_HOME/bin/proactive-client --createns pbs -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.GenericBatchJobInfrastructure rmURL javaPath SSHOptions schedulingPath javaOptions maxNodes nodeTimeout BatchJobServer RMCredentialsPath subOptions implementationName implementationPath
 
 where:
 
