@@ -6,7 +6,7 @@
 		<task name="MPITask">
 			<parallel numberOfNodes="3"/>
 			<nativeExecutable>
-				<staticCommand value="mpi">
+				<staticCommand value="mpirun">
 					<arguments>
 						<argument value="-hostfile"/>
 						<argument value="$PAS_NODESFILE"/>
