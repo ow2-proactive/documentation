@@ -402,7 +402,7 @@ By default, PNP and PAMR are enabled. PNP is the default protocol for better per
 The PAMR Router is started by default along with the ProActive Scheduler.
 
 For a node to connect to the ProActive Scheduler using PAMR, the following ProActive configuration file can be used
-(+PROACTIVE_HOME/config/network/ProActiveConfiguration.ini+).
+(+PROACTIVE_HOME/config/network/node.ini+).
 
 [source]
 ----
