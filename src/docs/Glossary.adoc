@@ -1,10 +1,16 @@
 The following terms are used throughout the documentation:
 
+[[_glossary_proactive_workflows_scheduling]]
+ProActive Workflows & Scheduling::
+The full distribution of ProActive for Workflows & Scheduling, it contains the <<_glossary_proactive_scheduler,*ProActive Scheduler*>>
+ server, the
+REST & Web interfaces, the command line tools. It is the commercial product name.
+
 [[_glossary_proactive_scheduler]]
 ProActive Scheduler::
 Can refer to any of the following:
   * A complete set of ProActive components.
-  * An archive that contains a released version of ProActive components, for example +ProActiveScheduling-3.4.0_bin_full.zip+.
+  * An archive that contains a released version of ProActive components, for example +ProActiveWorkflowsScheduling-3.4.0_bin_full.zip+.
   * A set of server-side ProActive components installed and running on a <<_glossary_server_host,*Server Host*>>.
 
 [[_glossary_resource_manager]]
