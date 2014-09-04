@@ -83,7 +83,10 @@ All configuration files of ProActive Scheduler can be found under +PROACTIVE_HOM
 |Scheduling Properties|config/scheduler/settings.ini|<<_scheduler_properties>>
 
 .1+^.^|Resource Manager
-|Node management configuration|config/scheduler/settings.ini|<<_resources_manager_properties>>
+|Node management configuration|config/rm/settings.ini|<<_resources_manager_properties>>
+
+.1+^.^|REST API
+|REST API configuration|config/web/settings.ini|<<_rest_api_properties>>
 
 .1+^.^|Networking
 |Network, firewall, protocols configuration|config/network/node.ini, config/network/server.ini|<<_network_properties>>
@@ -782,6 +785,10 @@ include::./references/RMPropertiesReference.adoc[]
 === Network Properties
 
 include::./references/NetworkPropertiesReference.adoc[]
+
+=== REST API Properties
+
+include::./references/WebPropertiesReference.adoc[]
 
 === Node Sources
 

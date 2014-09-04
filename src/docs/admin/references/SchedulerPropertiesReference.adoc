@@ -1,6 +1,8 @@
 Scheduler Properties are read when ProActive Scheduler is started therefore you need to restart it
 to apply changes.
 
+The default configuration file is *SCHEDULER_HOME/scheduler/settings.ini*.
+
 [source]
 ----
 # Scheduler home directory (this default value should be proper in most cases)

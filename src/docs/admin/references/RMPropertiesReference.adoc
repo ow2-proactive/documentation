@@ -1,6 +1,8 @@
 Resource Manager Properties are read when ProActive Scheduler is started therefore you need to restart it
 to apply changes.
 
+The default configuration file is _SCHEDULER_HOME/rm/settings.ini_.
+
 [source]
 ----
 # definition of all java properties used by resource manager

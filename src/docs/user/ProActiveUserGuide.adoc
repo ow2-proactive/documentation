@@ -919,6 +919,30 @@ retrieve information of each iteration.
  +RUNNING+ unless the cron task execution terminates either by the user (for instance by killing the job
   or the task) or due an error in the task execution.
 
+=== Remote Visualization
+
+Using the Scheduler Web Interface, it is possible to access the display of the ProActive Node running a given task.
+First remote visualization must be activated via the
+link:ProActiveAdminGuide.html#_rest_api_properties[Scheduler configuration files] (set *novnc.enabled* to true).
+
+NOTE: Remote visualization works via VNC where the REST API will connect to the node running the task, i.e a graphical
+application. The VNC output will be forwarded to the your browser and you will be able to interact with the
+application.
+
+The task that you want to visualize must output a special string using the following format:
+*PA_REMOTE_CONNECTION;TASK_ID;vnc;HOSTNAME:PORT* where *TASK_ID* must be the current task id
+and *HOSTNAME:PORT* the hostname and port where the VNC server runs.
+
+It is the task's responsibility to print the string.
+Here is an link:examples/remote_visualization_script.sh[sample script^] that starts a Xvnc server and runs
+ a graphical application.
+It can be used in a native task for instance.
+
+In the Scheduler Web Interface, select the running job and use the _Preview_ tab to enable remote visualization.
+
+TIP: Since it runs a graphical application, the task will never exit and run forever. The common use case is that
+you want to check manually some results via the graphical application and then exit the application.
+The task will then terminate normally.
 
 == Reference
 
