@@ -903,10 +903,6 @@ You can find a complete example running a simple task every minutes in this link
 
 ==== Notes
 
-* The default ProActive Scheduler policy does not support cron task executions. Therefore it is required
- to set +org.ow2.proactive.scheduler.policy.ExtendedSchedulerPolicy+ as the scheduler policy at ProActive Scheduler startup.
- See the link:ProActiveAdminGuide.html#_scheduler_properties[Administration Guide] to configure the Scheduler.
-
 * The execution of the first iteration occurs immediately and does not depend on the cron expression specified.
  However the user can specify a start time for the first iteration using +START_AT+ generic information.
  Its value should be http://en.wikipedia.org/wiki/ISO_8601[ISO 8601^] compliant.
