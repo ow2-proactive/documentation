@@ -204,8 +204,10 @@ especially if those are desktop machines where people perform their daily activi
 * Launch ProActive Nodes automatically when a Compute Host starts
 * Restart ProActive Nodes if they fail for some reason and reconnect them to ProActive Scheduler
 
-*ProActive Agents* exists for both +Linux+ and +Windows+ operating systems.
+*ProActive Agents* exists for both <<_proactive_linux_agent,Linux>> and <<_proactive_windows_agent,Windows>>
+ operating systems.
 
+[[_proactive_windows_agent]]
 ==== ProActive Windows Agent
 
 The ProActive Windows Agent is a *Windows Service*: a long-running executable that performs specific
@@ -320,15 +322,20 @@ The main troubles you may have to face are the following ones:
 * You get an *authentication error*: this is probably due to your default credentials file which cannot be found. In the "Connection" tab of the Configuration Editor (Figure 5.4, “Configuration Editor window - Connection Tab (Resource Manager Registration)”), you can choose the credentials file you want. You can select, for instance, the credentials file located at PROACTIVE_HOME/config/authentication/scheduler.cred or your own credentials file.
 * The node seems to be well started but you cannot see it in the Resource Manager interface : in this case, make sure that the *port number* is the good one. Do not forget that the runtime port number is incremented from the initial ProActive Resource Manager port number. You can see exactly on which port your runtime has been started looking at the log file described above.
 
+[[_proactive_linux_agent]]
+==== ProActive Linux Agent
 
-==== Linux Agent
+The ProActive Agent for Linux can be downloaded from our http://www.activeeon.com/community-downloads[website^].
 
-To install the ProActive Agent on Linux Debian based distributions:
-
-* Download the package from our http://www.activeeon.com/community-downloads[website^]
-* Install the package
+To install the ProActive Agent on Debian based distributions:
 
     sudo dpkg -i proactive-agent-standalone.deb
+
+TIP: Some extra dependencies might be required, to install them: `sudo apt-get -f install`
+
+To install the ProActive Agent on Redhat based distributions:
+
+    sudo rpm -i proactive-agent-standalone.deb
 
 By default the Linux Agent will launch locally a node but will not register it
 in the Resource Manager. The user has to configure the agent explicitly by specifying the required
