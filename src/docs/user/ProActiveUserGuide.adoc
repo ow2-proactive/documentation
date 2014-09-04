@@ -873,7 +873,7 @@ Setting up a cron task requires two steps:
 * Define a *Loop* with the desired cron tasks
 * Assign a cron expression as the +loop+ variable value
 
-Example:
+Example that prints _Hello_ every 10 minutes:
 [source, xml]
 ----
 <job name=”cron_job”>
@@ -881,14 +881,21 @@ Example:
         <info name="START_AT" value="2014-01-01T00:00:00+01:00"/>
     </genericInformation>
     <task name=”cron_task”>
-         <controlFlow>
-             <loop target=”cron_task”>
-                 <script>
-                     loop = “10 * * * *”
-                 </script>
-             <loop>
-         </controlFlow>
-     </task>
+        <scriptExecutable>
+            <script>
+                <code language="javascript">
+                    print("Hello");
+                </code>
+            </script>
+        </scriptExecutable>
+        <controlFlow>
+            <loop target=”cron_task”>
+                <script>
+                    loop = “10 * * * *”
+                </script>
+            <loop>
+        </controlFlow>
+    </task>
 </job>
 ----
 
