@@ -790,7 +790,7 @@ There are 3 possible ways to run a task under user account (in any case, the adm
 User must first create a credential containing this key :
 
 ----
-$ PROACTIVE_HOME/tools/create-cred -F config/authentication/keys/pub.key -l username -p userpwd -k path/to/private/sshkey -o myCredentials.cred
+$ PROACTIVE_HOME/tools/proactive-create-cred -F config/authentication/keys/pub.key -l username -p userpwd -k path/to/private/sshkey -o myCredentials.cred
 ----
 
 This command will create a new credentials with *username* as login, *userpwd* as password, using scheduler public key at
