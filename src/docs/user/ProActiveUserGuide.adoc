@@ -941,7 +941,7 @@ The task that you want to visualize must output a special string using the follo
 and *HOSTNAME:PORT* the hostname and port where the VNC server runs.
 
 It is the task's responsibility to print the string.
-Here is an link:examples/remote_visualization_script.sh[sample script^] that starts a Xvnc server and runs
+Here is a link:examples/remote_visualization_script.sh[sample script^] that starts a Xvnc server and runs
  a graphical application.
 It can be used in a native task for instance.
 
