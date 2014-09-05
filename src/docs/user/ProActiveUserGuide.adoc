@@ -92,11 +92,13 @@ Native application by nature can be tied to a given operating system so
 if you have different nodes at your disposal, you might need to select a suitable node to run your native task.
 This can be achieved using <<_selection,selection script>>.
 
-=== Dynamic language support
+=== Scripting language support
 
 Proactive Scheduler supports tasks  written in languages other than Java. The currently supported dynamic languages are
 http://groovy.codehaus.org[Groovy^], http://www.jython.org[Python^], http://jruby.org[Ruby^] and
 http://docs.oracle.com/javase/6/docs/technotes/guides/scripting/programmer_guide/#jsengine[Javascript^].
+
+Native scripts can also be executed using a script task. Currently Bash and CMD scripts are supported.
 
 You can easily embed small scripts in your workflow.
 The nice thing is that the workflow will be self-contained and will not require to compile your code before executing. However we
