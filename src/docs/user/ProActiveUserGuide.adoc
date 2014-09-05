@@ -242,7 +242,11 @@ Then anywhere in your task you can reference to it. For example in a *Groovy* sc
 [source]
 ----
 String var = variables.get("variable");
+variables.put("other_variable", "foo");
 ----
+
+Inside a script, `variables` is bound to a http://docs.oracle.com/javase/7/docs/api/java/util/Map.html[Map^].
+The syntax to access it might differ given the script engine you are using.
 
 If the a task depends on several tasks and each task modifies the same variable, the final value of the variable
 which is propagated down the execution chain, depends on the *order of task execution*.
