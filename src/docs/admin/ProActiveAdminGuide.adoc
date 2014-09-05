@@ -190,7 +190,7 @@ host2.mydomain.com 4
 Then using this file create a Node Source either from the *Resource Manager Web Interface* or from the command line:
 [source]
 ----
-$ PROACTIVE_HOME/bin/proactive-client -createns SSH_node_source --infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.SSHInfrastructure SCHEDULER_ADDRESS HOSTS_FILE 60000 3 \"\" /home/user/jdk/bin/java PROACTIVE_HOME Linux \"\" config/authentication/rm.cred
+$ PROACTIVE_HOME/bin/proactive-client -createns SSH_node_source --infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.SSHInfrastructure HOSTS_FILE 60000 3 \"\" /home/user/jdk/bin/java PROACTIVE_HOME Linux \"\" config/authentication/rm.cred
 ----
 
 Don't forget to replace +SCHEDULER_ADDRESS+, +HOSTS_FILE+ and +PROACTIVE_HOME+ with the corresponding values.
