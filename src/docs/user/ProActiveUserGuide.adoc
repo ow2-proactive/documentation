@@ -967,7 +967,7 @@ you will benefit from live validation and completion!
 === Topology Types
 include::./references/TopologyTypes.adoc[]
 
-=== Scheduler Command line
-include::./references/SchedulerCLI.adoc[]
+=== Command Line
+include::../CLI.adoc[]
 
 include::../Dedication.adoc[]

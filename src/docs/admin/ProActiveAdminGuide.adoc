@@ -811,10 +811,8 @@ include::./references/NodeSourceInfrastructureReference.adoc[]
 
 include::./references/NodeSourcePolicyReference.adoc[]
 
-=== Command Line Tools
-
 [[_resource_manager_command_line]]
-==== ProActive Resource Manager Command Line
-include::./references/RMCLI.adoc[]
+=== Command Line
+include::../CLI.adoc[]
 
 include::../Dedication.adoc[]
