@@ -1,0 +1,973 @@
+= ProActive User Guide
+include::../common-settings.adoc[]
+:toc-title: User Guide
+
+== Overview
+
+include::../Overview.adoc[]
+
+=== Glossary
+
+include::../Glossary.adoc[]
+
+== Get started
+
+To submit your first computation to *ProActive Scheduler*, link:ProActiveAdminGuide.html#_getting_started[install] it in
+your environment or just use our demo platform http://try.activeeon.com[try.activeeon.com^].
+
+*ProActive Scheduler* provides comprehensive interfaces that allow to:
+
+- http://try.activeeon.com/studio[Create workflows^]
+- http://try.activeeon.com/scheduler[Submit workflows, monitor their execution and retrieve the tasks results^]
+- http://try.activeeon.com/rm[Add resources and monitor them^]
+
+We also provide REST and command line interfaces for advanced users.
+
+== Create and run your computation
+
+=== Jobs, workflows and tasks
+
+In order to use Scheduler for executing various computations, one needs to write the execution definition
+also known as the Workflow definition. A workflow definition is an XML file that adheres to
+<<_job_and_task_specification,XML schema for ProActive Workflows>>.
+
+It specifies a number of XML tags for specifying execution steps, their sequence and dependencies.
+Each execution step corresponds to a task which is the smallest unit of execution that can be performed on a
+ computation resources. There are several types of tasks which caters different use cases.
+
+*ProActive Scheduler* currently supports three main types of tasks:
+
+- *Native Task*, an executable with eventual parameters to be executed
+- *Script Task*, a script written in Groovy, Ruby, Python and other languages supported by the JSR-223
+- *Java Task*, a task written in Java extending the Scheduler API
+
+For instance, a script
+task can be used to execute an inline script definition or a script file as an execution step whereas a
+native task can be used to execute a native executable file. It also possible to package an workflow definition
+along with its dependencies (libraries, executables etc) into a self-contained archive.
+
+One can use **ProActive Workflow Studio**  to create and submit workflows graphically .
+They can simply drag-and-drop various task constructs and draw their dependencies to form complex jobs.
+It also provides various flow control widgets such as conditional branch, loop, replicate etc to construct complex workflows.
+
+image::flow_spec_dependency.png[align="center"]
+
+In this tasks graph, we see that task 4 is preceded by task 1, that
+means scheduler waits the end of task 1 execution before launching task
+4. In a more concrete way, task 1 could be the calculation of a part of
+the problem to solve, and task 4 takes result provided by task 1 and
+compute another step of the calculation. We introduce here the concept
+of <<_passing_data_between_tasks,result passing>> between tasks. This relation is
+called a <<_dependency>>, and we say that task 4 **depends** on task 1.
+
+We see that task 1, 2 and 3 are not linked, so these three tasks can be
+executed in **parallel**, because there are independent from each other.
+
+The task graph is defined by the user at the time of workflow creation, but can also be modified during
+ the job execution by control flow actions such as <<_replicate>>.
+
+A *finished job* contains the results and logs of each task. Upon failure,
+a task can be restarted automatically or cancelled.
+
+=== A simple example
+
+The http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial^] on http://try.activeeon.com[try.activeeon.com^]
+shows you how to build a simple workflow using script tasks.
+
+=== Native application
+
+Using native tasks you can easily reuse existing applications and embed them in a workflow.
+The Scheduler lets you define a native task that takes the name of the executable and list of parameters.
+Once the executable is wrapped as a task you can easily leverage some of the workflow constructs to run your
+executable in parallel.
+
+TIP:  We advise you to test your application first, make sure that it works with a simple use case on
+one machine and then embed it in a workflow.
+
+You can find an example of such integration in this
+link:examples/native_task.xml[XML workflow^] or you can also build one yourself using the
+*Workflow Studio*.
+
+Native application by nature can be tied to a given operating system so
+if you have different nodes at your disposal, you might need to select a suitable node to run your native task.
+This can be achieved using <<_selection,selection script>>.
+
+=== Scripting language support
+
+Proactive Scheduler supports tasks  written in languages other than Java. The currently supported dynamic languages are
+http://groovy.codehaus.org[Groovy^], http://www.jython.org[Python^], http://jruby.org[Ruby^] and
+http://docs.oracle.com/javase/6/docs/technotes/guides/scripting/programmer_guide/#jsengine[Javascript^].
+
+Native scripts can also be executed using a script task. Currently Bash and CMD scripts are supported.
+
+You can easily embed small scripts in your workflow.
+The nice thing is that the workflow will be self-contained and will not require to compile your code before executing. However we
+recommend that you keep these scripts smalls to keep the workflow easy to understand.
+
+TIP: Use scripts to print debugging statements when you build a new workflow.
+
+Please note that the script execution relies on Java implementation of the cited languages thus it may come with
+some limitations.
+
+You can find an example of a script task in this
+link:examples/script_task.xml[XML workflow^] or you can also build one yourself using the
+*Workflow Studio*. The http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial]
+relies on script task and is a nice introduction to workflows.
+
+Scripts can also be used to decorate tasks with specific actions, we support pre/post/clean/selection scripts.
+
+=== MPI application
+
+http://en.wikipedia.org/wiki/Message_Passing_Interface[MPI^] is often used in the area of parallel computing.
+The Scheduler integrates with MPI with the concept of <<_reserve_more_than_one_node_for_a_task_parallel_environment,multi node tasks>>.
+ This particular task will acquire several
+nodes and will expose these nodes to the MPI environment.
+
+Applications built with MPI are often executed using the http://linux.die.net/man/1/mpirun[mpirun^] command.
+It accepts several parameters to
+choose how many CPUs and how many machines will be used. One particular parameter is the machine file that is
+built by the Scheduler when using *multi node tasks*.
+Here is how an MPI application invocation would look like when executed with the Scheduler:
+
+    mpirun -hostfile $PAS_NODESFILE myApplication
+
+The variable +$PAS_NODESFILE+ contains the path to a machine file created by the Scheduler that will be similar to:
+
+    compute-host
+    compute-host
+    another-host
+
+Meaning that +myApplication+ will use 2 CPUs on +compute-host+ and 1 CPU on +another-host+.
+
+You can find an example of a script task in this
+link:examples/mpi_task.xml[XML workflow^] or you can also build one yourself using the
+*Workflow Studio*.
+
+To achieve the best performance for MPI applications, nodes can be selected taking into account their *network topology*. One might want to select nodes that are as
+close to each other as possible to obtain better network performance or nodes on different hosts to split the I/O load.
+Refer to <<_topology_types>> for more details.
+
+=== Run a workflow
+
+To run a workflow, the user submits it to *ProActive Scheduler*.
+A verification is performed to ensure the well-formedness of the workflow.
+Next, a job is created and inserted into the pending queue and
+waits until free resources become available.
+Once the required resources are provided by the ProActive Resource Manager, the job is started. Finally,
+once the job is finished, it goes to the queue of finished
+jobs where its result can be retrieved.
+
+You can submit a workflow to the Scheduler using the *Workflow Studio*, the Scheduler Web Interface or <<_scheduler_command_line,command
+line tools>>. For advanced users we also expose REST and JAVA APIs.
+
+TIP: During the submission, you will be able to edit <<_workflow_variables>>, so you can effectively use
+them to parameterize workflow execution and use workflows as templates.
+
+==== Job/Task states
+
+During their execution, jobs and tasks go through different states:
+
+.Job States
+[cols="1,10", options="header"]
+|===
+| State | Description |
+ +PENDING+| The job is waiting to be scheduled.|
+ +RUNNING+| The job is running. At least one of its task has been scheduled.|
+ +STALLED+| The job has been launched but no task is currently running.|
+ +FINISHED+|The job is finished. All tasks are finished.|
+ +PAUSED+| The job is paused waiting for user to resume it.|
+ +CANCELED+| The job has been canceled because of an exception.
+This status is used when an exception is thrown by the user code of a task
+and when the user has asked to cancel the job on exception.|
+ +FAILED+| The job has failed. One or more tasks have failed (due to resources failure).
+There is no more executionOnFailure left for a task.|
+ +KILLED+| The job has been killed by the user.|
+|===
+
+
+.Task States
+[cols="1,10", options="header"]
+|===
+| State | Description |
+ +SUBMITTED+| The task has just been submitted by the user.|
+ +PENDING+| The task is in the scheduler pending queue.|
+ +PAUSED+| The task is paused.|
+ +RUNNING+|The task is executing.|
+ +WAITING_ON_ERROR+| The task is waiting for restart after an error. (ie:native code != 0 or exception).|
+ +WAITING_ON_FAILURE+| The task is waiting for restart after a failure. (ie:node down). |
+ +FAILED+| The task is failed
+(only if max execution time has been reached and the node on which it was started is down).|
+ +NOT_STARTED+| The task could not be started.
+It means that the task could not be started due to
+ dependencies failure.|
+ +NOT_RESTARTED+ | The task could not be restarted.
+ It means that the task could not be restarted after an error
+ during the previous execution. |
+ +ABORTED+ | The task has been aborted by an exception on an other task while the task is running. (job is cancelOnError=true).
+ Can be also in this status if the job is killed while the concerned task was running. |
+ +FAULTY+ | The task has finished execution with error code (!=0) or exception. |
+ +FINISHED+ | The task has finished execution. |
+ +SKIPPED+ | The task was not executed: it was the non-selected branch of an IF/ELSE control flow action. |
+|===
+
+// TODO state diagram
+
+==== Retrieve results
+
+Once a job or a task is terminated, it is possible to get its result. You can only get the result of the job that you own.
+Results can be retrieved using the Scheduler Web Interface or the command line tools.
+
+Along with results you can also retrieve logs of the tasks (standard ouput and error output)
+as well as Scheduler logs that provide debugging information.
+
+NOTE: When running native application, the task result will be the exit code of the application. Results
+usually make more sens when using script or Java tasks.
+
+== Data Management
+
+One of the major questions after having learned to submit and execute simple tasks is how to handle data.
+
+=== Workflow Variables
+
+ProActive Scheduler provides a mechanism to propagate data down the execution chain.
+On the job level you can define *variables* that are available in all tasks.
+
+[source, xml]
+----
+<variables>
+    <variable name="variable" value="value"/>
+</variables>
+----
+
+Then anywhere in your task you can reference to it. For example in a *Groovy* script task, you can use:
+
+[source]
+----
+String var = variables.get("variable");
+variables.put("other_variable", "foo");
+----
+
+Inside a script, `variables` is bound to a http://docs.oracle.com/javase/7/docs/api/java/util/Map.html[Map^].
+The syntax to access it might differ given the script engine you are using.
+
+If the a task depends on several tasks and each task modifies the same variable, the final value of the variable
+which is propagated down the execution chain, depends on the *order of task execution*.
+Therefore the users need to take appropriate measures to prevent any undesired effects of such race conditions.
+
+You can set any http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html[Java serializable object^]
+ as a variable value. They will be converted into strings using
+http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#toString()[toString()^]
+ method when required: for instance, to make those values available as environment variables in *native* tasks.
+
+WARNING: In native tasks, the variables can be read but not written to.
+
+
+=== Passing data between tasks
+
+Another important mechanism of data exchange is the task *result*. Anywhere in a task (usually at the end) you can set a reserved
+variable *result* to any Java object and it will be available in tasks depending on it. Moreover in case of several
+dependencies results will be aggregated. E.g. for a task written in Groovy:
+
+[source]
+----
+// task1
+result = "task1";
+----
+
+[source]
+----
+// task2
+result = "task2";
+----
+
+In *task3* that depends on tasks *task1* and *task2*:
+
+[source]
+----
+// task3
+println(results[0]);
+// will print "task1"
+println(results[1]);
+// will print "task2"
+----
+
+TIP: Similar to variables, *results* will be aggregated according to tasks termination, so results[0] can contain
+"task2" and results[1] can contain "task1".
+
+==== Job Result
+
+Once a Job is terminated, it is possible to get its result. You can only get the result of the job that you own.
+A Job result is the collection of the tasks' results and you can retrieve it either from Java API or <<_scheduler_command_line,command line>>
+ (it will be converted to
+a string).
+
+It is also available in the *Scheduler Web Interface* in the _Preview_ tab.
+
+=== Input/Output Data in Shared Directory
+
+The easiest way to use your data on computing machines is to set up a *shared directory* available on all Compute Hosts. For
+Linux it's typically an NFS directory, for Windows it could be an SMB network share. Then in tasks you can manipulate
+files seamlessly across ProActive Nodes.
+
+[source]
+----
+File inputData = new File("/data/username/inputfile");
+----
+
+This approach has some limitations though:
+
+* The path to the shared folder should be *identical* on all Compute Hosts
+* Can be difficult to use with *heterogeneous resources*, e.g. Linux and Windows hosts
+
+=== Data Spaces
+
+If a shared folder is not an option in your environment, the ProActive Scheduler provides a convenient way to access
+your data. It has two types of storage on the host where the server is running:
+
+* A *Global Space* where anyone can read/write files
+* An *User Space* which is a personal user data storage
+
+By default these spaces are linked to folders in the *data* directory of the ProActive Scheduler host:
+
+ * +PROACTIVE_HOME/data/defaultglobal+
+ * +PROACTIVE_HOME/data/defaultuser+
+
+But it can be changed in +PROACTIVE_HOME/config/scheduler/settings.ini+.
+
+All files that are stored in these spaces can be read from all computing nodes.
+In order to do it in a task set up the data management
+on a task or job level by specifying *input* and *output files*
+
+[source, xml]
+----
+        <task name="task1">
+            ...
+            <inputFiles>
+                <files includes="tata" accessMode="transferFromGlobalSpace"/>
+            </inputFiles>
+            <outputFiles>
+                <files includes="titi*" accessMode="transferToGlobalSpace"/>
+            </outputFiles>
+            ...
+        </task>
+----
+
+Then before executing this task Proactive Scheduler automatically transfers all files to a ProActive Node where task will be executed
+and put it to the special place called *Local Space*. Then file can be read normally like shown in example:
+
+[source]
+----
+File inputFile = new File(new URI(localspace.getRealURI()+"/tata"))
+----
+
+All the files produced by the task with the name "titi*" (e.g titi, titi2 etc) will be transferred back to Global Space
+automatically by the scheduler once the task is finished.
+
+Files can be also transferred from/to User Space by specifying +transferFromUserSpace+/+transferToUserSpace+.
+
+Before running your jobs you should first *upload* your files into either Global or User Space. To do it you can export folders linked to
+these spaces by one of the standard protocols like *FTP*, *NFS*, or use available web interfaces like
+http://pyd.io[Pydio/AjaXplorer^].
+
+== Workflow concepts
+
+Workflows comes with constructs that help you distribute your computation. The tutorial
+http://try.activeeon.com/tutorials/adv.html[Advanced workflows^] is a nice introduction to workflows with
+ProActive.
+
+The following constructs are available:
+
+- *Dependency*
+- *Replicate*
+- *Branch*
+- *Loop*
+
+TIP: Use the *Workflow Studio* to create complex workflows, it is much easier than to write XML!
+
+=== Dependency
+
+Dependencies can be set between tasks in a TaskFlow job. It provides a way to execute your tasks in a specified order,
+but also to forward result of an ancestor task to its children as parameter. Dependency between tasks is then
+both a temporal dependency and a data dependency.
+
+image::flow_spec_dependency.png[align="center"]
+
+Dependencies between tasks can be added either in *ProActive Workflow Studio* or simply in workflow XML as shown below:
+
+[source, xml]
+----
+<taskFlow>
+    <task name="task1">
+        <javaExecutable class="MyTask1"/>
+    </task>
+    <task name="task2">
+        <depends>
+            <task ref="task1"/>
+        </depends>
+        <javaExecutable class="MyTask2"/>
+    </task>
+</taskFlow>
+----
+
+[[_replicate]]
+=== Replicate
+
+The *replication* allows the execution of multiple tasks in parallel when only one task
+is defined and the number of tasks to run could change.
+
+image::flow_spec_duplicate.png[align=center]
+
+-   The target is the direct child of the task initiator.
+
+-   The initiator can have multiple children; each child is replicated.
+
+-   If the target is a *start block*, the whole block is replicated.
+
+-   The target must have the initiator as only dependency: the action is
+    performed when the initiator task terminates. If the target has an
+    other pending task as dependency, the behaviour cannot be specified.
+
+-   There should always be a merge task after the target of a replicate:
+    if the target is not a start block, it should have at least one
+    child, if the target is a start block, the corresponding end block
+    should have at least one child.
+
+-   The last task of a replicated task block (or the replicated task if
+    there is no block) cannot perform a *branching* or *replicate*
+    action.
+
+-   The target of a *replicate* action can not be tagged as *end block*.
+
+TIP: If you are familiar with programming, you can see the replication as forking tasks.
+
+=== Branch
+
+The *branch* construct provides the ability to choose between two alternative task flows,
+with the possibility to merge back to a common flow.
+
+TIP: If you are a developer, you can see the replication as forking tasks
+
+image::flow_spec_if.png[align=center]
+
+-   There is no explicit dependency between the initiator and the
+    *if/else* targets. These are *optional links* (ie. A -> B or E ->
+    F) defined in the *if* task.
+
+-   The *if* and *else* flows can be merged by a *continuation* task
+    referenced in the *if* task, playing the role of an *endif*
+    construct. After the branching task, the flow will either be that of
+    the *if* or the *else* task, but it will be continued by the
+    *continuation* task.
+
+-   *If* and *else* targets are executed *exclusively*. The initiator
+    however can be the dependency of other tasks, which will be executed
+    normally along the *if* or the *else* target.
+
+-   A *task block* can be defined across *if*, *else* and *continuation*
+    links, and not just plain dependencies (i.e. with *A* as *start* and
+    *F* as *end*).
+
+-   If using no continuation task, the if and else targets, along with
+    their children, must be strictly distinct.
+
+-   If using a continuation task, the if and else targets must be
+    strictly distinct and valid task blocks.
+
+-   *if*, *else* and *continuation* tasks (B, D and F) cannot have
+    an explicit dependency.
+
+-   *if*, *else* and *continuation* tasks cannot be entry points for the
+    job, they must be triggered by the *if* control flow action.
+
+-   A task can be target of only one *if* or *else* action. A
+    *continuation* task can not merge two different *if* actions.
+
+TIP: If you are familiar with programming, you can see the branch as a if/then/else.
+
+=== Loop
+
+The loop provides the ability to repeat a set of tasks.
+
+image::flow_spec_loop.png[align=center]
+
+-   The target of a *loop* action must be a parent of the initiator
+    following the dependency chain; this action goes back to a
+    previously executed task.
+
+-   Every task is executed at least once; *loop* operates in a
+    *do...while* fashion.
+
+-   The target of a *loop* should have only one explicit dependency. It
+    will have different parameters (dependencies) depending if it is
+    executed for the first time or not. The cardinality should stay the
+    same.
+
+-   The *loop* scope should be a *task block*: the target is a *start
+    block* task, and the initiator its related *end block task*.
+
+TIP: If you are familiar with programming, you can see the loop as a do/while.
+
+=== Task Blocks
+
+Workflows often relies on *task blocks*. Task blocks are defined by pairs of *start* and *end* tags.
+
+-   Each task of the flow can be tagged either *start* or *end*
+
+-   Tags can be nested
+
+-   Each *start* tag needs to match a distinct *end* tag
+
+Task blocks are very similar to the parenthesis of most programming
+languages: anonymous and nested start/end tags. The only difference is
+that a parenthesis is a syntactical information, whereas task blocks are
+semantic.
+
+The role of task blocks is to restrain the expressiveness of the system
+so that a workflow can be statically checked and validated. A treatment
+that can be looped or iterated will be isolated in a well-defined task
+block.
+
+-   A *loop* flow action only applies on a task block: the initiator of
+ the loop must be the end of the block, and the target must be the
+ beginning.
+
+-   When using a *continuation* task in an *if* flow action, the *if*
+ and *else* branches must be task blocks.
+
+-   If the child of a *replicate* task is a task block, the whole block
+ will be replicated and not only the child of the initiator.
+
+=== Control Flow Scripts
+
+To perform a control flow action such as if, replicate or loop, a
+*Control Flow Script* is executed on the ProActive node. This script
+takes the result of the task as input; meaning a Java object if it was a
+Java or Script task, or nothing if it was a native task.
+
+The script is executed on the ProActive node, just after the task's
+executable. If the executable is a Java Executable and returns a result,
+the variable +result+ will be set in the script's environment so that
+dynamic decisions can be taken with the task's result as input. Native
+Java objects can be used in a Javascript script using the following
+syntax:
+
+``` {.java}
+importPackage(java.io);
+// the result variable is the TaskResult.value() if it exists
+var resFile = new File("/path/to/data/" + new java.lang.String(result));
+if (! resFile.exists()) {
+   loop = false;
+} else {
+   loop = true;
+   var input = new BufferedReader(new FileReader(f));
+   // this variable will determine the number of parallel runs
+   runs = java.lang.Integer.parseInt(input.readLine());
+   input.close()
+}
+```
+
+Similarly to how parameters are passed through the *result* variable to
+the script, the script needs to define variables specific to each action
+to determine what action the script will lead to.
+
+-   A *replicate* control flow action needs to define how many parallel
+    runs will be executed, by defining the variable +runs+:
+
+``` {.java}
+// assuming result is a java.lang.Integer
+runs = result % 4 + 1;
+```
+
+The assigned value needs be a strictly positive integer.
+
+-   An *if* control flow action needs to determine whether the if or the
+    else branch is selected, it does this by defining the boolean
+    variable +branch+:
+
+``` {.java}
+// assuming result is a java.lang.Integer
+if (result % 2) {
+  branch = "if";
+} else {
+  branch = "else";
+}
+```
+
+The assigned value needs to be the string value +"if"+ or +"else"+.
+
+-   The *loop* control flow action requires setting the +loop+, which
+    will determine whether looping to the statically defined target is
+    performed, or if the normal flow is executed as would a continue
+    instruction do in a programming language:
+
+``` {.java}
+loop = new java.lang.Boolean(result);
+```
+
+The assigned value needs to be a boolean.
+
+Failure to set the required variables or to provide a valid
+control flow script will not be treated gracefully and will result in
+the failure of the task.
+
+=== Loop and Replicate awareness
+
+When Control Flow actions such as *replicate* or *loop* are performed,
+some tasks are replicated. To be able to identify replicated tasks
+uniquely, each replicated task has an *iteration index* and *replication
+index*.
+
+==== Task name
+
+First, those indexes are reflected inside the names of the tasks
+themselves. Indeed, task names must be unique inside a job. The indexes
+are added to the original task name as a suffix, separated by a special
+character.
+
+-   If a task named _T_ is replicated after a *loop* action, the newly
+    created tasks will be named _T#1_, _T#2_, etc. The number
+    following the _#_ separator character represents the *iteration
+    index*.
+
+-   The same scheme is used upon *replicate* actions: newly created
+    tasks are named _T*1_, _T*2_, and so on. The number following the
+    $$*$$ separator represents the *replication index*.|
+
+-   When combining both of the above, the resulting task names are of
+    the form: _T#1*1_, _T#2*4_, etc., in that precise order.
+
+==== Task definition
+
+Those indexes are also available when creating a task. They can be
+obtained using a special string that will be substituted with the actual
+iteration or replication index at runtime: *$IT* for the iteration
+index, and *$REP* for the replication index. Those macro can be used in
+the following locations:
+
+-   *Java Executable parameters:*
+
+``` {.xml}
+<javaExecutable class="net.example.Executable">
+  <parameters>
+    <parameter name="images" value="/some/path/images/pic_$IT_$REP.jpg" />
+```
+
+-   *Native Executable arguments:*
+
+``` {.xml}
+<staticCommand value="/path/to/bin.sh">
+  <arguments>
+    <argument value="/some/path/$IT/$REP.dat" />
+```
+
+-   *Dataspace input and output:*
+
+``` {.xml}
+<task name="t1" retries="2">
+  <inputFiles>
+    <files includes="foo_$IT_$REP.dat" accessMode="transferFromInputSpace"/>
+  </inputFiles><outputFiles>
+    <files includes="bar_$IT_$REP.res" accessMode="transferToOutputSpace"/>
+```
+
+-   *Script :*
+
+``` {.xml}
+<task>
+  <pre>
+    <script>
+        <code language="javascript">
+            var f = new java.io.File(".lock_$IT_$REP");
+            f.createNewFile();
+        </code>
+      </script>
+    </pre>
+```
+
+NOTE: Scripts affected by the macro substitution are: Pre, Post, Command
+generation and Control Flow. *No substitution will occur in
+selection scripts.*
+
+==== Task executable
+
+The iteration and replication indexes are available inside the
+executables launched by tasks.
+
+In Java and Script tasks, the indexes are exported through the following Java
+properties: +pas.task.iteration+ and +pas.task.replication+.
+
+``` {.java}
+  int it  = System.getProperty("pas.task.iteration");
+  int dup = System.getProperty("pas.task.replication");
+```
+
+In a similar fashion, environment variables are set when launching a
+native executable: +PAS_TASK_ITERATION+ and +PAS_TASK_REPLICATION+:
+
+``` {.sh}
+#!/bin/sh
+/path/to/bin.sh /path/to/file/${PAS_TASK_ITERATION}/${PAS_TASK_REPLICATION}.dat
+
+```
+
+=== Example: Embarrassingly Parallel problem
+
+An http://en.wikipedia.org/wiki/Embarrassingly_parallel[Embarrassingly Parallel problem^] is a problem that is easy
+to split into smaller independent tasks. With ProActive Scheduler you can tackle this type of problem with the
+<<_replicate>> construct.
+
+TIP: Familiar with http://en.wikipedia.org/wiki/MapReduce[MapReduce^]? Well, a workflow using replication
+uses similar concepts.
+
+The http://try.activeeon.com/tutorials/adv.html[Advanced workflows^] is an example of an embarrassingly parallel
+problem where the computation is easily distributed across ProActive Nodes.
+
+== Workflow Execution Control
+
+*ProActive Scheduler* supports portable script execution through the *JSR-223* Java
+Scripting capabilities. Scripts can be written in any language supported by the underlying
+Java Runtime Environment.
+
+They are used in the ProActive Scheduler to:
+
+* Execute some simple *pre*, *post* and *cleaning* processing (pre scripts, post scripts and cleaning scripts)
+* Select among available resources the node that *suits the execution* (selection scripts).
+
+=== Selection of ProActive Nodes
+
+A selection script provides an ability for the scheduler to execute tasks on particular ProActive nodes.
+E.g. you can specify that a task must be executed on a Unix/Linux system.
+
+A selection script is always executed before the task itself on any candidate node:
+the execution of a selection script must set the boolean variable selected,
+that indicates if the candidate node is suitable for the execution of the associated task.
+
+A java helper *org.ow2.proactive.scripting.helper.selection.SelectionUtils* is provided for allowing
+user to simply make some kind of selections. Some script samples are available in
++PROACTIVE_HOME/samples/scripts/selection+.
+
+The following example selects only nodes running on Windows:
+
+[source]
+----
+importClass(org.ow2.proactive.scripting.helper.selection.SelectionUtils);
+
+/* Check if OS name is Windows */
+if (SelectionUtils.checkOSName("windows")) {
+	selected = true;
+} else {
+	selected = false;
+}
+----
+
+=== Pre/Post/Clean Scripts
+
+Another functionality is the possibility to define pre and post scripts. For a given task (Java, Script or Native task),
+it is possible to launch a script before and after its execution. This possibility can be useful to copy files
+to a node, or clean a directory before or after task execution, for example.
+
+This is a way to separate from business code the preparation of execution environment and its cleaning. A good example
+is a script that removes files from task working directory once the task is finished.
+
+[source]
+----
+importPackage(java.io);
+print("clean working directory \n");
+for(i=0; i<args.length;i++)
+{
+    var f= new File(args[i]);
+    if(f["delete"]()) {
+        print(args[i] +" deleted\n");
+    } else {
+        print("deleting "+ args[i] +" failed\n");
+    }
+}
+----
+
+=== Run computation with your system account
+
+It is possible to start a task under the job owner if the system is configured for that purpose.
+There are 3 possible ways to run a task under user account (in any case, the administrator should have set computing hosts to authorize one of the 3 methods) :
+
+* Using your *scheduling login* : if computing hosts are configured and user is authorized to run a process under his login without password.
+* Using your *scheduling login and password* : if computing hosts are configured and user is authorized to run a process under his login and password.
+* Using an *ssh key* provided by the administrator : if computing hosts are configured, the administrator should have gave user a ssh key.
+
+User must first create a credential containing this key :
+
+----
+$ PROACTIVE_HOME/tools/proactive-create-cred -F config/authentication/keys/pub.key -l username -p userpwd -k path/to/private/sshkey -o myCredentials.cred
+----
+
+This command will create a new credentials with *username* as login, *userpwd* as password, using scheduler public key at
++config/authentication/keys/pub.key+
+for credentials encryption and using the private ssh key at
++path/to/private/sshkey+
+provided by administrator. The new credential will be stored in *myCredentials.cred*
+
+Once created, user must connect the scheduler using this credential. Then in order to execute your task under your account
+set *runAsMe=true* in the task.
+
+
+=== Reserve more than one node for a task
+
+To create a <<_mpi_application,multi-nodes>> task often used for MPI applications you need to add a *parallel environment*
+to the task. Parallel environment describes how many nodes are needed for a task as well as where these nodes should be
+located. For example if you'd like to run 4 processes in parallel it a scope of one task you should specify it in your task
+
+[source, xml]
+----
+<parallel numberOfNodes="4"/>
+----
+
+==== Defining a Topology for Multi-Nodes Tasks
+
+In addition to the number of ProActive Nodes you can specify the *nodes network topology*, e.g
+the set of nodes within some latency threshold, nodes on the same host and many more.
+
+
+Here is the list of topologies we support:
+
+* *Arbitrary* topology does not imply any restrictions on nodes location
+* *Best proximity* - the set of closest nodes among those which are not executing other tasks.
+* *Threshold proximity* - the set of nodes within a threshold proximity (in microseconds).
+* *Single Host* - the set of nodes on a single host.
+* *Single Host Exclusive* - the set of nodes of a single host exclusively. The host with selected nodes will be reserved for the user.
+* *Multiple Hosts Exclusive* - the set of nodes filled in multiple hosts. Hosts with selected nodes will be reserved for the user.
+* *Different Hosts Exclusive* - the set of nodes each from a different host. All hosts with selected nodes will be reserved for the user.
+
+See the exact syntax in the http://tbd[topology reference].
+
+=== Handling failures
+
+It's possible to have errors when your workflow is executed. *ProActive Scheduler* provides several mechanisms to deal
+with exceptional situations in your workflows.
+
+To understand if a task is successfully finished or not the scheduler checks its *exit code* (for native tasks) or
+*exceptions* (for java/script tasks). Then it decides what to do next according to the following parameters:
+
+* *cancelJobOnError* (optional - false by default) - defines whether the job must continue when a user exception or
+error occurs during the job process. This property can also be defined in each task. If the value of this property
+is defined at the job level, each cancelJobOnError property of each task will have this value as the default one
+(excepted if this property has been set at the task level). 'True' implies for the job to immediately stop
+every remaining running tasks if an error occurs in one of the tasks. It is useful when there is no need to go further after a task failure.
+
+* *restartTaskOnError* (optional - anywhere by default) - defines whether tasks that have to be restarted will
+restart on an other resource. Defining this property will set the restartTaskOnError property of each task to this
+value as the default one (excepted if this property has been set at the task level). Possible values are 'anywhere'
+or 'elsewhere' meaning respectively that the concerned task will be restart on any available resources or especially
+on a different one. A task can be restarted when an exception occurred (Java Task) or an error code is returned (Native Task).
+
+* *maxNumberOfExecution* (optional - 1 by default) - defines how many times tasks are allowed to be restarted.
+Defining this property will set the nbMaxOfExecution property of each task to this value as the default one
+(excepted if this property has been set at the task level). The value has to be a non-negative and non-null integer.
+
+
+=== Cron Tasks
+*ProActive Scheduler* supports the execution of time-based tasks or cron tasks. The users can assign a
+cron expression to the +loop+ variable of a *Loop* in a ProActive Job. All tasks which belong
+that Loop will be executed iteratively and indefinitely. The start time of the next iteration
+is the next point of time specified by the cron expression.
+
+==== Cron Expression Syntax
+The syntax of the follows the UNIX crontab pattern, a string consists of five space-separated segments.
+ Please refer http://www.sauronsoftware.it/projects/cron4j/manual.php#p02[cron4j documentation] for further details.
+
+==== Setting up Cron Tasks
+Setting up a cron task requires two steps:
+
+* Define a *Loop* with the desired cron tasks
+* Assign a cron expression as the +loop+ variable value
+
+Example that prints _Hello_ every 10 minutes:
+[source, xml]
+----
+<job name=”cron_job”>
+     <genericInformation>
+        <info name="START_AT" value="2014-01-01T00:00:00+01:00"/>
+    </genericInformation>
+    <task name=”cron_task”>
+        <scriptExecutable>
+            <script>
+                <code language="javascript">
+                    print("Hello");
+                </code>
+            </script>
+        </scriptExecutable>
+        <controlFlow>
+            <loop target=”cron_task”>
+                <script>
+                    loop = “10 * * * *”
+                </script>
+            <loop>
+        </controlFlow>
+    </task>
+</job>
+----
+
+You can find a complete example running a simple task every minutes in this link:examples/cron_task.xml[XML workflow^].
+
+==== Notes
+
+* The execution of the first iteration occurs immediately and does not depend on the cron expression specified.
+ However the user can specify a start time for the first iteration using +START_AT+ generic information.
+ Its value should be http://en.wikipedia.org/wiki/ISO_8601[ISO 8601^] compliant.
+
+* Each iteration yields one or more task results and the user can query the job state and task states to
+retrieve information of each iteration.
+
+* It is assumed that execution time of each iteration is less that time gap specified by the cron expression.
+ If the execution time of an iteration is longer, the execution of the next iteration will occur at next point
+  of time with respect to the current time. For instance it is possible to observe lesser number of iteration
+   executed within a certain time period than number of expected iterations, if some iterations had take longer finish time.
+
+* If the execution of a task fails within an iteration, the cron execution is terminated. In other words,
+ the *Loop* breaks, in case of a failure of any task execution belong to the iteration.
+
+* ProActive Scheduler executes any cron task indefinitely. Therefore the state of ProActive Job will remain
+ +RUNNING+ unless the cron task execution terminates either by the user (for instance by killing the job
+  or the task) or due an error in the task execution.
+
+=== Remote Visualization
+
+Using the Scheduler Web Interface, it is possible to access the display of the ProActive Node running a given task.
+First remote visualization must be activated via the
+link:ProActiveAdminGuide.html#_rest_api_properties[Scheduler configuration files] (set *novnc.enabled* to true).
+
+NOTE: Remote visualization works via VNC where the REST API will connect to the node running the task, i.e a graphical
+application. The VNC output will be forwarded to the your browser and you will be able to interact with the
+application.
+
+The task that you want to visualize must output a special string using the following format:
+*PA_REMOTE_CONNECTION;TASK_ID;vnc;HOSTNAME:PORT* where *TASK_ID* must be the current task id
+and *HOSTNAME:PORT* the hostname and port where the VNC server runs.
+
+It is the task's responsibility to print the string.
+Here is a link:examples/remote_visualization_script.sh[sample script^] that starts a Xvnc server and runs
+ a graphical application.
+It can be used in a native task for instance.
+
+In the Scheduler Web Interface, select the running job and use the _Preview_ tab to enable remote visualization.
+
+TIP: Since it runs a graphical application, the task will never exit and run forever. The common use case is that
+you want to check manually some results via the graphical application and then exit the application.
+The task will then terminate normally.
+
+== Reference
+
+=== Job and task specification
+
+Workflows are written in XML and we provide a XSD grammar to help you write and validate them.
+The Workflows XSD is available http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.2/schedulerjob.xsd[here^]
+and you can also find the documentation link:schedulerjob.html[here^].
+
+TIP: Setup your IDE to use the http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.2/schedulerjob.xsd[Workflow XSD^],
+you will benefit from live validation and completion!
+
+=== Topology Types
+include::./references/TopologyTypes.adoc[]
+
+=== Command Line
+include::../CLI.adoc[]
+
+include::../Dedication.adoc[]

@@ -1,0 +1,91 @@
+The ProActive client allows to interact with the Scheduler and Resource Manager.
+The client has an interactive mode started if you do not provided any command.
+
+The client usage is also available using the +-h+ parameter as shown below:
+
+    $ PROACTIVE_HOME/bin/proactive-client -h
+
+[cols="1,2"]
+|===
+| Parameter | Description |
+ -a,--addnodes <node-url> |           Add the specified nodes by their URLs | 
+ -c,--credentials <cred-path> |       Path to the credential file | 
+ -ca,--cacerts <store-path> |         CA certificate store (JKS type) to verify peer against (SSL) | 
+ -cap,--cacertspass <store-password>      |                          Password for CA certificate store |
+ -cn,--createns <node-source> |       Create new node source | 
+ -d,--removenodes <node-url> |        Remove the specified node | 
+ -df,--downloadfile <space-name path-name local-file>         |      Download the specified file from the server and stores it locally. |
+ -f,--force |                         Do not wait for buys nodes to be freed before removal | 
+ -freeze,--freezescheduler |          Freeze the Scheduler (pause all non-running jobs) | 
+ -h,--help |                          Prints the usage of REST command-line client for Resource Manager and Scheduler |
+ -in,--infrastructure <param1 param2 ...>     |                      Specify an infrastructure for the node source |
+ -jo,--joboutput <job-id> |           Retrieve the output of specified job | 
+ -jp,--jobpriority <job-id priority>           |                     Change the priority of the specified job |
+ -jr,--jobresult <job-id> |           Retrieve the result of specified job | 
+ -js,--jobstate <job-id> |            Retrieve the current state of specified job | 
+ -k,--insecure |                      Allow connections to SSL sites without certs verification | 
+ -kill,--killscheduler |              Kill the Scheduler | 
+ -kj,--killjob <job-id> |             Kill the specfied job | 
+ -l,--login <login-name> |            the login name to connect to REST server | 
+ -li,--listinfra |                    List supported infrastructure types | 
+ -lj,--listjobs |                     Retrieve a list of all jobs managed by the Scheduler | 
+ -ll,--livelog <job-id> |             Retrieve the live output of specified job | 
+ -ln,--listnodes |                    List nodes handled by the Resource Manager | 
+ -lns,--listns |                      List node-sources handled by the Resource Manager | 
+ -lon,--locknodes <node1-url node2-url ...>      |                   Lock specified nodes |
+ -lp,--listpolicy |                   List supported policy types | 
+ -lrm,--linkrm <rm-url> |             Reconnect a Resource Manager to the Scheduler | 
+ -ni,--nodeinfo <node-url> |          Retrieve info of specified node | 
+ -ns,--nodesource <node-source> |     Specify node source name | 
+ -o,--output-file <arg> |             Output the result of command execution to specified file | 
+ -p,--password <password> |           the password to connect to REST server | 
+ -pause,--pausescheduler |            Pause the Scheduler (pause all non-running jobs) | 
+ -pj,--pausejob <job-id> |            Pause the specified job (pause all non-running tasks) | 
+ -po,--policy <param1 param2 ...> |   Specify a policy for the node source | 
+ -pr,--print |                        Print the session id | 
+ -pt,--preempttask <job-id task-id [delay]>         |                Stop the specified task and re-schedules it after the specified delay |
+ -r,--removens <node-source> |        Remove specified node source | 
+ -resume,--resumescheduler |          Resume the Scheduler | 
+ -rh,--rmhelp |                       Prints the usage of REST command-line client for Resource Manager | 
+ -rj,--resumejob <job-id> |           Resume the specified job (restart all 'paused' tasks) | 
+ -rmj,--removejob <job-id> |          Remove the specified job | 
+ -rmstats,--rmstats |                 Retrieve current Resource Manager statistics | 
+ -rt,--restarttask <job-id task-name>       |                        Restart the specified task after the specified delay |
+ -s,--submit <job-descriptor [var1=value1 var2=value2 ...]>   |      Submit the specified job-description (XML) file |
+ -sa,--submitarchive <job-archive [var1=value1 var2=value2 ...]>  |  Submit the specified job archive (JAR or ZIP) file |
+ -sf,--script <script-path [param-1=value-1 param-2=value-2 ...]> |  Evaluate the specified JavaScript file |
+ -sh,--schedulerhelp |                Prints the usage of REST command-line client for Scheduler | 
+ -si,--session-id <session-id> |      the session id of this session | 
+ -sif,--session-id-file <session-file>              |                the session id file for this session |
+ -sstats,--schedulerstats |           Retrieve current Scheduler statistics | 
+ -start,--startscheduler |            Start the Scheduler | 
+ -stop,--stopscheduler |              Stop the Scheduler | 
+ -t,--topology |                      Retrieve node topology | 
+ -to,--taskoutput <job-id task-name>                 |               Retrieve the output of specified task |
+ -tr,--taskresult <job-id task-name>                |                Retrieve the result of specified task |
+ -u,--url <server-url> |              URL of REST server | 
+ -uf,--uploadfile <space-name file-path file-name local-file>   |    Upload a file to the specified location of the server |
+ -ulon,--unlocknodes <node1-url node2-url ...>           |           Unlock specified nodes |
+ -X,--debug |                         Print error messages (includes normal stack trace) | 
+ -z,--silent |                        Runs the command-line client in the silent mode | 
+|===
+
+
+==== Command Line Examples
+
+===== Deploy ProActive Nodes
+
+====== In non-interactive mode
+
+[source]
+----
+$ PROACTIVE_HOME/bin/proactive-client -cn 'moreLocalNodes' -infrastructure 'org.ow2.proactive.resourcemanager.nodesource.infrastructure.LocalInfrastructure' './config/authentication/rm.cred'  4 60000 '' -policy org.ow2.proactive.resourcemanager.nodesource.policy.StaticPolicy 'ALL' 'ALL'
+----
+
+====== In interactive mode
+
+[source]
+----
+$ PROACTIVE_HOME/bin/proactive-client
+> createns( 'moreLocalNodes', ['org.ow2.proactive.resourcemanager.nodesource.infrastructure.LocalInfrastructure', './config/authentication/rm.cred', 4, 60000, ''], ['org.ow2.proactive.resourcemanager.nodesource.policy.StaticPolicy', 'ALL', 'ALL'])
+----

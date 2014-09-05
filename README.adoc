@@ -1,0 +1,29 @@
+= Ascidoctor
+
+http://asciidoctor.org/docs/asciidoc-syntax-quick-reference/
+
+http://asciidoctor.org/docs/user-manual/
+
+To write  documentation with live preview see http://asciidoctor.org/docs/editing-asciidoc-with-live-preview/
+
+= How to write ProActive's documentation
+
+* Please read the glossary and use the terms defined in it.
+* User interface labels, buttons and actions should be written in _italic_
+    ** For instance, "Click on _Submit_ in the web portal"
+
+* Use capitals for ProActive's terms, as defined in the glossary
+    ** Workflow, Job, Scheduler
+
+* Use capitals for acronyms: SSH, URL,...
+
+* Lines should 120 characters wide max
+
+* Write code with blocks (----)
++
+----
+blahblahbcode
+----
+
+* If you need to create diagrams: please use https://docs.google.com/a/activeeon.com/document/d/1_krRw8h7i_F1CqfV7H--WHMPPI2nA1wfHsw_x6QIWpc/edit?usp=sharing
+ ** Mind the "ProActive" colors #E87224 and #1c3067
