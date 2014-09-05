@@ -38,7 +38,7 @@ ProActive Scheduler is ready to be started with no extra configuration.
 
 [source]
 ----
-$ PROACTIVE_HOME/bin/server
+$ PROACTIVE_HOME/bin/proactive-server
 ----
 
 [source]
