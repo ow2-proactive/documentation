@@ -131,7 +131,7 @@ Here is how an MPI application invocation would look like when executed with the
 
     mpirun -hostfile $PAS_NODESFILE myApplication
 
-The variable +$PAS_NODESFILE+ contains the path to a machine file created by the Scheduler that will be similar to:
+The environment variable +$PAS_NODESFILE+ contains the path to a machine file created by the Scheduler that will be similar to:
 
     compute-host
     compute-host
@@ -139,7 +139,7 @@ The variable +$PAS_NODESFILE+ contains the path to a machine file created by the
 
 Meaning that +myApplication+ will use 2 CPUs on +compute-host+ and 1 CPU on +another-host+.
 
-You can find an example of a script task in this
+You can find an example of a native task in this
 link:examples/mpi_task.xml[XML workflow^] or you can also build one yourself using the
 *Workflow Studio*.
 
