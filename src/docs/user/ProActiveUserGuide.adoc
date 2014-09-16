@@ -239,7 +239,7 @@ On the job level you can define *variables* that are available in all tasks.
 </variables>
 ----
 
-Then anywhere in your task you can reference to it. For example in a *Groovy* script task, you can use:
+Then anywhere in your task you can reference it. For example in a *Groovy* script task, you can use:
 
 [source]
 ----
