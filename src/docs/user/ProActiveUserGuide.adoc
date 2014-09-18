@@ -163,7 +163,7 @@ line tools>>. For advanced users we also expose REST and JAVA APIs.
 TIP: During the submission, you will be able to edit <<_workflow_variables>>, so you can effectively use
 them to parameterize workflow execution and use workflows as templates.
 
-==== Job/Task states
+==== Job & Task states
 
 During their execution, jobs and tasks go through different states:
 
@@ -222,6 +222,20 @@ as well as Scheduler logs that provide debugging information.
 
 NOTE: When running native application, the task result will be the exit code of the application. Results
 usually make more sens when using script or Java tasks.
+
+==== Job Priority
+
+A job is assigned a default priority of +NORMAL+ but the user can increase or decrease the priority once the
+job has been submitted. When they are scheduled, jobs with the highest priory are executed first.
+
+The following values are available:
+
+- +IDLE+
+- +LOWEST+
+- +LOW+
+- +NORMAL+
+- +HIGH+ can only be set by an administrator
+- +HIGHEST+ can only be set by an administrator
 
 == Data Management
 
