@@ -15,24 +15,13 @@ The administration guide covers cluster setup and cluster administration. Cluste
 
 include::../Glossary.adoc[]
 
+[[_run_the_proactive_scheduler]]
 == Get Started
-
-=== Requirements
-
-* http://www.oracle.com/technetwork/java/javase/downloads/index.html[JDK 1.6^] or later
-* http://www.activeeon.com/community-downloads[*ProActive Scheduler*^]
-
-NOTE: The ProActive Scheduler works with OpenJDK but it is recommended to use JDK from Oracle.
-
-=== Set up from scratch
 
 http://www.activeeon.com/community-downloads[Download^] ProActive Scheduler and *unzip* the archive.
 
 The extracted folder will be referenced as +PROACTIVE_HOME+ in the rest of the documentation.
 The archive contains all required dependencies.
-
-[[_run_the_proactive_scheduler]]
-=== Run the ProActive Scheduler
 
 ProActive Scheduler is ready to be started with no extra configuration.
 
