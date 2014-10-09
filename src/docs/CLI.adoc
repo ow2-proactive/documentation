@@ -27,6 +27,7 @@ The client usage is also available using the +-h+ parameter as shown below:
  -kill,--killscheduler |              Kill the Scheduler | 
  -kj,--killjob <job-id> |             Kill the specfied job | 
  -l,--login <login-name> |            the login name to connect to REST server | 
+ -lc,--list-credentials |             List third-party credential keys stored in the Scheduler |
  -li,--listinfra |                    List supported infrastructure types | 
  -lj,--listjobs |                     Retrieve a list of all jobs managed by the Scheduler | 
  -ll,--livelog <job-id> |             Retrieve the live output of specified job | 
@@ -40,11 +41,13 @@ The client usage is also available using the +-h+ parameter as shown below:
  -o,--output-file <arg> |             Output the result of command execution to specified file | 
  -p,--password <password> |           the password to connect to REST server | 
  -pause,--pausescheduler |            Pause the Scheduler (pause all non-running jobs) | 
+ -pc,--put-credential <key value> |   Store a third-party credential <key-value> pair in the Scheduler |
  -pj,--pausejob <job-id> |            Pause the specified job (pause all non-running tasks) | 
  -po,--policy <param1 param2 ...> |   Specify a policy for the node source | 
  -pr,--print |                        Print the session id | 
  -pt,--preempttask <job-id task-id [delay]>         |                Stop the specified task and re-schedules it after the specified delay |
  -r,--removens <node-source> |        Remove specified node source | 
+ -rc,--remove-credential <key> |      Remove a third-party credential corresponding to the key from the Scheduler |
  -resume,--resumescheduler |          Resume the Scheduler | 
  -rh,--rmhelp |                       Prints the usage of REST command-line client for Resource Manager | 
  -rj,--resumejob <job-id> |           Resume the specified job (restart all 'paused' tasks) | 

@@ -967,6 +967,122 @@ TIP: Since it runs a graphical application, the task will never exit and run for
 you want to check manually some results via the graphical application and then exit the application.
 The task will then terminate normally.
 
+== Third-party credentials
+
+=== Overview
+
+Tasks executed by <<_glossary_practive_scheduler,*ProActive
+Scheduler*>> might need to use a password or another kind of
+credentials to acces third-party services or applications. For example
+a user might wish to pass his MySQL password to Native Task which runs
+a `mysql` command to dump a database.
+
+In such cases it is often desireable to store the credentials
+separately from the <<_glossary_workflow,*Workflow*>>
+definition. *ProActive Scheduler* provides such facility.
+
+Third-party credentials in *ProActive Scheduler* are user-defined
+key-value pairs of strings stored on the server side in encrypted
+form. The credentals are accessible in the tasks executed by the user
+via API (Script and Java Tasks) or variable substitution (arguments of
+Native Tasks and parameters of Java Tasks).
+
+=== Managing third-party credentials
+
+Methods to add or remove the credentials and to list the stored
+credential keys are exposed in both Java and REST APIs.
+
+End users can manage their credentials using the
+<<_glossary_scheduler_web_interface,Scheduler Web Interface>> (Portal
+-> Manage third-party credentials) or the
+<<_scheduler_command_line,Command Line Interface>>.
+
+==== Example CLI usage
+
+Add credential:
+
+    $ ./bin/proactive-client --put-credential MY_MYSQL_PASSWORD mypassword
+    Credential "MY_MYSQL_PASSWORD" successfully stored.
+
+List creentials (only keys are listed):
+
+    $ ./bin/proactive-client --list-credentials
+	    [...]
+	    MY_MYSQL_PASSWORD
+
+Remove credential:
+
+    $ ./bin/proactive-client --remove-credential MY_MYSQL_PASSWORD 
+    Credential "MY_MYSQL_PASSWORD" successfully removed.
+
+=== Using third-party credentials
+
+==== In a Script Task
+
+In a Script Task, the `credentials` map contains all user's
+credentials:
+
+[source,groovy]
+----
+// mysqlPassword will contain the value corresponding to "MY_MYSQL_PASSWORD" key
+mysqlPassword = credentials.get('MY_MYSQL_PASSWORD')
+----
+
+==== In Java Task
+
+In Java, the method `getThirdPartyCredential` of `JavaExecutable`
+returns the credental corresponding to the key passed as parameter:
+
+[source,java]
+----
+public class PrintAndReturnCredentialsTask extends JavaExecutable {
+  @Override
+  public Serializable execute(TaskResult... results) throws Throwable {
+    // mysqlPassword will contain the value corresponding to "MY_MYSQL_PASSWORD" key
+    String mysqlPassword = getThirdPartyCredential("MY_MYSQL_PASSWORD");
+    [...]
+  }
+}
+----
+
+Another way to use credentials in Java tasks is via parameters. If a
+parameter contains a string of the form `$CREDENTIALS_<credential
+key>`, the string is replaced with the value of the corresponding
+credential:
+
+[source,xml]
+----
+<task name="...">
+  <javaExecutable class="...">
+    <parameters>
+      <!-- mysqlPassword will contain the value corresponding to "MY_MYSQL_PASSWORD" key -->
+      <parameter name="mysqlPassword" value="$CREDENTIALS_MY_MYSQL_PASSWORD"/>
+    </parameters>
+  </javaExecutable>
+</task>
+----
+
+==== In a Native Task
+
+Finally, a credential can be passed to a Native Task via
+argumens. Note that, as with Java Task parameters, the `$CREDENTIALS_`
+prefix is necessary. In the example below, `/bin/echo` will be called
+with the value corresponding to the key `MY_MYSQL_PASSWORD` (if the
+key is not present, no replacement occurs):
+
+[source,xml]
+----
+<task name="Task1">
+  <nativeExecutable>
+    <staticCommand value="/bin/echo" >
+      <arguments>
+        <argument value="$CREDENTIALS_MY_MYSQL_PASSWORD"/>
+      </arguments>
+    </staticCommand>
+  </nativeExecutable>
+</task>
+----
+
 == Reference
 
 === Job and task specification
@@ -981,6 +1097,7 @@ you will benefit from live validation and completion!
 === Topology Types
 include::./references/TopologyTypes.adoc[]
 
+[[_scheduler_command_line]]
 === Command Line
 include::../CLI.adoc[]
 
