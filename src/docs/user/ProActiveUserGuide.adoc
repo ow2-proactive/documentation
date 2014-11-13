@@ -71,7 +71,7 @@ a task can be restarted automatically or cancelled.
 
 === A simple example
 
-The http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial^] on http://try.activeeon.com[try.activeeon.com^]
+The link:http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial, window="_blank"] on link:http://try.activeeon.com[try.activeeon.com, window="_blank"]
 shows you how to build a simple workflow using script tasks.
 
 === Native application
@@ -95,8 +95,10 @@ This can be achieved using <<_selection,selection script>>.
 === Scripting language support
 
 Proactive Scheduler supports tasks  written in languages other than Java. The currently supported dynamic languages are
-http://groovy.codehaus.org[Groovy^], http://www.jython.org[Python^], http://jruby.org[Ruby^] and
-http://docs.oracle.com/javase/6/docs/technotes/guides/scripting/programmer_guide/#jsengine[Javascript^].
+link:http://groovy.codehaus.org[Groovy, window="_blank"],
+link:http://www.jython.org[Python, window="_blank"],
+link:http://jruby.org[Ruby, window="_blank"] and
+link:http://docs.oracle.com/javase/6/docs/technotes/guides/scripting/programmer_guide/#jsengine[Javascript, window="_blank"].
 
 Native scripts can also be executed using a script task. Currently Bash and CMD scripts are supported.
 
@@ -111,7 +113,7 @@ some limitations.
 
 You can find an example of a script task in this
 link:examples/script_task.xml[XML workflow^] or you can also build one yourself using the
-*Workflow Studio*. The http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial]
+*Workflow Studio*. The link:http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial, window="_blank"]
 relies on script task and is a nice introduction to workflows.
 
 Scripts can also be used to decorate tasks with specific actions, we support pre/post/clean/selection scripts.
@@ -268,7 +270,7 @@ If the a task depends on several tasks and each task modifies the same variable,
 which is propagated down the execution chain, depends on the *order of task execution*.
 Therefore the users need to take appropriate measures to prevent any undesired effects of such race conditions.
 
-You can set any http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html[Java serializable object^]
+You can set any link:http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html[Java serializable object, window="_blank"]
  as a variable value. They will be converted into strings using
 http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#toString()[toString()^]
  method when required: for instance, to make those values available as environment variables in *native* tasks.
@@ -985,8 +987,8 @@ The task will then terminate normally.
 === Job and task specification
 
 Workflows are written in XML and we provide a XSD grammar to help you write and validate them.
-The Workflows XSD is available http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.2/schedulerjob.xsd[here^]
-and you can also find the documentation link:schedulerjob.html[here^].
+The Workflows XSD is available link:http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.2/schedulerjob.xsd[here, window="_blank"]
+and you can also find the documentation link:schedulerjob.html[here, window="_blank"].
 
 TIP: Setup your IDE to use the http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.2/schedulerjob.xsd[Workflow XSD^],
 you will benefit from live validation and completion!
