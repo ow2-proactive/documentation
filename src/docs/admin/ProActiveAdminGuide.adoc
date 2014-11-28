@@ -754,6 +754,28 @@ More precisely, for a specific node provider, it is the sum of all time interval
 
 The accounting information can be accessed only through a *JMX client* or the ProActive Resource Manager *command line*.
 
+[[_run_as_me]]
+== Run Computation with a user's system account
+
+When starting a ProActive Node, it can be configured to run tasks under the user's system account when
+link:ProActiveUserGuide.html#_run_computation_with_your_system_account[runAsMe] is set to true in
+the job's definition. The default is to use the password method.
+
+=== Using password
+
+The ProActive Node will try to impersonate the user that submitted the task when running it. It means the
+username and password must be the same between the Scheduler and the operating system.
+
+=== Using SSH keys
+
+A SSH key can be tied to the user's account and used to impersonate the user when running a task (using SSH).
+The private key of the user must be provided.
+
+To enable this method, set the system property +pas.launcher.forkas.method+ to _key_ when starting a ProActive Node.
+
+NOTE: On Mac OS X, the default temporary folder is not shared between all users. It is required by this feature.
+To use a shared temporary folder, you need to set the _$TMPDIR_ environment variable and the Java property _java.io.tmpdir_
+to /tmp before starting the ProActive Node.
 
 [[_web_applications]]
 == Configure Web applications

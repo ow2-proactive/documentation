@@ -803,9 +803,11 @@ for(i=0; i<args.length;i++)
 === Run computation with your system account
 
 It is possible to start a task under the job owner if the system is configured for that purpose.
-There are 3 possible ways to run a task under user account (in any case, the administrator should have set computing hosts to authorize one of the 3 methods) :
+There are 2 possible ways to run a task under user account
+(in any case, the administrator should have
+link:ProActiveAdminGuide.html#_run_as_me[set computing hosts] to authorize
+one of the 2 methods) :
 
-* Using your *scheduling login* : if computing hosts are configured and user is authorized to run a process under his login without password.
 * Using your *scheduling login and password* : if computing hosts are configured and user is authorized to run a process under his login and password.
 * Using an *ssh key* provided by the administrator : if computing hosts are configured, the administrator should have gave user a ssh key.
 
@@ -823,6 +825,8 @@ provided by administrator. The new credential will be stored in *myCredentials.c
 
 Once created, user must connect the scheduler using this credential. Then in order to execute your task under your account
 set *runAsMe=true* in the task.
+
+TIP: You can now use <<_third_party_credentials,third party credentials>> to store the SSH key with the special entry named *SSH_PRIVATE_KEY*.
 
 
 === Reserve more than one node for a task
