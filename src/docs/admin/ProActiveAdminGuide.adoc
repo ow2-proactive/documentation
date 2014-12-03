@@ -397,20 +397,21 @@ as a tunnel to receive incoming messages. If the tunnel goes down, it is automat
 The biggest drawback of PAMR is that a centralized PAMR router is in charge of routing message between all the PAMR clients.
 To soften this limitation PAMR can be used with other communication protocols. This way, PAMR is used only when needed.
 
-By default, PNP and PAMR are enabled. PNP is the default protocol for better performance and nodes can also use PAMR if needed.
+By default, PNP is enabled. PNP is the default protocol for better performance and nodes can also use PAMR if needed.
 The PAMR Router is started by default along with the ProActive Scheduler.
 
-For a node to connect to the ProActive Scheduler using PAMR, the following ProActive configuration file can be used
-(+PROACTIVE_HOME/config/network/node.ini+).
+For a ProActive Node to connect to the ProActive Scheduler using PAMR, the following ProActive configuration file can be used
+(+PROACTIVE_HOME/config/network/node.ini+). The properties tell the ProActive Node where to find the PAMR router.
+The ProActive Node will then connect to +pamr://0+ where +0+ is the PAMR id of the Scheduler (0 by default).
 
 [source]
 ----
 proactive.communication.protocol=pamr
-proactive.net.router.address=ROUTER_HOSTNAME
-proactive.net.router.port=8090
+proactive.pamr.router.address=ROUTER_HOSTNAME
+proactive.pamr.router.port=33647
 ----
 
-This sample configuration requires to open only one port +8090+ for *incoming connections* on the router host
+This sample configuration requires to open only one port +33647+ for *incoming connections* on the router host
 and all the ProActive Nodes will be able to connect to the Scheduler.
 
 See <<_pamr_protocol_properties>> reference for a detailed explanation of each property.
@@ -563,7 +564,7 @@ The LDAP configuration is defined in +PROACTIVE_HOME/config/authentication/ldap.
 
 . *Set the LDAP server URL*
 +
-First, you have to define the LDAP's URL of your organisation. This address corresponds to the property: +pa.ldap.url+. You have to put a standard LDAP-like URL, for example *ldap://myLdap*. You can also set an URL with secure access: *ldaps://myLdap:636*.
+First, you have to define the LDAP's URL of your organisation. This address corresponds to the property: +pa.ldap.url+. You have to put a standard LDAP-like URL, for example *ldap://myLdap*. You can also set a URL with secure access: *ldaps://myLdap:636*.
 +
 . *Define object class of user and group entities*
 +
