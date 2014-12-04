@@ -809,7 +809,7 @@ link:ProActiveAdminGuide.html#_run_as_me[set computing hosts] to authorize
 one of the 2 methods) :
 
 * Using your *scheduling login and password* : if computing hosts are configured and user is authorized to run a process under his login and password.
-* Using an *ssh key* provided by the administrator : if computing hosts are configured, the administrator should have gave user a ssh key.
+* Using an *ssh key* provided by the administrator : if computing hosts are configured, the administrator should have given user an ssh key.
 
 User must first create a credential containing this key :
 
