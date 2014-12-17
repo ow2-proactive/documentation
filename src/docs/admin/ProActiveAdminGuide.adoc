@@ -116,6 +116,10 @@ $ PROACTIVE_HOME/bin/proactive-node -r pnp://SCHEDULER_ADDRESS:41303
 ----
 where +-r+ option is used to specify the URL of the *Resource Manager*. You can find this URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler>> (the Resource Manager URL).
 
+TIP: You can also use *discovery* to let the ProActive Node find the URL to connect to on its own.
+ Simply run +proactive-node+ without any parameter to use discovery.
+ It uses broadcast to retrieve the URL so this feature might not work depending on your network configuration.
+
 ==== Using node.jar
 
 It is also possible to launch a ProActive Node without even copying the ProActive Scheduler to a Compute Host:
@@ -129,7 +133,8 @@ It is also possible to launch a ProActive Node without even copying the ProActiv
 $ java -jar node.jar
 ----
 
-It should connect to the ProActive Scheduler automatically.
+It should connect to the ProActive Scheduler automatically using the discovery mechanism otherwise you might
+have to set the URL to connect to with the +-r+ parameter.
 
 TIP: Launch several processes if you would like to execute several Tasks at the same time on one host. Each
 ProActive Node process allows to execute one Task at a time.

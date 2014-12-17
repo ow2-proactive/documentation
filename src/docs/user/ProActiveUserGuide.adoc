@@ -856,8 +856,6 @@ Here is the list of topologies we support:
 * *Multiple Hosts Exclusive* - the set of nodes filled in multiple hosts. Hosts with selected nodes will be reserved for the user.
 * *Different Hosts Exclusive* - the set of nodes each from a different host. All hosts with selected nodes will be reserved for the user.
 
-See the exact syntax in the http://tbd[topology reference].
-
 === Handling failures
 
 It's possible to have errors when your workflow is executed. *ProActive Scheduler* provides several mechanisms to deal
