@@ -939,8 +939,8 @@ retrieve information of each iteration.
   of time with respect to the current time. For instance it is possible to observe lesser number of iteration
    executed within a certain time period than number of expected iterations, if some iterations had take longer finish time.
 
-* If the execution of a task fails within an iteration, the cron execution is terminated. In other words,
- the *Loop* breaks, in case of a failure of any task execution belong to the iteration.
+* If the execution of the task defining the loop (where the <controlFlow> block is defined) fails,
+ the cron execution is terminated.
 
 * ProActive Scheduler executes any cron task indefinitely. Therefore the state of ProActive Job will remain
  +RUNNING+ unless the cron task execution terminates either by the user (for instance by killing the job
