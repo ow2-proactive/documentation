@@ -114,7 +114,10 @@ to run the following command
 ----
 $ PROACTIVE_HOME/bin/proactive-node -r pnp://SCHEDULER_ADDRESS:41303
 ----
-where +-r+ option is used to specify the URL of the *Resource Manager*. You can find this URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler>> (the Resource Manager URL).
+where +-r+ option is used to specify the URL of the *Resource Manager*.
+You can find this URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler>> (the Resource Manager URL).
+If you want to run multiple tasks at the same time on the same machine, you can either start a few +proactive-node+ processes
+or start multiple nodes from the same process using the +-w+ command line option.
 
 TIP: You can also use *discovery* to let the ProActive Node find the URL to connect to on its own.
  Simply run +proactive-node+ without any parameter to use discovery.
@@ -136,8 +139,8 @@ $ java -jar node.jar
 It should connect to the ProActive Scheduler automatically using the discovery mechanism otherwise you might
 have to set the URL to connect to with the +-r+ parameter.
 
-TIP: Launch several processes if you would like to execute several Tasks at the same time on one host. Each
-ProActive Node process allows to execute one Task at a time.
+TIP: If you would like to execute several Tasks at the same time on one host, you can either launch several ProActive
+Node process or use the _-w_ parameter to run multiple nodes in the same process. A node executes one Task at a time.
 
 [[_deploy_nodes_via_ssh]]
 === Deploy ProActive Nodes via SSH
@@ -197,7 +200,7 @@ See <<_ssh_infrastructure>> reference for details on each parameter.
 In your production environment you might want to control and limit the resources utilization on some or all Compute Hosts,
 especially if those are desktop machines where people perform their daily activities. Using *ProActive Agent* you can:
 
-* Control the number of ProActive Nodes on each Compute Host
+* Control the number of ProActive Node processes on each Compute Host
 * Launch ProActive Nodes automatically when a Compute Host starts
 * Restart ProActive Nodes if they fail for some reason and reconnect them to ProActive Scheduler
 
@@ -273,15 +276,12 @@ In the general tab, the user can specify:
 
 * The *ProActive Scheduler* location.
 * The *JRE* location (usually something like +C:\Program Files\Java\jdk1.6.0_12+).
-* The *number* of Runtimes (the number of spawned ProActive Nodes).
-* The *JVM options*.
-* Note that if the parameter contains +${rank}+, it will be dynamically replaced by the ProActive Node rank starting from 0.
-* The *On Runtime Exit* script. A script executed after a ProActive Node exits. This can be useful to perform additional cleaning operation.
-* Note that the script receives as parameter the PID of the ProActive Node.
-* The user can set a *memory limit* that will prevent the spawned processes to exceed a specified amount of RAM. If a spawned process or its child process requires more memory, it will be killed as well as its child processes.
-* Note that this limit is disabled by default (0 means no limit) and a ProActive Node will require at least 128 MBytes.
+* The *numbers of Runtimes and Nodes* (the number of spawned processes and the number of ProActive Nodes per process).
+* The *JVM options*. Note that if the parameter contains +${rank}+, it will be dynamically replaced by the ProActive Node rank starting from 0.
+* The *On Runtime Exit* script. A script executed after a ProActive Node exits. This can be useful to perform additional cleaning operation. Note that the script receives as parameter the PID of the ProActive Node.
+* The user can set a *memory limit* that will prevent the spawned processes to exceed a specified amount of RAM. If a spawned process or its child process requires more memory, it will be killed as well as its child processes. Note that this limit is disabled by default (0 means no limit) and a ProActive Node will require at least 128 MBytes.
 * It is possible to list all available *network interfaces* by clicking on the "Refresh" button and add the selected network interface name as a value of the +proactive.net.interface+ property by clicking on "Use" button. See the ProActive documentation for further information.
-* The user can specify the *protocol* (rmi or http) to be used by the ProActive Node for incoming communications.
+* The user can specify the *protocol* (PNP or PAMR) to be used by the ProActive Node for incoming communications.
 * To ensure that a unique port is used by a ProActive Node, the initial port value will be incremented for each node process and given as value of the +-Dproactive.SELECTED_PROTOCOL.port+ JVM property. If the port chosen for a node is already used, it is incremented until an available port number is found.
 
 Clicking on the 'Connection' tab, the window will look like this:

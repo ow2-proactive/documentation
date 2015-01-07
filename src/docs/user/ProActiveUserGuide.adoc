@@ -122,8 +122,7 @@ Scripts can also be used to decorate tasks with specific actions, we support pre
 
 http://en.wikipedia.org/wiki/Message_Passing_Interface[MPI^] is often used in the area of parallel computing.
 The Scheduler integrates with MPI with the concept of <<_reserve_more_than_one_node_for_a_task_parallel_environment,multi node tasks>>.
- This particular task will acquire several
-nodes and will expose these nodes to the MPI environment.
+ This particular task will acquire several nodes and will expose these nodes to the MPI environment.
 
 Applications built with MPI are often executed using the http://linux.die.net/man/1/mpirun[mpirun^] command.
 It accepts several parameters to
@@ -839,6 +838,9 @@ located. For example if you'd like to run 4 processes in parallel it a scope of 
 ----
 <parallel numberOfNodes="4"/>
 ----
+
+NOTE: For instance if 4 nodes are running on a given note (often because the host has 4 cores), then
+a multi-nodes task that requires 4 nodes might select the 4 workers on this host.
 
 ==== Defining a Topology for Multi-Nodes Tasks
 
