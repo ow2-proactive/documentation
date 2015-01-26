@@ -414,6 +414,9 @@ proactive.pamr.router.port=33647
 This sample configuration requires to open only one port +33647+ for *incoming connections* on the router host
 and all the ProActive Nodes will be able to connect to the Scheduler.
 
+PAMR communication can be tunneled using SSH for better security. In that case, the ProActive node will establish
+a SSH tunnel between him and the ProActive Scheduler and use that tunnel for PAMR traffic.
+
 See <<_pamr_protocol_properties>> reference for a detailed explanation of each property.
 
 == Control the resource usage
