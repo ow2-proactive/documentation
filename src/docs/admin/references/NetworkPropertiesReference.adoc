@@ -40,15 +40,6 @@ is given by the value of the property. This property is particularly useful to d
 machines with two network interfaces.
 
 
-==== RMI Protocol Properties
-
-- +proactive.rmi.port+: Represents the port number on which to start the RMIRegistry. Default is 1099.
-If an RMIRegistry is already running on the given port, JMS uses the existing registry.
-
-- +proactive.rmi.connect_timeout+: The amount of time in millisecond to way wait while establishing a
- TCP connection before reporting it as failed. This option allows to not wait the TCP timeout when
-  a machine is firewalled and drop the packets (default Windows firewall behavior).
-
 ==== PNP Protocol Properties
 
 The property +proactive.communication.protocol+ must be set to *pnp*.
@@ -87,6 +78,20 @@ in the router configuration and must be between 0 and 4096.
 - +proactive.pamr.agent.magic_cookie+: The Magic cookie to submit to the router.
 If +proactive.pamr.agent.id+ is set, then this property must also be set to be able
 to use a reserved agent ID.
+
+===== PAMR over SSH Protocol Properties
+
+To enable PAMR over SSH, ProActive nodes hosts should be able to SSH to router's host without password, using
+SSH keys.
+
+- +proactive.pamr.socketfactory+: The underlying Socket factory, should be +ssh+ to enable PAMR over SSH
+
+- +proactive.pamrssh.port+: SSH port to use when connecting to router's host
+
+- +proactive.pamrssh.username+: username to use when connecting to router's host
+
+- +proactive.pamrssh.key_directory+: directory when SSH keys can be found to access router's host. For instance
+/home/login/.ssh
 
 ==== Enabling several communication protocols
 
