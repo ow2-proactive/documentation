@@ -876,6 +876,19 @@ on a different one. A task can be restarted when an exception occurred (Java Tas
 Defining this property will set the nbMaxOfExecution property of each task to this value as the default one
 (excepted if this property has been set at the task level). The value has to be a non-negative and non-null integer.
 
+==== Maximum execution time for a task
+
+A +timeout+ (also known as +walltime+) can be set at the task's level to stop a task's execution when the timeout is reached.
+The general format of the walltime attribute is +[hh:mm:ss]+, where h is hour, m is minute and s is second.
+The format still allows for more flexibility. We can define the walltime simply as +5+ which corresponds to
+5 seconds, +10+ is 10 seconds, +4:10+ is 4 minutes and 10 seconds, and so on.
+
+The walltime mechanism is started
+just before a task is launched. If a task does finish before its walltime, the mechanism is canceled. Otherwise,
+the task is terminated. Note that the tasks are terminated without any prior notice.
+
+NOTE: If the walltime is specified for a Java task, it enforces the creation of a forked task instead. When this property
+is defined and execution exceeds this time, the task ends with an exception.
 
 === Cron Tasks
 *ProActive Scheduler* supports the execution of time-based tasks or cron tasks. The users can assign a
