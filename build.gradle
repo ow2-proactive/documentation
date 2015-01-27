@@ -65,3 +65,4 @@ task xsdDoc(type: JavaExec) {
 }
 
 task('build', dependsOn: ['user', 'admin', 'developer', 'index', 'xsdDoc'])
+defaultTasks 'build'
