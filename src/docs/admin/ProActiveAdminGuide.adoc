@@ -501,7 +501,6 @@ pa.rm.authentication.loginMethod=RMLDAPLoginMethod
 #It can be one of the following values :
 #	- "SchedulerFileLoginMethod" to use file login and group management
 #	- "SchedulerLDAPLoginMethod" to use LDAP login management
-#	- "SchedulerLDAP2LoginMethod" to use improved LDAP login management
 pa.scheduler.core.authentication.loginMethod=SchedulerLDAPLoginMethod
 ----
 
