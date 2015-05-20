@@ -1,7 +1,7 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url 'http://repo.activeeon.com/content/repositories/thirdparty/' }
+        maven { url 'http://repository.activeeon.com/content/repositories/thirdparty/' }
     }
 
     dependencies {
