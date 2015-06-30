@@ -132,13 +132,13 @@ Here is how an MPI application invocation would look like when executed with the
 
     mpirun -hostfile $PAS_NODESFILE myApplication
 
-The environment variable +$PAS_NODESFILE+ contains the path to a machine file created by the Scheduler that will be similar to:
+The environment variable `$PAS_NODESFILE` contains the path to a machine file created by the Scheduler that will be similar to:
 
     compute-host
     compute-host
     another-host
 
-Meaning that +myApplication+ will use 2 CPUs on +compute-host+ and 1 CPU on +another-host+.
+Meaning that `myApplication` will use 2 CPUs on `compute-host` and 1 CPU on `another-host`.
 
 You can find an example of a native task in this
 link:examples/mpi_task.xml[XML workflow^] or you can also build one yourself using the
@@ -172,17 +172,17 @@ During their execution, jobs and tasks go through different states:
 [cols="1,10", options="header"]
 |===
 | State | Description |
- +PENDING+| The job is waiting to be scheduled.|
- +RUNNING+| The job is running. At least one of its task has been scheduled.|
- +STALLED+| The job has been launched but no task is currently running.|
- +FINISHED+|The job is finished. All tasks are finished.|
- +PAUSED+| The job is paused waiting for user to resume it.|
- +CANCELED+| The job has been canceled because of an exception.
+ `PENDING`| The job is waiting to be scheduled.|
+ `RUNNING`| The job is running. At least one of its task has been scheduled.|
+ `STALLED`| The job has been launched but no task is currently running.|
+ `FINISHED`|The job is finished. All tasks are finished.|
+ `PAUSED`| The job is paused waiting for user to resume it.|
+ `CANCELED`| The job has been canceled because of an exception.
 This status is used when an exception is thrown by the user code of a task
 and when the user has asked to cancel the job on exception.|
- +FAILED+| The job has failed. One or more tasks have failed (due to resources failure).
+ `FAILED`| The job has failed. One or more tasks have failed (due to resources failure).
 There is no more executionOnFailure left for a task.|
- +KILLED+| The job has been killed by the user.|
+ `KILLED`| The job has been killed by the user.|
 |===
 
 
@@ -190,25 +190,25 @@ There is no more executionOnFailure left for a task.|
 [cols="1,10", options="header"]
 |===
 | State | Description |
- +SUBMITTED+| The task has just been submitted by the user.|
- +PENDING+| The task is in the scheduler pending queue.|
- +PAUSED+| The task is paused.|
- +RUNNING+|The task is executing.|
- +WAITING_ON_ERROR+| The task is waiting for restart after an error. (ie:native code != 0 or exception).|
- +WAITING_ON_FAILURE+| The task is waiting for restart after a failure. (ie:node down). |
- +FAILED+| The task is failed
+ `SUBMITTED`| The task has just been submitted by the user.|
+ `PENDING`| The task is in the scheduler pending queue.|
+ `PAUSED`| The task is paused.|
+ `RUNNING`|The task is executing.|
+ `WAITING_ON_ERROR`| The task is waiting for restart after an error. (ie:native code != 0 or exception).|
+ `WAITING_ON_FAILURE`| The task is waiting for restart after a failure. (ie:node down). |
+ `FAILED`| The task is failed
 (only if max execution time has been reached and the node on which it was started is down).|
- +NOT_STARTED+| The task could not be started.
+ `NOT_STARTED`| The task could not be started.
 It means that the task could not be started due to
  dependencies failure.|
- +NOT_RESTARTED+ | The task could not be restarted.
+ `NOT_RESTARTED` | The task could not be restarted.
  It means that the task could not be restarted after an error
  during the previous execution. |
- +ABORTED+ | The task has been aborted by an exception on an other task while the task is running. (job is cancelOnError=true).
+ `ABORTED` | The task has been aborted by an exception on an other task while the task is running. (job is cancelOnError=true).
  Can be also in this status if the job is killed while the concerned task was running. |
- +FAULTY+ | The task has finished execution with error code (!=0) or exception. |
- +FINISHED+ | The task has finished execution. |
- +SKIPPED+ | The task was not executed: it was the non-selected branch of an IF/ELSE control flow action. |
+ `FAULTY` | The task has finished execution with error code (!=0) or exception. |
+ `FINISHED` | The task has finished execution. |
+ `SKIPPED` | The task was not executed: it was the non-selected branch of an IF/ELSE control flow action. |
 |===
 
 // TODO state diagram
@@ -226,17 +226,17 @@ usually make more sens when using script or Java tasks.
 
 ==== Job Priority
 
-A job is assigned a default priority of +NORMAL+ but the user can increase or decrease the priority once the
+A job is assigned a default priority of `NORMAL` but the user can increase or decrease the priority once the
 job has been submitted. When they are scheduled, jobs with the highest priory are executed first.
 
 The following values are available:
 
-- +IDLE+
-- +LOWEST+
-- +LOW+
-- +NORMAL+
-- +HIGH+ can only be set by an administrator
-- +HIGHEST+ can only be set by an administrator
+- `IDLE`
+- `LOWEST`
+- `LOW`
+- `NORMAL`
+- `HIGH` can only be set by an administrator
+- `HIGHEST` can only be set by an administrator
 
 == Data Management
 
@@ -344,10 +344,10 @@ your data. It has two types of storage on the host where the server is running:
 
 By default these spaces are linked to folders in the *data* directory of the ProActive Scheduler host:
 
- * +PROACTIVE_HOME/data/defaultglobal+
- * +PROACTIVE_HOME/data/defaultuser+
+ * `PROACTIVE_HOME/data/defaultglobal`
+ * `PROACTIVE_HOME/data/defaultuser`
 
-But it can be changed in +PROACTIVE_HOME/config/scheduler/settings.ini+.
+But it can be changed in `PROACTIVE_HOME/config/scheduler/settings.ini`.
 
 All files that are stored in these spaces can be read from all computing nodes.
 In order to do it in a task set up the data management
@@ -378,7 +378,7 @@ File inputFile = new File(new URI(localspace.getRealURI()+"/tata"))
 All the files produced by the task with the name "titi*" (e.g titi, titi2 etc) will be transferred back to Global Space
 automatically by the scheduler once the task is finished.
 
-Files can be also transferred from/to User Space by specifying +transferFromUserSpace+/+transferToUserSpace+.
+Files can be also transferred from/to User Space by specifying `transferFromUserSpace`/`transferToUserSpace`.
 
 Before running your jobs you should first *upload* your files into either Global or User Space. To do it you can export folders linked to
 these spaces by one of the standard protocols like *FTP*, *NFS*, or use available web interfaces like
@@ -561,7 +561,7 @@ Java or Script task, or nothing if it was a native task.
 
 The script is executed on the ProActive node, just after the task's
 executable. If the executable is a Java Executable and returns a result,
-the variable +result+ will be set in the script's environment so that
+the variable `result` will be set in the script's environment so that
 dynamic decisions can be taken with the task's result as input. Native
 Java objects can be used in a Javascript script using the following
 syntax:
@@ -586,7 +586,7 @@ the script, the script needs to define variables specific to each action
 to determine what action the script will lead to.
 
 -   A *replicate* control flow action needs to define how many parallel
-    runs will be executed, by defining the variable +runs+:
+    runs will be executed, by defining the variable `runs`:
 
 ``` {.java}
 // assuming result is a java.lang.Integer
@@ -597,7 +597,7 @@ The assigned value needs be a strictly positive integer.
 
 -   An *if* control flow action needs to determine whether the if or the
     else branch is selected, it does this by defining the boolean
-    variable +branch+:
+    variable `branch`:
 
 ``` {.java}
 // assuming result is a java.lang.Integer
@@ -608,9 +608,9 @@ if (result % 2) {
 }
 ```
 
-The assigned value needs to be the string value +"if"+ or +"else"+.
+The assigned value needs to be the string value `"if"` or `"else"`.
 
--   The *loop* control flow action requires setting the +loop+, which
+-   The *loop* control flow action requires setting the `loop`, which
     will determine whether looping to the statically defined target is
     performed, or if the normal flow is executed as would a continue
     instruction do in a programming language:
@@ -709,7 +709,7 @@ The iteration and replication indexes are available inside the
 executables launched by tasks.
 
 In Java and Script tasks, the indexes are exported through the following Java
-properties: +pas.task.iteration+ and +pas.task.replication+.
+properties: `pas.task.iteration` and `pas.task.replication`.
 
 ``` {.java}
   int it  = System.getProperty("pas.task.iteration");
@@ -717,7 +717,7 @@ properties: +pas.task.iteration+ and +pas.task.replication+.
 ```
 
 In a similar fashion, environment variables are set when launching a
-native executable: +PAS_TASK_ITERATION+ and +PAS_TASK_REPLICATION+:
+native executable: `PAS_TASK_ITERATION` and `PAS_TASK_REPLICATION`:
 
 ``` {.sh}
 #!/bin/sh
@@ -759,7 +759,7 @@ that indicates if the candidate node is suitable for the execution of the associ
 
 A java helper *org.ow2.proactive.scripting.helper.selection.SelectionUtils* is provided for allowing
 user to simply make some kind of selections. Some script samples are available in
-+PROACTIVE_HOME/samples/scripts/selection+.
+`PROACTIVE_HOME/samples/scripts/selection`.
 
 The following example selects only nodes running on Windows:
 
@@ -788,13 +788,13 @@ is a script that removes files from task working directory once the task is fini
 ----
 importPackage(java.io);
 print("clean working directory \n");
-for(i=0; i<args.length;i++)
+for(i=0; i<args.length;i``)
 {
     var f= new File(args[i]);
     if(f["delete"]()) {
         print(args[i] +" deleted\n");
     } else {
-        print("deleting "+ args[i] +" failed\n");
+        print("deleting "` args[i] `" failed\n");
     }
 }
 ----
@@ -817,9 +817,9 @@ $ PROACTIVE_HOME/tools/proactive-create-cred -F config/authentication/keys/pub.k
 ----
 
 This command will create a new credentials with *username* as login, *userpwd* as password, using scheduler public key at
-+config/authentication/keys/pub.key+
+`config/authentication/keys/pub.key`
 for credentials encryption and using the private ssh key at
-+path/to/private/sshkey+
+`path/to/private/sshkey`
 provided by administrator. The new credential will be stored in *myCredentials.cred*
 
 Once created, user must connect the scheduler using this credential. Then in order to execute your task under your account
@@ -884,10 +884,10 @@ Defining this property will set the nbMaxOfExecution property of each task to th
 
 ==== Maximum execution time for a task
 
-A +timeout+ (also known as +walltime+) can be set at the task's level to stop a task's execution when the timeout is reached.
-The general format of the walltime attribute is +[hh:mm:ss]+, where h is hour, m is minute and s is second.
-The format still allows for more flexibility. We can define the walltime simply as +5+ which corresponds to
-5 seconds, +10+ is 10 seconds, +4:10+ is 4 minutes and 10 seconds, and so on.
+A `timeout` (also known as `walltime`) can be set at the task's level to stop a task's execution when the timeout is reached.
+The general format of the walltime attribute is `[hh:mm:ss]`, where h is hour, m is minute and s is second.
+The format still allows for more flexibility. We can define the walltime simply as `5` which corresponds to
+5 seconds, `10` is 10 seconds, `4:10` is 4 minutes and 10 seconds, and so on.
 
 The walltime mechanism is started
 just before a task is launched. If a task does finish before its walltime, the mechanism is canceled. Otherwise,
@@ -898,7 +898,7 @@ is defined and execution exceeds this time, the task ends with an exception.
 
 === Cron Tasks
 *ProActive Scheduler* supports the execution of time-based tasks or cron tasks. The users can assign a
-cron expression to the +loop+ variable of a *Loop* in a ProActive Job. All tasks which belong
+cron expression to the `loop` variable of a *Loop* in a ProActive Job. All tasks which belong
 that Loop will be executed iteratively and indefinitely. The start time of the next iteration
 is the next point of time specified by the cron expression.
 
@@ -910,7 +910,7 @@ The syntax of the follows the UNIX crontab pattern, a string consists of five sp
 Setting up a cron task requires two steps:
 
 * Define a *Loop* with the desired cron tasks
-* Assign a cron expression as the +loop+ variable value
+* Assign a cron expression as the `loop` variable value
 
 Example that prints _Hello_ every 10 minutes:
 [source, xml]
@@ -943,7 +943,7 @@ You can find a complete example running a simple task every minutes in this link
 ==== Notes
 
 * The execution of the first iteration occurs immediately and does not depend on the cron expression specified.
- However the user can specify a start time for the first iteration using +START_AT+ generic information.
+ However the user can specify a start time for the first iteration using `START_AT` generic information.
  Its value should be http://en.wikipedia.org/wiki/ISO_8601[ISO 8601^] compliant.
 
 * Each iteration yields one or more task results and the user can query the job state and task states to
@@ -958,7 +958,7 @@ retrieve information of each iteration.
  the cron execution is terminated.
 
 * ProActive Scheduler executes any cron task indefinitely. Therefore the state of ProActive Job will remain
- +RUNNING+ unless the cron task execution terminates either by the user (for instance by killing the job
+ `RUNNING` unless the cron task execution terminates either by the user (for instance by killing the job
   or the task) or due an error in the task execution.
 
 === Remote Visualization

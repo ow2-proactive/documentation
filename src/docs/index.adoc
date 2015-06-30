@@ -1,10 +1,10 @@
 = ProActive Documentation
-:stylesheet: styles/stylesheets/activeeon.css
+:stylesheet: ../../styles/stylesheets/activeeon.css
 
 == ProActive Workflows & Scheduling
 
-* link:ProActiveUserGuide.html[User Guide] (Workflows, Tasks, Jobs Submission,...)
-* link:ProActiveAdminGuide.html[Administration Guide] (Installation, Infrastructure & Nodes setup, Agents,...)
+* link:user/ProActiveUserGuide.html[User Guide] (Workflows, Tasks, Jobs Submission,...)
+* link:admin/ProActiveAdminGuide.html[Administration Guide] (Installation, Infrastructure & Nodes setup, Agents,...)
 
 == Links
 

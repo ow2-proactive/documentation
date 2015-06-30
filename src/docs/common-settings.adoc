@@ -6,9 +6,9 @@ The Activeeon team <contact@activeeon.com>
 :linkattrs:
 :sectanchors:
 :icons: font
-:stylesheet: styles/stylesheets/activeeon.css
+:stylesheet: ../../../styles/stylesheets/activeeon.css
 :data-uri:
-:imagesdir: src/docs/images
+:imagesdir: ../images
 :description: ProActive Parallel Suite is an innovative Open Source solution (OW2) for acceleration and +
 orchestration of applications, seamlessly integrated with the management of high-performance Clouds +
 (Private and Public with bursting capabilities). +
