@@ -41,21 +41,24 @@ Each execution step corresponds to a task which is the smallest unit of executio
 - *Script Task*, a script written in Groovy, Ruby, Python and other languages supported by the JSR-223
 - *Java Task*, a task written in Java extending the Scheduler API
 
+WARNING: We strongly recommend to use script tasks that are more flexible rather than Java tasks.
+You can easily integrate with any Java code from a Groovy script task.
+In the near future, *Java tasks might be removed*.
+
 For instance, a script
 task can be used to execute an inline script definition or a script file as an execution step whereas a
-native task can be used to execute a native executable file. It also possible to package an workflow definition
-along with its dependencies (libraries, executables etc) into a self-contained archive.
+native task can be used to execute a native executable file.
 
 One can use **ProActive Workflow Studio**  to create and submit workflows graphically .
-They can simply drag-and-drop various task constructs and draw their dependencies to form complex jobs.
+You can simply drag-and-drop various task constructs and draw their dependencies to form complex jobs.
 It also provides various flow control widgets such as conditional branch, loop, replicate etc to construct complex workflows.
 
 image::flow_spec_dependency.png[align="center"]
 
 In this tasks graph, we see that task 4 is preceded by task 1, that
-means scheduler waits the end of task 1 execution before launching task
+means the Scheduler waits the end of task 1 execution before launching task
 4. In a more concrete way, task 1 could be the calculation of a part of
-the problem to solve, and task 4 takes result provided by task 1 and
+the problem to solve, and task 4 takes the result provided by task 1 and
 compute another step of the calculation. We introduce here the concept
 of <<_passing_data_between_tasks,result passing>> between tasks. This relation is
 called a <<_dependency>>, and we say that task 4 **depends** on task 1.
@@ -100,7 +103,8 @@ link:http://www.jython.org[Python, window="_blank"],
 link:http://jruby.org[Ruby, window="_blank"] and
 link:http://docs.oracle.com/javase/6/docs/technotes/guides/scripting/programmer_guide/#jsengine[Javascript, window="_blank"].
 
-Native scripts can also be executed using a script task. Currently Bash and CMD scripts are supported.
+Native scripts can also be executed using a script task. Currently Bash and CMD scripts are supported,
+simply set the language attribute to `bash` or `cmd` and type your script in the workflow.
 
 You can easily embed small scripts in your workflow.
 The nice thing is that the workflow will be self-contained and will not require to compile your code before executing. However we
@@ -116,12 +120,13 @@ link:examples/script_task.xml[XML workflow^] or you can also build one yourself 
 *Workflow Studio*. The link:http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial, window="_blank"]
 relies on script task and is a nice introduction to workflows.
 
-Scripts can also be used to decorate tasks with specific actions, we support pre/post/clean/selection scripts.
+Scripts can also be used to decorate tasks with specific actions, we support
+<<_pre_post_clean,pre>>, <<_pre_post_clean,post>>, <<_pre_post_clean,clean>> and <<_selection,selection>> scripts.
 
 === MPI application
 
 http://en.wikipedia.org/wiki/Message_Passing_Interface[MPI^] is often used in the area of parallel computing.
-The Scheduler integrates with MPI with the concept of <<_reserve_more_than_one_node_for_a_task_parallel_environment,multi node tasks>>.
+The Scheduler integrates with MPI with the concept of <<_multi_node_task,multi node tasks>>.
  This particular task will acquire several nodes and will expose these nodes to the MPI environment.
 
 Applications built with MPI are often executed using the http://linux.die.net/man/1/mpirun[mpirun^] command.
@@ -130,15 +135,16 @@ choose how many CPUs and how many machines will be used. One particular paramete
 built by the Scheduler when using *multi node tasks*.
 Here is how an MPI application invocation would look like when executed with the Scheduler:
 
-    mpirun -hostfile $PAS_NODESFILE myApplication
+    mpirun -hostfile $variables_PA_NODESFILE myApplication
 
-The environment variable `$PAS_NODESFILE` contains the path to a machine file created by the Scheduler that will be similar to:
+The <<_workflow_variables,variable>> `$variables_PA_NODESFILE` contains the path to a machine file created by the Scheduler that will be similar to:
 
     compute-host
     compute-host
     another-host
 
 Meaning that `myApplication` will use 2 CPUs on `compute-host` and 1 CPU on `another-host`.
+You can also use `$variables_PA_NODESNUMBER` to retrieve the number of acquired nodes.
 
 You can find an example of a native task in this
 link:examples/mpi_task.xml[XML workflow^] or you can also build one yourself using the
@@ -245,7 +251,7 @@ One of the major questions after having learned to submit and execute simple tas
 === Workflow Variables
 
 ProActive Scheduler provides a mechanism to propagate data down the execution chain.
-On the job level you can define *variables* that are available in all tasks.
+In a workflow you can define *variables* that are available in all tasks.
 
 [source, xml]
 ----
@@ -256,7 +262,7 @@ On the job level you can define *variables* that are available in all tasks.
 
 Then anywhere in your task you can reference to it. For example in a *Groovy* script task, you can use:
 
-[source]
+[source, groovy]
 ----
 String var = variables.get("variable");
 variables.put("other_variable", "foo");
@@ -265,6 +271,31 @@ variables.put("other_variable", "foo");
 Inside a script, `variables` is bound to a http://docs.oracle.com/javase/7/docs/api/java/util/Map.html[Map^].
 The syntax to access it might differ given the script engine you are using.
 
+But you can also refer to a variable from the workflow definition itself, for instance:
+
+[source, xml]
+----
+<nativeExecutable>
+    <staticCommand value="${variable}">
+    </staticCommand>
+</nativeExecutable>
+----
+
+Inside a workflow, you can use the `${VARIABLE_NAME}` syntax to access it.
+Most of the time, variable replacements are performed at runtime.
+However some of the information in the XML need to be processed at submission time and variable replacements might
+be performed at that moment (for instance job name, task attributes...).
+
+From a native executable, for instance a Shell script, variables are accessible through environment variables.
+
+[source, bash]
+----
+#!/bin/bash
+echo $variables_PA_TASK_NAME
+----
+
+WARNING: In native tasks and Bash/CMD script engines, variables can be read but not written to.
+
 If the a task depends on several tasks and each task modifies the same variable, the final value of the variable
 which is propagated down the execution chain, depends on the *order of task execution*.
 Therefore the users need to take appropriate measures to prevent any undesired effects of such race conditions.
@@ -272,10 +303,67 @@ Therefore the users need to take appropriate measures to prevent any undesired e
 You can set any link:http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html[Java serializable object, window="_blank"]
  as a variable value. They will be converted into strings using
 http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#toString()[toString()^]
- method when required: for instance, to make those values available as environment variables in *native* tasks.
+ method when required, for instance, to make those values available as environment variables in native tasks.
 
-WARNING: In native tasks, the variables can be read but not written to.
 
+==== ProActive system variables
+
+Some variables are explicitly defined by the Scheduler to retrieve runtime information about the job or task.
+You can retrieve them through the `variables` map or the `${}` syntax in the workflow XML definition.
+
+[source]
+.Retrieving the task ID from a Groovy script
+----
+String taskId = variables.get("PA_TASK_ID");
+----
+
+Here the list of ProActive system variables:
+
+.ProActive variables
+[cols="2,5,2"]
+|===
+| Variable name | Description | Type
+| `PA_JOB_ID`
+| The current job ID.
+| String
+
+| `PA_JOB_NAME`
+| The current job name.
+| String
+
+| `PA_TASK_ID`
+| The current task ID.
+| String
+
+| `PA_TASK_NAME`
+| The current task name.
+| String
+
+| `PA_TASK_ITERATION`
+| The current iteration index, when using <<_loop,looping>>, starts at 0.
+| Integer
+
+| `PA_TASK_REPLICATION`
+| The current iteration index, when using a <<_replicate,replication>>, starts at 0.
+| Integer
+
+| `PA_TASK_PROGRESS_FILE`
+| The path to the progress file, used to set the task's progress.
+| String
+
+| `PA_SCHEDULER_HOME`
+| The path to Scheduler home, where the Scheduler or the Node is installed.
+| String
+
+| `PA_NODESFILE`
+| The path to the hostfile when using a <<_multi_node_task,multi nodes task>>.
+| String
+
+| `PA_NODESNUMBER`
+| The number of acquired nodes when using a <<_multi_node_task,multi nodes task>>.
+| Integer
+
+|===
 
 === Passing data between tasks
 
@@ -368,15 +456,16 @@ on a task or job level by specifying *input* and *output files*
 ----
 
 Then before executing this task Proactive Scheduler automatically transfers all files to a ProActive Node where task will be executed
-and put it to the special place called *Local Space*. Then file can be read normally like shown in example:
+and put it to the special place called *Local Space*, the working directory of a task.
+Then files can be accessed normally like shown in example:
 
 [source]
 ----
-File inputFile = new File(new URI(localspace.getRealURI()+"/tata"))
+File inputFile = new File("tata"))
 ----
 
-All the files produced by the task with the name "titi*" (e.g titi, titi2 etc) will be transferred back to Global Space
-automatically by the scheduler once the task is finished.
+All the files produced by the task with the name _titi*_ (e.g titi, titi2 etc) will be transferred back to Global Space
+automatically by the Scheduler once the task is finished.
 
 Files can be also transferred from/to User Space by specifying `transferFromUserSpace`/`transferToUserSpace`.
 
@@ -413,13 +502,25 @@ Dependencies between tasks can be added either in *ProActive Workflow Studio* or
 ----
 <taskFlow>
     <task name="task1">
-        <javaExecutable class="MyTask1"/>
+        <scriptExecutable>
+            <script>
+                <code language="groovy">
+                    println "Executed first"
+                </code>
+            </script>
+        </scriptExecutable>
     </task>
     <task name="task2">
         <depends>
             <task ref="task1"/>
         </depends>
-        <javaExecutable class="MyTask2"/>
+        <scriptExecutable>
+            <script>
+                <code language="groovy">
+                    println "Now it's my turn"
+                </code>
+            </script>
+        </scriptExecutable>
     </task>
 </taskFlow>
 ----
@@ -452,6 +553,9 @@ image::flow_spec_duplicate.png[align=center]
     action.
 
 -   The target of a *replicate* action can not be tagged as *end block*.
+
+- The current replication index (from to 0 to `runs`) can be accessed via the
+`PA_TASK_REPLICATION` <<_workflow_variables,variable>>.
 
 TIP: If you are familiar with programming, you can see the replication as forking tasks.
 
@@ -520,6 +624,9 @@ image::flow_spec_loop.png[align=center]
 -   The *loop* scope should be a *task block*: the target is a *start
     block* task, and the initiator its related *end block task*.
 
+- The current iteration index (from to 0 to n until `loop` is false) can be accessed via the
+    `PA_TASK_ITERATION` <<_workflow_variables,variable>>.
+
 TIP: If you are familiar with programming, you can see the loop as a do/while.
 
 === Task Blocks
@@ -563,23 +670,13 @@ The script is executed on the ProActive node, just after the task's
 executable. If the executable is a Java Executable and returns a result,
 the variable `result` will be set in the script's environment so that
 dynamic decisions can be taken with the task's result as input. Native
-Java objects can be used in a Javascript script using the following
-syntax:
+Java objects can be used in a Groovy script.
 
-``` {.java}
-importPackage(java.io);
-// the result variable is the TaskResult.value() if it exists
-var resFile = new File("/path/to/data/" + new java.lang.String(result));
-if (! resFile.exists()) {
-   loop = false;
-} else {
-   loop = true;
-   var input = new BufferedReader(new FileReader(f));
-   // this variable will determine the number of parallel runs
-   runs = java.lang.Integer.parseInt(input.readLine());
-   input.close()
-}
-```
+.Decide whether to keep looping or not based on the task's result:
+[source,groovy]
+----
+loop = result
+----
 
 Similarly to how parameters are passed through the *result* variable to
 the script, the script needs to define variables specific to each action
@@ -588,10 +685,11 @@ to determine what action the script will lead to.
 -   A *replicate* control flow action needs to define how many parallel
     runs will be executed, by defining the variable `runs`:
 
-``` {.java}
+[source,groovy]
+----
 // assuming result is a java.lang.Integer
 runs = result % 4 + 1;
-```
+----
 
 The assigned value needs be a strictly positive integer.
 
@@ -599,25 +697,27 @@ The assigned value needs be a strictly positive integer.
     else branch is selected, it does this by defining the boolean
     variable `branch`:
 
-``` {.java}
+[source,groovy]
+----
 // assuming result is a java.lang.Integer
 if (result % 2) {
   branch = "if";
 } else {
   branch = "else";
 }
-```
+----
 
-The assigned value needs to be the string value `"if"` or `"else"`.
+The assigned value needs to be the string value _if_ or _else_.
 
 -   The *loop* control flow action requires setting the `loop`, which
     will determine whether looping to the statically defined target is
     performed, or if the normal flow is executed as would a continue
     instruction do in a programming language:
 
-``` {.java}
-loop = new java.lang.Boolean(result);
-```
+[source,groovy]
+----
+loop = result as Boolean
+----
 
 The assigned value needs to be a boolean.
 
@@ -653,26 +753,20 @@ character.
 
 ==== Task definition
 
-Those indexes are also available when creating a task. They can be
-obtained using a special string that will be substituted with the actual
-iteration or replication index at runtime: *$IT* for the iteration
-index, and *$REP* for the replication index. Those macro can be used in
-the following locations:
+Those indexes are also available as <<_workflow_variables,workflow variables>>. They can be
+obtained using the variable names:
 
--   *Java Executable parameters:*
+* PA_TASK_REPLICATION
+* PA_TASK_ITERATION
 
-``` {.xml}
-<javaExecutable class="net.example.Executable">
-  <parameters>
-    <parameter name="images" value="/some/path/images/pic_$IT_$REP.jpg" />
-```
+Here is how to access those variables:
 
 -   *Native Executable arguments:*
 
 ``` {.xml}
 <staticCommand value="/path/to/bin.sh">
   <arguments>
-    <argument value="/some/path/$IT/$REP.dat" />
+    <argument value="/some/path/${PA_TASK_ITERATION}/${PA_TASK_REPLICATION}.dat" />
 ```
 
 -   *Dataspace input and output:*
@@ -680,48 +774,34 @@ the following locations:
 ``` {.xml}
 <task name="t1" retries="2">
   <inputFiles>
-    <files includes="foo_$IT_$REP.dat" accessMode="transferFromInputSpace"/>
+    <files includes="foo_${PA_TASK_ITERATION}_${PA_TASK_REPLICATION}.dat" accessMode="transferFromInputSpace"/>
   </inputFiles><outputFiles>
-    <files includes="bar_$IT_$REP.res" accessMode="transferToOutputSpace"/>
+    <files includes="bar_${PA_TASK_ITERATION}_${PA_TASK_REPLICATION}.res" accessMode="transferToOutputSpace"/>
 ```
 
--   *Script :*
-
-``` {.xml}
-<task>
-  <pre>
-    <script>
-        <code language="javascript">
-            var f = new java.io.File(".lock_$IT_$REP");
-            f.createNewFile();
-        </code>
-      </script>
-    </pre>
-```
-
-NOTE: Scripts affected by the macro substitution are: Pre, Post, Command
-generation and Control Flow. *No substitution will occur in
-selection scripts.*
+NOTE: Scripts affected by the variable substitutions are: Pre, Post, Control Flow.
+*No substitution will occur in selection scripts or clean scripts.*
 
 ==== Task executable
 
 The iteration and replication indexes are available inside the
 executables launched by tasks.
 
-In Java and Script tasks, the indexes are exported through the following Java
-properties: `pas.task.iteration` and `pas.task.replication`.
+In script tasks, the indexes are exported through the following <<_workflow_variables,workflow variables>>:
+ `PA_TASK_ITERATION` and `PA_TASK_REPLICATION`.
 
-``` {.java}
-  int it  = System.getProperty("pas.task.iteration");
-  int dup = System.getProperty("pas.task.replication");
-```
+[source,groovy]
+----
+  int it  = variables.get("PA_TASK_ITERATION");
+  int rep = variables.get("PA_TASK_REPLICATION");
+----
 
 In a similar fashion, environment variables are set when launching a
 native executable: `PAS_TASK_ITERATION` and `PAS_TASK_REPLICATION`:
 
 ``` {.sh}
 #!/bin/sh
-/path/to/bin.sh /path/to/file/${PAS_TASK_ITERATION}/${PAS_TASK_REPLICATION}.dat
+myApp.sh /path/to/file/${variables_PAS_TASK_ITERATION}.dat
 
 ```
 
@@ -748,16 +828,17 @@ They are used in the ProActive Scheduler to:
 * Execute some simple *pre*, *post* and *cleaning* processing (pre scripts, post scripts and cleaning scripts)
 * Select among available resources the node that *suits the execution* (selection scripts).
 
+[[_selection]]
 === Selection of ProActive Nodes
 
-A selection script provides an ability for the scheduler to execute tasks on particular ProActive nodes.
+A selection script provides an ability for the Scheduler to execute tasks on particular ProActive nodes.
 E.g. you can specify that a task must be executed on a Unix/Linux system.
 
 A selection script is always executed before the task itself on any candidate node:
 the execution of a selection script must set the boolean variable selected,
 that indicates if the candidate node is suitable for the execution of the associated task.
 
-A java helper *org.ow2.proactive.scripting.helper.selection.SelectionUtils* is provided for allowing
+A Java helper *org.ow2.proactive.scripting.helper.selection.SelectionUtils* is provided for allowing
 user to simply make some kind of selections. Some script samples are available in
 `PROACTIVE_HOME/samples/scripts/selection`.
 
@@ -775,28 +856,20 @@ if (SelectionUtils.checkOSName("windows")) {
 }
 ----
 
-=== Pre/Post/Clean Scripts
+[[_pre_post_clean]]
+=== Pre, Post & Clean Scripts
 
 Another functionality is the possibility to define pre and post scripts. For a given task (Java, Script or Native task),
 it is possible to launch a script before and after its execution. This possibility can be useful to copy files
 to a node, or clean a directory before or after task execution, for example.
 
 This is a way to separate from business code the preparation of execution environment and its cleaning. A good example
-is a script that removes files from task working directory once the task is finished.
+is a script that removes files from a specific directory once the task is finished.
 
-[source]
+.Clean script example
+[source, groovy]
 ----
-importPackage(java.io);
-print("clean working directory \n");
-for(i=0; i<args.length;i``)
-{
-    var f= new File(args[i]);
-    if(f["delete"]()) {
-        print(args[i] +" deleted\n");
-    } else {
-        print("deleting "` args[i] `" failed\n");
-    }
-}
+Files.deleteIfExists(new File("/tmp/working_dir/").toPath())
 ----
 
 === Run computation with your system account
@@ -808,7 +881,7 @@ link:ProActiveAdminGuide.html#_run_as_me[set computing hosts] to authorize
 one of the 2 methods) :
 
 * Using your *scheduling login and password* : if computing hosts are configured and user is authorized to run a process under his login and password.
-* Using an *ssh key* provided by the administrator : if computing hosts are configured, the administrator should have given user an ssh key.
+* Using an *SSH key* provided by the administrator : if computing hosts are configured, the administrator should have given user an SSH key.
 
 User must first create a credential containing this key :
 
@@ -816,18 +889,18 @@ User must first create a credential containing this key :
 $ PROACTIVE_HOME/tools/proactive-create-cred -F config/authentication/keys/pub.key -l username -p userpwd -k path/to/private/sshkey -o myCredentials.cred
 ----
 
-This command will create a new credentials with *username* as login, *userpwd* as password, using scheduler public key at
+This command will create a new credentials with *username* as login, *userpwd* as password, using Scheduler public key at
 `config/authentication/keys/pub.key`
-for credentials encryption and using the private ssh key at
+for credentials encryption and using the private SSH key at
 `path/to/private/sshkey`
 provided by administrator. The new credential will be stored in *myCredentials.cred*
 
-Once created, user must connect the scheduler using this credential. Then in order to execute your task under your account
+Once created, user must connect the Scheduler using this credential. Then in order to execute your task under your account
 set *runAsMe=true* in the task.
 
 TIP: You can now use <<_third_party_credentials,third party credentials>> to store the SSH key with the special entry named *SSH_PRIVATE_KEY*.
 
-
+[[_multi_node_task]]
 === Reserve more than one node for a task
 
 To create a <<_mpi_application,multi-nodes>> task often used for MPI applications you need to add a *parallel environment*
@@ -863,8 +936,8 @@ Here is the list of topologies we support:
 It's possible to have errors when your workflow is executed. *ProActive Scheduler* provides several mechanisms to deal
 with exceptional situations in your workflows.
 
-To understand if a task is successfully finished or not the scheduler checks its *exit code* (for native tasks) or
-*exceptions* (for java/script tasks). Then it decides what to do next according to the following parameters:
+To understand if a task is successfully finished or not the Scheduler checks its *exit code* (for native tasks) or
+*exceptions* (for Java/script tasks). Then it decides what to do next according to the following parameters:
 
 * *cancelJobOnError* (optional - false by default) - defines whether the job must continue when a user exception or
 error occurs during the job process. This property can also be defined in each task. If the value of this property
@@ -893,8 +966,6 @@ The walltime mechanism is started
 just before a task is launched. If a task does finish before its walltime, the mechanism is canceled. Otherwise,
 the task is terminated. Note that the tasks are terminated without any prior notice.
 
-NOTE: If the walltime is specified for a Java task, it enforces the creation of a forked task instead. When this property
-is defined and execution exceeds this time, the task ends with an exception.
 
 === Cron Tasks
 *ProActive Scheduler* supports the execution of time-based tasks or cron tasks. The users can assign a
