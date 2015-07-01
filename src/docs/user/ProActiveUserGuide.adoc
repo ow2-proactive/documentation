@@ -264,8 +264,8 @@ Then anywhere in your task you can reference to it. For example in a *Groovy* sc
 
 [source, groovy]
 ----
-String var = variables.get("variable");
-variables.put("other_variable", "foo");
+String var = variables.get("variable")
+variables.put("other_variable", "foo")
 ----
 
 Inside a script, `variables` is bound to a http://docs.oracle.com/javase/7/docs/api/java/util/Map.html[Map^].
@@ -314,7 +314,7 @@ You can retrieve them through the `variables` map or the `${}` syntax in the wor
 [source]
 .Retrieving the task ID from a Groovy script
 ----
-String taskId = variables.get("PA_TASK_ID");
+String taskId = variables.get("PA_TASK_ID")
 ----
 
 Here the list of ProActive system variables:
@@ -688,7 +688,7 @@ to determine what action the script will lead to.
 [source,groovy]
 ----
 // assuming result is a java.lang.Integer
-runs = result % 4 + 1;
+runs = result % 4 + 1
 ----
 
 The assigned value needs be a strictly positive integer.
@@ -701,9 +701,9 @@ The assigned value needs be a strictly positive integer.
 ----
 // assuming result is a java.lang.Integer
 if (result % 2) {
-  branch = "if";
+  branch = "if"
 } else {
-  branch = "else";
+  branch = "else"
 }
 ----
 
@@ -792,8 +792,8 @@ In script tasks, the indexes are exported through the following <<_workflow_vari
 
 [source,groovy]
 ----
-  int it  = variables.get("PA_TASK_ITERATION");
-  int rep = variables.get("PA_TASK_REPLICATION");
+  int it  = variables.get("PA_TASK_ITERATION")
+  int rep = variables.get("PA_TASK_REPLICATION")
 ----
 
 In a similar fashion, environment variables are set when launching a
