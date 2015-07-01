@@ -84,7 +84,7 @@ ${PA_JOB_ID}
 | *Third party credentials*. Available via script task.
 | credentials.get( "pw" )
 | -
-| $CREDENTIALS_pw (only in the task arguments)
+| $credentials_pw (only in the task arguments)
 
 | *SSH private key*. See <<_run_computation_with_your_system_account>>. Available via script task.
 | credentials.get( "SSH_PRIVATE_KEY" )

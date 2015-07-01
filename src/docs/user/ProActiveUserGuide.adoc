@@ -1136,7 +1136,7 @@ public class PrintAndReturnCredentialsTask extends JavaExecutable {
 ----
 
 Another way to use credentials in Java tasks is via parameters. If a
-parameter contains a string of the form `$CREDENTIALS_<credential
+parameter contains a string of the form `$credentials_<credential
 key>`, the string is replaced with the value of the corresponding
 credential:
 
@@ -1146,7 +1146,7 @@ credential:
   <javaExecutable class="...">
     <parameters>
       <!-- mysqlPassword will contain the value corresponding to "MY_MYSQL_PASSWORD" key -->
-      <parameter name="mysqlPassword" value="$CREDENTIALS_MY_MYSQL_PASSWORD"/>
+      <parameter name="mysqlPassword" value="$credentials_MY_MYSQL_PASSWORD"/>
     </parameters>
   </javaExecutable>
 </task>
@@ -1155,7 +1155,7 @@ credential:
 ==== In a Native Task
 
 Finally, a credential can be passed to a Native Task via
-argumens. Note that, as with Java Task parameters, the `$CREDENTIALS_`
+argumens. Note that, as with Java Task parameters, the `$credentials_`
 prefix is necessary. In the example below, `/bin/echo` will be called
 with the value corresponding to the key `MY_MYSQL_PASSWORD` (if the
 key is not present, no replacement occurs):
@@ -1166,7 +1166,7 @@ key is not present, no replacement occurs):
   <nativeExecutable>
     <staticCommand value="/bin/echo" >
       <arguments>
-        <argument value="$CREDENTIALS_MY_MYSQL_PASSWORD"/>
+        <argument value="$credentials_MY_MYSQL_PASSWORD"/>
       </arguments>
     </staticCommand>
   </nativeExecutable>
