@@ -1,5 +1,5 @@
 *ProActive Scheduler* is a free and open-source *job scheduler*. The user specifies the computation in terms of a series of computation
- steps along with their execution and data dependencies. The scheduler executes this computation on a cluster
+ steps along with their execution and data dependencies. The Scheduler executes this computation on a cluster
  of computation resources, each step on the best-fit resource and in parallel wherever its possible.
 
 image::architecture.png[align=center]
