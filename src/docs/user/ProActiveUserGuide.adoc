@@ -107,7 +107,7 @@ Native scripts can also be executed using a script task. Currently Bash and CMD 
 simply set the language attribute to `bash` or `cmd` and type your script in the workflow.
 
 You can easily embed small scripts in your workflow.
-The nice thing is that the workflow will be self-contained and will not require to compile your code before executing. However we
+The nice thing is that the workflow will be self-contained and will not require to compile your code before executing. However, we
 recommend that you keep these scripts smalls to keep the workflow easy to understand.
 
 TIP: Use scripts to print debugging statements when you build a new workflow.
@@ -260,7 +260,7 @@ In a workflow you can define *variables* that are available in all tasks.
 </variables>
 ----
 
-Then anywhere in your task you can reference to it. For example in a *Groovy* script task, you can use:
+Then, anywhere in your task you can reference to it. For example in a *Groovy* script task, you can use:
 
 [source, groovy]
 ----
@@ -414,7 +414,7 @@ It is also available in the *Scheduler Web Interface* in the _Preview_ tab.
 === Input/Output Data in Shared Directory
 
 The easiest way to use your data on computing machines is to set up a *shared directory* available on all Compute Hosts. For
-Linux it's typically an NFS directory, for Windows it could be an SMB network share. Then in tasks you can manipulate
+Linux it's typically an NFS directory, for Windows it could be an SMB network share. Then, in tasks you can manipulate
 files seamlessly across ProActive Nodes.
 
 [source]
@@ -444,7 +444,7 @@ But it can be changed in `PROACTIVE_HOME/config/scheduler/settings.ini`.
 
 All files that are stored in these spaces can be read from all computing nodes.
 In order to do it in a task set up the data management
-on a task or job level by specifying *input* and *output files*
+on a task or job level by specifying *input* and *output files*:
 
 [source, xml]
 ----
@@ -460,9 +460,9 @@ on a task or job level by specifying *input* and *output files*
         </task>
 ----
 
-Then before executing this task Proactive Scheduler automatically transfers all files to a ProActive Node where task will be executed
+Then, before executing this task Proactive Scheduler automatically transfers all files to a ProActive Node where task will be executed
 and put it to the special place called *Local Space*, the working directory of a task.
-Then files can be accessed normally like shown in example:
+Then, files can be accessed normally like shown in example:
 
 [source]
 ----
@@ -491,7 +491,7 @@ The following constructs are available:
 - *Branch*
 - *Loop*
 
-TIP: Use the *Workflow Studio* to create complex workflows, it is much easier than to write XML!
+TIP: Use the *Workflow Studio* to create complex workflows, it is much easier than writing XML!
 
 === Dependency
 
@@ -898,7 +898,7 @@ for credentials encryption and using the private SSH key at
 `path/to/private/sshkey`
 provided by administrator. The new credential will be stored in *myCredentials.cred*
 
-Once created, user must connect the Scheduler using this credential. Then in order to execute your task under your account
+Once created, user must connect the Scheduler using this credential. Then, in order to execute your task under your account
 set *runAsMe=true* in the task.
 
 TIP: You can now use <<_third_party_credentials,third party credentials>> to store the SSH key with the special entry named *SSH_PRIVATE_KEY*.
@@ -940,7 +940,7 @@ It's possible to have errors when your workflow is executed. *ProActive Schedule
 with exceptional situations in your workflows.
 
 To understand if a task is successfully finished or not the Scheduler checks its *exit code* (for native tasks) or
-*exceptions* (for Java/script tasks). Then it decides what to do next according to the following parameters:
+*exceptions* (for Java/script tasks). Then, it decides what to do next according to the following parameters:
 
 * *cancelJobOnError* (optional - `false` by default) - defines whether the job must continue when a user exception or
 error occurs during the job process. This property can also be defined in each task. If the value of this property
@@ -1097,11 +1097,11 @@ Add credential:
     $ ./bin/proactive-client --put-credential MY_MYSQL_PASSWORD mypassword
     Credential "MY_MYSQL_PASSWORD" successfully stored.
 
-List creentials (only keys are listed):
+List credentials (only keys are listed):
 
     $ ./bin/proactive-client --list-credentials
-	    [...]
-	    MY_MYSQL_PASSWORD
+    [...]
+    MY_MYSQL_PASSWORD
 
 Remove credential:
 
@@ -1124,7 +1124,7 @@ mysqlPassword = credentials.get('MY_MYSQL_PASSWORD')
 ==== In Java Task
 
 In Java, the method `getThirdPartyCredential` of `JavaExecutable`
-returns the credental corresponding to the key passed as parameter:
+returns the credential corresponding to the key passed as parameter:
 
 [source,java]
 ----
