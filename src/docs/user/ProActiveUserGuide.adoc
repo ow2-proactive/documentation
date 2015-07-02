@@ -569,8 +569,6 @@ TIP: If you are familiar with programming, you can see the replication as forkin
 The *branch* construct provides the ability to choose between two alternative task flows,
 with the possibility to merge back to a common flow.
 
-TIP: If you are a developer, you can see the replication as forking tasks
-
 image::flow_spec_if.png[align=center]
 
 -   There is no explicit dependency between the initiator and the
@@ -1107,7 +1105,7 @@ List creentials (only keys are listed):
 
 Remove credential:
 
-    $ ./bin/proactive-client --remove-credential MY_MYSQL_PASSWORD 
+    $ ./bin/proactive-client --remove-credential MY_MYSQL_PASSWORD
     Credential "MY_MYSQL_PASSWORD" successfully removed.
 
 === Using third-party credentials
