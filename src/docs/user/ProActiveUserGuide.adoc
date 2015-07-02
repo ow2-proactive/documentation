@@ -228,7 +228,7 @@ Along with results you can also retrieve logs of the tasks (standard ouput and e
 as well as Scheduler logs that provide debugging information.
 
 NOTE: When running native application, the task result will be the exit code of the application. Results
-usually make more sens when using script or Java tasks.
+usually make more sense when using script or Java tasks.
 
 ==== Job Priority
 
