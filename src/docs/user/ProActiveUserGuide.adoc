@@ -287,13 +287,9 @@ However some of the information in the XML need to be processed at submission ti
 be performed at that moment (for instance job name, task attributes...).
 
 [[_templating]]
-TIP: Variables are very useful to use workflows as templates where only a few parameters change for each
+Variables are very useful to use workflows as templates where only a few parameters change for each
 execution. Upon submission you can define variable values either from <<_scheduler_command_line, CLI>> or from
 the Web interfaces.
-
-where `user_variable` will be defined by the user at submission time, either with the <<_scheduler_command_line,CLI>>
-or the Web interfaces.
-Then in the rest of the workflow, you can refer to the variable `${variable}` as usual.
 
 From a native executable, for instance a Shell script, variables are accessible through environment variables.
 
