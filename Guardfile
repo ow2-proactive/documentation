@@ -1,5 +1,4 @@
-require 'asciidoctor'
-require 'erb'
+Bundler.require(:default)
 
 guard 'shell' do
   watch(%r{^src/docs/.+$}) {|m|
