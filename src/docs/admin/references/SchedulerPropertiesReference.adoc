@@ -28,23 +28,11 @@ pa.scheduler.core.nodepingfrequency=20
 # Cache classes definition in task class servers
 pa.scheduler.classserver.usecache=true;
 
-# Temporary directory for jobclasspathes
-# pa.scheduler.classserver.tmpdir=TO/BE/SET;
-
 # Scheduler default policy full name
 pa.scheduler.policy=org.ow2.proactive.scheduler.policy.DefaultPolicy
 
 # Defines the maximum number of tasks to be scheduled in each scheduling loop.
 pa.scheduler.policy.nbtaskperloop=10
-
-# Forked java task default security policy path (use to define the policy of the forked task)
-pa.scheduler.forkedtask.security.policy=config/scheduler/forkedJavaTask/forkedTask.java.policy
-
-# Log4J forked java task default file path
-pa.scheduler.forkedtask.log4j=config/scheduler/forkedJavaTask/forkedTask-log4j
-
-# ProActiveConfiguration forked java task default file path
-pa.scheduler.forkedtask.paconfig=config/scheduler/forkedJavaTask/forkedTask-paconf.xml
 
 #Name of the JMX MBean for the scheduler
 pa.scheduler.core.jmx.connectorname=JMXSchedulerAgent
@@ -106,10 +94,8 @@ pa.scheduler.task.initialwaitingtime=1000
 # Maximum number of execution for a task in case of failure (node down)
 pa.scheduler.task.numberofexecutiononfailure=2
 
-# If false user cannot execute java tasks in nodes and must use either forked java tasks of native tasks
-pa.scheduler.task.allowjavatasks=true
-# If true script tasks are ran in a forked JVM, if false they are ran in the node's JVM
-pa.scheduler.task.scripttasks.fork=true
+# If true tasks are ran in a forked JVM, if false they are ran in the node's JVM
+pa.scheduler.task.fork=true
 
 #-------------------------------------------------------
 #-------------   DATASPACES PROPERTIES   ---------------
@@ -173,6 +159,9 @@ pa.scheduler.task.scripttasks.fork=true
 pa.scheduler.logs.provider=org.ow2.proactive.scheduler.common.util.logforwarder.providers.ProActiveBasedForwardingProvider
 # Location of server jobs logs (comment to disable job logging to separate files). Can be an absolute path.
 pa.scheduler.job.logs.location=logs/jobs/
+
+# Size limit for job and task logs in bytes
+pa.scheduler.job.logs.max.size=10000
 
 #-------------------------------------------------------
 #-----------   AUTHENTICATION PROPERTIES   -------------

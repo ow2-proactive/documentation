@@ -10,7 +10,7 @@ REST & Web interfaces, the command line tools. It is the commercial product name
 ProActive Scheduler::
 Can refer to any of the following:
   * A complete set of ProActive components.
-  * An archive that contains a released version of ProActive components, for example +ProActiveWorkflowsScheduling-OS-ARCH-VERSION.zip+.
+  * An archive that contains a released version of ProActive components, for example `ProActiveWorkflowsScheduling-OS-ARCH-VERSION.zip`.
   * A set of server-side ProActive components installed and running on a <<_glossary_server_host,*Server Host*>>.
 
 [[_glossary_resource_manager]]
@@ -37,7 +37,7 @@ Workflow Studio:: ProActive component that provides a web interface for designin
 Server Host::
   The machine on which <<_glossary_proactive_scheduler,*ProActive Scheduler*>> is installed.
 
-+SCHEDULER_ADDRESS+::
+`SCHEDULER_ADDRESS`::
   The IP address of the <<_glossary_server_host,*Server Host*>>.
 
 [[_glossary_proactive_node]]
@@ -60,7 +60,7 @@ Examples of *Compute Hosts*:
 * All desktop machines in an organisation that have <<_glossary_proactive_agent,*ProActive Agents*>> installed.
 ====
 
-+PROACTIVE_HOME+::
+`PROACTIVE_HOME`::
   The path to the extracted archive of <<_glossary_proactive_scheduler,*ProActive Scheduler*>> release, either on the <<_glossary_server_host,*Server Host*>> or on a <<_glossary_compute_host,*Compute Host*>>.
 
 [[_glossary_workflow]]

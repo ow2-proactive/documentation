@@ -1,7 +1,7 @@
 The ProActive client allows to interact with the <<_glossary_scheduler,*Scheduler*>> and <<_glossary_resource_manager,*Resource Manager*>>.
 The client has an interactive mode started if you do not provided any command.
 
-The client usage is also available using the +-h+ parameter as shown below:
+The client usage is also available using the `-h` parameter as shown below:
 
     $ PROACTIVE_HOME/bin/proactive-client -h
 
