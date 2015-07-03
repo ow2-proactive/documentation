@@ -316,7 +316,7 @@ http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#toString()[toStri
 Some variables are explicitly defined by the Scheduler to retrieve runtime information about the job or task.
 You can retrieve them through the `variables` map or the `${}` syntax in the workflow XML definition.
 
-[source]
+[source, groovy]
 .Retrieving the task ID from a Groovy script
 ----
 String taskId = variables.get("PA_TASK_ID")
@@ -376,13 +376,13 @@ Another important mechanism of data exchange is the task *result*. Anywhere in a
 variable *result* to any Java object and it will be available in tasks depending on it. Moreover in case of several
 dependencies results will be aggregated. E.g. for a task written in Groovy:
 
-[source]
+[source, groovy]
 ----
 // task1
 result = "task1";
 ----
 
-[source]
+[source, groovy]
 ----
 // task2
 result = "task2";
@@ -390,7 +390,7 @@ result = "task2";
 
 In *task3* that depends on tasks *task1* and *task2*:
 
-[source]
+[source, groovy]
 ----
 // task3
 println(results[0]);
@@ -417,7 +417,7 @@ The easiest way to use your data on computing machines is to set up a *shared di
 Linux it's typically an NFS directory, for Windows it could be an SMB network share. Then, in tasks you can manipulate
 files seamlessly across ProActive Nodes.
 
-[source]
+[source, java]
 ----
 File inputData = new File("/data/username/inputfile");
 ----
@@ -464,12 +464,12 @@ Then, before executing this task Proactive Scheduler automatically transfers all
 and put it to the special place called *Local Space*, the working directory of a task.
 Then, files can be accessed normally like shown in example:
 
-[source]
+[source, java]
 ----
-File inputFile = new File("tata"))
+File inputFile = new File("tata")
 ----
 
-All the files produced by the task with the name _titi*_ (e.g titi, titi2 etc) will be transferred back to Global Space
+All the files produced by the task with the name _titi*_ (e.g titi, titi2, etc.) will be transferred back to Global Space
 automatically by the Scheduler once the task is finished.
 
 Files can be also transferred from/to User Space by specifying `transferFromUserSpace`/`transferToUserSpace`.
@@ -795,8 +795,8 @@ In script tasks, the indexes are exported through the following <<_workflow_vari
 
 [source,groovy]
 ----
-  int it  = variables.get("PA_TASK_ITERATION")
-  int rep = variables.get("PA_TASK_REPLICATION")
+int it  = variables.get("PA_TASK_ITERATION")
+int rep = variables.get("PA_TASK_REPLICATION")
 ----
 
 In a similar fashion, environment variables are set when launching a
@@ -847,13 +847,13 @@ user to simply make some kind of selections. Some script samples are available i
 
 The following example selects only nodes running on Windows:
 
-[source]
+[source, javascript]
 ----
 importClass(org.ow2.proactive.scripting.helper.selection.SelectionUtils);
 
 /* Check if OS name is Windows */
 if (SelectionUtils.checkOSName("windows")) {
-	selected = true;
+  selected = true;
 } else {
 	selected = false;
 }
