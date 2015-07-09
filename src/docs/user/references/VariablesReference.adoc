@@ -9,7 +9,7 @@ This section describes useful variables, their scope, and their usage.
 | Use from a native task
 | Use from the workflow
 
-| *Task result*. See <<_passing_data_between_tasks>>.
+| *Task result*. See <<_passing_data_between_tasks_using_variables>>.
 | result = "value";
 | The result will be the exit code.
 | -
@@ -19,7 +19,7 @@ This section describes useful variables, their scope, and their usage.
 | Passed to native executable.
 | -
 
-| *Results of previous tasks*. See <<_passing_data_between_tasks>>. Available via script task.
+| *Results of previous tasks*. See <<_passing_data_between_tasks_using_variables>>. Available via script task.
 | ... = results[0];
 | $results_0
 | -
@@ -40,7 +40,7 @@ This section describes useful variables, their scope, and their usage.
 | -
 
 | *Task progress*. Represents the progress of the task. Can be set to a value between 0 and 100. Available via script task.
-| import org.ow2.proactive.scripting.helper.progress.ProgressFile
+| import org.ow2.proactive.scripting.helper.progress.ProgressFile;
 ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | -
 | -
@@ -59,27 +59,27 @@ ${PA_JOB_ID}
 | *Job name*. Available via script task, pre script, post script, flow script.
 | variables.get( "PA_JOB_NAME" )
 | $variables_PA_JOB_NAME
-| $PA_JOB_NAME
+| ${PA_JOB_NAME}
 
 | *Task ID*. Available via script task, pre script, post script, flow script.
 | variables.get( "PA_TASK_ID" )
 | $variables_PA_TASK_ID
-| $PA_TASK_ID
+| ${PA_TASK_ID}
 
 | *Task name*. Available via script task, pre script, post script, flow script.
 | variables.get( "PA_TASK_NAME" )
 | $variables_PA_TASK_NAME
-| $PA_TASK_NAME
+| ${PA_TASK_NAME}
 
 | *Task iteration index*. See <<_task_executable>>. Available via script task, pre script, post script, flow script.
 | variables.get( "PA_TASK_ITERATION" )
 | $variables_PA_TASK_ITERATION
-| $PA_TASK_ITERATION
+| ${PA_TASK_ITERATION}
 
 | *Task replication index*. See <<_task_executable>>. Available via script task, pre script, post script, flow script.
 | variables.get( "PA_TASK_REPLICATION" )
 | $variables_PA_TASK_REPLICATION
-| $PA_TASK_REPLICATION
+| ${PA_TASK_REPLICATION}
 
 | *Third party credentials*. Available via script task.
 | credentials.get( "pw" )
@@ -126,7 +126,7 @@ ${PA_JOB_ID}
 | -
 | -
 
-| *Selection*. See <<_selection_of_proactive_nodes>>. Only available via SelectionScript.
+| *Selection*. See <<_selection>>. Only available via SelectionScript.
 | selected = true
 | -
 | -
@@ -141,19 +141,19 @@ ${PA_JOB_ID}
 Note that for script tasks, syntax for accessing maps (like *variables* and *credentials*) is language dependant.
 
 For Groovy:
-[source]
+[source, groovy]
 ----
 print variables.get("key")
 ----
 
 For Python:
-[source]
+[source, python]
 ----
 print variables["key"]
 ----
 
 For Bash:
-[source]
+[source, bash]
 ----
 echo $variables_key
 ----
@@ -162,13 +162,13 @@ echo $variables_key
 ==== R language
 
 For R language there are some differences. The progress variable is set as follows:
-[source]
+[source, R]
 ----
 set_progress(50)
 ----
 
 Also, access to dataspaces variables is different:
-[source]
+[source, R]
 ----
 print(userspace)
 print(globalspace)

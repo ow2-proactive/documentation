@@ -248,9 +248,20 @@ The following values are available:
 
 One of the major questions after having learned to submit and execute simple tasks is how to handle data.
 
-=== Workflow Variables
+ProActive Scheduler provides two mechanisms for accessing and propagating data down the execution chain. One is based on <<_variable_based_propagation,variables>> and the other on <<_file_based_propagation,files>>.
 
-ProActive Scheduler provides a mechanism to propagate data down the execution chain.
+=== Variable based propagation
+
+Variables used for data access and propagation exist in three flavors:
+
+- <<_workflow_variables,Workflow variables>>
+- <<_proactive_system_variables,ProActive system variables>>
+- <<_passing_data_between_tasks_using_variables,Script variables>>
+
+Their usage depends of the context (see <<_variables_quick_reference>>).
+
+==== Workflow variables
+
 In a workflow you can define *variables* that are available in all tasks.
 
 [source, xml]
@@ -268,7 +279,7 @@ String var = variables.get("variable")
 variables.put("other_variable", "foo")
 ----
 
-Inside a script, `variables` is bound to a http://docs.oracle.com/javase/7/docs/api/java/util/Map.html[Map^].
+Inside a script, `variables` is bound to a http://docs.oracle.com/javase/8/docs/api/java/util/Map.html[Map^].
 The syntax to access it might differ given the script engine you are using.
 
 But you can also refer to a variable from the workflow definition itself, for instance:
@@ -276,15 +287,14 @@ But you can also refer to a variable from the workflow definition itself, for in
 [source, xml]
 ----
 <nativeExecutable>
-    <staticCommand value="${variable}">
-    </staticCommand>
+    <staticCommand value="${variable}" />
 </nativeExecutable>
 ----
 
-Inside a workflow, you can use the `${VARIABLE_NAME}` syntax to access it.
+Inside a workflow you can use the `${VARIABLE_NAME}` syntax to access it (variable names are case-sensitive).
 Most of the time, variable replacements are performed at runtime.
-However some of the information in the XML need to be processed at submission time and variable replacements might
-be performed at that moment (for instance job name, task attributes...).
+However, some of the information in the XML need to be processed at submission time and variable replacements might
+be performed at that moment (for instance job name, task attributes, etc.).
 
 [[_templating]]
 Variables are very useful to use workflows as templates where only a few parameters change for each
@@ -303,21 +313,21 @@ WARNING: In native tasks and Bash/CMD script engines, variables can be read but 
 
 If the a task depends on several tasks and each task modifies the same variable, the final value of the variable
 which is propagated down the execution chain, depends on the *order of task execution*.
-Therefore the users need to take appropriate measures to prevent any undesired effects of such race conditions.
+Therefore, the users need to take appropriate measures to prevent any undesired effects of such race conditions.
 
-You can set any link:http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html[Java serializable object, window="_blank"]
+You can set any link:http://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html[Java serializable object, window="_blank"]
  as a variable value. They will be converted into strings using
-http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#toString()[toString()^]
+http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()[toString()^]
  method when required, for instance, to make those values available as environment variables in native tasks.
 
 
 ==== ProActive system variables
 
-Some variables are explicitly defined by the Scheduler to retrieve runtime information about the job or task.
-You can retrieve them through the `variables` map or the `${}` syntax in the workflow XML definition.
+Some variables are explicitly defined by the Scheduler to retrieve runtime information about a job or a task.
+You can retrieve them through the `variables` map or the `${}` syntax in the workflow XML definition depending of the context.
 
 [source, groovy]
-.Retrieving the task ID from a Groovy script
+.Example for retrieving the task ID from a Groovy script
 ----
 String taskId = variables.get("PA_TASK_ID")
 ----
@@ -327,7 +337,7 @@ Here the list of ProActive system variables:
 .ProActive variables
 [cols="2,5,2"]
 |===
-| Variable name | Description | Type
+| *Variable name* | *Description* | *Type*
 | `PA_JOB_ID`
 | The current job ID.
 | String
@@ -337,11 +347,11 @@ Here the list of ProActive system variables:
 | String
 
 | `PA_TASK_ID`
-| The current task ID.
+| The current task ID.
 | String
 
 | `PA_TASK_NAME`
-| The current task name.
+| The current task name.
 | String
 
 | `PA_TASK_ITERATION`
@@ -354,6 +364,8 @@ Here the list of ProActive system variables:
 
 | `PA_TASK_PROGRESS_FILE`
 | The path to the progress file, used to set the task's progress.
+
+  You can import and use the utility class `org.ow2.proactive.scripting.helper.progress.ProgressFile` to read/write values to the file identified by this variable.
 | String
 
 | `PA_SCHEDULER_HOME`
@@ -370,11 +382,13 @@ Here the list of ProActive system variables:
 
 |===
 
-=== Passing data between tasks
+==== Passing data between tasks using variables
 
-Another important mechanism of data exchange is the task *result*. Anywhere in a task (usually at the end) you can set a reserved
-variable *result* to any Java object and it will be available in tasks depending on it. Moreover in case of several
-dependencies results will be aggregated. E.g. for a task written in Groovy:
+Another important mechanism of data exchange is the task *result* variable. Anywhere in a task (usually at the end) you can set a value to a reserved
+variable named *result* using any Java object. This value will be available in tasks depending on it. Moreover, in case of several dependencies,
+results will be aggregated into a new array variable named *results*.
+
+Assumming that we have two tasks *task1* and *task2* written in Groovy:
 
 [source, groovy]
 ----
@@ -388,7 +402,7 @@ result = "task1";
 result = "task2";
 ----
 
-In *task3* that depends on tasks *task1* and *task2*:
+and *task3* that depends on tasks *task1* and *task2*, then, you can access result values defined by the parents as follows:
 
 [source, groovy]
 ----
@@ -399,19 +413,11 @@ println(results[1]);
 // will print "task2"
 ----
 
-TIP: Similar to variables, *results* will be aggregated according to tasks termination, so results[0] can contain
-"task2" and results[1] can contain "task1".
+NOTE: Please note that as discussed with workflow variables, results will be aggregated according to tasks termination. Consequently, the order in which values are put in the `results` variable depends of the order in which task1 and task2 finish their execution, especially if they are executed in parallel.
 
-==== Job Result
+=== File based propagation
 
-Once a Job is terminated, it is possible to get its result. You can only get the result of the job that you own.
-A Job result is the collection of the tasks' results and you can retrieve it either from Java API or <<_scheduler_command_line,command line>>
- (it will be converted to
-a string).
-
-It is also available in the *Scheduler Web Interface* in the _Preview_ tab.
-
-=== Input/Output Data in Shared Directory
+==== Input/Output Data in Shared Directory
 
 The easiest way to use your data on computing machines is to set up a *shared directory* available on all Compute Hosts. For
 Linux it's typically an NFS directory, for Windows it could be an SMB network share. Then, in tasks you can manipulate
@@ -425,9 +431,9 @@ File inputData = new File("/data/username/inputfile");
 This approach has some limitations though:
 
 * The path to the shared folder should be *identical* on all Compute Hosts
-* Can be difficult to use with *heterogeneous resources*, e.g. Linux and Windows hosts
+* It can be difficult to use with *heterogeneous resources*, e.g. Linux and Windows hosts
 
-=== Data Spaces
+==== Data Spaces
 
 If a shared folder is not an option in your environment, the ProActive Scheduler provides a convenient way to access
 your data. It has two types of storage on the host where the server is running:
@@ -435,48 +441,52 @@ your data. It has two types of storage on the host where the server is running:
 * A *Global Space* where anyone can read/write files
 * An *User Space* which is a personal user data storage
 
-By default these spaces are linked to folders in the *data* directory of the ProActive Scheduler host:
+By default, these spaces are linked to folders in the *data* directory of the ProActive Scheduler host:
 
  * `PROACTIVE_HOME/data/defaultglobal`
  * `PROACTIVE_HOME/data/defaultuser`
 
 But it can be changed in `PROACTIVE_HOME/config/scheduler/settings.ini`.
 
-All files that are stored in these spaces can be read from all computing nodes.
-In order to do it in a task set up the data management
-on a task or job level by specifying *input* and *output files*:
+All files that are stored in these spaces can be read from all computing nodes. However, data transfer is declarative and not explicit.
+You need to define which files have to be transferred from a data space to computing nodes by using *input files* and reciprocally from computing nodes to a data space by defining *output files*:
 
 [source, xml]
 ----
-        <task name="task1">
-            ...
-            <inputFiles>
-                <files includes="tata" accessMode="transferFromGlobalSpace"/>
-            </inputFiles>
-            <outputFiles>
-                <files includes="titi*" accessMode="transferToGlobalSpace"/>
-            </outputFiles>
-            ...
-        </task>
+<task name="task1">
+    ...
+    <inputFiles>
+        <files includes="tata" accessMode="transferFromGlobalSpace"/>
+    </inputFiles>
+    <outputFiles>
+        <files includes="titi*" accessMode="transferToGlobalSpace"/>
+    </outputFiles>
+    ...
+</task>
 ----
 
-Then, before executing this task Proactive Scheduler automatically transfers all files to a ProActive Node where task will be executed
-and put it to the special place called *Local Space*, the working directory of a task.
-Then, files can be accessed normally like shown in example:
+Upon the execution of the previous example, Proactive Scheduler automatically transfers all files to a ProActive Node where the task will be executed. The files are put in a special place called *Local Space* on the ProActive Node. It corresponds to the working directory of a task.
+From a task point of view, files can be accessed normally like shown below:
 
 [source, java]
 ----
 File inputFile = new File("tata")
 ----
 
-All the files produced by the task with the name _titi*_ (e.g titi, titi2, etc.) will be transferred back to Global Space
-automatically by the Scheduler once the task is finished.
+Then, based on the previous task definition, all the files whose the name starts with _titi_ (e.g titi, titi2, etc.) produced by _task1_ will be transferred back automatically to Global Space by the Scheduler once the task is finished.
 
 Files can be also transferred from/to User Space by specifying `transferFromUserSpace`/`transferToUserSpace`.
 
 Before running your jobs you should first *upload* your files into either Global or User Space. To do it you can export folders linked to
 these spaces by one of the standard protocols like *FTP*, *NFS*, or use available web interfaces like
-http://pyd.io[Pydio/AjaXplorer^].
+http://pyd.io[Pydio^].
+
+=== Job Result
+
+Once a Job is terminated, it is possible to get its result. You can only get the result of the job that you own.
+A Job result is the collection of the tasks' results and you can retrieve it from either Java API or <<_scheduler_command_line,command line>> (it will be converted to a string).
+
+Job results are also available in the *Scheduler Web Interface* in the _Preview_ tab.
 
 == Workflow concepts
 
@@ -853,9 +863,9 @@ importClass(org.ow2.proactive.scripting.helper.selection.SelectionUtils);
 
 /* Check if OS name is Windows */
 if (SelectionUtils.checkOSName("windows")) {
-  selected = true;
+    selected = true;
 } else {
-	selected = false;
+    selected = false;
 }
 ----
 
