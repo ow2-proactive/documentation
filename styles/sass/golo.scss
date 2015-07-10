@@ -3,33 +3,25 @@
 @import "components/asciidoc";
 @import "components/awesome-icons";
 
-body {
-  //@include bg-noise(#fdfaf7, 4, .05, 400, false);
-  background: image-url('golo/body-bg.png') $body-bg repeat;
-}
-
-#toc.toc2 ol ol {
+#toc.toc2 ul ul {
   list-style-type: circle;
-  padding-left: emCalc(28px);
+  padding-left: emCalc(16px) * 2;
 }
 
-#toctitle {
-  color: $header-font-color;
+.sect1 {
+  padding-bottom: 0 !important;
+  margin-bottom: $panel-margin-bottom * 2;
 }
 
+// shift heading text slightly to left to account for font appearance
 #header h1 {
   font-weight: bold;
   position: relative;
   left: emCalc(-1px);
-
-  span.lo {
-    color: $dark-orange;
-  }
 }
 
 #content {
   h2, h3, h4, h5, #toctitle {
-    font-weight: normal;
     position: relative;
     left: emCalc(-1px);
   }
@@ -39,16 +31,21 @@ body {
   }
 }
 
-.admonitionblock > table {
-  td.content {
-    border-color: $sect-divider-color;
-  }
+.paragraph.lead > p,
+#preamble > .sectionbody > .paragraph:first-of-type p {
+  color: black;
 }
 
-table.tableblock.grid-all {
-  @include border-radius(0);
+// recommended pygments-style values: bw, colorful
+pre.pygments.highlight {
+  background-color: $pre-bg;
 }
 
-#footer {
-  background-color: darken($black-brown, 5%);
+.pygments .tok-err {
+  border: none !important;
+  color: #800000 !important;
+}
+
+.pygments .tok-c {
+  color: #999 !important;
 }

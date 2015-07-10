@@ -1,198 +1,138 @@
 This section describes useful variables, their scope, and their usage.
 
-[cols="1,1,1,1,1", options="header"]
+[cols="1,1,1,1", options="header"]
 
 |===
 
 | Variable name and description
 | Use from a script
 | Use from a native task
-| Use from a java task
 | Use from the workflow
 
-| *Task result*. See <<_passing_data_between_tasks>>. Available via ScriptTask.
+| *Task result*. See <<_passing_data_between_tasks_using_variables>>.
 | result = "value";
 | The result will be the exit code.
-| return "value";
 | -
 
-| *Task arguments*. Available via all kind of scripts.
+| *Task arguments*. Available via all kind of scripts when referencing an external file.
 | ... = args[0];
 | Passed to native executable.
-| args.get( "arg0" );
 | -
 
-| *Results of previous tasks*. See <<_passing_data_between_tasks>>. Available via ScriptTask.
+| *Results of previous tasks*. See <<_passing_data_between_tasks_using_variables>>. Available via script task.
 | ... = results[0];
-| -
-| results[0];
+| $results_0
 | -
 
-| *Branch*. Either "if" or "else". See <<_branch>>. Available via FlowScript.
+| *Branch*. Either "if" or "else". See <<_branch, branch>>. Available via <<_control_flow_scripts,flow script>>.
 | branch = "if";
 | -
 | -
-| -
 
-| *Parallel runs*. See <<_replicate>>. Available via FlowScript.
+| *Parallel runs*. See <<_replicate, replication>>. Available via <<_control_flow_scripts,flow script>>.
 | runs = 3;
 | -
 | -
-| -
 
-| *Loop variable*. See <<_control_flow_scripts>>. Available via FlowScript.
+| *Loop variable*. See <<_control_flow_scripts, loop>>. Available via <<_control_flow_scripts,flow script>>.
 | loop = false;
 | -
 | -
+
+| *Task progress*. Represents the progress of the task. Can be set to a value between 0 and 100. Available via script task.
+| import org.ow2.proactive.scripting.helper.progress.ProgressFile;
+ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
+| -
 | -
 
-| *Task progress*. Represents the progress of the task. Can be set to a value between 0 and 100. Available via ScriptTask.
-| progress = 50;
-| -
-| setProgress(50);
-| -
-
-| *Workflow variables*. See <<_workflow_variables>>. Available via ScriptTask, PreScript, PostScript, FlowScript.
-| variables.get( "key" )
-| $var_key
-| getVariables().get( "key" );
+| *Workflow variables*. See <<_workflow_variables>>. Available via script task, pre script, post script, flow script.
+| variables.get("key")
+| $variables_key
 | ${key}
 
-| *Job ID*. Contains the ID of the current job. Available via ScriptTask, PreScript, PostScript, FlowScript.
-| variables.get( "pas.job.id" )
-| $PAS_JOB_ID
-| -
+| *Job ID*. Contains the ID of the current job. Available via script task, pre script, post script, flow script.
+| variables.get( "PA_JOB_ID" )
+| $variables_PA_JOB_ID
 |
-$PAS_JOB_ID (only in generic information)
-or
-$JID (only in the task arguments, dataspaces and scripts)
+${PA_JOB_ID}
 
-| *Job name*. Available via ScriptTask, PreScript, PostScript, FlowScript.
-| variables.get( "pas.job.name" )
-| $PAS_JOB_NAME
-| -
-| $PAS_JOB_NAME (only in generic information)
+| *Job name*. Available via script task, pre script, post script, flow script.
+| variables.get( "PA_JOB_NAME" )
+| $variables_PA_JOB_NAME
+| ${PA_JOB_NAME}
 
-| *Task ID*. Available via ScriptTask, PreScript, PostScript, FlowScript.
-| variables.get( "pas.task.id" )
-| $PAS_TASK_ID
-| -
-| $PAS_TASK_ID (only in generic information)
+| *Task ID*. Available via script task, pre script, post script, flow script.
+| variables.get( "PA_TASK_ID" )
+| $variables_PA_TASK_ID
+| ${PA_TASK_ID}
 
-| *Task name*. Available via ScriptTask, PreScript, PostScript, FlowScript.
-| variables.get( "pas.task.name" )
-| $PAS_TASK_NAME
-| -
-| $PAS_TASK_NAME (only in generic information)
+| *Task name*. Available via script task, pre script, post script, flow script.
+| variables.get( "PA_TASK_NAME" )
+| $variables_PA_TASK_NAME
+| ${PA_TASK_NAME}
 
-| *Task iteration index*. See <<_task_executable>>. Available via ScriptTask, PreScript, PostScript, FlowScript.
-| variables.get( "pas.task.iteration" )
-| [small]#$PAS_TASK_ITERATION#
-| getIterationIndex();
-|
-[small]#$PAS_TASK_ITERATION# (only in generic information)
-or
-$IT (only in the task arguments, dataspaces and scripts)
+| *Task iteration index*. See <<_task_executable>>. Available via script task, pre script, post script, flow script.
+| variables.get( "PA_TASK_ITERATION" )
+| $variables_PA_TASK_ITERATION
+| ${PA_TASK_ITERATION}
 
-| *Task replication index*. See <<_task_executable>>. Available via ScriptTask, PreScript, PostScript, FlowScript.
-| variables.get( "pas.task.replication" )
-| [small]#$PAS_TASK_REPLICATION#
-| getReplicationIndex();
-|
-[small]#$PAS_TASK_REPLICATION# (only in generic information)
-or
-$REP (only in the task arguments, dataspaces and scripts)
+| *Task replication index*. See <<_task_executable>>. Available via script task, pre script, post script, flow script.
+| variables.get( "PA_TASK_REPLICATION" )
+| $variables_PA_TASK_REPLICATION
+| ${PA_TASK_REPLICATION}
 
-| *Third party credentials*. Available via ScriptTask.
+| *Third party credentials*. Available via script task.
 | credentials.get( "pw" )
 | -
-| -
-| $CREDENTIALS_pw (only in the task arguments)
+| $credentials_pw (only in the task arguments)
 
-| *SSH private key*. See <<_run_computation_with_your_system_account>>. Available via ScriptTask.
+| *SSH private key*. See <<_run_computation_with_your_system_account>>. Available via script task.
 | credentials.get( "SSH_PRIVATE_KEY" )
 | -
-| [small]#getThirdPartyCredential( "SSH_PRIVATE_KEY" );#
 | -
 
-| *Nodes information*. See <<_mpi_application>>. Available via ScriptTask.
-| nodeset.get( 0 ).getNodeInformation( )
-| $PAS_NODESFILE
-| getNodes();
+| *Number of nodes*. See <<_mpi_application>>. Available via script task.
+| nodesurl.size()
+| $variables_PA_NODESNUMBER
 | -
 
-| *Number of nodes*. See <<_mpi_application>>. Available via ScriptTask.
-| nodeset.size()
-| $PAS_NODESNUMBER
-| getNodes().size();
-| -
-
-| *Url of nodes*. List of url of nodes. See <<_mpi_application>>. Available via ScriptTask.
+| *Url of nodes*. List of url of nodes. See <<_mpi_application>>. Available via script task.
 | nodesurl.get(0)
-| -
-| -
+| $variables_PA_NODESFILE
 | -
 
-| *User space*. See <<_data_spaces>>. Available via ScriptTask, ForkEnvironment, PreScript, PostScript, FlowScript.
+| *User space*. See <<_data_spaces>>. Available via script task, ForkEnvironment, pre script, post script, flow script.
 | user.getVirtualURI()
 | $USERSPACE
-| getUserSpace();
 | -
 
-| *Global space*. See <<_data_spaces>>. Available via ScriptTask, ForkEnvironment, PreScript, PostScript, FlowScript.
+| *Global space*. See <<_data_spaces>>. Available via script task, ForkEnvironment, pre script, post script, flow script.
 | global.getVirtualURI()
 | $GLOBALSPACE
-| getGlobalSpace();
 | -
 
-| *Input space*. See <<_data_spaces>>. Available via ScriptTask, ForkEnvironment, PreScript, PostScript, FlowScript.
+| *Input space*. See <<_data_spaces>>. Available via script task, ForkEnvironment, pre script, post script, flow script.
 | input.getVirtualURI()
 | -
-| getInputSpace();
 | -
 
-| *Local space*. See <<_data_spaces>>. Available via ScriptTask, ForkEnvironment, PreScript, PostScript, FlowScript.
+| *Local space*. See <<_data_spaces>>. Available via script task, ForkEnvironment, pre script, post script, flow script.
 | localspace.getVirtualURI()
 | $LOCALSPACE
-| getLocalSpace();
 | -
 
-| *Output space*. See <<_data_spaces>>. Available via ScriptTask, ForkEnvironment, PreScript, PostScript, FlowScript.
+| *Output space*. See <<_data_spaces>>. Available via script task, ForkEnvironment, pre script, post script, flow script.
 | output.getVirtualURI()
 | -
-| getOutputSpace();
 | -
 
-| *Command*. Generates a native command which will be executed by a NativeTask via a Runtime.exec(cmd). Available only via GenerationScript.
-| command = "echo Hello"
-| -
-| -
-| -
-
-| *Command list*. Generates a native command list which will be executed by a NativeTask via a Runtime.exec(list). Available only via GenerationScript.
-|
-commandList = java.util.ArrayList()
-commandList.add("echo")
-commandList.add("Hello")
-| -
-| -
-| -
-
-| *Selection*. See <<_selection_of_proactive_nodes>>. Only available via SelectionScript.
+| *Selection*. See <<_selection>>. Only available via SelectionScript.
 | selected = true
-| -
 | -
 | -
 
 | *Fork Environment*. Fork Environment variable is a complex java object allowing a script to set various initialization parameters of the forked JVM. Available only via EnvironmentScript.
 | forkEnvironment.setJavaHome( "/usr/java/default" )
-| -
-| -
-| -
-
-| *Task Success*. This boolean variable allows the post script to know if the task was successfully executed. Available only via PostScript.
-| if (success == true)
-| -
 | -
 | -
 
@@ -201,19 +141,19 @@ commandList.add("Hello")
 Note that for script tasks, syntax for accessing maps (like *variables* and *credentials*) is language dependant.
 
 For Groovy:
-[source]
+[source, groovy]
 ----
 print variables.get("key")
 ----
 
 For Python:
-[source]
+[source, python]
 ----
 print variables["key"]
 ----
 
 For Bash:
-[source]
+[source, bash]
 ----
 echo $variables_key
 ----
@@ -222,13 +162,13 @@ echo $variables_key
 ==== R language
 
 For R language there are some differences. The progress variable is set as follows:
-[source]
+[source, R]
 ----
 set_progress(50)
 ----
 
 Also, access to dataspaces variables is different:
-[source]
+[source, R]
 ----
 print(userspace)
 print(globalspace)

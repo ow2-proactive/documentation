@@ -1,68 +1,39 @@
 buildscript {
     repositories {
-        mavenCentral()
-        maven { url 'http://repository.activeeon.com/content/repositories/thirdparty/' }
+        jcenter()
     }
 
     dependencies {
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:0.8.0'
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.1'
         classpath 'xalan:xalan:2.7.1'
     }
 }
 
-apply plugin: 'asciidoctor'
+apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 
-//def outputFormats = ['fopub','html5']
-def outputFormats = ['html5']
-
-task user(type: org.asciidoctor.gradle.AsciidoctorTask) {
-    sourceDocumentName file('src/docs/user/ProActiveUserGuide.adoc')
-    sourceDir = sourceDocumentName.parentFile
-    baseDir = sourceDocumentName.parentFile
-    backends = outputFormats
-    options = [
-            stylesheet: 'src/docs/activeeon.css'
-    ]
-}
-
-task admin(type: org.asciidoctor.gradle.AsciidoctorTask) {
-    sourceDocumentName file('src/docs/admin/ProActiveAdminGuide.adoc')
-    sourceDir = sourceDocumentName.parentFile
-    baseDir = sourceDocumentName.parentFile
-    backends = outputFormats
-    options = [
-            stylesheet: 'src/docs/activeeon.css'
-    ]
-}
-
-task developer(type: org.asciidoctor.gradle.AsciidoctorTask) {
-    sourceDocumentName file('src/docs/developer/ProActiveDeveloperGuide.adoc')
-    sourceDir = sourceDocumentName.parentFile
-    baseDir = sourceDocumentName.parentFile
-    backends = outputFormats
-    options = [
-            stylesheet: 'src/docs/activeeon.css'
-    ]
-}
-
-task index(type: org.asciidoctor.gradle.AsciidoctorTask) {
-    sourceDocumentName file('src/docs/index.adoc')
-    sourceDir = sourceDocumentName.parentFile
-    baseDir = sourceDocumentName.parentFile
-    backends = outputFormats
-    options = [
-            stylesheet: 'src/docs/activeeon.css'
-    ]
+asciidoctor {
+    sourceDir file('src/docs')
+    outputDir = new File("$buildDir/asciidoc")
+    sources {
+        include 'user/ProActiveUserGuide.adoc'
+        include 'admin/ProActiveAdminGuide.adoc'
+        include 'index.adoc'
+    }
+    resources {
+        from('src/docs/') {
+            include 'user/examples/**'
+        }
+    }
 }
 
 task xsdDoc(type: JavaExec) {
     inputs.files file('src/xsd/schedulerjob.xsd'), file('src/xsd/xs3p.xsl')
-    outputs.files file("$buildDir/schedulerjob.html")
+    outputs.files file("$buildDir/html5/user/schedulerjob.html")
 
     classpath buildscript.configurations.classpath
     main 'org.apache.xalan.xslt.Process'
-    args '-IN', 'src/xsd/schedulerjob.xsd', '-XSL', 'src/xsd/xs3p.xsl', '-OUT', "$buildDir/asciidoc/schedulerjob.html"
+    args '-IN', 'src/xsd/schedulerjob.xsd', '-XSL', 'src/xsd/xs3p.xsl', '-OUT', "$buildDir/asciidoc/html5/user/schedulerjob.html"
 }
 
-task('build', dependsOn: ['user', 'admin', 'developer', 'index', 'xsdDoc'])
+build.dependsOn(['asciidoctor', 'xsdDoc'])
 defaultTasks 'build'

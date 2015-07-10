@@ -9,7 +9,7 @@
 				<staticCommand value="mpirun">
 					<arguments>
 						<argument value="-hostfile"/>
-						<argument value="$NODESFILE"/>
+						<argument value="$variables_PA_NODESFILE"/>
 						<argument value="myApplication"/>
 					</arguments>
 				</staticCommand>
