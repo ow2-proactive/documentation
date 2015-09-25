@@ -380,6 +380,10 @@ Here the list of ProActive system variables:
 | The number of acquired nodes when using a <<_multi_node_task,multi nodes task>>.
 | Integer
 
+| `PA_USER`
+| The username of the ProActive user who has submitted the job.
+| String
+
 |===
 
 ==== Passing data between tasks using variables
