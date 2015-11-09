@@ -1060,7 +1060,7 @@ application. The VNC output will be forwarded to the your browser and you will b
 application.
 
 The task that you want to visualize must output a special string using the following format:
-*PA_REMOTE_CONNECTION;TASK_ID;vnc;HOSTNAME:PORT* where *TASK_ID* must be the current task id
+*PA_REMOTE_CONNECTION;JOB_ID;TASK_ID;vnc;HOSTNAME:PORT* where *JOB_ID* must be the current job id, *TASK_ID* the current task id
 and *HOSTNAME:PORT* the hostname and port where the VNC server runs.
 
 It is the task's responsibility to print the string.
