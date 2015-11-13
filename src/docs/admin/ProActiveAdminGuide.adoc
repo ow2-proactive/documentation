@@ -805,6 +805,23 @@ HTTPS can be enabled for Web applications using a Java keystore. See `web.https`
 for the possible settings. We provided a default self-signed keystore than can be used for testing but for
 production you should build your own keystore with a valid certificate so it will be accepted by browsers.
 
+== Performance tuning
+
+=== Database
+
+By default, ProActive Scheduler is configured to use http://hsqldb.org[HSQLDB]
+embedded database. This last is lightweight and does not require complex
+configuration. However, it cannot compete with more conventional database
+management systems, especially when the load increases. Consequently, it is
+recommended to setup an RDBMS such as https://mariadb.com[MariaDB],
+http://www.postgresql.org[Postgres] or
+http://www.microsoft.com/en-us/server-cloud/products/sql-server/[SQL Server] if
+you care about performance or notice a slowdown.
+
+ProActive Workflows and Scheduling distribution is provided with several samples
+for configuring the Scheduler and Resource Manager to use most standard RDBMS.
+You can find these examples in `PROACTIVE_HOME/config/scheduler/` folder.
+
 == Troubleshooting
 === Logs
 
