@@ -77,6 +77,27 @@ a task can be restarted automatically or cancelled.
 The link:http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial, window="_blank"] on link:http://try.activeeon.com[try.activeeon.com, window="_blank"]
 shows you how to build a simple workflow using script tasks.
 
+
+=== Docker task
+
+In order for Docker tasks to work, the _Node_ must have Docker and Docker Compose installed, please refer to the official
+ Docker documentation to see how to install http://docs.docker.com/engine/installation/[Docker^] and https://docs.docker.com/compose/install/[Docker Compose^].
+
+A Docker task expects the content of a Docker Compose file inside the _Script_ section. You can find out how to write Docker Compose files
+with the official https://docs.docker.com/compose/[Docker Compose documentation^].
+
+To get started: a simple Docker Compose example is explained below.
+
+The content of the _Script_ section (equal to the content of a Docker Compose file) is:
+---
+helloworld:
+    image: busybox
+    command: echo "Hello ProActive"
+---
+The above example describes a container which is called 'helloworld'. That container is created from a busybox image,
+ which will run the command 'echo "Hello ProActive"'
+
+
 === Native application
 
 Using native tasks you can easily reuse existing applications and embed them in a workflow.
