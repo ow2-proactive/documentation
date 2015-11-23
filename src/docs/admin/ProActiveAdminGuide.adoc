@@ -805,6 +805,42 @@ HTTPS can be enabled for Web applications using a Java keystore. See `web.https`
 for the possible settings. We provided a default self-signed keystore than can be used for testing but for
 production you should build your own keystore with a valid certificate so it will be accepted by browsers.
 
+[[_script_engines]]
+== Configure script engines
+
+Most script engines do not need any configuration. This section talks about the script engines which can be configured
+individually.
+
+=== Docker Compose (Docker task)
+
+The Docker Compose script engine is a wrapper around the Docker Compose command. It needs to have Docker Compose
+ and Docker installed, in order to work. The Docker Compose script engine has a configuration file which configures each ProActive Node individually.
+The configuration file is in `ROACTIVE_HOME/config/scriptengines/docker-compose.properties`.
+`docker-compose.properties` has the following configuration options:
+
+---
+docker.compose.command=[docker-compose executable example:/usr/local/bin/docker-compose]
+---
+Defines which Docker Compose executable is used by the script engine.
+
+---
+docker.compose.sudo.command=[sudo executable example:/usr/bin/sudo]
+---
+Defines the sudo executable which is used. The sudo property is used to give the Docker Compose command root rights.
+
+---
+docker.compose.use.sudo=false
+---
+Defines whether to execute Docker Compose with sudo [true] or without sudo [false]
+
+---
+docker.host=
+---
+Defines the DOCKER_HOST environment variable. The DOCKER_HOST variable defines the Docker socket which the Docker client connects to.
+That property is useful when accessing a Docker daemon which runs inside a container or on a remote machine.
+Further information about the DOCKER_HOST property can be found http://docs.docker.com/v1.8/reference/commandline/cli/[in the official Docker documentation^].
+
+
 == Performance tuning
 
 === Database
