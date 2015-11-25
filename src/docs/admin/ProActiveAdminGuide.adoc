@@ -322,7 +322,7 @@ The main troubles you may have to face are the following ones:
 [[_proactive_linux_agent]]
 ==== ProActive Linux Agent
 
-The ProActive Agent for Linux can be downloaded from our http://www.activeeon.com/community-downloads[website^].
+The ProActive Agent for Linux can be downloaded from ActiveEon http://www.activeeon.com/community-downloads[website^].
 
 To install the ProActive Agent on Debian based distributions:
 
@@ -334,15 +334,24 @@ To install the ProActive Agent on Redhat based distributions:
 
     sudo rpm -i proactive-agent-standalone.deb
 
-By default the Linux Agent will launch locally a node but will not register it
-in the Resource Manager. The user has to configure the agent explicitly by specifying the required
-parameters in the “config.xml” file.
+By default the Linux Agent will launch locally as many nodes as the number of
+CPU cores available on the host minus one. The URL to use for connecting nodes
+to the Resource Manager can be configured in `/opt/proactive-agent/config.xml`,
+along with several other parameters. If no URL is set, then broadcast is used
+for auto discovery. However, this feature might not work depending on your
+network configuration. Consequently, it is recommended to set the Resource
+Manager URL manually.
 
-The Agent's logs are located in `/var/log/proactive/agent/agent.log`.
+Logs related to the Agent daemon are located in
+`/opt/proactive-agent/proactive-agent.log`.
+
+Binaries, configuration files and logs related to ProActive nodes started by the
+agent are available at `/opt/proactive-node/`, respectively in subfolders `dist/lib`,
+`config` and `logs`.
 
 ===== Configure the Linux Agent
 
-To configure the agent behavior:
+To configure the agent behaviour:
 
 * Stop the Linux Agent
 +
@@ -352,24 +361,24 @@ sudo /etc/init.d/proactive-agent stop
 
 * Update the *config.xml* file in `/opt/proactive-agent` folder
 +
-In case there is no such file directory, create the directory. Create the *config.xml* file or create a symbolic link
+In case there is no such directory, create the directory. Then, create the *config.xml* file or create a symbolic link
 +
 ----
 sudo mkdir -p /opt/proactive-agent
 sudo ln -f -s <path-to-config-file> /opt/proactive-agent/config.xml
 ----
 
-* Change the ownership of the “config.xml” file
+* Change the ownership of the *config.xml* file
 +
 ----
-sudo chown -Rv proactive:proactivegroup config.xml
+sudo chown -Rv proactive:proactive config.xml
 ----
 +
-If the “proactivegroup” group does not exist, create the group and add “proactive” user to the group:
+If the group named "proactive" does not exist, create the group and add "proactive" user to the group:
 +
 ----
-sudo groupadd proactivegroup
-sudo usermod -g proactivegroup proactive
+sudo groupadd proactive
+sudo usermod -g proactive proactive
 ----
 
 * Start the Linux Agent
@@ -378,7 +387,13 @@ sudo usermod -g proactivegroup proactive
 
 ===== Uninstall the Linux Agent
 
+On Debian based distributions:
+
     sudo dpkg -r proactive-agent
+
+On Redhat based distributions:
+
+    sudo yum remove proactive-agent
 
 == Installation on a Cluster with Firewall
 
