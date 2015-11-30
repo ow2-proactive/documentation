@@ -776,9 +776,25 @@ The accounting information can be accessed only through a *JMX client* or the Pr
 [[_run_as_me]]
 == Run Computation with a user's system account
 
-When starting a ProActive Node, it can be configured to run tasks under the user's system account when
-link:ProActiveUserGuide.html#_run_computation_with_your_system_account[runAsMe] is set to true in
-the job's definition. The default is to use the password method.
+Configure a ProActive Node to execute tasks under a user's system account by ticking the
+link:ProActiveUserGuide.html#_run_computation_with_your_system_account[Run as me] box in the task configuration.
+By default authentication is done through a password, but can also be configured using a SSH key.
+
+
+For proper execution, *the user's system account must have:*
+
+* Execution rights to the PROACTIVE_HOME directory and all it's parent directories.
+* Write access to the PROACTIVE_HOME directory.
+
+Logs are written during task execution, as a matter of fact, the executing user needs write access to the
+PROACTIVE_HOME directory. ProActive does some tests before executing as a different user, those need full execution
+rights, including the PROACTIVE_HOME parent directories.
+
+TIP: Create a ProActive group which owns the PROACTIVE_HOME directory and has write access. Add every system user, which
+executes tasks under it's own system account, to the ProActive group.
+
+Find a a step by step tutorial link:AdminTutorials.html[here].
+
 
 === Using password
 
@@ -830,6 +846,7 @@ individually.
 
 The Docker Compose script engine is a wrapper around the Docker Compose command. It needs to have Docker Compose
  and Docker installed, in order to work. The Docker Compose script engine has a configuration file which configures each ProActive Node individually.
+The configuration file is in `ROACTIVE_HOME/config/scriptengines/docker-compose.properties`.
 The configuration file is in `ROACTIVE_HOME/config/scriptengines/docker-compose.properties`.
 `docker-compose.properties` has the following configuration options:
 
