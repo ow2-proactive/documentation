@@ -17,7 +17,7 @@ asciidoctor {
     sources {
         include 'user/ProActiveUserGuide.adoc'
         include 'admin/ProActiveAdminGuide.adoc'
-        include 'admin/tutorial/AdminTutorials.adoc'
+        include 'admin/AdminTutorials.adoc'
         include 'index.adoc'
     }
     resources {

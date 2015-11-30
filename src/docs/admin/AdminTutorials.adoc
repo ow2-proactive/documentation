@@ -1,10 +1,10 @@
 = Tutorials: ProActive Workflows & Scheduling
-include::../../common-settings.adoc[]
+include::../common-settings.adoc[]
 :toc-title: Tutorials for Administrators
 
-= Step by Step Tutorials
+== Step by Step Tutorials
 
-== Run As Me
+=== Run As Me
 This is a step by step tutorial, which was designed and tested for Ubuntu 14.04.
 
 ProActive Workflows & Scheduling allows advanced user management with the “run as me” feature. Run as me allows
@@ -14,10 +14,10 @@ to execute a task under the current ProActive user, if an equally named system u
 
 . Create a group called proactive `groupadd proactive’
 . Create a user running the ProActive Node, set it's primary group to proactive
- ‘useradd -g proactive -G sudo -m node-user’
-. Set the password of node-user ‘passwd node-user’
+ ‘useradd -g proactive -G sudo -m proactive’
+. Set the password of proactive user ‘passwd proactive’
 . Download and unzip ProActive inside the /opt/ directory (/opt/ gives execution right to everyone)
-. Change ownership of the ProActive folder with ‘sudo chown -R node-user:proactive ProActiveNode’
+. Change ownership of the ProActive folder with ‘sudo chown -R proactive:proactive ProActiveNode’
 . Add a run as me user, which is part of the proactive group ‘ useradd -g proactive -m Gord’
 . Create an ssh key for the run as me user ‘ssh-keygen -t rsa’
 . Go into the /home/Gord/.ssh directory and copy Gord’s public key to the authorized keys ‘cat id_rsa.pub >> authorized_keys’

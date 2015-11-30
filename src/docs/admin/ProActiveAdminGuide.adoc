@@ -777,7 +777,7 @@ The accounting information can be accessed only through a *JMX client* or the Pr
 == Run Computation with a user's system account
 
 Configure a ProActive Node to execute tasks under a user's system account by ticking the
-link:ProActiveUserGuide.html#_run_computation_with_your_system_account[Run as me] box in the task configuration.
+link:../user/ProActiveUserGuide.html#_run_computation_with_your_system_account[Run as me] box in the task configuration.
 By default authentication is done through a password, but can also be configured using a SSH key.
 
 
@@ -791,9 +791,9 @@ PROACTIVE_HOME directory. ProActive does some tests before executing as a differ
 rights, including the PROACTIVE_HOME parent directories.
 
 TIP: Create a ProActive group which owns the PROACTIVE_HOME directory and has write access. Add every system user, which
-executes tasks under it's own system account, to the ProActive group.
+executes tasks under its own system account, to the ProActive group.
 
-Find a a step by step tutorial link:AdminTutorials.html[here].
+Find a step by step tutorial link:AdminTutorials.html[here].
 
 
 === Using password
@@ -846,8 +846,8 @@ individually.
 
 The Docker Compose script engine is a wrapper around the Docker Compose command. It needs to have Docker Compose
  and Docker installed, in order to work. The Docker Compose script engine has a configuration file which configures each ProActive Node individually.
-The configuration file is in `ROACTIVE_HOME/config/scriptengines/docker-compose.properties`.
-The configuration file is in `ROACTIVE_HOME/config/scriptengines/docker-compose.properties`.
+The configuration file is in `PROACTIVE_HOME/config/scriptengines/docker-compose.properties`.
+The configuration file is in `PROACTIVE_HOME/config/scriptengines/docker-compose.properties`.
 `docker-compose.properties` has the following configuration options:
 
 ---
