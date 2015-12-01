@@ -18,11 +18,14 @@ to execute a task under the current ProActive user, if an equally named system u
 . Set the password of proactive user ‘passwd proactive’
 . Download and unzip ProActive inside the /opt/ directory (/opt/ gives execution right to everyone)
 . Change ownership of the ProActive folder with ‘sudo chown -R proactive:proactive ProActiveNode’
-. Add a run as me user, which is part of the proactive group ‘ useradd -g proactive -m Gord’
-. Create an ssh key for the run as me user ‘ssh-keygen -t rsa’
+. Add a run as me user, which is part of the proactive group ‘useradd -g proactive -m Gord’
+. Create an ssh key for the run as me user (Gord) ‘ssh-keygen -t rsa’
 . Go into the /home/Gord/.ssh directory and copy Gord’s public key to the authorized keys ‘cat id_rsa.pub >> authorized_keys’
-. Log into the node-user account and start the ProActive Node with the property ‘-Dpas.launcher.forkas.method=key’
+. Log into the proactive account
+. Start the ProActive Node with the property ‘-Dpas.launcher.forkas.method=key’
 
+NOTE: The proactive user got a password set with 'passwd proactive' to execute the sudo command. Whereas
+the run as me user (Gord) got a SSH key set. If you wish you can assign a password to Gord 'passwd Gord'.
 
 *Following steps configure the Scheduler with a sample user called Gord:*
 
