@@ -12,6 +12,8 @@ to execute a task under the current ProActive user, if an equally named system u
 
 *Following steps configure the Node with a sample user called Gord:*
 
+==== Linux
+
 . Create a group called proactive `groupadd proactive’
 . Create a user running the ProActive Node, set it's primary group to proactive
  ‘useradd -g proactive -G sudo -m proactive’
@@ -27,7 +29,48 @@ to execute a task under the current ProActive user, if an equally named system u
 NOTE: The proactive user got a password set with 'passwd proactive' to execute the sudo command. Whereas
 the run as me user (Gord) got a SSH key set. If you wish you can assign a password to Gord 'passwd Gord'.
 
+
+==== Windows
+
+. Create an account proactive/proactive:
++
+in *Control Panel->Administrative Tools->Computer Management->Local Users and Groups*
++
+image::add_user.png[align=center]
+. Create an account Gord that will be used as run as me account
+. Create a group proactiveGroup, and add all the previous accounts to this group.
++
+in *Control Panel->Administrative Tools->Computer Management->Local Users and Groups*
++
+image::add_group.png[align=center]
+. Add privileges to log on locally for the accounts of the proactiveGroup group
+.. Control Panel->Administrative tools->Local Security Policy->Local Policies->User Right Assignment
++
+image::allow_log_on_locally.png[align=center]
+.. On the policy Allow log on locally, click Edit properties and add proactiveGroup
+. For the proactive account add the following policies
+.. Adjust memory quotas for process
+.. Replace a process level token
+. Create a temp directory (i.e c:\tmp)
+. Install proactive agent and during the installation, assign the account proactive
+. Add the following JVM options to the proactive agent configuration:
++
+----
+    <jvmParameters>
+        <param>-Dpas.launcher.forkas.method=pwd</param>
+        <param>-Djava.io.tmpdir=<TMP_DIR></param>
+        <param>-Dpa.logs.dir=<TMP_DIR></param>
+    </jvmParameters>
+----
++
+where TMP_DIR is the temp directory previously created.
+. modify the configuration of the proactive agent to enable connection to the resource manager of the scheduler server.
+. start the scheduler agent with the proactive account.
+
+
 *Following steps configure the Scheduler with a sample user called Gord:*
+
+==== Linux
 
 . Add Gord:Gord (Username:Password) to PROACTIVE_HOME/config/authentication/login.cfg
 . Add Gord to the admin group by adding Gord:admin (Username:Group) to the PROACTIVE_HOME/config/authentication/group.cfg
@@ -41,3 +84,14 @@ NOTE: The ProActive Node must be installed in a directory where every parent dir
 execute tasks.
 The users need to be part of the proactive group because a task needs the rights to write logs. Which is achieved by
 being part of the proactive group and the proactive group ownership of the ProActive Node directory.
+
+
+==== Windows
+
+. Install proactive server by download and unzip it to a convenient folder
+. Add Gord:Gord (Username:Password) to PROACTIVE_HOME/config/authentication/login.cfg
+. Add Gord to the admin group by adding Gord:admin (Username:Group) to the PROACTIVE_HOME/config/authentication/group.cfg
+. Start the scheduler server.
+. Login is as Gord.
+. Create a task in the Studio and tick "Run as me"
+. Execute the job.
