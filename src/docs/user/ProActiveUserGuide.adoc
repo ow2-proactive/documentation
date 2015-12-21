@@ -804,6 +804,10 @@ formed like this: *(LOOP|REPLICATE)-Name_of_the_initiator-index*.
     then the tasks _T2#1_ and _T3#1_ will have the tag *LOOP-T1-1*. The tasks
     _T2#2_ and _T3#2_ will have the tag *LOOP-T1-3*.
 
+-   If the loop is a cron loop, the index is replaced by the resolved time of
+    the initiated looping. For example, in a cron loop that was initiated the
+    21/12/2015 at 14h00, the task _T1#1_ will have the tag *LOOP-T1#1-21_12_15_14_00*.
+
 -   If the task _T1_ replicates a block that contains the tasks _T2_ and _T3_,
     then the tasks _T2*1_ and _T3*1_ will have the tag *REPLICATE-T1-1*. The
     tasks _T2*2_ and _T3*2_ will have the tag *REPLICATE-T1-2*.
