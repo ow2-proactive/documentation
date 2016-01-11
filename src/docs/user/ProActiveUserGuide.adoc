@@ -1211,6 +1211,54 @@ key is not present, no replacement occurs):
 </task>
 ----
 
+== Fork environment
+A fork execution environment is a new java virtual machine which is started exclusively to execute a task. Starting a
+new java virtual machine means that the task inside it will run in a new environment. This environment can
+be set up by the creator of the task. A new java virtual machines is set up with a new classpath,
+new system properties and more customization.
+
+=== Docker fork execution environment
+A Docker fork execution environment executes a java virtual machine inside a Docker container. Hence the task
+which is executes in the Docker fork execution environment can be customized by the java virtual machine settings
+and by the tool-set and isolation provided by Docker containers.
+
+TIP: If your task needs to install new software or updates software, then run it inside a Docker container.
+That way other tasks will not be affected by changes, because Docker containers provide isolation so that
+the host machine's software stays the same.
+
+==== How to use a fork execution Environment
+Select Docker in the ‘Fork Execution Environment’ Dropdown:
+
+* A sample Docker Environment Setting will appear.
+
+That setting ensures, that the current task is executed inside a Docker container, or fail if Docker is
+ not installed or the user has no permission to run Docker containers.
+
+===== Procedure
+The Fork Environment Script exports a variable ‘preJavaHomeCmd’, which is picked up by the Node that
+ executes the Task. That variable is supposed to be a Docker run command inside a string.
+  That string will be split by space and added in front of the fork execution command. As an example:
+The fork execution command is:
+----
+/usr/bin/java -cp [Classpath] [ExecutedClass]
+----
+And the Docker run command is:
+----
+docker run java
+----
+Then both will be combined to:
+----
+ docker run java /usr/bin/java -cp [Classpath] [ExecutedClass]
+----
+
+The combined command will execute a JVM inside a docker container.
+Internally the command is split into docker, run, java, /usr/bin/java, -cp, [Classpath], [ExecutedClass].
+ That is important to know because the fork execution command is split by spaces.
+  That means, that paths can’t contain spaces. The Docker container mounts the proactive home and a
+   folder in the temp directory of the operating system. Those cannot contain spaces, because if they
+    do then the fork execution command will be split wrong and fail.
+
+
 == Reference
 
 === Job and task specification
