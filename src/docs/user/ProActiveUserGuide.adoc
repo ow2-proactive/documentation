@@ -1212,14 +1212,14 @@ key is not present, no replacement occurs):
 ----
 
 == Fork environment
-A fork execution environment is a new java virtual machine which is started exclusively to execute a task. Starting a
-new java virtual machine means that the task inside it will run in a new environment. This environment can
-be set up by the creator of the task. A new java virtual machines is set up with a new classpath,
+A fork execution environment is a new Java Virtual Machine (JVM) which is started exclusively to execute a task. Starting a
+new JVM means that the task inside it will run in a new environment. This environment can
+be set up by the creator of the task. A new JVMs is set up with a new classpath,
 new system properties and more customization.
 
 === Docker fork execution environment
-A Docker fork execution environment executes a java virtual machine inside a Docker container. Hence the task
-which is executes in the Docker fork execution environment can be customized by the java virtual machine settings
+A Docker fork execution environment executes a JVM inside a Docker container. Hence the task
+which is executes in the Docker fork execution environment can be customized by the JVM settings
 and by the tool-set and isolation provided by Docker containers.
 
 TIP: If your task needs to install new software or updates software, then run it inside a Docker container.
@@ -1228,17 +1228,18 @@ the host machine's software stays the same.
 
 ==== How to use a fork execution Environment
 Select Docker in the ‘Fork Execution Environment’ Dropdown:
+sample Docker environment settings will appear.
 
-* A sample Docker Environment Setting will appear.
-
-That setting ensures, that the current task is executed inside a Docker container, or fail if Docker is
+That settings ensure, that the current task is executed inside a Docker container, or fail if Docker is
  not installed or the user has no permission to run Docker containers.
 
+TIP: If the executing Node has no Docker installed, the task will fail. Selection Scripts can ensure
+that tasks are executed only on Nodes which have Docker installed.
+
 ===== Procedure
-The Fork Environment Script exports a variable ‘preJavaHomeCmd’, which is picked up by the Node that
+The Fork Environment Script exports a variable `preJavaHomeCmd`, which is picked up by the Node that
  executes the Task. That variable is supposed to be a Docker run command inside a string.
   That string will be split by space and added in front of the fork execution command. As an example:
-The fork execution command is:
 ----
 /usr/bin/java -cp [Classpath] [ExecutedClass]
 ----
@@ -1254,7 +1255,7 @@ Then both will be combined to:
 The combined command will execute a JVM inside a docker container.
 Internally the command is split into docker, run, java, /usr/bin/java, -cp, [Classpath], [ExecutedClass].
  That is important to know because the fork execution command is split by spaces.
-  That means, that paths can’t contain spaces. The Docker container mounts the proactive home and a
+  That means, that paths can’t contain spaces. The Docker container mounts the ProActive home and a
    folder in the temp directory of the operating system. Those cannot contain spaces, because if they
     do then the fork execution command will be split wrong and fail.
 
