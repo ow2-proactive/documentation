@@ -183,7 +183,7 @@ TIP: If all the nodes of an AWS instance are removed, the instance will be termi
     -   *minCores:* The minimum required amount of virtual cores for each AWS instance that needs to be created.
     
 +
-WARNING: If the combination between RAM and CPU does not match any existing AWS instance type, then the closest to the specified parameters will be selected.
+WARNING: If the combination between RAM and CORES does not match any existing AWS instance type, then the closest to the specified parameters will be selected.
 +
     
 
