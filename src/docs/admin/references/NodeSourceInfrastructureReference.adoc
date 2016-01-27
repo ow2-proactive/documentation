@@ -167,7 +167,7 @@ them, and how to use them to configure your environment.
     -   *numberOfNodesPerInstance:* Total number of Proactive Nodes to deploy in each AWS created instance. 
     
 +
-TIP: If all the nodes of an AWS instance are removed, the instance will be terminated.
+TIP: If all the nodes of an AWS instance are removed, the instance will be terminated. For more information on the terminated state in AWS please see http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/terminating-instances.html[AWS Terminating Instances].
 +
        
     -   *downloadCommand:* The command to download the Proactive node.jar. This command is executed in all the newly created AWS instances at cloud init time. 
@@ -178,12 +178,12 @@ TIP: If all the nodes of an AWS instance are removed, the instance will be termi
     	    	
     -   *additionalProperties:* Additional Java command properties to be added when starting each ProActive node JVM in the AWS instances (e.g. \"-Dpropertyname=propertyvalue\"). 
      
-    -   *ram:* The desired RAM amount expressed in Mega Bytes for each AWS instance that needs to be created.
+    -   *minRam:* The minimum required amount of RAM expressed in Mega Bytes for each AWS instance that needs to be created.
     
-    -   *cpu:* The desired CPU cores amount for each AWS instance that needs to be created.
+    -   *minCores:* The minimum required amount of virtual cores for each AWS instance that needs to be created.
     
 +
-WARNING: If the combination between RAM and CPU does not match any existing AWS instance type, then the closest to the specified parameters will be selected.
+WARNING: If the combination between RAM and CORES does not match any existing AWS instance type, then the closest to the specified parameters will be selected.
 +
     
 
@@ -191,14 +191,13 @@ Using this configuration, you can start a Resource Manager and a
 Scheduler using the */bin/proactive-server* script. An EC2 NodeSource can
 now be added using the *Create Node Source* panel in the Resource Manager or the command line interface:
 
-    $ PROACTIVE_HOME/bin/proactive-client --createns ec2 -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.AWSEC2Infrastructure aws_key aws_secret_key rmDomain connectorIaasURL image numberOfInstances numberOfNodesPerInstance downloadCommand additionalProperties ram cpu 
+    $ PROACTIVE_HOME/bin/proactive-client --createns ec2 -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.AWSEC2Infrastructure aws_key aws_secret_key rmDomain connectorIaasURL image numberOfInstances numberOfNodesPerInstance downloadCommand additionalProperties minRam minCores 
 
-
-When the Scheduler is stopped normally, all the AWS instances created will be terminated. For more information on the terminated state in AWS please see http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/terminating-instances.html[AWS Terminating Instances]. 
+When the Scheduler is stopped normally, all the AWS instances created will be terminated.
 
 WARNING: If the Scheduler is forced killed, the AWS instances will not be terminated.
 
-When the Scheduler is restarted, all the AWS instances that were previously created, will be re-created and re-configured as per previous settings.
+When the Scheduler is restarted, all the AWS instances that were previously created, will be terminated first and then re-created and re-configured as per previous settings.
 
 
 
