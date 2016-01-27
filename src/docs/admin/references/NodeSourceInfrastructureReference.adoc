@@ -191,7 +191,7 @@ Using this configuration, you can start a Resource Manager and a
 Scheduler using the */bin/proactive-server* script. An EC2 NodeSource can
 now be added using the *Create Node Source* panel in the Resource Manager or the command line interface:
 
-    $ PROACTIVE_HOME/bin/proactive-client --createns ec2 -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.AWSEC2Infrastructure aws_key aws_secret_key rmDomain connectorIaasURL image numberOfInstances numberOfNodesPerInstance downloadCommand additionalProperties ram cpu 
+    $ PROACTIVE_HOME/bin/proactive-client --createns ec2 -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.AWSEC2Infrastructure aws_key aws_secret_key rmDomain connectorIaasURL image numberOfInstances numberOfNodesPerInstance downloadCommand additionalProperties minRam minCores 
 
 When the Scheduler is stopped normally, all the AWS instances created will be terminated.
 
