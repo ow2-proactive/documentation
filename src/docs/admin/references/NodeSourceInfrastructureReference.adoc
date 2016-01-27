@@ -193,8 +193,9 @@ now be added using the *Create Node Source* panel in the Resource Manager or the
 
     $ PROACTIVE_HOME/bin/proactive-client --createns ec2 -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.AWSEC2Infrastructure aws_key aws_secret_key rmDomain connectorIaasURL image numberOfInstances numberOfNodesPerInstance downloadCommand additionalProperties ram cpu 
 
+When the Scheduler is stopped normally, all the AWS instances created will be terminated.
 
-WARNING: If the Scheduler is killed, the AWS instances will not be terminated.
+WARNING: If the Scheduler is forced killed, the AWS instances will not be terminated.
 
 When the Scheduler is restarted, all the AWS instances that were previously created, will be terminated first and then re-created and re-configured as per previous settings.
 
