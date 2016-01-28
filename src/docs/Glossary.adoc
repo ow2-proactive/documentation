@@ -33,6 +33,9 @@ Scheduler Web Interface:: ProActive component that provides a web interface to t
 [[_glossary_workflow_studio]]
 Workflow Studio:: ProActive component that provides a web interface for designing <<_glossary_workflow,*Workflows*>>.
 
+[[_glossary_workflow_catalog]]
+Workflow Catalog:: ProActive component that provides storage and versioning of <<_glossary_workflow,*Workflows*>> through a REST API.
+
 [[_glossary_server_host]]
 Server Host::
   The machine on which <<_glossary_proactive_scheduler,*ProActive Scheduler*>> is installed.
