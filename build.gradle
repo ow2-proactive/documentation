@@ -18,6 +18,7 @@ asciidoctor {
         include 'user/ProActiveUserGuide.adoc'
         include 'admin/ProActiveAdminGuide.adoc'
         include 'admin/AdminTutorials.adoc'
+        include 'admin/WorkflowCatalog.adoc'
         include 'index.adoc'
     }
     resources {

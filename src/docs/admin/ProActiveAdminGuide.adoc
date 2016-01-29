@@ -827,6 +827,9 @@ when starting the Scheduler.
 
 TIP: To configure Web applications, for instance the HTTP port to use, edit the `PROACTIVE_HOME/config/web/settings.ini` file.
 
+Web applications are deployed on the host using the HTTP port 8080 by default. The local part of the URL is based on the war files found in `PROACTIVE_HOME/dist/war`.
+For instance, the scheduler web portal is available at http://localhost:8080/scheduler.
+
 === Enable HTTPS
 
 NOTE: If you are familiar with Nginx or similar tools, you can also use it to enable HTTPS connection to Web applications.
@@ -835,6 +838,10 @@ It will also enable you to redirect HTTP requests to HTTPS for instance.
 HTTPS can be enabled for Web applications using a Java keystore. See `web.https` properties in `PROACTIVE_HOME/config/web/settings.ini`
 for the possible settings. We provided a default self-signed keystore than can be used for testing but for
 production you should build your own keystore with a valid certificate so it will be accepted by browsers.
+
+[[_workflow_catalog]]
+=== Workflow Catalog
+include::./WorkflowCatalog.adoc[]
 
 [[_script_engines]]
 == Configure script engines
@@ -918,6 +925,10 @@ include::./references/NetworkPropertiesReference.adoc[]
 === REST API & Web Properties
 
 include::./references/WebPropertiesReference.adoc[]
+
+[[_workflow_catalog_properties]]
+=== Workflow Catalog Properties
+include::./references/WorkflowCatalogReference.adoc[]
 
 === Node Sources
 
