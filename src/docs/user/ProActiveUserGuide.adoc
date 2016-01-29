@@ -767,8 +767,10 @@ the failure of the task.
 
 When Control Flow actions such as *replicate* or *loop* are performed,
 some tasks are replicated. To be able to identify replicated tasks
-uniquely, each replicated task has an *iteration index* and *replication
-index*.
+uniquely, each replicated task has an *iteration index*, *replication
+index*, and a *tag*. In addition to help to identify uniquely, these tags are
+useful to filter tasks by iterations for example.
+
 
 ==== Task name
 
@@ -788,6 +790,34 @@ character.
 
 -   When combining both of the above, the resulting task names are of
     the form: _T#1*1_, _T#2*4_, etc., in that precise order.
+
+
+==== Task tag
+
+Tags are assigned automatically by the scheduler when a task is created by
+replication from another task. They are designed to reflect the task that
+initiated the replication for the first time, the type of replication (loop
+or replicate) and the iteration index or replication indexes. So the tag is
+formed like this: *(LOOP|REPLICATE)-Name_of_the_initiator-index*.
+
+-   If the task _T1_ initiates a loop that contains the tasks _T2_ and _T3_,
+    then the tasks _T2#1_ and _T3#1_ will have the tag *LOOP-T1-1*. The tasks
+    _T2#2_ and _T3#2_ will have the tag *LOOP-T1-3*.
+
+-   If the loop is a cron loop, the index is replaced by the resolved time of
+    the initiated looping. For example, in a cron loop that was initiated the
+    21/12/2015 at 14h00, the task _T1#1_ will have the tag *LOOP-T1#1-21_12_15_14_00*.
+
+-   If the task _T1_ replicates a block that contains the tasks _T2_ and _T3_,
+    then the tasks _T2*1_ and _T3*1_ will have the tag *REPLICATE-T1-1*. The
+    tasks _T2*2_ and _T3*2_ will have the tag *REPLICATE-T1-2*.
+
+-   If the task _T1#1_, inside a loop, replicates tasks, the new tasks will have
+    the tags *REPLICATE-T1#1-1*, *REPLICATE-T1#1-2*, etc...
+
+-   If the replicated task _T1*1_ initiates a loop inside a replicate, the new
+    created tasks will have the tags *LOOP-T1*1-1*, *LOOP-T1*1-2*, etc...
+
 
 ==== Task definition
 
@@ -819,6 +849,8 @@ Here is how to access those variables:
 
 NOTE: Scripts affected by the variable substitutions are: Pre, Post, Control Flow.
 *No substitution will occur in selection scripts or clean scripts.*
+
+
 
 ==== Task executable
 
