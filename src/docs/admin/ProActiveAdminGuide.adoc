@@ -282,8 +282,8 @@ On Debian based distributions:
 On Redhat based distributions:
 
     sudo yum remove proactive-agent
-[[_proactive_windows_agent]]
 
+[[_proactive_windows_agent]]
 ==== ProActive Windows Agent
 
 The ProActive Windows Agent is a *Windows Service*: a long-running executable that performs specific
@@ -838,6 +838,21 @@ It will also enable you to redirect HTTP requests to HTTPS for instance.
 HTTPS can be enabled for Web applications using a Java keystore. See `web.https` properties in `PROACTIVE_HOME/config/web/settings.ini`
 for the possible settings. We provided a default self-signed keystore than can be used for testing but for
 production you should build your own keystore with a valid certificate so it will be accepted by browsers.
+
+=== Enable VNC remote visualization in the browser
+
+The Rest API web application embeds a proxy to allow the remote display visualization of a ProActive Node running a given task
+via a VNC server from the browser. To enable this feature, the scheduler has to be configured as follows:
+
+* configure the proxy: edit the `PROACTIVE_HOME/config/web/settings.ini` file and set `novnc.enabled` to true in order
+to start the proxy.
+* configure the scheduler portal to use the proxy when opening a new tab browser that shows the remote visualization:
+edit the `PROACTIVE_HOME/dist/war/scheduler/scheduler.conf`.
+** Set `sched.novnc.url` to the public address of the proxy. This public address is the public address of the host where the sheduler is started and the port specified by the option `novnc.port` in the file `PROACTIVE_HOME/config/web/settings.ini`
+** Set `sched.novnc.page.url` to the public address of the VNC client to be executed in the browser. The client is located
+in the REST API with the file `novnc.html`.
+
+For more information, see https://github.com/ow2-proactive/scheduling/blob/master/rest/README-novnc.txt
 
 [[_workflow_catalog]]
 === Workflow Catalog
