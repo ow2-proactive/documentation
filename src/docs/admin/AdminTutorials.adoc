@@ -2,83 +2,72 @@
 include::../common-settings.adoc[]
 :toc-title: Tutorials for Administrators
 
-== Step by Step Tutorials
+== Run As Me
+This is a step by step tutorial, which was tested on Ubuntu 14.04 and Microsoft Windows 7.
 
-=== Run As Me
-This is a step by step tutorial, which was designed and tested for Ubuntu 14.04.
-
-ProActive Workflows & Scheduling allows advanced user management with the “run as me” feature. Run as me allows
+ProActive Workflows & Scheduling allows advanced user management with the *Run As Me* feature. Run as me allows
 to execute a task under the current ProActive user, if an equally named system user exists on the executing machine.
 
-*Following steps configure the Node with a sample user called Gord:*
+=== Node configuration
+
+The following steps configure the Node with a sample user called Gord.
 
 ==== Linux
 
-. Create a group called proactive `groupadd proactive’
-. Create a user running the ProActive Node, set it's primary group to proactive
- ‘useradd -g proactive -G sudo -m proactive’
-. Set the password of proactive user ‘passwd proactive’
-. Download and unzip ProActive inside the /opt/ directory (/opt/ gives execution right to everyone)
-. Change ownership of the ProActive folder with ‘sudo chown -R proactive:proactive ProActiveNode’
-. Add a run as me user, which is part of the proactive group ‘useradd -g proactive -m Gord’
-. Create an ssh key for the run as me user (Gord) ‘ssh-keygen -t rsa’
-. Go into the /home/Gord/.ssh directory and copy Gord’s public key to the authorized keys ‘cat id_rsa.pub >> authorized_keys’
-. Log into the proactive account
-. Start the ProActive Node with the property ‘-Dpas.launcher.forkas.method=key’
+. Create a group called activeeon: _groupadd activeeon_
+. Create a user running the ProActive Node, set it's primary group to proactive: _useradd -g activeeon -G sudo -m proactive_
+. Set the password of proactive user: _passwd proactive_
+. Download and unzip ProActive inside the _/opt/_ directory (_/opt/_ gives execution right to everyone)
+. Change ownership of the ProActive folder with _sudo chown -R proactive:activeeon ProActive_
+. Add a *Run As Me* user, which needs to be part of the activeeon group _useradd -g activeeon -m Gord_
+. Create an ssh key for the *Run As Me* user (Gord) _ssh-keygen -t rsa_
+. Go into the _/home/Gord/.ssh_ directory and copy Gord’s public key to the authorized keys _cat id_rsa.pub >> authorized_keys_
+. Log into the activeeon account
+. Start the ProActive Node with the property `-Dpas.launcher.forkas.method=key`
 
-NOTE: The proactive user got a password set with 'passwd proactive' to execute the sudo command. Whereas
-the run as me user (Gord) got a SSH key set. If you wish you can assign a password to Gord 'passwd Gord'.
+NOTE: The proactive user got a password set with _passwd proactive_ to execute the sudo command. Whereas the run as me user (Gord) got a SSH key set. If you wish you can assign a password to Gord _passwd Gord_.
 
 
 ==== Windows
 
-. Create an account proactive/proactive:
+. Create an account called proactive:
 +
-in *Control Panel->Administrative Tools->Computer Management->Local Users and Groups*
+In *Control Panel->Administrative Tools->Computer Management->Local Users and Groups*
 +
 image::add_user.png[align=center]
-. Create an account Gord that will be used as run as me account
-. Create a group proactiveGroup, and add all the previous accounts to this group.
+NOTE: The proactive account might already exist if the Proactive Agent has been installed previously.
+. Create an account Gord that will be used as the *Run As Me* account
+. Create a group _activeeon_, and add all the previous accounts to this group.
 +
-in *Control Panel->Administrative Tools->Computer Management->Local Users and Groups*
+In *Control Panel->Administrative Tools->Computer Management->Local Users and Groups*
 +
 image::add_group.png[align=center]
-. Add privileges to log on locally for the accounts of the proactiveGroup group
+. Add privileges to log on locally for the accounts of the _activeeon_ group
 .. Control Panel->Administrative tools->Local Security Policy->Local Policies->User Right Assignment
 +
 image::allow_log_on_locally.png[align=center]
-.. On the policy Allow log on locally, click Edit properties and add proactiveGroup
+.. On the policy _Allow log on locally_, click on _Edit properties_ and add the _activeeon_ group
 . For the proactive account add the following policies
-.. Adjust memory quotas for process
-.. Replace a process level token
-. Create a temp directory (i.e c:\tmp)
-. Install proactive agent and during the installation, assign the account proactive
-. Add the following JVM options to the proactive agent configuration:
-+
-----
-    <jvmParameters>
-        <param>-Dpas.launcher.forkas.method=pwd</param>
-        <param>-Djava.io.tmpdir=<TMP_DIR></param>
-        <param>-Dpa.logs.dir=<TMP_DIR></param>
-    </jvmParameters>
-----
-+
-where TMP_DIR is the temp directory previously created.
-. modify the configuration of the proactive agent to enable connection to the resource manager of the scheduler server.
-. start the scheduler agent with the proactive account.
+.. _Adjust memory quotas for process_
+.. _Replace a process level token_
+. Create a temp directory (i.e _C:\tmp_)
+. Start the proactive node: _runas.exe /noprofile /user:proactive "PROACTIVE_HOME/bin/proactive-node.bat -Dpas.launcher.forkas.method=pwd -Djava.io.tmpdir=<TMP_DIR> -Dpa.logs.dir=<TMP_DIR>"_
 
+NOTE: The proactive node is bundled in the ProActive Scheduler which is installed in the next section.
 
-*Following steps configure the Scheduler with a sample user called Gord:*
+=== Scheduler configuration
+
+The following steps configure the Scheduler with a sample user called Gord.
 
 ==== Linux
 
-. Add Gord:Gord (Username:Password) to PROACTIVE_HOME/config/authentication/login.cfg
-. Add Gord to the admin group by adding Gord:admin (Username:Group) to the PROACTIVE_HOME/config/authentication/group.cfg
+. Add Gord:Gord (Username:Password) to _PROACTIVE_HOME/config/authentication/login.cfg_
+. Add Gord to the admin group by adding Gord:admin (Username:Group) to _PROACTIVE_HOME/config/authentication/group.cfg_
 . Start the Scheduler
 . Log in as Gord
-. Add the private key of Gord in the Scheduler interface under "Manage third-party credentials". Key: SSH_PRIVATE_KEY,
-Credential: [Content of Gords' private key, with '-----BEGIN RSA PRIVATE KEY-----' and '-----END RSA PRIVATE KEY-----'
-. Create a task in the Studio and tick "Run as me"
+. Add the private key of Gord in the Scheduler interface under _Manage third-party credentials_. Key: SSH_PRIVATE_KEY,
+Credential: Content of Gords' private key, without the '_-----BEGIN RSA PRIVATE KEY-----_' and _-----END RSA PRIVATE KEY-----_ comments
+. Create a task in the Studio and tick _Run as me_
 
 NOTE: The ProActive Node must be installed in a directory where every parent directory gives execution rights to users, which
 execute tasks.
@@ -89,9 +78,9 @@ being part of the proactive group and the proactive group ownership of the ProAc
 ==== Windows
 
 . Install proactive server by download and unzip it to a convenient folder
-. Add Gord:Gord (Username:Password) to PROACTIVE_HOME/config/authentication/login.cfg
-. Add Gord to the admin group by adding Gord:admin (Username:Group) to the PROACTIVE_HOME/config/authentication/group.cfg
-. Start the scheduler server.
-. Login is as Gord.
-. Create a task in the Studio and tick "Run as me"
+. Add Gord:Gord (Username:Password) to _PROACTIVE_HOME/config/authentication/login.cfg_
+. Add Gord to the admin group by adding Gord:admin (Username:Group) to _PROACTIVE_HOME/config/authentication/group.cfg_
+. Start the scheduler server: _PROACTIVE_HOME/bin/proactive-server.bat_
+. Log in the Studio's web interface with the Gord username.
+. Create a task and tick _Run as me_
 . Execute the job.
