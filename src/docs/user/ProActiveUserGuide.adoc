@@ -1127,6 +1127,122 @@ TIP: Since it runs a graphical application, the task will never exit and run for
 you want to check manually some results via the graphical application and then exit the application.
 The task will then terminate normally.
 
+== Workflow storage and versioning
+
+The Workflow Catalog provides the storage and versioning of workflows inside Buckets. It also provides a searching functionality using a simple query language to fetch workflows based on particular parameters. The Workflow Catalog is accessible via a REST API, and a http://swagger.io/[Swagger] interface is provided to help interacting with the API.
+
+=== Bucket concept
+
+A Bucket is a collection of Workflows that can be shared between users. The default settings provides the following Buckets:
+
+* Catalog
+* Templates (which is a set of workflow samples)
+
+=== Workflow versioning
+
+The Workflow Catalog provides versioning of workflows. Changes on an existing workflow will trigger the creation of a new version. By default, the catalog will always return the latest version of the workflows. It is possible to search for specific workflows using a query string.
+
+==== Workflow Revision
+
+Getting a workflow revision will actually fetch the following Workflow's metadata:
+
+* The _id_ of the current Workflow
+* The _name_ (of the Workflow)
+* The _project_name_
+* All _variables_ of the workflow
+* The _created_at_ creation date of the Workflow
+* The _revision_id_ of the current Workflow
+* The _bucket_id_ of the Bucket which holds the current Workflow
+* All _generic_information_ used by the Workflow
+
+NOTE: When we fetch a workflow, we actually fetch the latest revision of that workflow.
+
+==== Searching for workflows
+
+A query language is provided to search through either:
+
+* Workflows (all latest Workflows versions)
+* Workflows Revisions (all the versions of a specific Workflow)
+
+One simple query expression can be the following clause:
+
+    name = "My First Workflow"
+
+Which will look for all Workflow that verify that clause.
+Multiple clauses can be combined using conjunctions such as `AND` (or `&&`) and `OR` (or `||`).
+Evaluation priority is respected through operator precedence and parenthesises so the following statement:
+
+    Search for all Workflows that uses exactly 4 CPUs
+
+
+Can be expressed as:
+
+    (variable.name="nbCPU" OR variable.name="CPU") AND variable.value="4"
+
+
+Which will be converted into the following tree and evaluated bottom-up:
+
+image::ast_example.png[align=center]
+
+===== Field
+
+Attribute of the Workflow that is searched, e.g. the attribute _name_ of a Workflow.
+
+[width="80%",frame="topbot",options="header"]
+|===============================================================================================
+|Attribute                     |Description
+|name			       |The name of a Workflow
+|project_name		       |The project name of a Workflow
+|variable.name     	       |The name of a variable in a Workflow
+|variable.value                |The value of a variable in a Workflow
+|generic_information.name      |The name of a generic information in a Workflow
+|generic_information.value     |The value of a generic information in a Workflow
+|===============================================================================================
+
+===== Operator
+
+Test that is performed to provide a match, e.g. _!=_.
+[width="80%",frame="topbot",options="header"]
+|==================================================
+|Operator         |Description
+|=		  |The _equal_ operator
+|!=		  |The _not equal_ operator
+|==================================================
+
+===== Conjunction
+
+Special operators that enable the combination of multiple clauses, e.g. _AND_.
+[width="80%",frame="topbot",options="header"]
+|==================================================
+|Conjunction      |Description
+|AND		  |The _and_ logic operator
+|&&		  |The _and_ logic operator
+|OR		  |The _or_ logic operator
+|\|\|		  |The _or_ logic operator
+|==================================================
+
+===== Value
+
+The content of the attribute that is tested, e.g. the name of the Workflow _My First Workflow_. It is evaluated as a string of characters, and can contain the wildcard *%*.
+
+Let the following Workflows:
+[width="80%",frame="topbot",options="header"]
+|==============================================================================================
+|Name                         | Project Name | Variable Name    | Variable Value  
+|_My Workflow 1_	      | Tutorials    | 		        |
+|_Create OpenStack Instance_   | Deployment   | Core		| 4	  	
+|_New Amazon Instance 1_       | Deployment   | Nb_CPU		| 2
+|==============================================================================================
+
+They are matched against these expressions:
+[width="80%",frame="topbot",options="header"]
+|=================================================================================================================================
+|Expression						|Matches
+|name = "My%"						|_My Workflow 1_
+|project_name = "%ploy%" 		    		|_Create OpenStack Instance_ and _New Amazon Instance 1_
+|project_name = "%ploy%" AND variable.name = "%CPU"	|_New Amazon Instance 1_
+|=================================================================================================================================
+
 == Third-party credentials
 
 === Overview
