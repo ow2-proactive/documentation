@@ -12,7 +12,7 @@ include::../Glossary.adoc[]
 
 == Get started
 
-To submit your first computation to *ProActive Scheduler*, link:ProActiveAdminGuide.html#_getting_started[install] it in
+To submit your first computation to *ProActive Scheduler*, link:../admin/ProActiveAdminGuide.html#_getting_started[install] it in
 your environment or just use our demo platform http://try.activeeon.com[try.activeeon.com^].
 
 *ProActive Scheduler* provides comprehensive interfaces that allow to:
@@ -947,7 +947,7 @@ Files.deleteIfExists(new File("/tmp/working_dir/").toPath())
 It is possible to start a task under the job owner if the system is configured for that purpose.
 There are 2 possible ways to run a task under user account
 (in any case, the administrator should have
-link:ProActiveAdminGuide.html#_run_as_me[set computing hosts] to authorize
+link:../admin/ProActiveAdminGuide.html#_run_as_me[set computing hosts] to authorize
 one of the 2 methods) :
 
 * Using your *scheduling login and password* : if computing hosts are configured and user is authorized to run a process under his login and password.
@@ -1106,7 +1106,7 @@ retrieve information of each iteration.
 
 Using the Scheduler Web Interface, it is possible to access the display of the ProActive Node running a given task.
 First remote visualization must be activated via the
-link:ProActiveAdminGuide.html#_rest_api_properties[Scheduler configuration files] (set *novnc.enabled* to true).
+link:../admin/ProActiveAdminGuide.html#_rest_api_properties[Scheduler configuration files] (set *novnc.enabled* to true).
 
 NOTE: Remote visualization works via VNC where the REST API will connect to the node running the task, i.e a graphical
 application. The VNC output will be forwarded to the your browser and you will be able to interact with the
