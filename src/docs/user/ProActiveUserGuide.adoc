@@ -1127,64 +1127,76 @@ TIP: Since it runs a graphical application, the task will never exit and run for
 you want to check manually some results via the graphical application and then exit the application.
 The task will then terminate normally.
 
-== Workflow storage and versioning
+== Workflow Storage And Versioning
 
-The Workflow Catalog provides the storage and versioning of workflows inside Buckets. It also provides a searching functionality using a simple query language to fetch workflows based on particular parameters. The Workflow Catalog is accessible via a REST API, and a http://swagger.io/[Swagger] interface is provided to help interacting with the API.
+The Workflow Catalog provides the storage and versioning of workflows inside Buckets. It also features a searching functionality using a simple query language to fetch workflows based on particular parameters. The Workflow Catalog is a RESTful service. A http://swagger.io/[Swagger] interface is provided to understand and interact with the service.
 
 === Bucket concept
 
 A Bucket is a collection of Workflows that can be shared between users. The default settings provides the following Buckets:
 
 * Catalog
-* Templates (which is a set of workflow samples)
+* Templates (set of Workflows samples publicly readable)
+
+Listing the catalog for existing Buckets is done using the following HTTP request:
+
+    GET http://localhost:8080/workflow-catalog/buckets
+
+It is also possible to list all Workflows inside a particular Bucket using its `bucket_id`:
+
+    GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows
+
+Then we can fetch a particular Workflow based on its `workflow_id`:
+
+    GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows/{workflow_id}
 
 === Workflow versioning
 
-The Workflow Catalog provides versioning of workflows. Changes on an existing workflow will trigger the creation of a new version. By default, the catalog will always return the latest version of the workflows. It is possible to search for specific workflows using a query string.
+The Workflow Catalog provides versioning of workflows. You can list all the revisions of a particular Workflow using the HTTP request:
 
-==== Workflow Revision
+    GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows/{workflow_id}/revisions
 
-Getting a workflow revision will actually fetch the following Workflow's metadata:
+You can fetch a Workflow detailed information using its `workflow_id` and `revision_id`:
 
-* The _id_ of the current Workflow
-* The _name_ (of the Workflow)
-* The _project_name_
-* All _variables_ of the workflow
-* The _created_at_ creation date of the Workflow
-* The _revision_id_ of the current Workflow
-* The _bucket_id_ of the Bucket which holds the current Workflow
-* All _generic_information_ used by the Workflow
+    GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows/{workflow_id}/revisions/{revision_id}
 
-NOTE: When we fetch a workflow, we actually fetch the latest revision of that workflow.
+NOTE: By default, the catalog will always return the latest version of the workflows.
 
-==== Searching for workflows
+A Workflow Revision is created from a ProActive XML <<_glossary_workflow,*Workflow*>> definition.
+Beside from the _id_ and the _name_ of the Workflow, a few more information are indexed from the XML content such as _Variables_ and _Generic Information_.
 
-A query language is provided to search through either:
-
-* Workflows (all latest Workflows versions)
-* Workflows Revisions (all the versions of a specific Workflow)
-
-One simple query expression can be the following clause:
-
-    name = "My First Workflow"
-
-Which will look for all Workflow that verify that clause.
-Multiple clauses can be combined using conjunctions such as `AND` (or `&&`) and `OR` (or `||`).
-Evaluation priority is respected through operator precedence and parenthesises so the following statement:
-
-    Search for all Workflows that uses exactly 4 CPUs
+More detailed information on how to create or modify Workflows and Buckets are available in the link:../admin/ProActiveAdminGuide.html#_workflow_catalog[Admin guide].
 
 
-Can be expressed as:
+=== Searching for workflows
 
-    (variable.name="nbCPU" OR variable.name="CPU") AND variable.value="4"
+You can search or filter Workflows and Workflow Revisions by means of Workflow Catalog Query Language (<<_wcql,*WCQL*>>).
 
+Search on the latest versions of Workflows contained in a particular Bucket:
 
-Which will be converted into the following tree and evaluated bottom-up:
+    http://localhost:8080/workflow-catalog/{bucket_id}/workflows
 
-image::ast_example.png[align=center]
+Search through all versions of a particular Workflow:
 
-===== Field
+    http://localhost:8080/workflow-catalog/{bucket_id}/workflows/{workflow_id}/revisions
+
+[[_wcql]]
+==== Workflow Catalog Query Language
+
+Our Workflow Catalog Query Language allows to express simple conditions on the indexed information of ProActive XML Workflows.
+An *Expression* can be a composition of multiple conditions using conjunctions such as `AND` (or `&&`) and `OR` (or `||`).
+
+Since the `AND` conjunction has precedence over `OR`, an *Expression* is a *Or_Expression* that can have one or more *And_Expression*.
+A *And_Expression* has one or more *Clause* that represents the condition.
+Ultimately, a *Clause* is composed of:
+
+* an *Attribute* (the name of an indexed information)
+* an *Operator* (`=` or `!=`)
+* a *Literal Value*
+
+Alternatively, a *Clause* can be a nested *Or_Expression* if you use parenthesises.
+
+===== Attribute
 
 Attribute of the Workflow that is searched, e.g. the attribute _name_ of a Workflow.
 
@@ -1221,7 +1233,7 @@ Special operators that enable the combination of multiple clauses, e.g. _AND_.
 |\|\|		  |The _or_ logic operator
 |==================================================
 
-===== Value
+===== Literal Value
 
 The content of the attribute that is tested, e.g. the name of the Workflow _My First Workflow_. It is evaluated as a string of characters, and can contain the wildcard *%*.
 
@@ -1242,6 +1254,27 @@ They are matched against these expressions:
 |project_name = "%ploy%" 		    		|_Create OpenStack Instance_ and _New Amazon Instance 1_
 |project_name = "%ploy%" AND variable.name = "%CPU"	|_New Amazon Instance 1_
 |=================================================================================================================================
+
+==== Examples
+
+One simple query expression can be the following clause:
+
+    name = "My First Workflow"
+
+Which will look for all Workflow that verify that clause.
+Evaluation priority is respected through operator precedence (`AND` over `OR`) so the following statement:
+
+    Search for all Workflows that can deploy an OpenStack instance
+
+
+Can be expressed as:
+
+    name="Deploy OpenStack Instance" OR generic_information.name="infrastructure" AND generic_information.value="openstack"
+
+
+Which will be converted into the following tree and evaluated bottom-up:
+
+image::ast_example.png[align=center]
 
 == Third-party credentials
 

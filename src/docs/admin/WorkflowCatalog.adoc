@@ -1,12 +1,14 @@
 The Workflow Catalog stores ProActive workflows through a REST API.
 It is subdivided into buckets.
-Each bucket has a unique name and store zero, one or more versioned ProActive workflows.
+Each bucket has a unique name and stores zero, one or more versioned ProActive workflows.
 
 By default, ProActive workflows are persisted on disk using the embedded HSQL database.
 The data is located in `PROACTIVE_HOME/data/db/workflow-catalog`.
 
 The Workflow Catalog is a WAR file which contains a configuration file.
 More information regarding the Workflow Catalog configuration can be found in <<_workflow_catalog_properties>>.
+
+
 
 A complete documentation of the Workflow Catalog REST API is available by default on:
 
