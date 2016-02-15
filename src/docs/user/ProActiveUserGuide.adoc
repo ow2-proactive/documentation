@@ -1133,7 +1133,7 @@ The Workflow Catalog provides the storage and versioning of workflows inside Buc
 
 === Bucket concept
 
-A Bucket is a collection of Workflows that can be shared between users. The default settings provides the following Buckets:
+A Bucket is a collection of Workflows that can be shared between users. The default settings provide the following Buckets:
 
 * Catalog
 * Templates (set of Workflows samples publicly readable)
@@ -1150,6 +1150,8 @@ Then we can fetch a particular Workflow based on its `workflow_id`:
 
     GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows/{workflow_id}
 
+NOTE: By default, the catalog will always return the latest version of the workflows.
+
 === Workflow versioning
 
 The Workflow Catalog provides versioning of workflows. You can list all the revisions of a particular Workflow using the HTTP request:
@@ -1160,10 +1162,8 @@ You can fetch a Workflow detailed information using its `workflow_id` and `revis
 
     GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows/{workflow_id}/revisions/{revision_id}
 
-NOTE: By default, the catalog will always return the latest version of the workflows.
-
 A Workflow Revision is created from a ProActive XML <<_glossary_workflow,*Workflow*>> definition.
-Beside from the _id_ and the _name_ of the Workflow, a few more information are indexed from the XML content such as _Variables_ and _Generic Information_.
+Beside from the _id_,_name_ and _project_name_ of the Workflow, a few more information are indexed from the XML content such as _Variables_ and _Generic Information_.
 
 More detailed information on how to create or modify Workflows and Buckets are available in the link:../admin/ProActiveAdminGuide.html#_workflow_catalog[Admin guide].
 
@@ -1174,11 +1174,13 @@ You can search or filter Workflows and Workflow Revisions by means of Workflow C
 
 Search on the latest versions of Workflows contained in a particular Bucket:
 
-    http://localhost:8080/workflow-catalog/{bucket_id}/workflows
+    http://localhost:8080/workflow-catalog/{bucket_id}/workflows?query=...
 
 Search through all versions of a particular Workflow:
 
-    http://localhost:8080/workflow-catalog/{bucket_id}/workflows/{workflow_id}/revisions
+    http://localhost:8080/workflow-catalog/{bucket_id}/workflows/{workflow_id}/revisions?query=...
+
+NOTE: More detail on pagination and sorting is available on the http://docs.spring.io/spring-data/rest/docs/2.4.2.RELEASE/reference/html/#paging-and-sorting[Spring-data REST documentation].
 
 [[_wcql]]
 ==== Workflow Catalog Query Language
