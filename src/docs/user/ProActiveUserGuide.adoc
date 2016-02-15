@@ -12,7 +12,7 @@ include::../Glossary.adoc[]
 
 == Get started
 
-To submit your first computation to *ProActive Scheduler*, link:ProActiveAdminGuide.html#_getting_started[install] it in
+To submit your first computation to *ProActive Scheduler*, link:../admin/ProActiveAdminGuide.html#_getting_started[install] it in
 your environment or just use our demo platform http://try.activeeon.com[try.activeeon.com^].
 
 *ProActive Scheduler* provides comprehensive interfaces that allow to:
@@ -947,7 +947,7 @@ Files.deleteIfExists(new File("/tmp/working_dir/").toPath())
 It is possible to start a task under the job owner if the system is configured for that purpose.
 There are 2 possible ways to run a task under user account
 (in any case, the administrator should have
-link:ProActiveAdminGuide.html#_run_as_me[set computing hosts] to authorize
+link:../admin/ProActiveAdminGuide.html#_run_as_me[set computing hosts] to authorize
 one of the 2 methods) :
 
 * Using your *scheduling login and password* : if computing hosts are configured and user is authorized to run a process under his login and password.
@@ -1106,7 +1106,7 @@ retrieve information of each iteration.
 
 Using the Scheduler Web Interface, it is possible to access the display of the ProActive Node running a given task.
 First remote visualization must be activated via the
-link:ProActiveAdminGuide.html#_rest_api_properties[Scheduler configuration files] (set *novnc.enabled* to true).
+link:../admin/ProActiveAdminGuide.html#_rest_api_properties[Scheduler configuration files] (set *novnc.enabled* to true).
 
 NOTE: Remote visualization works via VNC where the REST API will connect to the node running the task, i.e a graphical
 application. The VNC output will be forwarded to the your browser and you will be able to interact with the
@@ -1126,6 +1126,157 @@ In the Scheduler Web Interface, select the running job and use the _Preview_ tab
 TIP: Since it runs a graphical application, the task will never exit and run forever. The common use case is that
 you want to check manually some results via the graphical application and then exit the application.
 The task will then terminate normally.
+
+== Workflow Storage And Versioning
+
+The Workflow Catalog provides the storage and versioning of workflows inside Buckets. It also features a searching functionality using a simple query language to fetch workflows based on particular parameters. The Workflow Catalog is a RESTful service. A http://swagger.io/[Swagger] interface is provided to understand and interact with the service.
+
+=== Bucket concept
+
+A Bucket is a collection of Workflows that can be shared between users. The default settings provide the following Buckets:
+
+* Catalog
+* Templates (set of Workflows samples publicly readable)
+
+Listing the catalog for existing Buckets is done using the following HTTP request:
+
+    GET http://localhost:8080/workflow-catalog/buckets
+
+It is also possible to list all Workflows inside a particular Bucket using its `bucket_id`:
+
+    GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows
+
+Then we can fetch a particular Workflow based on its `workflow_id`:
+
+    GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows/{workflow_id}
+
+NOTE: By default, the catalog will always return the latest version of the workflows.
+
+=== Workflow versioning
+
+The Workflow Catalog provides versioning of workflows. You can list all the revisions of a particular Workflow using the HTTP request:
+
+    GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows/{workflow_id}/revisions
+
+You can fetch a Workflow detailed information using its `workflow_id` and `revision_id`:
+
+    GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows/{workflow_id}/revisions/{revision_id}
+
+A Workflow Revision is created from a ProActive XML <<_glossary_workflow,*Workflow*>> definition.
+Beside from the _id_,_name_ and _project_name_ of the Workflow, a few more information are indexed from the XML content such as _Variables_ and _Generic Information_.
+
+More detailed information on how to create or modify Workflows and Buckets are available in the link:../admin/ProActiveAdminGuide.html#_workflow_catalog[Admin guide].
+
+
+=== Searching for workflows
+
+You can search or filter Workflows and Workflow Revisions by means of Workflow Catalog Query Language (<<_wcql,*WCQL*>>).
+
+Search on the latest versions of Workflows contained in a particular Bucket:
+
+    http://localhost:8080/workflow-catalog/{bucket_id}/workflows?query=...
+
+Search through all versions of a particular Workflow:
+
+    http://localhost:8080/workflow-catalog/{bucket_id}/workflows/{workflow_id}/revisions?query=...
+
+NOTE: More detail on pagination and sorting is available on the http://docs.spring.io/spring-data/rest/docs/2.4.2.RELEASE/reference/html/#paging-and-sorting[Spring-data REST documentation].
+
+[[_wcql]]
+==== Workflow Catalog Query Language
+
+Our Workflow Catalog Query Language allows to express simple conditions on the indexed information of ProActive XML Workflows.
+An *Expression* can be a composition of multiple conditions using conjunctions such as `AND` (or `&&`) and `OR` (or `||`).
+
+Since the `AND` conjunction has precedence over `OR`, an *Expression* is a *Or_Expression* that can have one or more *And_Expression*.
+A *And_Expression* has one or more *Clause* that represents the condition.
+Ultimately, a *Clause* is composed of:
+
+* an *Attribute* (the name of an indexed information)
+* an *Operator* (`=` or `!=`)
+* a *Literal Value*
+
+Alternatively, a *Clause* can be a nested *Or_Expression* if you use parenthesises.
+
+===== Attribute
+
+Attribute of the Workflow that is searched, e.g. the attribute _name_ of a Workflow.
+
+[width="80%",frame="topbot",options="header"]
+|===============================================================================================
+|Attribute                     |Description
+|name			       |The name of a Workflow
+|project_name		       |The project name of a Workflow
+|variable.name     	       |The name of a variable in a Workflow
+|variable.value                |The value of a variable in a Workflow
+|generic_information.name      |The name of a generic information in a Workflow
+|generic_information.value     |The value of a generic information in a Workflow
+|===============================================================================================
+
+===== Operator
+
+Test that is performed to provide a match, e.g. _!=_.
+[width="80%",frame="topbot",options="header"]
+|==================================================
+|Operator         |Description
+|=		  |The _equal_ operator
+|!=		  |The _not equal_ operator
+|==================================================
+
+===== Conjunction
+
+Special operators that enable the combination of multiple clauses, e.g. _AND_.
+[width="80%",frame="topbot",options="header"]
+|==================================================
+|Conjunction      |Description
+|AND		  |The _and_ logic operator
+|&&		  |The _and_ logic operator
+|OR		  |The _or_ logic operator
+|\|\|		  |The _or_ logic operator
+|==================================================
+
+===== Literal Value
+
+The content of the attribute that is tested, e.g. the name of the Workflow _My First Workflow_. It is evaluated as a string of characters, and can contain the wildcard *%*.
+
+Let the following Workflows:
+[width="80%",frame="topbot",options="header"]
+|==============================================================================================
+|Name                         | Project Name | Variable Name    | Variable Value  
+|_My Workflow 1_	      | Tutorials    | 		        |
+|_Create OpenStack Instance_   | Deployment   | Core		| 4	  	
+|_New Amazon Instance 1_       | Deployment   | Nb_CPU		| 2
+|==============================================================================================
+
+They are matched against these expressions:
+[width="80%",frame="topbot",options="header"]
+|=================================================================================================================================
+|Expression						|Matches
+|name = "My%"						|_My Workflow 1_
+|project_name = "%ploy%" 		    		|_Create OpenStack Instance_ and _New Amazon Instance 1_
+|project_name = "%ploy%" AND variable.name = "%CPU"	|_New Amazon Instance 1_
+|=================================================================================================================================
+
+==== Examples
+
+One simple query expression can be the following clause:
+
+    name = "My First Workflow"
+
+Which will look for all Workflow that verify that clause.
+Evaluation priority is respected through operator precedence (`AND` over `OR`) so the following statement:
+
+    Search for all Workflows that can deploy an OpenStack instance
+
+
+Can be expressed as:
+
+    name="Deploy OpenStack Instance" OR generic_information.name="infrastructure" AND generic_information.value="openstack"
+
+
+Which will be converted into the following tree and evaluated bottom-up:
+
+image::ast_example.png[align=center]
 
 == Third-party credentials
 

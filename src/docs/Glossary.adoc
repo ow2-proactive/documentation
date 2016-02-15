@@ -22,7 +22,7 @@ Scheduler:: ProActive component that accepts <<_glossary_job,*Jobs*>> from users
 NOTE: Please note the difference between *Scheduler* and <<_glossary_proactive_scheduler,*ProActive Scheduler*>>.
 
 [[_glossary_rest_api]]
-REST API:: ProActive component that provides RESTful API for the <<_glossary_resource_manager,*Resource Manager*>> and the <<_glossary_scheduler,*Scheduler*>>.
+REST API:: ProActive component that provides RESTful API for the <<_glossary_resource_manager,*Resource Manager*>>, the <<_glossary_scheduler,*Scheduler*>> and the <<_glossary_workflow_catalog, *Workflow Catalog*>>.
 
 [[_glossary_rm_web_interface]]
 Resource Manager Web Interface:: ProActive component that provides a web interface to the <<_glossary_resource_manager,*Resource Manager*>>.
@@ -34,7 +34,10 @@ Scheduler Web Interface:: ProActive component that provides a web interface to t
 Workflow Studio:: ProActive component that provides a web interface for designing <<_glossary_workflow,*Workflows*>>.
 
 [[_glossary_workflow_catalog]]
-Workflow Catalog:: ProActive component that provides storage and versioning of <<_glossary_workflow,*Workflows*>> through a REST API.
+Workflow Catalog:: ProActive component that provides storage and versioning of <<_glossary_workflow,*Workflows*>> through a REST API. It is also possible to query the catalog for specific <<_glossary_workflow,*Workflows*>>.
+
+[[_glossary_workflow_bucket]]
+Bucket:: ProActive notion used with the <<_glossary_workflow_catalog, *Workflow Catalog*>> to refer to a specific collection of workflows. 
 
 [[_glossary_server_host]]
 Server Host::
@@ -68,7 +71,10 @@ Examples of *Compute Hosts*:
 
 [[_glossary_workflow]]
 Workflow::
-  User-defined representation of a distributed computation. Consits of the definitions of one or more <<_glossary_task,*Tasks*>> and their dependencies.
+  User-defined representation of a distributed computation. Consists of the definitions of one or more <<_glossary_task,*Tasks*>> and their dependencies.
+
+[[_glossary_workflow_revision]]
+Workflow Revision:: ProActive concept that reflects the changes made on a <<_glossary_workflow,*Workflow*>> during it development. Generally speaking, the term <<_glossary_workflow, *Workflow*>> is used to refer to the latest version of a <<_glossary_workflow_revision,*Workflow Revision*>>.
 
 [[_glossary_job]]
 Job::

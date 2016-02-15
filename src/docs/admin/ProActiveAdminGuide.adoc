@@ -42,6 +42,7 @@ The web application /scheduler created on http://localhost:8080/scheduler
 The web application /rm created on http://localhost:8080/rm
 The web application /rest created on http://localhost:8080/rest
 The web application /studio created on http://localhost:8080/studio
+The web application /workflow-catalog created on http://localhost:8080/workflow-catalog
 *** Get started at http://localhost:8080 ***
 ----
 
@@ -54,6 +55,7 @@ The following ProActive Scheduler components are started:
 * <<_glossary_rm_web_interface,*Resource Manager Web Interface*>>
 * <<_glossary_scheduler_web_interface,*Scheduler Web Interface*>>
 * <<_glossary_workflow_studio,*Workflow Studio*>>
+* <<_glossary_workflow_catalog,*Workflow Catalog*>>
 
 The URLs of the Scheduler, Resource Manager, REST API and Web Interfaces are displayed in the output.
 
