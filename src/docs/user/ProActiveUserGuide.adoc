@@ -1127,7 +1127,7 @@ TIP: Since it runs a graphical application, the task will never exit and run for
 you want to check manually some results via the graphical application and then exit the application.
 The task will then terminate normally.
 
-== Workflow Storage And Versioning
+== Workflow Storage and Versioning
 
 The Workflow Catalog provides the storage and versioning of workflows inside Buckets. It also features a searching functionality using a simple query language to fetch workflows based on particular parameters. The Workflow Catalog is a RESTful service. A http://swagger.io/[Swagger] interface is provided to understand and interact with the service.
 
@@ -1135,7 +1135,6 @@ The Workflow Catalog provides the storage and versioning of workflows inside Buc
 
 A Bucket is a collection of Workflows that can be shared between users. The default settings provide the following Buckets:
 
-* Catalog
 * Templates (set of Workflows samples publicly readable)
 
 Listing the catalog for existing Buckets is done using the following HTTP request:
@@ -1242,9 +1241,9 @@ The content of the attribute that is tested, e.g. the name of the Workflow _My F
 Let the following Workflows:
 [width="80%",frame="topbot",options="header"]
 |==============================================================================================
-|Name                         | Project Name | Variable Name    | Variable Value  
+|Name                         | Project Name | Variable Name    | Variable Value
 |_My Workflow 1_	      | Tutorials    | 		        |
-|_Create OpenStack Instance_   | Deployment   | Core		| 4	  	
+|_Create OpenStack Instance_   | Deployment   | Core		| 4
 |_New Amazon Instance 1_       | Deployment   | Nb_CPU		| 2
 |==============================================================================================
 
