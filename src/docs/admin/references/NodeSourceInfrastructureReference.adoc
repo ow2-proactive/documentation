@@ -155,28 +155,28 @@ them, and how to use them to configure your environment.
     some reason to handle multiple EC2 accounts. Other properties in the
     *Create Node Source* are:
     
-    -   *rmHostname:* The hostname or the public IP address of the resource manager. This address needs to be accessible from the AWS cloud. 
+    -   *rmHostname:* The hostname or the public IP address of the resource manager. This address needs to be accessible from the AWS cloud.
     
-    -   *connectorIaasURL:* Connector-iaas is a service embedded in the scheduler used to interact with IaaS like AWS. By default it runs on the following url rmHostname/connector-iaas.    
+    -   *connectorIaasURL:* Connector-iaas is a service embedded in the scheduler used to interact with IaaS like AWS. By default it runs on the following url rmHostname/connector-iaas.
 
-    -   *image:* Defines which AMI will be deployed on the AWS instances to create. The
-        value to provide is the AWS region together with the unique AMI Id, for example: `eu-west-1/ami-bff32ccc`. 
+    -   *image:* Defines which AMI will be used to create an AWS instances. The
+        value to provide is the AWS region together with the unique AMI Id, for example: `eu-west-1/ami-bff32ccc`.
         
-    -   *numberOfInstances:* Total number of AWS instances to create for this infrastructure. 
+    -   *numberOfInstances:* Total number of AWS instances to create for this infrastructure.
     
-    -   *numberOfNodesPerInstance:* Total number of Proactive Nodes to deploy in each AWS created instance. 
+    -   *numberOfNodesPerInstance:* Total number of Proactive Nodes to deploy in each AWS created instance.
     
 +
 TIP: If all the nodes of an AWS instance are removed, the instance will be terminated. For more information on the terminated state in AWS please see http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/terminating-instances.html[AWS Terminating Instances].
 +
        
-    -   *downloadCommand:* The command to download the Proactive node.jar. This command is executed in all the newly created AWS instances at cloud init time. 
-    	The full URL path of the node.jar to download, needs to be accessible from the AWS cloud.     	
+    -   *downloadCommand:* The command to download the Proactive node.jar. This command is executed in all the newly created AWS instances at cloud init time.
+    	The full URL path of the node.jar to download, needs to be accessible from the AWS cloud.
         Example based on AWS image with windows operating system:
         
         	powershell -command "& { (New-Object Net.WebClient).DownloadFile('try.activeeon.com/rest/node.jar', 'node.jar') }"
     	    	
-    -   *additionalProperties:* Additional Java command properties to be added when starting each ProActive node JVM in the AWS instances (e.g. \"-Dpropertyname=propertyvalue\"). 
+    -   *additionalProperties:* Additional Java command properties to be added when starting each ProActive node JVM in the AWS instances (e.g. \"-Dpropertyname=propertyvalue\").
      
     -   *minRam:* The minimum required amount of RAM expressed in Mega Bytes for each AWS instance that needs to be created.
     
@@ -191,13 +191,144 @@ Using this configuration, you can start a Resource Manager and a
 Scheduler using the */bin/proactive-server* script. An EC2 NodeSource can
 now be added using the *Create Node Source* panel in the Resource Manager or the command line interface:
 
-    $ PROACTIVE_HOME/bin/proactive-client --createns ec2 -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.AWSEC2Infrastructure aws_key aws_secret_key rmDomain connectorIaasURL image numberOfInstances numberOfNodesPerInstance downloadCommand additionalProperties minRam minCores 
+    $ PROACTIVE_HOME/bin/proactive-client --createns ec2 -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.AWSEC2Infrastructure aws_key aws_secret_key rmDomain connectorIaasURL image numberOfInstances numberOfNodesPerInstance downloadCommand additionalProperties minRam minCores
 
 When the Scheduler is stopped normally, all the AWS instances created will be terminated.
 
 WARNING: If the Scheduler is forced killed, the AWS instances will not be terminated.
 
 When the Scheduler is restarted, all the AWS instances that were previously created, will be terminated first and then re-created and re-configured as per previous settings.
+
+
+
+===== OpenStack Infrastructure
+
+To use the OpenStack instances as computing nodes, a specific OpenStack Infrastructure
+can be created using the Resource Manager. This section describes briefly how to make it.
+
+1.  First, you need to have an admin account on your OpenStack server
+
+2.  Use the login and password information to fill in the properties *Openstack_Username*,
+    *Openstack_Username* in the *Create Node Source* panel located in the resource manager.
+    Those two parameters should never change, except if you need for
+    some reason to handle multiple OpenStack accounts. Other properties in the
+    *Create Node Source* are:
+    
+     -   *endpoint:* The hostname or the IP address of the OpenStack server. This address needs to be accessible from the resource manager.
+    
+    -   *rmHostname:* The hostname or the public IP address of the resource manager. This address needs to be accessible from the OpenStack server.
+    
+    -   *connectorIaasURL:* Connector-iaas is a service embedded in the scheduler used to interact with IaaS like OpenStack. By default it runs on the following url rmHostname/connector-iaas.
+
+    -   *image:* Defines which image will be used to create the Openstack instance. The
+        value to provide is the Openstack region together with the unique image Id, for example: `RegionOne/74oi56bff32ccc`.
+        
+    -   *flavor:* Defines the size of the instance. For more information see http://docs.openstack.org/openstack-ops/content/flavors.html[OpenStack flavors].
+    
+    -   *publicKeyName:* Defines the name of the public key to push to the instance when it is created.
+    
++
+WARNING: In order to use publicKeyName, the key pair needs to be created and imported first on the openstack server. For more information see https://community.hpcloud.com/article/managing-your-key-pairs-0[OpenStack key pair management].
++
+ 
+        
+    -   *numberOfInstances:* Total number of OpenStack instances to create for this infrastructure.
+    
+    -   *numberOfNodesPerInstance:* Total number of Proactive Nodes to deploy in each Openstack created instance.
+    
++
+TIP: If all the nodes of an Openstack instance are removed, the instance will be terminated.
++
+
+       
+    -   *downloadCommand:* The command to download the Proactive node.jar. This command is executed in all the newly created OpenStack instances at cloud init time.
+    	The full URL path of the node.jar to download, needs to be accessible from the OpenStack cloud.
+        Example based on OpenStack image with windows operating system:
+        
+        	powershell -command "& { (New-Object Net.WebClient).DownloadFile('try.activeeon.com/rest/node.jar', 'node.jar') }"
+    	    	
+    -   *additionalProperties:* Additional Java command properties to be added when starting each ProActive node JVM in the OpenStack instances (e.g. \"-Dpropertyname=propertyvalue\").
+    
+
+Using this configuration, you can start a Resource Manager and a
+Scheduler using the */bin/proactive-server* script. An OpenStack NodeSource can
+now be added using the *Create Node Source* panel in the Resource Manager or the command line interface:
+
+    $ PROACTIVE_HOME/bin/proactive-client --createns openstack -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.OpenstackInfrastructure username password endpoint rmHostname connectorIaasURL image flavor publicKeyName numberOfInstances numberOfNodesPerInstance downloadCommand additionalProperties
+
+
+WARNING: When the Scheduler is stopped, the OpenStack instances will not be terminated.
+
+When the Scheduler is restarted, all the OpenStack instances that were previously created, will be terminated first and then re-created and re-configured as per previous settings.
+
+
+
+===== VmWare Infrastructure
+
+To use the VmWare instances as computing nodes, a specific VmWare Infrastructure
+can be created using the Resource Manager. This section describes briefly how to make it.
+
+1.  First, you need to have an admin account on your VmWare server
+
+2.  Use the login and password information to fill in the properties *VmWare_Username*,
+    *VmWare_Username* in the *Create Node Source* panel located in the resource manager.
+    Those two parameters should never change, except if you need for
+    some reason to handle multiple VmWare accounts. Other properties in the
+    *Create Node Source* are:
+    
+     -   *endpoint:* The hostname or the IP address of the VmWare server. This address needs to be accessible from the resource manager.
+    
+    -   *rmHostname:* The hostname or the public IP address of the resource manager. This address needs to be accessible from the VmWare server.
+    
+    -   *connectorIaasURL:* Connector-iaas is a service embedded in the scheduler used to interact with IaaS like VmWare. By default it runs on the following url rmHostname/connector-iaas.
+
+    -   *image:* Defines which image will be used to create the VmWare instance. The
+        value to provide is the VmWare folder together with the unique image Id, for example: `ActiveEon/ubuntu`.
+        
+    -   *minRam:* The minimum required amount of RAM expressed in Mega Bytes for each VmWare instance that needs to be created.
+    
+    -   *minCores:* The minimum required amount of virtual cores for each VmWare instance that needs to be created.
+    
++
+WARNING: If the combination between RAM and CORES does not match any existing VmWare instance type, then the closest to the specified parameters will be selected.
++
+
+    -   *vmUsername:* Defines the username to log in the instance when it is created.
+    
+    -   *vmPassword:* Defines the password to log in the instance when it is created.
+    
++
+WARNING: The username and password are related to the image.
++
+        
+    -   *numberOfInstances:* Total number of VmWare instances to create for this infrastructure.
+    
+    -   *numberOfNodesPerInstance:* Total number of Proactive Nodes to deploy in each VmWare created instance.
+    
++
+TIP: If all the nodes of an VmWare instance are removed, the instance will be terminated.
++
+
+       
+    -   *downloadCommand:* The command to download the Proactive node.jar. This command is executed in all the newly created VmWare instances at cloud init time.
+    	The full URL path of the node.jar to download, needs to be accessible from the OpenStack cloud.
+        Example based on VmWare image with windows operating system:
+        
+        	powershell -command "& { (New-Object Net.WebClient).DownloadFile('try.activeeon.com/rest/node.jar', 'node.jar') }"
+    	    	
+    -   *additionalProperties:* Additional Java command properties to be added when starting each ProActive node JVM in the VmWare instances (e.g. \"-Dpropertyname=propertyvalue\").
+    
+
+Using this configuration, you can start a Resource Manager and a
+Scheduler using the */bin/proactive-server* script. An VmWare NodeSource can
+now be added using the *Create Node Source* panel in the Resource Manager or the command line interface:
+
+    $ PROACTIVE_HOME/bin/proactive-client --createns vmware -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.VmwareInfrastructure username password endpoint rmHostname connectorIaasURL image ram cores vmusername vmpassword numberOfInstances numberOfNodesPerInstance downloadCommand additionalProperties
+
+
+WARNING: When the Scheduler is stopped, the OpenStack instances will not be terminated.
+
+When the Scheduler is restarted, all the OpenStack instances that were previously created, will be terminated first and then re-created and re-configured as per previous settings.
 
 
 
