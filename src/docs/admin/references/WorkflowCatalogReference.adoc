@@ -6,8 +6,9 @@ It can be extended with additional https://docs.spring.io/spring-boot/docs/curre
 [source]
 ----
 # Configure logging level
-logging.level.org.hibernate=off
-logging.level.org.ow2.proactive.workflow_catalog.rest=info
+logging.level.org.hibernate.SQL=off
+logging.level.org.ow2.proactive.workflow_catalog.rest.controller=info
+logging.level.org.ow2.proactive.workflow_catalog.rest.query=info
 logging.level.org.springframework.web=info
 
 # Buckets that must be created on first run

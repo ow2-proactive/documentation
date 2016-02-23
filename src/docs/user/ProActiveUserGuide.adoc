@@ -1145,7 +1145,7 @@ It is also possible to list all Workflows inside a particular Bucket using its `
 
     GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows
 
-Then we can fetch a particular Workflow based on its `workflow_id`:
+Then, we can fetch a particular Workflow based on its `workflow_id`:
 
     GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows/{workflow_id}
 
@@ -1162,7 +1162,7 @@ You can fetch a Workflow detailed information using its `workflow_id` and `revis
     GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows/{workflow_id}/revisions/{revision_id}
 
 A Workflow Revision is created from a ProActive XML <<_glossary_workflow,*Workflow*>> definition.
-Beside from the _id_,_name_ and _project_name_ of the Workflow, a few more information are indexed from the XML content such as _Variables_ and _Generic Information_.
+Beside from the _id_, _name_ and _project_name_ of the Workflow, a few more information are indexed from the XML content such as _Generic Information_ and _Variables_.
 
 More detailed information on how to create or modify Workflows and Buckets are available in the link:../admin/ProActiveAdminGuide.html#_workflow_catalog[Admin guide].
 
@@ -1179,103 +1179,80 @@ Search through all versions of a particular Workflow:
 
     http://localhost:8080/workflow-catalog/{bucket_id}/workflows/{workflow_id}/revisions?query=...
 
-NOTE: More detail on pagination and sorting is available on the http://docs.spring.io/spring-data/rest/docs/2.4.2.RELEASE/reference/html/#paging-and-sorting[Spring-data REST documentation].
+NOTE: More details about how to use pagination and sorting is available on the http://docs.spring.io/spring-data/rest/docs/2.4.2.RELEASE/reference/html/#paging-and-sorting[Spring-data REST documentation].
 
 [[_wcql]]
 ==== Workflow Catalog Query Language
 
 Our Workflow Catalog Query Language allows to express simple conditions on the indexed information of ProActive XML Workflows.
-An *Expression* can be a composition of multiple conditions using conjunctions such as `AND` (or `&&`) and `OR` (or `||`).
+A search query written in WCQL can combine one or more search clauses with the conjunctions `AND` and `OR`, thus forming an expression.
+Like in most query languages, the `AND` conjunction has precedence over `OR`.
 
-Since the `AND` conjunction has precedence over `OR`, an *Expression* is a *Or_Expression* that can have one or more *And_Expression*.
-A *And_Expression* has one or more *Clause* that represents the condition.
-Ultimately, a *Clause* is composed of:
+===== Clauses
 
-* an *Attribute* (the name of an indexed information)
-* an *Operator* (`=` or `!=`)
+====== Atomic Clause
+
+It is made up of three parts:
+
+* an *Attribute*: `name` or `project_name`
+* an *Operator*: `=` or `!=`
 * a *Literal Value*
 
-Alternatively, a *Clause* can be a nested *Or_Expression* if you use parenthesises.
+====== Key/Value Clause
 
-===== Attribute
+It is composed of:
 
-Attribute of the Workflow that is searched, e.g. the attribute _name_ of a Workflow.
-
-[width="80%",frame="topbot",options="header"]
-|===============================================================================================
-|Attribute                     |Description
-|name			       |The name of a Workflow
-|project_name		       |The project name of a Workflow
-|variable.name     	       |The name of a variable in a Workflow
-|variable.value                |The value of a variable in a Workflow
-|generic_information.name      |The name of a generic information in a Workflow
-|generic_information.value     |The value of a generic information in a Workflow
-|===============================================================================================
-
-===== Operator
-
-Test that is performed to provide a match, e.g. _!=_.
-[width="80%",frame="topbot",options="header"]
-|==================================================
-|Operator         |Description
-|=		  |The _equal_ operator
-|!=		  |The _not equal_ operator
-|==================================================
-
-===== Conjunction
-
-Special operators that enable the combination of multiple clauses, e.g. _AND_.
-[width="80%",frame="topbot",options="header"]
-|==================================================
-|Conjunction      |Description
-|AND		  |The _and_ logic operator
-|&&		  |The _and_ logic operator
-|OR		  |The _or_ logic operator
-|\|\|		  |The _or_ logic operator
-|==================================================
+* an *Attribute*: `generic_information` or `variable`
+* a *Key/Value Pair*: starts with `(`, ends with `)` and contains between
+the last two characters two *Literal Value* separated by a comma.
 
 ===== Literal Value
 
-The content of the attribute that is tested, e.g. the name of the Workflow _My First Workflow_. It is evaluated as a string of characters, and can contain the wildcard *%*.
-
-Let the following Workflows:
-[width="80%",frame="topbot",options="header"]
-|==============================================================================================
-|Name                         | Project Name | Variable Name    | Variable Value
-|_My Workflow 1_	      | Tutorials    | 		        |
-|_Create OpenStack Instance_   | Deployment   | Core		| 4
-|_New Amazon Instance 1_       | Deployment   | Nb_CPU		| 2
-|==============================================================================================
-
-They are matched against these expressions:
-[width="80%",frame="topbot",options="header"]
-|=================================================================================================================================
-|Expression						|Matches
-|name = "My%"						|_My Workflow 1_
-|project_name = "%ploy%" 		    		|_Create OpenStack Instance_ and _New Amazon Instance 1_
-|project_name = "%ploy%" AND variable.name = "%CPU"	|_New Amazon Instance 1_
-|=================================================================================================================================
+The representation of a String value as a quoted sequence of characters, e.g. _"My First Workflow"_. It can contain a wildcard `*` that substitutes for zero or more characters.
 
 ==== Examples
 
-One simple query expression can be the following clause:
+===== Atomic Clauses
 
-    name = "My First Workflow"
+    name="My First Workflow"
+    project_name="Templates"
 
-Which will look for all Workflow that verify that clause.
-Evaluation priority is respected through operator precedence (`AND` over `OR`) so the following statement:
+===== Key/Value Clauses
+
+    generic_information("Infrastructure", "Amazon EC2")
+    variable("CPU", "4")
+
+===== Wildcard and Expressions
+
+Let the following Workflows:
+[width="100%",frame="topbot",options="header"]
+|==============================================================================================
+| Name                         | Project Name | GI Name | GI Value | Variable Name     | Variable Value
+| _My First Workflow_	         | Tutorials    |         |          | 		               |
+| _Create OpenStack Instance_  | Deployment   | Infrastructure | OpenStack  | Core		 | 4
+| _Stop OpenStack Instance_    | Lifecycle    | Infrastructure | OpenStack  |      		 |
+| _New Amazon Instance_        | Deployment   | Infrastructure | Amazon EC2 | Nb_CPU	 | 2
+|==============================================================================================
+
+They are matched against these query expressions:
+[width="100%",frame="topbot",options="header"]
+|=================================================================================================================================
+| Expression						                              | Matches
+| name = "My First Workflow"						              | _My First Workflow_
+| name = "My*"						                            | _My First Workflow_
+| project_name = "\*ploy*" 		    		                |_Create OpenStack Instance_ and _New Amazon Instance 1_
+| project_name = "\*ploy*" AND variable("\*CPU", "*")	|_New Amazon Instance 1_
+|=================================================================================================================================
+
+Evaluation priority is respected through operator precedence (`AND` over `OR`), so the following statement:
 
     Search for all Workflows that can deploy an OpenStack instance
 
+can be expressed as:
 
-Can be expressed as:
+    name="Create OpenStack Instance" OR project_name="Deployment" AND generic_information("Infrastructure", "OpenStack")
 
-    name="Deploy OpenStack Instance" OR generic_information.name="infrastructure" AND generic_information.value="openstack"
-
-
-Which will be converted into the following tree and evaluated bottom-up:
-
-image::ast_example.png[align=center]
+Once executed, this query will return a single Workflow named _Create OpenStack Instance_. 
 
 == Third-party credentials
 
