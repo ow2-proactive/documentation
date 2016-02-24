@@ -1222,10 +1222,10 @@ The representation of a String value as a quoted sequence of characters, e.g. _"
     generic_information("Infrastructure", "Amazon EC2")
     variable("CPU", "4")
 
-===== Wildcard and Expressions
+===== Expressions and Wildcard
 
 Let the following Workflows:
-[width="100%",frame="topbot",options="header"]
+[width="100%",frame="topbot",options="header", cols="30%<"]
 |==============================================================================================
 | Name                         | Project Name | GI Name | GI Value | Variable Name     | Variable Value
 | _My First Workflow_	         | Tutorials    |         |          | 		               |
@@ -1252,7 +1252,7 @@ can be expressed as:
 
     name="Create OpenStack Instance" OR project_name="Deployment" AND generic_information("Infrastructure", "OpenStack")
 
-Once executed, this query will return a single Workflow named _Create OpenStack Instance_. 
+Once executed, this query will return a single Workflow named _Create OpenStack Instance_.
 
 == Third-party credentials
 
