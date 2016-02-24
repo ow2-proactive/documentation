@@ -43,3 +43,17 @@ out/
 .idea_modules/
 
 styles/.sass-cache/
+
+/bin
+.classpath
+.project
+.settings/
+.gradle
+/.DS_Store/
+*build
+.idea/
+smart-watch.iml
+/logs
+*.log
+*bin/
+*.iml

@@ -1,5 +1,9 @@
+apply plugin: 'maven'
+apply plugin: 'java'
+
 buildscript {
     repositories {
+        mavenCentral()
         jcenter()
     }
 
@@ -36,6 +40,8 @@ task xsdDoc(type: JavaExec) {
     main 'org.apache.xalan.xslt.Process'
     args '-IN', 'src/xsd/schedulerjob.xsd', '-XSL', 'src/xsd/xs3p.xsl', '-OUT', "$buildDir/asciidoc/html5/user/schedulerjob.html"
 }
+
+
 
 build.dependsOn(['asciidoctor', 'xsdDoc'])
 defaultTasks 'build'
