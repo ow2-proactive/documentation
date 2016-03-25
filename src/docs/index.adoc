@@ -11,3 +11,11 @@
 * http://www.activeeon.com[Activeeon^]
 * http://www.activeeon.com/community-downloads[Download ProActive^]
 * http://try.activeeon.com/[Try ProActive online^]
+
+++++
+<p>The documentation version: <span id="versionId"/></p>
+<script src="version-conf.js"/>
+<script>
+document.getElementById('versionId').innerHTML = conf.version
+</script>
+++++
