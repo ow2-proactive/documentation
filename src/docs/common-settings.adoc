@@ -1,3 +1,10 @@
+++++
+<p>The documentation version: <span id="versionId"/></p>
+<script src="version-conf.js"/>
+<script>
+document.getElementById('versionId').innerHTML = conf.version
+</script>
+++++
 The Activeeon team <contact@activeeon.com>
 :toc: left
 :numbered:
