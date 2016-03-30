@@ -24,7 +24,6 @@ asciidoctor {
         include 'admin/AdminTutorials.adoc'
         include 'admin/WorkflowCatalog.adoc'
         include 'index.adoc'
-        include 'version-conf.js'
     }
     resources {
         from('src/docs/') {
@@ -42,7 +41,12 @@ task xsdDoc(type: JavaExec) {
     args '-IN', 'src/xsd/schedulerjob.xsd', '-XSL', 'src/xsd/xs3p.xsl', '-OUT', "$buildDir/asciidoc/html5/user/schedulerjob.html"
 }
 
+moveConfig{
+    File file = new File("src/docs/version-conf.js");
+    File dir = new File("$buildDir/asciidoc/html5");
+    boolean fileMoved = file.renameTo(new File(dir, file.getName()));
+}
 
 
-build.dependsOn(['asciidoctor', 'xsdDoc'])
+build.dependsOn(['asciidoctor', 'xsdDoc', 'moveConfig'])
 defaultTasks 'build'
