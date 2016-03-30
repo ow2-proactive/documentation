@@ -24,6 +24,7 @@ asciidoctor {
         include 'admin/AdminTutorials.adoc'
         include 'admin/WorkflowCatalog.adoc'
         include 'index.adoc'
+        include 'version-conf.js'
     }
     resources {
         from('src/docs/') {
