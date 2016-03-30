@@ -1,6 +1,6 @@
 = ProActive Documentation
 :stylesheet: ../../styles/stylesheets/activeeon.css
-
+:docinfo:
 == ProActive Workflows & Scheduling
 
 * link:user/ProActiveUserGuide.html[User Guide] (Workflows, Tasks, Jobs Submission,...)
@@ -14,7 +14,6 @@
 
 ++++
 <p>The documentation version: <span id="versionId"/></p>
-<script src="version-conf.js"/>
 <script>
 document.getElementById('versionId').innerHTML = conf.version
 </script>
