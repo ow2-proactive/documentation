@@ -24,12 +24,7 @@ asciidoctor {
         include 'admin/AdminTutorials.adoc'
         include 'admin/WorkflowCatalog.adoc'
         include 'index.adoc'
-        include 'docinfo.html'
-        include 'docinfo-footer.html'
-        include 'admin/ProActiveAdminGuide-docinfo.html'
-        include 'admin/ProActiveAdminGuide-docinfo-footer.html'
-        include 'user/ProActiveUserGuide-docinfo.html'
-        include 'user/ProActiveUserGuide-docinfo-footer.html'
+
     }
     resources {
         from('src/docs/') {
