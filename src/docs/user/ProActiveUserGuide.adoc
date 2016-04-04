@@ -197,46 +197,49 @@ them to parameterize workflow execution and use workflows as <<_templating,templ
 During their execution, jobs and tasks go through different states:
 
 .Job States
-[cols="1,10", options="header"]
+[cols="17%,17%,66%", options="header"]
 |===
-| State | Description |
- `PENDING`| The job is waiting to be scheduled.|
- `RUNNING`| The job is running. At least one of its task has been scheduled.|
- `STALLED`| The job has been launched but no task is currently running.|
- `FINISHED`|The job is finished. All tasks are finished.|
- `PAUSED`| The job is paused waiting for user to resume it.|
- `CANCELED`| The job has been canceled because of an exception.
-This status is used when an exception is thrown by the user code of a task
-and when the user has asked to cancel the job on exception.|
- `FAILED`| The job has failed. One or more tasks have failed (due to resources failure).
-There is no more executionOnFailure left for a task.|
- `KILLED`| The job has been killed by the user.|
+| State | Name | Description
+| `CANCELED` | Cancelled | The job has been canceled because of an exception.
+This status is used when an exception is thrown by the user code of a task and when the user has asked to cancel the job on exception.
+| `FAILED` | Failed | The job has failed. One or more tasks have failed (due to resources failure).
+There is no more executionOnFailure left for a task.
+| `FINISHED` | Finished | The job is finished. Tasks are finished or faulty.
+| `IN_ERROR` | In-Error | The job has at least one In-Error task and all In-Error tasks are the last, among others, which have changed their state.
+| `KILLED` | Killed | The job has been killed by the user.
+| `PAUSED` | Paused | The job is paused waiting for user to resume it.
+| `PENDING` | Pending | The job is waiting to be scheduled.
+| `RUNNING` | Running | The job is running. At least one of its task has been scheduled.
+| `STALLED` | Stalled | The job has been launched but no task is currently running.
+
 |===
 
 
 .Task States
-[cols="1,10", options="header"]
+[cols="17%,17%,66%", options="header"]
 |===
-| State | Description |
- `SUBMITTED`| The task has just been submitted by the user.|
- `PENDING`| The task is in the scheduler pending queue.|
- `PAUSED`| The task is paused.|
- `RUNNING`|The task is executing.|
- `WAITING_ON_ERROR`| The task is waiting for restart after an error. (ie:native code != 0 or exception).|
- `WAITING_ON_FAILURE`| The task is waiting for restart after a failure. (ie:node down). |
- `FAILED`| The task is failed
-(only if max execution time has been reached and the node on which it was started is down).|
- `NOT_STARTED`| The task could not be started.
-It means that the task could not be started due to
- dependencies failure.|
- `NOT_RESTARTED` | The task could not be restarted.
- It means that the task could not be restarted after an error
- during the previous execution. |
- `ABORTED` | The task has been aborted by an exception on an other task while the task is running. (job is cancelOnError=true).
+| State | Name | Description |
+ `ABORTED` | Aborted | The task has been aborted by an exception on an other task while the task is running. (job is cancelOnError=true).
  Can be also in this status if the job is killed while the concerned task was running. |
- `FAULTY` | The task has finished execution with error code (!=0) or exception. |
- `FINISHED` | The task has finished execution. |
- `SKIPPED` | The task was not executed: it was the non-selected branch of an IF/ELSE control flow action. |
+ `FAILED` | Resource down | The task is failed
+(only if maximum number of execution has been reached and the node on which it was started is down).|
+ `FAULTY` | Faulty | The task has finished execution with error code (!=0) or exception. |
+ `FINISHED` | Finished | The task has finished execution. |
+ `IN_ERROR` | In-Error | The task is suspended after first error, if the user has asked to suspend it. The task is waiting for a manual restart action. |
+ `NOT_RESTARTED` | Could not restart | The task could not be restarted.
+  It means that the task could not be restarted after an error
+  during the previous execution. |
+ `NOT_STARTED` | Could not start | The task could not be started.
+  It means that the task could not be started due to
+   dependencies failure.|
+ `PAUSED` | Paused | The task is paused.|
+ `PENDING` | Pending | The task is in the scheduler pending queue.|
+ `RUNNING` | Running | The task is executing.|
+ `SKIPPED` | Skipped | The task was not executed: it was the non-selected branch of an IF/ELSE control flow action. |
+ `SUBMITTED` | Submitted | The task has just been submitted by the user.|
+ `WAITING_ON_ERROR` | Faulty... | The task is waiting for restart after an error (i.e. native code != 0 or exception, and maximum number of execution is not reached).|
+ `WAITING_ON_FAILURE` | Failed... | The task is waiting for restart after a failure (i.e. node down). |
+
 |===
 
 // TODO state diagram
