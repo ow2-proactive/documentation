@@ -927,6 +927,23 @@ Users submitting jobs have access to server logs of their jobs through the *Sche
 
 image::server_logs.png[align="center"]
 
+=== Common Problems
+
+==== 'Path too Long' Errors When Unzipping Windows Downloads
+
+When you unzip a Windows package using the default Windows compression utility,
+you might get errors stating that the path is too long. Path length is
+determined by the Windows OS. The maximum path, which includes drive letter,
+colon, backslash, name components separated by backslashes, and a terminating
+null character, is defined as 260 characters.
+
+Workarounds:
+
+  - Move the Zip file on the root level of the system drive and unzip from there.
+  - Use a third-party compression utility. Unlike the default Windows
+  compression utility, some third-party utilities allow for longer maximum
+  path lengths.
+
 == Reference
 
 === Scheduler Properties
