@@ -138,7 +138,7 @@ ${PA_JOB_ID}
 
 |===
 
-Note that for script tasks, syntax for accessing maps (like *variables* and *credentials*) is language dependant.
+Note that for script tasks, syntax for accessing maps (like *variables* and *credentials*) is language dependent.
 
 For Groovy:
 [source, groovy]
