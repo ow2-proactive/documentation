@@ -915,7 +915,8 @@ you care about performance or notice a slowdown.
 
 ProActive Workflows and Scheduling distribution is provided with several samples
 for configuring the Scheduler and Resource Manager to use most standard RDBMS.
-You can find these examples in `PROACTIVE_HOME/config/scheduler/` folder.
+You can find these examples in `PROACTIVE_HOME/config/rm/templates/` and
+`PROACTIVE_HOME/config/scheduler/templates/` folders.
 
 == Troubleshooting
 === Logs
