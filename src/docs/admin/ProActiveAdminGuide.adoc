@@ -913,10 +913,36 @@ http://www.postgresql.org[Postgres] or
 http://www.microsoft.com/en-us/server-cloud/products/sql-server/[SQL Server] if
 you care about performance or notice a slowdown.
 
-ProActive Workflows and Scheduling distribution is provided with several samples
-for configuring the Scheduler and Resource Manager to use most standard RDBMS.
+ProActive Workflows and Scheduling distribution is provided with several
+samples for configuring the Scheduler and Resource Manager to use most
+standard RDBMS.
 You can find these examples in `PROACTIVE_HOME/config/rm/templates/` and
 `PROACTIVE_HOME/config/scheduler/templates/` folders.
+
+==== Indexes
+
+The Scheduler and RM databases rely on Hibernate to create and update the
+database schema automatically on startup. Hibernate is configured for adding
+indexes on frequently used columns, including columns associated to foreign
+keys. The goal is to provide a default configuration that behaves in a
+satisfactory manner with the different features available in the Scheduler.
+For instance, the Jobs housekeeping feature requires indexes on most foreign
+keys since a Job deletion may imply several cascade delete.
+
+Unfortunately, each database vendor implements its own strategy regarding
+indexes on foreign keys.  Thus, some databases such as _MariaDB_ and _MySQL_
+automatically add indexes for foreign keys whereas some others like _Postgres_
+or _Oracle_ do not add such indexes by default. Besides, Hibernate does not
+offer control over this strategy.
+As a consequence, this difference of behaviour, once linked to our default
+configuration for Hibernate, may lead to duplicate indexes (two indexes with
+different names for a same column) that are created for columns in RM and
+Scheduler tables.
+
+In case you are using in production _MySQL_, _MariaDB_ or a similar database
+that automatically adds indexes on foreign keys, it is strongly recommended to
+ask your DBA to identify and delete duplicate indexes created by the database
+system since they may hurt performances.
 
 == Troubleshooting
 === Logs
