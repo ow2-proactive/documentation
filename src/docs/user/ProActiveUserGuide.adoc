@@ -336,7 +336,7 @@ echo $variables_PA_TASK_NAME
 
 WARNING: In native tasks and Bash/CMD script engines, variables can be read but not written to.
 
-If the a task depends on several tasks and each task modifies the same variable, the final value of the variable
+If a task depends on several tasks and each task modifies the same variable, the final value of the variable
 which is propagated down the execution chain, depends on the *order of task execution*.
 Therefore, the users need to take appropriate measures to prevent any undesired effects of such race conditions.
 
