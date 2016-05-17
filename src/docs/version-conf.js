@@ -1,1 +1,1 @@
-conf = { version: '7.9.0-SNAPSHOT'} 
+conf = { version: '7.10.0-SNAPSHOT'} 
