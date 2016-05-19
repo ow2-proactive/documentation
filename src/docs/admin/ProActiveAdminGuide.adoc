@@ -400,19 +400,56 @@ The main troubles you may have to face are the following ones:
 * You get an *authentication error*: this is probably due to your default credentials file which cannot be found. In the "Connection" tab of the Configuration Editor (Figure 5.4, “Configuration Editor window - Connection Tab (Resource Manager Registration)”), you can choose the credentials file you want. You can select, for instance, the credentials file located at PROACTIVE_HOME/config/authentication/scheduler.cred or your own credentials file.
 * The node seems to be well started but you cannot see it in the Resource Manager interface : in this case, make sure that the *port number* is the good one. Do not forget that the runtime port number is incremented from the initial ProActive Resource Manager port number. You can see exactly on which port your runtime has been started looking at the log file described above.
 
+== Available Network Protocols
+
+ProActive Workflows and Scheduling offers several protocols for
+the Scheduler and nodes to communicate. These protocols provide different
+features: _speed_, _security_, _fast error detection_, _firewall_ or
+_NAT friendliness_ but one of the protocols can offer all these features at
+the same time.
+Consequently, the selection should be made carefully. Below are introduced
+available network protocols.
+Configuration and properties are discussed in <<_network_properties>>.
+
+=== ProActive Network Protocol
+
+ProActive Network Protocol (PNP) is the general purpose communication protocol
+(`pnp://` scheme). Its performances are quite similar to the well known Java RMI
+protocol, but it is much more robust and network friendly. It requires only one
+TCP port per JVM and no shared registry. Besides, it enables fast network
+failure discovery and better scalability.
+PNP binds to a given TCP port at startup. All incoming communications use this
+TCP port. Deploying the Scheduler or a node with PNP requires to open one and
+only one incoming TCP port per machine.
+
+=== ProActive Network Protocol over SSL
+
+ProActive Network Protocol over SSL (PNPS) is the PNP protocol wrapped inside
+an SSL tunnel. The URI scheme used for the protocol is `pnps://`. It includes
+the same features as PNP plus ciphering and optionally authentication.
+Using SSL creates some CPU overhead which implies that PNPS is slower than PNP.
+
+=== ProActive Message Routing
+
+ProActive Message Routing (PAMR) allows the deployment of the Scheduler and nodes
+behind a firewall. Its associated URI
+scheme is `pamr://`. PAMR has the weakest expectations on how the network is
+configured. Unlike all the other communication protocols introduced previously,
+it has been designed to work when only outgoing TCP connections are available.
+
 == Installation on a Cluster with Firewall
 
-When the configuration of the network is unfriendly (ports closed, firewalls,...) the ProActive Scheduler allows
-you to connect nodes without significant changes in your network firewall configuration.
-It relies on the *PAMR* protocol (ProActive Message Routing Protocol) that has the weakest expectations on
-how the network is configured.
+When incoming connections are not allowed (ports closed, firewalls, etc.), the
+ProActive Scheduler allows you to connect nodes without significant changes
+in your network firewall configuration. It relies on the PAMR protocol.
 
-Unlike all the other communication protocols, PAMR does *not* expect *bidirectional* TCP connections.
-It has been designed to work when only outgoing TCP connections are available. Such environments can be encountered due to:
+This last does *not* expect *bidirectional* TCP connections.
+It has been designed to work when only outgoing TCP connections are available.
+Such environments can be encountered due to:
 
-* Network address translation devices
-* Firewalls allowing only outgoing connection (this is the default setup of many personal firewalls)
-* Virtual Machines with a virtualized network stack
+  - Network address translation devices
+  - Firewalls allowing only outgoing connections (this is the default setup of many firewalls)
+  - Virtual Machines with a virtualized network stack
 
 image::firewall.png[]
 
@@ -981,6 +1018,7 @@ include::./references/SchedulerPropertiesReference.adoc[]
 
 include::./references/RMPropertiesReference.adoc[]
 
+[[_network_properties]]
 === Network Properties
 
 include::./references/NetworkPropertiesReference.adoc[]
