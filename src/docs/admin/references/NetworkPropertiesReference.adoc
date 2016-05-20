@@ -1,107 +1,149 @@
+Configuration files related to network properties for the Scheduler and nodes
+are located respectively in:
 
-- +proactive.communication.protocol+: Represents the communication protocol, i.e. the protocol used to export
- objects on remote JVMs. At this stage, several protocols are supported: RMI(rmi), HTTP(http), IBIS/RMI(ibis),
-  SSH tunneling for RMI/HTTP(rmissh), ProActive Message Routing(pamr). It means that once the JVM starts,
-  nodes and active objects that will be created on this JVM will export themselves using the protocol
-  specified in proactive.communication.protocol property. They will be reachable transparently through
-  the given protocol.
+  - `PROACTIVE_HOME/config/network/server.ini`
+  - `PROACTIVE_HOME/config/network/node.ini`
+
+If you are using ProActive agents, then the configuration file location differs
+depending of the Operating System:
+
+  - On Unix OS, the default location is
+    `/opt/proactive-node/config/network/node.ini`
+  - On Windows OS, the default one is
+    `C:\Program Files (x86)\ProActiveAgent\schedworker\config\network\node.ini`.
+
+==== Common Network Properties
+
+The protocol to use by the Server and the nodes can be configured by setting a
+value to the property `proactive.communication.protocol`. It represents the
+protocol used to export objects on remote JVMs. At this stage, several protocols
+are supported: PNP (pnp), PNP over SSL (pnps), ProActive Message Routing (pamr).
 
 The Scheduler is only able to bind to one and only one address. Usually, this limitation is not
 seen by the user and no special configuration is required. The Scheduler tries to use the most suitable network
 address available. But sometimes, the Scheduler fails to elect the right IP address or the user wants to use
  a given IP address. In such case, you can specify the IP address to use by using theses properties:
- +proactive.hostname+, +proactive.net.interface+, +proactive.net.netmask+, +proactive.net.nolocal+, +proactive.net.noprivate+.
+ `proactive.hostname`, `proactive.net.interface`, `proactive.net.netmask`, `proactive.net.nolocal`, `proactive.net.noprivate`.
 
-IPv6 can be enabled by setting the +proactive.net.disableIPv6+ property to false . By default,
+IPv6 can be enabled by setting the `proactive.net.disableIPv6` property to false . By default,
 the Scheduler does not use IPv6 addresses.
 
-If none of the +proactive.hostname+ , +proactive.net.interface+ , +proactive.net.netmask+ ,
-+proactive.net.nolocal+ , +proactive.net.noprivate+ properties is defined, then the following algorithm is used to elect an IP address:
+If none of the `proactive.hostname`, `proactive.net.interface`, `proactive.net.netmask`,
+`proactive.net.nolocal` , `proactive.net.noprivate` properties is defined, then the following algorithm is used to elect an IP address:
 
-- If a public IP address is available, then use it. If several ones are available, one is randomly chosen.
-- If a private IP address is available, then use it. If several ones are available, one is randomly chosen.
-- If a loopback IP address is available, then use it. If several ones are available, one is randomly chosen.
-- If no IP address is available at all, then the runtime exits with an error message.
-- If +proactive.hostname+ is set, then the value returned by InetAddress.getByName(+proactive.hostname+)
+  - If a public IP address is available, then use it. If several ones are available, one is randomly chosen.
+  - If a private IP address is available, then use it. If several ones are available, one is randomly chosen.
+  - If a loopback IP address is available, then use it. If several ones are available, one is randomly chosen.
+  - If no IP address is available at all, then the runtime exits with an error message.
+  - If `proactive.hostname` is set, then the value returned by InetAddress.getByName(`proactive.hostname`)
  is elected. If no IP address is found, then the runtime exits with an error message.
 
-If +proactive.hostname+ is not set, and at least one of the +proactive.net.interface+ , +proactive.net.netmask+ , +proactive.net.nolocal+ , +proactive.net.noprivate+ is set, then one of the addresses matching all the requirements is elected. Requirements are:
+If `proactive.hostname` is not set, and at least one of the `proactive.net.interface` , `proactive.net.netmask` , `proactive.net.nolocal` , `proactive.net.noprivate` is set, then one of the addresses matching all the requirements is elected. Requirements are:
 
-- If +proactive.net.interface+ is set, then the IP address must be bound to the given network interface.
-- If +proactive.net.netmask+ is set, then the IP address must match the given netmask.
-- If +proactive.net.nolocal+ is set, then the IP address must not be a loopback address.
-- If +proactive.net.noprivate+ is set, then the IP address must not be a private address.
+- If `proactive.net.interface` is set, then the IP address must be bound to the given network interface.
+- If `proactive.net.netmask` is set, then the IP address must match the given netmask.
+- If `proactive.net.nolocal` is set, then the IP address must not be a loopback address.
+- If `proactive.net.noprivate` is set, then the IP address must not be a private address.
 
-- +proactive.useIPaddress+: If set to true, IP addresses will be used instead of machines names.
+- `proactive.useIPaddress`: If set to true, IP addresses will be used instead of machines names.
  This property is particularly useful to deal with sites that do not host a DNS.
 
-- ++proactive.hostname++: When this property is set, the host name on which the JVM is started
+- `proactive.hostname`: When this property is set, the host name on which the JVM is started
 is given by the value of the property. This property is particularly useful to deal with
 machines with two network interfaces.
 
 
 ==== PNP Protocol Properties
 
-The property +proactive.communication.protocol+ must be set to *pnp*.
+PNP allows the following options:
 
-- +proactive.pnp.port+: The TCP port to bind to. If not set PNP uses a random free port. If the specified
-TCP port is already used PNP will not start and an error message is displayed.
+  - `proactive.pnp.port`: The TCP port to bind to. If not set PNP uses a random free port. If the specified
+    TCP port is already used, PNP will not start and an error message is displayed.
 
-- +proactive.pnp.default_heartbeat+: PNP uses heartbeat messages to monitor TCP socket and
-discover network failures. This value determines how long PNP will wait before the connection
-is considered broken. Heartbeat messages are usually sent every default_heartbeat/2 ms. This value is
- in milliseconds. This value is a trade-off between fast error discovery and network overhead. The default
- value is 9000 ms. Setting this value to 0 disable the heartbeat mechanism and client will not be advertised of
-  network failure before the TCP timeout (which can be really long).
+  - `proactive.pnp.default_heartbeat`: PNP uses heartbeat messages to monitor the TCP socket and
+    discover network failures. This value determines how long PNP will wait before the connection
+    is considered broken. Heartbeat messages are usually sent every +default_heartbeat/2+ ms.
+    This value is a trade-off between fast error discovery and network overhead. The default
+    value is 9000 ms. Setting this value to 0 disables the heartbeat mechanism and client will not be
+    advertised of network failure before the TCP timeout (which can be really long).
 
-- +proactive.pnp.idle_timeout+: PNP channels are closed when unused to free system resources. Establishing a
- TCP connection is costly (at least 3 RTT) so PNP connections are not closed immediately but after a grace
-  time. By default the grace time is 60 000 ms. Setting this value to 0 disable the autoclosing mechanism,
-  connections are kept open forever.
+  - `proactive.pnp.idle_timeout`: PNP channels are closed when unused to free system resources. Establishing a
+    TCP connection is costly (at least 3 RTT) so PNP connections are not closed immediately but after a grace
+    time. By default the grace time is 60 000 ms. Setting this value to 0 disables the autoclosing mechanism,
+    connections are kept open forever.
+
+==== PNP over SSL Properties
+
+PNPS support the same options as PNP (in its own option name space) plus some SSL specific options:
+
+  - `proactive.pnps.port`: same as `proactive.pnp.port`
+  - `proactive.pnps.default_heartbeat`: same as `proactive.pnp.default_heartbeat`
+  - `proactive.pnps.idle_timeout`: same as `proactive.pnp.idle_timeout`
+  - `proactive.pnps.authenticate`: By default, PNPS only ciphers the communication but does not authenticate
+    nor the client nor the server. Setting this option to `true` enable client and server authentication.
+    If set to `true` the option `proactive.pnps.keystore` must also be set.
+  - `proactive.pnps.keystore`: Specify the keystore (containing the SSL private key) to use. The keystore must
+    be of type PKCS12. If not set a private key is dynamically generated for this execution.
+    Below is an example for creating a keystore by using the _keytool_ binary that is shipped with Java:
+
+    $JAVA_HOME/bin/keytool -genkey -keyalg RSA -keystore keystore.jks \
+           -validity 365 -keyalg RSA -keysize 2048 -storetype pkcs12
+
+  - `proactive.pnps.keystore.password`: the password associated to the keystore used by PNPS.
+
+When using the authentication and ciphering mode (or to speed up the initialization in ciphering only mode),
+the option `proactive.pnps.keystore` must be set and a keystore embedding the private SSL key must be
+generated. This keystore must be accessible to ProActive services but kept secret to others. The same applies
+to the configuration file that contains the keystore password defined with property
+`proactive.pnps.keystore.password`.
 
 ==== PAMR Protocol Properties
 
-- +proactive.pamr.router.address+: The address of the router to use. Must be set if message routing is enabled.
+PAMR options are listed below:
+
+- `proactive.pamr.router.address`: The address of the router to use. Must be set if message routing is enabled.
  It can be FQDN or an IP address.
 
-- +proactive.pamr.router.port+: The port of the router to use. Must be set if message routing is enabled.
+- `proactive.pamr.router.port`: The port of the router to use. Must be set if message routing is enabled.
 
-- +proactive.pamr.socketfactory+: The Socket Factory to use by the message routing protocol
+- `proactive.pamr.socketfactory`: The Socket Factory to use by the message routing protocol
 
-- +proactive.pamr.connect_timeout+: Sockets used by the PAMR remote object factory connect to the remote server
+- `proactive.pamr.connect_timeout`: Sockets used by the PAMR remote object factory connect to the remote server
 with a specified timeout value. A timeout of zero is interpreted as an infinite timeout.
 The connection will then block until established or an error occurs.
 
-- +proactive.pamr.agent.id+: This property can be set to obtain a given (and fixed) agent ID. This id must be declared
+- `proactive.pamr.agent.id`: This property can be set to obtain a given (and fixed) agent ID. This id must be declared
 in the router configuration and must be between 0 and 4096.
 
-- +proactive.pamr.agent.magic_cookie+: The Magic cookie to submit to the router.
-If +proactive.pamr.agent.id+ is set, then this property must also be set to be able
+- `proactive.pamr.agent.magic_cookie`: The Magic cookie to submit to the router.
+If `proactive.pamr.agent.id` is set, then this property must also be set to be able
 to use a reserved agent ID.
 
-===== PAMR over SSH Protocol Properties
+===== PAMR over SSH protocol properties
 
 To enable PAMR over SSH, ProActive nodes hosts should be able to SSH to router's host without password, using
 SSH keys.
 
-- +proactive.pamr.socketfactory+: The underlying Socket factory, should be +ssh+ to enable PAMR over SSH
+- `proactive.pamr.socketfactory`: The underlying Socket factory, should be `ssh` to enable PAMR over SSH
 
-- +proactive.pamrssh.port+: SSH port to use when connecting to router's host
+- `proactive.pamrssh.port`: SSH port to use when connecting to router's host
 
-- +proactive.pamrssh.username+: username to use when connecting to router's host
+- `proactive.pamrssh.username`: username to use when connecting to router's host
 
-- +proactive.pamrssh.key_directory+: directory when SSH keys can be found to access router's host. For instance
+- `proactive.pamrssh.key_directory`: directory when SSH keys can be found to access router's host. For instance
 /home/login/.ssh
 
-==== Enabling several communication protocols
+==== Enabling Several Communication Protocols
 
-- +proactive.communication.additional_protocols+: The set of protocol to use separated by commas.
+The next options are available to control multiprocol:
 
-- +proactive.communication.benchmark.parameter+:  This property is used pass parameters to the benchmark.
+- `proactive.communication.additional_protocols`: The set of protocol to use separated by commas.
+
+- `proactive.communication.benchmark.parameter`:  This property is used pass parameters to the benchmark.
 This could be a duration time, a size, ...
 This property is expressed as a String.
 
-- +proactive.communication.protocols.order+: A fixed order could be specified if protocol's
+- `proactive.communication.protocols.order`: A fixed order could be specified if protocol's
 performance is known in advance and won't change.
 This property explain a preferred order for a subset of protocols declared in the property
 proactive.communication.additional_protocols. If one of the specified protocol isn't exposed,
@@ -114,7 +156,6 @@ they are used in the order choose by the benchmark mechanism.
     Order : pnp
     This will give the order of use : pnp > rmi > http
 
-- +proactive.communication.protocols.order+: A fixed order could be specified if protocol's performance
+- `proactive.communication.protocols.order`: A fixed order could be specified if protocol's performance
 is known in advance and won't change.
 This automatically disabled	RemoteObject's Benchmark.
-
