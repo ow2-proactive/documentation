@@ -64,7 +64,7 @@ PNP allows the following options:
     discover network failures. This value determines how long PNP will wait before the connection
     is considered broken. Heartbeat messages are usually sent every +default_heartbeat/2+ ms.
     This value is a trade-off between fast error discovery and network overhead. The default
-    value is 9000 ms. Setting this value to 0 disables the heartbeat mechanism and client will not be
+    value is 30000 ms. Setting this value to 0 disables the heartbeat mechanism and client will not be
     advertised of network failure before the TCP timeout (which can be really long).
 
   - `proactive.pnp.idle_timeout`: PNP channels are closed when unused to free system resources. Establishing a
