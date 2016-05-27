@@ -442,7 +442,15 @@ println(results[1]);
 // will print "task2"
 ----
 
-NOTE: Please note that as discussed with workflow variables, results will be aggregated according to tasks termination. Consequently, the order in which values are put in the `results` variable depends of the order in which task1 and task2 finish their execution, especially if they are executed in parallel.
+NOTE: results will be aggregated according to the order declared in the dependency list. Consequently, if the xml *depends* tag of *task3* contains the list [task1, task2] (see the xml example below), then results[0] will contain the result of *task1* and results[1] the result of *task2*. On the contrary, if the depends list is [task2, task1], then results[0] will contain the result of *task2* and results[1] the result of *task1*.
+
+[source, xml]
+----
+<depends>
+        <task ref="task1"/>
+        <task ref="task2"/>
+</depends>
+----
 
 === File based propagation
 
