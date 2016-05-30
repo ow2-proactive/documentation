@@ -1,7 +1,7 @@
 #!/bin/bash
 # Create a X server with Xvnc and run a simple graphical app
 
-Xvnc :10 -geometry 1280x1024 &
+Xvnc :10 -geometry 1280x1024 -SecurityTypes None &
 xvnc_pid=$!
 ps -p $xvnc_pid
 if [ $? -eq 0 ]; then
