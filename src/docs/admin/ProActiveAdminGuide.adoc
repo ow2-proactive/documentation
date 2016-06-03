@@ -857,19 +857,13 @@ to /tmp before starting the ProActive Node.
 [[_web_applications]]
 == Configure Web applications
 
-The ProActive Scheduler deploys several web applications :
-
- - Scheduler Web Interface
- - Resource Manager Interface
- - Workflow Studio
- - REST API
-
-All these applications can be found in `PROACTIVE_HOME/dist/war` and are automatically deployed in an embedded Jetty web server
-when starting the Scheduler.
+The ProActive Scheduler deploys automatically several web applications in an
+embedded Jetty web server. The binaries and sources associated to the web
+applications can be found in `PROACTIVE_HOME/dist/war`.
 
 TIP: To configure Web applications, for instance the HTTP port to use, edit the `PROACTIVE_HOME/config/web/settings.ini` file.
 
-Web applications are deployed on the host using the HTTP port 8080 by default. The local part of the URL is based on the war files found in `PROACTIVE_HOME/dist/war`.
+Web applications are deployed on the host using the HTTP port 8080 by default. The local part of the URL is based on the WAR files found in `PROACTIVE_HOME/dist/war`.
 For instance, the scheduler web portal is available at http://localhost:8080/scheduler.
 
 === Enable HTTPS
