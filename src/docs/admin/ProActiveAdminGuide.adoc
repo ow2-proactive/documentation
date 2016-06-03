@@ -882,7 +882,8 @@ testing purposes, however it must not be used in production.
 When you are using the default keystore or a custom keystore with a self-signed
 certificate you need to enable `web.https.allow_any_certificate` and optionally
 `web.https.allow_any_hostname` if your certificate Common Name (CN) does not
-match the one used for the machine hosting the Web applications.
+match the fully qualified host name used for the machine hosting the Web
+applications.
 
 Port 8443 is used for listening to connections when HTTPS is enabled.
 This port number prevents to have root access for deploying web applications.
@@ -895,6 +896,35 @@ is protected. It requires to enable `web.redirect_http_to_https`.
 NOTE: If you are familiar with Nginx or a similar tool, you can also use it to
 enable HTTPS connection to Web applications. It has the advantage to make
 possible to have ProActive web applications and additional ones to coexist.
+
+==== Creating a valid keystore
+
+Java is bundled with some utility binaries such as
+link:http://docs.oracle.com/javase/8/docs/technotes/tools/unix/keytool.html[keytool].
+This last allows to create and manage a keystore but also to generate keys and
+certificates.
+
+===== With a self-signed certificate
+
+Generating a new self-signed certificate imported in a new keystore with a
+custom password is as simple as executing the following command:
+
+[source]
+----
+$JAVA_HOME/bin/keytool -keystore keystore -alias jetty -genkey -keyalg RSA -validity 365
+----
+
+This command prompts for information about the certificate and for password to
+protect both the keystore and the keys within it. The only mandatory responses
+are to provide a password and the fully qualified host name of the server. Once
+done, the value for properties `web.https.keystore` and
+`web.https.keystore.password` must be adapted based on the information you have
+entered.
+
+For more information, please look at the
+link:http://www.eclipse.org/jetty/documentation/current/configuring-ssl.html[Jetty documentation].
+
+===== With a trusted certificate
 
 === Enable VNC remote visualization in the browser
 
