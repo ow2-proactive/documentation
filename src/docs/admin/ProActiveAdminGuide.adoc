@@ -885,7 +885,7 @@ certificate you need to enable `web.https.allow_any_certificate` and optionally
 match the fully qualified host name used for the machine hosting the Web
 applications.
 
-Port 8443 is used for listening to connections when HTTPS is enabled.
+Port 8443 is used for listening to HTTPS connections.
 This port number prevents to have root access for deploying web applications.
 However, you can change it by editing `web.https.port` value.
 
@@ -893,9 +893,9 @@ When HTTPS is set up, you can automatically redirect any HTTP request from
 users to the secured version of the protocol to make sure exchanged information
 is protected. It requires to enable `web.redirect_http_to_https`.
 
-NOTE: If you are familiar with Nginx or a similar tool, you can also use it to
-enable HTTPS connection to Web applications. It has the advantage to make
-possible to have ProActive web applications and additional ones to coexist.
+NOTE: If you are familiar with Nginx or a similar web server, you can also use
+it to enable HTTPS connection to Web applications. It has the advantage to make
+it possible to have ProActive web applications and additional ones to coexist.
 
 ==== Creating a valid keystore
 
@@ -914,9 +914,9 @@ custom password is as simple as executing the following command:
 $JAVA_HOME/bin/keytool -keystore keystore -alias jetty -genkey -keyalg RSA -validity 365
 ----
 
-This command prompts for information about the certificate and for password to
+This command prompts for information about the certificate and for a password to
 protect both the keystore and the keys within it. The only mandatory responses
-are to provide a password and the fully qualified host name of the server. Once
+are to provide a password and the Fully Qualified Domain Name of the server. Once
 done, the value for properties `web.https.keystore` and
 `web.https.keystore.password` must be adapted based on the information you have
 entered.
@@ -925,6 +925,64 @@ For more information, please look at the
 link:http://www.eclipse.org/jetty/documentation/current/configuring-ssl.html[Jetty documentation].
 
 ===== With a trusted certificate
+
+The first step is to obtain a trusted certificate that is valid for your Fully
+Qualified Domain Name (FQDN). This process differs from a Certification
+Authority (CA) to another. In the following, it is assumed that
+link:https://letsencrypt.org[Let's Encrypt] is used. By way of illustration,
+Digital Ocean provides examples for link:https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-centos-7[CentOS] and
+link:https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-14-04[Ubuntu].
+
+Assumming your FQDN is _example.org_, then after obtaining a certificate you will
+get the following PEM-encoded files in `/etc/letsencrypt/live/example.org`:
+
+  - cert.pem: Your domain's certificate
+  - chain.pem: The Let's Encrypt chain certificate
+  - fullchain.pem: cert.pem and chain.pem combined
+  - privkey.pem: Your certificate's private key
+
+Before loading the key and the certificate into a new keystore that is
+recognized by ProActive Workflows and Scheduling, you need to combine them into
+a PKCS12 format file. You can achieve this action by means of the following
+OpenSSL command:
+
+[source]
+----
+openssl pkcs12 \
+    -inkey /etc/letsencrypt/live/example.org/privkey.pem \
+    -in /etc/letsencrypt/live/example.org/cert.pem \
+    -export -out jetty.pkcs12
+----
+
+Then, you can load the resulting PKCS12 file into a JSSE keystore with keytool:
+
+[source]
+----
+keytool -importkeystore -srckeystore jetty.pkcs12 \
+    -srcstoretype PKCS12 -destkeystore keystore
+----
+
+Both commands prompt for a password. You need to use the same and set it as a
+value to property `web.https.keystore.password`. The resulting _keystore_ file
+corresponds to the file whose path must be used for property
+`web.https.keystore`.
+
+IMPORTANT: link:https://bugs.openjdk.java.net/browse/JDK-8154757[Starting from update 101],
+Java 8 trusts Lets Encrypt certificates. However, if you are using a less recent
+version of Java for running JVMs related to ProActive Workflows and Scheduling,
+you will need to update the truststore of your Java installation.
+
+==== Updating Java truststore for accepting Lets Encrypt certificates
+
+[source]
+----
+sudo keytool -trustcacerts \
+    -keystore $JAVA_HOME/jre/lib/security/cacerts \
+    -storepass changeit \
+    -noprompt \
+    -importcert \
+    -file /etc/letsencrypt/live/example.org/chain.pem
+----
 
 === Enable VNC remote visualization in the browser
 
