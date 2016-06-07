@@ -864,7 +864,7 @@ applications can be found in `PROACTIVE_HOME/dist/war`.
 TIP: To configure Web applications, for instance the HTTP port to use, edit the `PROACTIVE_HOME/config/web/settings.ini` file.
 
 Web applications are deployed on the host using the HTTP port 8080 by default. The local part of the URL is based on the WAR files found in `PROACTIVE_HOME/dist/war`.
-For instance, the scheduler web portal is available at http://localhost:8080/scheduler.
+For instance, the Scheduler web portal is available at http://localhost:8080/scheduler.
 
 === Enable HTTPS
 
@@ -892,6 +892,12 @@ However, you can change it by editing `web.https.port` value.
 When HTTPS is set up, you can automatically redirect any HTTP request from
 users to the secured version of the protocol to make sure exchanged information
 is protected. It requires to enable `web.redirect_http_to_https`.
+
+Unlike other web applications, the Scheduler and Resource Manager web portals
+require manual configuration based on your HTTPS settings. The configuration
+files to edit are respectively in
+`PROACTIVE_HOME/dist/war/scheduler/scheduler.conf` and
+`PROACTIVE_HOME/dist/war/rm/rm.conf`.
 
 NOTE: If you are familiar with Nginx or a similar web server, you can also use
 it to enable HTTPS connection to Web applications. It has the advantage to make
