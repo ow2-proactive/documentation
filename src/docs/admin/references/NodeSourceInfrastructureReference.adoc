@@ -70,7 +70,7 @@ This infrastructure needs 10 arguments, described hereafter:
 
 -   **RM Credentials Path** - The absolute path of the 'rm.cred' file to
     make the deployed nodes able to register to the Resource Manager (
-    config/authentication/rm.cred ).
+    config/authentication/credentials/rm.cred ).
 
 -   **Hosts List** - Path to a file containing the hosts on which
     resources should be acquired. This file should contain one host per
