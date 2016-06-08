@@ -1,6 +1,20 @@
 This section describes useful variables, their scope, and their usage.
 
-[cols="1,1,1,1", options="header"]
+The following script names refer to:
+
+* <<_selection,selection>>: a script executed to select nodes suitable to execute a task. This script is executed on many nodes from the scheduling loop, before the task is deployed.
+* <<_fork_environment, environment>>: the default mode to execute a task is to fork a dedicated JVM from the selected ProActive Node. The environment script, if defined in the workflow, is executed on the node to
+ let the user define which environment parameters will be given to the forked JVM.
+* <<_pre_post_clean, pre>>: a script which is executed _before_ the task execution, in the same context (for example in the forked JVM).
+* <<_scripting_language_support,task>>: the main script of a task when the task is a *script task*.
+* <<_pre_post_clean, post>>: a script which is executed _after_ the task execution, in the same context. The post script is executed only if there was no error inside the task.
+* <<_control_flow_scripts,flow>>: a script which is executed _after_ the task execution, in the same context, and when the task is part of a control flow.
+* <<_pre_post_clean, clean>>: a script which is executed _after_ the task execution, directly on the node selected to execute the task (so not inside the forked JVM), whether there was a *task error* or not. The _clean script_ is mainly used to clean the task host. If there was a *node failure* (the node is lost during the task execution), then the _clean script_ is not executed and the task will be executed on another node.
+
+The order in this list corresponds to the task life-cycle order.
+*all scripts* refers to all above scripts
+
+[cols="1,1,1,1,1", options="header"]
 
 |===
 
@@ -8,133 +22,176 @@ This section describes useful variables, their scope, and their usage.
 | Use from a script
 | Use from a native task
 | Use from the workflow
+| Available in
 
-| *Task result*. See <<_passing_data_between_tasks_using_variables>>.
+| *Task result*. Variable set by the user to return the result of a task. See <<_passing_data_between_tasks_using_variables>>.
 | result = "value";
 | The result will be the exit code.
 | -
+| <<_scripting_language_support,task>>
 
-| *Task arguments*. Available via all kind of scripts when referencing an external file.
+| *Task arguments*. Arguments of a script defined in the workflow. Available via all kind of scripts when referencing an external file.
 | ... = args[0];
 | Passed to native executable.
 | -
+| all scripts defined as external file
 
-| *Results of previous tasks*. See <<_passing_data_between_tasks_using_variables>>. Available via script task.
+| *Results of previous tasks*. An array containing the results of parent tasks. See <<_passing_data_between_tasks_using_variables>>.
 | ... = results[0];
 | $results_0
 | -
+| <<_scripting_language_support,task>>
 
-| *Branch*. Either "if" or "else". See <<_branch, branch>>. Available via <<_control_flow_scripts,flow script>>.
+| *Branch*. Either "if" or "else". See <<_branch, branch>>.
 | branch = "if";
 | -
 | -
+| <<_control_flow_scripts,flow>> (if)
 
-| *Parallel runs*. See <<_replicate, replication>>. Available via <<_control_flow_scripts,flow script>>.
+| *Parallel runs*. Number of replications. See <<_replicate, replication>>.
 | runs = 3;
 | -
 | -
+| <<_control_flow_scripts,flow>> (replicate)
 
-| *Loop variable*. See <<_control_flow_scripts, loop>>. Available via <<_control_flow_scripts,flow script>>.
+| *Loop variable*. A boolean variable used in a flow script to decide if the loop continues or not. See <<_control_flow_scripts, loop>>.
 | loop = false;
 | -
 | -
+| <<_control_flow_scripts,flow>> (replicate) (loop)
 
-| *Task progress*. Represents the progress of the task. Can be set to a value between 0 and 100. Available via script task.
+| *Task progress*. Represents the progress of the task. Can be set to a value between 0 and 100.
 | import org.ow2.proactive.scripting.helper.progress.ProgressFile;
 ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | -
 | -
+| <<_scripting_language_support,task>>
 
-| *Workflow variables*. See <<_workflow_variables>>. Available via script task, pre script, post script, flow script.
+| *Workflow variables*. Job variables defined in the workflow. See <<_workflow_variables>>.
 | variables.get("key")
 | $variables_key
 | ${key}
+| all scripts
 
-| *Job ID*. Contains the ID of the current job. Available via script task, pre script, post script, flow script.
+| *Job ID*. ID of the current job.
 | variables.get( "PA_JOB_ID" )
 | $variables_PA_JOB_ID
-|
-${PA_JOB_ID}
+| ${PA_JOB_ID}
+| all scripts
 
-| *Job name*. Available via script task, pre script, post script, flow script.
+| *Job name*. Name of the current job.
 | variables.get( "PA_JOB_NAME" )
 | $variables_PA_JOB_NAME
 | ${PA_JOB_NAME}
+| all scripts
 
-| *Task ID*. Available via script task, pre script, post script, flow script.
+| *Task ID*. Id of the task.
 | variables.get( "PA_TASK_ID" )
 | $variables_PA_TASK_ID
 | ${PA_TASK_ID}
+| all scripts
 
-| *Task name*. Available via script task, pre script, post script, flow script.
+| *Task name*. Name of the task.
 | variables.get( "PA_TASK_NAME" )
 | $variables_PA_TASK_NAME
 | ${PA_TASK_NAME}
+| all scripts
 
-| *Task iteration index*. See <<_task_executable>>. Available via script task, pre script, post script, flow script.
+| *User*. The name of user who submitted the job.
+| variables.get( "PA_USER" )
+| $variables_PA_USER
+| ${PA_USER}
+| all scripts
+
+| *Scheduler Home*. Installation directory of the scheduler on the ProActive node.
+| variables.get( "PA_SCHEDULER_HOME" )
+| $variables_PA_SCHEDULER_HOME
+| -
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>, <<_pre_post_clean, clean>>
+
+| *Task iteration index*. Index of iteration for this task inside a loop control. See <<_task_executable>>.
 | variables.get( "PA_TASK_ITERATION" )
 | $variables_PA_TASK_ITERATION
 | ${PA_TASK_ITERATION}
+| all scripts
 
-| *Task replication index*. See <<_task_executable>>. Available via script task, pre script, post script, flow script.
+| *Task replication index*. Index of replication for this task inside a replicate control. See <<_task_executable>>.
 | variables.get( "PA_TASK_REPLICATION" )
 | $variables_PA_TASK_REPLICATION
 | ${PA_TASK_REPLICATION}
+| all scripts
 
-| *Third party credentials*. Available via script task.
+| *Task Success*. A variable accessible only from the clean script. It is a boolean value which is _true_ is the task succeeded and _false_ if the task failed.
+| variables.get( "PA_TASK_SUCCESS" )
+| $variables_PA_TASK_SUCCESS
+| -
+| <<_pre_post_clean, clean>>
+
+| *Third party credentials*. Credentials stored on the server for this user account. See <<_managing_third_party_credentials>>
 | credentials.get( "pw" )
 | -
 | $credentials_pw (only in the task arguments)
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 
-| *SSH private key*. See <<_run_computation_with_your_system_account>>. Available via script task.
+| *SSH private key*. Private SSH Key used at login. See <<_run_computation_with_your_system_account>>.
 | credentials.get( "SSH_PRIVATE_KEY" )
 | -
 | -
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 
-| *Number of nodes*. See <<_mpi_application>>. Available via script task.
+| *Number of nodes*. Number of nodes used by this task. See <<_mpi_application>>.
 | nodesurl.size()
 | $variables_PA_NODESNUMBER
 | -
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 
-| *Url of nodes*. List of url of nodes. See <<_mpi_application>>. Available via script task.
+| *Url of nodes*. List of url of nodes. See <<_mpi_application>>.
 | nodesurl.get(0)
 | $variables_PA_NODESFILE
 | -
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 
-| *User space*. See <<_data_spaces>>. Available via script task, ForkEnvironment, pre script, post script, flow script.
+| *User space*. Location of the user space. See <<_data_spaces>>.
 | user.getVirtualURI()
 | $USERSPACE
 | -
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 
-| *Global space*. See <<_data_spaces>>. Available via script task, ForkEnvironment, pre script, post script, flow script.
+| *Global space*. Location of the global space. See <<_data_spaces>>.
 | global.getVirtualURI()
 | $GLOBALSPACE
 | -
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 
-| *Input space*. See <<_data_spaces>>. Available via script task, ForkEnvironment, pre script, post script, flow script.
+| *Input space*. Location of the input space. See <<_data_spaces>>.
 | input.getVirtualURI()
 | -
 | -
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 
-| *Local space*. See <<_data_spaces>>. Available via script task, ForkEnvironment, pre script, post script, flow script.
+| *Local space*. Location of the local space. See <<_data_spaces>>.
 | localspace.getVirtualURI()
 | $LOCALSPACE
 | -
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 
-| *Output space*. See <<_data_spaces>>. Available via script task, ForkEnvironment, pre script, post script, flow script.
+| *Output space*. Location of the output space. See <<_data_spaces>>.
 | output.getVirtualURI()
 | -
 | -
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 
-| *Selection*. See <<_selection>>. Only available via SelectionScript.
+| *Selection*. Variable which must be set to select the node. See <<_selection>>.
 | selected = true
 | -
 | -
+| <<_selection, selection>>
 
-| *Fork Environment*. Fork Environment variable is a complex java object allowing a script to set various initialization parameters of the forked JVM. Available only via EnvironmentScript.
+| *Fork Environment*. Fork Environment variable is a http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/common/task/ForkEnvironment.html[ForkEnvironment java object] allowing a script to set various initialization parameters of the forked JVM. See <<_fork_environment, Fork Environment>>
 | forkEnvironment.setJavaHome( "/usr/java/default" )
 | -
 | -
+| <<_fork_environment, environment>>
 
 |===
 
@@ -152,10 +209,31 @@ For Python:
 print variables["key"]
 ----
 
+For Ruby:
+[source, ruby]
+----
+puts $variables["key"]
+----
+
+For R:
+[source, R]
+----
+print(variables[["key"]])
+----
+
 For Bash:
 [source, bash]
 ----
 echo $variables_key
+----
+
+For Python script, the *results* variable contains a list of http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/common/task/TaskResult.html[TaskResult java object].
+In order to access the result value, the value() method of this object must be called:
+
+For Python:
+[source, python]
+----
+print results[0].value()
 ----
 
 
