@@ -82,7 +82,7 @@ The client usage is also available using the `-h` parameter as shown below:
 
 [source]
 ----
-$ PROACTIVE_HOME/bin/proactive-client -cn 'moreLocalNodes' -infrastructure 'org.ow2.proactive.resourcemanager.nodesource.infrastructure.LocalInfrastructure' './config/authentication/rm.cred'  4 60000 '' -policy org.ow2.proactive.resourcemanager.nodesource.policy.StaticPolicy 'ALL' 'ALL'
+$ PROACTIVE_HOME/bin/proactive-client -cn 'moreLocalNodes' -infrastructure 'org.ow2.proactive.resourcemanager.nodesource.infrastructure.LocalInfrastructure' './config/authentication/credentials/rm.cred'  4 60000 '' -policy org.ow2.proactive.resourcemanager.nodesource.policy.StaticPolicy 'ALL' 'ALL'
 ----
 
 ====== In interactive mode
@@ -90,5 +90,5 @@ $ PROACTIVE_HOME/bin/proactive-client -cn 'moreLocalNodes' -infrastructure 'org.
 [source]
 ----
 $ PROACTIVE_HOME/bin/proactive-client
-> createns( 'moreLocalNodes', ['org.ow2.proactive.resourcemanager.nodesource.infrastructure.LocalInfrastructure', './config/authentication/rm.cred', 4, 60000, ''], ['org.ow2.proactive.resourcemanager.nodesource.policy.StaticPolicy', 'ALL', 'ALL'])
+> createns( 'moreLocalNodes', ['org.ow2.proactive.resourcemanager.nodesource.infrastructure.LocalInfrastructure', './config/authentication/credentials/rm.cred', 4, 60000, ''], ['org.ow2.proactive.resourcemanager.nodesource.policy.StaticPolicy', 'ALL', 'ALL'])
 ----
