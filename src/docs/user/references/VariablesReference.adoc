@@ -73,6 +73,12 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | ${key}
 | all scripts
 
+| *Generic information*. Generic information defined in the workflow. See <<_generic_information>>.
+| genericInformation.get("key")
+| $genericInformation_key
+| -
+| all scripts
+
 | *Job ID*. ID of the current job.
 | variables.get( "PA_JOB_ID" )
 | $variables_PA_JOB_ID

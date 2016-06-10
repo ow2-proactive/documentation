@@ -281,6 +281,7 @@ Variables used for data access and propagation exist in three flavors:
 
 - <<_workflow_variables,Workflow variables>>
 - <<_proactive_system_variables,ProActive system variables>>
+- <<_generic_information>>
 - <<_passing_data_between_tasks_using_variables,Script variables>>
 
 Their usage depends of the context (see <<_variables_quick_reference>>).
@@ -410,6 +411,17 @@ Here the list of ProActive system variables:
 | String
 
 |===
+
+==== Generic Information
+
+In addition to variables, another key/value structure can be accessed inside a script: *_Generic Information_*.
+
+Generic information semantics differ from <<_workflow_variables>> semantics in the following way:
+
+ * Generic information can be accessed inside a script, but cannot be modified.
+ * Generic information can be defined at *job level* or at *task level*. If the same generic information is defined at job level and at task level, the latter value takes precedence inside the task scope.
+ * Generic information cannot be used directly inside the workflow with the syntax ${} (See  <<_workflow_variables>>).
+ * Generic information are used in general internally by the scheduler, for example to provide information to the scheduling loop on how to handle the task. An example of such generic information is the _START_AT_ info used inside <<_cron_tasks>>.
 
 ==== Passing data between tasks using variables
 
@@ -1096,7 +1108,7 @@ You can find a complete example running a simple task every minutes in this link
 ==== Notes
 
 * The execution of the first iteration occurs immediately and does not depend on the cron expression specified.
- However the user can specify a start time for the first iteration using `START_AT` generic information.
+ However the user can specify a start time for the first iteration using `START_AT` <<_generic_information,generic information>>.
  Its value should be http://en.wikipedia.org/wiki/ISO_8601[ISO 8601^] compliant.
 
 * Each iteration yields one or more task results and the user can query the job state and task states to
@@ -1174,7 +1186,7 @@ You can fetch a Workflow detailed information using its `workflow_id` and `revis
     GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows/{workflow_id}/revisions/{revision_id}
 
 A Workflow Revision is created from a ProActive XML <<_glossary_workflow,*Workflow*>> definition.
-Beside from the _id_, _name_ and _project_name_ of the Workflow, a few more information are indexed from the XML content such as _Generic Information_ and _Variables_.
+Beside from the _id_, _name_ and _project_name_ of the Workflow, a few more information are indexed from the XML content such as _<<_generic_information>>_ and _<<_workflow_variables>>_.
 
 More detailed information on how to create or modify Workflows and Buckets are available in the link:../admin/ProActiveAdminGuide.html#_workflow_catalog[Admin guide].
 
