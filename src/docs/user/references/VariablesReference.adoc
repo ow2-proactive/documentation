@@ -158,32 +158,38 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 
 | *User space*. Location of the user space. See <<_data_spaces>>.
-| user.getVirtualURI()
+| println userspace
 | $USERSPACE
 | -
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 
 | *Global space*. Location of the global space. See <<_data_spaces>>.
-| global.getVirtualURI()
+| println globalspace
 | $GLOBALSPACE
 | -
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 
 | *Input space*. Location of the input space. See <<_data_spaces>>.
-| input.getVirtualURI()
-| -
+| println inputspace
+| $INPUTSPACE
 | -
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 
 | *Local space*. Location of the local space. See <<_data_spaces>>.
-| localspace.getVirtualURI()
+| println localspace
 | $LOCALSPACE
 | -
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 
-| *Output space*. Location of the output space. See <<_data_spaces>>.
-| output.getVirtualURI()
+| *Cache space*. Location of the cache space. See <<_data_spaces>>.
+| println cachespace
+| $CACHESPACE
 | -
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
+
+| *Output space*. Location of the output space. See <<_data_spaces>>.
+| println outputspace
+| $OUTPUTSPACE
 | -
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 
@@ -233,10 +239,10 @@ For Bash:
 echo $variables_key
 ----
 
-For Python script, the *results* variable contains a list of http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/common/task/TaskResult.html[TaskResult java object].
+For nearly all script languages, the *results* variable contains a list of http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/common/task/TaskResult.html[TaskResult java object].
 In order to access the result value, the value() method of this object must be called:
 
-For Python:
+Example for Python:
 [source, python]
 ----
 print results[0].value()
@@ -245,18 +251,25 @@ print results[0].value()
 
 ==== R language
 
-For R language there are some differences. The progress variable is set as follows:
+For R language there are some differences. The progress variable is set as follows (notice the leading dot):
 [source, R]
 ----
-set_progress(50)
+.set_progress(50)
 ----
 
-Also, access to dataspaces variables is different:
+In contrary to the other languages, the result variables is accessed directly:
+[source, R]
+----
+print(results[[0]])
+----
+
+Access to dataspaces variables is similar to other languages:
 [source, R]
 ----
 print(userspace)
 print(globalspace)
 print(inputspace)
 print(localspace)
+print(cachespace)
 print(outputspace)
 ----
