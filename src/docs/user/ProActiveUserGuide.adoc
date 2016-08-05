@@ -484,6 +484,8 @@ This approach has some limitations though:
 
 ==== Data Spaces
 
+===== Global and User Spaces
+
 If a shared folder is not an option in your environment, the ProActive Scheduler provides a convenient way to access
 your data. It has two types of storage on the host where the server is running:
 
@@ -496,6 +498,8 @@ By default, these spaces are linked to folders in the *data* directory of the Pr
  * `PROACTIVE_HOME/data/defaultuser`
 
 But it can be changed in `PROACTIVE_HOME/config/scheduler/settings.ini`.
+
+===== Local Space
 
 All files that are stored in these spaces can be read from all computing nodes. However, data transfer is declarative and not explicit.
 You need to define which files have to be transferred from a data space to computing nodes by using *input files* and reciprocally from computing nodes to a data space by defining *output files*:
@@ -514,7 +518,7 @@ You need to define which files have to be transferred from a data space to compu
 </task>
 ----
 
-Upon the execution of the previous example, Proactive Scheduler automatically transfers all files to a ProActive Node where the task will be executed. The files are put in a special place called *Local Space* on the ProActive Node. It corresponds to the working directory of a task.
+Upon the execution of the previous example, Proactive Scheduler automatically transfers all files to a ProActive Node where the task will be executed. The files are put in a special place called *Local Space* on the ProActive Node. It corresponds to the working directory of a task when the task is in fork mode (default).
 From a task point of view, files can be accessed normally like shown below:
 
 [source, java]
@@ -529,6 +533,66 @@ Files can be also transferred from/to User Space by specifying `transferFromUser
 Before running your jobs you should first *upload* your files into either Global or User Space. To do it you can export folders linked to
 these spaces by one of the standard protocols like *FTP*, *NFS*, or use available web interfaces like
 http://pyd.io[Pydio^].
+
+It is possible to use wildcards in transfer directives, such as:
+
+[source, xml]
+----
+<task name="task1">
+    ...
+    <inputFiles>
+        <files includes="**/tata" accessMode="transferFromGlobalSpace"/>
+    </inputFiles>
+    <outputFiles>
+        <files includes="*" accessMode="transferToGlobalSpace"/>
+    </outputFiles>
+    ...
+</task>
+----
+
+More information of pattern syntax can be found in the https://docs.oracle.com/javase/7/docs/api/java/nio/file/FileSystem.html#getPathMatcher(java.lang.String)[FileSystem class JDK documentation].
+
+
+===== Cache Space
+
+In addition to transferring to the Task *Local Space*, it is also possible to transfer files to the Node host *Cache Space*.
+
+From the Node host point of view, the Cache Space is *unique* and shared for all tasks and all ProActive Nodes deployed on the host.
+
+Transfers to the cache are *not concurrent*, only a single task can transfer to the cache at the same time. I.e if multiple tasks are run in parallel on the same hosts and they all transfer to the cache, these transfers will be executed sequentially.
+
+If a file declared for the transfer is newer than the existing version in the cache, the file will be updated.
+
+In order to transfer files to the cache, simply use the cache transfer directives inside your job:
+
+[source, xml]
+----
+<task name="task1">
+    ...
+    <inputFiles>
+        <files includes="tata" accessMode="cacheFromGlobalSpace"/>
+        <files includes="toto" accessMode="cacheFromUserSpace"/>
+    </inputFiles>
+    ...
+</task>
+----
+
+The files will not be transferred to the Local Space of the task, so it will not be possible to access these files from the current directory.
+
+In order to access these files, use the *cachespace* variable which contains the location of the cache, for example in groovy:
+
+[source, groovy]
+----
+inputFile = new File(cachespace, "tata")
+----
+
+There are no transfer directives to transfer output files *from* the cache. Output files transfers are only possible from the *Local Space*.
+
+Files in the cache space are *automatically deleted* after a given period. The default invalidation period is two weeks, which means that files older than two weeks will be automatically deleted.
+
+In order to change this period, the ProActive Node must be started with the property *node.dataspace.cache.invalidation.period* (in miliseconds).
+
+The property *node.dataspace.cachedir* can also be used to control the cache location on the node.
 
 === Job Result
 
