@@ -1045,6 +1045,64 @@ Defines the DOCKER_HOST environment variable. The DOCKER_HOST variable defines t
 That property is useful when accessing a Docker daemon which runs inside a container or on a remote machine.
 Further information about the DOCKER_HOST property can be found http://docs.docker.com/v1.8/reference/commandline/cli/[in the official Docker documentation^].
 
+== Addons
+
+=== Email notification
+
+The email notification addons includes an utility Java class but also a Groovy task that allow to send an
+email from a ProActive Workflow.
+
+The task assumes that configuration for connecting to an SMTP server is done using
+third-party credentials. It requires to define some values as key/value pairs in the third-party
+credentials associated to the user that runs the task.
+
+This configuration can be achieved from the Scheduler Web portal, the
+ProActive client or even through the REST API. Please see
+link:../user/ProActiveUserGuide.html#_third_party_credentials[Third-party credentials] for more information.
+
+==== SMTP configuration examples
+
+===== Free
+
+[width="60%",frame="topbot",options="header,footer"]
+|======================
+| Key | Value
+| mail.smtp.host | smtp.free.fr
+| mail.smtp.username | user@free.fr
+| mail.smtp.password | user_password
+|======================
+
+===== Gmail
+
+Password authentication to Google servers requires extra configuration.
+
+See https://www.google.com/settings/security/lesssecureapps.
+
+[width="60%",frame="topbot",options="header,footer"]
+|======================
+| Key | Value
+| mail.smtp.host            | smtp.gmail.com
+| mail.smtp.starttls.enable | true
+| mail.smtp.ssl.trust       | smtp.gmail.com
+| mail.smtp.username        | user@gmail.com
+| mail.smtp.password        | user_password
+|======================
+
+===== Outlook
+
+Password authentication to Microsoft servers requires extra configuration.
+
+See http://pchelp.ricmedia.com/how-to-fix-550-5-3-4-requested-action-not-taken-error/
+
+[width="60%",frame="topbot",options="header,footer"]
+|======================
+| Key | Value
+| mail.smtp.host            | smtp-mail.outlook.com
+| mail.smtp.starttls.enable | true
+| mail.smtp.ssl.trust       | smtp-mail.outlook.com
+| mail.smtp.username        | user@gmail.com
+| mail.smtp.password        | user_password
+|======================
 
 == Performance tuning
 
