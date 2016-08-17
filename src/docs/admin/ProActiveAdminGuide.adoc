@@ -1049,8 +1049,9 @@ Further information about the DOCKER_HOST property can be found http://docs.dock
 
 === Email notification
 
-The email notification addons includes an utility Java class but also a Groovy task that allow to send an
-email from a ProActive Workflow.
+The email notification addons includes an utility Java class but also a Groovy 
+task (accessible from the Studio Web app) that allow to send an email 
+from a ProActive Workflow.
 
 The task assumes that configuration for connecting to an SMTP server is done using
 third-party credentials. It requires to define some values as key/value pairs in the third-party
