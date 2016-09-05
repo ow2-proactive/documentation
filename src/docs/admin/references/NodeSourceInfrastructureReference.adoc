@@ -184,7 +184,7 @@ TIP: If all the nodes of an AWS instance are removed, the instance will be termi
 +
 WARNING: If the combination between RAM and CORES does not match any existing AWS instance type, then the closest to the specified parameters will be selected.
 
-    -   *spotPrice:* The maximum price that you are willing to pay per hour per instance (your bid price). Amazon EC2 Spot instances allow you to bid on spare Amazon EC2 computing capacity. Since Spot instances are often available at a discount compared to On-Demand pricing. More information available documentation on https://aws.amazon.com/ec2/spot/[AWS Spot]
+    -   *spotPrice:* The maximum price that you are willing to pay per hour per instance (your bid price). Amazon EC2 Spot instances allow you to bid on spare Amazon EC2 computing capacity. Since Spot instances are often available at a discount compared to On-Demand pricing. More information available on https://aws.amazon.com/ec2/spot/
 
 +
 Using this configuration, you can start a Resource Manager and a
