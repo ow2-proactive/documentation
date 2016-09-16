@@ -205,6 +205,24 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | -
 | <<_fork_environment, environment>>
 
+| *Scheduler API*. Scheduler API variable is a http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/SchedulerNodeClient.html[SchedulerNodeClient java object] which can connect to the scheduler and interact directly with its API.
+| schedulerapi.connect()
+| -
+| -
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
+
+| *UserSpace API*. UserSpace API variable is a http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient java object] which can connect to the user space and interact directly with its API.
+| userspaceapi.connect()
+| -
+| -
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
+
+| *GlobalSpace API*. GlobalSpace API variable is a http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient java object] which can connect to the global space and interact directly with its API.
+| globalspaceapi.connect()
+| -
+| -
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
+
 |===
 
 Note that for script tasks, syntax for accessing maps (like *variables* and *credentials*) is language dependent.
@@ -273,3 +291,5 @@ print(localspace)
 print(cachespace)
 print(outputspace)
 ----
+
+Java objects such as fork environment variable, scheduler, userspace or globalspace APIs are not available in R.

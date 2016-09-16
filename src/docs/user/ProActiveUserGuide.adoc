@@ -1458,6 +1458,82 @@ key is not present, no replacement occurs):
 </task>
 ----
 
+== Scheduler and DataSpace APIs
+From a ProActive task, several APIs are accessible via Java objects bound to dedicated variables:
+
+- Scheduler API : using the "schedulerapi" variable, it is possible to interact directly with the scheduler and do several operations such as submitting jobs, waiting for tasks, listing running jobs etc.
+- DataSpace API : the "userspaceuri" or "globalspaceuri" variables allow to manipulate files present in User or Global spaces. Operations include listing, uploading, downloading, or deleting files.
+
+=== Scheduler API
+
+From inside a task script, you can use the Scheduler API variable like the following:
+
+[source,groovy]
+----
+// importing necessary classes
+import org.ow2.proactive.scheduler.common.job.*
+import org.ow2.proactive.scheduler.common.task.*
+import org.ow2.proactive.scripting.*
+
+
+// connect to the scheduler
+schedulerapi.connect()
+
+// create a hello world job
+job = new TaskFlowJob()
+job.setName("HelloJob")
+task = new ScriptTask()
+task.setName("HelloTask")
+task.setScript(new TaskScript(new SimpleScript("println 'Hello World'", "groovy")))
+job.addTask(task)
+
+// submitting the job
+jobid = schedulerapi.submit(job)
+
+// Wait for the task termination
+taskResult = schedulerapi.waitForTask(jobid.toString(), "HelloTask", 120000)
+
+// displaying the task output
+println taskResult.getOutput().getAllLogs(false)
+
+----
+
+The complete API description can be found in the http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/SchedulerNodeClient.html[SchedulerNodeClient JavaDoc].
+
+=== DataSpace API
+
+The traditional way to transfer files from the user or global space to a task is by using file transfer directives as described in chapter <<_data_spaces>>.
+
+Where file transfer directives are sufficient to cover usual cases, it is sometimes necessary to manipulate directly the dataspace API to have a finer control level.
+
+Below is an example use of this api :
+
+[source,groovy]
+----
+// connect to the user space
+userspaceapi.connect()
+
+// push file
+inFile = new File("inFile.txt");
+inFile.write("HelloWorld")
+userspaceapi.pushFile(inFile, "remoteDir/inFile.txt")
+
+// list files
+
+remotefiles = userspaceapi.listFiles("remoteDir", "*.txt"
+println remotefiles
+
+// pull File
+outFile = new File("outFile.txt")
+userspaceapi.pullFile("remote/inFile.txt", outFile)
+
+println outFile.text
+
+----
+
+The complete description of user and global space APIs can be found in the http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient JavaDoc].
+
+
 == Fork environment
 A fork execution environment is a new Java Virtual Machine (JVM) which is started exclusively to execute a task. Starting a
 new JVM means that the task inside it will run in a new environment. This environment can
