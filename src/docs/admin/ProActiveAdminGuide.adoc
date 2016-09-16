@@ -857,29 +857,138 @@ to /tmp before starting the ProActive Node.
 [[_web_applications]]
 == Configure Web applications
 
-The ProActive Scheduler deploys several web applications :
-
- - Scheduler Web Interface
- - Resource Manager Interface
- - Workflow Studio
- - REST API
-
-All these applications can be found in `PROACTIVE_HOME/dist/war` and are automatically deployed in an embedded Jetty web server
-when starting the Scheduler.
+The ProActive Scheduler deploys automatically several web applications in an
+embedded Jetty web server. The binaries and sources associated to the web
+applications can be found in `PROACTIVE_HOME/dist/war`.
 
 TIP: To configure Web applications, for instance the HTTP port to use, edit the `PROACTIVE_HOME/config/web/settings.ini` file.
 
-Web applications are deployed on the host using the HTTP port 8080 by default. The local part of the URL is based on the war files found in `PROACTIVE_HOME/dist/war`.
-For instance, the scheduler web portal is available at http://localhost:8080/scheduler.
+Web applications are deployed on the host using the HTTP port 8080 by default. The local part of the URL is based on the WAR files found in `PROACTIVE_HOME/dist/war`.
+For instance, the Scheduler web portal is available at http://localhost:8080/scheduler.
 
 === Enable HTTPS
 
-NOTE: If you are familiar with Nginx or similar tools, you can also use it to enable HTTPS connection to Web applications.
-It will also enable you to redirect HTTP requests to HTTPS for instance.
+ProActive Workflows and Scheduling provides support for HTTPS. Similarly to
+other web settings, HTTPS related properties are defined in
+`PROACTIVE_HOME/config/web/settings.ini` and any update necessitates a restart
+of the Scheduler instance.
 
-HTTPS can be enabled for Web applications using a Java keystore. See `web.https` properties in `PROACTIVE_HOME/config/web/settings.ini`
-for the possible settings. We provided a default self-signed keystore than can be used for testing but for
-production you should build your own keystore with a valid certificate so it will be accepted by browsers.
+Enabling HTTPS requires to set `web.https` to `true` but also to define a path
+to a valid link:https://en.wikipedia.org/wiki/Keystore[keystore] through
+`web.https.keystore` along with its associated password
+by using `web.https.keystore.password`. A default keystore is provided for
+testing purposes, however it must not be used in production.
+
+When you are using the default keystore or a custom keystore with a self-signed
+certificate you need to enable `web.https.allow_any_certificate` and optionally
+`web.https.allow_any_hostname` if your certificate Common Name (CN) does not
+match the fully qualified host name used for the machine hosting the Web
+applications.
+
+Port 8443 is used for listening to HTTPS connections.
+This port number prevents to have root access for deploying web applications.
+However, you can change it by editing `web.https.port` value.
+
+When HTTPS is set up, you can automatically redirect any HTTP request from
+users to the secured version of the protocol to make sure exchanged information
+is protected. It requires to enable `web.redirect_http_to_https`.
+
+Unlike other web applications, the Scheduler and Resource Manager web portals
+require manual configuration based on your HTTPS settings. The configuration
+files to edit are respectively in
+`PROACTIVE_HOME/dist/war/scheduler/scheduler.conf` and
+`PROACTIVE_HOME/dist/war/rm/rm.conf`.
+
+NOTE: If you are familiar with Nginx or a similar web server, you can also use
+it to enable HTTPS connection to Web applications. It has the advantage to make
+it possible to have ProActive web applications and additional ones to coexist.
+
+==== Creating a valid keystore
+
+Java is bundled with some utility binaries such as
+link:http://docs.oracle.com/javase/8/docs/technotes/tools/unix/keytool.html[keytool].
+This last allows to create and manage a keystore but also to generate keys and
+certificates.
+
+===== With a self-signed certificate
+
+Generating a new self-signed certificate imported in a new keystore with a
+custom password is as simple as executing the following command:
+
+[source]
+----
+$JAVA_HOME/bin/keytool -keystore keystore -alias jetty -genkey -keyalg RSA -validity 365
+----
+
+This command prompts for information about the certificate and for a password to
+protect both the keystore and the keys within it. The only mandatory responses
+are to provide a password and the Fully Qualified Domain Name of the server. Once
+done, the value for properties `web.https.keystore` and
+`web.https.keystore.password` must be adapted based on the information you have
+entered.
+
+For more information, please look at the
+link:http://www.eclipse.org/jetty/documentation/current/configuring-ssl.html[Jetty documentation].
+
+===== With a trusted certificate
+
+The first step is to obtain a trusted certificate that is valid for your Fully
+Qualified Domain Name (FQDN). This process differs from a Certification
+Authority (CA) to another. In the following, it is assumed that
+link:https://letsencrypt.org[Let's Encrypt] is used. By way of illustration,
+Digital Ocean provides examples for link:https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-centos-7[CentOS] and
+link:https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-14-04[Ubuntu].
+
+Assumming your FQDN is _example.org_, then after obtaining a certificate you will
+get the following PEM-encoded files in `/etc/letsencrypt/live/example.org`:
+
+  - cert.pem: Your domain's certificate
+  - chain.pem: The Let's Encrypt chain certificate
+  - fullchain.pem: cert.pem and chain.pem combined
+  - privkey.pem: Your certificate's private key
+
+Before loading the key and the certificate into a new keystore that is
+recognized by ProActive Workflows and Scheduling, you need to combine them into
+a PKCS12 format file. You can achieve this action by means of the following
+OpenSSL command:
+
+[source]
+----
+openssl pkcs12 \
+    -inkey /etc/letsencrypt/live/example.org/privkey.pem \
+    -in /etc/letsencrypt/live/example.org/cert.pem \
+    -export -out jetty.pkcs12
+----
+
+Then, you can load the resulting PKCS12 file into a JSSE keystore with keytool:
+
+[source]
+----
+keytool -importkeystore -srckeystore jetty.pkcs12 \
+    -srcstoretype PKCS12 -destkeystore keystore
+----
+
+Both commands prompt for a password. You need to use the same and set it as a
+value to property `web.https.keystore.password`. The resulting _keystore_ file
+corresponds to the file whose path must be used for property
+`web.https.keystore`.
+
+IMPORTANT: link:https://bugs.openjdk.java.net/browse/JDK-8154757[Starting from update 101],
+Java 8 trusts Lets Encrypt certificates. However, if you are using a less recent
+version of Java for running JVMs related to ProActive Workflows and Scheduling,
+you will need to update the truststore of your Java installation.
+
+==== Updating Java truststore for accepting Lets Encrypt certificates
+
+[source]
+----
+sudo keytool -trustcacerts \
+    -keystore $JAVA_HOME/jre/lib/security/cacerts \
+    -storepass changeit \
+    -noprompt \
+    -importcert \
+    -file /etc/letsencrypt/live/example.org/chain.pem
+----
 
 === Enable VNC remote visualization in the browser
 
@@ -936,6 +1045,65 @@ Defines the DOCKER_HOST environment variable. The DOCKER_HOST variable defines t
 That property is useful when accessing a Docker daemon which runs inside a container or on a remote machine.
 Further information about the DOCKER_HOST property can be found http://docs.docker.com/v1.8/reference/commandline/cli/[in the official Docker documentation^].
 
+== Addons
+
+=== Email notification
+
+The email notification addons includes an utility Java class but also a Groovy 
+task (accessible from the Studio Web app) that allow to send an email 
+from a ProActive Workflow.
+
+The task assumes that configuration for connecting to an SMTP server is done using
+third-party credentials. It requires to define some values as key/value pairs in the third-party
+credentials associated to the user that runs the task.
+
+This configuration can be achieved from the Scheduler Web portal, the
+ProActive client or even through the REST API. Please see
+link:../user/ProActiveUserGuide.html#_third_party_credentials[Third-party credentials] for more information.
+
+==== SMTP configuration examples
+
+===== Free
+
+[width="60%",frame="topbot",options="header,footer"]
+|======================
+| Key | Value
+| mail.smtp.host | smtp.free.fr
+| mail.smtp.username | user@free.fr
+| mail.smtp.password | user_password
+|======================
+
+===== Gmail
+
+Password authentication to Google servers requires extra configuration.
+
+See https://www.google.com/settings/security/lesssecureapps.
+
+[width="60%",frame="topbot",options="header,footer"]
+|======================
+| Key | Value
+| mail.smtp.host            | smtp.gmail.com
+| mail.smtp.starttls.enable | true
+| mail.smtp.ssl.trust       | smtp.gmail.com
+| mail.smtp.username        | user@gmail.com
+| mail.smtp.password        | user_password
+|======================
+
+===== Outlook
+
+Password authentication to Microsoft servers requires extra configuration.
+
+See http://pchelp.ricmedia.com/how-to-fix-550-5-3-4-requested-action-not-taken-error/
+
+[width="60%",frame="topbot",options="header,footer"]
+|======================
+| Key | Value
+| mail.smtp.host            | smtp-mail.outlook.com
+| mail.smtp.starttls.enable | true
+| mail.smtp.ssl.trust       | smtp-mail.outlook.com
+| mail.smtp.username        | user@gmail.com
+| mail.smtp.password        | user_password
+|======================
 
 == Performance tuning
 
