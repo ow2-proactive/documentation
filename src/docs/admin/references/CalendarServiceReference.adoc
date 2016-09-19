@@ -1,0 +1,87 @@
+Calendar service is another ProActive micro-service allowing to visualize and manage (edit and delete) all jobs and a filter planned jobs in a calendar client such as Outlook, Thunderbird Lightning, Mac Calendar, etc. Be aware that calendar service could be running only when the ProActive scheduler is already running.
+
+==== Installation
+
+Python3 and Radicale are mandatory for calendar service's installation, since calendar services uses Radicale as its CalDav server, and Radicale is written in pure Python.
+For more information about Radicale, please refer to <http://radicale.org/>.
+
+===== Windows
+A portable Radicale programm is available to be used in Windows environment, which includes all libraries and dependencies in one package to make Radicale server running on Windows.
+    
+    1. Run %PROACTIVE_HOME%/tools/radicale/windows/RadicalePortable_1.1.1_English.paf.exe and select a directory where the Radicale server will be installed (Note down this directory which is going to be used in the next step). 
+    +
+    WARNING: Do not tick the checkbox "Run Radicale Portable" in the last installation, Radicale server will be run later after some configurations
+    +
+    2. Add `RADICALE_HOME` system variable. Go to System -> Advanced system settings -> Environment Variables, Click on the "New" button of the "System variables" section, set `RADICALE_HOME` as the variable name and the Radicale installed directory as the variable value
+    
+    3. Set up calendar service. Go to the \tools folder and run the calendar-service-setup batch script, the Radicale server will be started up by this script
+    +
+    [source]
+    ----
+    cd  %PROACTIVE_HOME%/tools/
+    calendar-service-setup.bat
+    ----
+    +
+    WARNING: At the end, the script will ask to run the calendar service or not, please don't run calendar service if ProActive Scheduler is not running.
+    +
+        
+===== Linux (Debian)
+The following scripts have to be run as root
+
+    1. Go to /tools folder, and run calendar-service-setup.sh batch script (which is going to install python3 and Radicale)
+    +
+    [source]
+    ----
+    cd  %PROACTIVE_HOME%/tools/
+    sudo ./calendar-service-setup.sh
+    ----
+    +
+    WARNING: At the end, the script will ask to run the calendar service or not, please don't run calendar service if ProActive Scheduler is not running.
+    +
+
+    2. Go to /bin folder, and run calendar-service.sh 
+    +
+    [source]
+    ----
+    cd  %PROACTIVE_HOME%/bin/
+    sudo ./calendar-service.sh start
+    ----
+    +
+
+===== Mac OS
+Python3 has to be installed already on Mac OS. Then user can follow the same steps for Linux to setup and start the calendar service.
+
+==== Start up Calendar service
+
+===== Windows
+Go to the \bin foler and run calendar-service.bat
+    +
+    [source]
+    ----
+    cd  %PROACTIVE_HOME%/bin/
+    calendar-service.bat
+    ----
+
+===== Linux
+Go to the \bin foler and run calendar-service.sh
+    +
+    [source]
+    ----
+    cd  %PROACTIVE_HOME%/bin/
+    sudo ./calendar-service.sh start
+    ----
+TIP: `calendar-service.sh` can be used with option stop, restart, status as well.
+
+==== Calendar service configuration
+Calendar service's default configuration can be override by creating an application.properties file in $PROACTIVE_HOME/config/calendar-service/.
+Some important configuration properties are shown in the list below
+
+-  `server.port` - Calendar service rest server port, default value is "4242"
+
+-  `pa.scheduler.rest.url` - ProActive scheduler rest url, which is used to subscribe to the scheduler's jobs events listener list. Default value is "http://localhost:8080/rest/"
+
+-  `pa.scheduler.admin.login` - ProActive scheduler admin login name, used to connect to scheduler, default value is "admin"
+
+-  `pa.scheduler.admin.password` - ProActive scheduler admin login password, default value is "admin"
+
+-  `pa.scheduler.home` - ProActive installed home path, default value is relative parent directory "..""

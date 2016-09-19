@@ -1524,6 +1524,9 @@ include::./references/VariablesReference.adoc[]
 === Topology Types
 include::./references/TopologyTypes.adoc[]
 
+=== Calendar Service
+include::./references/CalendarServiceReference.adoc[]
+
 [[_scheduler_command_line]]
 === Command Line
 include::../CLI.adoc[]
