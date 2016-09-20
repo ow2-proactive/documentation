@@ -1,4 +1,4 @@
-Calendar service is another ProActive micro-service allowing to visualize and manage (edit and delete) all jobs and a filter planned jobs in a calendar client such as Outlook, Thunderbird Lightning, Mac Calendar, etc. Be aware that calendar service could be running only when the ProActive scheduler is already running.
+Calendar service is another ProActive micro-service allowing to visualize and manage (edit and delete) all jobs and planned jobs in a calendar client such as Outlook, Thunderbird Lightning, Mac Calendar, etc. Be aware that calendar service could be running only when the ProActive scheduler is already running.
 
 ==== Installation
 
