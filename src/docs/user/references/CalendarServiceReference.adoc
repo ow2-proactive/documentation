@@ -1,10 +1,12 @@
-Calendar service is another ProActive micro-service allowing to visualize and manage (edit and delete) all jobs and a filter planned jobs in a calendar client such as Outlook, Thunderbird Lightning, Mac Calendar, etc. 
 
-== Subscribe to Calendar Service
+=== Calendar Service
+Calendar service is another ProActive micro-service allowing to visualize and manage (edit and delete) all jobs and planned jobs created by the user in a calendar client application such as Outlook, Thunderbird Lightning, Mac Calendar, etc. 
+
+=== Subscribe to Calendar Service
 
 To use Calendar Service, it's simple to subscribe to the calendar service url from within a calendar client application. 
 
-=== Calendar service URL
+==== Calendar service URL
 
 The Calendar service's URL is in the following format
 
@@ -20,9 +22,11 @@ ProActive user can get this URL from scheduler portal's `Calendar` button
 
 image::calendar_button.png[align="center"]
 
+The URL for the logined user is going to be shown in a popup window
+
 image::calendar_url.png[align="center"]
 
-=== Outlook
+==== Outlook
 
 1. Open IE browser and go to the Calendar service URL
 
@@ -32,7 +36,7 @@ image::calendar_url.png[align="center"]
 
 4. The calendar should be opened in the Outlook
         
-=== Mac Calendar
+==== Mac Calendar
 
 1. Go to `File` popdown menu, and select `New Calendar Subscription...`
 
@@ -46,7 +50,7 @@ image::icalendar_2.png[align="center"]
 
 image::icalendar_3.png[align="center"]
 
-=== Thunderbird Lightning
+==== Thunderbird Lightning
 
 1. Go to `Home` tab, create a new calendar
 

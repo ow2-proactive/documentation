@@ -1593,6 +1593,10 @@ Internally the command is split into docker, run, java, /usr/bin/java, -cp, [Cla
     do then the fork execution command will be split wrong and fail.
 
 
+== Calendar Integration
+
+include::./references/CalendarServiceReference.adoc[]
+
 == Reference
 
 === Job and task specification
@@ -1609,9 +1613,6 @@ include::./references/VariablesReference.adoc[]
 
 === Topology Types
 include::./references/TopologyTypes.adoc[]
-
-=== Calendar Service
-include::./references/CalendarServiceReference.adoc[]
 
 [[_scheduler_command_line]]
 === Command Line
