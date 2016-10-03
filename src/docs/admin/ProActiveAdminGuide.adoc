@@ -1045,6 +1045,7 @@ Defines the DOCKER_HOST environment variable. The DOCKER_HOST variable defines t
 That property is useful when accessing a Docker daemon which runs inside a container or on a remote machine.
 Further information about the DOCKER_HOST property can be found http://docs.docker.com/v1.8/reference/commandline/cli/[in the official Docker documentation^].
 
+
 == Addons
 
 === Email notification
@@ -1104,6 +1105,12 @@ See http://pchelp.ricmedia.com/how-to-fix-550-5-3-4-requested-action-not-taken-e
 | mail.smtp.username        | user@gmail.com
 | mail.smtp.password        | user_password
 |======================
+
+
+[[_calendar_service]]
+=== Calendar Integration
+
+include::./references/CalendarServiceReference.adoc[]
 
 == Performance tuning
 

@@ -1,0 +1,73 @@
+
+=== Calendar Service
+Calendar service is another ProActive micro-service allowing to visualize and manage (edit and delete) all jobs and planned jobs created by the user in a calendar client application such as Outlook, Thunderbird Lightning, Mac Calendar, etc. 
+
+=== Subscribe to Calendar Service
+
+To use Calendar Service, it's simple to subscribe to the calendar service url from within a calendar client application. 
+
+==== Calendar service URL
+
+The Calendar service's URL is in the following format
+
+[source]
+----
+http://*host-address*:5232/*user*/calendar.ics/
+----
+
+* `host-address` - ProActive server address
+* `user` - ProActive scheduler user login name
+
+ProActive user can get this URL from scheduler portal's `Calendar` button
+
+image::calendar_button.png[align="center"]
+
+The URL for the logined user is going to be shown in a popup window
+
+image::calendar_url.png[align="center"]
+
+==== Outlook
+
+1. Open IE browser and go to the Calendar service URL
+
+2. A popup window appears and asks the credential. Use the credential of the scheduler `user` account where the login name is the one used in the calendar service url
+
+3. IE browser is going to ask if you'd like to `Open` or `Save` the calendar from the server, select `Open`
+
+4. The calendar should be opened in the Outlook
+        
+==== Mac Calendar
+
+1. Go to `File` popdown menu, and select `New Calendar Subscription...`
+
+image::icalendar_1.png[align="center"]
+
+2. Set the calendar URL as `Calendar URL` value
+
+image::icalendar_2.png[align="center"]
+
+3. Configue this new calendar
+
+image::icalendar_3.png[align="center"]
+
+==== Thunderbird Lightning
+
+1. Go to `Home` tab, create a new calendar
+
+image::thunderbird_1.png[align="center"]
+
+2. A new calendar on the Network
+
+image::thunderbird_2.png[align="center"]
+
+3. Select `CalDav` format and set the the Calendar URL as Location
+
+image::thunderbird_3.png[align="center"]
+
+4. Give a name for this new calendar
+
+image::thunderbird_4.png[align="center"]
+
+5. Done
+
+image::thunderbird_5.png[align="center"]

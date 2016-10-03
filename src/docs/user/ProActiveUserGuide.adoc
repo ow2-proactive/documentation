@@ -1215,6 +1215,16 @@ TIP: Since it runs a graphical application, the task will never exit and run for
 you want to check manually some results via the graphical application and then exit the application.
 The task will then terminate normally.
 
+=== Troubleshoot a Workflow Execution
+
+When a task has *IN_ERROR* status, a right click on it allows the user to select _Mark as finished and resume_. 
+This will set the task status as *FINISHED* and then resume job execution: this task won't be executed again, subsequent tasks will execute as if the task executed correctly.
+This allows the user to manually perform actions to the *IN_ERROR* task, without cancelling the whole job execution. 
+
+
+If the task has not *IN_ERROR* status, the _Mark as finished and resume_ option will be in grey, meaning that the action is disabled.
+
+
 == Workflow Storage and Versioning
 
 The Workflow Catalog provides the storage and versioning of workflows inside Buckets. It also features a searching functionality using a simple query language to fetch workflows based on particular parameters. The Workflow Catalog is a RESTful service. A http://swagger.io/[Swagger] interface is provided to understand and interact with the service.
@@ -1582,6 +1592,10 @@ Internally the command is split into docker, run, java, /usr/bin/java, -cp, [Cla
    folder in the temp directory of the operating system. Those cannot contain spaces, because if they
     do then the fork execution command will be split wrong and fail.
 
+
+== Calendar Integration
+
+include::./references/CalendarServiceReference.adoc[]
 
 == Reference
 
