@@ -80,7 +80,7 @@ TIP: `calendar-service.sh` can be used with option stop, restart, status as well
 
 ==== Calendar service configuration
 
-Calendar service's default configuration can be overriden by creating an application.properties file in $PROACTIVE_HOME/config/calendar-service/.
+Calendar service's default configuration can be overriden by modifying the application.properties file in $PROACTIVE_HOME/config/calendar-service/.
 Some important configuration properties are shown in the list below
 
 -  `server.port` - Calendar service rest server port, default value is "4242"
