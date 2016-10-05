@@ -527,17 +527,18 @@ Agents configuration is detailed in the section <<_proactive_agents>>.
 
 == User Authentication
 
-In order to use ProActive Scheduler every user must have an account. It supports two methods for authentication:
+In order to use ProActive Scheduler every user must have an account. It supports three methods for authentication:
 
 * *File based*
 * *LDAP*
+* *PAM*
 
 === Select authentication method
 
 By default the ProActive Scheduler is configured to use *file based* authentication and has some default accounts ('demo/demo', 'admin/admin') that
 work out of the box.
 
-If you would like to use your *LDAP* server you need to modify two configs:
+If you would like to change the method authentication type to use your *LDAP* server or use Linux PAM, you need to modify two configs:
 
 * *Resource Manager* configuration (`PROACTIVE_HOME/config/rm/settings.ini`)
 +
@@ -547,6 +548,7 @@ If you would like to use your *LDAP* server you need to modify two configs:
 #It can be one of the following values:
 #    - "RMFileLoginMethod" to use file login and group management
 #    - "RMLDAPLoginMethod" to use LDAP login management
+#    - "RMPAMLoginMethod" to use PAM login management
 pa.rm.authentication.loginMethod=RMLDAPLoginMethod
 ----
 
@@ -558,6 +560,7 @@ pa.rm.authentication.loginMethod=RMLDAPLoginMethod
 #It can be one of the following values :
 #	- "SchedulerFileLoginMethod" to use file login and group management
 #	- "SchedulerLDAPLoginMethod" to use LDAP login management
+#   - "SchedulerPAMLoginMethod" to use PAM login management
 pa.scheduler.core.authentication.loginMethod=SchedulerLDAPLoginMethod
 ----
 
@@ -687,6 +690,40 @@ It uses `pa.rm.defaultloginfilename` and `pa.rm.defaultgroupfilename` files to a
 To activate this behavior set `pa.ldap.group.membership.fallback` to true, in LDAP configuration file.
 * If a user is not found in LDAP, fall back to authentication and group membership checking with login
 and group files. To activate this behavior, set `pa.ldap.authentication.fallback` to true, in LDAP configuration file.
+
+=== PAM
+
+The ProActive Scheduler & Resource Manager are able to interact with *PAM (Linux Pluggable Authentication Modules)* to check users login/password.
+It is not currently possible to retrieve linux system group memberships for users. Thus groups must be managed using the `PROACTIVE_HOME/config/authentication/group.cfg` file.
+
+The *first step* to authenticate users with PAM is to configure the PAM login methods in the scheduler and rm settings:
+
+
+.PROACTIVE_HOME/config/rm/settings.ini
+----
+pa.rm.authentication.loginMethod=RMPAMLoginMethod
+----
+
+.PROACTIVE_HOME/config/scheduler/settings.ini
+----
+pa.scheduler.core.authentication.loginMethod=SchedulerPAMLoginMethod
+----
+
+The *second step* is to copy the file `PROACTIVE_HOME/config/authentication/proactive-jpam` to `/etc/pam.d` (you must be root to perform this operation).
+
+You can modify this default PAM configuration file if you need specific PAM policies.
+
+The *third step* is to add the user which will start the scheduler process (*PROACTIVE_HOME/bin/proactive-server*) to the shadow group
+
+[source]
+----
+sudo usermod -G shadow proactive
+----
+After this command, the user, called "proactive" here in this example will be added to group shadow. You may need to logoff/logon before this modification can be effective.
+
+The *fourth step* will be to add, for each linux system users which will connect to the scheduler, a corresponding group in `PROACTIVE_HOME/config/authentication/group.cfg`
+
+In that case, don't use the *proactive-users* tool, but rather edit the group file manually.
 
 == User Permissions
 
