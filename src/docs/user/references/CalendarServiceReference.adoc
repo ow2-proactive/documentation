@@ -36,7 +36,7 @@ The URL for the logined user is going to be shown in a popup window
 
 image::calendar_url.png[align="center"]
 
-By default, only the secured URL is provided, which user can use with Thunderbird, Apple Calendar application with credential. A private URL can be created and used for Google calendar or Outlook without credential, the private URL can be regenerated or deleted if it is compromised.
+By default, only the secured URL is provided, which user can use with Thunderbird, Apple Calendar application with credentials. A private URL can be created and used for Google calendar or Outlook without credentials, the private URL can be regenerated or deleted if it is compromised.
 
 image::calendar_url_private.png[align="center"]
 
@@ -44,7 +44,7 @@ image::calendar_url_private.png[align="center"]
 
 1. Open IE browser and go to the Calendar service URL
 
-2. A popup window appears and asks the credential. Use the credential of the scheduler `user` account where the login name is the one used in the calendar service url
+2. A popup window appears and asks the credentials. Use the credentials of the scheduler `user` account where the login name is the one used in the calendar service url
 
 3. IE browser is going to ask if you'd like to `Open` or `Save` the calendar from the server, select `Open`
 
