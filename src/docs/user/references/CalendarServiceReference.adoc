@@ -36,7 +36,7 @@ The URL for the logined user is going to be shown in a popup window
 
 image::calendar_url.png[align="center"]
 
-By default, only secured URL is provided, which user can use it with Thunderbird, Apple Calendar application. A private URL can be created for Google calendar or Outlook, the private URL can be regenerated or deleted if needed.
+By default, only the secured URL is provided, which user can use with Thunderbird, Apple Calendar application with credential. A private URL can be created and used for Google calendar or Outlook without credential, the private URL can be regenerated or deleted if it is compromised.
 
 image::calendar_url_private.png[align="center"]
 
