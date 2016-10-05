@@ -590,6 +590,8 @@ demo:admin
 user:user
 ----
 
+ProActive contains a set of predefined groups such as "user" and "admin". Groups are defined in `PROACTIVE_HOME/config/security.java.policy-server` as described in chapter <<User Permissions>>.
+
 === LDAP
 
 The ProActive Resource Manager is able to connect to an existing *LDAP* server, to check users login/password and verify users group
@@ -693,37 +695,43 @@ and group files. To activate this behavior, set `pa.ldap.authentication.fallback
 
 === PAM
 
-The ProActive Scheduler & Resource Manager are able to interact with *PAM (Linux Pluggable Authentication Modules)* to check users login/password.
+The ProActive Scheduler & Resource Manager are able to interact with Linux *PAM (Pluggable Authentication Modules)* to check users login/password.
 It is not currently possible to retrieve linux system group memberships for users. Thus groups must be managed using the `PROACTIVE_HOME/config/authentication/group.cfg` file.
 
-The *first step* to authenticate users with PAM is to configure the PAM login methods in the scheduler and rm settings:
+In order to enable PAM authentication, follow the following steps:
 
-
+1. Configure the PAM login methods in the Scheduler and RM settings:
++
 .PROACTIVE_HOME/config/rm/settings.ini
 ----
 pa.rm.authentication.loginMethod=RMPAMLoginMethod
 ----
-
++
 .PROACTIVE_HOME/config/scheduler/settings.ini
 ----
 pa.scheduler.core.authentication.loginMethod=SchedulerPAMLoginMethod
 ----
++
 
-The *second step* is to copy the file `PROACTIVE_HOME/config/authentication/proactive-jpam` to `/etc/pam.d` (you must be root to perform this operation).
-
+2. Copy the file `PROACTIVE_HOME/config/authentication/proactive-jpam` to `/etc/pam.d` (you must be root to perform this operation).
++
 You can modify this default PAM configuration file if you need specific PAM policies.
 
-The *third step* is to add the user which will start the scheduler process (*PROACTIVE_HOME/bin/proactive-server*) to the shadow group
 
+3. Add the user which will start the scheduler process `PROACTIVE_HOME/bin/proactive-server` to the *shadow* group
++
 [source]
 ----
-sudo usermod -G shadow proactive
+sudo usermod -G shadow your_user
 ----
-After this command, the user, called "proactive" here in this example will be added to group shadow. You may need to logoff/logon before this modification can be effective.
++
+After this command, the user, called "your_user" here in this example, will be added to group *shadow*. You may need to logoff/logon before this modification can be effective.
 
-The *fourth step* will be to add, for each linux system users which will connect to the scheduler, a corresponding group in `PROACTIVE_HOME/config/authentication/group.cfg`
-
-In that case, don't use the *proactive-users* tool, but rather edit the group file manually.
+4. Associate, for each Linux system users which will connect to the Scheduler, a ProActive group.
++
+Following the procedure described in chapter <<File>>, groups must be associated to existing PAM users in the ProActive group file `PROACTIVE_HOME/config/authentication/group.cfg`.
++
+In case of PAM users, the login file should not be modified as password authentication will be performed at the Linux system level.
 
 == User Permissions
 
