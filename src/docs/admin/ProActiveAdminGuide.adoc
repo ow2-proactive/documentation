@@ -271,7 +271,7 @@ If the group named "proactive" does not exist, create the group and add "proacti
 +
 ----
 sudo groupadd proactive
-sudo usermod -g proactive proactive
+sudo usermod -ag proactive proactive
 ----
 
 * Start the Linux Agent
@@ -722,7 +722,7 @@ You can modify this default PAM configuration file if you need specific PAM poli
 +
 [source]
 ----
-sudo usermod -G shadow your_user
+sudo usermod -aG shadow your_user
 ----
 +
 After this command, the user, called "your_user" here in this example, will be added to group *shadow*. You may need to logoff/logon before this modification can be effective.
