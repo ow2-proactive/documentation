@@ -570,27 +570,80 @@ pa.scheduler.core.authentication.loginMethod=SchedulerLDAPLoginMethod
 By default, the ProActive Resource Manager stores users accounts, passwords, and group memberships (user or admin), in two files:
 
 * users and passwords accounts are stored in `PROACTIVE_HOME/config/authentication/login.cfg`.
-Each line has to follow the format *user:passwd*. The default `login.cfg` file is given hereafter:
+Each line has to follow the format *user:encypted password*.
+The default accounts in `login.cfg` file correspond to the following passwords, which are encrypted in the actual login.cfg file:
 +
-[source]
+.unencrypted_login.cfg
 ----
 admin:admin
 user:pwd
 demo:demo
+guest:pwd
+test:pwd
+radmin:pwd
+nsadmin:pwd
+provider:pwd
+scheduler:scheduler_pwd
+rm:rm_pwd
+watcher:watcher_pwd
+test_executor:pwd
 ----
 
 * users membership is stored in `PROACTIVE_HOME/config/authentication/group.cfg`. For each user registered in login.cfg,
 a group membership has to be defined in this file. Each line has to look like *user:group*. Group has to be
-user to have user rights, or admin to have administrator rights. Below is an extract of `group.cfg`:
+user to have user rights, or admin to have administrator rights. Below is an example `group.cfg` file:
 +
-[source]
+.group.cfg
 ----
 admin:admin
 demo:admin
+guest:guests
+rm:admin
+scheduler:user
 user:user
+watcher:watchers
 ----
 
 ProActive contains a set of predefined groups such as "user" and "admin". Groups are defined in `PROACTIVE_HOME/config/security.java.policy-server` as described in chapter <<User Permissions>>.
+
+In order to create new users, delete an existing user, or modify the groups or password for an existing user, a command-line tool is available.
+
+This command is available inside the *tools* folder: `PROACTIVE_HOME/tools/proactive-users`.
+You can check the command syntax using the -h option.
+
+----
+$ proactive-users -h
+usage: proactive-users [-C | -D | -U]  [-g <GROUPS>] [-gf <GROUPFILE>] [-h] [-kf <KEYFILE>] [-l <LOGIN>] [-lf <LOGINFILE>] [-p <PASSWORD>]
+----
+
+Here are examples of use:
+
+* Creating users
++
+----
+$ proactive-users -C -l user1 -p pwd1 -g user
+Created user user1 in H:\Install\scheduling\tools\..\config/authentication/login.cfg
+Added group user to user user1
+----
+The user with login "user1", password "pwd1" and group "user" was created
+
+* Updating users
++
+----
+$ proactive-users -U -l user1 -p pwd2 -g nsadmins,admin
+Changed password for user user1 in H:\Install\scheduling\tools\..\config/authentication/login.cfg
+Added group nsadmins to user user1
+Added group admin to user user1
+----
+User "user1" now has password pwd2 and groups nsadmins & admin (group "user" was removed).
+
+* Deleting users
++
+----
+$ proactive-users -D -l user1
+Deleted user user1 in H:\Install\scheduling\tools\..\config/authentication/login.cfg
+----
+User "user1" does not exist any more.
 
 === LDAP
 
