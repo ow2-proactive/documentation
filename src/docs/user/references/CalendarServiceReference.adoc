@@ -1,6 +1,6 @@
 
 === Calendar Service
-Calendar service is another ProActive micro-service allowing to visualize and manage (edit and delete) all jobs and planned jobs created by the user in a calendar client application such as Outlook, Thunderbird Lightning, Mac Calendar, etc. 
+Calendar service is another ProActive micro-service allowing to visualize and manage (edit and delete) all jobs and planned jobs created by the user in a calendar client application having CalDav support such as Outlook, Thunderbird Lightning, Mac Calendar, Google Calendar, etc. 
 
 === Subscribe to Calendar Service
 
@@ -9,15 +9,6 @@ To use Calendar Service, it's simple to subscribe to the calendar service url fr
 ==== Calendar service URL
 
 The Calendar service's URL is in the following format
-
-secured URL
-
-[source]
-----
-http://*host-address*:5232/*user*/calendar.ics/
-----
-
-private URL
 
 [source]
 ----
@@ -32,23 +23,31 @@ ProActive user can get this URL from scheduler portal's `Calendar` button
 
 image::calendar_button.png[align="center"]
 
-The URL for the logined user is going to be shown in a popup window
+ProActive user can create a unique private URL by clicking on the `Create` button in the popup window. 
 
-image::calendar_url.png[align="center"]
+image::calendar_url_create.png[align="center"]
 
-By default, only the secured URL is provided, which user can use with Thunderbird, Apple Calendar application with credentials. A private URL can be created and used for Google calendar or Outlook without credentials, the private URL can be regenerated or deleted if it is compromised.
+The generated private URL can then be used in a calendar client application to receive jobs events coming from ProActive Scheduler. The user's private URL can be regenerated or deleted and recreate if it is compromised.
 
 image::calendar_url_private.png[align="center"]
 
 ==== Outlook
 
-1. Open IE browser and go to the Calendar service URL
+Outlook users have to install the Outlook CalDav Synchronizer to integrate ProActive Calendar Service. It is a free Outlook plugin, which can be downloaded from https://sourceforge.net/projects/outlookcaldavsynchronizer/.
 
-2. A popup window appears and asks the credentials. Use the credentials of the scheduler `user` account where the login name is the one used in the calendar service url
+1. Open the plugin `Synchronization Profiles` option from within Outlook
 
-3. IE browser is going to ask if you'd like to `Open` or `Save` the calendar from the server, select `Open`
+image::outlook_1.png[align="center"]
 
-4. The calendar should be opened in the Outlook
+2. Give a name and set a Outlook folder for the new calendar
+
+3. Set the user's private URL as `DAV Url` in Server settings, leave `Username` and `Password` empty
+
+4. Configure the `Sync settings` (optional)
+
+5. Click `Ok` and it's done
+
+image::outlook_2.png[align="center"]
         
 ==== Mac Calendar
 
@@ -60,7 +59,7 @@ image::icalendar_1.png[align="center"]
 
 image::icalendar_2.png[align="center"]
 
-3. Configue this new calendar
+3. Configure this new calendar
 
 image::icalendar_3.png[align="center"]
 
