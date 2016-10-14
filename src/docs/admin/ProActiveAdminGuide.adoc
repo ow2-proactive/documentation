@@ -136,9 +136,10 @@ It is also possible to launch a ProActive Node without even copying the ProActiv
 * Navigate to the Resource Manager Web Interface. You can find the URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler>> (the Resource Manager web application URL).
 * Use default demo/demo account to access the Resource Manager Web Interface.
 * Click on 'Portal->Launch' to download *node.jar*.
+* Click on 'Portal->Create Credentials'
 * Run it:
 ----
-$ java -jar node.jar
+$ java -Dproactive.communication.protocol=pnp -jar node.jar -f CREDENTIAL_FILE -r pnp://SCHEDULER_ADDRESS:64738/
 ----
 
 It should connect to the ProActive Scheduler automatically using the discovery mechanism otherwise you might
@@ -271,7 +272,7 @@ If the group named "proactive" does not exist, create the group and add "proacti
 +
 ----
 sudo groupadd proactive
-sudo usermod -g proactive proactive
+sudo usermod -ag proactive proactive
 ----
 
 * Start the Linux Agent
@@ -527,17 +528,18 @@ Agents configuration is detailed in the section <<_proactive_agents>>.
 
 == User Authentication
 
-In order to use ProActive Scheduler every user must have an account. It supports two methods for authentication:
+In order to use ProActive Scheduler every user must have an account. It supports three methods for authentication:
 
 * *File based*
 * *LDAP*
+* *PAM*
 
 === Select authentication method
 
 By default the ProActive Scheduler is configured to use *file based* authentication and has some default accounts ('demo/demo', 'admin/admin') that
 work out of the box.
 
-If you would like to use your *LDAP* server you need to modify two configs:
+If you would like to change the method authentication type to use your *LDAP* server or use Linux PAM, you need to modify two configs:
 
 * *Resource Manager* configuration (`PROACTIVE_HOME/config/rm/settings.ini`)
 +
@@ -547,6 +549,7 @@ If you would like to use your *LDAP* server you need to modify two configs:
 #It can be one of the following values:
 #    - "RMFileLoginMethod" to use file login and group management
 #    - "RMLDAPLoginMethod" to use LDAP login management
+#    - "RMPAMLoginMethod" to use PAM login management
 pa.rm.authentication.loginMethod=RMLDAPLoginMethod
 ----
 
@@ -558,6 +561,7 @@ pa.rm.authentication.loginMethod=RMLDAPLoginMethod
 #It can be one of the following values :
 #	- "SchedulerFileLoginMethod" to use file login and group management
 #	- "SchedulerLDAPLoginMethod" to use LDAP login management
+#   - "SchedulerPAMLoginMethod" to use PAM login management
 pa.scheduler.core.authentication.loginMethod=SchedulerLDAPLoginMethod
 ----
 
@@ -586,6 +590,8 @@ admin:admin
 demo:admin
 user:user
 ----
+
+ProActive contains a set of predefined groups such as "user" and "admin". Groups are defined in `PROACTIVE_HOME/config/security.java.policy-server` as described in chapter <<User Permissions>>.
 
 === LDAP
 
@@ -687,6 +693,46 @@ It uses `pa.rm.defaultloginfilename` and `pa.rm.defaultgroupfilename` files to a
 To activate this behavior set `pa.ldap.group.membership.fallback` to true, in LDAP configuration file.
 * If a user is not found in LDAP, fall back to authentication and group membership checking with login
 and group files. To activate this behavior, set `pa.ldap.authentication.fallback` to true, in LDAP configuration file.
+
+=== PAM
+
+The ProActive Scheduler & Resource Manager are able to interact with Linux *PAM (Pluggable Authentication Modules)* to check users login/password.
+It is not currently possible to retrieve linux system group memberships for users. Thus groups must be managed using the `PROACTIVE_HOME/config/authentication/group.cfg` file.
+
+In order to enable PAM authentication, follow the following steps:
+
+1. Configure the PAM login methods in the Scheduler and RM settings:
++
+.PROACTIVE_HOME/config/rm/settings.ini
+----
+pa.rm.authentication.loginMethod=RMPAMLoginMethod
+----
++
+.PROACTIVE_HOME/config/scheduler/settings.ini
+----
+pa.scheduler.core.authentication.loginMethod=SchedulerPAMLoginMethod
+----
++
+
+2. Copy the file `PROACTIVE_HOME/config/authentication/proactive-jpam` to `/etc/pam.d` (you must be root to perform this operation).
++
+You can modify this default PAM configuration file if you need specific PAM policies.
+
+
+3. Add the user which will start the scheduler process `PROACTIVE_HOME/bin/proactive-server` to the *shadow* group
++
+[source]
+----
+sudo usermod -aG shadow your_user
+----
++
+After this command, the user, called "your_user" here in this example, will be added to group *shadow*. You may need to logoff/logon before this modification can be effective.
+
+4. Associate, for each Linux system users which will connect to the Scheduler, a ProActive group.
++
+Following the procedure described in chapter <<File>>, groups must be associated to existing PAM users in the ProActive group file `PROACTIVE_HOME/config/authentication/group.cfg`.
++
+In case of PAM users, the login file should not be modified as password authentication will be performed at the Linux system level.
 
 == User Permissions
 
