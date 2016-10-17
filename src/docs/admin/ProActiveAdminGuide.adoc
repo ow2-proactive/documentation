@@ -783,7 +783,10 @@ After this command, the user, called "your_user" here in this example, will be a
 +
 Following the procedure described in chapter <<File>>, groups must be associated to existing PAM users in the ProActive group file `PROACTIVE_HOME/config/authentication/group.cfg`.
 +
-In case of PAM users, the login file should not be modified as password authentication will be performed at the Linux system level.
+In case of PAM users, the login file should not be modified as password authentication will be performed at the Linux system level. Accordingly, you should not use the *proactive-users* command to associate groups to PAM users.
+
+NOTE: Similarly to the LDAP authentication, there is a fallback mechanism for login authentication, with the difference that it is always activated.
+A user defined in the ProActive login file always has precedence over the same user defined on the Linux system.
 
 == User Permissions
 
