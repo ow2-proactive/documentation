@@ -737,14 +737,13 @@ Finally, in `config/authentication/ldap.cfg`, set keyStore and trustStore create
 
 . *Use fall back to file authentication*
 +
-You can use simultaneously file-based authentication and LDAP-based authentication. Then ProActive Scheduler can check user password and group membership in
-login and group files, as performed in FileLogin method, if user or group is not found in LDAP.
+You can use simultaneously file-based authentication and LDAP-based authentication. Then, ProActive Scheduler can check at first user password and group membership in
+login and group files, as performed in FileLogin method. If user or group is not found in login file, login or group will be searched in LDAP.
 It uses `pa.rm.defaultloginfilename` and `pa.rm.defaultgroupfilename` files to authenticate user and check group membership. There are two rules:
 
-* If LDAP group membership checking fails, fall back to group membership checking with group file.
+* If file group membership checking fails, fall back to group membership checking with LDAP.
 To activate this behavior set `pa.ldap.group.membership.fallback` to true, in LDAP configuration file.
-* If a user is not found in LDAP, fall back to authentication and group membership checking with login
-and group files. To activate this behavior, set `pa.ldap.authentication.fallback` to true, in LDAP configuration file.
+* If a user is not found in the login file, fall back to authentication and group membership checking with LDAP. To activate this behavior, set `pa.ldap.authentication.fallback` to true, in LDAP configuration file.
 
 === PAM
 
