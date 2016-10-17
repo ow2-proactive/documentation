@@ -27,7 +27,7 @@ ProActive user can create a unique private URL by clicking on the `Create` butto
 
 image::calendar_url_create.png[align="center"]
 
-The generated private URL can then be used in a calendar client application to receive jobs events coming from ProActive Scheduler. The user's private URL can be regenerated or deleted and recreate if it is compromised.
+The generated private URL can then be used in a calendar client application to receive jobs events coming from ProActive Scheduler. The user's private URL can be regenerated, or deleted and recreate if it is compromised.
 
 image::calendar_url_private.png[align="center"]
 
