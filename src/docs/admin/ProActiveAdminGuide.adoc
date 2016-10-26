@@ -615,7 +615,8 @@ You can check the command syntax using the -h option.
 
 ----
 $ proactive-users -h
-usage: proactive-users [-C | -D | -U]  [-g <GROUPS>] [-gf <GROUPFILE>] [-h] [-kf <KEYFILE>] [-l <LOGIN>] [-lf <LOGINFILE>] [-p <PASSWORD>]
+usage: proactive-users [-C | -D | -U]  [-g <GROUPS>] [-gf <GROUPFILE>] [-h] [-kf <KEYFILE>] [-l <LOGIN>] [-lf <LOGINFILE>] [-p
+       <PASSWORD>] [-sgf <SOURCEGROUPFILE>] [-slf <SOURCELOGINFILE>]
 ----
 
 Here are examples of use:
@@ -646,6 +647,41 @@ $ proactive-users -D -l user1
 Deleted user user1 in H:\Install\scheduling\tools\..\config/authentication/login.cfg
 ----
 User "user1" does not exist any more.
+
+* Creating multiple users
++
+It is also possible to create multiple users at once using a source login file and a source group file.
+In that case, the source login file contains, for each user, a line with the format "login:unencrypted_password".
+The source group file has the same structure as the `PROACTIVE_HOME/config/authentication/group.cfg` file.
+This can be used, for example, to convert login files used by ProActive Scheduler versions prior to 7.19.0.
++
+----
+$ proactive-users -C -slf source_login.cfg -sgf source_group.cfg
+Adding group admin to user admin1
+Created user admin1
+Adding group user to user user2
+Created user user2
+Adding group user to user user1
+Created user user1
+Stored login file in H:\Install\scheduling\tools\..\config/authentication/login.cfg
+Stored group file in H:\Install\scheduling\tools\..\config/authentication/group.cfg
+----
+
+* Updating multiple users
++
+Similarly, it is possible to update existing users with source login or group files. It is possible to update only group membership for existing users, or only passwords, or both.
++
+The example below shows how to update only groups for existing users:
++
+----
+proactive-users -U -sgf source_group_2.cfg
+Adding group admin to user user1
+Updated user user1
+Adding group admin to user user2
+Updated user user2
+Stored login file in H:\Install\scheduling\tools\..\config/authentication/login.cfg
+Stored group file in H:\Install\scheduling\tools\..\config/authentication/group.cfg
+----
 
 === LDAP
 
