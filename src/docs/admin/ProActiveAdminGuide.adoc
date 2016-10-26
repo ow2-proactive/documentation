@@ -136,11 +136,13 @@ It is also possible to launch a ProActive Node without even copying the ProActiv
 * Navigate to the Resource Manager Web Interface. You can find the URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler>> (the Resource Manager web application URL).
 * Use default demo/demo account to access the Resource Manager Web Interface.
 * Click on 'Portal->Launch' to download *node.jar*.
+* Click on 'Portal->Create Credentials' and download your credential file.
+* Create a Node Source using the infrastructure DefaultInfrastructureManager.
 * Run it:
 ----
-$ java -jar node.jar
+$ java -Dproactive.communication.protocol=pnp -jar node.jar -f CREDENTIAL_FILE -s NAME
 ----
-
+Where NAME is the name of the node source.
 It should connect to the ProActive Scheduler automatically using the discovery mechanism otherwise you might
 have to set the URL to connect to with the `-r` parameter.
 
@@ -271,7 +273,7 @@ If the group named "proactive" does not exist, create the group and add "proacti
 +
 ----
 sudo groupadd proactive
-sudo usermod -g proactive proactive
+sudo usermod -ag proactive proactive
 ----
 
 * Start the Linux Agent
@@ -774,7 +776,7 @@ You can modify this default PAM configuration file if you need specific PAM poli
 +
 [source]
 ----
-sudo usermod -G shadow your_user
+sudo usermod -aG shadow your_user
 ----
 +
 After this command, the user, called "your_user" here in this example, will be added to group *shadow*. You may need to logoff/logon before this modification can be effective.
