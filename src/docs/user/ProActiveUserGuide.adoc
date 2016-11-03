@@ -1224,6 +1224,9 @@ This allows the user to manually perform actions to the *IN_ERROR* task, without
 
 If the task has not *IN_ERROR* status, the _Mark as finished and resume_ option will be in grey, meaning that the action is disabled.
 
+=== Get Notifications on Job Events
+
+
 
 == Workflow Storage and Versioning
 
