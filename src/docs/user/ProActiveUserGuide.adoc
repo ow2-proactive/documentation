@@ -1224,6 +1224,31 @@ This allows the user to manually perform actions to the *IN_ERROR* task, without
 
 If the task has not *IN_ERROR* status, the _Mark as finished and resume_ option will be in grey, meaning that the action is disabled.
 
+=== Get Notifications on Job Events
+
+
+Add a "NOTIFICATION_EVENTS" Generic information, to list events on which a user wants to be notified. List is comma-separated and should be taken from: *JOB_PAUSED*, *JOB_RESUMED*, *JOB_IN_ERROR*, *JOB_RUNNING_TO_FINISHED*, *JOB_PENDING_TO_FINISHED* and *JOB_RESTARTED_FROM_ERROR*. Scheduler can send email to the users when one of the above events is received.
+
+To enable this functionality, the following properties should be set in `config/scheduler/setting.ini`:
+
+[source, groovy]
+----
+pa.scheduler.notifications.email.enabled
+pa.scheduler.notifications.email.from
+----
+
+The machine running the scheduler should be configured to accept outgoing mail (i.e. it should have a mail transport agent).
+
+Notifications will only be sent for jobs whose generic information contains user's email address under the "EMAIL" key. Example:
+
+[source, xml]
+----
+<genericInformation>
+    <info name="EMAIL" value="user@example.com"/>
+    <info name="NOTIFICATION_EVENTS" value="JOB_PAUSED, JOB_RESUMED"/>
+</genericInformation>
+----
+
 
 == Workflow Storage and Versioning
 
