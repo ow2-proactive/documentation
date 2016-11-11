@@ -328,7 +328,7 @@ usually make more sense when using script or Java tasks.
 
 ==== Retrieve results from the portal
 
-In the scheduler portal, select a job, then select a task from the job's task list. Click on on _Preview_ tab in the bottom-right panel.
+In the scheduler portal, select a job, then select a task from the job's task list. Click on _Preview_ tab in the bottom-right panel.
 
 In this tab, you will see two buttons:
 
@@ -339,6 +339,13 @@ If the task failed, when clicking on the _Open in browser_ button, the task erro
 - `Save as file`: when clicking on this button, the result will be saved on disk in binary format. By default, the file name will be generated automatically using the job and task ids, without an extension.
 It is possible to customize this behavior and specify in the task a file name, or a file extension using <<_result_metadata>>.
 
+The following example gets one png image and add the metadata to help the browser display it and add a name when downloading.
+----
+file = new File(fileName)
+result = file.getBytes()
+resultMetadata.put("file.name", fileName)
+resultMetadata.put("content.type", "image/png")
+----
 
 ==== Retrieve results from the command line
 
