@@ -244,17 +244,6 @@ There is no more executionOnFailure left for a task.
 
 // TODO state diagram
 
-==== Retrieve results
-
-Once a job or a task is terminated, it is possible to get its result. You can only get the result of the job that you own.
-Results can be retrieved using the Scheduler Web Interface or the command line tools.
-
-Along with results you can also retrieve logs of the tasks (standard ouput and error output)
-as well as Scheduler logs that provide debugging information.
-
-NOTE: When running native application, the task result will be the exit code of the application. Results
-usually make more sense when using script or Java tasks.
-
 ==== Job Priority
 
 A job is assigned a default priority of `NORMAL` but the user can increase or decrease the priority once the
@@ -268,6 +257,116 @@ The following values are available:
 - `NORMAL`
 - `HIGH` can only be set by an administrator
 - `HIGHEST` can only be set by an administrator
+
+=== Retrieve logs
+
+It is possible to retrieve multiple logs from a job, these logs can either be:
+
+- The standard _output/error logs_ associated with a job.
+- The standard _output/error logs_ associated with a task.
+- The scheduler _server logs_ associated with a job.
+- The scheduler _server logs_ associated with a task.
+
+Unless your account belongs to an administrator group, you can only see the logs of a job that you own.
+
+==== Retrieve logs from the portal
+
+- `Job standard output/error logs`: +
+To view the standard output or error logs associated with a job, select a job from the job list and then on the _Output_ tab in the bottom right panel. +
+To view logs of a currently running job, you need to click on the _Streaming_ checkbox, the logs panel will be updated as soon as new log lines will be printed by this job.  +
+If the job is terminated, you can click on the _Fetch output_ button to view the final output of the job. +
+Logs are limited to 1024 lines. Should your job logs be longer, you can select the _Full logs (download)_ option from the drop down list.
+
+- `Task standard output/error logs`: +
+To view the standard output or error logs associated with a task, select a job from the job list and a task from the task list. +
+Then in the _Output_ tab, choose _Selected task_ from the drop down list. +
+Once the task is terminated, you will be able to click on the _Fetch output_ button to see the standard output or error associated with the task. +
+It is not possible to view the streaming logs of single task, only the job streaming logs are available.
+
+- `Job server logs`: +
+Whether a job is running or finished, you can access the associated server logs by selecting a job, opening the _Server Logs_ tab in the bottom-right panel and then clicking on _Fetch logs_. +
+Server logs contains debugging information, such as the job definition, output of selection or cleaning scripts, etc.
+
+- `Task server logs`: +
+In the _Server Logs_ tab, you can choose _Selected task_ to view the server logs associated with a single task.
+
+==== Retrieve logs from the command line
+
+The chapter <<_scheduler_command_line,command line tools>> explains how to use the command line interface.
+Once connected, you can retrieve the various logs using the following commands. Server logs cannot be accessed from the command line.
+
+- `Job standard output/error logs`: joboutput(jobid) +
+----
+> joboutput(1955)
+[1955t0@precision;14:10:57] [2016-10-27 14:10:057 precision] HelloWorld
+[1955t1@precision;14:10:56] [2016-10-27 14:10:056 precision] HelloWorld
+[1955t2@precision;14:10:56] [2016-10-27 14:10:056 precision] HelloWorld
+[1955t3@precision;14:11:06] [2016-10-27 14:11:006 precision] HelloWorld
+[1955t4@precision;14:11:05] [2016-10-27 14:11:005 precision] HelloWorld
+----
+- `Task standard output/error logs`: taskoutput(jobid, taskname) +
+----
+> taskoutput(1955,'0_0')
+[1955t0@precision;14:10:57] [2016-10-27 14:10:057 precision] HelloWorld
+----
+
+- `Streaming job standard output/error logs`: livelog(jobid)
+----
+> livelog(2002)
+Displaying live log for job 2002. Press 'q' to stop.
+> Displaying live log for job 2002. Press 'q' to stop.
+[2002t2@precision;15:57:13] [ABC, DEF]
+----
+
+=== Retrieve results
+
+Once a job or a task is terminated, it is possible to get its result. Unless you belong to the administrator group, you can only get the result of the job that you own.
+Results can be retrieved using the Scheduler Web Interface or the command line tools.
+
+NOTE: When running native application, the task result will be the exit code of the application. Results
+usually make more sense when using script or Java tasks.
+
+==== Retrieve results from the portal
+
+In the scheduler portal, select a job, then select a task from the job's task list. Click on _Preview_ tab in the bottom-right panel.
+
+In this tab, you will see two buttons:
+
+- `Open in browser`: when clicking on this button, the result will be displayed in a new browser tab. By default, the result will be displayed in text format.
+If your result contains binary data, it is possible to specify a different display mode using <<_result_metadata>>. +
+If the task failed, when clicking on the _Open in browser_ button, the task error will be displayed.
+
+- `Save as file`: when clicking on this button, the result will be saved on disk in binary format. By default, the file name will be generated automatically using the job and task ids, without an extension.
+It is possible to customize this behavior and specify in the task a file name, or a file extension using <<_result_metadata>>.
+
+The following example gets one png image and add the metadata to help the browser display it and add a name when downloading.
+----
+file = new File(fileName)
+result = file.getBytes()
+resultMetadata.put("file.name", fileName)
+resultMetadata.put("content.type", "image/png")
+----
+
+==== Retrieve results from the command line
+
+The chapter <<_scheduler_command_line,command line tools>> explains how to use the command line interface.
+Once connected, you can retrieve the task or job results:
+
+- `Result of a single task`: taskresult(jobid, taskname)
+----
+> taskresult(2002, 'Merge')
+task('Merge') result: true
+----
+
+- `Result of all tasks of a job`: jobresult(jobid)
+----
+> jobresult(2002)
+job('2002') result:
+Merge : true
+Process*1 : DEF
+Process : ABC
+Split : {0=abc, 1=def}
+----
 
 == Data Management
 
@@ -446,7 +545,7 @@ Another important mechanism of data exchange is the task *result* variable. Anyw
 variable named *result* using any Java object. This value will be available in tasks depending on it. Moreover, in case of several dependencies,
 results will be aggregated into a new array variable named *results*.
 
-Assumming that we have two tasks *task1* and *task2* written in Groovy:
+Assuming that we have two tasks *task1* and *task2* written in Groovy:
 
 [source, groovy]
 ----
@@ -479,6 +578,63 @@ NOTE: results will be aggregated according to the order declared in the dependen
         <task ref="task1"/>
         <task ref="task2"/>
 </depends>
+----
+
+For nearly all script languages, the *results* variable contains a list of http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/common/task/TaskResult.html[TaskResult java object].
+In order to access the result value, the value() method of this object must be called.
+Example for Python:
+[source, python]
+----
+print results[0].value()
+----
+
+==== Result metadata
+
+Result metadata can contain additional information associated with the result. In order to store metadata information, use the following syntax, if task2 depends on task1:
+
+[source, groovy]
+----
+// task1
+result = "task1";
+resultMetadata.put("mymetadata", "myvalue")
+----
+
+[source, groovy]
+----
+// task2
+println(results[0].getMetadata());
+----
+
+It is up to the user code to decide the metadata semantics, but some specific metadata can have a meaning when downloading or previewing results from the *Scheduler portal*:
+
+- *file.name* : the name of the file, including the extension, which will be used when storing the result in binary format.
++
+[source, groovy]
+----
+// fileNameTask
+file = new File("balloon13.png")
+result = file.getBytes()
+resultMetadata.put("file.name","balloon13.png")
+----
+
+- *file.extension* : the extension, which will be appended to the automatically generated name, when storing the result in binary format
++
+[source, groovy]
+----
+// fileExtensionTask
+file = new File("balloon13.png")
+result = file.getBytes()
+resultMetadata.put("file.extension",".png")
+----
+
+- *content.type* : the display format, which will be used when previewing the file in the browser. Open the following https://www.iana.org/assignments/media-types/media-types.xhtml[link] for the complete list of mime-types.
++
+[source, groovy]
+----
+// contentTypeTask
+file = new File("balloon13.png")
+result = file.getBytes()
+resultMetadata.put("content.type","image/png")
 ----
 
 === File based propagation
@@ -611,12 +767,6 @@ In order to change this period, the ProActive Node must be started with the prop
 
 The property *node.dataspace.cachedir* can also be used to control the cache location on the node.
 
-=== Job Result
-
-Once a Job is terminated, it is possible to get its result. You can only get the result of the job that you own.
-A Job result is the collection of the tasks' results and you can retrieve it from either Java API or <<_scheduler_command_line,command line>> (it will be converted to a string).
-
-Job results are also available in the *Scheduler Web Interface* in the _Preview_ tab.
 
 == Workflow concepts
 
@@ -1241,6 +1391,31 @@ This allows the user to manually perform actions to the *IN_ERROR* task, without
 
 If the task has not *IN_ERROR* status, the _Mark as finished and resume_ option will be in grey, meaning that the action is disabled.
 
+=== Get Notifications on Job Events
+
+
+Add a "NOTIFICATION_EVENTS" Generic information, to list events on which a user wants to be notified. List is comma-separated and should be taken from: *JOB_PAUSED*, *JOB_RESUMED*, *JOB_IN_ERROR*, *JOB_RUNNING_TO_FINISHED*, *JOB_PENDING_TO_FINISHED* and *JOB_RESTARTED_FROM_ERROR*. Scheduler can send email to the users when one of the above events is received.
+
+To enable this functionality, the following properties should be set in `config/scheduler/setting.ini`:
+
+[source, groovy]
+----
+pa.scheduler.notifications.email.enabled
+pa.scheduler.notifications.email.from
+----
+
+The machine running the scheduler should be configured to accept outgoing mail (i.e. it should have a mail transport agent).
+
+Notifications will only be sent for jobs whose generic information contains user's email address under the "EMAIL" key. Example:
+
+[source, xml]
+----
+<genericInformation>
+    <info name="EMAIL" value="user@example.com"/>
+    <info name="NOTIFICATION_EVENTS" value="JOB_PAUSED, JOB_RESUMED"/>
+</genericInformation>
+----
+
 
 == Workflow Storage and Versioning
 
@@ -1610,6 +1785,10 @@ Internally the command is split into docker, run, java, /usr/bin/java, -cp, [Cla
     do then the fork execution command will be split wrong and fail.
 
 
+== Calendar Integration
+
+include::./references/CalendarServiceReference.adoc[]
+
 == Reference
 
 === Job and task specification
@@ -1626,9 +1805,6 @@ include::./references/VariablesReference.adoc[]
 
 === Topology Types
 include::./references/TopologyTypes.adoc[]
-
-=== Calendar Service
-include::./references/CalendarServiceReference.adoc[]
 
 [[_scheduler_command_line]]
 === Command Line

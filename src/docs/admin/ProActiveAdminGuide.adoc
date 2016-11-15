@@ -136,11 +136,13 @@ It is also possible to launch a ProActive Node without even copying the ProActiv
 * Navigate to the Resource Manager Web Interface. You can find the URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler>> (the Resource Manager web application URL).
 * Use default demo/demo account to access the Resource Manager Web Interface.
 * Click on 'Portal->Launch' to download *node.jar*.
+* Click on 'Portal->Create Credentials' and download your credential file.
+* Create a Node Source using the infrastructure DefaultInfrastructureManager.
 * Run it:
 ----
-$ java -jar node.jar
+$ java -Dproactive.communication.protocol=pnp -jar node.jar -f CREDENTIAL_FILE -s NAME
 ----
-
+Where NAME is the name of the node source.
 It should connect to the ProActive Scheduler automatically using the discovery mechanism otherwise you might
 have to set the URL to connect to with the `-r` parameter.
 
@@ -271,7 +273,7 @@ If the group named "proactive" does not exist, create the group and add "proacti
 +
 ----
 sudo groupadd proactive
-sudo usermod -g proactive proactive
+sudo usermod -ag proactive proactive
 ----
 
 * Start the Linux Agent
@@ -527,17 +529,18 @@ Agents configuration is detailed in the section <<_proactive_agents>>.
 
 == User Authentication
 
-In order to use ProActive Scheduler every user must have an account. It supports two methods for authentication:
+In order to use ProActive Scheduler every user must have an account. It supports three methods for authentication:
 
 * *File based*
 * *LDAP*
+* *PAM*
 
 === Select authentication method
 
 By default the ProActive Scheduler is configured to use *file based* authentication and has some default accounts ('demo/demo', 'admin/admin') that
 work out of the box.
 
-If you would like to use your *LDAP* server you need to modify two configs:
+If you would like to change the method authentication type to use your *LDAP* server or use Linux PAM, you need to modify two configs:
 
 * *Resource Manager* configuration (`PROACTIVE_HOME/config/rm/settings.ini`)
 +
@@ -547,6 +550,7 @@ If you would like to use your *LDAP* server you need to modify two configs:
 #It can be one of the following values:
 #    - "RMFileLoginMethod" to use file login and group management
 #    - "RMLDAPLoginMethod" to use LDAP login management
+#    - "RMPAMLoginMethod" to use PAM login management
 pa.rm.authentication.loginMethod=RMLDAPLoginMethod
 ----
 
@@ -558,6 +562,7 @@ pa.rm.authentication.loginMethod=RMLDAPLoginMethod
 #It can be one of the following values :
 #	- "SchedulerFileLoginMethod" to use file login and group management
 #	- "SchedulerLDAPLoginMethod" to use LDAP login management
+#   - "SchedulerPAMLoginMethod" to use PAM login management
 pa.scheduler.core.authentication.loginMethod=SchedulerLDAPLoginMethod
 ----
 
@@ -567,24 +572,115 @@ pa.scheduler.core.authentication.loginMethod=SchedulerLDAPLoginMethod
 By default, the ProActive Resource Manager stores users accounts, passwords, and group memberships (user or admin), in two files:
 
 * users and passwords accounts are stored in `PROACTIVE_HOME/config/authentication/login.cfg`.
-Each line has to follow the format *user:passwd*. The default `login.cfg` file is given hereafter:
+Each line has to follow the format *user:encypted password*.
+The default accounts in `login.cfg` file correspond to the following passwords, which are encrypted in the actual login.cfg file:
 +
-[source]
+.unencrypted_login.cfg
 ----
 admin:admin
 user:pwd
 demo:demo
+guest:pwd
+test:pwd
+radmin:pwd
+nsadmin:pwd
+provider:pwd
+scheduler:scheduler_pwd
+rm:rm_pwd
+watcher:watcher_pwd
+test_executor:pwd
 ----
 
 * users membership is stored in `PROACTIVE_HOME/config/authentication/group.cfg`. For each user registered in login.cfg,
 a group membership has to be defined in this file. Each line has to look like *user:group*. Group has to be
-user to have user rights, or admin to have administrator rights. Below is an extract of `group.cfg`:
+user to have user rights, or admin to have administrator rights. Below is an example `group.cfg` file:
 +
-[source]
+.group.cfg
 ----
 admin:admin
 demo:admin
+guest:guests
+rm:admin
+scheduler:user
 user:user
+watcher:watchers
+----
+
+ProActive contains a set of predefined groups such as "user" and "admin". Groups are defined in `PROACTIVE_HOME/config/security.java.policy-server` as described in chapter <<User Permissions>>.
+
+In order to create new users, delete an existing user, or modify the groups or password for an existing user, a command-line tool is available.
+
+This command is available inside the *tools* folder: `PROACTIVE_HOME/tools/proactive-users`.
+You can check the command syntax using the -h option.
+
+----
+$ proactive-users -h
+usage: proactive-users [-C | -D | -U]  [-g <GROUPS>] [-gf <GROUPFILE>] [-h] [-kf <KEYFILE>] [-l <LOGIN>] [-lf <LOGINFILE>] [-p
+       <PASSWORD>] [-sgf <SOURCEGROUPFILE>] [-slf <SOURCELOGINFILE>]
+----
+
+Here are examples of use:
+
+* Creating users
++
+----
+$ proactive-users -C -l user1 -p pwd1 -g user
+Created user user1 in H:\Install\scheduling\tools\..\config/authentication/login.cfg
+Added group user to user user1
+----
+The user with login "user1", password "pwd1" and group "user" was created
+
+* Updating users
++
+----
+$ proactive-users -U -l user1 -p pwd2 -g nsadmins,admin
+Changed password for user user1 in H:\Install\scheduling\tools\..\config/authentication/login.cfg
+Added group nsadmins to user user1
+Added group admin to user user1
+----
+User "user1" now has password pwd2 and groups nsadmins & admin (group "user" was removed).
+
+* Deleting users
++
+----
+$ proactive-users -D -l user1
+Deleted user user1 in H:\Install\scheduling\tools\..\config/authentication/login.cfg
+----
+User "user1" does not exist any more.
+
+* Creating multiple users
++
+It is also possible to create multiple users at once using a source login file and a source group file.
+In that case, the source login file contains, for each user, a line with the format "login:unencrypted_password".
+The source group file has the same structure as the `PROACTIVE_HOME/config/authentication/group.cfg` file.
+This can be used, for example, to convert login files used by ProActive Scheduler versions prior to 7.19.0.
++
+----
+$ proactive-users -C -slf source_login.cfg -sgf source_group.cfg
+Adding group admin to user admin1
+Created user admin1
+Adding group user to user user2
+Created user user2
+Adding group user to user user1
+Created user user1
+Stored login file in H:\Install\scheduling\tools\..\config/authentication/login.cfg
+Stored group file in H:\Install\scheduling\tools\..\config/authentication/group.cfg
+----
+
+* Updating multiple users
++
+Similarly, it is possible to update existing users with source login or group files. It is possible to update only group membership for existing users, or only passwords, or both.
++
+The example below shows how to update only groups for existing users:
++
+----
+proactive-users -U -sgf source_group_2.cfg
+Adding group admin to user user1
+Updated user user1
+Adding group admin to user user2
+Updated user user2
+Stored login file in H:\Install\scheduling\tools\..\config/authentication/login.cfg
+Stored group file in H:\Install\scheduling\tools\..\config/authentication/group.cfg
 ----
 
 === LDAP
@@ -679,14 +775,56 @@ Finally, in `config/authentication/ldap.cfg`, set keyStore and trustStore create
 
 . *Use fall back to file authentication*
 +
-You can use simultaneously file-based authentication and LDAP-based authentication. Then ProActive Scheduler can check user password and group membership in
-login and group files, as performed in FileLogin method, if user or group is not found in LDAP.
+You can use simultaneously file-based authentication and LDAP-based authentication. Then, ProActive Scheduler can check at first user password and group membership in
+login and group files, as performed in FileLogin method. If user or group is not found in login file, login or group will be searched in LDAP.
 It uses `pa.rm.defaultloginfilename` and `pa.rm.defaultgroupfilename` files to authenticate user and check group membership. There are two rules:
 
-* If LDAP group membership checking fails, fall back to group membership checking with group file.
+* If file group membership checking fails, fall back to group membership checking with LDAP.
 To activate this behavior set `pa.ldap.group.membership.fallback` to true, in LDAP configuration file.
-* If a user is not found in LDAP, fall back to authentication and group membership checking with login
-and group files. To activate this behavior, set `pa.ldap.authentication.fallback` to true, in LDAP configuration file.
+* If a user is not found in the login file, fall back to authentication and group membership checking with LDAP. To activate this behavior, set `pa.ldap.authentication.fallback` to true, in LDAP configuration file.
+
+=== PAM
+
+The ProActive Scheduler & Resource Manager are able to interact with Linux *PAM (Pluggable Authentication Modules)* to check users login/password.
+It is not currently possible to retrieve linux system group memberships for users. Thus groups must be managed using the `PROACTIVE_HOME/config/authentication/group.cfg` file.
+
+In order to enable PAM authentication, follow the following steps:
+
+1. Configure the PAM login methods in the Scheduler and RM settings:
++
+.PROACTIVE_HOME/config/rm/settings.ini
+----
+pa.rm.authentication.loginMethod=RMPAMLoginMethod
+----
++
+.PROACTIVE_HOME/config/scheduler/settings.ini
+----
+pa.scheduler.core.authentication.loginMethod=SchedulerPAMLoginMethod
+----
++
+
+2. Copy the file `PROACTIVE_HOME/config/authentication/proactive-jpam` to `/etc/pam.d` (you must be root to perform this operation).
++
+You can modify this default PAM configuration file if you need specific PAM policies.
+
+
+3. Add the user which will start the scheduler process `PROACTIVE_HOME/bin/proactive-server` to the *shadow* group
++
+[source]
+----
+sudo usermod -aG shadow your_user
+----
++
+After this command, the user, called "your_user" here in this example, will be added to group *shadow*. You may need to logoff/logon before this modification can be effective.
+
+4. Associate, for each Linux system users which will connect to the Scheduler, a ProActive group.
++
+Following the procedure described in chapter <<File>>, groups must be associated to existing PAM users in the ProActive group file `PROACTIVE_HOME/config/authentication/group.cfg`.
++
+In case of PAM users, the login file should not be modified as password authentication will be performed at the Linux system level. Accordingly, you should not use the *proactive-users* command to associate groups to PAM users.
+
+NOTE: Similarly to the LDAP authentication, there is a fallback mechanism for login authentication, with the difference that it is always activated.
+A user defined in the ProActive login file always has precedence over the same user defined on the Linux system.
 
 == User Permissions
 
@@ -1045,10 +1183,6 @@ Defines the DOCKER_HOST environment variable. The DOCKER_HOST variable defines t
 That property is useful when accessing a Docker daemon which runs inside a container or on a remote machine.
 Further information about the DOCKER_HOST property can be found http://docs.docker.com/v1.8/reference/commandline/cli/[in the official Docker documentation^].
 
-[[_calendar_service]]
-=== Calendar Service
-
-include::./references/CalendarServiceReference.adoc[]
 
 == Addons
 
@@ -1109,6 +1243,12 @@ See http://pchelp.ricmedia.com/how-to-fix-550-5-3-4-requested-action-not-taken-e
 | mail.smtp.username        | user@gmail.com
 | mail.smtp.password        | user_password
 |======================
+
+
+[[_calendar_service]]
+=== Calendar Integration
+
+include::./references/CalendarServiceReference.adoc[]
 
 == Performance tuning
 

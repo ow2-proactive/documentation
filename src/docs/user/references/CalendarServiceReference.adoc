@@ -1,38 +1,55 @@
-Calendar service is another ProActive micro-service allowing to visualize and manage (edit and delete) all jobs and a filter planned jobs in a calendar client such as Outlook, Thunderbird Lightning, Mac Calendar, etc. 
 
-== Subscribe to Calendar Service
+=== Calendar Service
+Calendar service is another ProActive micro-service allowing to visualize and manage (edit and delete) all jobs and planned jobs created by the user in a calendar client application having CalDav support such as Outlook, Thunderbird Lightning, Mac Calendar, Google Calendar, etc. 
+
+=== Subscribe to Calendar Service
 
 To use Calendar Service, it's simple to subscribe to the calendar service url from within a calendar client application. 
 
-=== Calendar service URL
+==== Calendar service URL
 
 The Calendar service's URL is in the following format
 
 [source]
 ----
-http://*host-address*:5232/*user*/calendar.ics/
+http://*host-address*:5232/*user*/private-*unique-code*.ics/
 ----
 
 * `host-address` - ProActive server address
 * `user` - ProActive scheduler user login name
+* 'unique-code' - A unique hashing value
 
 ProActive user can get this URL from scheduler portal's `Calendar` button
 
 image::calendar_button.png[align="center"]
 
-image::calendar_url.png[align="center"]
+ProActive user can create a unique private URL by clicking on the `Create` button in the popup window. 
 
-=== Outlook
+image::calendar_url_create.png[align="center"]
 
-1. Open IE browser and go to the Calendar service URL
+The generated private URL can then be used in a calendar client application to receive jobs events coming from ProActive Scheduler. The user's private URL can be regenerated, or deleted and recreate if it is compromised.
 
-2. A popup window appears and asks the credential. Use the credential of the scheduler `user` account where the login name is the one used in the calendar service url
+image::calendar_url_private.png[align="center"]
 
-3. IE browser is going to ask if you'd like to `Open` or `Save` the calendar from the server, select `Open`
+==== Outlook
 
-4. The calendar should be opened in the Outlook
+Outlook users have to install the Outlook CalDav Synchronizer to integrate ProActive Calendar Service. It is a free Outlook plugin, which can be downloaded from https://sourceforge.net/projects/outlookcaldavsynchronizer/.
+
+1. Open the plugin `Synchronization Profiles` option from within Outlook
+
+image::outlook_1.png[align="center"]
+
+2. Give a name and set a Outlook folder for the new calendar
+
+3. Set the user's private URL as `DAV Url` in Server settings, leave `Username` and `Password` empty
+
+4. Configure the `Sync settings` (optional)
+
+5. Click `Ok` and it's done
+
+image::outlook_2.png[align="center"]
         
-=== Mac Calendar
+==== Mac Calendar
 
 1. Go to `File` popdown menu, and select `New Calendar Subscription...`
 
@@ -42,11 +59,11 @@ image::icalendar_1.png[align="center"]
 
 image::icalendar_2.png[align="center"]
 
-3. Configue this new calendar
+3. Configure this new calendar
 
 image::icalendar_3.png[align="center"]
 
-=== Thunderbird Lightning
+==== Thunderbird Lightning
 
 1. Go to `Home` tab, create a new calendar
 

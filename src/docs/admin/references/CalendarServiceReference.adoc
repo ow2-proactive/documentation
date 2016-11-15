@@ -1,4 +1,5 @@
-Calendar service is another ProActive micro-service allowing to visualize and manage (edit and delete) all jobs and planned jobs in a calendar client such as Outlook, Thunderbird Lightning, Mac Calendar, etc. Be aware that calendar service could be started only when the ProActive scheduler is already running.
+==== Calendar Service
+Calendar service is another ProActive micro-service allowing to visualize and manage (edit and delete) all jobs and planned jobs created by the user in a calendar client application such as Outlook, Thunderbird Lightning, Mac Calendar, etc. Be aware that calendar service could be started only when the ProActive scheduler is already running.
 
 ==== Installation
 
@@ -19,7 +20,7 @@ WARNING: Do not tick the checkbox "Run Radicale Portable" in the last installati
 +
 [source]
 ----
-cd  %PROACTIVE_HOME%/tools/
+cd  %PROACTIVE_HOME%\tools\
 calendar-service-setup.bat
 ----
 
@@ -78,7 +79,8 @@ cd  $PROACTIVE_HOME/tools/
 TIP: `calendar-service.sh` can be used with option stop, restart, status as well.
 
 ==== Calendar service configuration
-Calendar service's default configuration can be overriden by creating an application.properties file in $PROACTIVE_HOME/config/calendar-service/.
+
+Calendar service's default configuration can be overriden by modifying the application.properties file in $PROACTIVE_HOME/config/calendar-service/.
 Some important configuration properties are shown in the list below
 
 -  `server.port` - Calendar service rest server port, default value is "4242"
