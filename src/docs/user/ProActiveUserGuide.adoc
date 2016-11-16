@@ -447,11 +447,11 @@ http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()[toStri
 
 ==== Task variables
 
-In a task you can define *variables* that are available only in the scope of that task. Therefore, those variables won't be propagated to depending tasks. However, if a different value is set into a script, this value will be propagated. A variable is defined using the following attributes:
+In a Task you can define *variables* that are available only in the scope of that Task. Therefore, those variables won't be propagated to depending Tasks. However, if a different value is set into a script, this value will be propagated. A variable is defined using the following attributes:
 
 * *name*: the name of the variable
 * *value*: the value of the variable
-* *inherited*: asserts whether the propagated value should be use instead of the *value* value. If *true*, the *value* field can be empty. As a consequence, inheritance requires to declare the variable value at workflow level
+* *inherited*: asserts whether the propagated value should be use instead of the *value* value. If _true_, the *value* field can be empty. As a consequence, inheritance requires to declare the variable value at Workflow level
 * *model*: the type of the value. This field should be empty
 
 [source, xml]
@@ -461,7 +461,7 @@ In a task you can define *variables* that are available only in the scope of tha
 </variables>
 ----
 
-Task variables override workflow variables, and can be accessed as well from the scripts or from the workflow definition (for more information please refer to <<_workflow_variables,Workflow variables>> section).
+Task variables override Workflow variables, and can be accessed as well from the scripts or from the Workflow definition (for more information please refer to <<_workflow_variables,Workflow variables>> section).
 
 ==== ProActive system variables
 
