@@ -379,35 +379,37 @@ ProActive Scheduler provides two mechanisms for accessing and propagating data d
 Variables used for data access and propagation exist in three flavors:
 
 - <<_workflow_variables,Workflow variables>>
-- <<_proactive_system_variables,ProActive system variables>>
 - <<_generic_information>>
-- <<_passing_data_between_tasks_using_variables,Script variables>>
+- <<_passing_data_between_tasks_using_results,Result variables>>
 
 Their usage depends of the context (see <<_variables_quick_reference>>).
 
 ==== Workflow variables
 
-In a workflow you can define *variables* that are available in all tasks.
+===== Job variables
 
+In a workflow you can define *job variables* that can be used in all tasks.
+
+
+[[_templating]]
+Variables are very useful to use workflows as templates where only a few parameters change for each
+execution. Upon submission you can define variable values either from <<_scheduler_command_line, CLI>> or from
+the Web interfaces.
+
+The following example shows how to define a job variable:
 [source, xml]
 ----
-<variables>
-    <variable name="variable" value="value"/>
-</variables>
+<job ... >
+    <variables>
+        <variable name="variable" value="value"/>
+    </variables>
+    ...
+</job>
 ----
 
-Then, anywhere in your task you can reference to it. For example in a *Groovy* script task, you can use:
+*Job variables* can be referenced anywhere in the workflow, including other job variables.
 
-[source, groovy]
-----
-String var = variables.get("variable")
-variables.put("other_variable", "foo")
-----
-
-Inside a script, `variables` is bound to a http://docs.oracle.com/javase/8/docs/api/java/util/Map.html[Map^].
-The syntax to access it might differ given the script engine you are using.
-
-But you can also refer to a variable from the workflow definition itself, for instance:
+The syntax for referencing a variable is the pattern `${variable_name}` (case-sensitive), for example:
 
 [source, xml]
 ----
@@ -416,65 +418,37 @@ But you can also refer to a variable from the workflow definition itself, for in
 </nativeExecutable>
 ----
 
-Inside a workflow you can use the `${VARIABLE_NAME}` syntax to access it (variable names are case-sensitive).
-Most of the time, variable replacements are performed at runtime.
-However, some of the information in the XML need to be processed at submission time and variable replacements might
-be performed at that moment (for instance job name, task attributes, etc.).
+===== Task variables
 
-[[_templating]]
-Variables are very useful to use workflows as templates where only a few parameters change for each
-execution. Upon submission you can define variable values either from <<_scheduler_command_line, CLI>> or from
-the Web interfaces.
+Similarly to job variables, *Task variables* can be defined inside a task. Task variables scope is strictly limited to the task definition.
 
-From a native executable, for instance a Shell script, variables are accessible through environment variables.
-
-[source, bash]
-----
-#!/bin/bash
-echo $variables_PA_TASK_NAME
-----
-
-WARNING: In native tasks and Bash/CMD script engines, variables can be read but not written to.
-
-If a task depends on several tasks and each task modifies the same variable, the final value of the variable
-which is propagated down the execution chain, depends on the *order of task execution*.
-Therefore, the users need to take appropriate measures to prevent any undesired effects of such race conditions.
-
-You can set any link:http://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html[Java serializable object, window="_blank"]
- as a variable value. They will be converted into strings using
-http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()[toString()^]
- method when required, for instance, to make those values available as environment variables in native tasks.
-
-==== Task variables
-
-In a Task you can define *variables* that are available only in the scope of that Task. Therefore, those variables won't be propagated to depending Tasks. However, if a different value is set into a script, this value will be propagated. A variable is defined using the following attributes:
+A task variable is defined using the following attributes:
 
 * *name*: the name of the variable
 * *value*: the value of the variable
 * *inherited*: asserts whether the propagated value should be use instead of the *value* value. If _true_, the *value* field can be empty. As a consequence, inheritance requires to declare the variable value at Workflow level
 * *model*: the type of the value. This field should be empty
 
+For example:
 [source, xml]
 ----
-<variables>
-    <variable name="variable" value="value" inherited="false" model=""/>
-</variables>
+<task ... >
+    <variables>
+        <variable name="variable" value="value" inherited="false" model=""/>
+    </variables>
+    ...
+</task>
 ----
+Task variables can be used similarly to job variables using the pattern `${variable_name}` but only inside the task where the variable is defined.
 
-Task variables override Workflow variables, and can be accessed as well from the scripts or from the Workflow definition (for more information please refer to <<_workflow_variables,Workflow variables>> section).
+Task variables override job variables, this means that if a job variable and a task variable are defined with the same name, the task variable value will be used inside the task, and the job variable value will be used elsewhere in the job.
 
-==== ProActive system variables
+
+===== ProActive system variables
 
 Some variables are explicitly defined by the Scheduler to retrieve runtime information about a job or a task.
-You can retrieve them through the `variables` map or the `${}` syntax in the workflow XML definition depending of the context.
 
-[source, groovy]
-.Example for retrieving the task ID from a Groovy script
-----
-String taskId = variables.get("PA_TASK_ID")
-----
-
-Here the list of ProActive system variables:
+Here is the list of ProActive system variables:
 
 .ProActive variables
 [cols="2,5,2"]
@@ -528,6 +502,122 @@ Here the list of ProActive system variables:
 
 |===
 
+They can be used inside the workflow with the pattern syntax, for example:
+
+[source, xml]
+----
+<task ...>
+    ...
+     <forkEnvironment workingDir="/opt/${PA_JOB_ID}"></forkEnvironment>
+    ...
+</task>
+----
+
+===== Dynamic replacements
+
+It is possible to combine recursive definitions of variables.
+
+For example, one could write:
+----
+<task ...>
+    ...
+     <forkEnvironment workingDir="/opt/${DIRECTORY_${PA_TASK_REPLICATION}}"></forkEnvironment>
+    ...
+</task>
+----
+
+In that case, the variable `DIRECTORY_0` or `DIRECTORY_1`, etc (depending on the replication index) will be used in the working dir attribute.
+
+Pattern variable replacements may be performed at submission time or at execution time:
+
+- A replacement performed at *execution time* means that the replacement is executed only when the task enclosing the replacement is executed.
+- A replacement performed at *submission time* means that the replacement is directly executed when the job is submitted to the scheduler.
+
+Replacements directly using global job or task variables will always be performed at submission time.
+
+In the following example, the description replacement is performed at submission time:
+
+[source, xml]
+----
+<job ... >
+    <variables>
+        <variable name="description" value="My ProActive workflow"/>
+    </variables>
+    ...
+    <task ... >
+        <description>${description}</description>
+
+    </task>
+</job>
+----
+
+Replacements using system variables, such as the workingDir example above, will always be performed at execution time.
+
+
+===== Variables map and propagation
+
+In addition to the ability to use variables directly inside the workflow with the pattern syntax, it is also possible to use
+all type of variables inside scripts thanks to the `variables` map.
+
+Inside a script, `variables` is bound to a http://docs.oracle.com/javase/8/docs/api/java/util/Map.html[Map^].
+The syntax to access it might differ given the script engine you are using.
+
+For example in a *Groovy* script task, you can use:
+
+[source, groovy]
+----
+String var = variables.get("one_variable")
+variables.put("other_variable", "foo")
+----
+
+The first line access the variable `one_variable` from the `variables` map.
+The second line stores in the variables map a new variable called `other_variable`.
+
+System variables can also be accessed from the `variables` map, for example:
+
+[source, groovy]
+----
+println variables.get("PA_JOB_ID") // will display the id of the current job
+----
+
+From a native executable, for instance a Shell script, variables are accessible through environment variables.
+
+[source, bash]
+----
+#!/bin/bash
+echo $variables_PA_TASK_NAME
+----
+
+WARNING: In native tasks and Bash/CMD script engines, variables can be read but not written to.
+
+The `variables` map is propagated down the execution chain. If a task modifies a variable in the variables map, or add a new variable, all dependent tasks will have access to this modification.
+
+For example:
+
+[source, groovy]
+----
+// task1
+String var = variables.get("one_variable")
+variables.put("one_variable", "foo")
+variables.put("other_variable", "bar")
+----
+
+[source, groovy]
+----
+// task2 depends on task1
+println variables.get("one_variable") // will display "foo"
+println variables.get("other_variable") // will display "bar"
+----
+
+If a task depends on several tasks and each task modifies the same variable, the final value of the variable
+which is propagated down the execution chain, depends on the *order of task execution*.
+Therefore, the users need to take appropriate measures to prevent any undesired effects of such race conditions.
+
+You can set any link:http://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html[Java serializable object, window="_blank"]
+ as a variable value. They will be converted into strings using
+http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()[toString()^]
+ method when required, for instance, to make those values available as environment variables in native tasks.
+
 ==== Generic Information
 
 In addition to variables, another key/value structure can be accessed inside a script: *_Generic Information_*.
@@ -538,8 +628,22 @@ Generic information semantics differ from <<_workflow_variables>> semantics in t
  * Generic information can be defined at *job level* or at *task level*. If the same generic information is defined at job level and at task level, the latter value takes precedence inside the task scope.
  * Generic information cannot be used directly inside the workflow with the syntax ${} (See  <<_workflow_variables>>).
  * Generic information are used in general internally by the scheduler, for example to provide information to the scheduling loop on how to handle the task. An example of such generic information is the _START_AT_ info used inside <<_cron_tasks>>.
+ * Generic information can use in their definition job/task variables patterns, pattern replacements can be done at execution time when using task generic information.
 
-==== Passing data between tasks using variables
+Example of generic information definition:
+
+For example:
+[source, xml]
+----
+<task ... >
+    <genericInformation>
+        <info name="ginfo" value="${test}"/>
+    </genericInformation>
+    ...
+</task>
+----
+
+==== Passing data between tasks using results
 
 Another important mechanism of data exchange is the task *result* variable. Anywhere in a task (usually at the end) you can set a value to a reserved
 variable named *result* using any Java object. This value will be available in tasks depending on it. Moreover, in case of several dependencies,
