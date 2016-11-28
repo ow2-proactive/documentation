@@ -1,19 +1,19 @@
-apply plugin: 'maven'
-apply plugin: 'java'
-
 buildscript {
     repositories {
-        mavenCentral()
         jcenter()
     }
 
     dependencies {
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.1'
-        classpath 'xalan:xalan:2.7.1'
+        classpath 'de.undercouch:gradle-download-task:3.1.2'
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
+        classpath 'xalan:xalan:2.7.2'
     }
 }
 
-apply plugin: 'org.asciidoctor.gradle.asciidoctor'
+apply plugin: 'de.undercouch.download'
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'org.asciidoctor.convert'
 
 asciidoctor {
     sourceDir file('src/docs')
@@ -33,7 +33,45 @@ asciidoctor {
     }
 }
 
+project.ext.branch = new File('src/docs/version-conf.js').text.split("'")[1]
+if (project.ext.branch.endsWith("-SNAPSHOT")) {
+    project.ext.branch = 'master'
+}
+
+task copyDocs(type: Copy) {
+    from "src/docs/version-conf.js"
+    into "$buildDir/asciidoc/html5"
+}
+
+task removeProperties(type: Delete) {
+    delete fileTree(dir: 'src/docs/admin/references/properties/')
+}
+
+import de.undercouch.gradle.tasks.download.Download
+
+task downloadRmProperties(type: Download) {
+    src "https://raw.githubusercontent.com/ow2-proactive/scheduling/${project.branch}/config/rm/settings.ini"
+    dest file("src/docs/admin/references/properties/rm.properties")
+}
+
+task downloadSchedulerProperties(type: Download) {
+    src "https://raw.githubusercontent.com/ow2-proactive/scheduling/${project.branch}/config/scheduler/settings.ini"
+    dest file("src/docs/admin/references/properties/scheduler.properties")
+}
+
+task downloadSchedulerWebProperties(type: Download) {
+    src "https://raw.githubusercontent.com/ow2-proactive/scheduling/${project.branch}/config/web/settings.ini"
+    dest file("src/docs/admin/references/properties/scheduler-web.properties")
+}
+
+task downloadWorkflowCatalogProperties(type: Download) {
+    src "https://raw.githubusercontent.com/ow2-proactive/workflow-catalog/${project.branch}/src/main/resources/application.properties"
+    dest file("src/docs/admin/references/properties/workflow-catalog.properties")
+}
+
 task xsdDoc(type: JavaExec) {
+    println file('src/xsd/schedulerjob.xsd').absoluteFile
+
     inputs.files file('src/xsd/schedulerjob.xsd'), file('src/xsd/xs3p.xsl')
     outputs.files file("$buildDir/html5/user/schedulerjob.html")
 
@@ -42,11 +80,13 @@ task xsdDoc(type: JavaExec) {
     args '-IN', 'src/xsd/schedulerjob.xsd', '-XSL', 'src/xsd/xs3p.xsl', '-OUT', "$buildDir/asciidoc/html5/user/schedulerjob.html"
 }
 
-task copyDocs(type: Copy) {
-    from "src/docs/version-conf.js"
-    into "$buildDir/asciidoc/html5"
-}
+copyDocs.dependsOn removeProperties
+downloadRmProperties.dependsOn copyDocs
+downloadSchedulerProperties.dependsOn downloadRmProperties
+downloadSchedulerWebProperties.dependsOn downloadSchedulerProperties
+downloadWorkflowCatalogProperties.dependsOn downloadSchedulerWebProperties
+asciidoctor.dependsOn downloadWorkflowCatalogProperties
+xsdDoc.dependsOn asciidoctor
 
-
-build.dependsOn(['asciidoctor', 'xsdDoc', 'copyDocs'])
-defaultTasks 'build'
+build.dependsOn(['xsdDoc'])
+defaultTasks 'clean', 'build'
