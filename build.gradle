@@ -16,7 +16,7 @@ apply plugin: 'maven'
 apply plugin: 'org.asciidoctor.convert'
 
 asciidoctor {
-    sourceDir file('src/docs')
+    sourceDir file("$projectDir/src/docs")
     outputDir = new File("$buildDir/asciidoc")
     sources {
         include 'user/ProActiveUserGuide.adoc'
@@ -27,52 +27,52 @@ asciidoctor {
 
     }
     resources {
-        from('src/docs/') {
+        from("$projectDir/src/docs/") {
             include 'user/examples/**'
         }
     }
 }
 
-project.ext.branch = new File('src/docs/version-conf.js').text.split("'")[1]
+project.ext.branch = new File("$projectDir/src/docs/version-conf.js").text.split("'")[1]
 if (project.ext.branch.endsWith("-SNAPSHOT")) {
     project.ext.branch = 'master'
 }
 
 task copyDocs(type: Copy) {
-    from "src/docs/version-conf.js"
+    from "$projectDir/src/docs/version-conf.js"
     into "$buildDir/asciidoc/html5"
 }
 
 task removeProperties(type: Delete) {
-    delete fileTree(dir: 'src/docs/admin/references/properties/')
+    delete fileTree(dir: "$projectDir/src/docs/admin/references/properties/")
 }
 
 import de.undercouch.gradle.tasks.download.Download
 
 task downloadRmProperties(type: Download) {
     src "https://raw.githubusercontent.com/ow2-proactive/scheduling/${project.branch}/config/rm/settings.ini"
-    dest file("src/docs/admin/references/properties/rm.properties")
+    dest file("$projectDir/src/docs/admin/references/properties/rm.properties")
 }
 
 task downloadSchedulerProperties(type: Download) {
     src "https://raw.githubusercontent.com/ow2-proactive/scheduling/${project.branch}/config/scheduler/settings.ini"
-    dest file("src/docs/admin/references/properties/scheduler.properties")
+    dest file("$projectDir/src/docs/admin/references/properties/scheduler.properties")
 }
 
 task downloadSchedulerWebProperties(type: Download) {
     src "https://raw.githubusercontent.com/ow2-proactive/scheduling/${project.branch}/config/web/settings.ini"
-    dest file("src/docs/admin/references/properties/scheduler-web.properties")
+    dest file("$projectDir/src/docs/admin/references/properties/scheduler-web.properties")
 }
 
 task downloadWorkflowCatalogProperties(type: Download) {
     src "https://raw.githubusercontent.com/ow2-proactive/workflow-catalog/${project.branch}/src/main/resources/application.properties"
-    dest file("src/docs/admin/references/properties/workflow-catalog.properties")
+    dest file("$projectDir/src/docs/admin/references/properties/workflow-catalog.properties")
 }
 
 task xsdDoc(type: JavaExec) {
-    println file('src/xsd/schedulerjob.xsd').absoluteFile
+    println file("$projectDir/src/xsd/schedulerjob.xsd").absoluteFile
 
-    inputs.files file('src/xsd/schedulerjob.xsd'), file('src/xsd/xs3p.xsl')
+    inputs.files file("$projectDir/src/xsd/schedulerjob.xsd"), file("$projectDir/src/xsd/xs3p.xsl")
     outputs.files file("$buildDir/html5/user/schedulerjob.html")
 
     classpath buildscript.configurations.classpath
