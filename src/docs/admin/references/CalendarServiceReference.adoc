@@ -9,18 +9,18 @@ For more information about Radicale, please refer to <http://radicale.org/>.
 ===== Windows
 A portable Radicale program is available to be used in Windows environment, which includes all libraries and dependencies in one package to make Radicale server running on Windows.
     
-    1. Run %PROACTIVE_HOME%\tools\radicale\windows\RadicalePortable_1.1.1_English.paf.exe and select a directory where the Radicale server will be installed (Note down this directory which is going to be used in the next step). 
+    1. Run %PROACTIVE_HOME%\calendar-service\radicale\windows\RadicalePortable_1.1.1_English.paf.exe and select a directory where the Radicale server will be installed (Note down this directory which is going to be used in the next step). 
 +
 WARNING: Do not tick the checkbox "Run Radicale Portable" in the last installation, Radicale server will be launched later after some configurations
 
     2. Add `RADICALE_HOME` system variable. Go to System -> Advanced system settings -> Environment Variables, Click on the "New" button of the "System variables" section, set `RADICALE_HOME` as the variable name and the Radicale installed directory as the variable value
     
-    3. Set up calendar service. Go to the \tools folder and run the calendar-service-setup batch script, the Radicale server will be started up by this script
+    3. Set up calendar service. Go to the \calendar-service folder and run the calendar-service-setup batch script, the Radicale server will be started up by this script
     
 +
 [source]
 ----
-cd  %PROACTIVE_HOME%\tools\
+cd  %PROACTIVE_HOME%\calendar-service\
 calendar-service-setup.bat
 ----
 
@@ -31,12 +31,12 @@ WARNING: At the end, the script will ask to run the calendar service or not, ple
 ===== Linux (Debian)
 The following scripts have to be run as the same linux user as the one running proactive scheduler 
 
-    1. Go to /tools folder, and run calendar-service-setup.sh batch script (which is going to install python3 and Radicale)
+    1. Go to /calendar-service folder, and run calendar-service-setup.sh batch script (which is going to install python3 and Radicale)
     
 +
 [source]
 ----
-cd  $PROACTIVE_HOME/tools/
+cd  $PROACTIVE_HOME/calendar-service/
 ./calendar-service-setup.sh
 ----
 
@@ -44,11 +44,11 @@ cd  $PROACTIVE_HOME/tools/
 WARNING: At the end, the script will ask to run the calendar service or not, please don't run calendar service if ProActive Scheduler is not running.
 
 
-    2. Go to /tools folder, and run calendar-service.sh 
+    2. Go to /calendar-service folder, and run calendar-service.sh 
 +
 [source]
 ----
-cd  $PROACTIVE_HOME/tools/
+cd  $PROACTIVE_HOME/calendar-service/
 ./calendar-service.sh start
 ----
 
@@ -59,20 +59,20 @@ Python3 has to be already installed on Mac OS. The user can follow the same step
 ==== Start up Calendar service
 
 ===== Windows
-Go to the \tools folder and run calendar-service.bat
+Go to the \calendar-service folder and run calendar-service.bat
 
 [source]
 ----
-cd  %PROACTIVE_HOME%\tools\
+cd  %PROACTIVE_HOME%\calendar-service\
 calendar-service.bat
 ----
 
 ===== Linux
-Go to the /tools folder and run calendar-service.sh
+Go to the /calendar-service folder and run calendar-service.sh
 
 [source]
 ----
-cd  $PROACTIVE_HOME/tools/
+cd  $PROACTIVE_HOME/calendar-service/
 ./calendar-service.sh start
 
 ----
