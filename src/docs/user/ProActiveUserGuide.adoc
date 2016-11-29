@@ -1498,7 +1498,7 @@ If the task has not *IN_ERROR* status, the _Mark as finished and resume_ option 
 === Get Notifications on Job Events
 
 
-Add a "NOTIFICATION_EVENTS" Generic information, to list events on which a user wants to be notified. List is comma-separated and should be taken from(lower case or upper case does not matter):
+Add a "NOTIFICATION_EVENTS" Generic information, to list events on which a user wants to be notified. List is comma-separated and should be taken from(events are not case sensitive):
 
 * *Job change priority*
 * *Job In-Error*
