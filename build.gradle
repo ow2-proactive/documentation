@@ -38,8 +38,20 @@ if (project.ext.branch.endsWith("-SNAPSHOT")) {
     project.ext.branch = 'master'
 }
 
+def getDate() {
+    def currentDate = new Date()
+    def formattedDateString = currentDate.format('yyyy-MM-dd')
+    return formattedDateString
+}
+
 task copyDocs(type: Copy) {
-    from "$projectDir/src/docs/version-conf.js"
+    def dateString = getDate()
+    from ("$projectDir/src/docs/") {
+        include 'version-conf.js'
+        filter { line ->
+            line.replace('date: \'\'', 'date: \''+dateString+'\'')
+        }
+    }
     into "$buildDir/asciidoc/html5"
 }
 
