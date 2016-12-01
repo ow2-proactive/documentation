@@ -92,3 +92,5 @@ Some important configuration properties are shown in the list below
 -  `pa.scheduler.admin.password` - ProActive scheduler admin login password, default value is "admin"
 
 -  `pa.scheduler.home` - ProActive installed home path, default value is relative parent directory ".."
+
+Other properties can be found in the scheduler.conf file in $PROACTIVE_HOME/dist/war/scheduler/.
