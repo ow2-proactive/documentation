@@ -33,6 +33,10 @@ asciidoctor {
     }
 }
 
+asciidoctorj {
+    version = '1.5.1'
+}
+
 project.ext.branch = new File("$projectDir/src/docs/version-conf.js").text.split("'")[1]
 if (project.ext.branch.endsWith("-SNAPSHOT")) {
     project.ext.branch = 'master'
