@@ -17,6 +17,6 @@
 
 ++++
 <script>
-document.getElementById('versionId').innerHTML = conf.version
+document.getElementById('versionId').innerHTML = conf.version + ' - ' +conf.date
 </script>
 ++++

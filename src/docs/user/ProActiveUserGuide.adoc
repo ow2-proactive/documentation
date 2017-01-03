@@ -1498,17 +1498,29 @@ If the task has not *IN_ERROR* status, the _Mark as finished and resume_ option 
 === Get Notifications on Job Events
 
 
-Add a "NOTIFICATION_EVENTS" Generic information, to list events on which a user wants to be notified. List is comma-separated and should be taken from: *JOB_PAUSED*, *JOB_RESUMED*, *JOB_IN_ERROR*, *JOB_RUNNING_TO_FINISHED*, *JOB_PENDING_TO_FINISHED* and *JOB_RESTARTED_FROM_ERROR*. Scheduler can send email to the users when one of the above events is received.
+Add a "NOTIFICATION_EVENTS" Generic information, to list events on which a user wants to be notified. List is comma-separated and should be taken from(events are not case sensitive):
+
+* *Job change priority*
+* *Job In-Error*
+* *Job paused*
+* *Job pending to finished*
+* *Job pending to running*
+* *Job restarted from error*
+* *Job resumed*
+* *Job running to finished*
+* *Job submitted*
+
+Scheduler can send email to the users when one of the above events is received.
 
 To enable this functionality, the following properties should be set in `config/scheduler/setting.ini`:
 
 [source, groovy]
 ----
-pa.scheduler.notifications.email.enabled
-pa.scheduler.notifications.email.from
+pa.scheduler.notifications.email.enabled = true
+pa.scheduler.notifications.email.from = username@example.com
 ----
 
-The machine running the scheduler should be configured to accept outgoing mail (i.e. it should have a mail transport agent).
+To configure the email sender on Scheduler, the configuration file `config/scheduler/emailnotification.properties` should be filled in.
 
 Notifications will only be sent for jobs whose generic information contains user's email address under the "EMAIL" key. Example:
 
@@ -1516,10 +1528,17 @@ Notifications will only be sent for jobs whose generic information contains user
 ----
 <genericInformation>
     <info name="EMAIL" value="user@example.com"/>
-    <info name="NOTIFICATION_EVENTS" value="JOB_PAUSED, JOB_RESUMED"/>
+    <info name="NOTIFICATION_EVENTS" value="Job paused, Job resumed"/>
 </genericInformation>
 ----
 
+=== Chaining Jobs
+
+SubmitJobNoWait and SubmitJobAndWait templates under *Controls* menu allow you to submit a workflow from another workflow using *schedulerapi*.
+
+In order to submit a workflow, you need to put the URL of that workflow in the Task Variables under the key *workflowURL*. You can use any URL that points to
+a valid workflow xml file. For example, you can add the workflow that you want to execute into *Workflow Catalog*, then retrieve its URL by indicating its Bucket ID
+and workflow ID. Moreover, SubmitJobAndWait will wait for the completion of the submitted workflow before proceeding further with the execution of the dependant tasks.
 
 == Workflow Storage and Versioning
 
