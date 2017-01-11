@@ -960,6 +960,7 @@ Configure a ProActive Node to execute tasks under a user's system account by tic
 link:../user/ProActiveUserGuide.html#_run_computation_with_your_system_account[Run as me] box in the task configuration.
 By default authentication is done through a password, but can also be configured using a SSH key.
 
+Find a step by step tutorial link:AdminTutorials.html[here].
 
 For proper execution, *the user's system account must have:*
 
@@ -973,8 +974,17 @@ rights, including the PROACTIVE_HOME parent directories.
 TIP: Create a ProActive group which owns the PROACTIVE_HOME directory and has write access. Add every system user, which
 executes tasks under its own system account, to the ProActive group.
 
-Find a step by step tutorial link:AdminTutorials.html[here].
+NOTE: On Mac OS X, the default temporary folder is not shared between all users. It is required by the RunAsMe feature.
+To use a shared temporary folder, you need to set the _$TMPDIR_ environment variable and the Java property _java.io.tmpdir_
+to /tmp before starting the ProActive Node.
 
+NOTE: the same applies on Windows. To use a shared temporary folder, create a folder shared by all proactive users e.g. C:\TEMP and define
+the Java property _java.io.tmpdir_ to C:\TEMP before starting the ProActive Node.
+
+Example:
+----
+proactive-node -Djava.io.tmpdir=C:\TEMP
+----
 
 === Using password
 
@@ -983,14 +993,38 @@ username and password must be the same between the Scheduler and the operating s
 
 === Using SSH keys
 
-A SSH key can be tied to the user's account and used to impersonate the user when running a task (using SSH).
-The private key of the user must be provided.
+A SSH key can be tied to the user's account and used to impersonate the user when running a task on a given machine (using SSH).
+The .ssh/authorized_keys files of all machines must be configured to accept this SSH key.
+The SSH key must require *no passphrase*.
+
+When login into the scheduler portal, the private key of the user must be provided, this can be done by selecting on the login dialog : `More options > Use SSH private key`.
 
 To enable this method, set the system property `pas.launcher.forkas.method` to _key_ when starting a ProActive Node.
 
-NOTE: On Mac OS X, the default temporary folder is not shared between all users. It is required by this feature.
-To use a shared temporary folder, you need to set the _$TMPDIR_ environment variable and the Java property _java.io.tmpdir_
-to /tmp before starting the ProActive Node.
+Example:
+----
+proactive-node -Dpas.launcher.forkas.method=key
+----
+
+=== Using passwordless sudo
+
+This configuration, only availabe on linux nodes, allows the impersonation to be performed using passwordless sudo.
+
+To enable it at the system level, edit the /etc/sudoers file to allow passwordless sudo from the account running the proactive node
+to any users which require impersonation. Passwordless sudo should be enabled for any command.
+
+For example, the following line will allow the proactive account to impersonate to any user:
+----
+proactive ALL=(ALL) NOPASSWD: ALL
+----
+
+To enable this configuration on the proactive node, start it with the system property `pas.launcher.forkas.method` to _none_
+
+Example:
+----
+proactive-node -Dpas.launcher.forkas.method=none
+----
+
 
 [[_web_applications]]
 == Configure Web applications
