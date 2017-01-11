@@ -993,8 +993,11 @@ username and password must be the same between the Scheduler and the operating s
 
 === Using SSH keys
 
-A SSH key can be tied to the user's account and used to impersonate the user when running a task (using SSH).
-The private key of the user must be provided when the user log into the scheduler from the scheduler or rm portal.
+A SSH key can be tied to the user's account and used to impersonate the user when running a task on a given machine (using SSH).
+The .ssh/authorized_keys files of all machines must be configured to accept this SSH key.
+The SSH key must require *no passphrase*.
+
+When login into the scheduler portal, the private key of the user must be provided, this can be done by selecting on the login dialog : `More options > Use SSH private key`.
 
 To enable this method, set the system property `pas.launcher.forkas.method` to _key_ when starting a ProActive Node.
 
