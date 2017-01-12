@@ -826,6 +826,81 @@ In case of PAM users, the login file should not be modified as password authenti
 NOTE: Similarly to the LDAP authentication, there is a fallback mechanism for login authentication, with the difference that it is always activated.
 A user defined in the ProActive login file always has precedence over the same user defined on the Linux system.
 
+== Task Termination Behavior
+
+=== ProActive Node Graceful Task Termination (SIGTERM) at Killing
+
+The task termination timeout is a cleanup timeout for each task (executed on this Node)
+after it was killed (through the Scheduler REST API or the Scheduler web portal).
+By default the task termination timeout is set to 10 seconds
+but it can be setup on each ProActive Node individually.
+It can be set at node startup by setting the "proactive.node.task.cleanup.time" property.
+Example: add  "-Dproactive.node.task.cleanup.time=30" (set to 30 seconds as example) to
+the node startup command.
+
+
+
+==== Step by Step Killing Example
+
+With a 30 seconds termination timeout following steps happen.
+
+===== First
+
+The kill request is received by the Scheduler Server.
+
+===== Second
+
+The ProActive Node which executes the task receives the kill request.
+The behavior depends if the Scheduler Server is configured to launch tasks in Forked or Non-Forked Mode.
+
+*Forked Mode*:
+
+On Linux, a SIGTERM signal is send to the JVM which executes the task.
+On Windows, the TerminateProcess method of the JVM process which executes the task is executed.
+That will finally lead to the Task Process being interrupted by:
+
+* A SIGTERM signal on Linux
+* TerminateProcess method called, on Windows
+
+The task can deal with the killing event and start a cleanup procedure. If
+the task has started sub-processes it is responsible to initiate graceful termination
+of the sub-processes. Handling a graceful termination event looks different in each task type
+and is dependent on the capabilities of the language used.
+As an example Bash and Jython (Python task) can catch a SIGTERM signal.
+Java and Groovy task need to register shutdownHooks to achieve similar behavior.
+
+*Non-Forked Mode*:
+
+In Non-Forked Mode, the task runs in a separate thread in the same JVM as the ProActive Node.
+Therefore, the thread running the task will be interrupted.
+
+Bash tasks, in Non-Forked Mode, do receive SIGTERM.
+Java and Groovy tasks will receive an InterruptedException, which can be used to handle
+the graceful termination of that task and sub-processes.
+But, Jython (Python tasks) will not receive any notification.
+If the task has started sub-processes it is responsible to initiate graceful termination of the sub-processes,
+if possible.
+
+===== Third
+
+The ProActive Node waits as many seconds as setup in the proactive.node.task.cleanup.time property or until
+the task is stopped.
+Example: cleanup timeout is 30 seconds and the task takes 3 seconds to terminate, then the ProActive Node will
+wait 3 seconds only.
+
+===== Fourth
+
+The ProActive Node initiates the task process and sub-process removal.
+This will forcefully kill the whole tree of processes. Another SIGTERM
+might be send shortly before the forcefully killing (SIGKILL).
+
+===== Additional Information
+
+*On Windows* the termination procedure is similar. But the Windows SIGTERM equivalent is
+executing the TerminateProcess method of the process. Whereas the SIGKILL is equivalent to
+the forceful removal of the running process.
+
+
 == User Permissions
 
 All users authenticated in the Resource Manager have they own role according to granted permissions.
