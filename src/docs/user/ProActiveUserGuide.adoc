@@ -1544,9 +1544,9 @@ and workflow ID. Moreover, SubmitJobAndWait will wait for the completion of the 
 
 In order to better control your workflows, two templates *Web Validation* and *Email Validation* are provided under the *Manuals* menu. These templates aime at validating part of your workflows manually. The tasks after the validation template will only be executed
 once you validate it. You can put your description of the validation under the *content* variable in *Web Validation* template, and under *message* variable in *Email Validation* template. Three options are provided, the *Yes* option indicates that you want
-to validate the workflow and continue the execution of the rest tasks; the *Maybe* option means that you do not know what to do for the moment; the *No* option denotes that you do not want to validate the workflow, and the rest of the workflow will be paused.
+to validate the workflow and continue the execution of the rest tasks; the *Maybe* option means that you do not know what to do for the moment; the *No* option denotes that you do not want to validate the workflow, and the remaining of the workflow will be paused.
 
-In order to validate your workflow using *Web Validation*, you need to go to the *ProActive Notification & Validation* portal, the workflow will be validated by clicking on one of the three buttons. By using *Email Validation*, you will receive an email with three link, the workflow can be validated by clicking on one of the link.
+In order to validate your workflow using *Web Validation*, you need to go to the *ProActive Notification & Validation* portal, the workflow will be validated by clicking on one of the three buttons. By using *Email Validation*, you will receive an email with three links, the workflow can be validated by clicking on one of the links.
 
 
 
