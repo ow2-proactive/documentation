@@ -484,6 +484,7 @@ a SSH tunnel between him and the ProActive Scheduler and use that tunnel for PAM
 See <<_pamr_protocol_properties>> reference for a detailed explanation of each property.
 
 == Control the resource usage
+
 === Policies
 
 You can limit the utilization of resources connected to the ProActive Scheduler in different ways. When you create node
@@ -526,6 +527,22 @@ Both linux and windows agents have an ability to:
 * Limit resources utilization for these daemons (e.g CPU, memory)
 
 Agents configuration is detailed in the section <<_proactive_agents>>.
+
+[[_nodes_locking]]
+=== Locking ProActive Nodes
+
+The Resource Manager allows to lock and unlock ProActive nodes. Locking a Node prevents new Tasks to be launched on
+that node. This operation is possible whatever the <<_node_states,state of a Node>> is. Once locked, the Resource Manager keeps track of
+who has locked the Node and when.
+
+A common use case for locking Nodes is about maintenances. You may have a long running Task executing on a ProActive
+Node where a maintenance is planned. Let's say the current Task must not be interrupted and new ones not started before
+achieving the maintenance. A solution is to lock the Node. This way, the current Task will complete but no new Tasks are
+scheduled on that Node. Then, it is possible to perform the maintenance and on termination to unlock the Node. Upon
+unlocking, the Node becomes again eligible for Tasks execution.
+
+Locking and unlocking a Node, or more generally a set of Nodes, is possible from the REST API, the command line client
+but also the Resource Manager portal.
 
 == User Authentication
 
@@ -933,9 +950,10 @@ The same information is accessible using the command line:
 $ PROACTIVE_HOME/bin/proactive-client --listnodes
 ----
 
+[[_node_states]]
 === ProActive Node States
 
-When you look at your cluster ProActive Nodes can be in one of the following states
+When you look at your cluster, ProActive Nodes can be in one of the following states:
 
 * `Deploying` - The deployment of the node has been triggered by the ProActive Resource Manager but it has not yet been added.
 * `Lost` - The deployment of the node has failed for some reason.
@@ -943,9 +961,11 @@ The node has never been added to the ProActive Resource Manager and won't be usa
 * `Configuring` - Node has been added to the ProActive Resource Manager and is being configured.
 * `Free` - Node is available for computations.
 * `Busy` - Node has been given to user to execute computations.
-* `Locked` - Node is under maintenance and cannot be used for computations.
 * `To be removed` - Node is busy but requested to be removed. So it will be removed once the client will release it.
 * `Down` - Node is unreachable or down and cannot be used anymore.
+
+The state of a ProActive Node is managed by the Resource Manager. However, each Node has a
+<<_nodes_locking,user managed lock status>>.
 
 === JMX
 
