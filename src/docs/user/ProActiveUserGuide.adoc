@@ -1557,16 +1557,19 @@ This task provides Ldap client for querying Ldap server. The query is the search
 |================================================================
 |Parameter Name | Description | Example
 |ldapURL|URL the ldap server| "ldap://localhost:389" (unsecured) or "ldaps://127.0.0.1:636" (secured)
-|ldapSearchBase|base domain name for ldap queries|"dc=yourOrganization,dc=com" 
+|ldapDnBase|The base distinguished name of the catalog| "dc=yourOrganization,dc=com"
+|ldapUsername|The username | "cn=admin" for global admin or "cn=yourName,ou=users" for a specific user
+|ldapSearchBase|base domain name for ldap queries|"dc=specificDepartment" or can be empty for base DN search
 |ldapSearchFilter|ldap search filter|"(objectclass=*)"
 |ldapSelectedAttributes|list of attributes to retrieve|"attributeName1,attributeName2"
 |================================================================
+
+If any of these variables must stay private you'll need to set them as third-party credentials (details are given below) instead.
 
 ==== Authenticate with Third-party credentials
 
 In order to be able to authenticate to the Ldap server you need to add in the Scheduler the next <<_third_party_credentials,Third-party credentials>> : 
 
-* ldapUsername
 * ldapPassword
 
 ==== Result of task
