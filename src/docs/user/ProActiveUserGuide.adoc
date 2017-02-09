@@ -1559,29 +1559,29 @@ This task provides LDAP client for querying LDAP server. The query is the search
 The next parameters are provided as task variables:
  
 [width="100%",frame="topbot",options="header"]
-|================================================================
+|===
 |Parameter Name | Description | Example
-|ldapURL|URL the LDAP server| "ldap://localhost:389" (unsecured) or "ldaps://127.0.0.1:636" (secured)
-|ldapSearchBase|base domain name for LDAP queries|"dc=yourOrganization,dc=com" 
-|ldapSearchFilter|LDAP search filter|"(objectclass=*)"
-|ldapSelectedAttributes|list of attributes to retrieve|"attributeName1,attributeName2"
-|================================================================
+|ldapURL|URL the LDAP server|`ldap://localhost:389` (unsecured) or `ldaps://127.0.0.1:636` (secured)
+|ldapSearchBase|base domain name for LDAP queries|`dc=yourOrganization,dc=com`
+|ldapSearchFilter|LDAP search filter|`(objectclass=*)`
+|ldapSelectedAttributes|list of attributes to retrieve|`attributeName1,attributeName2`
+|===
 
 ==== Authenticate with Third-party credentials
 
-In order to be able to authenticate to the LDAP server you need to add in the Scheduler the next <<_third_party_credentials,Third-party credentials>>: 
+In order to be able to authenticate to the LDAP server you need to add define for the right Scheduler ser the <<_third_party_credentials,Third-party credentials>>: 
 
 * ldapUsername (example : "cn=username,dc=test,dc=com")
 * ldapPassword
 
 ==== Result of task
 
-The task provides a specific variable for the result, which is called ‘result'.
+The task provides a specific variable for the result, which is called `result`.
 
-The <<_retrieve_results, task result >>  is a string in json format.
+The <<_retrieve_results, task result >>  is a String in JSON format.
 
 
-===== Output example :
+===== Output example 
 
 Successful task :
 ```{.json}
@@ -1595,13 +1595,13 @@ Failed task :
 
 ==== Secure connection to LDAP server
 
-In order to use secure connection to LDAP server, specify a correct LDAP server url (for example ldaps://localhost:636 ).
+In order to use secure connection to LDAP server, specify a correct LDAP over SSL URL (for example ldaps://localhost:636 ).
 
-You need to have valid certificate to be able to connect to LDAP server.
+You need to have valid a certificate to be able to connect to LDAP server.
 
-In case of use self-signed certificate, add this certificate to the trusted certificates of included jre provided by scheduler.
+In the case you are using a self-signed certificate, add this certificate to the trusted certificates of the JRE provided with the Scheduler.
 
-For example, the command should be like the next one for adding certificate to your Java cacerts file:
+Below is an example for adding a certificate to a Java cacerts file:
 ----
 keytool -import -alias ldap-self-signed -keystore </pathToScheduler/jre/lib/security/cacerts> -file ldaps.crt
 ----
