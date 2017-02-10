@@ -1567,11 +1567,12 @@ The next parameters are provided as task variables:
 |ldapSelectedAttributes|list of attributes to retrieve|`attributeName1,attributeName2`
 |===
 
+If any of these variables must stay private you'll need to set them as third-party credentials (details are given below) instead.
+
 ==== Authenticate with Third-party credentials
 
-In order to be able to authenticate to the LDAP server you need to define the right Scheduler user in the <<_third_party_credentials,Third-party credentials>>: 
+In order to be able to authenticate to the LDAP server you need to define for the right Scheduler user in the <<_third_party_credentials,Third-party credentials>>: 
 
-* ldapUsername (example : `cn=username,dc=test,dc=com`)
 * ldapPassword
 
 ==== Result of task
