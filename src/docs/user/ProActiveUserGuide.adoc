@@ -1552,7 +1552,7 @@ In order to validate your workflow using *Web Validation*, you need to go to the
 
 ==== Description
 
-This task provides LDAP client for querying LDAP server. The query is the search query with parameters.
+This task provides a LDAP client for querying LDAP server. The query is the search query with parameters.
 
 ==== LDAP query task variables table
 
@@ -1569,7 +1569,7 @@ The next parameters are provided as task variables:
 
 ==== Authenticate with Third-party credentials
 
-In order to be able to authenticate to the LDAP server you need to add define for the right Scheduler user the <<_third_party_credentials,Third-party credentials>>: 
+In order to be able to authenticate to the LDAP server you need to define the right Scheduler user in the <<_third_party_credentials,Third-party credentials>>: 
 
 * ldapUsername (example : "cn=username,dc=test,dc=com")
 * ldapPassword
@@ -1595,9 +1595,9 @@ Failed task :
 
 ==== Secure connection to LDAP server
 
-In order to use secure connection to LDAP server, specify a correct LDAP over SSL URL (for example ldaps://localhost:636).
+In order to use secure connection for the LDAP server, specify a correct LDAP over SSL URL (for example ldaps://localhost:636).
 
-You need to have a valid certificate to be able to connect to LDAP server.
+You need to have a valid certificate to be able to connect to LDAP server
 
 In the case you are using a self-signed certificate, add this certificate to the trusted certificates of the JRE provided with the Scheduler.
 
