@@ -1548,38 +1548,41 @@ to validate the workflow and continue the execution of the rest tasks; the *Mayb
 
 In order to validate your workflow using *Web Validation*, you need to go to the *ProActive Notification & Validation* portal, the workflow will be validated by clicking on one of the three buttons. By using *Email Validation*, you will receive an email with three links, the workflow can be validated by clicking on one of the links.
 
-=== Ldap Query Tasks
+=== LDAP Query Tasks
 
-==== Ldap query task variables table
+==== Description
 
-This task provides Ldap client for querying Ldap server. The query is the search query with parameters. The next parameters is provided as task variables:
+This task features the LDAP searching operation.
+
+==== LDAP query task variables table
+
+The next parameters are provided as task variables:
+ 
 [width="100%",frame="topbot",options="header"]
-|================================================================
+|===
 |Parameter Name | Description | Example
-|ldapURL|URL the ldap server| "ldap://localhost:389" (unsecured) or "ldaps://127.0.0.1:636" (secured)
-|ldapDnBase|The base distinguished name of the catalog| "dc=yourOrganization,dc=com"
-|ldapUsername|The username | "cn=admin" for global admin or "cn=yourName,ou=users" for a specific user
-|ldapSearchBase|base domain name for ldap queries|"dc=specificDepartment" or can be empty for base DN search
-|ldapSearchFilter|ldap search filter|"(objectclass=*)"
-|ldapSelectedAttributes|list of attributes to retrieve|"attributeName1,attributeName2"
-|================================================================
+|ldapURL|URL the LDAP server|`ldap://localhost:389` (unsecured) or `ldaps://127.0.0.1:636` (secured)
+|ldapSearchBase|base domain name for LDAP queries|`dc=yourOrganization,dc=com`
+|ldapSearchFilter|LDAP search filter|`(objectclass=*)`
+|ldapSelectedAttributes|list of attributes to retrieve|`attributeName1,attributeName2`
+|===
 
 If any of these variables must stay private you'll need to set them as third-party credentials (details are given below) instead.
 
 ==== Authenticate with Third-party credentials
 
-In order to be able to authenticate to the Ldap server you need to add in the Scheduler the next <<_third_party_credentials,Third-party credentials>> : 
+In order to be able to authenticate to the LDAP server you need to define for the right Scheduler user in the <<_third_party_credentials,Third-party credentials>>: 
 
 * ldapPassword
 
 ==== Result of task
 
-The task provides a specific variable for the result, which is called ‘result'.
+The task provides a specific variable for the result, which is called `result`.
 
-The <<_retrieve_results, task result >>  is a string in json format.
+The <<_retrieve_results, task result >>  is a String in JSON format.
 
 
-===== Output example :
+===== Output example 
 
 Successful task :
 ```{.json}
@@ -1593,15 +1596,15 @@ Failed task :
 
 ==== Secure connection to LDAP server
 
-In order to use secure connection to LDAP server, specify a correct LDAP server url (for example ldaps://localhost:636 ).
+In order to use secure connection for the LDAP server, specify a correct LDAP over SSL URL (for example ldaps://localhost:636).
 
-You need to have valid certificate to be able to connect to LDAP server.
+In order to be able to connect to a LDAP server, a valid certificate is needed.
 
-In case of use self-signed certificate, add this certificate to the trusted certificates of included jre provided by scheduler.
+When a self-signed certificate is used, the certificate needs to be added to the trusted certificates of the JRE provided with the Scheduler.
 
-For example, the command should be like the next one for adding certificate to your Java cacerts file:
+Below is an example for adding a certificate to a Java cacerts file:
 ----
-keytool -import -alias ldap-self-signed -keystore </pathToScheduler/jre/lib/security/cacerts> -file ldaps.crt
+keytool -import -alias ldap-self-signed -keystore </pathToScheduler/jre/lib/security/cacerts> -file ldaps.crt -storepass changeit
 ----
 
 == Workflow Storage and Versioning
