@@ -1571,7 +1571,7 @@ The next parameters are provided as task variables:
 
 In order to be able to authenticate to the LDAP server you need to define the right Scheduler user in the <<_third_party_credentials,Third-party credentials>>: 
 
-* ldapUsername (example : "cn=username,dc=test,dc=com")
+* ldapUsername (example : `cn=username,dc=test,dc=com`)
 * ldapPassword
 
 ==== Result of task
