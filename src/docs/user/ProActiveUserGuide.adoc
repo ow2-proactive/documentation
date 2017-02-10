@@ -1597,9 +1597,9 @@ Failed task :
 
 In order to use secure connection for the LDAP server, specify a correct LDAP over SSL URL (for example ldaps://localhost:636).
 
-You need to have a valid certificate to be able to connect to LDAP server
+In order to be able to connect to a LDAP server, a valid certificate is needed.
 
-In the case you are using a self-signed certificate, add this certificate to the trusted certificates of the JRE provided with the Scheduler.
+When a self-signed certificate is used, the certificate needs to be added to the trusted certificates of the JRE provided with the Scheduler.
 
 Below is an example for adding a certificate to a Java cacerts file:
 ----
