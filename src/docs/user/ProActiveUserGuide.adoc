@@ -1603,7 +1603,7 @@ In the case you are using a self-signed certificate, add this certificate to the
 
 Below is an example for adding a certificate to a Java cacerts file:
 ----
-keytool -import -alias ldap-self-signed -keystore </pathToScheduler/jre/lib/security/cacerts> -file ldaps.crt
+keytool -import -alias ldap-self-signed -keystore </pathToScheduler/jre/lib/security/cacerts> -file ldaps.crt -storepass changeit
 ----
 
 == Workflow Storage and Versioning
