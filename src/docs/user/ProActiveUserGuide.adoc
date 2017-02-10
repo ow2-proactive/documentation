@@ -1593,7 +1593,63 @@ to validate the workflow and continue the execution of the rest tasks; the *Mayb
 
 In order to validate your workflow using *Web Validation*, you need to go to the *ProActive Notification & Validation* portal, the workflow will be validated by clicking on one of the three buttons. By using *Email Validation*, you will receive an email with three links, the workflow can be validated by clicking on one of the links.
 
+=== LDAP Query Tasks
 
+==== Description
+
+This task features the LDAP searching operation.
+
+==== LDAP query task variables table
+
+The next parameters are provided as task variables:
+ 
+[width="100%",frame="topbot",options="header"]
+|===
+|Parameter Name | Description | Example
+|ldapURL|URL the LDAP server|`ldap://localhost:389` (unsecured) or `ldaps://127.0.0.1:636` (secured)
+|ldapSearchBase|base domain name for LDAP queries|`dc=yourOrganization,dc=com`
+|ldapSearchFilter|LDAP search filter|`(objectclass=*)`
+|ldapSelectedAttributes|list of attributes to retrieve|`attributeName1,attributeName2`
+|===
+
+==== Authenticate with Third-party credentials
+
+In order to be able to authenticate to the LDAP server you need to define the right Scheduler user in the <<_third_party_credentials,Third-party credentials>>: 
+
+* ldapUsername (example : `cn=username,dc=test,dc=com`)
+* ldapPassword
+
+==== Result of task
+
+The task provides a specific variable for the result, which is called `result`.
+
+The <<_retrieve_results, task result >>  is a String in JSON format.
+
+
+===== Output example 
+
+Successful task :
+```{.json}
+{"status":"Ok","attributes":[{"loginShell":"/bin/csh","uid":"yaro","userPassword":"[B@2d6a9952","homeDirectory":"/home/users/yaro","uidNumber":"1000","givenName":"yaro","objectClass":"inetOrgPerson","sn":"yaya","gidNumber":"500","cn":"yaro"}]}
+```
+
+Failed task :
+```{.json}
+{"status":"Error","errorMessage":"javax.naming.NameNotFoundException: [LDAP: error code 32 - No Such Object]; remaining name 'cn=yaro,dc=activeeon,dc=com1'"}
+```
+
+==== Secure connection to LDAP server
+
+In order to use secure connection for the LDAP server, specify a correct LDAP over SSL URL (for example ldaps://localhost:636).
+
+In order to be able to connect to a LDAP server, a valid certificate is needed.
+
+When a self-signed certificate is used, the certificate needs to be added to the trusted certificates of the JRE provided with the Scheduler.
+
+Below is an example for adding a certificate to a Java cacerts file:
+----
+keytool -import -alias ldap-self-signed -keystore </pathToScheduler/jre/lib/security/cacerts> -file ldaps.crt -storepass changeit
+----
 
 == Workflow Storage and Versioning
 
