@@ -864,6 +864,7 @@ It can be set at node startup by setting the "proactive.node.task.cleanup.time" 
 Example: add  "-Dproactive.node.task.cleanup.time=30" (set to 30 seconds as example) to
 the node startup command.
 
+Find an overview of termination behavior by task and language in section <<Termination behavior by language>>.
 
 
 ==== Step by Step Killing Example
@@ -920,16 +921,45 @@ The ProActive Node initiates the task process and sub-process removal.
 This will forcefully kill the whole tree of processes. Another SIGTERM
 might be send shortly before the forcefully killing (SIGKILL).
 
-===== Additional Information
+===== Additional information
 
 *On Windows* the termination procedure is similar. But the Windows SIGTERM equivalent is
 executing the TerminateProcess method of the process. Whereas the SIGKILL is equivalent to
 the forceful removal of the running process.
 
 
+===== Termination behavior by language
+
+.Termination Behavior for a Few Languages
+|===
+|Language/Execution type|Bash |Python |Java |Groovy
+
+|Forked Mode
+| Handle SIGTERM. Task waits cleanup timeout, before being killed.
+| Handle SIGTERM. Task waits cleanup timeout, before being killed.
+| Add a shutdown hook. Task waits cleanup timeout, before being killed.
+| add a shutdown hook. Task waits cleanup timeout, before being killed.
+
+|Forked Mode Run As Me
+| Handle SIGTERM. Task waits cleanup timeout, before being killed.
+| Handle SIGTERM. Task waits cleanup timeout, before being killed.
+| Add a shutdown hook. Task waits cleanup timeout, before being killed.
+| Add a shutdown hook. Task waits cleanup timeout, before being killed.
+
+
+|Non-Forked Mode
+| Handle SIGTERM. Task waits cleanup timeout, before being killed.
+| Terminates immediately.
+| Catch an InterruptedException. Task waits cleanup timeout, before being killed.
+| Catch an InterruptedException. Task waits cleanup timeout, before being killed.
+
+
+|===
+
+
 == User Permissions
 
-All users authenticated in the Resource Manager have they own role according to granted permissions.
+All users authenticated in the Resource Manager have their own role according to granted permissions.
 In ProActive Scheduler, we use the standard
 http://www.oracle.com/technetwork/java/javase/jaas/index.html[Java Authentication and Authorization Service (JAAS)^]
 to address these needs.
