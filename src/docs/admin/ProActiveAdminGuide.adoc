@@ -544,6 +544,15 @@ unlocking, the Node becomes again eligible for Tasks execution.
 Locking and unlocking a Node, or more generally a set of Nodes, is possible from the REST API, the command line client
 but also the Resource Manager portal.
 
+Please note that locks are restored, by default, on Resource Manager restart and thus Scheduler restart.
+It is possible to disable this feature by editing the value associated to the property named
+`pa.rm.nodes.lock.restoration` in `PROACTIVE_HOME/config/rm/settings.ini`.
+
+When the nodes lock restoration feature is enabled, the Resource Manager will try to lock, per Node Source,
+as many Nodes as there were on the previous run.
+The approach is best effort and Node hostname is not considered.
+As a consequence, Nodes are not necessarily locked on the same host after a Scheduler restart.
+
 == User Authentication
 
 In order to use ProActive Scheduler every user must have an account. It supports three methods for authentication:
