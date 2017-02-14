@@ -2034,6 +2034,9 @@ and you can also find the documentation link:schedulerjob.html[here, window="_bl
 TIP: Setup your IDE to use the http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.3/schedulerjob.xsd[Workflow XSD^],
 you will benefit from live validation and completion!
 
+=== Studio Tasks
+include::./references/Tasks.adoc[]
+
 === Variables quick reference
 include::./references/VariablesReference.adoc[]
 
