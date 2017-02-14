@@ -179,7 +179,9 @@ Refer to <<_topology_types>> for more details.
 === Run a workflow
 
 To run a workflow, the user submits it to *ProActive Scheduler*.
+It will be possible to choose the values of all Job Variables when submitting the workflow (see section <<_job_variables,Job Variables>>).
 A verification is performed to ensure the well-formedness of the workflow.
+A verification will also be performed to ensure that all variables are valid according to their model definition (see section <<_variable_model,Variable Model>>).
 Next, a job is created and inserted into the pending queue and
 waits until free resources become available.
 Once the required resources are provided by the ProActive Resource Manager, the job is started. Finally,
@@ -390,6 +392,12 @@ Their usage depends of the context (see <<_variables_quick_reference>>).
 
 In a workflow you can define *job variables* that can be used in all tasks.
 
+A job variable is defined using the following attributes:
+
+* *name*: the name of the variable
+* *value*: the value of the variable
+* *model*: the type of the value (optional). See section <<_variable_model,Variable Model>>
+
 
 [[_templating]]
 Variables are very useful to use workflows as templates where only a few parameters change for each
@@ -401,7 +409,7 @@ The following example shows how to define a job variable:
 ----
 <job ... >
     <variables>
-        <variable name="variable" value="value"/>
+        <variable name="variable" value="value" model=""/>
     </variables>
     ...
 </job>
@@ -427,7 +435,7 @@ A task variable is defined using the following attributes:
 * *name*: the name of the variable
 * *value*: the value of the variable
 * *inherited*: asserts whether the propagated value should be use instead of the *value* value. If _true_, the *value* field can be empty. As a consequence, inheritance requires to declare the variable value at Workflow level
-* *model*: the type of the value. This field should be empty
+* *model*: the type of the value (optional). See section <<_variable_model,Variable Model>>
 
 For example:
 [source, xml]
@@ -443,6 +451,43 @@ Task variables can be used similarly to job variables using the pattern `${varia
 
 Task variables override job variables, this means that if a job variable and a task variable are defined with the same name, the task variable value will be used inside the task, and the job variable value will be used elsewhere in the job.
 
+===== Variable Model
+
+Job and Task variables can define a `model` attribute which let the workflow designer control the variable value syntax.
+A workflow designer can for example decide that the variable NUMBER_OF_ENTRIES is expected to be convertible to an Integer ranged between 0 and 20.
+
+The workflow designer will then provide a default value to the variable NUMBER_OF_ENTRIES, for example "10". This workflow is valid as "10" can be converted to an Integer and is between 0 and 20.
+
+When submitting the workflow, it will be possible to choose a new value for the variable NUMBER_OF_ENTRIES.
+If the user submitting the workflow chooses for example the value -5, the validation will fail and an error message will appear.
+
+The following list describes the various model syntax available:
+
+* *PA:BOOLEAN* : variable is either "true", "false", "0" or "1".
+* *PA:INTEGER* , *PA:INTEGER[min,max]* : variable can be converted to https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Integer.html[java.lang.Integer], and eventually is contained in the range [min, max]. +
+Examples : PA:INTEGER will accept "-5" but not "1.4", PA:INTEGER[0,20] will accept "12" but not "25".
+* *PA:LONG* , *PA:LONG[min,max]* : same as above with https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Long.html[java.lang.Long].
+* *PA:FLOAT* , *PA:FLOAT[min,max]* : same as above with https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Float.html[java.lang.Float]. +
+Examples: PA:FLOAT[-0.33,5.99] will accept "3.5" but not "6".
+* *PA:DOUBLE* , *PA:DOUBLE[min,max]* : same as above with https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Double.html[java.lang.Double].
+* *PA:SHORT* , *PA:SHORT[min,max]* : same as above with https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Short.html[java.lang.Short].
+* *PA:URL* : variable can be converted to https://docs.oracle.com/javase/7/docs/api/index.html?java/net/URL.html[java.net.URL]. +
+Examples: PA:URL will accept "http://mysite.com" but not "c:/Temp".
+* *PA:URI* : variable can be converted to https://docs.oracle.com/javase/7/docs/api/index.html?java/net/URI.html[java.net.URI]. +
+Examples: PA:URI will accept "/tmp/file" but not "c:\a^~to" due to invalid characters.
+* *PA:DATETIME(format)* , *PA:DATETIME(format)[min,max]* : variable can be converted to a https://docs.oracle.com/javase/7/docs/api/index.html?java/util/Date.html[java.util.Date] using the format specified (see the format definition syntax in the https://docs.oracle.com/javase/7/docs/api/index.html?java/text/SimpleDateFormat.html[SimpleDateFormat] class). +
+A range can also be used in the PA:DATETIME model. In that case, each bound of the range must match the date format used. +
++
+Examples: +
+PA:DATETIME(yyyy-MM-dd) will accept "2014-12-01" but not "2014". +
+PA:DATETIME(yyyy-MM-dd)[2014-01-01, 2015-01-01] will accept "2014-12-01" but not "2015-03-01". +
+PA:DATETIME(yyyy-MM-dd)[2014, 2015] will result in an error during the workflow definition as the range bounds [2014, 2015] are not using the format yyyy-MM-dd.
+* *PA:LIST(item1,item2,...)* : variable must be one of the values defined in the list. +
+Examples: PA:LIST(a,b,c) will accept "a", "b", "c" but no other value.
+* *PA:REGEXP(pattern)* : variable syntax must match the regular expression defined in the pattern. The regular expression syntax is described in class https://docs.oracle.com/javase/7/docs/api/index.html?java/util/regex/Pattern.html[Pattern]. +
+Examples: PA:REGEXP([a-z]+) will accept "abc", "foo", but not "Foo".
+* *PA:MODEL_FROM_URL(url)* : variable syntax must match the model fetched from the given url. This can be used for example when the model needs to represent a list of elements which may evolve over time and is updated inside a file. Such as a list of machines in an infrastructure, a list of users, etc. +
+Examples: PA:MODEL_FROM_URL(file:///srv/machines_list_model.txt), if the file machines_list_model.txt contains PA:LIST(host1,host2), will accept only "host1" and "host2", but may accept other values as the machines_list_model file changes.
 
 ===== ProActive system variables
 
@@ -1992,6 +2037,9 @@ and you can also find the documentation link:schedulerjob.html[here, window="_bl
 
 TIP: Setup your IDE to use the http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.3/schedulerjob.xsd[Workflow XSD^],
 you will benefit from live validation and completion!
+
+=== Studio Tasks
+include::./references/Tasks.adoc[]
 
 === Variables quick reference
 include::./references/VariablesReference.adoc[]
