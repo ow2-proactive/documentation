@@ -1782,6 +1782,24 @@ can be expressed as:
 
 Once executed, this query will return a single Workflow named _Create OpenStack Instance_.
 
+=== Importing/Exporting Workflows into the Catalog
+
+In the Workflow Catalog, it is possible to select Workflows from the current bucket and send them to another bucket, which can belong to the same Catalog or to another Scheduler's Catalog.
+
+==== Send Workflows directly
+
+It is convenient to send the Workflows to share directly, if they are sent to a Scheduler with a public API, or to another bucket of the local Scheduler.
+
+Select the bucket then the Workflows. Choose `Send to another scheduler` and click `OK`.
+
+==== Export Workflows into an archive, then Import them
+
+If the remote Scheduler is not reachable, or the direct sending cannot be performed for some other reason, you can export Workflows into an archive, which can be transferred by any file transfer method (email, usb key, etc.) and then imported into the other Scheduler.
+
+To export the selected Workflows as a ZIP archive, select a bucket, then the targeted Workflows. Choose "Export selected Workflows" into the list and click on `OK`. You'll get a ZIP file which can be transferred to the machine on which the other Scheduler runs.
+
+To import the archive on the Scheduler, select the bucket to which the Workflows will be added. Then choose `Import archive of Workflows` and click on `OK`.
+
 == Third-party credentials
 
 === Overview
