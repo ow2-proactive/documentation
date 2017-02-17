@@ -1792,7 +1792,7 @@ It is convenient to send the Workflows to share directly, if they are sent to a 
 
 Select the bucket then the Workflows. Choose `Send to another scheduler` and click `OK`.
 
-==== Export Workflows into an archive, then Import them
+==== Export Workflows as an archive, then Import them
 
 If the remote Scheduler is not reachable, or the direct sending cannot be performed for some other reason, you can export Workflows into an archive, which can be transferred by any file transfer method (email, usb key, etc.) and then imported into the other Scheduler.
 
