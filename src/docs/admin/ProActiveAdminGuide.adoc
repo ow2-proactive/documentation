@@ -1462,6 +1462,25 @@ that automatically adds indexes on foreign keys, it is strongly recommended to
 ask your DBA to identify and delete duplicate indexes created by the database
 system since they may hurt performances.
 
+==== Housekeeping
+
+The Scheduler provides a housekeeping mechanism that periodically removes finished jobs
+from the Scheduler Portal. It can also remove jobs and all its data from the database to save space.
+This mechanism has two phases:
+
+. Once a job is finished, set its scheduled time for removal (the job expiration date)
+. Periodically trigger the cleaning of the expired jobs off the scheduler and/or the database
+
+One can edit the `pa.scheduler.core.automaticremovejobdelay` parameter to set the delay before
+marking a job to be removed.
+The `pa.scheduler.core.removejobdelay` parameter can be used in the case where the delay should only
+start once the job result has been accessed.
+
+The housekeeping mechanism is periodically triggered through the cron
+expression `pa.scheduler.core.automaticremovejobexpression`.
+If the `pa.scheduler.job.removeFromDataBase` property is
+also set to `true`, a query is executed in-base to remove all jobs that qualify for the bulk removal.
+
 == Troubleshooting
 === Logs
 
