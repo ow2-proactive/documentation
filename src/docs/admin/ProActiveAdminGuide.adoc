@@ -1468,9 +1468,10 @@ The Scheduler provides a housekeeping mechanism that periodically removes finish
 from the Scheduler Portal. It can also remove jobs and all its data from the database to save space.
 This mechanism has two phases:
 
-. Once a job is finished, set its scheduled time for removal (the job expiration date)
-. Periodically trigger the cleaning of the expired jobs off the scheduler and/or the database
+. Once a job is finished, it sets its scheduled time for removal (the job expiration date)
+. Actual cleaning of expired jobs from the scheduler and/or the database will be periodically triggered and performed in a bulk operation
 
+The following parameters are accessible in <<Scheduler Properties,the scheduler config file>>.
 One can edit the `pa.scheduler.core.automaticremovejobdelay` parameter to set the delay before
 marking a job to be removed.
 The `pa.scheduler.core.removejobdelay` parameter can be used in the case where the delay should only
