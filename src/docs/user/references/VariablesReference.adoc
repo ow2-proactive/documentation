@@ -293,3 +293,26 @@ print(outputspace)
 ----
 
 Java objects such as fork environment variable, scheduler, userspace or globalspace APIs are not available in R.
+
+==== Perl task
+For the perl task: the specification of special variables accesible inside scheduler is corresponding to native task. So for example the result of perl task should be the exit code.
+Please see the proper names of the variables in http://doc.activeeon.com/dev/user/ProActiveUserGuide.html#_variables_quick_reference[Variables quick reference]. +
+Inside Perl, you can access the environment variables using the *%ENV* hash.
+
+The aim of next examples is to clarify usage of variables in Perl:
+
+- to get job name variable you should write next code:
+[source, perl]
+----
+my $jobName= $ENV{"variables_PA_JOB_NAME"};
+----
+- to get the result of parent task you can implement next code:
+[source, perl]
+----
+my $parent_task_result= $ENV{"results_0"};
+----
+- to get the userspace please put the next code:
+[source, perl]
+----
+my $USERSPACE= $ENV{"USERSPACE"};
+----
