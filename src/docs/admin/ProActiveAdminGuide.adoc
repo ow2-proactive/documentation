@@ -1478,7 +1478,7 @@ The `pa.scheduler.core.removejobdelay` parameter can be used in the case where t
 start once the job result has been accessed.
 
 The housekeeping mechanism is periodically triggered through the cron
-expression `pa.scheduler.core.automaticremovejobexpression`.
+expression `pa.scheduler.core.automaticremovejobcronexpression`.
 As the `pa.scheduler.job.removeFromDataBase` property is set to `true` by default,
 a query is executed in-base to remove all jobs that qualify for the bulk removal.
 
