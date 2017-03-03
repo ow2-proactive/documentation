@@ -1325,8 +1325,7 @@ individually.
 
 The Docker Compose script engine is a wrapper around the Docker Compose command. It needs to have Docker Compose
  and Docker installed, in order to work. The Docker Compose script engine has a configuration file which configures each ProActive Node individually.
-The configuration file is in `PROACTIVE_HOME/config/scriptengines/docker-compose.properties`.
-The configuration file is in `PROACTIVE_HOME/config/scriptengines/docker-compose.properties`.
+The configuration file is in `PROACTIVE_HOME/config/scriptengines/docker-compose.properties`. +
 `docker-compose.properties` has the following configuration options:
 
 ---
@@ -1350,6 +1349,16 @@ docker.host=
 Defines the DOCKER_HOST environment variable. The DOCKER_HOST variable defines the Docker socket which the Docker client connects to.
 That property is useful when accessing a Docker daemon which runs inside a container or on a remote machine.
 Further information about the DOCKER_HOST property can be found http://docs.docker.com/v1.8/reference/commandline/cli/[in the official Docker documentation^].
+
+=== Perl scripts execution (Perl task)
+Perl should be installed on your machine. By default the perl engine is installed in Linux and Mac Os. Please install the perl engine on Windows. +
+The execution mechanism of perl task is based on running perl file on your machine.
+
+If you encountered the issues, please check if you have installed Perl properly on you machine.
+In order to verify this you can follow next steps:
+
+* For example you should to be able to launch the command 'perl -V'.
+* Then from command line you should be able to launch simple perl file (perl yourPerlFile.pl).
 
 
 == Addons
