@@ -1352,13 +1352,13 @@ Further information about the DOCKER_HOST property can be found http://docs.dock
 
 === Perl scripts execution (Perl task)
 Perl should be installed on your machine. By default the perl engine is installed in Linux and Mac Os. Please install the perl engine on Windows. +
-The execution mechanism of perl task is based on running perl file on your machine.
+The execution mechanism of perl tasks is based on running perl files on your machine.
 
 If you encountered the issues, please check if you have installed Perl properly on you machine.
-In order to verify this you can follow next steps:
+In order to verify this you can follow the next steps:
 
 * For example you should to be able to launch the command 'perl -V'.
-* Then from command line you should be able to launch simple perl file (perl yourPerlFile.pl).
+* Then from command line you should be able to launch a simple perl file (perl yourPerlFile.pl).
 
 
 == Addons
