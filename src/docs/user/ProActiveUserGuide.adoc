@@ -1607,17 +1607,21 @@ The next parameters are provided as task variables:
 |===
 |Parameter Name | Description | Example
 |ldapURL|URL the LDAP server|`ldap://localhost:389` (unsecured) or `ldaps://127.0.0.1:636` (secured)
-|ldapSearchBase|base domain name for LDAP queries|`dc=yourOrganization,dc=com`
+|ldapDnBase|The base distinguished name of the catalog| `dc=yourOrganization,dc=com`
+|ldapUsername|The username | `cn=admin` for global admin or `cn=yourName,ou=users` for a specific user
+|ldapSearchBase|base domain name for ldap queries|`dc=specificDepartment` or can be empty for base DN search
 |ldapSearchFilter|LDAP search filter|`(objectclass=*)`
 |ldapSelectedAttributes|list of attributes to retrieve|`attributeName1,attributeName2`
+
 |===
+
+If any of these variables must stay private you'll need to set them as third-party credentials (details are given below).
 
 ==== Authenticate with Third-party credentials
 
-In order to be able to authenticate to the LDAP server you need to define the right Scheduler user in the <<_third_party_credentials,Third-party credentials>>: 
+In order to be able to authenticate to the LDAP server you need to define for the right Scheduler user the `ldapPassword` in the <<_third_party_credentials,Third-party credentials>>.
 
-* ldapUsername (example : `cn=username,dc=test,dc=com`)
-* ldapPassword
+
 
 ==== Result of task
 
@@ -1777,6 +1781,24 @@ can be expressed as:
     name="Create OpenStack Instance" OR project_name="Deployment" AND generic_information("Infrastructure", "OpenStack")
 
 Once executed, this query will return a single Workflow named _Create OpenStack Instance_.
+
+=== Importing/Exporting Workflows into the Catalog
+
+In the Workflow Catalog, it is possible to select Workflows from the current bucket and send them to another bucket, which can belong to the same Catalog or to another Scheduler's Catalog.
+
+==== Send Workflows directly
+
+It is convenient to send the Workflows to share directly, if they are sent to a Scheduler with a public API, or to another bucket of the local Scheduler.
+
+Select the bucket then the Workflows. Choose `Send to another scheduler` and click `OK`.
+
+==== Export Workflows as an archive, then Import them
+
+If the remote Scheduler is not reachable, or the direct sending cannot be performed for some other reason, you can export Workflows into an archive, which can be transferred by any file transfer method (email, usb key, etc.) and then imported into the other Scheduler.
+
+To export the selected Workflows as a ZIP archive, select a bucket, then the targeted Workflows. Choose "Export selected Workflows" into the list and click on `OK`. You'll get a ZIP file which can be transferred to the machine on which the other Scheduler runs.
+
+To import the archive on the Scheduler, select the bucket to which the Workflows will be added. Then choose `Import archive of Workflows` and click on `OK`.
 
 == Third-party credentials
 
@@ -2033,6 +2055,9 @@ and you can also find the documentation link:schedulerjob.html[here, window="_bl
 
 TIP: Setup your IDE to use the http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.3/schedulerjob.xsd[Workflow XSD^],
 you will benefit from live validation and completion!
+
+=== Studio Tasks
+include::./references/Tasks.adoc[]
 
 === Variables quick reference
 include::./references/VariablesReference.adoc[]

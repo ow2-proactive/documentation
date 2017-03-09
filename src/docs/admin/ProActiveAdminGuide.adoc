@@ -864,6 +864,7 @@ It can be set at node startup by setting the "proactive.node.task.cleanup.time" 
 Example: add  "-Dproactive.node.task.cleanup.time=30" (set to 30 seconds as example) to
 the node startup command.
 
+Find an overview of termination behavior by task and language in section <<Termination behavior by language>>.
 
 
 ==== Step by Step Killing Example
@@ -920,16 +921,45 @@ The ProActive Node initiates the task process and sub-process removal.
 This will forcefully kill the whole tree of processes. Another SIGTERM
 might be send shortly before the forcefully killing (SIGKILL).
 
-===== Additional Information
+===== Additional information
 
 *On Windows* the termination procedure is similar. But the Windows SIGTERM equivalent is
 executing the TerminateProcess method of the process. Whereas the SIGKILL is equivalent to
 the forceful removal of the running process.
 
 
+===== Termination behavior by language
+
+.Termination Behavior for a Few Languages
+|===
+|Language/Execution type|Bash |Python |Java |Groovy
+
+|Forked Mode
+| Handle SIGTERM. Task waits cleanup timeout, before being killed.
+| Handle SIGTERM. Task waits cleanup timeout, before being killed.
+| Add a shutdown hook. Task waits cleanup timeout, before being killed.
+| add a shutdown hook. Task waits cleanup timeout, before being killed.
+
+|Forked Mode Run As Me
+| Handle SIGTERM. Task waits cleanup timeout, before being killed.
+| Handle SIGTERM. Task waits cleanup timeout, before being killed.
+| Add a shutdown hook. Task waits cleanup timeout, before being killed.
+| Add a shutdown hook. Task waits cleanup timeout, before being killed.
+
+
+|Non-Forked Mode
+| Handle SIGTERM. Task waits cleanup timeout, before being killed.
+| Terminates immediately.
+| Catch an InterruptedException. Task waits cleanup timeout, before being killed.
+| Catch an InterruptedException. Task waits cleanup timeout, before being killed.
+
+
+|===
+
+
 == User Permissions
 
-All users authenticated in the Resource Manager have they own role according to granted permissions.
+All users authenticated in the Resource Manager have their own role according to granted permissions.
 In ProActive Scheduler, we use the standard
 http://www.oracle.com/technetwork/java/javase/jaas/index.html[Java Authentication and Authorization Service (JAAS)^]
 to address these needs.
@@ -1431,6 +1461,26 @@ In case you are using in production _MySQL_, _MariaDB_ or a similar database
 that automatically adds indexes on foreign keys, it is strongly recommended to
 ask your DBA to identify and delete duplicate indexes created by the database
 system since they may hurt performances.
+
+==== Housekeeping
+
+The Scheduler provides a housekeeping mechanism that periodically removes finished jobs
+from the Scheduler Portal. It can also remove jobs and all its data from the database to save space.
+This mechanism has two phases:
+
+. Once a job is finished, it sets its scheduled time for removal (the job expiration date)
+. Actual cleaning of expired jobs from the scheduler and/or the database will be periodically triggered and performed in a bulk operation
+
+The following parameters are accessible in <<Scheduler Properties,the scheduler config file>>.
+One can edit the `pa.scheduler.core.automaticremovejobdelay` parameter to set the delay before
+marking a job to be removed.
+The `pa.scheduler.core.removejobdelay` parameter can be used in the case where the delay should only
+start once the job result has been accessed.
+
+The housekeeping mechanism is periodically triggered through the cron
+expression `pa.scheduler.core.automaticremovejobcronexpression`.
+As the `pa.scheduler.job.removeFromDataBase` property is set to `true` by default,
+a query is executed in-base to remove all jobs that qualify for the bulk removal.
 
 == Troubleshooting
 === Logs
