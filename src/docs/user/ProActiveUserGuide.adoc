@@ -461,7 +461,9 @@ The workflow designer will then provide a default value to the variable NUMBER_O
 When submitting the workflow, it will be possible to choose a new value for the variable NUMBER_OF_ENTRIES.
 If the user submitting the workflow chooses for example the value -5, the validation will fail and an error message will appear.
 
-The following list describes the various model syntax available:
+====== Available Models
+
+The following list describes the various model syntaxes available:
 
 * *PA:BOOLEAN* : variable is either "true", "false", "0" or "1".
 * *PA:INTEGER* , *PA:INTEGER[min,max]* : variable can be converted to https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Integer.html[java.lang.Integer], and eventually is contained in the range [min, max]. +
@@ -488,6 +490,40 @@ Examples: PA:LIST(a,b,c) will accept "a", "b", "c" but no other value.
 Examples: PA:REGEXP([a-z]+) will accept "abc", "foo", but not "Foo".
 * *PA:MODEL_FROM_URL(url)* : variable syntax must match the model fetched from the given url. This can be used for example when the model needs to represent a list of elements which may evolve over time and is updated inside a file. Such as a list of machines in an infrastructure, a list of users, etc. +
 Examples: PA:MODEL_FROM_URL(file:///srv/machines_list_model.txt), if the file machines_list_model.txt contains PA:LIST(host1,host2), will accept only "host1" and "host2", but may accept other values as the machines_list_model file changes.
+* *PA:CRON* : variable syntax must be a valid cron expression as defined in the  http://www.sauronsoftware.it/projects/cron4j/manual.php#p02[cron4j manual]. +
+Examples: PA:CRON will accept "5 * * * \*" but not "* * * *" (missing minutes sub-pattern).
+* *PA:SPEL(SpEL expression)* : variable syntax will be evaluated by a https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[SpEL] expression. Refer to next paragraph.
+
+====== Spring Expression Language Model
+
+The PA:SPEL(expr) model allows to define expressions able to validate a variable value or not. Additionally, this model can be used to validate multiple variable values or to dynamically update other variables.
+The syntax of the SpEL expression is defined by the https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[Spring Expression Language reference].
+
+In order to interact with variables, the expression has access to the following properties:
+
+* *#value* : this property will contain the value of the current variable defined by the user.
+* *variables['variable_name']* : this property array contains all the variables of the same context (for example of the same task for a task variable).
+
+The SpEL expression must return a *boolean value*, `true` if the value is correct, `false` otherwise, returning another type will raise an error.
+
+* *Example of SpEL simple validations:* +
++
+PA:SPEL(#value == 'abc') : will accept the value if it's the 'abc' string +
+PA:SPEL(T(Integer).parseInt(#value) > 10) : will accept the value if it's an integer greater than 10. +
++
+Note that #value always contains a string and must be converted to other types if needed. +
++
+* *Example of SpEL multiple validations:* +
++
+PA:SPEL(variables['var1'] + variables['var2'] == 'abcdef') : will be accepted if the string concatenation of variable var1 and var2 is 'abcdef'. +
+PA:SPEL(T(Integer).parseInt(variables['var1']) + T(Integer).parseInt(variables['var2']) < 100) : will be accepted if the sum of variables var1 and var2 are smaller than 100. +
++
+* *Example of SpEL variable inference:* +
++
+PA:SPEL( variables['var2'] == '' ? (variables['var2'] = variables['var1']) instanceof T(String) : true ) : if the variable var2 is empty, it will use the value of variable var1 instead. +
++
+Note that the SpEL expression must always return a boolean value, this is why in this last expression we use the instanceof keyword to avoid returning a string value.
+
 
 ===== ProActive system variables
 
