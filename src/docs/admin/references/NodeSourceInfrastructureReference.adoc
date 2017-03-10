@@ -61,6 +61,9 @@ This infrastructure needs 10 arguments, described hereafter:
 -   **Attempt** - The number of time the Resource Manager tries to
     acquire a node for which one the deployment fails before discarding
     it forever.
+    
+    **Wait time between failed attempts** - The time in milliseconds that the Resource Manager wait before trying to
+    acquire a node for which one the deployment fails before.
 
 -   **Target OS** - One of 'LINUX', 'CYGWIN' or 'WINDOWS' depending on
     the machines' ( in Hosts List file ) operating system.
