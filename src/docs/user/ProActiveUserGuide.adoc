@@ -1472,12 +1472,17 @@ The walltime mechanism is started
 just before a task is launched. If a task does finish before its walltime, the mechanism is canceled. Otherwise,
 the task is terminated. Note that the tasks are terminated without any prior notice.
 
+=== Cron Workflows
+The *ProActive Scheduler* allows to schedule <<_glossary_workflow,*Workflows*>> with the <<_glossary_execution_scheduler,*Execution Scheduler*>>.
+Find more information in the <<_user_execution_scheduler_service,*Execution Scheduler Service*>> section.
+
 
 === Cron Tasks
 *ProActive Scheduler* supports the execution of time-based tasks or cron tasks. The users can assign a
 cron expression to the `loop` variable of a *Loop* in a ProActive Job. All tasks which belong
 that Loop will be executed iteratively and indefinitely. The start time of the next iteration
 is the next point of time specified by the cron expression.
+
 
 ==== Cron Expression Syntax
 The syntax of the follows the UNIX crontab pattern, a string consists of five space-separated segments.
@@ -2072,6 +2077,10 @@ Internally the command is split into docker, run, java, /usr/bin/java, -cp, [Cla
    folder in the temp directory of the operating system. Those cannot contain spaces, because if they
     do then the fork execution command will be split wrong and fail.
 
+[[_user_execution_scheduler_service]]
+== Execution Scheduler Service
+
+include::./references/ExecutionSchedulerService.adoc[]
 
 == Calendar Integration
 

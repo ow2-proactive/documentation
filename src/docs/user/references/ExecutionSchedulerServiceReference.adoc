@@ -1,0 +1,59 @@
+
+=== Introduction
+The <<_glossary_execution_scheduler,*Execution Scheduler*>> schedules <<_glossary_workflow,*Workflows*>>. Given a
+ A <<_glossary_workflow,*Workflow*>> is scheduled by the <<_glossary_execution_scheduler,*Execution Scheduler*>> if
+  an <<_glossary_execution_calendars_object,*Execution Calendars Object*>> is attached to the
+   <<_glossary_generic_information,*Generic Information*>> of a <<_glossary_workflow,*Workflow*>>.
+
+=== Execution Calendars Object Syntax
+Below is an example <<_glossary_execution_calendars_object,*Execution Calendars Object*>>. It has a cron
+expression attached as "cron" and a name as "name".
+The name must be unique and submission will be rejected if a name clashes with an already existing
+<<_glossary_execution_calendars_object,*Execution Calendars Object*>> inside the <<_glossary_execution_scheduler,*Execution Scheduler*>>.
+----
+EXECUTION_CALENDARS =
+{
+    "name": "weekdaysEveryHourAt23MinutsPast",
+    "cron": "0 23 0 ? * MON,TUE,WED,THU,FRI *"
+}
+----
+One can see the cron expression "0 23 0 ? * MON,TUE,WED,THU,FRI *", which follows the quartz cron expression syntax explained in the
+<<_execution_scheduler_cron_expression_syntax, Quartz Cron Expression Syntax>> section. The cron expression in this example
+ executes 23 minutes past every hour, on working days (Monday to Friday).
+
+==== Troubleshooting in ProActive Studio
+The name of the <<_glossary_execution_calendars_object,*Execution Calendars Object*>> must be unique.
+The Studio displays "Unknown Error", if anything in the <<_glossary_execution_calendars_object,*Execution Calendars Object*>>
+is not correctly formatted or the name clashes with existing <<_glossary_execution_calendars_object,*Execution Calendars Objects*>>.
+
+Please validate the <<_glossary_execution_calendars_object,*Execution Calendars Object*>> beforehand
+http://jsonlint.com/[with websites like this.]
+
+Be aware that the "Unknown Error" is also displayed, when the <<_glossary_execution_calendars_object,*Execution Calendars Object*>>
+name clashes with existing <<_glossary_execution_calendars_object,*Execution Calendars Objects*>>.
+You can list existing <<_glossary_execution_calendars_object,*Execution Calendars Objects*>> with the
+<<_glossary_execution_scheduler,*Execution Scheduler*>> REST API.
+
+
+=== Execution Scheduler Submission
+When you are using the <<_glossary_workflow_studio,*Workflow Studio*>>, add an
+<<_glossary_execution_calendars_object,*Execution Calendars Object*>> to <<_glossary_generic_information,*Generic Information*>>
+of a <<_glossary_workflow,*Workflow*>> and click execute.
+ The <<_glossary_workflow_studio,*Workflow Studio*>> automatically detect the
+ <<_glossary_execution_calendars_object,*Execution Calendars Object*>> and submits the <<_glossary_workflow,*Workflow*>>
+ accoordingly.
+
+If you manually submit <<_glossary_workflow,*Workflows*>> intended for the
+<<_glossary_execution_scheduler,*Execution Scheduler*>> , you need to submit it to its REST API.
+
+The proactive-client does currently not support <<_glossary_execution_scheduler,*Execution Scheduler*>>
+ <<_glossary_workflow,*Workflows*>>.
+
+
+[[_execution_scheduler_cron_expression_syntax]]
+==== Quartz Cron Expression Syntax
+The cron expression syntax follows the quarts-cron syntax.
+ Please refer to the  http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html#format[quartz format documentation] for further details.
+
+http://www.cronmaker.com/[You can generate your quartz cron expression here.]
+
