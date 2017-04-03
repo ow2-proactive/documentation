@@ -36,8 +36,8 @@ Workflow Studio:: ProActive component that provides a web interface for designin
 [[_glossary_workflow_catalog]]
 Workflow Catalog:: ProActive component that provides storage and versioning of <<_glossary_workflow,*Workflows*>> through a REST API. It is also possible to query the catalog for specific <<_glossary_workflow,*Workflows*>>.
 
-[[_glossary_execution_scheduler]]
-Execution Scheduler:: A ProActive component providing advanced scheduling options for <<_glossary_workflow,*Workflows*>>.
+[[_glossary_job_planner]]
+Job Planner:: A ProActive component providing advanced scheduling options for <<_glossary_workflow,*Workflows*>>.
 
 [[_glossary_workflow_bucket]]
 Bucket:: ProActive notion used with the <<_glossary_workflow_catalog, *Workflow Catalog*>> to refer to a specific collection of workflows. 

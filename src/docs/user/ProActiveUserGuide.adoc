@@ -1473,8 +1473,8 @@ just before a task is launched. If a task does finish before its walltime, the m
 the task is terminated. Note that the tasks are terminated without any prior notice.
 
 === Cron Workflows
-The *ProActive Scheduler* allows to schedule <<_glossary_workflow,*Workflows*>> with the <<_glossary_execution_scheduler,*Execution Scheduler*>>.
-Find more information in the <<_user_execution_scheduler_service,*Execution Scheduler Service*>> section.
+The *ProActive Scheduler* allows to schedule <<_glossary_workflow,*Workflows*>> with the <<_glossary_job_planner,*Job Planner*>>.
+Find more information in the <<_user_job_planner_service,*Job Planner Service*>> section.
 
 
 === Cron Tasks
@@ -2077,10 +2077,10 @@ Internally the command is split into docker, run, java, /usr/bin/java, -cp, [Cla
    folder in the temp directory of the operating system. Those cannot contain spaces, because if they
     do then the fork execution command will be split wrong and fail.
 
-[[_user_execution_scheduler_service]]
-== Execution Scheduler Service
+[[_user_job_planner_service]]
+== Job Planner Service
 
-include::./references/ExecutionSchedulerService.adoc[]
+include::./references/JobPlannerServiceReference.adoc[]
 
 == Calendar Integration
 
