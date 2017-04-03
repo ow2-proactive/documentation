@@ -2080,7 +2080,7 @@ Internally the command is split into docker, run, java, /usr/bin/java, -cp, [Cla
 [[_user_execution_scheduler_service]]
 == Execution Scheduler Service
 
-include::./references/ExecutionSchedulerService.adoc[]
+include::./references/ExecutionSchedulerServiceReference.adoc[]
 
 == Calendar Integration
 
