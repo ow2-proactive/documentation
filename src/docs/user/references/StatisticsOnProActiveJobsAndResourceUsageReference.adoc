@@ -1,0 +1,12 @@
+==== Statistics on ProActive Jobs and Resource Usage
+
+This addon generates a gantt chart to visualize executions of jobs and tasks, per node and over the time.
+
+An example of a generated gantt chart
+
+image::job_and_tasks_statistics.png[align="center"]
+
+This chart can be generated on-demand, running Gantt_chart workflow from the Analytics bucket in the Catalog. 
+
+WARNING: Please note that to run properly, this workflow requires a third party credential named "SCHEDULER_PASSWORD" with your scheduler password (so the tool can connect to the scheduler and retrieve information to build the chart)
+       
