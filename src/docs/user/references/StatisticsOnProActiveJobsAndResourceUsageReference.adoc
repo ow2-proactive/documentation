@@ -8,5 +8,5 @@ image::job_and_tasks_statistics.png[align="center"]
 
 This chart can be generated on-demand, running Gantt_chart workflow from the Analytics bucket in the Catalog. 
 
-WARNING: Please note that to run properly, this workflow requires a third party credential named "SCHEDULER_PASSWORD" with your scheduler password (so the tool can connect to the scheduler and retrieve information to build the chart)
+WARNING: Please note that to run properly, this workflow requires a third party credential named "SCHEDULER_PASSWORD" with your scheduler password (so the tool can connect to the scheduler and retrieve information to build the chart) See <<Managing third-party credentials>>
        
