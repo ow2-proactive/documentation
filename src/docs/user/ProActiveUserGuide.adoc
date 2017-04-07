@@ -2082,6 +2082,10 @@ Internally the command is split into docker, run, java, /usr/bin/java, -cp, [Cla
 
 include::./references/JobPlannerServiceReference.adoc[]
 
+== Addons
+
+include::./references/StatisticsOnProActiveJobsAndResourceUsageReference.adoc[]
+
 == Calendar Integration
 
 include::./references/CalendarServiceReference.adoc[]
