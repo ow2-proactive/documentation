@@ -1,0 +1,31 @@
+Scheduler Portal Properties are read when Portal main page is loaded.
+
+The Configuration file named `scheduler-portal-display.conf` is located in the folder `$PROACTIVE_HOME/config/portal/`.
+
+==== The list of Columns property
+
+It is possible to specify a list of Variables or Generic Information to display in a column of the Execution List table (Job Centric View). The list of columns is defined as a JSON array, for example:
+
+[source,]
+----
+execution-list-extra-columns: [{ \
+	"title": "start at", \
+	"information": { \
+		"type": "generic-information", \
+		"key": "START_AT"}, \
+	"hide": false }, \
+	{ \
+	"title": "My var", \
+	"information": { \
+		"type": "variable", \
+		"key": "MY_VAR"}, \
+	"hide": false }]
+----
+
+The property `execution-list-extra-columns` contains the JSON array. If the array is written on several lines, each line except the last one should end with the caracter `\`. Each element of the array should contain the following fields:
+
+* `title`: the header of the column containing the value of the Variable or Generic Information
+* `information`: the information about the value displayed in the column. This field contains 2 fields:
+** `type`: the type, either _variable_ or _generic-information_
+** `key`: the key of the value in the Variable or Generic Information map
+* `hide`: whether the column should be hidden by default

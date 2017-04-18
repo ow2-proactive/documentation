@@ -1546,6 +1546,10 @@ include::./references/WebPropertiesReference.adoc[]
 === Workflow Catalog Properties
 include::./references/WorkflowCatalogReference.adoc[]
 
+[[_scheduler_portal_properties]]
+=== Scheduler Portal Properties
+include::./references/SchedulerPortalReference.adoc[]
+
 === Node Sources
 
 The ProActive Resource Manager supports ProActive Nodes aggregation from heterogeneous environments.
