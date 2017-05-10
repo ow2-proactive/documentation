@@ -1433,6 +1433,7 @@ include::./references/StatisticsOnProActiveJobsAndResourceUsageReference.adoc[]
 
 == Performance tuning
 
+[[_perf_tuning_db]]
 === Database
 
 By default, ProActive Scheduler is configured to use http://hsqldb.org[HSQLDB]
@@ -1494,6 +1495,37 @@ The housekeeping mechanism is periodically triggered through the cron
 expression `pa.scheduler.core.automaticremovejobcronexpression`.
 As the `pa.scheduler.job.removeFromDataBase` property is set to `true` by default,
 a query is executed in-base to remove all jobs that qualify for the bulk removal.
+
+==== Database impact on performance
+
+The choice of the database provider can influence the Scheduler and Resource Manager performance overall.
+In the following figure, we see the job submission time between different database providers:
+
+image::job-submission-time-comparison.png[align="center"]
+
+On a 1000-jobs submission basis across ProActive's embedded database, the in-memory database and a standalone PostgreSQL server,
+we can see that the in-memory database is in fact faster and more consistent in speed than the default embedded database.
+However the in-memory database has no persistence of the data on disk, as opposed to the embedded database.
+A standalone database is a good tradeoff between speed and data resilience.
+
+The embedded database is used by default in ProActive. To switch to an in-memory database, you need to modify the following files:
+
+`PROACTIVE_HOME/config/scheduler/database.properties`:
+
+Replace the default value of `hibernate.connection.url` to:
+```
+hibernate.connection.url=jdbc:hsqldb:mem:scheduler;hsqldb.tx=mvcc;hsqldb.lob_file_scale=1
+```
+
+`PROACTIVE_HOME/config/rm/database.properties`:
+
+Replace the default value of `hibernate.connection.url` to:
+```
+hibernate.connection.url=jdbc:hsqldb:mem:rm;hsqldb.tx=mvcc;hsqldb.lob_file_scale=1
+```
+
+To switch to a standalone database, see <<_perf_tuning_db>>.
+
 
 == Troubleshooting
 === Logs
