@@ -1203,13 +1203,14 @@ Unlike other web applications, the Scheduler, the Resource Manager and the studi
 Proactive cloud watch, Cloud automation service, Job planner and Notification service
 require manual configuration based on your HTTPS settings. The configuration
 files to edit are respectively in
-`PROACTIVE_HOME/dist/war/scheduler/scheduler.conf`, 
-`PROACTIVE_HOME/dist/war/rm/rm.conf`,
-`PROACTIVE_HOME/config/web/settings.ini`,
-`PROACTIVE_HOME/dist/war/proactive-cloud-watch/WEB-INF/classes/application.properties`,
-`PROACTIVE_HOME/dist/war/cloud-automation-service/WEB-INF/classes/application.properties`,
-`PROACTIVE_HOME/dist/war/job-planner/WEB-INF/classes/application.properties`,
-`PROACTIVE_HOME/dist/war/notification-service/WEB-INF/classes/application.properties`
+
+* `PROACTIVE_HOME/dist/war/scheduler/scheduler.conf`
+* `PROACTIVE_HOME/dist/war/rm/rm.conf`
+* `PROACTIVE_HOME/config/web/settings.ini`
+* `PROACTIVE_HOME/dist/war/proactive-cloud-watch/WEB-INF/classes/application.properties`
+* `PROACTIVE_HOME/dist/war/cloud-automation-service/WEB-INF/classes/application.properties`
+* `PROACTIVE_HOME/dist/war/job-planner/WEB-INF/classes/application.properties`
+* `PROACTIVE_HOME/dist/war/notification-service/WEB-INF/classes/application.properties`
 
 
 
