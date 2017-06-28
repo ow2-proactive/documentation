@@ -21,6 +21,14 @@ One can see the cron expression "0 23 0 ? * MON,TUE,WED,THU,FRI *", which follow
 <<_job_planner_cron_expression_syntax, Quartz Cron Expression Syntax>> section. The cron expression in this example
  executes 23 minutes past every hour, on working days (Monday to Friday).
 
+==== Exclusion Calendar
+
+===== External calendar retrieved from URL
+
+If an exclusion calendar is not retrievable it is blocking the <<_glossary_workflow,*Workflow*>> submission.
+An exclusion calendar can become not retrievable if it cannot be downloaded from its URL and the
+<<_glossary_job_planner,*Job Planner*>> cache doesn't hold a copy.
+
 ==== Troubleshooting in ProActive Studio
 The name of the <<_glossary_execution_calendars_object,*Execution Calendars Object*>> must be unique.
 The Studio displays "Unknown Error", if anything in the <<_glossary_execution_calendars_object,*Execution Calendars Object*>>
