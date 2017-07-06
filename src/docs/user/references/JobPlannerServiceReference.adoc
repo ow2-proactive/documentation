@@ -26,11 +26,17 @@ One can see the cron expression "0 23 0 ? * MON,TUE,WED,THU,FRI *", which follow
 The purpose of the inclusion calendar is to use ICS file to launch workflows during events. For each events a pre-defined action will be executed an will define when the workflow will be executed.
 
 ===== Available inclusion actions
- - EXECUTE_AT_START
- - POSTPONE_TO_NEXT_WORKING_DAY
 
-===== Generic Information example : 
-EXECUTION_CALENDAR = { "inclusion_calendars":[{  "calendar": {"url": "http://localhost:8080/myCalendars/myInclusionCalendar.ics"}, "rule": { "action": "EXECTURE_At_START" }]}
+[cols="1,1", options="header"]
+|===
+
+|Inclusion action
+|Description
+
+|EXECUTE_AT_START
+|The workflow will be executed at each event start.
+
+|===
 
 ==== Exclusion Calendar
 
@@ -40,7 +46,76 @@ If an exclusion calendar is not retrievable it is blocking the <<_glossary_workf
 An exclusion calendar can become not retrievable if it cannot be downloaded from its URL and the
 <<_glossary_job_planner,*Job Planner*>> cache doesn't hold a copy.
 
-==== Troubleshooting in ProActive Studio
+===== Available exclusion actions
+
+[cols="1,1", options="header"]
+|===
+
+|Exclusion action
+|Description
+
+|CANCEL_NEXT_EXECUTION
+|All worklfow execution are canceled during the events.
+
+|POSTPONE_TO_NEXT_WORKING_DAY
+|All workflow execution are postponed during events to the next working day. If no execution is planned during an event then no action is taken.
+
+|===
+
+===== Execution Calendar examples : 
+----
+EXECUTION_CALENDAR =
+{
+	"name": "executeAtStartCalendar",
+	"inclusion_calendars": [
+				{     
+				"calendar": {"url": "http://localhost:8080/myCalendars/myInclusionCalendar.ics"},
+				"rule": { "action": "EXECUTE_AT_START" }
+				}
+			     ]
+}
+----
+
+----
+EXECUTION_CALENDAR =
+{
+	"name": "dayOfWorkCalendar",
+	"cron": "0 0 12 ? * MON,TUE,WED,THU,FRI *"
+	"exclusion_calendars": [
+				{     
+				"calendar": {"url": "http://localhost:8080/myCalendars/myHolidaysCalendar.ics"},
+				"rule": { "action": "POSTPONE_TO_NEXT_WORKING_DAY" }
+				}
+			     ]
+}
+----
+
+----
+EXECUTION_CALENDAR =
+{
+	"name": "retrospectiveCalendar",
+	"cron": "0 0 10 ? * FRI *"
+	"inclusion_calendars": [
+				{     
+				"calendar": {"url": "http://localhost:8080/myCalendars/eventCallMeetingCalendar.ics"},
+				"rule": { "action": "EXECUTE_AT_START" }
+				}
+			     ]
+			     
+	"exclusion_calendars": [
+				{     
+				"calendar": {"url": "http://localhost:8080/myCalendars/myHolidaysCalendar.ics"},
+				"rule": { "action": "POSTPONE_TO_NEXT_WORKING_DAY" }
+				},
+				{     
+				"calendar": {"url": "http://localhost:8080/myCalendars/agileTraining.ics"},
+				"rule": { "action": "CANCEL_NEXT_EXECUTION" }
+				}
+			     ]
+}
+----
+
+=== Troubleshooting in ProActive Studio
 The name of the <<_glossary_execution_calendars_object,*Execution Calendars Object*>> must be unique.
 The Studio displays "Unknown Error", if anything in the <<_glossary_execution_calendars_object,*Execution Calendars Object*>>
 is not correctly formatted or the name clashes with existing <<_glossary_execution_calendars_object,*Execution Calendars Objects*>>.
