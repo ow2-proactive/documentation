@@ -65,7 +65,7 @@ of <<_passing_data_between_tasks,result passing>> between tasks. This relation i
 called a <<_dependency>>, and we say that task 4 **depends** on task 1.
 
 We see that task 1, 2 and 3 are not linked, so these three tasks can be
-executed in **parallel**, because there are independent from each other.
+executed in **parallel**, because they are independent from each other.
 
 The task graph is defined by the user at the time of workflow creation, but can also be modified during
  the job execution by control flow actions such as <<_replicate>>.
@@ -130,7 +130,7 @@ simply set the language attribute to `bash` or `cmd` and type your script in the
 
 You can easily embed small scripts in your workflow.
 The nice thing is that the workflow will be self-contained and will not require to compile your code before executing. However, we
-recommend that you keep these scripts smalls to keep the workflow easy to understand.
+recommend that you keep these scripts small to keep the workflow easy to understand.
 
 TIP: Use scripts to print debugging statements when you build a new workflow.
 
@@ -1102,7 +1102,7 @@ image::flow_spec_loop.png[align=center]
 -   The *loop* scope should be a *task block*: the target is a *start
     block* task, and the initiator its related *end block task*.
 
-- The current iteration index (from to 0 to n until `loop` is false) can be accessed via the
+- The current iteration index (from 0 to n until `loop` is false) can be accessed via the
     `PA_TASK_ITERATION` <<_workflow_variables,variable>>.
 
 TIP: If you are familiar with programming, you can see the loop as a do/while.
