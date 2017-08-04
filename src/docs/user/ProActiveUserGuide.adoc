@@ -77,7 +77,7 @@ a task can be restarted automatically or cancelled.
 
 The link:http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial, window="_blank"] on link:http://try.activeeon.com[try.activeeon.com, window="_blank"]
 shows you how to build a simple workflow using script tasks.
-We show in below an example of a workflow created with different parameters illustrated in the left part of the Figure. The **General Parameters** section contains the following information:
+We show below an example of a workflow created with different parameters illustrated in the left part of the Figure. The **General Parameters** section contains the following information:
 - `Name`: the name of the workflow
 - `Project`: the project name to which belongs the workflow
 - `Description`: the textual description of the workflow
