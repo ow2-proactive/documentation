@@ -84,8 +84,8 @@ We show below an example of a workflow created with different parameters illustr
 - `Name`: the name of the workflow
 - `Project`: the project name to which belongs the workflow
 - `Description`: the textual description of the workflow
-- `Documentation`: if the workflow has a Generic Information of type "DOCUMENTATION", then its value is displayed as a link. 
-- `Job Priority`: the priority assigned to the workflow. It is by default set to can be set to `NORMAL`, but can be increased or decreased once the job is submitted. 
+- `Documentation`: if the workflow has a Generic Information named "DOCUMENTATION", then its URL value is displayed as a link. 
+- `Job Priority`: the priority assigned to the workflow. It is by default set to `NORMAL`, but can be increased or decreased once the job is submitted. 
 
 
 image::GI_documentation.png[align="center"]
