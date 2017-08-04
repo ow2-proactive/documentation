@@ -79,6 +79,22 @@ The link:http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstar
 shows you how to build a simple workflow using script tasks.
 
 
+We show below an example of a workflow created with the Studio:
+
+image::GI_documentation_finance_url.png[align="center"]
+
+At the left part, are illustrated the **General Parameters** of the workflow with the following information:
+
+- `Name`: the name of the workflow.
+- `Project`: the project name to which belongs the workflow.
+- `Description`: the textual description of the workflow.
+- `Documentation`: if the workflow has a Generic Information named "Documentation", then its URL value is displayed as a link. 
+- `Job Priority`: the priority assigned to the workflow. It is by default set to `NORMAL`, but can be increased or decreased once the job is submitted. 
+
+
+
+
+
 === Docker task
 
 In order for Docker tasks to work, the _Node_ must have Docker and Docker Compose installed, please refer to the official
@@ -1793,20 +1809,20 @@ Let the following Workflows:
 [width="100%",frame="topbot",options="header", cols="30%<"]
 |==============================================================================================
 | Name                         | Project Name | GI Name | GI Value | Variable Name     | Variable Value
-| _My First Workflow_	         | Tutorials    |         |          | 		               |
-| _Create OpenStack Instance_  | Deployment   | Infrastructure | OpenStack  | Core		 | 4
-| _Stop OpenStack Instance_    | Lifecycle    | Infrastructure | OpenStack  |      		 |
-| _New Amazon Instance_        | Deployment   | Infrastructure | Amazon EC2 | Nb_CPU	 | 2
+| _My First Workflow_          | Tutorials    |         |          |                   |
+| _Create OpenStack Instance_  | Deployment   | Infrastructure | OpenStack  | Core     | 4
+| _Stop OpenStack Instance_    | Lifecycle    | Infrastructure | OpenStack  |          |
+| _New Amazon Instance_        | Deployment   | Infrastructure | Amazon EC2 | Nb_CPU   | 2
 |==============================================================================================
 
 They are matched against these query expressions:
 [width="100%",frame="topbot",options="header"]
 |=================================================================================================================================
-| Expression						                              | Matches
-| name = "My First Workflow"						              | _My First Workflow_
-| name = "My*"						                            | _My First Workflow_
-| project_name = "\*ploy*" 		    		                |_Create OpenStack Instance_ and _New Amazon Instance 1_
-| project_name = "\*ploy*" AND variable("\*CPU", "*")	|_New Amazon Instance 1_
+| Expression                                          | Matches
+| name = "My First Workflow"                          | _My First Workflow_
+| name = "My*"                                        | _My First Workflow_
+| project_name = "\*ploy*"                            |_Create OpenStack Instance_ and _New Amazon Instance 1_
+| project_name = "\*ploy*" AND variable("\*CPU", "*") |_New Amazon Instance 1_
 |=================================================================================================================================
 
 Evaluation priority is respected through operator precedence (`AND` over `OR`), so the following statement:
