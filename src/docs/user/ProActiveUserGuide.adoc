@@ -84,7 +84,7 @@ We show below an example of a workflow created with different parameters illustr
 - `Documentation`: if the workflow has a Generic Information of type "DOCUMENTATION", then its value is displayed as a link. 
 - `Job Priority`:
 
-image::flow_spec_dependency.png[align="center"]
+image::GI_documentation.png[align="center"]
 
 
 === Docker task
