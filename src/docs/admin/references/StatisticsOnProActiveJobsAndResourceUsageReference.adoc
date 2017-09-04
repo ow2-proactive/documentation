@@ -1,0 +1,94 @@
+This addon generates a gantt chart to visualize executions of jobs and tasks, per node and over the time.
+
+==== Installation
+
+To enable this addon, a Node connected to the Resource Manager must have access to the PA_PLOT application configured in it.
+
+===== Requirements
+
+    1. Linux, Windows, or MacOSX.
+
+    2. Python 2.7 or 3.5.
+    
+    3. Bokeh, dateutil, requests, pytest, sphinx.
+
+===== Requirements setup with Anaconda
+
+Anaconda is the fastest and easiest way to install all requirements.
+You do not need internet access on the installation host.
+
+    1. Download and install https://www.continuum.io/downloads[Anaconda]  
+    2. Linux/MacOSX::
++
+[source]
+----
+source <anaconda root>/bin/activate
+----
+
+    3. Windows:
+
+       Run "Anaconda Prompt"
+
+
+===== Requirements setup with Miniconda
+
+Miniconda is a stripped down version of Anaconda, much smaller in size.
+The downside is that it normally requires internet access on the machine where it is installed.
+
+    1. Download and install http://conda.pydata.org/miniconda.html[Miniconda]  
+    2. If behind a proxy, compile http://conda.pydata.org/docs/config.html[condarc]
+    3. Linux/MacOSX::
++
+[source]
+----
+source <anaconda root>/bin/activate
+----
+
+   Windows:
+
+       Run "Anaconda Prompt"
+
+    4. Execute::
++
+[source]
+----
+conda install -y python-dateutil bokeh requests
+----
+       
+
+    5. Addional optional dependencies to run the unit tests:
+
+   Python 2.7::
++
+[source]
+----
+conda install -y pytest mock
+----
+       
+
+   Python 3.5::
++
+[source]
+----
+conda install -y pytest
+----
+       
+
+    6. Additional optional dependencies to regenerate the documentation::
++
+[source]
+----
+conda install -y sphinx
+----
+    
+===== pa_plot installation
+
+    1. Source Anaconda environment (see previous steps)
+    2. Unpack :file:`pa_plot.tar.gz` and move to the :file:`pa_plot` directory
+    3. Execute::
++
+[source]
+----
+python setup.py install
+----
+       

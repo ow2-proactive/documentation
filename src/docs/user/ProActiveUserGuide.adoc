@@ -65,7 +65,7 @@ of <<_passing_data_between_tasks,result passing>> between tasks. This relation i
 called a <<_dependency>>, and we say that task 4 **depends** on task 1.
 
 We see that task 1, 2 and 3 are not linked, so these three tasks can be
-executed in **parallel**, because there are independent from each other.
+executed in **parallel**, because they are independent from each other.
 
 The task graph is defined by the user at the time of workflow creation, but can also be modified during
  the job execution by control flow actions such as <<_replicate>>.
@@ -77,6 +77,22 @@ a task can be restarted automatically or cancelled.
 
 The link:http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial, window="_blank"] on link:http://try.activeeon.com[try.activeeon.com, window="_blank"]
 shows you how to build a simple workflow using script tasks.
+
+
+We show below an example of a workflow created with the Studio:
+
+image::GI_documentation_finance_url.png[align="center"]
+
+At the left part, are illustrated the **General Parameters** of the workflow with the following information:
+
+- `Name`: the name of the workflow.
+- `Project`: the project name to which belongs the workflow.
+- `Description`: the textual description of the workflow.
+- `Documentation`: if the workflow has a Generic Information named "Documentation", then its URL value is displayed as a link. 
+- `Job Priority`: the priority assigned to the workflow. It is by default set to `NORMAL`, but can be increased or decreased once the job is submitted. 
+
+
+
 
 
 === Docker task
@@ -130,7 +146,7 @@ simply set the language attribute to `bash` or `cmd` and type your script in the
 
 You can easily embed small scripts in your workflow.
 The nice thing is that the workflow will be self-contained and will not require to compile your code before executing. However, we
-recommend that you keep these scripts smalls to keep the workflow easy to understand.
+recommend that you keep these scripts small to keep the workflow easy to understand.
 
 TIP: Use scripts to print debugging statements when you build a new workflow.
 
@@ -1102,7 +1118,7 @@ image::flow_spec_loop.png[align=center]
 -   The *loop* scope should be a *task block*: the target is a *start
     block* task, and the initiator its related *end block task*.
 
-- The current iteration index (from to 0 to n until `loop` is false) can be accessed via the
+- The current iteration index (from 0 to n until `loop` is false) can be accessed via the
     `PA_TASK_ITERATION` <<_workflow_variables,variable>>.
 
 TIP: If you are familiar with programming, you can see the loop as a do/while.
@@ -1443,27 +1459,23 @@ Here is the list of topologies we support:
 
 === Handling failures
 
-It's possible to have errors when your workflow is executed. *ProActive Scheduler* provides several mechanisms to deal
-with exceptional situations in your workflows.
+It’s possible to have errors when your Job is executed. *ProActive Scheduler* provides several mechanisms to deal with exceptional situations in your Jobs.
+If a Task contains errors during Job execution, the *Proactive Scheduler* automatically restarts this Task. The number of automatic restarts is defined by the Workflow owner by assigning an integer value to the counter *Number of Automatic Restarts*.
+The user also defines *Where he wants that the scheduler restarts In-Error tasks*, i.e., on the same Proactive node or on another Proactive node.
 
-To understand if a task is successfully finished or not the Scheduler checks its *exit code* (for native tasks) or
-*exceptions* (for Java/script tasks). Then, it decides what to do next according to the following parameters:
+If automatic restarts does not fix errors, the Scheduler applies one of the following Task error management policies, i.e., the one defined by the user during Workflow creation:
 
-* *cancelJobOnError* (optional - `false` by default) - defines whether the job must continue when a user exception or
-error occurs during the job process. This property can also be defined in each task. If the value of this property
-is defined at the job level, each cancelJobOnError property of each task will have this value as the default one
-(excepted if this property has been set at the task level). `true` implies for the job to immediately stop
-every remaining running tasks if an error occurs in one of the tasks. It is useful when there is no need to go further after a task failure.
+* *Ignore error and continue Job execution* - each *In-Error* Task inside the Job transits to *Faulty* and its successor Tasks are executed.
 
-* *restartTaskOnError* (optional - `anywhere` by default) - defines whether tasks that have to be restarted will
-restart on an other resource. Defining this property will set the restartTaskOnError property of each task to this
-value as the default one (excepted if this property has been set at the task level). Possible values are 'anywhere'
-or 'elsewhere' meaning respectively that the concerned task will be restart on any available resources or especially
-on a different one. A task can be restarted when an exception occurred (Java Task) or an error code is returned (Native Task).
+* *Only suspend dependencies of In-Error Tasks* - successor Tasks of each *In-Error* Task are *Pending* until errors are fixed. The Job is in *In-Error* state.
+                                               The user can restart *In-Error* Tasks as many times as he wishes.
 
-* *maxNumberOfExecution* (optional - `1` by default) - defines how many times tasks are allowed to be restarted.
-Defining this property will set the nbMaxOfExecution property of each task to this value as the default one
-(excepted if this property has been set at the task level). The value has to be a non-negative and non-null integer.
+
+* *Pause Job execution (running Tasks can terminate)* - successor Tasks of each *In-Error* Task are paused until errors are fixed. The Job is paused.
+                                                     The user can restart *In-Error* Tasks as many times as he wishes.
+
+* *Kill Job (running Tasks are killed)* - The Job is killed with all Tasks.
+
 
 ==== Maximum execution time for a task
 
@@ -1476,12 +1488,17 @@ The walltime mechanism is started
 just before a task is launched. If a task does finish before its walltime, the mechanism is canceled. Otherwise,
 the task is terminated. Note that the tasks are terminated without any prior notice.
 
+=== Cron Workflows
+The *ProActive Scheduler* allows to schedule <<_glossary_workflow,*Workflows*>> with the <<_glossary_job_planner,*Job Planner*>>.
+Find more information in the <<_user_job_planner_service,*Job Planner Service*>> section.
+
 
 === Cron Tasks
 *ProActive Scheduler* supports the execution of time-based tasks or cron tasks. The users can assign a
 cron expression to the `loop` variable of a *Loop* in a ProActive Job. All tasks which belong
 that Loop will be executed iteratively and indefinitely. The start time of the next iteration
 is the next point of time specified by the cron expression.
+
 
 ==== Cron Expression Syntax
 The syntax of the follows the UNIX crontab pattern, a string consists of five space-separated segments.
@@ -1792,20 +1809,20 @@ Let the following Workflows:
 [width="100%",frame="topbot",options="header", cols="30%<"]
 |==============================================================================================
 | Name                         | Project Name | GI Name | GI Value | Variable Name     | Variable Value
-| _My First Workflow_	         | Tutorials    |         |          | 		               |
-| _Create OpenStack Instance_  | Deployment   | Infrastructure | OpenStack  | Core		 | 4
-| _Stop OpenStack Instance_    | Lifecycle    | Infrastructure | OpenStack  |      		 |
-| _New Amazon Instance_        | Deployment   | Infrastructure | Amazon EC2 | Nb_CPU	 | 2
+| _My First Workflow_          | Tutorials    |         |          |                   |
+| _Create OpenStack Instance_  | Deployment   | Infrastructure | OpenStack  | Core     | 4
+| _Stop OpenStack Instance_    | Lifecycle    | Infrastructure | OpenStack  |          |
+| _New Amazon Instance_        | Deployment   | Infrastructure | Amazon EC2 | Nb_CPU   | 2
 |==============================================================================================
 
 They are matched against these query expressions:
 [width="100%",frame="topbot",options="header"]
 |=================================================================================================================================
-| Expression						                              | Matches
-| name = "My First Workflow"						              | _My First Workflow_
-| name = "My*"						                            | _My First Workflow_
-| project_name = "\*ploy*" 		    		                |_Create OpenStack Instance_ and _New Amazon Instance 1_
-| project_name = "\*ploy*" AND variable("\*CPU", "*")	|_New Amazon Instance 1_
+| Expression                                          | Matches
+| name = "My First Workflow"                          | _My First Workflow_
+| name = "My*"                                        | _My First Workflow_
+| project_name = "\*ploy*"                            |_Create OpenStack Instance_ and _New Amazon Instance 1_
+| project_name = "\*ploy*" AND variable("\*CPU", "*") |_New Amazon Instance 1_
 |=================================================================================================================================
 
 Evaluation priority is respected through operator precedence (`AND` over `OR`), so the following statement:
@@ -2076,6 +2093,14 @@ Internally the command is split into docker, run, java, /usr/bin/java, -cp, [Cla
    folder in the temp directory of the operating system. Those cannot contain spaces, because if they
     do then the fork execution command will be split wrong and fail.
 
+[[_user_job_planner_service]]
+== Job Planner Service
+
+include::./references/JobPlannerServiceReference.adoc[]
+
+== Addons
+
+include::./references/StatisticsOnProActiveJobsAndResourceUsageReference.adoc[]
 
 == Calendar Integration
 

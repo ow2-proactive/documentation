@@ -194,7 +194,7 @@ host2.mydomain.com 4
 Then using this file create a Node Source either from the *Resource Manager Web Interface* or from the command line:
 [source]
 ----
-$ PROACTIVE_HOME/bin/proactive-client -createns SSH_node_source --infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.SSHInfrastructure HOSTS_FILE 60000 3 \"\" /home/user/jdk/bin/java PROACTIVE_HOME Linux \"\" config/authentication/rm.cred
+$ PROACTIVE_HOME/bin/proactive-client -createns SSH_node_source --infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.SSHInfrastructure HOSTS_FILE 60000 3 5000 "" /home/user/jdk/bin/java PROACTIVE_HOME Linux "" config/authentication/rm.cred
 ----
 
 Don't forget to replace `SCHEDULER_ADDRESS`, `HOSTS_FILE` and `PROACTIVE_HOME` with the corresponding values.
@@ -1199,11 +1199,20 @@ When HTTPS is set up, you can automatically redirect any HTTP request from
 users to the secured version of the protocol to make sure exchanged information
 is protected. It requires to enable `web.redirect_http_to_https`.
 
-Unlike other web applications, the Scheduler and Resource Manager web portals
+Unlike other web applications, the Scheduler, the Resource Manager and the studio web portals together with the 
+Proactive cloud watch, Cloud automation service, Job planner and Notification service
 require manual configuration based on your HTTPS settings. The configuration
 files to edit are respectively in
-`PROACTIVE_HOME/dist/war/scheduler/scheduler.conf` and
-`PROACTIVE_HOME/dist/war/rm/rm.conf`.
+
+* `PROACTIVE_HOME/dist/war/scheduler/scheduler.conf`
+* `PROACTIVE_HOME/dist/war/rm/rm.conf`
+* `PROACTIVE_HOME/config/web/settings.ini`
+* `PROACTIVE_HOME/dist/war/proactive-cloud-watch/WEB-INF/classes/application.properties`
+* `PROACTIVE_HOME/dist/war/cloud-automation-service/WEB-INF/classes/application.properties`
+* `PROACTIVE_HOME/dist/war/job-planner/WEB-INF/classes/application.properties`
+* `PROACTIVE_HOME/dist/war/notification-service/WEB-INF/classes/application.properties`
+
+
 
 NOTE: If you are familiar with Nginx or a similar web server, you can also use
 it to enable HTTPS connection to Web applications. It has the advantage to make
@@ -1325,8 +1334,7 @@ individually.
 
 The Docker Compose script engine is a wrapper around the Docker Compose command. It needs to have Docker Compose
  and Docker installed, in order to work. The Docker Compose script engine has a configuration file which configures each ProActive Node individually.
-The configuration file is in `PROACTIVE_HOME/config/scriptengines/docker-compose.properties`.
-The configuration file is in `PROACTIVE_HOME/config/scriptengines/docker-compose.properties`.
+The configuration file is in `PROACTIVE_HOME/config/scriptengines/docker-compose.properties`. +
 `docker-compose.properties` has the following configuration options:
 
 ---
@@ -1350,6 +1358,16 @@ docker.host=
 Defines the DOCKER_HOST environment variable. The DOCKER_HOST variable defines the Docker socket which the Docker client connects to.
 That property is useful when accessing a Docker daemon which runs inside a container or on a remote machine.
 Further information about the DOCKER_HOST property can be found http://docs.docker.com/v1.8/reference/commandline/cli/[in the official Docker documentation^].
+
+=== Perl scripts execution (Perl task)
+Perl should be installed on your machine. By default the perl engine is installed in Linux and Mac Os. Please install the perl engine on Windows. +
+The execution mechanism of perl tasks is based on running perl files on your machine.
+
+If you encountered the issues, please check if you have installed Perl properly on you machine.
+In order to verify this you can follow the next steps:
+
+* For example you should to be able to launch the command 'perl -V'.
+* Then from command line you should be able to launch a simple perl file (perl yourPerlFile.pl).
 
 
 == Addons
@@ -1418,8 +1436,13 @@ See http://pchelp.ricmedia.com/how-to-fix-550-5-3-4-requested-action-not-taken-e
 
 include::./references/CalendarServiceReference.adoc[]
 
+=== Statistics on ProActive Jobs and Resource Usage
+
+include::./references/StatisticsOnProActiveJobsAndResourceUsageReference.adoc[]
+
 == Performance tuning
 
+[[_perf_tuning_db]]
 === Database
 
 By default, ProActive Scheduler is configured to use http://hsqldb.org[HSQLDB]
@@ -1482,6 +1505,37 @@ expression `pa.scheduler.core.automaticremovejobcronexpression`.
 As the `pa.scheduler.job.removeFromDataBase` property is set to `true` by default,
 a query is executed in-base to remove all jobs that qualify for the bulk removal.
 
+==== Database impact on performance
+
+The choice of the database provider can influence the Scheduler and Resource Manager performance overall.
+In the following figure, we see the job submission time between different database providers:
+
+image::job-submission-time-comparison.png[align="center"]
+
+On a 1000-jobs submission basis across ProActive's embedded database, the in-memory database and a standalone PostgreSQL server,
+we can see that the in-memory database is in fact faster and more consistent in speed than the default embedded database.
+However the in-memory database has no persistence of the data on disk, as opposed to the embedded database.
+A standalone database is a good tradeoff between speed and data resilience.
+
+The embedded database is used by default in ProActive. To switch to an in-memory database, you need to modify the following files:
+
+`PROACTIVE_HOME/config/scheduler/database.properties`:
+
+Replace the default value of `hibernate.connection.url` to:
+```
+hibernate.connection.url=jdbc:hsqldb:mem:scheduler;hsqldb.tx=mvcc;hsqldb.lob_file_scale=1
+```
+
+`PROACTIVE_HOME/config/rm/database.properties`:
+
+Replace the default value of `hibernate.connection.url` to:
+```
+hibernate.connection.url=jdbc:hsqldb:mem:rm;hsqldb.tx=mvcc;hsqldb.lob_file_scale=1
+```
+
+To switch to a standalone database, see <<_perf_tuning_db>>.
+
+
 == Troubleshooting
 === Logs
 
@@ -1532,6 +1586,10 @@ include::./references/WebPropertiesReference.adoc[]
 [[_workflow_catalog_properties]]
 === Workflow Catalog Properties
 include::./references/WorkflowCatalogReference.adoc[]
+
+[[_scheduler_portal_properties]]
+=== Scheduler Portal Properties
+include::./references/SchedulerPortalReference.adoc[]
 
 === Node Sources
 
