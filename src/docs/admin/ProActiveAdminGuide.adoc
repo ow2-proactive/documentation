@@ -613,7 +613,7 @@ nsadmin:pwd
 provider:pwd
 scheduler:scheduler_pwd
 rm:rm_pwd
-watcher:watcher_pwd
+watcher:w_pwd
 test_executor:pwd
 ----
 
