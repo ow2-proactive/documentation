@@ -22,7 +22,6 @@ asciidoctor {
         include 'user/ProActiveUserGuide.adoc'
         include 'admin/ProActiveAdminGuide.adoc'
         include 'admin/AdminTutorials.adoc'
-        include 'admin/WorkflowCatalog.adoc'
         include 'index.adoc'
 
     }
@@ -80,11 +79,6 @@ task downloadSchedulerWebProperties(type: Download) {
     dest file("$projectDir/src/docs/admin/references/properties/scheduler-web.properties")
 }
 
-task downloadWorkflowCatalogProperties(type: Download) {
-    src "https://raw.githubusercontent.com/ow2-proactive/workflow-catalog/${project.branch}/src/main/resources/application.properties"
-    dest file("$projectDir/src/docs/admin/references/properties/workflow-catalog.properties")
-}
-
 task xsdDoc(type: JavaExec) {
     println file("$projectDir/src/xsd/schedulerjob.xsd").absoluteFile
 
@@ -100,8 +94,7 @@ copyDocs.dependsOn removeProperties
 downloadRmProperties.dependsOn copyDocs
 downloadSchedulerProperties.dependsOn downloadRmProperties
 downloadSchedulerWebProperties.dependsOn downloadSchedulerProperties
-downloadWorkflowCatalogProperties.dependsOn downloadSchedulerWebProperties
-asciidoctor.dependsOn downloadWorkflowCatalogProperties
+asciidoctor.dependsOn downloadSchedulerWebProperties
 xsdDoc.dependsOn asciidoctor
 
 build.dependsOn(['xsdDoc'])
