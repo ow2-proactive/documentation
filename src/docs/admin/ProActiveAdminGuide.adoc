@@ -1430,10 +1430,6 @@ See http://pchelp.ricmedia.com/how-to-fix-550-5-3-4-requested-action-not-taken-e
 
 include::./references/CalendarServiceReference.adoc[]
 
-=== Statistics on ProActive Jobs and Resource Usage
-
-include::./references/StatisticsOnProActiveJobsAndResourceUsageReference.adoc[]
-
 == Scheduler start tuning
 
 Scheduler start can be customized by automatically triggering user's scripts.
