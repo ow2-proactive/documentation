@@ -1708,6 +1708,67 @@ Below is an example for adding a certificate to a Java cacerts file:
 keytool -import -alias ldap-self-signed -keystore </pathToScheduler/jre/lib/security/cacerts> -file ldaps.crt -storepass changeit
 ----
 
+== Workflow Storage and Versioning
+
+The Workflow Catalog provides the storage and versioning of workflows inside Buckets. It also features a searching functionality using a simple query language to fetch workflows based on particular parameters. The Workflow Catalog is a RESTful service. A http://swagger.io/[Swagger] interface is provided to understand and interact with the service.
+
+=== Bucket concept
+
+A Bucket is a collection of Workflows that can be shared between users. The default settings provide the following Buckets:
+
+* Templates (set of Workflows samples publicly readable)
+
+Listing the catalog for existing Buckets is done using the following HTTP request:
+
+    GET http://localhost:8080/workflow-catalog/buckets
+
+It is also possible to list all Workflows inside a particular Bucket using its `bucket_id`:
+
+    GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows
+
+Then, we can fetch a particular Workflow based on its `workflow_id`:
+
+    GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows/{workflow_id}
+
+NOTE: By default, the catalog will always return the latest version of the workflows.
+
+=== Workflow versioning
+
+The Workflow Catalog provides versioning of workflows. You can list all the revisions of a particular Workflow using the HTTP request:
+
+    GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows/{workflow_id}/revisions
+
+You can fetch a Workflow detailed information using its `workflow_id` and `revision_id`:
+
+    GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows/{workflow_id}/revisions/{revision_id}
+
+A Workflow Revision is created from a ProActive XML <<_glossary_workflow,*Workflow*>> definition.
+Beside from the _id_, _name_ and _project_name_ of the Workflow, a few more information are indexed from the XML content such as _<<_generic_information>>_ and _<<_workflow_variables>>_.
+
+More detailed information on how to create or modify Workflows and Buckets are available in the link:../admin/ProActiveAdminGuide.html#_workflow_catalog[Admin guide].
+
+
+=== Searching for workflows
+
+You can search or filter Workflows and Workflow Revisions by means of Workflow Catalog Query Language (<<_wcql,*WCQL*>>).
+
+Search on the latest versions of Workflows contained in a particular Bucket:
+
+    http://localhost:8080/workflow-catalog/{bucket_id}/workflows?query=...
+
+Search through all versions of a particular Workflow:
+
+    http://localhost:8080/workflow-catalog/{bucket_id}/workflows/{workflow_id}/revisions?query=...
+
+NOTE: More details about how to use pagination and sorting is available on the http://docs.spring.io/spring-data/rest/docs/2.4.2.RELEASE/reference/html/#paging-and-sorting[Spring-data REST documentation].
+
+[[_wcql]]
+==== Workflow Catalog Query Language
+
+Our Workflow Catalog Query Language allows to express simple conditions on the indexed information of ProActive XML Workflows.
+A search query written in WCQL can combine one or more search clauses with the conjunctions `AND` and `OR`, thus forming an expression.
+Like in most query languages, the `AND` conjunction has precedence over `OR`.
+
 ===== Clauses
 
 ====== Atomic Clause
@@ -1773,6 +1834,24 @@ can be expressed as:
     name="Create OpenStack Instance" OR project_name="Deployment" AND generic_information("Infrastructure", "OpenStack")
 
 Once executed, this query will return a single Workflow named _Create OpenStack Instance_.
+
+=== Importing/Exporting Workflows into the Catalog
+
+In the Workflow Catalog, it is possible to select Workflows from the current bucket and send them to another bucket, which can belong to the same Catalog or to another Scheduler's Catalog.
+
+==== Send Workflows directly
+
+It is convenient to send the Workflows to share directly, if they are sent to a Scheduler with a public API, or to another bucket of the local Scheduler.
+
+Select the bucket then the Workflows. Choose `Send to another scheduler` and click `OK`.
+
+==== Export Workflows as an archive, then Import them
+
+If the remote Scheduler is not reachable, or the direct sending cannot be performed for some other reason, you can export Workflows into an archive, which can be transferred by any file transfer method (email, usb key, etc.) and then imported into the other Scheduler.
+
+To export the selected Workflows as a ZIP archive, select a bucket, then the targeted Workflows. Choose "Export selected Workflows" into the list and click on `OK`. You'll get a ZIP file which can be transferred to the machine on which the other Scheduler runs.
+
+To import the archive on the Scheduler, select the bucket to which the Workflows will be added. Then choose `Import archive of Workflows` and click on `OK`.
 
 == Third-party credentials
 

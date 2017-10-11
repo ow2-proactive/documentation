@@ -1,0 +1,9 @@
+Workflow Catalog Properties are read from its WAR file.
+
+The default configuration file is located at _WEB-INF/classes/application.properties_.
+It can be extended with additional https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html[Spring properties].
+
+[source]
+----
+include::properties/workflow-catalog.properties[]
+----
