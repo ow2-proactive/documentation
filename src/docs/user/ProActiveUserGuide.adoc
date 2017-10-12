@@ -1711,7 +1711,7 @@ keytool -import -alias ldap-self-signed -keystore </pathToScheduler/jre/lib/secu
 == Workflow Storage and Versioning
 
 The Catalog provides the storage and versioning of workflows inside Buckets. It also features a searching functionality using a http://graphql.org/[GraphQL] query language to fetch workflows based on particular parameters. The Catalog is a RESTful service. A http://swagger.io/[Swagger] interface is provided to understand and interact with the service.
-First the concepts of the Catalog will be explained. Then it will infromation how to interact with Catalog from GUI.
+First the concepts of the Catalog will be explained. Then it will be provided information how to interact with Catalog from GUI.
 
 === Bucket concept
 
@@ -1751,13 +1751,16 @@ More detailed information on how to create or modify Workflows and Buckets are a
 
 === Catalog security and groups management
 
-For security reason there are groups associated to buckets.
-The user from same group can view the content of bucket.
-There is special default group. The bucket associated with default group can be viewed by any user.
+The Catalog is secured with a sessionId. Every request to the Catalog must have a valid sessionId inside the request header.
+The security mechanism is based on groups, the group GROUP:public-objects can be access by any user with a valid sessionId. Other groups can be accessed (read and write) if the sessionId corresponds to a user which is part of that group.
+As an example, a user which is part of the interns group (GROUP:interns) can see and change buckets and their contents which belong to the GROUP:interns.
+A user which gets a list of buckets can only see the buckets to which the user belongs plus the GROUP:public-objects associated buckets.
+
+The sessionId is validated against the Scheduler REST api, so if the Catalog does not have access (network outage, firewall) to the Scheduler, no access to the Catalog is possible.
 
 === Retrieving and searching the workflows
 
-== Get workflow from REST API
+==== Get workflow from REST API
 
 From REST API it's possible to retrieve the raw content of a specific revision of workflow. For this case it's required to specify `name` and `commit_time` of the workflow's  revision:
 
@@ -1766,51 +1769,67 @@ From REST API it's possible to retrieve the raw content of a specific revision o
 In order to get the raw content of a last revision of a workflow use next REST API endpoint:
 
     GET http://localhost:8080/catalog//buckets/{bucketId}/resources/{name}/raw
+
 In this case you need to provide only the `name` of a workflow.
 
 NOTE: A complete documentation of the Catalog REST API is available by default on:
   http://localhost:8080/catalog/swagger-ui.html
 
-== GraphQl usage
+==== GraphQl usage
 
 http://graphql.org/[GraphQL] is the standardized query language, which  provides opportunity to search and retrieve the workflow by specified criterion from the Catalog.
 NOTE: Please follow the graphiql endpoint: `http://localhost:8080/catalog/graphiql` in order to query for the specific workflow.
 
-=== Usage of catalog from GUI
+== Usage of catalog from GUI
+
 The GUI interaction with the Catalog can be done in two places: Studio portal and Workflow Catalog Portal.
 The portals follow the concepts of catalog: workflows store inside buckets, the workflow can have several revisions, each workflow have specific description.
+The view of workflows from Catalog in Studio and from Workflow Catalog Portal follow the same view logic. The page is separated in 3 sections.
+The approach is selecting the needed information from left to right. First user should choose the required bucket, then the user can observe all the workflows in the selected bucket. When the user select the workflow it will be shown all existing revisions of the workflow. And finally there is a description about workflow revision.
 
-== Studio
+=== Studio
 Inside Studio portal there is present a `Catalog` menu. With help of this menu the user can directly interact from studio view with catalog storage.
 
-= Publish current Workflow to the Catalog
+==== Publish current Workflow to the Catalog
 The Catalog menu will provide possibility for an user directly save inside catalog the created in studio workflow: `Publish current Workflow to the Catalog`.
-In opened window for publishing workflow to catalog the user can choose the `Bucket` where the workflow will be stored and `commit message`.
+In opened window for publishing the current workflow to catalog the user can choose the `Bucket` where the workflow will be stored and `commit message`.
 If the workflow with the same name is already exists in specified bucket in the catalog, it will be created the new revision of this workflow.
 We recommend to specify commit message for easier differentiation the versions of a workflow.
 
-= Get a Workflow from the Catalog
+==== Get a Workflow from the Catalog
 When the workflow is selected from catalog you have two options:
 `Open as a new Workflow`
+This option will open the workflow from catalog as new Workflow in Studio
 `Append to current Workflow`
 When the user choose this option, it's supposed that the user wants to append the workflow from catalog to workflow already opened inside studio. Please open the workflow to which you want to append before.
 
-== Workflow Catalog Portal
-The Workflow Catalog Portal provides interfaces for easy administrating the catalog. The examples of provided options from this portal:
-- creating new buckets
-- removing workflows inside bucket
-- importing/exporting Workflows into the Catalog
+=== Workflow Catalog Portal
+The Workflow Catalog Portal provides interfaces for easy administering the catalog. The most important of provided features will be described next.
 
-The portal logically is separated in 3 sections.
+==== Creating the new buckets
+You need to press `plus` button from above of buckets. In opened window you need to specify Bucket name and associate with user group.
+For security reason there are groups associated to buckets. The user from same group can view the content of bucket.
+There is a special default group - `no group` in the dropdown list of window. The bucket associated with this default group can be viewed by any user.
 
-=== Importing/Exporting Workflows into the Catalog
+==== Removing workflows inside bucket
+For removing workflows, first the user should select the bucket containing the workflows. Then the user can select multiple workflows with pressed CTRL button. To delete the selected workflows push the `trash` button.
 
+===== Importing/Exporting Workflows into the Catalog
 In the Workflow Catalog, it is possible to Export Workflows as an archive, then Import them.
 You can export Workflows into an archive, which can be transferred by any file transfer method (email, usb key, etc.) and then imported into the other Scheduler.
 
-To export the selected Workflows as a ZIP archive from Workflow catalog portal: select a bucket, then the targeted Workflows (you can select multiple workflows with pressed CTRL button). Press "Export Workflows" button from portal view. You'll get a ZIP file which can be transferred to the machine on which the other Scheduler runs.
+To export the selected Workflows as a ZIP archive from Workflow catalog portal: select a bucket, then the targeted Workflows (you can select multiple workflows with pressed CTRL button). Press "Download Workflows" button from portal view. You'll get a ZIP file which can be transferred to the machine on which the other Scheduler runs.
+To import the zip archive of workflows to the Catalog from portal, select the bucket to which the Workflows will be added. Then press `Upload Workflows` button in portal and follow the instructions `Upload a ZIP archive of workflows` opened window.
 
-To import the zip archive of workflows to the Catalog from portal, select the bucket to which the Workflows will be added. Then press `Import Workflows` button in portal and follow the instructions `Upload a ZIP archive of workflows` opened window.
+==== List revisions of workflow
+In portal you always see the last revision of catalog. In order to see all revisions of selected workflow, please click on `clock` button inside description area.
+The revisions are shown in chronological order by commit time.
+
+==== Restore the revision
+Usually the users works the last version of workflow. But there is the case when the user wants to make the specific revision as the last version of workflow.
+For this case there is a special option inside portal: `Restore the revision`. The user should select the workflow, click `clock` button to see the list of all revisions.
+By simply selecting the required revision from list and clicking `Restore`, the selected revision will become the last version of workflow.
+
 
 == Third-party credentials
 
