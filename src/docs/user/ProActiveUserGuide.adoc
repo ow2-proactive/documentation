@@ -1635,8 +1635,8 @@ Notifications will only be sent for jobs whose generic information contains user
 SubmitJobNoWait and SubmitJobAndWait templates under *Controls* menu allow you to submit a workflow from another workflow using *schedulerapi*.
 
 In order to submit a workflow, you need to put the URL of that workflow in the Task Variables under the key *workflowURL*. You can use any URL that points to
-a valid workflow xml file. For example, you can add the workflow that you want to execute into *Workflow Catalog*, then retrieve its URL by indicating its Bucket ID
-and workflow ID. Moreover, SubmitJobAndWait will wait for the completion of the submitted workflow before proceeding further with the execution of the dependant tasks.
+a valid workflow xml file. For example, you can add the workflow that you want to execute into *Catalog*, then retrieve its URL by indicating its Bucket ID
+and workflow name. Moreover, SubmitJobAndWait will wait for the completion of the submitted workflow before proceeding further with the execution of the dependant tasks.
 
 === Control and Validation
 
@@ -1710,148 +1710,107 @@ keytool -import -alias ldap-self-signed -keystore </pathToScheduler/jre/lib/secu
 
 == Workflow Storage and Versioning
 
-The Workflow Catalog provides the storage and versioning of workflows inside Buckets. It also features a searching functionality using a simple query language to fetch workflows based on particular parameters. The Workflow Catalog is a RESTful service. A http://swagger.io/[Swagger] interface is provided to understand and interact with the service.
+The Catalog provides the storage and versioning of workflows inside Buckets. It also features a searching functionality using a http://graphql.org/[GraphQL] query language to fetch workflows based on particular parameters. The Catalog is a RESTful service. A http://swagger.io/[Swagger] interface is provided to understand and interact with the service.
+First the concepts of the Catalog will be explained. Then it will infromation how to interact with Catalog from GUI.
 
 === Bucket concept
 
-A Bucket is a collection of Workflows that can be shared between users. The default settings provide the following Buckets:
+A Bucket is a collection of Workflows that can be shared between users. The default settings provide the different Buckets, one of them is:
 
-* Templates (set of Workflows samples publicly readable)
+* Examples (set of Workflows samples publicly readable)
 
 Listing the catalog for existing Buckets is done using the following HTTP request:
 
-    GET http://localhost:8080/workflow-catalog/buckets
+    GET http://localhost:8080/catalog/buckets
 
 It is also possible to list all Workflows inside a particular Bucket using its `bucket_id`:
 
-    GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows
+    GET http://localhost:8080/catalog/buckets/{bucket_id}/resources
 
-Then, we can fetch a particular Workflow based on its `workflow_id`:
+Then, we can fetch a particular Workflow based on its `name`:
 
-    GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows/{workflow_id}
+    GET http://localhost:8080/catalog/buckets/{bucket_id}/resources/{name}
 
 NOTE: By default, the catalog will always return the latest version of the workflows.
 
 === Workflow versioning
 
-The Workflow Catalog provides versioning of workflows. You can list all the revisions of a particular Workflow using the HTTP request:
+The Catalog provides versioning of workflows. You can list all the revisions of a particular Workflow using the HTTP request:
 
-    GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows/{workflow_id}/revisions
+    GET http://localhost:8080/catalog/buckets/{bucketId}/resources/{name}/revisions
 
-You can fetch a Workflow detailed information using its `workflow_id` and `revision_id`:
+The revision of workflow is identified by `commit_time`. Commit time specifies the time when the workflow's version was added in the catalog.
+You can fetch a Workflow detailed metadata information using its `name` and `commit_time`:
 
-    GET http://localhost:8080/workflow-catalog/buckets/{bucket_id}/workflows/{workflow_id}/revisions/{revision_id}
+    GET http://localhost:8080/catalog/buckets/{bucketId}/resources/{name}/revisions/{commit_time}
 
 A Workflow Revision is created from a ProActive XML <<_glossary_workflow,*Workflow*>> definition.
 Beside from the _id_, _name_ and _project_name_ of the Workflow, a few more information are indexed from the XML content such as _<<_generic_information>>_ and _<<_workflow_variables>>_.
 
-More detailed information on how to create or modify Workflows and Buckets are available in the link:../admin/ProActiveAdminGuide.html#_workflow_catalog[Admin guide].
+More detailed information on how to create or modify Workflows and Buckets are available in the link:../admin/ProActiveAdminGuide.html#_catalog[Admin guide].
 
+=== Catalog security and groups management
 
-=== Searching for workflows
+For security reason there are groups associated to buckets.
+The user from same group can view the content of bucket.
+There is special default group. The bucket associated with default group can be viewed by any user.
 
-You can search or filter Workflows and Workflow Revisions by means of Workflow Catalog Query Language (<<_wcql,*WCQL*>>).
+=== Retrieving and searching the workflows
 
-Search on the latest versions of Workflows contained in a particular Bucket:
+== Get workflow from REST API
 
-    http://localhost:8080/workflow-catalog/{bucket_id}/workflows?query=...
+From REST API it's possible to retrieve the raw content of a specific revision of workflow. For this case it's required to specify `name` and `commit_time` of the workflow's  revision:
 
-Search through all versions of a particular Workflow:
+    GET http://localhost:8080/catalog/buckets/{bucketId}/resources/{name}/revisions/{commit_time}/raw
 
-    http://localhost:8080/workflow-catalog/{bucket_id}/workflows/{workflow_id}/revisions?query=...
+In order to get the raw content of a last revision of a workflow use next REST API endpoint:
 
-NOTE: More details about how to use pagination and sorting is available on the http://docs.spring.io/spring-data/rest/docs/2.4.2.RELEASE/reference/html/#paging-and-sorting[Spring-data REST documentation].
+    GET http://localhost:8080/catalog//buckets/{bucketId}/resources/{name}/raw
+In this case you need to provide only the `name` of a workflow.
 
-[[_wcql]]
-==== Workflow Catalog Query Language
+NOTE: A complete documentation of the Catalog REST API is available by default on:
+  http://localhost:8080/catalog/swagger-ui.html
 
-Our Workflow Catalog Query Language allows to express simple conditions on the indexed information of ProActive XML Workflows.
-A search query written in WCQL can combine one or more search clauses with the conjunctions `AND` and `OR`, thus forming an expression.
-Like in most query languages, the `AND` conjunction has precedence over `OR`.
+== GraphQl usage
 
-===== Clauses
+http://graphql.org/[GraphQL] is the standardized query language, which  provides opportunity to search and retrieve the workflow by specified criterion from the Catalog.
+NOTE: Please follow the graphiql endpoint: `http://localhost:8080/catalog/graphiql` in order to query for the specific workflow.
 
-====== Atomic Clause
+=== Usage of catalog from GUI
+The GUI interaction with the Catalog can be done in two places: Studio portal and Workflow Catalog Portal.
+The portals follow the concepts of catalog: workflows store inside buckets, the workflow can have several revisions, each workflow have specific description.
 
-It is made up of three parts:
+== Studio
+Inside Studio portal there is present a `Catalog` menu. With help of this menu the user can directly interact from studio view with catalog storage.
 
-* an *Attribute*: `name` or `project_name`
-* an *Operator*: `=` or `!=`
-* a *Literal Value*
+= Publish current Workflow to the Catalog
+The Catalog menu will provide possibility for an user directly save inside catalog the created in studio workflow: `Publish current Workflow to the Catalog`.
+In opened window for publishing workflow to catalog the user can choose the `Bucket` where the workflow will be stored and `commit message`.
+If the workflow with the same name is already exists in specified bucket in the catalog, it will be created the new revision of this workflow.
+We recommend to specify commit message for easier differentiation the versions of a workflow.
 
-====== Key/Value Clause
+= Get a Workflow from the Catalog
+When the workflow is selected from catalog you have two options:
+`Open as a new Workflow`
+`Append to current Workflow`
+When the user choose this option, it's supposed that the user wants to append the workflow from catalog to workflow already opened inside studio. Please open the workflow to which you want to append before.
 
-It is composed of:
+== Workflow Catalog Portal
+The Workflow Catalog Portal provides interfaces for easy administrating the catalog. The examples of provided options from this portal:
+- creating new buckets
+- removing workflows inside bucket
+- importing/exporting Workflows into the Catalog
 
-* an *Attribute*: `generic_information` or `variable`
-* a *Key/Value Pair*: starts with `(`, ends with `)` and contains between
-the last two characters two *Literal Value* separated by a comma.
-
-===== Literal Value
-
-The representation of a String value as a quoted sequence of characters, e.g. _"My First Workflow"_. It can contain a wildcard `*` that substitutes for zero or more characters.
-
-==== Examples
-
-===== Atomic Clauses
-
-    name="My First Workflow"
-    project_name="Templates"
-
-===== Key/Value Clauses
-
-    generic_information("Infrastructure", "Amazon EC2")
-    variable("CPU", "4")
-
-===== Expressions and Wildcard
-
-Let the following Workflows:
-[width="100%",frame="topbot",options="header", cols="30%<"]
-|==============================================================================================
-| Name                         | Project Name | GI Name | GI Value | Variable Name     | Variable Value
-| _My First Workflow_          | Tutorials    |         |          |                   |
-| _Create OpenStack Instance_  | Deployment   | Infrastructure | OpenStack  | Core     | 4
-| _Stop OpenStack Instance_    | Lifecycle    | Infrastructure | OpenStack  |          |
-| _New Amazon Instance_        | Deployment   | Infrastructure | Amazon EC2 | Nb_CPU   | 2
-|==============================================================================================
-
-They are matched against these query expressions:
-[width="100%",frame="topbot",options="header"]
-|=================================================================================================================================
-| Expression                                          | Matches
-| name = "My First Workflow"                          | _My First Workflow_
-| name = "My*"                                        | _My First Workflow_
-| project_name = "\*ploy*"                            |_Create OpenStack Instance_ and _New Amazon Instance 1_
-| project_name = "\*ploy*" AND variable("\*CPU", "*") |_New Amazon Instance 1_
-|=================================================================================================================================
-
-Evaluation priority is respected through operator precedence (`AND` over `OR`), so the following statement:
-
-    Search for all Workflows that can deploy an OpenStack instance
-
-can be expressed as:
-
-    name="Create OpenStack Instance" OR project_name="Deployment" AND generic_information("Infrastructure", "OpenStack")
-
-Once executed, this query will return a single Workflow named _Create OpenStack Instance_.
+The portal logically is separated in 3 sections.
 
 === Importing/Exporting Workflows into the Catalog
 
-In the Workflow Catalog, it is possible to select Workflows from the current bucket and send them to another bucket, which can belong to the same Catalog or to another Scheduler's Catalog.
+In the Workflow Catalog, it is possible to Export Workflows as an archive, then Import them.
+You can export Workflows into an archive, which can be transferred by any file transfer method (email, usb key, etc.) and then imported into the other Scheduler.
 
-==== Send Workflows directly
+To export the selected Workflows as a ZIP archive from Workflow catalog portal: select a bucket, then the targeted Workflows (you can select multiple workflows with pressed CTRL button). Press "Export Workflows" button from portal view. You'll get a ZIP file which can be transferred to the machine on which the other Scheduler runs.
 
-It is convenient to send the Workflows to share directly, if they are sent to a Scheduler with a public API, or to another bucket of the local Scheduler.
-
-Select the bucket then the Workflows. Choose `Send to another scheduler` and click `OK`.
-
-==== Export Workflows as an archive, then Import them
-
-If the remote Scheduler is not reachable, or the direct sending cannot be performed for some other reason, you can export Workflows into an archive, which can be transferred by any file transfer method (email, usb key, etc.) and then imported into the other Scheduler.
-
-To export the selected Workflows as a ZIP archive, select a bucket, then the targeted Workflows. Choose "Export selected Workflows" into the list and click on `OK`. You'll get a ZIP file which can be transferred to the machine on which the other Scheduler runs.
-
-To import the archive on the Scheduler, select the bucket to which the Workflows will be added. Then choose `Import archive of Workflows` and click on `OK`.
+To import the zip archive of workflows to the Catalog from portal, select the bucket to which the Workflows will be added. Then press `Import Workflows` button in portal and follow the instructions `Upload a ZIP archive of workflows` opened window.
 
 == Third-party credentials
 
