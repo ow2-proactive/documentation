@@ -34,13 +34,13 @@ Scheduler Web Interface:: ProActive component that provides a web interface to t
 Workflow Studio:: ProActive component that provides a web interface for designing <<_glossary_workflow,*Workflows*>>.
 
 [[_glossary_catalog]]
-Catalog:: ProActive component that provides storage and versioning of <<_glossary_workflow,*Workflows*>> and other ProActive objects through a REST API. It is also possible to query the catalog for specific <<_glossary_workflow,*Workflows*>>.
+Catalog:: ProActive component that provides storage and versioning of <<_glossary_workflow,*Workflows*>> and other ProActive Objects through a REST API. It is also possible to query the Catalog for specific <<_glossary_workflow,*Workflows*>>.
 
 [[_glossary_job_planner]]
 Job Planner:: A ProActive component providing advanced scheduling options for <<_glossary_workflow,*Workflows*>>.
 
 [[_glossary_workflow_bucket]]
-Bucket:: ProActive notion used with the <<_glossary_catalog, *Catalog*>> to refer to a specific collection of workflows. 
+Bucket:: ProActive notion used with the <<_glossary_catalog, *Catalog*>> to refer to a specific collection of ProActive Objects and in particular ProActive Workflows.
 
 [[_glossary_server_host]]
 Server Host::

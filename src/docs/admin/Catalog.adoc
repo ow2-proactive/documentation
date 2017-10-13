@@ -1,6 +1,6 @@
-The Catalog stores ProActive objects and in particular ProActive Workflows through a REST API.
+The Catalog stores ProActive Objects and in particular ProActive Workflows through a REST API.
 It is subdivided into buckets.
-Each bucket has a unique name and stores zero, one or more versioned ProActive objects.
+Each bucket has a unique name and stores zero, one or more versioned ProActive Objects.
 
 By default, ProActive objects are persisted on disk using the embedded HSQL database.
 The data is located in `PROACTIVE_HOME/data/db/catalog`.
