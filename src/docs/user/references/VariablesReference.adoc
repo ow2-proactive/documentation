@@ -25,7 +25,7 @@ The order in this list corresponds to the task life-cycle order.
 | Available in
 | Not Available in
 
-| *Task result*. Variable set by the user to return the result of a task. See <<passing_data_between_tasks_using_results>>.
+| *Task result*. Variable set by the user to return the result of a task. See <<_passing_data_between_tasks_using_results,Result variables>>.
 | result = "value";
 | The result will be the exit code.
 | -
@@ -39,7 +39,7 @@ The order in this list corresponds to the task life-cycle order.
 | all scripts defined as external file
 | -
 
-| *Results of previous tasks*. An array containing the results of parent tasks. See <<passing_data_between_tasks_using_results>>.
+| *Results of previous tasks*. An array containing the results of parent tasks. See <<_passing_data_between_tasks_using_results,Result variables>>.
 | ... = results[0];
 | $results_0
 | -
