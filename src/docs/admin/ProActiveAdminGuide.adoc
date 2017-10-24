@@ -1547,6 +1547,70 @@ hibernate.connection.url=jdbc:hsqldb:mem:rm;hsqldb.tx=mvcc;hsqldb.lob_file_scale
 
 To switch to a standalone database, see <<_perf_tuning_db>>.
 
+== Nodes and Task Recovery
+
+While your tasks are running on nodes, the scheduler can experience a transient failure and come back to life without
+losing the on-going computations. This is possible thanks to the nodes and task recovery mechanism run by the scheduler.
+When the scheduler is starting, it checks the nodes and the tasks that were persisted in database to be able to recover
+on going tasks and alive nodes. For each node that is supposed to be handled by the scheduler, the recovery will consist
+into trying to contact these nodes. If a node is alive, the reference that is retrieved with the lookup of this node is
+kept by the resource manager and the internal data structures of the scheduler are updated with this node information.
+If a persisted node is not alive at recovery time, then the node will be recreated automatically.
+
+=== Scope
+
+A recovery is not a restart, and as such a clean restart will not preserve on-going tasks and running nodes. Indeed, if
+you restart the scheduler manually, it will clean and remove the nodes before exiting. Thus, there will be no node and
+no running tasks to recover when the scheduler is started again. However, in the particular case where the scheduler
+experiences a failure, no such cleaning is performed. Thus, when the scheduler starts again after a failure, it loads
+all the persisted information about the nodes state and the tasks state to be able to resume. If, for a node source, no
+node is found in database, then the node recovery will not take place for this node source. Instead, the nodes will be
+redeployed as for the first time.
+
+=== Dedicated Resource Manager property
+```
+pa.rm.nodes.recovery
+```
+
+Default is ```true```
+
+Controls the recovery mechanism of the nodes.
+
+=== Task Result Holding While Scheduler is Down
+
+To handle the particular situation in which the scheduler is down when a running task terminates, a proper configuration
+of the scheduler enables the task to hold the result until the scheduler comes back alive. Two scheduler properties
+manage the way a task will attempt to submit its results to the scheduler:
+
+```
+pa.scheduler.core.nodepingfrequency
+```
+
+Defines the frequence in seconds at which the task will try to contact the active object responsible of receiving the
+task’s result (such active object exists on the scheduler side).
+
+```
+pa.scheduler.core.node.ping.attempts
+```
+
+Defines the number of times the task will attempt to submit its result to the scheduler.
+
+Combining those two properties will define the maximum total time the task’s result will try to be submitted to the
+scheduler: node ping frequency x node ping attempts seconds. In order to ensure that a task’s result will be able to be
+submitted after a recovery of the scheduler, one must make sure that this total delay is long enough for the scheduler
+to come back alive. Otherwise if this delay is consumed and the scheduler is not present to receive the result, the
+task’s result will be lost forever.
+
+=== Cloud Platforms
+
+The nodes and task recovery of ProActive is available for the deployments on Microsoft Azure and Amazon EC2 clouds.
+For these, the behavior of the recovery mechanism is the following. When the scheduler is restarted after a failure,
+it will try to contact the nodes that are deployed on some cloud instances. If the nodes are alive then the recovery
+proceeds as with non-cloud infrastructures. If the nodes cannot be contacted, the recovery mechanism will try to deploy
+them again by running a deployment script on the persisted instance identifiers. If the deployment script fails, it
+means that the cloud instances do not exist anymore, so the recovery mechanism will trigger a redeployment including
+instance creation.
+
 
 == Troubleshooting
 === Logs
