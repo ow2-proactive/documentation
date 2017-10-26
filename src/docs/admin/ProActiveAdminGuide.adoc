@@ -1369,6 +1369,18 @@ In order to verify this you can follow the next steps:
 * For example you should to be able to launch the command 'perl -V'.
 * Then from command line you should be able to launch a simple perl file (perl yourPerlFile.pl).
 
+=== Python Script Engine (Python task)
+Python should be installed on your machine. By default Python2 is installed on Linux and Mac OS. If another version of Python is required,
+it should be installed on your machine in advance.
+
+More over, the native Python Script Engine depends on the py4j library in order to communicate with our Java classes. Please follow the following step to install it:
+
+* With Python2: `pip install py4j`
+
+* With Python3: `pip3 install py4j`
+
+Further information can be found https://www.py4j.org/install.html[in the official py4j documentation^].
+
 
 == Addons
 
