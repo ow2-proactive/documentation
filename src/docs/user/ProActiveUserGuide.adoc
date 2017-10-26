@@ -137,7 +137,8 @@ This can be achieved using <<_selection,selection script>>.
 
 Proactive Scheduler supports tasks  written in languages other than Java. The currently supported dynamic languages are
 link:http://groovy.codehaus.org[Groovy, window="_blank"],
-link:http://www.jython.org[Python, window="_blank"],
+link:http://www.jython.org[Jython, window="_blank"],
+link:https://www.python.org/[Python, window="_blank"],
 link:http://jruby.org[Ruby, window="_blank"] and
 link:http://docs.oracle.com/javase/6/docs/technotes/guides/scripting/programmer_guide/#jsengine[Javascript, window="_blank"].
 
@@ -160,6 +161,15 @@ relies on script task and is a nice introduction to workflows.
 
 Scripts can also be used to decorate tasks with specific actions, we support
 <<_pre_post_clean,pre>>, <<_pre_post_clean,post>>, <<_pre_post_clean,clean>> and <<_selection,selection>> scripts.
+
+==== Python Script Engine
+
+Since there are many different versions of Python (mainly Python2 and Python3) which are not compatible, ProActive supports all the Python versions (Python2, Python3, etc).
+By default, the Python used to execute the Script is the default Python version on your machine. In order to use another Python version to execute
+the task, it is required to put a key 'PYTHON_COMMAND' in Generic Info, and its value is the path (symbolic or absolute, for example 'python3' or
+/usr/local/opt/python3/bin/python3.6) to the python executable that you want to use. If the Generic Info is put at task level this version of Python will be only used for this task, if
+it is put in the job level this version of Python will be used for all the tasks in this job. Of course the required Python needs to be installed on your machine,
+and the corresponding py4j module as well.
 
 === MPI application
 
