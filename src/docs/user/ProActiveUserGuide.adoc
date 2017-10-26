@@ -164,10 +164,11 @@ Scripts can also be used to decorate tasks with specific actions, we support
 
 ==== Python Script Engine
 
-Since there are many different versions of Python (mainly Python2 and Python3) which are not compatible, ProActive supports all the versions of python.
+Since there are many different versions of Python (mainly Python2 and Python3) which are not compatible, ProActive supports all the Python versions (Python2, Python3, etc).
 By default, the Python used to execute the Script is the default Python version on your machine. In order to use another Python version to execute
 the task, it is required to put a key 'PYTHON_COMMAND' in Generic Info, and its value is the path (symbolic or absolute, for example 'python3' or
-/usr/local/opt/python3/bin/python3.6) to the python executable that you want to use. Of course the required Python needs to be installed on your machine,
+/usr/local/opt/python3/bin/python3.6) to the python executable that you want to use. If the Generic Info is put at task level this version of Python will be only used for this task, if
+it is put in the job level this version of Python will be used for all the tasks in this job. Of course the required Python needs to be installed on your machine,
 and the corresponding py4j module as well.
 
 === MPI application
