@@ -269,7 +269,7 @@ For Groovy:
 print variables.get("key")
 ----
 
-For Python:
+For Python/Jython:
 [source, python]
 ----
 print variables["key"]
