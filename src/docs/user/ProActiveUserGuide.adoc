@@ -138,7 +138,7 @@ This can be achieved using <<_selection,selection script>>.
 Proactive Scheduler supports tasks  written in languages other than Java. The currently supported dynamic languages are
 link:http://groovy.codehaus.org[Groovy, window="_blank"],
 link:http://www.jython.org[Jython, window="_blank"],
-link:https://www.python.org/[ython, window="_blank"],
+link:https://www.python.org/[Python, window="_blank"],
 link:http://jruby.org[Ruby, window="_blank"] and
 link:http://docs.oracle.com/javase/6/docs/technotes/guides/scripting/programmer_guide/#jsengine[Javascript, window="_blank"].
 
