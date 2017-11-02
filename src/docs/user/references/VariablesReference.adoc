@@ -321,10 +321,10 @@ If the task displays an error due to the result conversion, several approaches c
 
 Results of parent tasks are stored in the *results* variable. Like the variables map, accessing this *results* variable is language-dependant.
 
-For ruby, python or groovy script languages, the parent tasks results (*results* variable) contains a list of http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/common/task/TaskResult.html[TaskResult java object].
+For ruby, python, jython or groovy script languages, the parent tasks results (*results* variable) contains a list of http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/common/task/TaskResult.html[TaskResult java object].
 In order to access the result real value, the value() method of this object must be called:
 
-Example for Python:
+Example for Python/Jython:
 [source, python]
 ----
 print results[0].value()
