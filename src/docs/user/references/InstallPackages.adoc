@@ -1,0 +1,68 @@
+A ProActive package is a collection of files that allows for applications or libraries to be distributed to a ProActive Workflows & Scheduling setup.
+It can be a directory or a ZIP archive that respects the directory structure depicted below and contains the following files and folders:
+
+    1. a METADATA.json file that describes object-related-information such as bucket name, list of jobs included in the package, job dependencies, etc.
+    2. a resources/catalog folder that contains XML definition files of all jobs in the package.
+    3. an optional resources/dataspaces folder that contains any dependencies or resources required by package jobs.
+
+    ├── ./README
+    ├── ./metadata.json
+    └── ./resources
+        ├──./resources/catalog
+        │  └──./resources/catalog/workflow_1
+        │  └──./resources/catalog/workflow_2
+        │  └──./resources/catalog/...
+        └──./resources/dataspaces (optional)
+           └──./resources/dataspaces/resource_1
+           └──./resources/dataspaces/resource_2
+           └──./resources/dataspaces/...
+
+To install a package, you can use the ProActive CLI by providing a path to your package.
+It can be a local directory, a ZIP file or can be a URL to a web directory, a direct-download ZIP file, a GitHub repository or ZIP or a directory inside a GitHub repository.
+Please note that URL forwarding is supported.
+
+Upon installation, new workflows will be added to the Workflow Catalog under their corresponding buckets as declared in METADATA.json. The installation will create new buckets if they do not exist. Please note that a job can be added to one or multiple buckets.
+
+For more details about ProActive packages and how to create one, please refer to https://github.com/ow2-proactive/proactive-examples/blob/master/README.md[ProActive Examples Documentation].
+
+The following examples illustrate all the aforementioned showcases:
+
+====== In non-interactive mode
+
+* To install a package located in a local directory or ZIP
+
+[source]
+----
+$ PROACTIVE_HOME/bin/proactive-client -pkg /Path/To/Local/Package/Directory/Or/Zip
+----
+
+* To install a package located in a web folder (Supports only Apache Tomcat directory listing)
+
+[source]
+----
+$ PROACTIVE_HOME/bin/proactive-client -pkg http://example.com/installablePackageDirectory/
+----
+
+* To install a package with a direct download ZIP URL:
+
+[source]
+----
+$ PROACTIVE_HOME/bin/proactive-client -pkg https://s3.eu-west-2.amazonaws.com/activeeon-public/proactive-packages/package-example.zip
+----
+
+* To install a package located in a GitHub repository (either in the repository root or in a sub-folder within a repository):
+
+[source]
+----
+$ PROACTIVE_HOME/bin/proactive-client -pkg https://github.com/ow2-proactive/hub-packages/tree/master/package-example
+----
+
+====== In interactive mode
+
+* To install a package located in any of the aforementioned possible locations
+
+[source]
+----
+$ PROACTIVE_HOME/bin/proactive-client
+> installpackage(PackagePathOrURL)
+----

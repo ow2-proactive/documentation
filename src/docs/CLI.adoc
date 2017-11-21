@@ -23,3 +23,6 @@ $ PROACTIVE_HOME/bin/proactive-client -cn 'moreLocalNodes' -infrastructure 'org.
 $ PROACTIVE_HOME/bin/proactive-client
 > createns( 'moreLocalNodes', ['org.ow2.proactive.resourcemanager.nodesource.infrastructure.LocalInfrastructure', './config/authentication/rm.cred', 4, 60000, ''], ['org.ow2.proactive.resourcemanager.nodesource.policy.StaticPolicy', 'ALL', 'ALL'])
 ----
+
+===== Install ProActive packages
+include::./user/references/InstallPackages.adoc[]
