@@ -1821,6 +1821,13 @@ You need to press `plus` button from above of buckets. In opened window you need
 For security reason there are groups associated to buckets. The user from same group can view the content of bucket.
 There is a special default group - `no group` in the dropdown list of window. The bucket associated with this default group can be viewed by any user.
 
+==== Set Bucket as Catalog Menu
+This allows the user to change the bucket used to get workflows from the Catalog in the studio. By selecting a bucket, the user can change the content of the main Catalog menu (named as the current bucket) to get workflows from another bucket as templates.
+This can also be achieved by adding `/templates/bucket_name` at the end of the URL.
+
+==== Add Bucket as Extra Catalog Menu
+This allows the user to add a bucket for templates in the studio. By selecting a bucket, the user can add a new Catalog menu that will contain its workflows.
+
 ==== Removing Workflows inside bucket
 For removing Workflows, first the user should select the bucket containing the Workflows. Then the user can select multiple Workflows with pressed CTRL button. To delete the selected Workflows push the `trash` button.
 
