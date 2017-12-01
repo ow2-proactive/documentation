@@ -133,6 +133,11 @@ SSH keys.
 - `proactive.pamrssh.key_directory`: directory when SSH keys can be found to access router's host. For instance
 /home/login/.ssh
 
+- `proactive.pamrssh.address`: Correspond to the host that actually runs a PAMR router on the remote side of the
+SSH tunnel. It may be used to point to a different host than the SSH server itself - making the SSH server to act as
+a gateway. The parameter is also useful when the PAMR router is running inside a cloud based VM which doesn't support
+its public IP address. In that case it can be used to enforce the usage of the remote loopback interface.
+
 ==== Enabling Several Communication Protocols
 
 The next options are available to control multiprocol:
