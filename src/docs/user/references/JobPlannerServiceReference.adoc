@@ -9,7 +9,6 @@ The <<_glossary_job_planner,*Job Planner*>> schedules <<_glossary_workflow,*Work
 
 Job Planner uses an Execution Calendars Definition to know how the job will be planned over the time. As shown on the example below, this definition is composed of 4 fields:
 
- - a name for the definition
  - a cron expression to define the recurrence (every morning at 6am, etc.)
  - a set of inclusions calendars to add specific job executions which cannot be defined by a cron expression (holidays, etc.)
  - a set of exclusions calendars to exclude specific occurrences of the job executions defined in cron and inclusion definitions (maintenances operations, holidays, etc.)
@@ -18,7 +17,6 @@ Job Planner uses an Execution Calendars Definition to know how the job will be p
 ----
 EXECUTION_CALENDARS =
 {
-	"name": "retrospectiveCalendar",
 	"cron": "0 23 0 ? * MON,TUE,WED,THU,FRI *",
 	"inclusion_calendars": [
 				{     
@@ -38,12 +36,6 @@ EXECUTION_CALENDARS =
 			     ]
 }
 ----
-
-===== Name
-
-The execution calendar definition can be described according to several tokens. The execution calendar must have a unique name and the worklfow		submission will be
-rejected if a name clashes with an already existing <<_glossary_execution_calendars_definition,*Execution Calendars defintion*>>
-inside the <<_glossary_job_planner,*Job Planner*>>.
 
 ===== Cron
 
