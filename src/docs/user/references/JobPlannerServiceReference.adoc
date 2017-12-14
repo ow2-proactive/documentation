@@ -7,7 +7,7 @@ The <<_glossary_job_planner,*Job Planner*>> schedules <<_glossary_workflow,*Work
 
 === Execution Calendars Definition Syntax
 
-Job Planner uses an Execution Calendars Definition to know how the job will be planned over the time. As shown on the example below, this definition is composed of 4 fields:
+Job Planner uses an Execution Calendars Definition to know how the job will be planned over the time. As shown on the example below, this definition is composed of 3 fields:
 
  - a cron expression to define the recurrence (every morning at 6am, etc.)
  - a set of inclusions calendars to add specific job executions which cannot be defined by a cron expression (holidays, etc.)
