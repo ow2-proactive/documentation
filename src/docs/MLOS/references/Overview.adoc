@@ -1,0 +1,11 @@
+*ProActive Scheduler* is a free and open-source *job scheduler*. The user specifies the computation in terms of a series of computation
+ steps along with their execution and data dependencies. The Scheduler executes this computation on a cluster
+ of computation resources, each step on the best-fit resource and in parallel wherever its possible.
+
+image::architecture.png[align=center]
+
+On the top left is the Studio interface that allows you to build Workflows.
+In the middle is the Scheduler that enables an enterprise to orchestrate and automate Multi-users, Multi-application Jobs. 
+Finally, at the bottom right is the Resource manager interface that manage and automate resource provisioning
+on any Public Cloud, on any virtualization software, on any container system, and on any Physical Machine of any OS.
+All the components you see come with fully Open and modern REST APIs. 
