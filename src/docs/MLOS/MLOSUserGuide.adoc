@@ -21,8 +21,15 @@ your environment (default credentials: admin/admin) or just use our demo platfor
 - http://try.activeeon.com/studio[Create workflows^]
 - http://try.activeeon.com/scheduler[Submit workflows, monitor their execution and retrieve the tasks results^]
 - http://try.activeeon.com/rm[Add resources and monitor them^]
+- http://try.activeeon.com//cloud-automation[Add services^]
 
 We also provide REST and command line interfaces for advanced users.
+
+To add the *Machine Learning Bucket* containing the generic ML tasks, you need to click on `Catalog` menu then `Set Bucket as Main Catalog Menu` and select `machine-learning` bucket.
+
+This can also be achieved by adding `/templates/machine-learning` at the end of the URL of the proactive workflow studio.
+
+NOTE: Set Bucket as Main Catalog Menu allows the user to change the bucket used to get workflows from the Catalog in the studio. By selecting a bucket, the user can change the content of the main Catalog menu (named as the current bucket) to get workflows from another bucket as templates.
 
 == Machine Learning Bucket
 
@@ -582,15 +589,90 @@ NOTE: More information about the source of this task can be found http://scikit-
 
 NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/supervised_learning.html#supervised-learning[here^].
 
+== Data Visualization Bucket
+*Visdom Bucket* integrates generic tasks that can be easily used to broadcast visualizations of the analytic results provided by ML tasks. These visualization are created, organized, and shared using https://github.com/facebookresearch/visdom[Visdom^], a flexible tool proposed by Facebook Research.
+
+It provides a large set of plots that can be organized programmatically or through the UI. These plots can be used to create dashboards for both live and real-time data, inspect results of experiments, or debug experimental code.
+
+Visdom bucket provides a fast, easy and practice way to execute different workflows generating these diverse visualizations that are automatically cached by the Visdom Server.
+
+=== Bind_or_Start_Visdom_Service
+
+*Task Overview:* Bind or/and Start Visdom server.
+
+*Task Variables:*
+
+.Bind_or_Start_Visdom_Service_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `service_model`
+| The Visdom service to start. The Visdom Service available in http://try.activeeon.com//cloud-automation[Proactive Cloud Automation^] is used by default. (default="http://models.activeeon.com/pca/visdom")
+| String
+| `instance_name`
+| The instance name of the server to use to broadcast visualization
+| String (default="visdom-server-1")
+|===
+
+WARNING: If two workflows use the same service instance names, then, their generated plots will be created on the same service instance.
+
+=== Visdom_Client_Example
+
+*Task Overview:* Connect and plot a text into the Visdom Server.
+
+*Task Variables:*
+
+To adapt according to the plots that you need to visualize
+
+*How to use this task:*  Customize this task by putting the source code generating your code in the *Task Implementation* section
+
+WARNING: This task has to be connected to the Bind_or_Start_Visdom_Service_Task. The Visdom server should be up in order to be able to broadcast visualizations.
+
+=== Terminate_Visdom_Service
+
+*Task Overview:*  Stop and remove the Visdom Server.
+
+*Task Variables:*
+
+.Terminate_Visdom_Service variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `service_model`
+| The Visdom service to start. The Visdom Service available in http://try.activeeon.com//cloud-automation[Proactive Cloud Automation^] is used by default. (default="http://models.activeeon.com/pca/visdom")
+| String
+| `instance_name`
+| The instance name of the server to use to broadcast visualization
+| String (default="visdom-server-1")
+|===
+
+*How to use this task:* This task can be connected to Visdom_Client_Example. Visualize, then, stop the Visdom Service.
+
+NOTE: This task will immediately stop the service.
+
+=== Visdom_Terminate_Service_Until_Validation
+
+*Task Overview:* wait for the validation of the job by the user to stop and remove the Visdom Server.
+
+*Task Variables:*
+
+.Visdom_Terminate_Service_Until_Validation variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `service_model`
+| The Visdom service to start. The Visdom Service available in http://try.activeeon.com//cloud-automation[Proactive Cloud Automation^] is used by default. (default="http://models.activeeon.com/pca/visdom")
+| String
+| `instance_name`
+| The instance name of the server to use to broadcast visualization
+| String (default="visdom-server-1")
+|===
+
+*How to use this task:* This task can be connected to Visdom_Client_Example. Visualize, then, stop the Visdom Service.
+
+NOTE: This task will stop the service once the user has validated this requirement using http://try.activeeon.com//cloud-automation[Proactive Cloud Automation^] portal.
+
 == Create and run your ML workflow
-
-=== Set machine-learning Bucket as Catalog Menu
-
-To add the *Machine Learning Bucket* containing the different ML tasks, you need to click on `Catalog` menu then `Set Bucket as Main Catalog Menu` and select `machine-learning`.
-
-This can also be achieved by adding `/templates/machine-learning` at the end of the URL of the proactive workflow studio.
-
-NOTE: Set Bucket as Main Catalog Menu allows the user to change the bucket used to get workflows from the Catalog in the studio. By selecting a bucket, the user can change the content of the main Catalog menu (named as the current bucket) to get workflows from another bucket as templates.
 
 === Create or Update a ML task
 
@@ -606,20 +688,18 @@ NOTE: It is also possible to add or/and delete variables of each task, set your 
 
 A fork execution environment is a new Java Virtual Machine (JVM) which is started exclusively to execute a task. Starting a new JVM means that the task inside it will run in a new environment. This environment can be set up by the creator of the task. A new JVMs is set up with a new classpath, new system properties and more customization.
 
-We used a Docker fork environment for all the Machine Learning tasks. activeeon/dlm3 was used as a docker container for all tasks. If your task needs to install new Machine Learning libraries which are not available in this container, then use your own docker container or an appropriate environment with the needed libraries.
+We used a `Docker fork environment` for all the Machine Learning tasks. *activeeon/dlm3* was used as a docker container for all tasks. If your task needs to install new Machine Learning libraries which are not available in this container, then, use your own docker container or an appropriate environment with the needed libraries.
 
 NOTE: The use of docker containers is recommended as that way other tasks will not be affected by change. Docker containers provide isolation so that the host machine’s software stays the same. More details available on https://www.activeeon.com/public_content/documentation/latest/user/ProActiveUserGuide.html#_fork_environment[Proactive User Guide^]
 
 === Publish a ML task
 
-The Catalog menu provides the possibility for a user to publish new created or/and update tasks inside *Machine Learning Bucket*, you need just to click on `Catalog` Menu then `Publish current Workflow to the Catalog`.
-Choose 'machine-leaning' Bucket to store your new added workflow on it.
+The `Catalog` menu provides the possibility for a user to publish new created or/and update tasks inside *Machine Learning Bucket*, you need just to click on `Catalog` Menu then `Publish current Workflow to the Catalog`.
+Choose `machine-leaning` Bucket to store your new added workflow on it.
 If the Task with the same name already exists in the 'machine-leaning' bucket, then, it will be updated.
 We recommend to submit Tasks with a commit message for easier differentiation between the different submitted versions.
 
 NOTE: More details available on https://www.activeeon.com/public_content/documentation/latest/user/ProActiveUserGuide.html#_publish_current_workflow_to_the_catalog[Proactive User Guide^]
-
-=== Add Visualizations to a Workflow
 
 === Create a ML Workflow
 
@@ -640,8 +720,67 @@ At the left part, are illustrated the **General Parameters** of the workflow wit
 
 NOTE: The workflow represented in the above is available on the 'machine-learning-workflows' bucket.
 
-
 == Machine Learning Workflows Examples
+
+=== Basic Machine Learning
+
+*simple_clustering:* trains and tests a clustering model using Mean_shift algorithm.
+
+*simple_collaborative_filtering:* create a movie recommender engine using collaborative filtering algorithm
+
+*simple_linear_regression:*  trains and tests a clustering model using Mean_shift algorithm.
+
+*simple_logistic_regression:*  trains and tests a predictive model using logistic_regressive algorithm.
+
+=== Image Analysis
+
+video::XEMm47GwCn8[youtube, width=700, height=400 start=0, position=center]
+
+*Anomaly_Detection_Demo:* checks if exists an anomaly in a certain scene using the YOLO library. However, we show a scene where only people are allowed on a pedestrian street. Anything detected other than people is considered as anomaly.
+
+*Pytorch_Demo_Obj_Seg_Prediction:* returns the horse segments of a given input image.
+
+*Pytorch_Demo_Obj_Seg_Training:* trains an image segmentation algorithm using PyTorch* to segment horses. It segments horses in the input image using a deep neural network (DNN).
+
+*Tensorflow_Demo_Image_Classification:* classifies a input image using deep ConvNets (specifically, VGG16)* pre-trained on the ImageNet dataset.
+
+*Tensorflow_Demo_Parallel_Prediction:* predicts three different images of flower species in parallel.
+
+*Tensorflow_Demo_Prediction:* returns the flower specie of a given input image.
+
+*Tensorflow_Demo_Training:* trains a deep ConvNets (specifically, Inception)* to recognize flower species.
+
+*YOLO_Demo_Object_Detection:* detects real-world objects in a image with the YOLO* library using a pre-trained.
+
+=== Log Analysis
+
+*real_time_apache_intrusion_detection:* detects intrusions in apache logs.
+
+*supervised_classification:* detects anomalies in HDFS logs based on a supervised algorithm.
+
+*supervised_learning:* trains an anomaly detection model for logs using various supervised machine learning algorithms.
+
+*unsupervised_classification:* detects anomalies in HDFS logs based on an unsupervised algorithm.
+
+*unsupervised_learning:* trains an anomaly detection model for logs using various unsupervised machine learning algorithms.
+
+=== Text Analysis
+
+*unsupervised_learning*
+
+=== Visdom Workflows
+
+video::bQpwS2nMAZY[youtube, width=700, height=400 start=0, position=center]
+
+*Visdom_Plot_Example:* returns numerous examples of plots covered by Visdom.
+
+*Visdom_Realtime_Apache_Intrusion_Detection:*  broadcasts in real time some visualizations of the analytic results provided by the Apache log intrusion detector.
+
+*Visdom_Realtime_Digit_Classification:* evaluates in real time the performance of a simple Convolutional Neural Network (CNN) for MNIST* handwritten digit classification during the training and test processes.
+
+*Visdom_Realtime_HDFS_Anomaly_Detection:* broadcasts in real time some visualizations of the analytic results provided by the supervised anomaly detector for HDFS logs developed by ActiveEon.
+
+*Visdom_Service_Example:* evaluates in real time the performance of a simple Convolutional Neural Network (CNN) for MNIST* handwritten digit classification during the training and test processes.
 
 
 
