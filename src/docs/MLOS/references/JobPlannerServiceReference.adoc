@@ -1,0 +1,128 @@
+
+=== Introduction
+The <<_glossary_job_planner,*Job Planner*>> schedules <<_glossary_workflow,*Workflows*>>.
+ A <<_glossary_workflow,*Workflow*>> is scheduled by the <<_glossary_job_planner,*Job Planner*>> if
+  an <<_glossary_execution_calendars_definition,*Execution Calendars Definition*>> is attached to the
+   <<_glossary_generic_information,*Generic Information*>> of a <<_glossary_workflow,*Workflow*>>.
+
+=== Execution Calendars Definition Syntax
+
+Job Planner uses an Execution Calendars Definition to know how the job will be planned over the time. As shown on the example below, this definition is composed of 4 fields:
+
+ - a name for the definition
+ - a cron expression to define the recurrence (every morning at 6am, etc.)
+ - a set of inclusions calendars to add specific job executions which cannot be defined by a cron expression (holidays, etc.)
+ - a set of exclusions calendars to exclude specific occurrences of the job executions defined in cron and inclusion definitions (maintenances operations, holidays, etc.)
+		
+
+----
+EXECUTION_CALENDARS =
+{
+	"name": "retrospectiveCalendar",
+	"cron": "0 23 0 ? * MON,TUE,WED,THU,FRI *",
+	"inclusion_calendars": [
+				{     
+				"calendar": {"url": "http://localhost:8080/calendar1.ics"},
+				"rule": { "action": "EXECUTE_AT_START" }
+				}
+			     ],
+	"exclusion_calendars": [
+				{     
+				"calendar": {"url": "http://localhost:8080/calendar2.ics"},
+				"rule": { "action": "POSTPONE_TO_NEXT_WORKING_DAY" }
+				},
+				{     
+				"calendar": {"url": "http://localhost:8080/calendar3.ics"},
+				"rule": { "action": "CANCEL_NEXT_EXECUTION" }
+				}
+			     ]
+}
+----
+
+===== Name
+
+The execution calendar definition can be described according to several tokens. The execution calendar must have a unique name and the worklfow		submission will be
+rejected if a name clashes with an already existing <<_glossary_execution_calendars_definition,*Execution Calendars defintion*>>
+inside the <<_glossary_job_planner,*Job Planner*>>.
+
+===== Cron
+
+The aim of the cron expression is to launch the planned workflow according to the cron syntax.
+One can see the cron expression "0 23 0 ? * MON,TUE,WED,THU,FRI *", which follows the quartz cron expression syntax explained in the
+<<_job_planner_cron_expression_syntax, Quartz Cron Expression Syntax>> section. The cron expression in this example
+ executes 23 minutes past every hour, on working days (Monday to Friday).
+
+===== Inclusion Calendar
+
+The purpose of the inclusion calendar section is to use an ICS file to specify a workflow launching policies during calendar events. For instance automatically
+submit a worklfow at event start. Given an event, a predefined action will be applied on the workflow execution.
+
+[cols="1,1", options="header"]
+|===
+
+|Inclusion action
+|Description
+
+|EXECUTE_AT_START
+|The workflow will be submitted at each event start.
+
+|===
+
+===== Exclusion Calendar
+
+The purpose of the exclusion calendar is to use an ICS file to prevent workflows to be executed during a calendar event. 
+Given an event, a predefined action will be applied on the workflow execution.
+
+[cols="1,1", options="header"]
+|===
+
+|Exclusion action
+|Description
+
+|CANCEL_NEXT_EXECUTION
+|All workflow submissions are canceled during the calendar events.
+
+|===
+
+===== External calendar retrieved from URL
+
+If an inclusion or exclusion calendar is not retrievable, it is blocking the <<_glossary_workflow,*Workflow*>> submission.
+An inclusion or exclusion calendar can become not retrievable if it cannot be downloaded from its URL and the
+<<_glossary_job_planner,*Job Planner*>> cache doesn't hold a copy.
+
+=== Troubleshooting in ProActive Studio
+The name of the <<_glossary_execution_calendars_definition,*Execution Calendars Definition*>> must be unique.
+The Studio displays "Unknown Error", if anything in the <<_glossary_execution_calendars_definition,*Execution Calendars Definition*>>
+is not correctly formatted or the name clashes with existing <<_glossary_execution_calendars_definition,*Execution Calendars Definitions*>>.
+
+Please validate the <<_glossary_execution_calendars_definition,*Execution Calendars Definition*>> beforehand
+http://jsonlint.com/[with websites like this.]
+
+Be aware that the "Unknown Error" is also displayed, when the <<_glossary_execution_calendars_definition,*Execution Calendars Definition*>>
+name clashes with existing <<_glossary_execution_calendars_definition,*Execution Calendars Definitions*>>.
+You can list existing <<_glossary_execution_calendars_definition,*Execution Calendars Definitions*>> with the
+<<_glossary_job_planner,*Job Planner*>> REST API.
+
+
+=== Job Planner Submission
+When you are using the <<_glossary_workflow_studio,*Workflow Studio*>>, add an
+<<_glossary_execution_calendars_definition ,*Execution Calendars Definition*>> to <<_glossary_generic_information,*Generic Information*>>
+of a <<_glossary_workflow,*Workflow*>> and click execute.
+ The <<_glossary_workflow_studio,*Workflow Studio*>> automatically detect the
+ <<_glossary_execution_calendars_definition,*Execution Calendars Definition*>> and submits the <<_glossary_workflow,*Workflow*>>
+ accoordingly.
+
+If you manually submit <<_glossary_workflow,*Workflows*>> intended for the
+<<_glossary_job_planner,*Job Planner*>> , you need to submit it to its REST API.
+
+The proactive-client does currently not support <<_glossary_job_planner,*Job Planner*>>
+ <<_glossary_workflow,*Workflows*>>.
+
+
+[[_job_planner_cron_expression_syntax]]
+==== Quartz Cron Expression Syntax
+The cron expression syntax follows the quarts-cron syntax.
+ Please refer to the  http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html#format[quartz format documentation] for further details.
+
+http://www.cronmaker.com/[You can generate your quartz cron expression here.]
+

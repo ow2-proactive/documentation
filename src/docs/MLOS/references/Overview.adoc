@@ -1,11 +1,8 @@
-*ProActive Scheduler* is a free and open-source *job scheduler*. The user specifies the computation in terms of a series of computation
- steps along with their execution and data dependencies. The Scheduler executes this computation on a cluster
- of computation resources, each step on the best-fit resource and in parallel wherever its possible.
+*Machine Learning Open Studio (ML OS)* is an interactive visual interface that allows to easily build, deploy, and test predictive on your data. It provides different tasks, for instance, import data, export data,
+ save model, load a trained model, train prediction, and evaluate a model, etc. These tasks enable the
+ user to develop powerful machine learning solutions, such as: fraud detection, text analysis, online offer
+ recommendations, prediction of equipment failures, facial expression analysis, etc.
 
-image::architecture.png[align=center]
+image::ML_OS_overview.png[align=center]
 
-On the top left is the Studio interface that allows you to build Workflows.
-In the middle is the Scheduler that enables an enterprise to orchestrate and automate Multi-users, Multi-application Jobs. 
-Finally, at the bottom right is the Resource manager interface that manage and automate resource provisioning
-on any Public Cloud, on any virtualization software, on any container system, and on any Physical Machine of any OS.
-All the components you see come with fully Open and modern REST APIs. 
+Proactive Machine Learning Open Studio is open source and allows easy task parallelization, running them on resources matching constraints (Multi-CPU, GPU, data locality, library).

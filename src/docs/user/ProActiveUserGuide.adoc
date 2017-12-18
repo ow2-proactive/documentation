@@ -88,8 +88,8 @@ At the left part, are illustrated the **General Parameters** of the workflow wit
 - `Name`: the name of the workflow.
 - `Project`: the project name to which belongs the workflow.
 - `Description`: the textual description of the workflow.
-- `Documentation`: if the workflow has a Generic Information named "Documentation", then its URL value is displayed as a link. 
-- `Job Priority`: the priority assigned to the workflow. It is by default set to `NORMAL`, but can be increased or decreased once the job is submitted. 
+- `Documentation`: if the workflow has a Generic Information named "Documentation", then its URL value is displayed as a link.
+- `Job Priority`: the priority assigned to the workflow. It is by default set to `NORMAL`, but can be increased or decreased once the job is submitted.
 
 
 
@@ -560,7 +560,7 @@ Here is the list of ProActive system variables:
 .ProActive variables
 [cols="2,5,2"]
 |===
-| *Variable name* | *Description* | *Type*
+| *Variable name* | *Description* | *Type*
 | `PA_JOB_ID`
 | The current job ID.
 | String
@@ -1596,9 +1596,9 @@ The task will then terminate normally.
 
 === Troubleshoot a Workflow Execution
 
-When a task has *IN_ERROR* status, a right click on it allows the user to select _Mark as finished and resume_. 
+When a task has *IN_ERROR* status, a right click on it allows the user to select _Mark as finished and resume_.
 This will set the task status as *FINISHED* and then resume job execution: this task won't be executed again, subsequent tasks will execute as if the task executed correctly.
-This allows the user to manually perform actions to the *IN_ERROR* task, without cancelling the whole job execution. 
+This allows the user to manually perform actions to the *IN_ERROR* task, without cancelling the whole job execution.
 
 
 If the task has not *IN_ERROR* status, the _Mark as finished and resume_ option will be in grey, meaning that the action is disabled.
@@ -1665,7 +1665,7 @@ This task features the LDAP searching operation.
 ==== LDAP query task variables table
 
 The next parameters are provided as task variables:
- 
+
 [width="100%",frame="topbot",options="header"]
 |===
 |Parameter Name | Description | Example
@@ -1693,7 +1693,7 @@ The task provides a specific variable for the result, which is called `result`.
 The <<_retrieve_results, task result >>  is a String in JSON format.
 
 
-===== Output example 
+===== Output example
 
 Successful task :
 ```{.json}
