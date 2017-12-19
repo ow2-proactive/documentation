@@ -25,11 +25,85 @@ your environment (default credentials: admin/admin) or just use our demo platfor
 
 We also provide REST and command line interfaces for advanced users.
 
-To add the *Machine Learning Bucket* containing the generic ML tasks, you need to click on `Catalog` menu then `Set Bucket as Main Catalog Menu` and select `machine-learning` bucket.
+== Create a First Predictive Solution
 
+Suppose you need to predict houses prices based on the information provided by the estate agency:
+
+- CRIM per capita crime rate by town
+- ZN proportion of residential lawd zoned for lots over 25000
+- INDUS proportion of non-retail business acres per town
+- CHAS Charles River dummy variable
+- NOX nitric oxides concentration
+- RM average number of rooms per dwelling
+- AGE proportion of owner-occupied units built prior to 1940
+- DIS weighted distances to five Boston Employment centres
+- RAD index of accessibility to radial highways
+- TAX full-value property-tax rate per $10 000
+- PTRATIO pupil-teacher ratio by town
+- B 1000(Bk - 0.63)^2 where Bk is the proportion of blacks by town
+- LSTAT % lower status of the population
+- MDEV Median value of owner-occupied homes in $1000' s
+
+The prediction of houses prices is a complex problem, but we can simplify it a bit for this step by step example. We'll show you how you can easily create a predictive analytics solution using Machine Learning Open Studio.
+
+=== Manage the Workspace
+
+To use Machine Learning Open Studio, you need to add the *Machine Learning Bucket* as main catalog in the Proactive Studio. This bucket contains a set of generic tasks that enables you to upload and prepare data, train a model and test it.
+
+1. Open http://try.activeeon.com/studio[Proactive Workflow Studio^] home page.
+
+3. Create a new workflow.
+
+2. Click on `Catalog` menu then `Set Bucket as Main Catalog Menu` and select `machine-learning` bucket.
 This can also be achieved by adding `/templates/machine-learning` at the end of the URL of the proactive workflow studio.
 
+3. Click on `Catalog` menu then `Add Bucket as Extra Catalog Menu` and select `data-visualization` bucket.
+
 NOTE: Set Bucket as Main Catalog Menu allows the user to change the bucket used to get workflows from the Catalog in the studio. By selecting a bucket, the user can change the content of the main Catalog menu (named as the current bucket) to get workflows from another bucket as templates.
+
+4. Organize the dashboard to optimze your workspace.
+
+=== Upload Data
+
+To upload data into the Workflow, you need to use a dataset stored in a CSV file.
+
+1. Upload your dataset into a cloud storage service for example https://www.aws.amazon.com/s3‎[Amazon S3^], once the data has been converted to *CSV* format.
+
+2. Drag and drop the *Import_Data* task from the *machine-learning* bucket in the Proactive Workflow Studio.
+
+3. Click on the task and click *General Parameters* in the left to change the default parameters of this task.
+
+4. Put in *FILE_URL* variable the S3 link to upload your dataset.
+
+5. Set the other parameters according to your dataset format.
+
+This task uploads the data into the workflow that we can for model training and testing.
+
+If you want to skip these steps, you can directly use the *Load_Boston_Dataset* Task by a simple drag and drop.
+
+=== Prepare Data
+
+This step consists of preparing the data for the training and testing of the predictive model. So in this example, we will simply split our datset into two separate datasets: one for training and one for testing.
+
+To do this, we use the *Split_Data* Task in the machine_learning bucket.
+
+1. Drag and drop the *Split_Data* Task into the canvas, and connect it to the *Import_Data* or *Load_Boston_Dataset* Task.
+
+2. By default, the default ratio is 0.7. this means that 0.7 of the dataset will be used for training the model and 0.3 for testing it.
+
+3. Click the  *Split_Data* Task and set the *TRAIN_SIZE* variable to 0.6.
+
+=== Train a Predictive model
+
+Using Machine Learning Open Studio you can easily create different machine learning models in a single experiment and compare their results. This type of experimentation helps you find the best solution for your problem.
+ You can also enrich the *machine-learning* bucket by adding new machine learning algorithms and publish or customize an existing task according to your requirements as the tasks are open source.
+
+NOTE: To change the code of a task click on it and click the *Task Implementation*. You can also add new variables to a specific task.
+
+In this experiment, we will use
+
+
+=== Test the Predictive Model
 
 == Machine Learning Bucket
 
