@@ -46,13 +46,15 @@ Suppose you need to predict houses prices based on the information provided by t
 
 The prediction of houses prices is a complex problem, but we can simplify it a bit for this step by step example. We'll show you how you can easily create a predictive analytics solution using Machine Learning Open Studio.
 
-=== Manage the Workspace
+=== Manage the Canvas
 
 To use Machine Learning Open Studio, you need to add the *Machine Learning Bucket* as main catalog in the Proactive Studio. This bucket contains a set of generic tasks that enables you to upload and prepare data, train a model and test it.
 
 1. Open http://try.activeeon.com/studio[Proactive Workflow Studio^] home page.
 
 3. Create a new workflow.
+
+4. Fill the Workflow `General Parameters`.
 
 2. Click on `Catalog` menu then `Set Bucket as Main Catalog Menu` and select `machine-learning` bucket.
 This can also be achieved by adding `/templates/machine-learning` at the end of the URL of the proactive workflow studio.
@@ -61,7 +63,7 @@ This can also be achieved by adding `/templates/machine-learning` at the end of 
 
 NOTE: Set Bucket as Main Catalog Menu allows the user to change the bucket used to get workflows from the Catalog in the studio. By selecting a bucket, the user can change the content of the main Catalog menu (named as the current bucket) to get workflows from another bucket as templates.
 
-4. Organize the dashboard to optimze your workspace.
+4. Organize your canvas.
 
 === Upload Data
 
@@ -69,9 +71,9 @@ To upload data into the Workflow, you need to use a dataset stored in a CSV file
 
 1. Upload your dataset into a cloud storage service for example https://www.aws.amazon.com/s3‎[Amazon S3^], once the data has been converted to *CSV* format.
 
-2. Drag and drop the *Import_Data* task from the *machine-learning* bucket in the Proactive Workflow Studio.
+2. Drag and drop the `Import_Data` task from the *machine-learning* bucket in the Proactive Workflow Studio.
 
-3. Click on the task and click *General Parameters* in the left to change the default parameters of this task.
+3. Click on the task and click `General Parameters` in the left to change the default parameters of this task.
 
 4. Put in *FILE_URL* variable the S3 link to upload your dataset.
 
@@ -79,33 +81,76 @@ To upload data into the Workflow, you need to use a dataset stored in a CSV file
 
 This task uploads the data into the workflow that we can for model training and testing.
 
-If you want to skip these steps, you can directly use the *Load_Boston_Dataset* Task by a simple drag and drop.
+If you want to skip these steps, you can directly use the `Load_Boston_Dataset` Task by a simple drag and drop.
 
 === Prepare Data
 
 This step consists of preparing the data for the training and testing of the predictive model. So in this example, we will simply split our datset into two separate datasets: one for training and one for testing.
 
-To do this, we use the *Split_Data* Task in the machine_learning bucket.
+To do this, we use the `Split_Data` Task in the machine_learning bucket.
 
-1. Drag and drop the *Split_Data* Task into the canvas, and connect it to the *Import_Data* or *Load_Boston_Dataset* Task.
+1. Drag and drop the `Split_Data` Task into the canvas, and connect it to the `Import_Data` or `Load_Boston_Dataset` Task.
 
 2. By default, the default ratio is 0.7. this means that 0.7 of the dataset will be used for training the model and 0.3 for testing it.
 
-3. Click the  *Split_Data* Task and set the *TRAIN_SIZE* variable to 0.6.
+3. Click the `Split_Data` Task and set the `TRAIN_SIZE` variable to 0.6.
 
 === Train a Predictive model
 
-Using Machine Learning Open Studio you can easily create different machine learning models in a single experiment and compare their results. This type of experimentation helps you find the best solution for your problem.
- You can also enrich the *machine-learning* bucket by adding new machine learning algorithms and publish or customize an existing task according to your requirements as the tasks are open source.
+Using Machine Learning Open Studio, you can easily create different machine learning models in a single experiment and compare their results. This type of experimentation helps you find the best solution for your problem.
+You can also enrich the `machine-learning` bucket by adding new machine learning algorithms and publish or customize an existing task according to your requirements as the tasks are open source.
 
-NOTE: To change the code of a task click on it and click the *Task Implementation*. You can also add new variables to a specific task.
+NOTE: To change the code of a task click on it and click the `Task Implementation`. You can also add new variables to a specific task.
 
-In this experiment, we will use
+In this experiment, we will create two different types of models and then compare their scores to decide which algorithm is most suitable to our problem. As the Boston dataset used for this example consists of predicting price of houses (continuous label). As such, we need to deal with a regression predictive problem.
+
+To solve this problem, we have to choose a regression algorithm to train the predictive model. To see the available regression algorithms available on the Machine Learning Open Studio, see *ML Regression* Section in the *machine-learning* bucket.
+
+For this example, we will use `Liner_Regression` Task and `Support_Vector_Regression` Task.
+
+1. Find the `Liner_Regression` Task and `Support_Vector_Regression` Task and drag them into the canvas.
+
+2. Find the `Train_Mode` Task and drag it twice into the canvas.
+
+3. Connect the `Split_Data` Task to  the two `Train_Model` Tasks in order to give it access to the training data. Connect then the `Support_Vector_Regression` Task to the first `Train_Model` Task and `Support_Vector_Regression` to the second `Train_Model` Task.
+
+4. To be able to download the model learned by each algorithm, drag two `Load_Model` Tasks and connect them to each `Train_Model` Task.
 
 
 === Test the Predictive Model
 
+To evaluate the two learned predictive models, we will use the testing data that was separated out by the *Split_Data* Task to score our trained models. We can then compare the results of the two models to see which generated better results.
+
+1. Find the `Predict_Model` Task and drag and drop it twice into the canvas.
+
+2. Connect the first `Predict_Model` Task to the `Train_Model` Task that's connected to `Support_Vector_Regression` Task.
+
+3. Connect the second `Predict_Model` Task to the `Train_Model` Task that's connected to `Liner_Regression` Task.
+
+4. Find the `Export_Result` Task in the Machine Learning bucket and drag and drop it twice into the canvas.
+
+5. Connect each `Export_Result` Task with `Predict_Model`.
+
+NOTE: if you have a pkl predictive model that you have learned using another platform and you need to test it in the Machine Learning Open Studio, you can load it using *Load_Model* Task.
+
+=== Run the Experiment and Preview the Results
+
+Now the workflow is completed and should look like this:
+
+1. Click the *Execute* button on the menu to run the workflow.
+
+2. Click the *Scheduling & Orchestration* button to track the workflow execution progress.
+
+3. Click the Visualization tab and track the progress of your workflow execution (a green check mark appears on each Task when its execution is finished).
+
+4. Visualize the output logs by clicking on the output tab and check the streaming check box.
+
+5. Click the `Tasks` tab and click open the `Preview` tab and then click whether on `Open in browser` to preview the results on your browser or on `Save as file` to download the results locally.
+
 == Machine Learning Bucket
+
+The `machine-learning` bucket contains diverse generic machine learning tasks that enable you to easily compose workflows for predictive models learning and testing. This bucket can be easily customized according to your needs.
+This bucket offers different options, you can customize it by adding new tasks or update the existing tasks.
 
 === Public Datasets
 
@@ -124,7 +169,7 @@ In this experiment, we will use
 
 - The Boston House-Prices is a dataset regression, you can only use it with a regression algorithm, such as Linear Regression and Support Vector Regression.
 
-- After this task, you can use the *Split_Data* task to divide the dataset into training and testing sets.
+- After this task, you can use the `Split_Data` task to divide the dataset into training and testing sets.
 
 NOTE: More information about this dataset can be found http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_boston.html[here^].
 
@@ -143,7 +188,7 @@ NOTE: More information about this dataset can be found http://scikit-learn.org/s
 
 - The Iris is a dataset for classification, you can only use it with a classification algorithm, such as Support Vector Machines and Logistic Regression.
 
-- After this task, you can use the *Split_Data* task to divide the dataset into training and testing sets.
+- After this task, you can use the `Split_Data` task to divide the dataset into training and testing sets.
 
 NOTE: More information about this dataset can be found http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html#sklearn.datasets.load_iris[here^].
 
@@ -153,7 +198,7 @@ NOTE: More information about this dataset can be found http://scikit-learn.org/s
 
 *Task Overview:* Download a trained model on your computer device.
 
-*How to use this task:* Should be used after the *Train_Model* or *Train_Clustering_Model* tasks.
+*How to use this task:* Should be used after the `Train_Model` or `Train_Clustering_Model` tasks.
 
 ==== Export_Results
 
@@ -170,7 +215,7 @@ NOTE: More information about this dataset can be found http://scikit-learn.org/s
 | String [HTML or CSV]
 |===
 
-*How to use this task:* Should be used after *Predict_Model* or *Predict_Clustering_Model* tasks.
+*How to use this task:* Should be used after `Predict_Model` or `Predict_Clustering_Model` tasks.
 
 ==== Import_Data
 
@@ -213,7 +258,7 @@ default:  https://s3.eu-west-2.amazonaws.com/activeeon-public/models/pima-indian
 | String
 |===
 
-*How to use this task:* Should be used before *Predict_Model* or *Predict_Clustering_Model* to make predictions.
+*How to use this task:* Should be used before `Predict_Model` or `Predict_Clustering_Model` to make predictions.
 
 ==== Log_Parser
 
@@ -254,7 +299,7 @@ default:  https://s3.eu-west-2.amazonaws.com/activeeon-public/models/pima-indian
 
 image::pattern_file.png[align="center"]
 
-*How to use this task:* Could be connected with *Filter_Data* task and feature extraction's tasks.
+*How to use this task:* Could be connected with `Filter_Data` task and feature extraction's tasks.
 
 === Data Preprocessing
 
@@ -282,7 +327,7 @@ image::pattern_file.png[align="center"]
 | Boolean [True or False]
 |===
 
-*How to use this task:* Should be used after *Import_Data* task.
+*How to use this task:* Should be used after `Import_Data` task.
 
 NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/merging.html[here^].
 
@@ -303,7 +348,7 @@ NOTE: More details about the source code of this task can be found https://panda
 | Delimiter to use.
 |===
 
-*How to use this task:* Could be used after *Feature_Extraction* and *Import_Data* tasks.
+*How to use this task:* Could be used after `Feature_Extraction` and `Import_Data` tasks.
 
 NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/merging.html[here^].
 
@@ -385,7 +430,7 @@ N.B: separate the different variables with a comma ','
 | Boolean [True or False]
 |===
 
-*How to use this task:* Could be connected with *Add_Label* if you need to train a model using supervised learning algorithms or with *Train_Clustering_Model* if you need to train a model using unsupervised machine learning techniques.
+*How to use this task:* Could be connected with `Add_Label` if you need to train a model using supervised learning algorithms or with `Train_Clustering_Model` if you need to train a model using unsupervised machine learning techniques.
 
 ==== Time_Series_Feature_Extractor
 
@@ -475,7 +520,7 @@ NOTE: More information about this task can be found http://scikit-learn.org/stab
 | Integer (default=100)
 |===
 
-*How to use this task:* Should be connected with *Train_Model* / *Train_Clustering_Model* or *Predict_Model* / *Predict_Clustering_Model*.
+*How to use this task:* Should be connected with `Train_Model` or `Train_Clustering_Model` and `Predict_Model` or `Predict_Clustering_Model`.
 
 NOTE: More information about the source code of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html[here^].
 
@@ -497,7 +542,7 @@ NOTE: More information about the source code of this task can be found http://sc
 | string, optional (default=’rbf’)
 |===
 
-*How to use this task:* Should be connected with *Train_Model* / *Train_Clustering_Model* or *Predict_Model* / *Predict_Clustering_Model*.
+*How to use this task:* Should be connected with `Train_Model` / `Train_Clustering_Model` or `Predict_Model` / `Predict_Clustering_Model`.
 
 NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html[here^].
 
@@ -530,7 +575,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 | Float (default=1.e-6)
 |===
 
-*How to use this task:* Should be connected with *Train_Model* / *Train_Clustering_Model* or *Predict_Model* / *Predict_Clustering_Model*.
+*How to use this task:* Should be connected with `Train_Model` or `Train_Clustering_Model` or `Predict_Model` / `Predict_Clustering_Model`.
 
 NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html[here^].
 
@@ -549,7 +594,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 | Integer (default=1)
 |===
 
-*How to use this task:* Should be connected with *Train_Model* / *Train_Clustering_Model* or *Predict_Model* / *Predict_Clustering_Model*.
+*How to use this task:* Should be connected with `Train_Model` or `Train_Clustering_Model` and `Predict_Model` or `Predict_Clustering_Model`.
 
 NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html[here^].
 
@@ -574,7 +619,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 | Float, optional (default=1.0)
 |===
 
-*How to use this task:*  Should be connected with *Train_Model* / *Train_Clustering_Model* or *Predict_Model* / *Predict_Clustering_Model*.
+*How to use this task:*  Should be connected with `Train_Model` or `Train_Clustering_Model` and `Predict_Model` or `Predict_Clustering_Model`.
 
 NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html[here^].
 
@@ -601,7 +646,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 | Integer, optional (default=1)
 |===
 
-*How to use this task:*  Should be connected with *Train_Model* / *Train_Clustering_Mode*l or *Predict_Model* / *Predict_Clustering_Model*.
+*How to use this task:*  Should be connected with `Train_Model` or `Train_Clustering_Model` and `Predict_Model` or `Predict_Clustering_Model`.
 
 NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
 
@@ -623,7 +668,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 | Integer (default=1)
 |===
 
-*How to use this task:* Should be connected with *Train_Model* / *Train_Clustering_Model* or *Predict_Model* / *Predict_Clustering_Model*.
+*How to use this task:* Should be connected with `Train_Model` or `Train_Clustering_Model` and `Predict_Model` or `Predict_Clustering_Model`.
 
 NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.cluster.MeanShift.html[here^].
 
@@ -651,7 +696,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 
 *Task Overview:* Generate predictions using a trained model.
 
-*How to use this task:* Should be used after the *Train_Clustering_Model* task.
+*How to use this task:* Should be used after the `Train_Clustering_Model` Task.
 
 NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/supervised_learning.html#supervised-learning[here^].
 
@@ -659,7 +704,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 
 *Task Overview:* Generate predictions using a trained model.
 
-*How to use this task:* Should be used after the *Train_Model task*.
+*How to use this task:* Should be used after the `Train_Model` Task.
 
 NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/supervised_learning.html#supervised-learning[here^].
 
@@ -698,7 +743,7 @@ WARNING: If two workflows use the same service instance names, then, their gener
 
 To adapt according to the plots that you need to visualize
 
-*How to use this task:*  Customize this task by putting the source code generating your code in the *Task Implementation* section
+*How to use this task:*  Customize this task by putting the source code generating your code in the `Task Implementation` section
 
 WARNING: This task has to be connected to the Bind_or_Start_Visdom_Service_Task. The Visdom server should be up in order to be able to broadcast visualizations.
 
@@ -746,7 +791,7 @@ NOTE: This task will immediately stop the service.
 
 NOTE: This task will stop the service once the user has validated this requirement using http://try.activeeon.com//cloud-automation[Proactive Cloud Automation^] portal.
 
-== Create and run your ML workflow
+== Customize the Machine Learning Bucket
 
 === Create or Update a ML task
 
