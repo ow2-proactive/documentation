@@ -67,7 +67,7 @@ NOTE: Set Bucket as Main Catalog Menu allows the user to change the bucket used 
 
 4. Organize your canvas.
 
-image::manage_canvas.gif[align="center", options=loop]
+image::manage_canvas.gif[100000,2000]
 
 === Upload Data
 
@@ -88,7 +88,7 @@ This task uploads the data into the workflow that we can for model training and 
 
 If you want to skip these steps, you can directly use the <<Load_Boston_Dataset>> Task by a simple drag and drop.
 
-image::upload_data.gif[align="center"]
+image::upload_data.gif[100000,2000]
 
 === Prepare Data
 
@@ -102,7 +102,7 @@ To do this, we use the <<Split_Data>> Task in the machine_learning bucket.
 
 3. Click the <<Split_Data>> Task and set the <<TRAIN_SIZE>> variable to 0.6.
 
-image::prepare_data.gif[align="center"]
+image::prepare_data.gif[100000,2000]
 
 === Train a Predictive model
 
@@ -125,7 +125,7 @@ For this example, we will use <<Linear_Regression>> Task and <<Support_Vector_Re
 
 4. To be able to download the model learned by each algorithm, drag two <<Load_Model>> Tasks and connect them to each <<Train_Model>> Task.
 
-image::train.gif[align="center"]
+image::train.gif[100000,2000]
 
 === Test the Predictive Model
 
@@ -141,7 +141,7 @@ To evaluate the two learned predictive models, we will use the testing data that
 
 5. Connect each <<Export_Result>> Task with <<Predict_Model>>.
 
-image::test.gif[align="center"]
+image::test.gif[100000,2000]
 
 NOTE: if you have a pkl predictive model that you have learned using another platform and you need to test it in the Machine Learning Open Studio, you can load it using *Load_Model* Task.
 
@@ -159,7 +159,7 @@ Now the workflow is completed and should look like this:
 
 5. Click the `Tasks` tab and click open the `Preview` tab and then click whether on `Open in browser` to preview the results on your browser or on `Save as file` to download the results locally.
 
-image::https://media.giphy.com/media/3o752iMSklKkdyW0hO/giphy.gif[align="center"]
+image::execute.gif[100000,2000]
 
 == Customize the Machine Learning Bucket
 
