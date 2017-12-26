@@ -1745,9 +1745,9 @@ NOTE: By default, the Catalog will always return the latest version of the Workf
 
 === Bucket naming requirements
 
-Every bucket is identified by unique bucket name. The bucket naming should follow the following rules:
+Every bucket is identified by unique a bucket name. The bucket naming should follow the following rules:
 
-* The bucket name can be between 3 and 63 characters long, and can contain only lower-case characters, numbers, and dashes.
+* The bucket name must be between 3 and 63 characters long and can contain only lower-case characters, numbers, and dashes.
 
 * A bucket name must start with a lowercase letter and cannot terminate with a dash.
 
