@@ -100,7 +100,7 @@ To do this, we use the <<Split_Data>> Task in the machine_learning bucket.
 
 2. By default, the default ratio is 0.7. this means that 0.7 of the dataset will be used for training the model and 0.3 for testing it.
 
-3. Click the <<Split_Data>> Task and set the <<TRAIN_SIZE>> variable to 0.6.
+3. Click the <<Split_Data>> Task and set the *TRAIN_SIZE* variable to 0.6.
 
 image::prepare_data.gif[100000,2000]
 
@@ -137,13 +137,13 @@ To evaluate the two learned predictive models, we will use the testing data that
 
 3. Connect the second <<Predict_Model>> Task to the <<Train_Model>> Task that's connected to `Liner_Regression` Task.
 
-4. Find the <<Export_Result>> Task in the Machine Learning bucket and drag and drop it twice into the canvas.
+4. Find the <<Export_Results>> Task in the Machine Learning bucket and drag and drop it twice into the canvas.
 
-5. Connect each <<Export_Result>> Task with <<Predict_Model>>.
+5. Connect each <<Export_Results>> Task with <<Predict_Model>>.
 
 image::test.gif[100000,2000]
 
-NOTE: if you have a pkl predictive model that you have learned using another platform and you need to test it in the Machine Learning Open Studio, you can load it using *Load_Model* Task.
+NOTE: if you have a pickled file (.pkl) containing a predictive model that you have learned using another platform and you need to test it in the Machine Learning Open Studio, you can load it using *Load_Model* Task.
 
 === Run the Experiment and Preview the Results
 
@@ -225,9 +225,11 @@ To test these workflows, you need to add the *machine-Learning-workflows Bucket*
 
 5. Execute the chosed workflow, track its progress and preview its results.
 
-More details about these workflows is available in this link:https://www.activeeon.com/resources/automated-machine-learning-activeeon.pdf[link]
+More details about these workflows are available in this link:https://www.activeeon.com/resources/automated-machine-learning-activeeon.pdf[link]
 
 === Basic Machine Learning
+
+The following workflows present some machine learning basic examples. These workflows are built using generic machine learning tasks available on the machine learning bucket.
 
 *simple_clustering:* trains and tests a clustering model using Mean_shift algorithm.
 
@@ -238,6 +240,8 @@ More details about these workflows is available in this link:https://www.activee
 *simple_logistic_regression:*  trains and tests a predictive model using logistic_regressive algorithm.
 
 === Image Analysis
+
+The following workflows present useful computer vision applications using deep learning based algorithms by convolutional neural networks for image recognition, object detection, anomaly detection, and image segmentation. Open source libraries, such as TensorFlow, Keras, Caffe, OpenCV, PyTorch and scikit-learn are used as a backend for AI workflows.
 
 video::XEMm47GwCn8[youtube, width=700, height=400 start=0, position=center]
 
@@ -259,21 +263,21 @@ video::XEMm47GwCn8[youtube, width=700, height=400 start=0, position=center]
 
 === Log Analysis
 
-*real_time_apache_intrusion_detection:* detects intrusions in apache logs.
+The following workflows are designed to detect anomalies in log files. They are constructed using generic tasks which are available on the `machine-learning` and `data-visualization` buckets.
 
-*supervised_classification:* detects anomalies in HDFS logs based on a supervised algorithm.
+*Real_time_apache_intrusion_detection:* detects intrusions in apache logs.
 
-*supervised_learning:* trains an anomaly detection model for logs using various supervised machine learning algorithms.
+*Supervised_classification:* detects anomalies in HDFS logs based on a supervised algorithm.
 
-*unsupervised_classification:* detects anomalies in HDFS logs based on an unsupervised algorithm.
+*Supervised_learning:* trains an anomaly detection model for logs using various supervised machine learning algorithms.
 
-*unsupervised_learning:* trains an anomaly detection model for logs using various unsupervised machine learning algorithms.
+*Unsupervised_classification:* detects anomalies in HDFS logs based on an unsupervised algorithm.
 
-=== Text Analysis
-
-*unsupervised_learning*
+*Unsupervised_learning:* trains an anomaly detection model for logs using various unsupervised machine learning algorithms.
 
 === Visdom
+
+The following workflows present some examples using Visdom service to visualize the results obtained while training and testing some predictive models.
 
 video::bQpwS2nMAZY[youtube, width=700, height=400 start=0, position=center]
 
@@ -286,6 +290,8 @@ video::bQpwS2nMAZY[youtube, width=700, height=400 start=0, position=center]
 *Visdom_Realtime_HDFS_Anomaly_Detection:* broadcasts in real time some visualizations of the analytic results provided by the supervised anomaly detector for HDFS logs developed by ActiveEon.
 
 *Visdom_Service_Example:* evaluates in real time the performance of a simple Convolutional Neural Network (CNN) for MNIST* handwritten digit classification during the training and test processes.
+
+A demo video of these workflows is available in https://www.activeeon.com/public_content/documentation/latest/user/ProActiveUserGuide.html#_publish_current_workflow_to_the_catalog[Activeeon Youtube Channel^].
 
 == References
 

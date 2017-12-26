@@ -30,6 +30,7 @@ asciidoctor {
     resources {
         from("$projectDir/src/docs/") {
             include 'user/examples/**'
+            include 'images/**'
         }
     }
 }
