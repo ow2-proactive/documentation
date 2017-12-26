@@ -36,7 +36,7 @@ asciidoctor {
 }
 
 asciidoctorj {
-    version = '1.5.1'
+    version = '1.5.3'
 }
 
 project.ext.branch = new File("$projectDir/src/docs/version-conf.js").text.split("'")[1]
