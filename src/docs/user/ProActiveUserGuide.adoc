@@ -1733,26 +1733,34 @@ Listing the Catalog for existing Buckets is done using the following HTTP reques
 
     GET http://localhost:8080/catalog/buckets
 
-It is also possible to list all Workflows inside a particular Bucket using its `bucket_id`:
+It is also possible to list all Workflows inside a particular Bucket using its `bucketName`:
 
-    GET http://localhost:8080/catalog/buckets/{bucket_id}/resources
+    GET http://localhost:8080/catalog/buckets/{bucketName}/resources
 
 Then, we can fetch a particular Workflow based on its `name`:
 
-    GET http://localhost:8080/catalog/buckets/{bucket_id}/resources/{name}
+    GET http://localhost:8080/catalog/buckets/{bucketName}/resources/{name}
 
 NOTE: By default, the Catalog will always return the latest version of the Workflows.
+
+=== Bucket naming requirements
+
+Every bucket is identified by a unique bucket name. The bucket naming should follow the following rules:
+
+* The bucket name must be between 3 and 63 characters long and can contain only lower-case characters, numbers, and dashes.
+
+* A bucket name must start with a lowercase letter and cannot terminate with a dash.
 
 === Workflow versioning
 
 The Catalog provides versioning of Workflows. You can list all the revisions of a particular Workflow using the HTTP request:
 
-    GET http://localhost:8080/catalog/buckets/{bucketId}/resources/{name}/revisions
+    GET http://localhost:8080/catalog/buckets/{bucketName}/resources/{name}/revisions
 
 The revision of Workflow is identified by `commit_time`. Commit time specifies the time when the Workflow's version was added in the Catalog.
 You can fetch a Workflow detailed metadata information using its `name` and `commit_time`:
 
-    GET http://localhost:8080/catalog/buckets/{bucketId}/resources/{name}/revisions/{commit_time}
+    GET http://localhost:8080/catalog/buckets/{bucketName}/resources/{name}/revisions/{commit_time}
 
 A Workflow Revision is created from a ProActive XML <<_glossary_workflow,*Workflow*>> definition.
 Beside from the _id_, _name_ and _project_name_ of the Workflow, a few more information are indexed from the XML content such as _<<_generic_information>>_ and _<<_workflow_variables>>_.
@@ -1774,11 +1782,11 @@ The sessionId is validated against the Scheduler REST api, so if the Catalog doe
 
 From REST API it's possible to retrieve the raw content of a specific revision of Workflow. For this case it's required to specify `name` and `commit_time` of the Workflow's  revision:
 
-    GET http://localhost:8080/catalog/buckets/{bucketId}/resources/{name}/revisions/{commit_time}/raw
+    GET http://localhost:8080/catalog/buckets/{bucketName}/resources/{name}/revisions/{commit_time}/raw
 
 In order to get the raw content of a last revision of a Workflow use next REST API endpoint:
 
-    GET http://localhost:8080/catalog//buckets/{bucketId}/resources/{name}/raw
+    GET http://localhost:8080/catalog//buckets/{bucketName}/resources/{name}/raw
 
 In this case you need to provide only the `name` of a Workflow.
 
