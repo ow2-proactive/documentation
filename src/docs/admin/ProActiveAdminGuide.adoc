@@ -1384,7 +1384,7 @@ Further information can be found https://www.py4j.org/install.html[in the offici
 
 == Full control of the scheduling policy
 
-Default scheduling policy can be extended to perfectly fit with user scheduling constraints. For instance, we integrated a license policy,
+Default scheduling policy can be extended to perfectly fit with user scheduling constraints. For instance, we integrated a license policy
 to control the number of concurrent licenses usage. To use it, user has to edit `PROACTIVE_HOME/config/scheduler/settings.ini` following this
 
 ----
