@@ -133,6 +133,15 @@ Native application by nature can be tied to a given operating system so
 if you have different nodes at your disposal, you might need to select a suitable node to run your native task.
 This can be achieved using <<_selection,selection script>>.
 
+=== PHP Task
+
+The PHP task executes a PHP script on a ProActive Node’s local PHP installation. The PHP script will be downloaded from the dataspace. So, the PHP script must be present in the dataspace beforehand. The task can also be modified to download the PHP script from other sources. Log forwarding and log streaming during PHP execution is conveniently available through the Scheduler portal.
+
+==== Node configuration
+For a ProActive Node to execute a PHP script, PHP must be installed on the machine of the ProActive Node. The PHP task has a selection script which validates a correct PHP installation by searching the PATH and validating if the PHP can be executed successfully. The static selection script validates the PHP execution once and stores the result in the cache, so removing or installing PHP requires a restart of the node or a switch to the dynamic selection script.
+The selection script in the PHP task does not validate the PHP version, therefore it is advised to use the same PHP version on the ProActive Nodes or to improve the selection script itself.
+
+
 === Scripting language support
 
 Proactive Scheduler supports tasks  written in languages other than Java. The currently supported dynamic languages are
