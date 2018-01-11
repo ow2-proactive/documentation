@@ -26,7 +26,7 @@ your environment (default credentials: admin/admin) or just use our demo platfor
 - http://try.activeeon.com//cloud-automation[Add services^]
 
 We also provide REST and command line interfaces for advanced users.
-https://try.activeeon.com/rest/
+http://try.activeeon.com/rest[try.activeeon.com/rest^]
 
 == Create a First Predictive Solution
 
@@ -99,7 +99,7 @@ To do this, we use the <<Split_Data>> Task in the machine_learning bucket.
 
 A. Drag and drop the <<Split_Data>> Task into the canvas, and connect it to the <<Import_Data>> or <<Load_Boston_Dataset>> Task.
 
-B. By default, the ratio is 0.7. this means that 0.7 of the dataset will be used for training the model and 0.3 for testing it.
+B. By default, the ratio is 0.7 this means that 70% of the dataset will be used for training the model and 0.3 for testing it.
 
 C. Click the <<Split_Data>> Task and set the *TRAIN_SIZE* variable to 0.6.
 
@@ -248,7 +248,7 @@ The following workflows present useful computer vision applications using Convol
 
 video::XEMm47GwCn8[youtube, width=700, height=400 start=0, position=center]
 
-*Keras_Image_Classification:* classifies a input image using deep ConvNets (specifically, VGG16) pre-trained on the ImageNet dataset.
+*Keras_Image_Classification:* classifies an input image using deep ConvNets (specifically, VGG16) pre-trained on the ImageNet dataset.
 
 *Pytorch_Image_Object_Segmentation:* returns the horse segments of a given input image.
 
@@ -256,7 +256,7 @@ video::XEMm47GwCn8[youtube, width=700, height=400 start=0, position=center]
 
 *Tensorflow_Parallel_Image_Prediction:* predicts three different images of flower species in parallel.
 
-*Tensorflow_Image_Prediction:* returns the flower specie of a given input image.
+*Tensorflow_Image_Prediction:* returns the flower species of a given input image.
 
 *Tensorflow_Train_Image_Classifier:* trains a deep ConvNets (specifically, Inception)* to recognize flower species.
 
@@ -716,7 +716,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 
 *Task Variables:*
 
-.Linear regression_Task variables
+.Linear_Regression_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
