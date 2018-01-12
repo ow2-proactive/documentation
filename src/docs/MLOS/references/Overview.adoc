@@ -1,8 +1,4 @@
-*Machine Learning Open Studio (MLOS)* is an interactive visual interface that allows to easily build, deploy, and test predictive on your data. It provides different tasks, for instance, import data, export data,
- save model, load a trained model, train prediction, and evaluate a model, etc. These tasks allow the
- user to develop powerful machine learning solutions, such as: fraud detection, text analysis, online offer
- recommendations, prediction of equipment failures, facial expression analysis, etc.
+*Machine Learning Open Studio (ML-OS)* is an interactive graphical interface that enables developers and data scientists to quickly and easily build, train, and deploy machine learning models at any scale. It provides a rich set of generic machine learning tasks that can be connected together to build either basic or complex machine learning workflows for various use cases such as: fraud detection, text analysis, online offer recommendations, prediction of equipment failures, facial expression analysis, etc. These tasks are open source and can be easily customized according to your needs. ML-OS can schedule and orchestrate executions while optimising the use of computational resources. Usage of resources (e.g. CPU, GPU, local, remote nodes) can be easily monitored.
 
 image::ML_OS_overview.png[align=center]
 
-Proactive Machine Learning Open Studio is open source and allows easy task parallelization, running them on resources matching constraints (Multi-CPU, GPU, data locality, library).
