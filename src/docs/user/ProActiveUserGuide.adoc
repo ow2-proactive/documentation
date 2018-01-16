@@ -319,7 +319,7 @@ Logs are limited to 1024 lines. Should your job logs be longer, you can select t
 - `Task standard output/error logs`: +
 To view the standard output or error logs associated with a task, select a job from the job list and a task from the task list. +
 Then in the _Output_ tab, choose _Selected task_ from the drop down list. +
-Once the task is terminated, you will be able to click on the _FFinished Tasks Output_ button to see the standard output or error associated with the task. +
+Once the task is terminated, you will be able to click on the _Finished Tasks Output_ button to see the standard output or error associated with the task. +
 It is not possible to view the streaming logs of single task, only the job streaming logs are available.
 
 - `Job server logs`: +
