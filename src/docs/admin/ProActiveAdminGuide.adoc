@@ -1621,6 +1621,8 @@ To handle the particular situation in which the Scheduler is down when a running
 WARNING: The nodes and task recovery feature requires a proper configuration to ensure that nodes and tasks are *kept
 alive* during the down time of the Scheduler.
 
+==== How to make sure that nodes and task recovery is enabled
+
 * *Resource Manager* configuration (`PROACTIVE_HOME/config/rm/settings.ini`)
 +
 In order to enable the nodes and task recovery feature, make sure that the `pa.rm.nodes.recovery` property of the
@@ -1637,6 +1639,7 @@ The default for this property is 30 seconds.
 
 ** Use `-Dproactive.node.reconnection.attempts` to specify how many times the node will try to reconnect with the
 Resource Manager. The default for this property is to attempt 10 times.
+
 +
 These two properties define the total delay for the node to reconnect to the Resource Manager. By default, the total
 delay of reconnection is 5 minutes. When this total delay is consumed, _the node shuts itself down_, and the node recovery
@@ -1653,11 +1656,33 @@ Scheduler. The default for this property is to attempt only once.
 
 ** `pa.scheduler.core.nodepingfrequency` property to define a delay (in seconds) in between two attempts. The default
 for this property is 20 seconds.
+
 +
 If the Scheduler is still not up and running after the total delay defined by these properties (which is 20 seconds by
 default), then _the task’s result will be lost_ forever.
-
 Note that these two properties are also used by the scheduler to decide when to *re-schedule* tasks.
+
+==== How to disable nodes and task recovery
+
+You can completely disable the nodes and task recovery feature by setting the `pa.rm.nodes.recovery` property of the
+*Resource Manager* to `false`.
+
+In addition, the nodes and task recovery can be configured *per node source* at creation time. This configuration will
+be applied only if the global `pa.rm.nodes.recovery` property is set to `true`. The specification of nodes recovery per
+node source can be done through the *REST API* of the Resource Manager or through the <<_cli,CLI>>.
+
+** Through the REST API, the `nodesRecoverable` parameter of the `rm/nodesource/create` *REST endpoint* specifies
+whether the nodes of the new node source will be recoverable. _Nodes recovery will be disabled_ for this node source if
+the given value does not match any case of the "true" string.
+
+** Through the CLI, the `createns` *command* takes an optional parameter to specify whether the nodes of the new node
+source will be recoverable. _Nodes recovery will be disabled_ for this node source if the optional parameter is provided
+and does not match any case of the "true" string.
+
++
+However, all node sources that are created through the *Resource Manager portal* will be created _with recoverable
+nodes_. The only way to disable nodes and task recovery for these node sources is to set the global property
+`pa.rm.nodes.recovery` to `false`.
 
 === Nodes and Task Recovery on Cloud Platforms
 
