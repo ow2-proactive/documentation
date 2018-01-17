@@ -310,14 +310,16 @@ Unless your account belongs to an administrator group, you can only see the logs
 
 - `Job standard output/error logs`: +
 To view the standard output or error logs associated with a job, select a job from the job list and then on the _Output_ tab in the bottom right panel. +
-To view logs of a currently running job, you need to click on the _Streaming_ checkbox, the logs panel will be updated as soon as new log lines will be printed by this job.  +
-If the job is terminated, you can click on the _Fetch output_ button to view the final output of the job. +
+Click on _Streaming Output_ checkbox to auto-fetch logs for running tasks of the entire Job. The logs panel will be updated as soon as new log lines will be printed by this job. +
+You cannot select a specific Task in the streaming mode. If you activate streaming while some Tasks are already finished, you will get the logs of those Tasks as well. +
+Click on _Finished Tasks Output_ button to retrieve logs for already finished tasks. For all the finished Tasks within the Job, or for the selected Task. +
+The command does work when Job is still in Running state, as well as when Job is Finished. +
 Logs are limited to 1024 lines. Should your job logs be longer, you can select the _Full logs (download)_ option from the drop down list.
 
 - `Task standard output/error logs`: +
 To view the standard output or error logs associated with a task, select a job from the job list and a task from the task list. +
 Then in the _Output_ tab, choose _Selected task_ from the drop down list. +
-Once the task is terminated, you will be able to click on the _Fetch output_ button to see the standard output or error associated with the task. +
+Once the task is terminated, you will be able to click on the _Finished Tasks Output_ button to see the standard output or error associated with the task. +
 It is not possible to view the streaming logs of single task, only the job streaming logs are available.
 
 - `Job server logs`: +
