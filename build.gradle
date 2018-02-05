@@ -47,6 +47,11 @@ if (project.ext.branch.endsWith("-SNAPSHOT")) {
 def getDate() {
     def currentDate = new Date()
     def formattedDateString = currentDate.format('yyyy-MM-dd')
+    
+    if(project.ext.branch == 'master'){
+        formattedDateString = currentDate.format('yyyy-MM-dd HH:mm:ss')
+    }
+    
     return formattedDateString
 }
 
