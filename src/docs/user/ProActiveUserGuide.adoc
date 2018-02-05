@@ -114,6 +114,16 @@ helloworld:
 The above example describes a container which is called 'helloworld'. That container is created from a busybox image,
  which will run the command 'echo "Hello ProActive"'
 
+=== Docker task advanced options
+
+The Docker task allows to add command options for the `docker-compose up` command.
+You can specify these options by supplying a space character separated list in the <<_glossary_generic_information>>.
+Use the key "docker-compose-up-options" and supply, as value, for example "--option1 --option2", this leads to a command
+ similar to "docker-compose up --option1 --option2".
+
+If splitting by space is prohibitive you can specify the split regex in the <<_glossary_generic_information>> with the
+key "docker-compose-options-split-regex", if you supply e.g. "!SPLIT!" as value, then your "docker-compose-up-options"
+ will need to look like this "--option1!SPLIT!--option2".
 
 === Native application
 
