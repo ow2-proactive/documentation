@@ -36,7 +36,7 @@ The order in this list corresponds to the task life-cycle order.
 | ... = args[0];
 | Passed to native executable.
 | -
-| all scripts, as external file, or XML element see <<>>
+| all scripts, as external file, or XML element
 | -
 
 | *Results of previous tasks*. An array containing the results of parent tasks. See <<_passing_data_between_tasks_using_results,Result variables>>.
