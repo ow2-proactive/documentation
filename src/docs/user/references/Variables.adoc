@@ -13,6 +13,7 @@ Workflow variables are declared in the XML job definition. Within the definition
 levels, at job level the variables are visible and shared by all tasks. At task level, variables are visible
 only within the task execution context.
 
+[[_job_variables]]
 ===== Job variables
 
 In a workflow you can define *job variables* that are shared and visible by all tasks.
@@ -188,8 +189,9 @@ For example:
 
 ==== Dynamic Variables
 
-As opposed to the <<_workflow_variables>>, *dynamic variables* are all variables created outside the XML job definition.
-We have mainly two types of dynamic variables :
+As opposed to <<_workflow_variables>>, *dynamic variables* are created or manipulated directly when executing scripts,
+through the use of the "variables" map (see <<_variables_quick_reference>>).
+We have mainly two types of *dynamic variables*:
 
 - <<_system_variables>>, declared by the ProActive scheduller.
 - <<_inherited_variables>>, created after adding values to the *variables* map.
@@ -197,7 +199,7 @@ We have mainly two types of dynamic variables :
 [[_system_variables]]
 ===== ProActive system variables
 
-Some variables are explicitly defined by the Scheduler to retrieve runtime information about a job or a task.
+Some variables are implicitly defined by the Scheduler to retrieve runtime information about a job or a task.
 
 Here is the list of ProActive system variables:
 
@@ -267,13 +269,11 @@ They can be used inside the workflow with the pattern syntax, for example:
 [[_inherited_variables]]
 ===== Script variables
 
-In addition to the ability to use variables directly inside the workflow with the pattern syntax, it is also possible to use
-all type of variables inside scripts thanks to the `variables` map.
-
-Inside a script, `variables` is bound to a http://docs.oracle.com/javase/8/docs/api/java/util/Map.html[Map^].
-The syntax to access it might differ given the script engine you are using.
-
-For example in a *Groovy* script task, you can use:
+In addition to the ability to declare variables directly inside job XML definition, it is also possible to
+dynamically read and write new variables while executing a task script with the `variables` map. This map of `variables` is bound to
+hash type depending on the script engine you are using, for instance in native
+Java as http://docs.oracle.com/javase/8/docs/api/java/util/Map.html[Map^].
+In *Groovy*  as a global map, see below:
 
 [source, groovy]
 ----
@@ -281,28 +281,10 @@ String var = variables.get("one_variable")
 variables.put("other_variable", "foo")
 ----
 
-The first line access the variable `one_variable` from the `variables` map.
-The second line stores in the variables map a new variable called `other_variable`.
-
-System variables can also be accessed from the `variables` map, for example:
-
-[source, groovy]
-----
-println variables.get("PA_JOB_ID") // will display the id of the current job
-----
-
-From a native executable, for instance a Shell script, variables are accessible through environment variables.
-
-[source, bash]
-----
-#!/bin/bash
-echo $variables_PA_TASK_NAME
-----
-
-WARNING: In native tasks and Bash/CMD script engines, variables can be read but not written to.
-
-The `variables` map is propagated down the execution chain. If a task modifies a variable in the variables map, or add a new variable, all dependent tasks will have access to this modification.
-
+In the *Groovy* example above the first line retrieve the value of variable
+`one_variable` from the `variables` map. The second line create a new entry  `other_variable` with value `foo`.
+The `variables` map is propagated down the execution chain. If a task modifies a variable in the variables map,
+or add a new variable, all dependent tasks will have access to this modification.
 For example:
 
 [source, groovy]
@@ -322,21 +304,44 @@ println variables.get("other_variable") // will display "bar"
 
 If a task depends on several tasks and each task modifies the same variable, the final value of the variable
 which is propagated down the execution chain, depends on the *order of task execution*.
-Therefore, the users need to take appropriate measures to prevent any undesired effects of such race conditions.
+Therefore, the users need to take appropriate measures to prevent any undesired effects such as race conditions.
 
-You can set any link:http://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html[Java serializable object, window="_blank"]
+System variables can also be accessed from the `variables` map, for example:
+
+[source, groovy]
+----
+println variables.get("PA_JOB_ID") // will display the id of the current job
+----
+
+If using a *Bash shell script*, variables are accessible through environment variables.
+
+[source, bash]
+----
+#!/bin/bash
+echo $variables_PA_TASK_NAME
+----
+
+WARNING: In native tasks and Bash/CMD script engines, variables can be read but not written to.
+
+
+
+For Java native script you can set any link:http://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html[Java serializable object, window="_blank"]
  as a variable value. They will be converted into strings using
 http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()[toString()^]
  method when required, for instance, to make those values available as environment variables in native tasks.
 
 
-Sometimes we want to propagate values between tasks and still define a default value.
-Setting the inherited field to true a task variable will read its value from a the *variables* map.
+The field variable tag has an `inherited` field, if this field is set as true a task variable will read
+its value from the *variables* map instead of the `value` field in the XML definition.
+In this case, the *value* field becomes optional and work as a default value.
 Below a XML schema that shows two tasks: *first* and *second*. Task *first* insert a new
-variable using `variables.put("inherited_var", "somevalue")`. Task *second* declares *inherited_var*
+variable using `variables.put("inherited_var", "somevalue")`.
+Task *second* declares *inherited_var*
 but with *defaultvalue*, this value will be overwritten by the  *first* task, `variables.put("inherited_var", "somevalue")`.
-This might be useful if for some reason the *first* task fails before inserting the *inhereted_var* value on *variables*
-map.
+Defining a default value  might be useful if for some reason the *first* task fails before inserting the *inhereted_var*
+on *variables* map. In this last case the `defaultvalue` remains unchanged.
+
+
 
 [source, xml]
 ----
@@ -366,9 +371,83 @@ map.
 
 ===== Dynamic replacements
 
-It is possible to combine recursive definitions of variables.
+We've seen in <<_job_variables>> that we can use the `${varname}` syntax to create and access variables.
+Dynamic replacement is in charge to resolve variables just before the execution of task script, or
+in case of job variables, just before submitting the job.
+We can also combine recursive definitions of variables.
 
 For example, one could write:
+----
+<job ...>
+    ...
+    <variables>
+        <variable name="job_var" value="hello" model=""/>
+        <variable name="job_var2" value="${job_var}" model=""/>
+        <variable name="job_var3" value="${job_var2}" model=""/>
+    </variables>
+    ...
+</job>
+----
+
+The dynamic replacement will resolve `job_var3` to `hello` just before submitting the job to the scheduller.
+
+WARNING:  We can use job variable references in task variables but not otherwise.
+
+
+When dynamic replacing a task script variable the resolution happens just before running the task. So we can
+ use the `variables` map value. The example below will print "hello world" because `hello` is recursively
+ resolved at job level assigning `hello world` to `inherited_var`. When `task_2` starts its local
+    variable `task_var2` is dynamically replaced by `hello world`, i.e., the content of `inherited_var` that was
+    inserted in the `variables` map by the previous task.
+
+
+[source, xml]
+----
+<job ... >
+  <variables>
+    <variable name="job_var" value="hello" model=""/>
+    <variable name="job_var2" value="${job_var}" model=""/>
+  </variables>
+  <taskFlow>
+    <task name="task_1" >
+      <scriptExecutable>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+            variables.put("inherited_var", "\${job_var2} world")
+            ]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+    <task name="task_2">
+      <variables>
+        <variable name="task_var2" value="${inherited_var}" inherited="false"/>
+      </variables>
+      <depends>
+        <task ref="task_1"/>
+      </depends>
+      <scriptExecutable>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+            println ""+variables.get("task_var2")
+            ]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+  </taskFlow>
+</job>
+----
+
+
+
+Note that we can combine recursive definitions of variables.
+
+For example, one could write:
+
+[source, xml]
 ----
 <task ...>
     ...
