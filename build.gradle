@@ -20,20 +20,23 @@ asciidoctor {
     outputDir = new File("$buildDir/asciidoc")
     sources {
         include 'user/ProActiveUserGuide.adoc'
+        include 'MLOS/MLOSUserGuide.adoc'
         include 'admin/ProActiveAdminGuide.adoc'
         include 'admin/AdminTutorials.adoc'
+        include 'admin/Catalog.adoc'
         include 'index.adoc'
 
     }
     resources {
         from("$projectDir/src/docs/") {
             include 'user/examples/**'
+            include 'images/**'
         }
     }
 }
 
 asciidoctorj {
-    version = '1.5.1'
+    version = '1.5.3'
 }
 
 project.ext.branch = new File("$projectDir/src/docs/version-conf.js").text.split("'")[1]
@@ -44,6 +47,11 @@ if (project.ext.branch.endsWith("-SNAPSHOT")) {
 def getDate() {
     def currentDate = new Date()
     def formattedDateString = currentDate.format('yyyy-MM-dd')
+    
+    if(project.ext.branch == 'master'){
+        formattedDateString = currentDate.format('yyyy-MM-dd HH:mm:ss')
+    }
+    
     return formattedDateString
 }
 
@@ -79,6 +87,11 @@ task downloadSchedulerWebProperties(type: Download) {
     dest file("$projectDir/src/docs/admin/references/properties/scheduler-web.properties")
 }
 
+task downloadCatalogProperties(type: Download) {
+    src "https://raw.githubusercontent.com/ow2-proactive/catalog/${project.branch}/src/main/resources/application.properties"
+    dest file("$projectDir/src/docs/admin/references/properties/catalog.properties")
+}
+
 task xsdDoc(type: JavaExec) {
     println file("$projectDir/src/xsd/schedulerjob.xsd").absoluteFile
 
@@ -94,7 +107,8 @@ copyDocs.dependsOn removeProperties
 downloadRmProperties.dependsOn copyDocs
 downloadSchedulerProperties.dependsOn downloadRmProperties
 downloadSchedulerWebProperties.dependsOn downloadSchedulerProperties
-asciidoctor.dependsOn downloadSchedulerWebProperties
+downloadCatalogProperties.dependsOn downloadSchedulerWebProperties
+asciidoctor.dependsOn downloadCatalogProperties
 xsdDoc.dependsOn asciidoctor
 
 build.dependsOn(['xsdDoc'])

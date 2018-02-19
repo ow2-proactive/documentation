@@ -43,6 +43,7 @@ The web application /scheduler created on http://localhost:8080/scheduler
 The web application /rm created on http://localhost:8080/rm
 The web application /rest created on http://localhost:8080/rest
 The web application /studio created on http://localhost:8080/studio
+The web application /catalog created on http://localhost:8080/catalog
 *** Get started at http://localhost:8080 ***
 ----
 
@@ -55,6 +56,7 @@ The following ProActive Scheduler components are started:
 * <<_glossary_rm_web_interface,*Resource Manager Web Interface*>>
 * <<_glossary_scheduler_web_interface,*Scheduler Web Interface*>>
 * <<_glossary_workflow_studio,*Workflow Studio*>>
+* <<_glossary_catalog,*Catalog*>>
 
 The URLs of the Scheduler, Resource Manager, REST API and Web Interfaces are displayed in the output.
 
@@ -1318,6 +1320,10 @@ in the REST API with the file `novnc.html`.
 
 For more information, see https://github.com/ow2-proactive/scheduling/blob/master/rest/README-novnc.txt
 
+[[_catalog]]
+=== Catalog
+include::./Catalog.adoc[]
+
 [[_script_engines]]
 == Configure script engines
 
@@ -1363,6 +1369,43 @@ In order to verify this you can follow the next steps:
 * For example you should to be able to launch the command 'perl -V'.
 * Then from command line you should be able to launch a simple perl file (perl yourPerlFile.pl).
 
+=== Python Script Engine (Python task)
+Python should be installed on your machine. By default Python2 is installed on Linux and Mac OS. If another version of Python is required,
+it should be installed on your machine in advance.
+
+More over, the native Python Script Engine depends on the py4j library in order to communicate with our Java classes. Please follow the following step to install it:
+
+* With Python2: `pip install py4j`
+
+* With Python3: `pip3 install py4j`
+
+Further information can be found https://www.py4j.org/install.html[in the official py4j documentation^].
+
+
+== Full control of the scheduling policy
+
+Default scheduling policy can be extended to perfectly fit with user scheduling constraints. For instance, we integrated a license policy
+to control the number of concurrent licenses usage. To use it, user has to edit `PROACTIVE_HOME/config/scheduler/settings.ini` following this
+
+----
+pa.scheduler.policy=org.ow2.proactive.scheduler.policy.license.LicenseSchedulingPolicy
+----
+
+Then, the maximum number of licenses per software must be specified into `PROACTIVE_HOME/config/scheduler/license.properties` like this
+
+----
+software_A = 3
+software_B = 2
+----
+
+From now, given a task, user can specify which software licenses are required, by adding the REQUIRED_LICENSES generic information,
+which value can be
+
+----
+softwareA,softwareB
+----
+
+As expected, if 10 replicated tasks requiring software_A,software_B licenses are submitted, they will be executed 3 by 3.
 
 == Addons
 
@@ -1424,12 +1467,6 @@ See http://pchelp.ricmedia.com/how-to-fix-550-5-3-4-requested-action-not-taken-e
 | mail.smtp.password        | user_password
 |======================
 
-
-[[_calendar_service]]
-=== Calendar Integration
-
-include::./references/CalendarServiceReference.adoc[]
-
 === Statistics on ProActive Jobs and Resource Usage
 
 include::./references/StatisticsOnProActiveJobsAndResourceUsageReference.adoc[]
@@ -1443,7 +1480,7 @@ following this
 pa.scheduler.startscripts.paths=/your/script1/path;/your/script2/path;/your/script3/path
 
 For example, load-examples.groovy which is executed by default at scheduler start, has in charge
-the full deployment of proactive-examples by: populating the running catalog, exposing as templates
+the full deployment of proactive-examples by: populating the running Catalog, exposing as templates
 specific workflows and copying workflows dependencies into dataspaces.
 
 == Performance tuning
@@ -1541,6 +1578,143 @@ hibernate.connection.url=jdbc:hsqldb:mem:rm;hsqldb.tx=mvcc;hsqldb.lob_file_scale
 
 To switch to a standalone database, see <<_perf_tuning_db>>.
 
+== Nodes and Task Recovery
+
+The Scheduler can be started in *recovery mode*. If so, the Scheduler will try to restore Resource Manager nodes and
+ProActive tasks that were running in the previous execution of the Scheduler. The nodes
+and task recovery feature makes sure you do not lose on-going computations if the Scheduler experiences a failure.
+
+=== Use Case and Scope of the Feature
+
+Suppose that at an instant T the Scheduler is running tasks. Without the nodes and task
+recovery feature, if the Scheduler crashed at instant T, then the tasks that were on-going would be
+*re-scheduled* on any node and *re-executed* from the beginning when the Scheduler restarts. With the nodes and task
+recovery feature enabled, when the Scheduler restarts it will retrieve the *previous* RM nodes and the *on-going* tasks,
+and the execution of the tasks will continue and finish as if there was no failure of the Scheduler.
+
+WARNING: The nodes and task recovery feature is *not* applicable when the Scheduler is cleanly stopped or exits normally.
+This is a mechanism that is *only* applicable upon failure of the Scheduler (machine crash, abrupt exit).
+
+=== How Does Nodes and Task Recovery Work?
+
+At startup, the Scheduler checks the nodes and the tasks that were previously persisted in database to be able to restore
+their state. Here are the different cases that can occur at recovery time:
+
+* If a node that is found in database is still *alive*, the node's information is restored in the Resource Manager. The
+same restoration mechanism is applied for running tasks in the Scheduler.
+
+* If however, no node is found in database for a given *node source*, then the node recovery will
+not take place for this node source. Instead, the nodes will be re-deployed like for the first time.
+
+* If a node that is found in database is *not alive* at recovery time, then the node will also be recreated automatically.
+
+*A recovery is not a restart*, and as such a clean restart of the Scheduler will not preserve on-going tasks and
+running nodes. Indeed, in the case of a *regular shutdown* of the Scheduler, the nodes are *cleaned and removed* from the
+Resource Manager before the Scheduler exits. Thus, there will be no nodes and no running tasks to recover when the
+Scheduler is started again.
+
+To handle the particular situation in which the Scheduler is down when a running task terminates, a proper
+*configuration* of the Scheduler allows the task to hold the result until the Scheduler is up and running again.
+
+=== Nodes and Task Recovery Configuration
+
+WARNING: The nodes and task recovery feature requires a proper configuration to ensure that nodes and tasks are *kept
+alive* during the down time of the Scheduler.
+
+==== How to make sure that nodes and task recovery is enabled
+
+* *Resource Manager* configuration (`PROACTIVE_HOME/config/rm/settings.ini`)
++
+In order to enable the nodes and task recovery feature, make sure that the `pa.rm.nodes.recovery` property of the
+Resource Manager is set to `true`. This property is set to `true` by default.
++
+
+* *Node* configuration
++
+The ProActive nodes should be started with a configuration that keeps them alive if the Scheduler fails. Node properties
+can be set at node startup:
+
+** Use `-Dproactive.node.ping.delay` to specify how often the node will try to communicate with the Resource Manager.
+The default for this property is 30 seconds.
+
+** Use `-Dproactive.node.reconnection.attempts` to specify how many times the node will try to reconnect with the
+Resource Manager. The default for this property is to attempt 10 times.
+
++
+These two properties define the total delay for the node to reconnect to the Resource Manager. By default, the total
+delay of reconnection is 5 minutes. When this total delay is consumed, _the node shuts itself down_, and the node recovery
+will not be applicable any more for this node.
++
+
+* *Scheduler* configuration (`PROACTIVE_HOME/config/scheduler/settings.ini`)
++
+In order to make sure that a task will attempt several times to send back its result to the Scheduler, you must set the
+properties:
+
+** `pa.scheduler.core.node.ping.attempts` to specify the number of times a finished task will try to contact the
+Scheduler. The default for this property is to attempt only once.
+
+** `pa.scheduler.core.nodepingfrequency` property to define a delay (in seconds) in between two attempts. The default
+for this property is 20 seconds.
+
++
+If the Scheduler is still not up and running after the total delay defined by these properties (which is 20 seconds by
+default), then _the task’s result will be lost_ forever.
+Note that these two properties are also used by the scheduler to decide when to *re-schedule* tasks.
+
+==== How to disable nodes and task recovery
+
+You can completely disable the nodes and task recovery feature by setting the `pa.rm.nodes.recovery` property of the
+*Resource Manager* to `false`.
+
+In addition, the nodes and task recovery can be configured *per node source* at creation time. This configuration will
+be applied only if the global `pa.rm.nodes.recovery` property is set to `true`. The specification of nodes recovery per
+node source can be done through the *REST API* of the Resource Manager or through the <<_cli,CLI>>.
+
+** Through the REST API, the `nodesRecoverable` parameter of the `rm/nodesource/create` *REST endpoint* specifies
+whether the nodes of the new node source will be recoverable. _Nodes recovery will be disabled_ for this node source if
+the given value does not match any case of the "true" string.
+
+** Through the CLI, the `createns` *command* takes an optional parameter to specify whether the nodes of the new node
+source will be recoverable. _Nodes recovery will be disabled_ for this node source if the optional parameter is provided
+and does not match any case of the "true" string.
+
++
+However, all node sources that are created through the *Resource Manager portal* will be created _with recoverable
+nodes_. The only way to disable nodes and task recovery for these node sources is to set the global property
+`pa.rm.nodes.recovery` to `false`.
+
+=== Nodes and Task Recovery on Cloud Platforms
+
+The nodes and task recovery feature of ProActive is also available for the deployments on _Microsoft Azure_ and _Amazon
+EC2_ clouds.
+
+For these platforms, when the Scheduler is restarted after a failure, it will try to contact the nodes that are
+deployed on the cloud *instances*:
+
+* If the nodes are alive then the recovery proceeds like with non-cloud infrastructures.
+
+* If the nodes cannot be contacted, the recovery mechanism will try to re-deploy them by asking the instances to run a
+node deployment script.
+
+* If the script fails, it means that the cloud instances do not exist anymore, so the recovery mechanism will trigger a
+re-deployment including the re-creation of the instances.
+
+=== Nodes and Task Recovery Performance Tuning
+
+By default, the persistence of the node states is slightly delayed in order to batch several database operations in the
+same transaction. This is done in order to minimize the execution time overhead of the nodes and task recovery feature.
+However, this default *batching mechanism* can be overriden to adapt the delay, or to disable batching.
+
+The properties that allow performance tuning are the following:
+
+** `pa.rm.node.db.operations.delay` defines the delay in milliseconds that is applied when the RM requests the
+persistence of a node. By default the delay is set to 100 milliseconds. If the value of this property is set to `0`,
+then all database operations related to the persistence of nodes are executed *immediately and synchronously*.
+
+** `pa.rm.nodes.db.operations.update.synchronous` defines whether the node updates are persisted synchronously
+(with no delay) whenever it is possible. By default this property is set to `true`.
+
 
 == Troubleshooting
 === Logs
@@ -1588,6 +1762,10 @@ include::./references/NetworkPropertiesReference.adoc[]
 === REST API & Web Properties
 
 include::./references/WebPropertiesReference.adoc[]
+
+[[_catalog_properties]]
+=== Catalog Properties
+include::./references/CatalogReference.adoc[]
 
 [[_scheduler_portal_properties]]
 === Scheduler Portal Properties

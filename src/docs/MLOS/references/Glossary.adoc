@@ -52,8 +52,7 @@ Server Host::
 [[_glossary_proactive_node]]
 ProActive Node::
   One *ProActive Node* can execute one <<_glossary_task,*Task*>> at a time. This concept is often tied to the number of cores
-  available on a <<_glossary_compute_host,*Compute Host*>>. We assume a task consumes one core (more is possible, see
-  <<_reserve_more_than_one_node_for_a_task,multi-nodes tasks>>, so on a 4 cores machines you might want to run 4 ProActive Nodes.
+  available on a <<_glossary_compute_host,*Compute Host*>>. We assume a task consumes one core (more is possible, so on a 4 cores machines you might want to run 4 ProActive Nodes.
   One (by default) or more ProActive Nodes can be executed in a Java process on the <<_glossary_compute_host,*Compute Hosts*>> and
   will communicate with the <<_glossary_proactive_scheduler,*ProActive Scheduler*>> to execute tasks.
 
@@ -76,15 +75,8 @@ Examples of *Compute Hosts*:
 Workflow::
   User-defined representation of a distributed computation. Consists of the definitions of one or more <<_glossary_task,*Tasks*>> and their dependencies.
 
-[[_glossary_workflow_revision]]
-Workflow Revision:: ProActive concept that reflects the changes made on a <<_glossary_workflow,*Workflow*>> during it development. Generally speaking, the term <<_glossary_workflow, *Workflow*>> is used to refer to the latest version of a <<_glossary_workflow_revision,*Workflow Revision*>>.
-
 [[_glossary_generic_information]]
 Generic Information:: Are additional information which are attached to <<_glossary_workflow,*Workflows*>>.
-
-[[_glossary_execution_calendars_definition]]
-Execution Calendars Definition:: Is a json object attached by adding it to the <<_glossary_generic_information,*Generic Information*>>
-of a <<_glossary_workflow,*Workflow*>>.
 
 [[_glossary_job]]
 Job::
@@ -93,10 +85,6 @@ Job::
 [[_glossary_task]]
 Task::
   A unit of computation handled by <<_glossary_proactive_scheduler,*ProActive Scheduler*>>. Both <<_glossary_workflow,*Workflows*>> and <<_glossary_job,*Jobs*>> are made of *Tasks*.
-
-[[_glossary_node_source]]
-Node Source::
-  A set of <<_glossary_proactive_node,*ProActive Nodes*>> deployed using the same deployment mechanism and sharing the same access policy.
 
 [[_glossary_proactive_agent]]
 ProActive Agent::

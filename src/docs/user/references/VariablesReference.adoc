@@ -25,21 +25,21 @@ The order in this list corresponds to the task life-cycle order.
 | Available in
 | Not Available in
 
-| *Task result*. Variable set by the user to return the result of a task. See <<passing_data_between_tasks_using_results>>.
+| *Task result*. Variable set by the user to return the result of a task. See <<_passing_data_between_tasks_using_results,Result variables>>.
 | result = "value";
 | The result will be the exit code.
 | -
 | <<_scripting_language_support,task>>
 | -
 
-| *Task arguments*. Arguments of a script defined in the workflow. Available via all kind of scripts when referencing an external file.
+| *Task arguments*. Arguments of a script defined in the workflow. Available via all kind of scripts, when referencing an external file or directly as XML elements.
 | ... = args[0];
 | Passed to native executable.
 | -
-| all scripts defined as external file
+| all scripts, as external file, or XML element
 | -
 
-| *Results of previous tasks*. An array containing the results of parent tasks. See <<passing_data_between_tasks_using_results>>.
+| *Results of previous tasks*. An array containing the results of parent tasks. See <<_passing_data_between_tasks_using_results,Result variables>>.
 | ... = results[0];
 | $results_0
 | -
@@ -156,7 +156,7 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | credentials.get( "pw" )
 | -
 | $credentials_pw (only in the task arguments)
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
 | -
 
 | *SSH private key*. Private SSH Key used at login. See <<_run_computation_with_your_system_account>>.
@@ -240,21 +240,21 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | schedulerapi.connect()
 | -
 | -
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
 | bash, cmd, perl, R, PowerShell
 
 | *UserSpace API*. UserSpace API variable is a http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient java object] which can connect to the user space and interact directly with its API.
 | userspaceapi.connect()
 | -
 | -
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
 | bash, cmd, perl, R, PowerShell
 
 | *GlobalSpace API*. GlobalSpace API variable is a http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient java object] which can connect to the global space and interact directly with its API.
 | globalspaceapi.connect()
 | -
 | -
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
 | bash, cmd, perl, R, PowerShell
 
 |===
@@ -269,7 +269,7 @@ For Groovy:
 print variables.get("key")
 ----
 
-For Python:
+For Python/Jython:
 [source, python]
 ----
 print variables["key"]
@@ -321,10 +321,10 @@ If the task displays an error due to the result conversion, several approaches c
 
 Results of parent tasks are stored in the *results* variable. Like the variables map, accessing this *results* variable is language-dependant.
 
-For ruby, python or groovy script languages, the parent tasks results (*results* variable) contains a list of http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/common/task/TaskResult.html[TaskResult java object].
+For ruby, python, jython or groovy script languages, the parent tasks results (*results* variable) contains a list of http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/common/task/TaskResult.html[TaskResult java object].
 In order to access the result real value, the value() method of this object must be called:
 
-Example for Python:
+Example for Python/Jython:
 [source, python]
 ----
 print results[0].value()
