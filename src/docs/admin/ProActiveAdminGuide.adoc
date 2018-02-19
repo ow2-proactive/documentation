@@ -112,12 +112,13 @@ by launching commands remotely on Compute Hosts. For instance, it can be useful 
 [[run_node_manually]]
 === Deploy ProActive Nodes manually
 
-==== Using PROACTIVE_HOME
+[[proactive_node]]
+==== Using proactive-node command
 
 Let's take a closer look at the first method described above. To deploy a ProActive Node from the Compute Host you need
 to run the following command
 ----
-$ PROACTIVE_HOME/bin/proactive-node -r pnp://SCHEDULER_ADDRESS:41303
+$ PROACTIVE_HOME/bin/proactive-node -r pnp://SCHEDULER_ADDRESS:64738
 ----
 where `-r` option is used to specify the URL of the *Resource Manager*.
 You can find this URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler>> (the Resource Manager URL).
@@ -128,6 +129,7 @@ TIP: You can also use *discovery* to let the ProActive Node find the URL to conn
  Simply run `proactive-node` without any parameter to use discovery.
  It uses broadcast to retrieve the URL so this feature might not work depending on your network configuration.
 
+[[node_jar]]
 ==== Using node.jar
 
 It is also possible to launch a ProActive Node without even copying the ProActive Scheduler to a Compute Host:
@@ -148,6 +150,26 @@ have to set the URL to connect to with the `-r` parameter.
 
 TIP: If you would like to execute several Tasks at the same time on one host, you can either launch several ProActive
 Node process or use the _-w_ parameter to run multiple nodes in the same process. A node executes one Task at a time.
+
+[[proactive_node_autoupdate]]
+==== Using proactive-node-autoupdate command
+
+This method is a combination of the two above, it starts a node from the command line, and makes sure the node libary (node.jar) is synchronized with the latest server version.
+
+The `proactive-node-autoupdate` command acts as a bootstrap and spawns a new java virtual machine with the up-to-date library classpath.
+
+Launching the node is similar to the `proactive-node` command, additional options must be specified to allow the download of the node.jar from the server:
+
+----
+$ PROACTIVE_HOME/bin/proactive-node-autoupdate -r pnp://SCHEDULER_ADDRESS:64738 -nju http://SCHEDULER_ADDRESS:8080/rest/node.jar -njs /tmp/node.jar -nja
+----
+
+where `-nju` option is used to specify the http URL of the *node.jar*.
+You can find this URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler>>, the node.jar url is built by appending */rest/node.jar* to the base http url of the server.
+
+`-nju` option is used to specify where the node.jar will be stored locally on the machine.
+
+Finally, `-nja` option, when enabled, specifies that the `proactive-node-autoupdate` will be always up, it means that it will automatically restart when the node terminates (for example in case of server upgrades).
 
 [[_deploy_nodes_via_ssh]]
 === Deploy ProActive Nodes via SSH
@@ -280,6 +302,7 @@ sudo usermod -ag proactive proactive
 
     sudo /etc/init.d/proactive-agent start
 
+
 ===== Uninstalling the Linux Agent
 
 On Debian based distributions:
@@ -401,6 +424,32 @@ The main troubles you may have to face are the following ones:
 ----
 * You get an *authentication error*: this is probably due to your default credentials file which cannot be found. In the "Connection" tab of the Configuration Editor (Figure 5.4, “Configuration Editor window - Connection Tab (Resource Manager Registration)”), you can choose the credentials file you want. You can select, for instance, the credentials file located at PROACTIVE_HOME/config/authentication/scheduler.cred or your own credentials file.
 * The node seems to be well started but you cannot see it in the Resource Manager interface : in this case, make sure that the *port number* is the good one. Do not forget that the runtime port number is incremented from the initial ProActive Resource Manager port number. You can see exactly on which port your runtime has been started looking at the log file described above.
+
+
+==== Configuring Linux Or Windows Agents For Auto-Update
+
+The *Linux* or *Windows Agents* can be configured to automatically synchronize the node libary (node.jar) with the ProActive server.
+
+The behavior is similar to the <<proactive_node_autoupdate,proactive-node-autoupdate>> command, the main JVM will act as a bootstrap and spawn a child JVM with the up-to-date library in its classpath.
+
+In order to enable auto-update, you need to edit the agent configuration file. This file location is:
+
+ * Linux Agent: `/opt/proactive-agent/config.xml`
+ * Windows Agent: `C:\Program Files (x86)\ProActiveAgent\config\PAAgent-config.xml`
+
+The following changes must be performed:
+
+ 1. Change the *<javaStarterClass>* to `org.ow2.proactive.resourcemanager.updater.RMNodeUpdater`
+ 2. Add the following *<jvmParameters>*
+   * `node.jar.url` : url of the node jar (similar to the `nju` option of the `proactive-node-autoupdate` command)
+   * `node.jar.saveas` : path used to store the node.jar file locally (similar to the `njs` option of the `proactive-node-autoupdate` command)
+ 3. Other *JVM properties* specified will be forwarded to the spawned JVM, but non-standard options such as *-Xmx* will not be forwarded. In order to do so, you must declare them using the following syntax:
+
+----
+   <param>-DXtraOption1=Xmx2048m</param>
+   <param>-DXtraOption2=Xms256m</param>
+   ...
+----
 
 == Available Network Protocols
 
