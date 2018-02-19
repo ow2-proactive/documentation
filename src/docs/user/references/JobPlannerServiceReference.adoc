@@ -37,14 +37,14 @@ EXECUTION_CALENDARS =
 }
 ----
 
-===== Cron
+==== Cron
 
 The aim of the cron expression is to launch the planned workflow according to the cron syntax.
 One can see the cron expression "0 23 0 ? * MON,TUE,WED,THU,FRI *", which follows the quartz cron expression syntax explained in the
 <<_job_planner_cron_expression_syntax, Quartz Cron Expression Syntax>> section. The cron expression in this example
  executes 23 minutes past every hour, on working days (Monday to Friday).
 
-===== Inclusion Calendar
+==== Inclusion Calendar
 
 The purpose of the inclusion calendar section is to use an ICS file to specify a workflow launching policies during calendar events. For instance automatically
 submit a worklfow at event start. Given an event, a predefined action will be applied on the workflow execution.
@@ -60,7 +60,7 @@ submit a worklfow at event start. Given an event, a predefined action will be ap
 
 |===
 
-===== Exclusion Calendar
+==== Exclusion Calendar
 
 The purpose of the exclusion calendar is to use an ICS file to prevent workflows to be executed during a calendar event. 
 Given an event, a predefined action will be applied on the workflow execution.
@@ -76,7 +76,7 @@ Given an event, a predefined action will be applied on the workflow execution.
 
 |===
 
-===== External calendar retrieved from URL
+==== External calendar retrieved from URL
 
 If an inclusion or exclusion calendar is not retrievable, it is blocking the <<_glossary_workflow,*Workflow*>> submission.
 An inclusion or exclusion calendar can become not retrievable if it cannot be downloaded from its URL and the
