@@ -27,10 +27,11 @@ A job variable is defined using the following attributes:
 
 [[_templating]]
 Variables are very useful to use workflows as templates where only a few parameters change for each
-execution. Upon submission you can define variable values either from <<_scheduler_command_line, CLI>> or from
-the Web interfaces.
+execution. Upon submission you can define variable values in several ways from <<_scheduler_command_line, CLI>>,
+using the ProActive Workflow Studio, directly editing the XML job definition, or even using REST
+API.
 
-The following example shows how to define a job variable in the XML schema:
+The following example shows how to define a job variable in the XML:
 [source, xml]
 ----
 <job ... >
@@ -61,9 +62,8 @@ A task variable is defined using the following attributes:
 
 * *name*: the name of the variable
 * *value*: the value of the variable
-* *inherited*: asserts whether the propagated value should be use instead of the *value* on the workflow attribute.
-If _true_, the *value* field can be empty and as a consequence this variable is dynamically propagated from a
-previous task.
+* *inherited*: asserts when the content of this variable is propagated from a previous task.
+If _true_, the value defined in the task variable will only be used if no variable with the same name is propagated.
 * *model*: the type of the value (optional). See section <<_variable_model,Variable Model>>
 
 When the inherited parameters is true the variable value is propagated by a previous task (See
@@ -193,7 +193,7 @@ As opposed to <<_workflow_variables>>, *dynamic variables* are created or manipu
 through the use of the "variables" map (see <<_variables_quick_reference>>).
 We have mainly two types of *dynamic variables*:
 
-- <<_system_variables>>, declared by the ProActive scheduller.
+- <<_system_variables>>, declared by the ProActive scheduler.
 - <<_inherited_variables>>, created after adding values to the *variables* map.
 
 [[_system_variables]]
@@ -389,7 +389,7 @@ For example, one could write:
 </job>
 ----
 
-The dynamic replacement will resolve `job_var3` to `hello` just before submitting the job to the scheduller.
+The dynamic replacement will resolve `job_var3` to `hello` just before submitting the job to the scheduler.
 
 WARNING:  We can use job variable references in task variables but not otherwise.
 
