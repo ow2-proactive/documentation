@@ -1406,7 +1406,7 @@ docker.host=
 ---
 Defines the DOCKER_HOST environment variable. The DOCKER_HOST variable defines the Docker socket which the Docker client connects to.
 That property is useful when accessing a Docker daemon which runs inside a container or on a remote machine.
-Further information about the DOCKER_HOST property can be found http://docs.docker.com/v1.8/reference/commandline/cli/[in the official Docker documentation^].
+Further information about the DOCKER_HOST property can be found https://docs.docker.com/engine/reference/commandline/cli/[in the official Docker documentation^].
 
 === Perl scripts execution (Perl task)
 Perl should be installed on your machine. By default the perl engine is installed in Linux and Mac Os. Please install the perl engine on Windows. +
