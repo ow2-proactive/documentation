@@ -15,7 +15,6 @@ Job Planner uses an  Calendars Definition to know how the job will be planned ov
 		
 
 ----
-EXECUTION_CALENDARS =
 {
 	"cron": "0 23 0 ? * MON,TUE,WED,THU,FRI *",
 	"inclusion_calendars": [
@@ -116,7 +115,7 @@ You can select one or several Calendar Definitions on the left panel and associa
     - "Sort chronologically" tab : All executions are displayed chronologically in a list, with for each execution, the workflow that will be executed and the corresponding Calendar Definition.
     The combo box allows you to choose the period of the execution planning.
     - "Calendar" tab : You can see the execution planning of the selected Calendar Definitions, by year/month/week or day. In the year and month views, you can see the number of executions in one month/day.
-    If you click on it, you can see more details on which workflows are executed and when.
+    If you click on it, you can see more details on which workflows are executed and when. In the week view, if several workflows are executed at the same time, you will only be able to see one at the time.
 
 If a calendar has no association, you can still select it and see its recurrence on the Execution Planning panel.
 If nothing is displayed, it means the selected Calendar Definitions have no recurrence on the selected period.
