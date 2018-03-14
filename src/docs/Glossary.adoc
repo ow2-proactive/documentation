@@ -82,8 +82,8 @@ Workflow Revision:: ProActive concept that reflects the changes made on a <<_glo
 [[_glossary_generic_information]]
 Generic Information:: Are additional information which are attached to <<_glossary_workflow,*Workflows*>>.
 
-[[_glossary_execution_calendars_definition]]
-Execution Calendars Definition:: Is a json object attached by adding it to the <<_glossary_generic_information,*Generic Information*>>
+[[_glossary_calendars_definition]]
+Calendar Definition:: Is a json object attached by adding it to the <<_glossary_generic_information,*Generic Information*>>
 of a <<_glossary_workflow,*Workflow*>>.
 
 [[_glossary_job]]
