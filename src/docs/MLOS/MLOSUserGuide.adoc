@@ -224,10 +224,9 @@ C. Click on `Catalog` menu then `Add Bucket as Extra Catalog Menu` and select `m
 
 D. Open this added extra catalog menu and drag and drop the workflow example of your choice.
 
-E. Execute the chosed workflow, track its progress and preview its results.
+E. Execute the chosen workflow, track its progress and preview its results.
 
 More details about these workflows are available in this in link:https://www.activeeon.com/resources/automated-machine-learning-activeeon.pdf[ActiveEon's Machine Learning Documentation]
-
 
 
 === Basic Machine Learning
@@ -263,6 +262,7 @@ video::XEMm47GwCn8[youtube, width=700, height=400 start=0, position=center]
 *YOLO_Image_Object_Detection:* detects real-world objects in a image with the YOLO* library using a pre-trained.
 
 *YOLO_Image_Anomaly_Detection:* checks if an anomaly exists in a certain scene using the YOLO library. However, we show a scene where only people are allowed on a pedestrian street. Anything detected other than people is considered as anomaly.
+
 *YOLO_Demo_Object_Detection:* detects real-world objects in a image with the YOLO* library using a pre-trained model.
 
 === Log Analysis
@@ -274,6 +274,60 @@ The following workflows are designed to detect anomalies in log files. They are 
 *Anomaly_detection_in_HDFS_Blocks:* trains and test an anomaly detection model for detecting anomalies in HDFS Blocks.
 
 *Anomaly_detection_in_HDFS_Nodes:* trains and test an anomaly detection model for detecting anomalies in HDFS Nodes.
+
+== Deep Learning Workflows Examples
+
+ML-OS provides a fast, easy and practical way to execute deep learning workflows. In the following sub-sections, we present useful deep learning workflows for text and image classification and generation.
+
+video::FwMPR87wzoo[youtube, width=700, height=400 start=0, position=center]
+
+You can test these workflows by following these steps :
+
+A. Open http://try.activeeon.com/studio[ProActive Workflow Studio^] home page.
+
+B. Create a new workflow.
+
+C. Click on `Catalog` menu then `Add Bucket as Extra Catalog Menu` and select `deep-learning-workflows` bucket.
+
+D. Open this added extra catalog menu and drag and drop the workflow example of your choice.
+
+E. Execute the chosen workflow, track its progress and preview its results.
+
+=== Azure Cognitive Services
+
+The following workflows present useful examples composed by pre-built Azure cognitive services available on `azure-cognitive-services` bucket.
+
+*Emotion_Detection_in_Bing_News:* is a mashup that searches for images of a person using Azure Bing Image Search then performs an emotion detection using Azure Emotion API.
+
+*Sentiment_Analysis_in_Bing_News:* is a mashup that searches for news related to a given search term using Azure Bing News API then performs a sentiment analysis using Azure Text Analytics API.
+
+=== Microsoft Cognitive Toolkit
+
+The following workflows present useful examples for predictive models training and test using Microsoft Cognitive Toolkit (CNTK).
+
+*CNTK_ConvNet:* trains a Convolutional Neural Network (CNN) on CIFAR-10 dataset.
+
+*CNTK_SimpleNet:* trains a 2-layer fully connected deep neural network with 50 hidden dimensions per layer.
+
+*GAN_Generate_Fake_MNIST_Images:* generates fake MNIST images using a Generative Adversarial Network (GAN).
+
+*DCGAN_Generate_Fake_MNIST_Images:* generates fake MNIST images using a Deep Convolutional Generative Adversarial Network (DCGAN).
+
+=== Mixed Workflows
+
+The following workflow presents an example of a workflow built using pre-built Azure cognitive services tasks available on the `azure-cognitive-services` bucket and custom AI tasks available on the `deep-learning` bucket.
+
+*Custom_Sentiment_Analysis:* is a mashup that searches for news related to a given search term using Azure Bing News API then performs a sentiment analysis using a custom deep learning based pretrained model.
+
+=== Custom AI Workflows
+
+The following workflows present an example of workflows built using custom AI tasks available on the `deep-learning` bucket. Such tasks enable you to train and test your own AI models by a simple drag and drop of custom AI task.
+
+*IMDB_Sentiment_Analysis:* trains a model for opinions identification and categorization expressed in a piece of text, especially in order to determine the opinion of IMDB users regarding specific movies [positive or negative].
+
+*Image_Classification:* uses a pre-trained deep neural network to classify ants and bees images.
+
+*Language_Detection:* involves building an RNN model from a lot of text data of respective languages and then identifying the test data (text) among the trained models.
 
 == References
 
@@ -839,6 +893,343 @@ NOTE: More information about the source of this task can be found http://scikit-
 
 NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/supervised_learning.html#supervised-learning[here^].
 
+=== Deep Learning Bucket
+
+The `deep-learning` bucket contains diverse generic deep learning tasks that enable you to easily compose workflows for predictive models learning and testing. This bucket can be easily customized according to your needs.
+It offers different options, you can customize it by adding new tasks or update the existing tasks.
+
+==== Input and Output
+
+===== Import_Image_Dataset
+
+*Task Overview:* Load and return an image dataset. Each unique label should have its own folder which should contain its related images.
+
+*Task Variables:*
+
+.Import_Image_Dataset_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DATASET_URL`
+| URL pointing to the zip folder containing the needed data.
+| String
+| `TRAIN_SPLIT`
+| Must be a float within the range (0.0, 1.0), not including the values 0.0 and 1.0.
+| Float (default=1)
+| `TEST_SPLIT`
+| Must be a float within the range (0.0, 1.0), not including the values 0.0 and 1.0.
+| Float (default=0.3)
+| `VALIDATION_SPLIT`
+| Must be a float within the range (0.0, 1.0), not including the values 0.0 and 1.0.
+| Float (default=0.1)
+|===
+
+*How to use this task:* Should be connected with <<Train_Image_Model>> or <<Predict_Image_Model>>.
+
+NOTE: Torchvision were used to preprocess and load the dataset.
+
+===== Export_Model
+
+*Task Overview:* Export a trained model by a deep learning algorithm.
+
+*How to use this task:* Should be connected with <<Train_Image_Model>> or <<Train_Text_Model>>.
+
+===== Import_Model
+
+*Task Overview:* Import a trained model by a deep learning algorithm.
+
+*Task Variables:*
+
+.Import_Model_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `MODEL_URL`
+| URL pointing to the zip folder containing the needed model.
+|===
+
+*How to use this task:* Should be connected with <<Predict_Text_Model>> or <<Predict_Image_Model>>.
+
+===== Import_Text_Dataset
+
+*Task Overview:* Import data from external sources. Each unique label must have its own folder which should contain its related text file. If your data is unlabeled, use the name 'unlabeled' for the folder containing your text file.
+
+*Task Variables:*
+
+.Import_Text_Dataset_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DATASET_URL`
+| URL pointing to the zip folder containing the needed data.
+| String
+| `TRAIN_SPLIT`
+| Must be a float within the range (0.0, 1.0), not including the values 0.0 and 1.0.
+| Float (default=1)
+| `TEST_SPLIT`
+| Must be a float within the range (0.0, 1.0), not including the values 0.0 and 1.0.
+| Float (default=0.3)
+| `VALIDATION_SPLIT`
+| Must be a float within the range (0.0, 1.0), not including the values 0.0 and 1.0.
+| Float (default=0.1)
+| `TOY_MODE`
+| Use a subset of the data to train the model fastly.
+| Boolean (default=True)
+| `TOKENIZER`
+| Transform the text into tokens. Different options are available (str.split,moses,spacy,revtok,subword)
+| List (default=str.split)
+| `SENTENCE_SEPARATOR`
+| Split the text into separated paragraphs, separated lines, separated words. Choose your own separator.
+| String (default=\r)
+| `CHARSET`
+| Encode to be used to read the text.
+| String (default='utf-8')
+| `IS_LABELED_DATA`
+|  True if data is labeled.
+| Boolean (default=True)
+|===
+
+*How to use this task:* Should be connected with <<Train_Text_Model>> or <<Predict_Text_Model>>.
+
+NOTE: Torchtext were used to preprocess and load the text input. More information about this library can be found https://github.com/pytorch/text[here^].
+
+===== Export Results
+
+*Task Overview:* Export the results of the predictions generated by the trained model.
+
+*Task Variables:*
+
+.Export_Results_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `OUTPUT_FILE`
+| Converts the prediction results to HTML or CSV file.
+| List (default='HTML')
+|===
+
+*How to use this task:* Should be used after <<Predict_Text_Model>> or <<Predict_Image_Model>> tasks.
+
+===== Export Images
+
+*Task Overview:* Download a zip file of your results.
+
+*How to use this task:* Should be connected to <<Predict_Image_Model>> task.
+
+==== Image Classification
+
+===== AlexNet
+
+*Task Overview:* AlexNet is the name of a Convolutional Neural Network (CNN), originally written with CUDA to run with GPU support, which competed in the ImageNet Large Scale Visual Recognition Challenge in 2012.
+
+*How to use this task:* Should be connected to <<Train_Image_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/torchvision/models.html[AlexNet^].
+
+===== DenseNet-161
+
+*Task Overview:* Densely Connected Convolutional Network (DenseNet) is a network architecture where each layer is directly connected to every other layer in a feed-forward fashion (within each dense block).
+
+*How to use this task:* Should be connected to <<Train_Image_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/torchvision/models.html[DenseNet-161^].
+
+===== ResNet-18
+
+*Task Overview:* Deep Residual Networks (ResNet-18) is a deep convolutional neural network, trained on 1.28 million ImageNet training images, coming from 1000 classes.
+
+*How to use this task:* Should be connected to <<Train_Image_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/torchvision/models.html[ResNet-18^].
+
+===== VGG-16
+
+*Task Overview:* The VGG-16 is an image classification convolutional neural network.
+
+*How to use this task:* Should be connected to <<Train_Image_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/torchvision/models.html[VGG-16^].
+
+==== Text Classification
+
+===== GRU
+*Task Overview:* Gated recurrent units (GRUs) are a gating mechanism in recurrent neural networks.
+
+*Task Variables:*
+
+.GRU_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `EMBEDDING_DIM`
+| The dimension of the vectors that will be used to map words in some languages.
+| Integer (default=50)
+| `HIDDEN_DIM`
+| Hidden dimension of the neural network.
+| Integer (default=40)
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=2)
+| `DROPOUT`
+| Percentage of the neurons that will be ignored during the training.
+| Float (default=0.5)
+|===
+
+*How to use this task:* Should be connected to <<Train_Text_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/nn.html#torch.nn.GRU[GRU^].
+
+===== LSTM
+
+*Task Overview:* Long short-term memory (LSTM) units (or blocks) are a building unit for layers of a recurrent neural network (RNN).
+
+*Task Variables:*
+
+.LSTM_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `EMBEDDING_DIM`
+| The dimension of the vectors that will be used to map words in some languages.
+| Integer (default=50)
+| `HIDDEN_DIM`
+| Hidden dimension of the neural network.
+| Integer (default=40)
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=2)
+| `DROPOUT`
+| Percentage of the neurons that will be ignored during the training.
+| Float (default=0.5)
+|===
+
+*How to use this task:* Should be connected to <<Train_Text_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/nn.html#torch.nn.LSTM[LSTM^].
+
+===== RNN
+
+*Task Overview:* A recurrent neural network (RNN) is a class of artificial neural network where connections between units form a directed graph along a sequence.
+
+*Task Variables:*
+
+.RNN_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `EMBEDDING_DIM`
+| The dimension of the vectors that will be used to map words in some languages.
+| Integer (default=50)
+| `HIDDEN_DIM`
+| Hidden dimension of the neural network.
+| Integer (default=40)
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=2)
+| `DROPOUT`
+| Percentage of the neurons that will be ignored during the training.
+| Float (default=0.5)
+|===
+
+*How to use this task:* Should be connected to <<Train_Text_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/nn.html#torch.nn.RNN[RNN^].
+
+==== Train Model
+
+===== Train_Image_Model
+
+*Task Overview:* Train a model using a Convolutional Neural Network (CNN) algorithm.
+
+*Task Variables:*
+
+.Train_Image_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `NUM_EPOCHS`
+| Number of times all of the training vectors are used once to update the weights.
+| Integer (default=1)
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=4)
+| `NUM_WORKERS`
+| Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+| Integer (default=2)
+|===
+
+*How to use this task:* Could be connected to <<Predict_Image_Model>> and <<Export_Model>> tasks.
+
+===== Train_Text_Model
+
+*Task Overview:* A recurrent neural network (RNN) is a class of artificial neural network where connections between units form a directed graph along a sequence.
+
+*Task Variables:*
+
+.Train_Text_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `LEARNING_RATE`
+| Determines how quickly or how slowly you want to update the parameters.
+| Float (default=0.001)
+| `OPTIMIZER`
+| Choose the optimization algorithm that would help you to minimize the Loss function. Different options are available (42B, 840B, twitter.27B,6B).
+| List (default=Adam)
+| `LOSS_FUNCTION`
+| Choose the function that will be used to compute the loss. Different options are available (Adam,RMS, SGD, Adagrad, Adadelta).
+| List (default=NLLLoss)
+| `EPOCHS`
+| Number of times all of the training vectors are used once to update the weights.
+| Integer (default=10)
+| `TRAINABLE`
+| True if you want to update the embedding vectors during the training process.
+| Boolean (default=False)
+| `GLOVE`
+| Choose the glove vectors that need to be used for words embedding. Different options are available (42B, 840B, twitter.27B,6B)
+| List (default=6B)
+| `USE_GPU`
+| True if you need to execute the training task in a GPU node.
+| Boolean (default=True)
+|===
+
+*How to use this task:* Could be connected to <<Predict_Text_Model>> and <<Export_Model>> tasks.
+
+==== Predict
+
+===== Predict_Image_Model
+
+*Task Overview:* Generate predictions using a trained model.
+
+.Predict_Text_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=4)
+| `NUM_WORKERS`
+| Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+| Integer (default=2)
+|===
+
+*How to use this task:* Should be used after the <<Train_Image_Model>> or <<Export_Model>> Task.
+
+===== Predict_Text_Model
+
+*Task Overview:* Generate predictions using a trained model.
+
+.Predict_Text_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `LOSS_FUNCTION`
+| Choose the function that will be used to compute the loss. Different options are available (Adam,RMS, SGD, Adagrad, Adadelta).
+| List (default=NLLLoss)
+|===
+
+*How to use this task:* Should be used after the <<Train_Text_Model>> or <<Export_Model>> Task.
+
 === Data Visualization Bucket
 *Visdom Bucket* integrates generic tasks that can be easily used to broadcast visualizations of the analytic results provided by ML tasks. These visualization are created, organized, and shared using https://github.com/facebookresearch/visdom[Visdom^], a flexible tool proposed by Facebook Research.
 
@@ -953,4 +1344,5 @@ video::bQpwS2nMAZY[youtube, width=700, height=400 start=0, position=center]
 *Visdom_Service_Example:* evaluates in real time the performance of a simple Convolutional Neural Network (CNN) for MNIST* handwritten digit classification during the training and test processes.
 
 A demo video of these workflows is available in https://www.youtube.com/user/ActiveEonCompany[ActiveEon Youtube Channel^].
+
 
