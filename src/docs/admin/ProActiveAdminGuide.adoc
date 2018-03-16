@@ -611,7 +611,7 @@ configuration.
 
 Node Source undeploying can be *preemptive* or not. If a Node Source undeploying is initiated with a non-preemptive
 requirement, then the Nodes of this Node Source which are currently running <<_glossary_task,Tasks>> will not be
-removed until their Task is finished. In this case, the Nodes that are still running a Task appear in the
+removed until their Task is finished. In this case, these Nodes are displayed in the
 _to-be-removed_ state. In other terms, if a Node Source is undeployed *non-preemptively*, it will be completely
 undeployed as soon as all of its Nodes have finished executing their Task. On the opposite, if a Node Source is
 undeployed *with preemption*, its Nodes are immediately removed regardless of whether they execute Tasks, and this may
