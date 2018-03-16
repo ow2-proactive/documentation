@@ -602,6 +602,28 @@ as many Nodes as there were on the previous run.
 The approach is best effort and Node hostname is not considered.
 As a consequence, Nodes are not necessarily locked on the same host after a Scheduler restart.
 
+=== Undeploying Node Sources
+
+The <<_glossary_resource_manager,Resource Manager>> allows for <<_glossary_node_source,Node Sources>> to be
+*undeployed*. In this case, the Node Source is shut down and its <<_glossary_proactive_node,Nodes>> are removed, but
+the Node Source definition is kept. An undeployed Node Source can be *redeployed* later, using its initial
+configuration.
+
+Node Source undeploying can be *preemptive* or not. If a Node Source undeploying is initiated with a non-preemptive
+requirement, then the Nodes of this Node Source which are currently running <<_glossary_task,Tasks>> will not be
+removed until their Task is finished. In this case, these Nodes are displayed in the
+_to-be-removed_ state. In other terms, if a Node Source is undeployed *non-preemptively*, it will be completely
+undeployed as soon as all of its Nodes have finished executing their Task. On the opposite, if a Node Source is
+undeployed *with preemption*, its Nodes are immediately removed regardless of whether they execute Tasks, and this may
+cause Tasks to fail.
+
+Deploying and undeploying Node Sources is possible from the
+<<_glossary_rm_web_interface,Resource Manager Web Interface>>, from the Resource Manager
+<<_glossary_rest_api,REST API>>, and from the <<_resource_manager_command_line,Command Line>> client.
+
+TIP: The deployment status of a Node Source is persistent. If the Resource Manager is restarted, then all Node Sources
+will be *restored* to their previous state.
+
 == User Authentication
 
 In order to use ProActive Scheduler every user must have an account. It supports three methods for authentication:
@@ -1716,22 +1738,21 @@ Note that these two properties are also used by the scheduler to decide when to 
 You can completely disable the nodes and task recovery feature by setting the `pa.rm.nodes.recovery` property of the
 *Resource Manager* to `false`.
 
-In addition, the nodes and task recovery can be configured *per node source* at creation time. This configuration will
+In addition, the nodes and task recovery can be configured *per Node Source* at creation time. This configuration will
 be applied only if the global `pa.rm.nodes.recovery` property is set to `true`. The specification of nodes recovery per
-node source can be done through the *REST API* of the Resource Manager or through the <<_cli,CLI>>.
+Node Source can be done through the <<_glossary_rm_web_interface,Resource Manager Web Interface>>, through the Resource
+Manager <<_glossary_rest_api,REST API>>, and through the <<_resource_manager_command_line,Command Line>> client (CLI).
 
-** Through the REST API, the `nodesRecoverable` parameter of the `rm/nodesource/create` *REST endpoint* specifies
-whether the nodes of the new node source will be recoverable. _Nodes recovery will be disabled_ for this node source if
-the given value does not match any case of the "true" string.
+** Through the *Web Interface*, the form to create a new Node Source contains a checkbox that controls nodes
+recoverability.
 
-** Through the CLI, the `createns` *command* takes an optional parameter to specify whether the nodes of the new node
-source will be recoverable. _Nodes recovery will be disabled_ for this node source if the optional parameter is provided
-and does not match any case of the "true" string.
+** Through the *REST API*, the `nodesRecoverable` parameter of the `rm/nodesource/create` and `rm/nodesource` *REST
+endpoints* specify whether the ProActive Nodes of a new Node Source will be recoverable. _Nodes recovery will be
+disabled_ if the given value does not match any case of the "true" string.
 
-+
-However, all node sources that are created through the *Resource Manager portal* will be created _with recoverable
-nodes_. The only way to disable nodes and task recovery for these node sources is to set the global property
-`pa.rm.nodes.recovery` to `false`.
+** Through the *CLI*, the `createns` and `definens` *commands* take an optional parameter to specify whether the
+ProActive Nodes of a new Node Source will be recoverable. _Nodes recovery will be disabled_ if
+the optional parameter is provided and does not match any case of the "true" string.
 
 === Nodes and Task Recovery on Cloud Platforms
 
