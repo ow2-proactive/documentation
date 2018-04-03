@@ -1649,13 +1649,18 @@ hibernate.connection.url=jdbc:hsqldb:mem:rm;hsqldb.tx=mvcc;hsqldb.lob_file_scale
 
 To switch to a standalone database, see <<_perf_tuning_db>>.
 
-=== Tunning Linux for 15K nodes
+=== Tuning Linux for 15K nodes
 
 It is necessary to tune underlying Linux system, in case there will be plenty of nodes in the Resource Manager.
 
 It is mandatory to allow having a large number of running processes and open files.
 
-For 15.000 nodes, it is recommended to set `ulimit -u` bigger than 100.000 and `ulimit -n` at least 65.536.
+For example, on 15.000 nodes, the recommended ulimit settings for running processes and open files are:
+
+```
+nproc soft/hard 100000
+nofile soft/hard 65536
+```
 
 In addition, we recommend to have at least 16GB RAM for 15.000 nodes.
 
