@@ -1545,7 +1545,7 @@ include::./references/StatisticsOnProActiveJobsAndResourceUsageReference.adoc[]
 == Scheduler start tuning
 
 Scheduler start can be customized by automatically triggering user's scripts.
-A list of scripts can be specified in 'PROACTIVE_HOME/config/scheduler/settings.ini`
+A list of scripts can be specified in `PROACTIVE_HOME/config/scheduler/settings.ini`
 following this
 
 `pa.scheduler.startscripts.paths=/your/script1/path;/your/script2/path;/your/script3/path`
@@ -1651,13 +1651,13 @@ To switch to a standalone database, see <<_perf_tuning_db>>.
 
 === Tunning Linux for 15K nodes
 
-It is necessary to tune underlying Linux system, in case there will be plenty of nodes in Resource Manager.
+It is necessary to tune underlying Linux system, in case there will be plenty of nodes in the Resource Manager.
 
-There should be big enough number of processes allowed, and number of open files as well.
+It is mandatory to allow having a large number of running processes and open files.
 
 For 15.000 nodes, it is recommended to set `ulimit -u` bigger than 100.000 and `ulimit -n` at least 65.536.
 
-As well, we recommend to have at least 16GB RAM for 15.000 nodes.
+n addition, we recommend to have at least 16GB RAM for 15.000 nodes.
 
 
 == Nodes and Task Recovery
