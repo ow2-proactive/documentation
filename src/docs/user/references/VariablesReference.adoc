@@ -32,11 +32,11 @@ The order in this list corresponds to the task life-cycle order.
 | <<_scripting_language_support,task>>
 | -
 
-| *Task arguments*. Arguments of a script defined in the workflow. Available via all kind of scripts when referencing an external file.
+| *Task arguments*. Arguments of a script defined in the workflow. Available via all kind of scripts, when referencing an external file or directly as XML elements.
 | ... = args[0];
 | Passed to native executable.
 | -
-| all scripts defined as external file
+| all scripts, as external file, or XML element
 | -
 
 | *Results of previous tasks*. An array containing the results of parent tasks. See <<_passing_data_between_tasks_using_results,Result variables>>.

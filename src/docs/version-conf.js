@@ -1,2 +1,2 @@
-conf = { version: '7.34.0-SNAPSHOT',
+conf = { version: '8.1.0-SNAPSHOT',
          date: '' }

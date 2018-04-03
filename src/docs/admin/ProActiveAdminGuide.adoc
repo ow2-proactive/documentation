@@ -112,12 +112,13 @@ by launching commands remotely on Compute Hosts. For instance, it can be useful 
 [[run_node_manually]]
 === Deploy ProActive Nodes manually
 
-==== Using PROACTIVE_HOME
+[[proactive_node]]
+==== Using proactive-node command
 
 Let's take a closer look at the first method described above. To deploy a ProActive Node from the Compute Host you need
 to run the following command
 ----
-$ PROACTIVE_HOME/bin/proactive-node -r pnp://SCHEDULER_ADDRESS:41303
+$ PROACTIVE_HOME/bin/proactive-node -r pnp://SCHEDULER_ADDRESS:64738
 ----
 where `-r` option is used to specify the URL of the *Resource Manager*.
 You can find this URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler>> (the Resource Manager URL).
@@ -128,6 +129,7 @@ TIP: You can also use *discovery* to let the ProActive Node find the URL to conn
  Simply run `proactive-node` without any parameter to use discovery.
  It uses broadcast to retrieve the URL so this feature might not work depending on your network configuration.
 
+[[node_jar]]
 ==== Using node.jar
 
 It is also possible to launch a ProActive Node without even copying the ProActive Scheduler to a Compute Host:
@@ -148,6 +150,26 @@ have to set the URL to connect to with the `-r` parameter.
 
 TIP: If you would like to execute several Tasks at the same time on one host, you can either launch several ProActive
 Node process or use the _-w_ parameter to run multiple nodes in the same process. A node executes one Task at a time.
+
+[[proactive_node_autoupdate]]
+==== Using proactive-node-autoupdate command
+
+This method is a combination of the two above, it starts a node from the command line, and makes sure the node libary (node.jar) is synchronized with the latest server version.
+
+The `proactive-node-autoupdate` command acts as a bootstrap and spawns a new java virtual machine with the up-to-date library classpath.
+
+Launching the node is similar to the `proactive-node` command, additional options must be specified to allow the download of the node.jar from the server:
+
+----
+$ PROACTIVE_HOME/bin/proactive-node-autoupdate -r pnp://SCHEDULER_ADDRESS:64738 -nju http://SCHEDULER_ADDRESS:8080/rest/node.jar -njs /tmp/node.jar -nja
+----
+
+where `-nju` option is used to specify the http URL of the *node.jar*.
+You can find this URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler>>, the node.jar url is built by appending */rest/node.jar* to the base http url of the server.
+
+`-nju` option is used to specify where the node.jar will be stored locally on the machine.
+
+Finally, `-nja` option, when enabled, specifies that the `proactive-node-autoupdate` will be always up, it means that it will automatically restart when the node terminates (for example in case of server upgrades).
 
 [[_deploy_nodes_via_ssh]]
 === Deploy ProActive Nodes via SSH
@@ -280,6 +302,7 @@ sudo usermod -ag proactive proactive
 
     sudo /etc/init.d/proactive-agent start
 
+
 ===== Uninstalling the Linux Agent
 
 On Debian based distributions:
@@ -401,6 +424,32 @@ The main troubles you may have to face are the following ones:
 ----
 * You get an *authentication error*: this is probably due to your default credentials file which cannot be found. In the "Connection" tab of the Configuration Editor (Figure 5.4, “Configuration Editor window - Connection Tab (Resource Manager Registration)”), you can choose the credentials file you want. You can select, for instance, the credentials file located at PROACTIVE_HOME/config/authentication/scheduler.cred or your own credentials file.
 * The node seems to be well started but you cannot see it in the Resource Manager interface : in this case, make sure that the *port number* is the good one. Do not forget that the runtime port number is incremented from the initial ProActive Resource Manager port number. You can see exactly on which port your runtime has been started looking at the log file described above.
+
+
+==== Configuring Linux Or Windows Agents For Auto-Update
+
+The *Linux* or *Windows Agents* can be configured to automatically synchronize the node libary (node.jar) with the ProActive server.
+
+The behavior is similar to the <<proactive_node_autoupdate,proactive-node-autoupdate>> command, the main JVM will act as a bootstrap and spawn a child JVM with the up-to-date library in its classpath.
+
+In order to enable auto-update, you need to edit the agent configuration file. This file location is:
+
+ * Linux Agent: `/opt/proactive-agent/config.xml`
+ * Windows Agent: `C:\Program Files (x86)\ProActiveAgent\config\PAAgent-config.xml`
+
+The following changes must be performed:
+
+ 1. Change the *<javaStarterClass>* to `org.ow2.proactive.resourcemanager.updater.RMNodeUpdater`
+ 2. Add the following *<jvmParameters>*
+   * `node.jar.url` : url of the node jar (similar to the `nju` option of the `proactive-node-autoupdate` command)
+   * `node.jar.saveas` : path used to store the node.jar file locally (similar to the `njs` option of the `proactive-node-autoupdate` command)
+ 3. Other *JVM properties* specified will be forwarded to the spawned JVM, but non-standard options such as *-Xmx* will not be forwarded. In order to do so, you must declare them using the following syntax:
+
+----
+   <param>-DXtraOption1=Xmx2048m</param>
+   <param>-DXtraOption2=Xms256m</param>
+   ...
+----
 
 == Available Network Protocols
 
@@ -552,6 +601,28 @@ When the nodes lock restoration feature is enabled, the Resource Manager will tr
 as many Nodes as there were on the previous run.
 The approach is best effort and Node hostname is not considered.
 As a consequence, Nodes are not necessarily locked on the same host after a Scheduler restart.
+
+=== Undeploying Node Sources
+
+The <<_glossary_resource_manager,Resource Manager>> allows for <<_glossary_node_source,Node Sources>> to be
+*undeployed*. In this case, the Node Source is shut down and its <<_glossary_proactive_node,Nodes>> are removed, but
+the Node Source definition is kept. An undeployed Node Source can be *redeployed* later, using its initial
+configuration.
+
+Node Source undeploying can be *preemptive* or not. If a Node Source undeploying is initiated with a non-preemptive
+requirement, then the Nodes of this Node Source which are currently running <<_glossary_task,Tasks>> will not be
+removed until their Task is finished. In this case, these Nodes are displayed in the
+_to-be-removed_ state. In other terms, if a Node Source is undeployed *non-preemptively*, it will be completely
+undeployed as soon as all of its Nodes have finished executing their Task. On the opposite, if a Node Source is
+undeployed *with preemption*, its Nodes are immediately removed regardless of whether they execute Tasks, and this may
+cause Tasks to fail.
+
+Deploying and undeploying Node Sources is possible from the
+<<_glossary_rm_web_interface,Resource Manager Web Interface>>, from the Resource Manager
+<<_glossary_rest_api,REST API>>, and from the <<_resource_manager_command_line,Command Line>> client.
+
+TIP: The deployment status of a Node Source is persistent. If the Resource Manager is restarted, then all Node Sources
+will be *restored* to their previous state.
 
 == User Authentication
 
@@ -1357,7 +1428,7 @@ docker.host=
 ---
 Defines the DOCKER_HOST environment variable. The DOCKER_HOST variable defines the Docker socket which the Docker client connects to.
 That property is useful when accessing a Docker daemon which runs inside a container or on a remote machine.
-Further information about the DOCKER_HOST property can be found http://docs.docker.com/v1.8/reference/commandline/cli/[in the official Docker documentation^].
+Further information about the DOCKER_HOST property can be found https://docs.docker.com/engine/reference/commandline/cli/[in the official Docker documentation^].
 
 === Perl scripts execution (Perl task)
 Perl should be installed on your machine. By default the perl engine is installed in Linux and Mac Os. Please install the perl engine on Windows. +
@@ -1381,6 +1452,31 @@ More over, the native Python Script Engine depends on the py4j library in order 
 
 Further information can be found https://www.py4j.org/install.html[in the official py4j documentation^].
 
+
+== Full control of the scheduling policy
+
+Default scheduling policy can be extended to perfectly fit with user scheduling constraints. For instance, we integrated a license policy
+to control the number of concurrent licenses usage. To use it, user has to edit `PROACTIVE_HOME/config/scheduler/settings.ini` following this
+
+----
+pa.scheduler.policy=org.ow2.proactive.scheduler.policy.license.LicenseSchedulingPolicy
+----
+
+Then, the maximum number of licenses per software must be specified into `PROACTIVE_HOME/config/scheduler/license.properties` like this
+
+----
+software_A = 3
+software_B = 2
+----
+
+From now, given a task, user can specify which software licenses are required, by adding the REQUIRED_LICENSES generic information,
+which value can be
+
+----
+softwareA,softwareB
+----
+
+As expected, if 10 replicated tasks requiring software_A,software_B licenses are submitted, they will be executed 3 by 3.
 
 == Addons
 
@@ -1596,6 +1692,8 @@ To handle the particular situation in which the Scheduler is down when a running
 WARNING: The nodes and task recovery feature requires a proper configuration to ensure that nodes and tasks are *kept
 alive* during the down time of the Scheduler.
 
+==== How to make sure that nodes and task recovery is enabled
+
 * *Resource Manager* configuration (`PROACTIVE_HOME/config/rm/settings.ini`)
 +
 In order to enable the nodes and task recovery feature, make sure that the `pa.rm.nodes.recovery` property of the
@@ -1612,6 +1710,7 @@ The default for this property is 30 seconds.
 
 ** Use `-Dproactive.node.reconnection.attempts` to specify how many times the node will try to reconnect with the
 Resource Manager. The default for this property is to attempt 10 times.
+
 +
 These two properties define the total delay for the node to reconnect to the Resource Manager. By default, the total
 delay of reconnection is 5 minutes. When this total delay is consumed, _the node shuts itself down_, and the node recovery
@@ -1628,11 +1727,32 @@ Scheduler. The default for this property is to attempt only once.
 
 ** `pa.scheduler.core.nodepingfrequency` property to define a delay (in seconds) in between two attempts. The default
 for this property is 20 seconds.
+
 +
 If the Scheduler is still not up and running after the total delay defined by these properties (which is 20 seconds by
 default), then _the task’s result will be lost_ forever.
-
 Note that these two properties are also used by the scheduler to decide when to *re-schedule* tasks.
+
+==== How to disable nodes and task recovery
+
+You can completely disable the nodes and task recovery feature by setting the `pa.rm.nodes.recovery` property of the
+*Resource Manager* to `false`.
+
+In addition, the nodes and task recovery can be configured *per Node Source* at creation time. This configuration will
+be applied only if the global `pa.rm.nodes.recovery` property is set to `true`. The specification of nodes recovery per
+Node Source can be done through the <<_glossary_rm_web_interface,Resource Manager Web Interface>>, through the Resource
+Manager <<_glossary_rest_api,REST API>>, and through the <<_resource_manager_command_line,Command Line>> client (CLI).
+
+** Through the *Web Interface*, the form to create a new Node Source contains a checkbox that controls nodes
+recoverability.
+
+** Through the *REST API*, the `nodesRecoverable` parameter of the `rm/nodesource/create` and `rm/nodesource` *REST
+endpoints* specify whether the ProActive Nodes of a new Node Source will be recoverable. _Nodes recovery will be
+disabled_ if the given value does not match any case of the "true" string.
+
+** Through the *CLI*, the `createns` and `definens` *commands* take an optional parameter to specify whether the
+ProActive Nodes of a new Node Source will be recoverable. _Nodes recovery will be disabled_ if
+the optional parameter is provided and does not match any case of the "true" string.
 
 === Nodes and Task Recovery on Cloud Platforms
 

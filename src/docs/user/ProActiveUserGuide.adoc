@@ -114,6 +114,16 @@ helloworld:
 The above example describes a container which is called 'helloworld'. That container is created from a busybox image,
  which will run the command 'echo "Hello ProActive"'
 
+=== Docker task advanced options
+
+The Docker task allows to add command options for the `docker-compose up` command.
+You can specify these options by supplying a space character separated list in the <<_glossary_generic_information>>.
+Use the key "docker-compose-up-options" and supply, as value, for example "--option1 --option2", this leads to a command
+ similar to "docker-compose up --option1 --option2".
+
+If splitting by space is prohibitive you can specify the split regex in the <<_glossary_generic_information>> with the
+key "docker-compose-options-split-regex", if you supply e.g. "!SPLIT!" as value, then your "docker-compose-up-options"
+ will need to look like this "--option1!SPLIT!--option2".
 
 === Native application
 
@@ -132,6 +142,15 @@ link:examples/native_task.xml[XML workflow^] or you can also build one yourself 
 Native application by nature can be tied to a given operating system so
 if you have different nodes at your disposal, you might need to select a suitable node to run your native task.
 This can be achieved using <<_selection,selection script>>.
+
+=== PHP Task
+
+The PHP task executes a PHP script on a ProActive Node’s local PHP installation. The PHP script will be downloaded from the dataspace. So, the PHP script must be present in the dataspace beforehand. The task can also be modified to download the PHP script from other sources. Log forwarding and log streaming during PHP execution is conveniently available through the Scheduler portal.
+
+==== Node configuration
+For a ProActive Node to execute a PHP script, PHP must be installed on the machine of the ProActive Node. The PHP task has a selection script which validates a correct PHP installation by searching the PATH and validating if the PHP can be executed successfully. The static selection script validates the PHP execution once and stores the result in the cache, so removing or installing PHP requires a restart of the node or a switch to the dynamic selection script.
+The selection script in the PHP task does not validate the PHP version, therefore it is advised to use the same PHP version on the ProActive Nodes or to improve the selection script itself.
+
 
 === Scripting language support
 
@@ -301,14 +320,16 @@ Unless your account belongs to an administrator group, you can only see the logs
 
 - `Job standard output/error logs`: +
 To view the standard output or error logs associated with a job, select a job from the job list and then on the _Output_ tab in the bottom right panel. +
-To view logs of a currently running job, you need to click on the _Streaming_ checkbox, the logs panel will be updated as soon as new log lines will be printed by this job.  +
-If the job is terminated, you can click on the _Fetch output_ button to view the final output of the job. +
+Click on _Streaming Output_ checkbox to auto-fetch logs for running tasks of the entire Job. The logs panel will be updated as soon as new log lines will be printed by this job. +
+You cannot select a specific Task in the streaming mode. If you activate streaming while some Tasks are already finished, you will get the logs of those Tasks as well. +
+Click on _Finished Tasks Output_ button to retrieve logs for already finished tasks. For all the finished Tasks within the Job, or for the selected Task. +
+The command does work when Job is still in Running state, as well as when Job is Finished. +
 Logs are limited to 1024 lines. Should your job logs be longer, you can select the _Full logs (download)_ option from the drop down list.
 
 - `Task standard output/error logs`: +
 To view the standard output or error logs associated with a task, select a job from the job list and a task from the task list. +
 Then in the _Output_ tab, choose _Selected task_ from the drop down list. +
-Once the task is terminated, you will be able to click on the _Fetch output_ button to see the standard output or error associated with the task. +
+Once the task is terminated, you will be able to click on the _Finished Tasks Output_ button to see the standard output or error associated with the task. +
 It is not possible to view the streaming logs of single task, only the job streaming logs are available.
 
 - `Job server logs`: +
@@ -395,589 +416,6 @@ Process*1 : DEF
 Process : ABC
 Split : {0=abc, 1=def}
 ----
-
-== Data Management
-
-One of the major questions after having learned to submit and execute simple tasks is how to handle data.
-
-ProActive Scheduler provides two mechanisms for accessing and propagating data down the execution chain. One is based on <<_variable_based_propagation,variables>> and the other on <<_file_based_propagation,files>>.
-
-=== Variable based propagation
-
-Variables used for data access and propagation exist in three flavors:
-
-- <<_workflow_variables,Workflow variables>>
-- <<_generic_information>>
-- <<_passing_data_between_tasks_using_results,Result variables>>
-
-Their usage depends of the context (see <<_variables_quick_reference>>).
-
-==== Workflow variables
-
-===== Job variables
-
-In a workflow you can define *job variables* that can be used in all tasks.
-
-A job variable is defined using the following attributes:
-
-* *name*: the name of the variable
-* *value*: the value of the variable
-* *model*: the type of the value (optional). See section <<_variable_model,Variable Model>>
-
-
-[[_templating]]
-Variables are very useful to use workflows as templates where only a few parameters change for each
-execution. Upon submission you can define variable values either from <<_scheduler_command_line, CLI>> or from
-the Web interfaces.
-
-The following example shows how to define a job variable:
-[source, xml]
-----
-<job ... >
-    <variables>
-        <variable name="variable" value="value" model=""/>
-    </variables>
-    ...
-</job>
-----
-
-*Job variables* can be referenced anywhere in the workflow, including other job variables.
-
-The syntax for referencing a variable is the pattern `${variable_name}` (case-sensitive), for example:
-
-[source, xml]
-----
-<nativeExecutable>
-    <staticCommand value="${variable}" />
-</nativeExecutable>
-----
-
-===== Task variables
-
-Similarly to job variables, *Task variables* can be defined inside a task. Task variables scope is strictly limited to the task definition.
-
-A task variable is defined using the following attributes:
-
-* *name*: the name of the variable
-* *value*: the value of the variable
-* *inherited*: asserts whether the propagated value should be use instead of the *value* value. If _true_, the *value* field can be empty. As a consequence, inheritance requires to declare the variable value at Workflow level
-* *model*: the type of the value (optional). See section <<_variable_model,Variable Model>>
-
-For example:
-[source, xml]
-----
-<task ... >
-    <variables>
-        <variable name="variable" value="value" inherited="false" model=""/>
-    </variables>
-    ...
-</task>
-----
-Task variables can be used similarly to job variables using the pattern `${variable_name}` but only inside the task where the variable is defined.
-
-Task variables override job variables, this means that if a job variable and a task variable are defined with the same name, the task variable value will be used inside the task, and the job variable value will be used elsewhere in the job.
-
-===== Variable Model
-
-Job and Task variables can define a `model` attribute which let the workflow designer control the variable value syntax.
-A workflow designer can for example decide that the variable NUMBER_OF_ENTRIES is expected to be convertible to an Integer ranged between 0 and 20.
-
-The workflow designer will then provide a default value to the variable NUMBER_OF_ENTRIES, for example "10". This workflow is valid as "10" can be converted to an Integer and is between 0 and 20.
-
-When submitting the workflow, it will be possible to choose a new value for the variable NUMBER_OF_ENTRIES.
-If the user submitting the workflow chooses for example the value -5, the validation will fail and an error message will appear.
-
-====== Available Models
-
-The following list describes the various model syntaxes available:
-
-* *PA:BOOLEAN* : variable is either "true", "false", "0" or "1".
-* *PA:INTEGER* , *PA:INTEGER[min,max]* : variable can be converted to https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Integer.html[java.lang.Integer], and eventually is contained in the range [min, max]. +
-Examples : PA:INTEGER will accept "-5" but not "1.4", PA:INTEGER[0,20] will accept "12" but not "25".
-* *PA:LONG* , *PA:LONG[min,max]* : same as above with https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Long.html[java.lang.Long].
-* *PA:FLOAT* , *PA:FLOAT[min,max]* : same as above with https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Float.html[java.lang.Float]. +
-Examples: PA:FLOAT[-0.33,5.99] will accept "3.5" but not "6".
-* *PA:DOUBLE* , *PA:DOUBLE[min,max]* : same as above with https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Double.html[java.lang.Double].
-* *PA:SHORT* , *PA:SHORT[min,max]* : same as above with https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Short.html[java.lang.Short].
-* *PA:URL* : variable can be converted to https://docs.oracle.com/javase/7/docs/api/index.html?java/net/URL.html[java.net.URL]. +
-Examples: PA:URL will accept "http://mysite.com" but not "c:/Temp".
-* *PA:URI* : variable can be converted to https://docs.oracle.com/javase/7/docs/api/index.html?java/net/URI.html[java.net.URI]. +
-Examples: PA:URI will accept "/tmp/file" but not "c:\a^~to" due to invalid characters.
-* *PA:DATETIME(format)* , *PA:DATETIME(format)[min,max]* : variable can be converted to a https://docs.oracle.com/javase/7/docs/api/index.html?java/util/Date.html[java.util.Date] using the format specified (see the format definition syntax in the https://docs.oracle.com/javase/7/docs/api/index.html?java/text/SimpleDateFormat.html[SimpleDateFormat] class). +
-A range can also be used in the PA:DATETIME model. In that case, each bound of the range must match the date format used. +
-+
-Examples: +
-PA:DATETIME(yyyy-MM-dd) will accept "2014-12-01" but not "2014". +
-PA:DATETIME(yyyy-MM-dd)[2014-01-01, 2015-01-01] will accept "2014-12-01" but not "2015-03-01". +
-PA:DATETIME(yyyy-MM-dd)[2014, 2015] will result in an error during the workflow definition as the range bounds [2014, 2015] are not using the format yyyy-MM-dd.
-* *PA:LIST(item1,item2,...)* : variable must be one of the values defined in the list. +
-Examples: PA:LIST(a,b,c) will accept "a", "b", "c" but no other value.
-* *PA:REGEXP(pattern)* : variable syntax must match the regular expression defined in the pattern. The regular expression syntax is described in class https://docs.oracle.com/javase/7/docs/api/index.html?java/util/regex/Pattern.html[Pattern]. +
-Examples: PA:REGEXP([a-z]+) will accept "abc", "foo", but not "Foo".
-* *PA:MODEL_FROM_URL(url)* : variable syntax must match the model fetched from the given url. This can be used for example when the model needs to represent a list of elements which may evolve over time and is updated inside a file. Such as a list of machines in an infrastructure, a list of users, etc. +
-Examples: PA:MODEL_FROM_URL(file:///srv/machines_list_model.txt), if the file machines_list_model.txt contains PA:LIST(host1,host2), will accept only "host1" and "host2", but may accept other values as the machines_list_model file changes.
-* *PA:CRON* : variable syntax must be a valid cron expression as defined in the  http://www.sauronsoftware.it/projects/cron4j/manual.php#p02[cron4j manual]. +
-Examples: PA:CRON will accept "5 * * * \*" but not "* * * *" (missing minutes sub-pattern).
-* *PA:SPEL(SpEL expression)* : variable syntax will be evaluated by a https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[SpEL] expression. Refer to next paragraph.
-
-====== Spring Expression Language Model
-
-The PA:SPEL(expr) model allows to define expressions able to validate a variable value or not. Additionally, this model can be used to validate multiple variable values or to dynamically update other variables.
-The syntax of the SpEL expression is defined by the https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[Spring Expression Language reference].
-
-In order to interact with variables, the expression has access to the following properties:
-
-* *#value* : this property will contain the value of the current variable defined by the user.
-* *variables['variable_name']* : this property array contains all the variables of the same context (for example of the same task for a task variable).
-
-The SpEL expression must return a *boolean value*, `true` if the value is correct, `false` otherwise, returning another type will raise an error.
-
-* *Example of SpEL simple validations:* +
-+
-PA:SPEL(#value == 'abc') : will accept the value if it's the 'abc' string +
-PA:SPEL(T(Integer).parseInt(#value) > 10) : will accept the value if it's an integer greater than 10. +
-+
-Note that #value always contains a string and must be converted to other types if needed. +
-+
-* *Example of SpEL multiple validations:* +
-+
-PA:SPEL(variables['var1'] + variables['var2'] == 'abcdef') : will be accepted if the string concatenation of variable var1 and var2 is 'abcdef'. +
-PA:SPEL(T(Integer).parseInt(variables['var1']) + T(Integer).parseInt(variables['var2']) < 100) : will be accepted if the sum of variables var1 and var2 are smaller than 100. +
-+
-* *Example of SpEL variable inference:* +
-+
-PA:SPEL( variables['var2'] == '' ? (variables['var2'] = variables['var1']) instanceof T(String) : true ) : if the variable var2 is empty, it will use the value of variable var1 instead. +
-+
-Note that the SpEL expression must always return a boolean value, this is why in this last expression we use the instanceof keyword to avoid returning a string value.
-
-
-===== ProActive system variables
-
-Some variables are explicitly defined by the Scheduler to retrieve runtime information about a job or a task.
-
-Here is the list of ProActive system variables:
-
-.ProActive variables
-[cols="2,5,2"]
-|===
-| *Variable name* | *Description* | *Type*
-| `PA_JOB_ID`
-| The current job ID.
-| String
-
-| `PA_JOB_NAME`
-| The current job name.
-| String
-
-| `PA_TASK_ID`
-| The current task ID.
-| String
-
-| `PA_TASK_NAME`
-| The current task name.
-| String
-
-| `PA_TASK_ITERATION`
-| The current iteration index, when using <<_loop,looping>>, starts at 0.
-| Integer
-
-| `PA_TASK_REPLICATION`
-| The current iteration index, when using a <<_replicate,replication>>, starts at 0.
-| Integer
-
-| `PA_TASK_PROGRESS_FILE`
-| The path to the progress file, used to set the task's progress.
-
-  You can import and use the utility class `org.ow2.proactive.scripting.helper.progress.ProgressFile` to read/write values to the file identified by this variable.
-| String
-
-| `PA_SCHEDULER_HOME`
-| The path to Scheduler home, where the Scheduler or the Node is installed.
-| String
-
-| `PA_NODESFILE`
-| The path to the hostfile when using a <<_multi_node_task,multi nodes task>>.
-| String
-
-| `PA_NODESNUMBER`
-| The number of acquired nodes when using a <<_multi_node_task,multi nodes task>>.
-| Integer
-
-| `PA_USER`
-| The username of the ProActive user who has submitted the job.
-| String
-
-|===
-
-They can be used inside the workflow with the pattern syntax, for example:
-
-[source, xml]
-----
-<task ...>
-    ...
-     <forkEnvironment workingDir="/opt/${PA_JOB_ID}"></forkEnvironment>
-    ...
-</task>
-----
-
-===== Dynamic replacements
-
-It is possible to combine recursive definitions of variables.
-
-For example, one could write:
-----
-<task ...>
-    ...
-     <forkEnvironment workingDir="/opt/${DIRECTORY_${PA_TASK_REPLICATION}}"></forkEnvironment>
-    ...
-</task>
-----
-
-In that case, the variable `DIRECTORY_0` or `DIRECTORY_1`, etc (depending on the replication index) will be used in the working dir attribute.
-
-Pattern variable replacements may be performed at submission time or at execution time:
-
-- A replacement performed at *execution time* means that the replacement is executed only when the task enclosing the replacement is executed.
-- A replacement performed at *submission time* means that the replacement is directly executed when the job is submitted to the scheduler.
-
-Replacements directly using global job or task variables will always be performed at submission time.
-
-In the following example, the description replacement is performed at submission time:
-
-[source, xml]
-----
-<job ... >
-    <variables>
-        <variable name="description" value="My ProActive workflow"/>
-    </variables>
-    ...
-    <task ... >
-        <description>${description}</description>
-
-    </task>
-</job>
-----
-
-Replacements using system variables, such as the workingDir example above, will always be performed at execution time.
-
-
-===== Variables map and propagation
-
-In addition to the ability to use variables directly inside the workflow with the pattern syntax, it is also possible to use
-all type of variables inside scripts thanks to the `variables` map.
-
-Inside a script, `variables` is bound to a http://docs.oracle.com/javase/8/docs/api/java/util/Map.html[Map^].
-The syntax to access it might differ given the script engine you are using.
-
-For example in a *Groovy* script task, you can use:
-
-[source, groovy]
-----
-String var = variables.get("one_variable")
-variables.put("other_variable", "foo")
-----
-
-The first line access the variable `one_variable` from the `variables` map.
-The second line stores in the variables map a new variable called `other_variable`.
-
-System variables can also be accessed from the `variables` map, for example:
-
-[source, groovy]
-----
-println variables.get("PA_JOB_ID") // will display the id of the current job
-----
-
-From a native executable, for instance a Shell script, variables are accessible through environment variables.
-
-[source, bash]
-----
-#!/bin/bash
-echo $variables_PA_TASK_NAME
-----
-
-WARNING: In native tasks and Bash/CMD script engines, variables can be read but not written to.
-
-The `variables` map is propagated down the execution chain. If a task modifies a variable in the variables map, or add a new variable, all dependent tasks will have access to this modification.
-
-For example:
-
-[source, groovy]
-----
-// task1
-String var = variables.get("one_variable")
-variables.put("one_variable", "foo")
-variables.put("other_variable", "bar")
-----
-
-[source, groovy]
-----
-// task2 depends on task1
-println variables.get("one_variable") // will display "foo"
-println variables.get("other_variable") // will display "bar"
-----
-
-If a task depends on several tasks and each task modifies the same variable, the final value of the variable
-which is propagated down the execution chain, depends on the *order of task execution*.
-Therefore, the users need to take appropriate measures to prevent any undesired effects of such race conditions.
-
-You can set any link:http://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html[Java serializable object, window="_blank"]
- as a variable value. They will be converted into strings using
-http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()[toString()^]
- method when required, for instance, to make those values available as environment variables in native tasks.
-
-==== Generic Information
-
-In addition to variables, another key/value structure can be accessed inside a script: *_Generic Information_*.
-
-Generic information semantics differ from <<_workflow_variables>> semantics in the following way:
-
- * Generic information can be accessed inside a script, but cannot be modified.
- * Generic information can be defined at *job level* or at *task level*. If the same generic information is defined at job level and at task level, the latter value takes precedence inside the task scope.
- * Generic information cannot be used directly inside the workflow with the syntax ${} (See  <<_workflow_variables>>).
- * Generic information are used in general internally by the scheduler, for example to provide information to the scheduling loop on how to handle the task. An example of such generic information is the _START_AT_ info used inside <<_cron_tasks>>.
- * Generic information can use in their definition job/task variables patterns, pattern replacements can be done at execution time when using task generic information.
-
-Example of generic information definition:
-
-For example:
-[source, xml]
-----
-<task ... >
-    <genericInformation>
-        <info name="ginfo" value="${test}"/>
-    </genericInformation>
-    ...
-</task>
-----
-
-==== Passing data between tasks using results
-
-Another important mechanism of data exchange is the task *result* variable. Anywhere in a task (usually at the end) you can set a value to a reserved
-variable named *result* using any Java object. This value will be available in tasks depending on it. Moreover, in case of several dependencies,
-results will be aggregated into a new array variable named *results*.
-
-Assuming that we have two tasks *task1* and *task2* written in Groovy:
-
-[source, groovy]
-----
-// task1
-result = "task1";
-----
-
-[source, groovy]
-----
-// task2
-result = "task2";
-----
-
-and *task3* that depends on tasks *task1* and *task2*, then, you can access result values defined by the parents as follows:
-
-[source, groovy]
-----
-// task3
-println(results[0]);
-// will print "task1"
-println(results[1]);
-// will print "task2"
-----
-
-NOTE: results will be aggregated according to the order declared in the dependency list. Consequently, if the xml *depends* tag of *task3* contains the list [task1, task2] (see the xml example below), then results[0] will contain the result of *task1* and results[1] the result of *task2*. On the contrary, if the depends list is [task2, task1], then results[0] will contain the result of *task2* and results[1] the result of *task1*.
-
-[source, xml]
-----
-<depends>
-        <task ref="task1"/>
-        <task ref="task2"/>
-</depends>
-----
-
-For nearly all script languages, the *results* variable contains a list of http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/common/task/TaskResult.html[TaskResult java object].
-In order to access the result value, the value() method of this object must be called.
-Example for Python/Jython:
-[source, python]
-----
-print results[0].value()
-----
-
-==== Result metadata
-
-Result metadata can contain additional information associated with the result. In order to store metadata information, use the following syntax, if task2 depends on task1:
-
-[source, groovy]
-----
-// task1
-result = "task1";
-resultMetadata.put("mymetadata", "myvalue")
-----
-
-[source, groovy]
-----
-// task2
-println(results[0].getMetadata());
-----
-
-It is up to the user code to decide the metadata semantics, but some specific metadata can have a meaning when downloading or previewing results from the *Scheduler portal*:
-
-- *file.name* : the name of the file, including the extension, which will be used when storing the result in binary format.
-+
-[source, groovy]
-----
-// fileNameTask
-file = new File("balloon13.png")
-result = file.getBytes()
-resultMetadata.put("file.name","balloon13.png")
-----
-
-- *file.extension* : the extension, which will be appended to the automatically generated name, when storing the result in binary format
-+
-[source, groovy]
-----
-// fileExtensionTask
-file = new File("balloon13.png")
-result = file.getBytes()
-resultMetadata.put("file.extension",".png")
-----
-
-- *content.type* : the display format, which will be used when previewing the file in the browser. Open the following https://www.iana.org/assignments/media-types/media-types.xhtml[link] for the complete list of mime-types.
-+
-[source, groovy]
-----
-// contentTypeTask
-file = new File("balloon13.png")
-result = file.getBytes()
-resultMetadata.put("content.type","image/png")
-----
-
-=== File based propagation
-
-==== Input/Output Data in Shared Directory
-
-The easiest way to use your data on computing machines is to set up a *shared directory* available on all Compute Hosts. For
-Linux it's typically an NFS directory, for Windows it could be an SMB network share. Then, in tasks you can manipulate
-files seamlessly across ProActive Nodes.
-
-[source, java]
-----
-File inputData = new File("/data/username/inputfile");
-----
-
-This approach has some limitations though:
-
-* The path to the shared folder should be *identical* on all Compute Hosts
-* It can be difficult to use with *heterogeneous resources*, e.g. Linux and Windows hosts
-
-==== Data Spaces
-
-===== Global and User Spaces
-
-If a shared folder is not an option in your environment, the ProActive Scheduler provides a convenient way to access
-your data. It has two types of storage on the host where the server is running:
-
-* A *Global Space* where anyone can read/write files
-* An *User Space* which is a personal user data storage
-
-By default, these spaces are linked to folders in the *data* directory of the ProActive Scheduler host:
-
- * `PROACTIVE_HOME/data/defaultglobal`
- * `PROACTIVE_HOME/data/defaultuser`
-
-But it can be changed in `PROACTIVE_HOME/config/scheduler/settings.ini`.
-
-===== Local Space
-
-All files that are stored in these spaces can be read from all computing nodes. However, data transfer is declarative and not explicit.
-You need to define which files have to be transferred from a data space to computing nodes by using *input files* and reciprocally from computing nodes to a data space by defining *output files*:
-
-[source, xml]
-----
-<task name="task1">
-    ...
-    <inputFiles>
-        <files includes="tata" accessMode="transferFromGlobalSpace"/>
-    </inputFiles>
-    <outputFiles>
-        <files includes="titi*" accessMode="transferToGlobalSpace"/>
-    </outputFiles>
-    ...
-</task>
-----
-
-Upon the execution of the previous example, Proactive Scheduler automatically transfers all files to a ProActive Node where the task will be executed. The files are put in a special place called *Local Space* on the ProActive Node. It corresponds to the working directory of a task when the task is in fork mode (default).
-From a task point of view, files can be accessed normally like shown below:
-
-[source, java]
-----
-File inputFile = new File("tata")
-----
-
-Then, based on the previous task definition, all the files whose the name starts with _titi_ (e.g titi, titi2, etc.) produced by _task1_ will be transferred back automatically to Global Space by the Scheduler once the task is finished.
-
-Files can be also transferred from/to User Space by specifying `transferFromUserSpace`/`transferToUserSpace`.
-
-Before running your jobs you should first *upload* your files into either Global or User Space. To do it you can export folders linked to
-these spaces by one of the standard protocols like *FTP*, *NFS*, or use available web interfaces like
-http://pyd.io[Pydio^].
-
-It is possible to use wildcards in transfer directives, such as:
-
-[source, xml]
-----
-<task name="task1">
-    ...
-    <inputFiles>
-        <files includes="**/tata" accessMode="transferFromGlobalSpace"/>
-    </inputFiles>
-    <outputFiles>
-        <files includes="*" accessMode="transferToGlobalSpace"/>
-    </outputFiles>
-    ...
-</task>
-----
-
-More information of pattern syntax can be found in the https://docs.oracle.com/javase/7/docs/api/java/nio/file/FileSystem.html#getPathMatcher(java.lang.String)[FileSystem class JDK documentation].
-
-
-===== Cache Space
-
-In addition to transferring to the Task *Local Space*, it is also possible to transfer files to the Node host *Cache Space*.
-
-From the Node host point of view, the Cache Space is *unique* and shared for all tasks and all ProActive Nodes deployed on the host.
-
-Transfers to the cache are *not concurrent*, only a single task can transfer to the cache at the same time. I.e if multiple tasks are run in parallel on the same hosts and they all transfer to the cache, these transfers will be executed sequentially.
-
-If a file declared for the transfer is newer than the existing version in the cache, the file will be updated.
-
-In order to transfer files to the cache, simply use the cache transfer directives inside your job:
-
-[source, xml]
-----
-<task name="task1">
-    ...
-    <inputFiles>
-        <files includes="tata" accessMode="cacheFromGlobalSpace"/>
-        <files includes="toto" accessMode="cacheFromUserSpace"/>
-    </inputFiles>
-    ...
-</task>
-----
-
-The files will not be transferred to the Local Space of the task, so it will not be possible to access these files from the current directory.
-
-In order to access these files, use the *cachespace* variable which contains the location of the cache, for example in groovy:
-
-[source, groovy]
-----
-inputFile = new File(cachespace, "tata")
-----
-
-There are no transfer directives to transfer output files *from* the cache. Output files transfers are only possible from the *Local Space*.
-
-Files in the cache space are *automatically deleted* after a given period. The default invalidation period is two weeks, which means that files older than two weeks will be automatically deleted.
-
-In order to change this period, the ProActive Node must be started with the property *node.dataspace.cache.invalidation.period* (in miliseconds).
-
-The property *node.dataspace.cachedir* can also be used to control the cache location on the node.
-
 
 == Workflow concepts
 
@@ -1162,6 +600,110 @@ block.
 
 -   If the child of a *replicate* task is a task block, the whole block
  will be replicated and not only the child of the initiator.
+
+=== Variables
+
+include::./references/Variables.adoc[]
+
+=== Task result
+
+Another way to propagate data from a task to another relies on *result* variable.
+Anywhere in a task (usually at the end) you can set a value to a reserved
+variable named *result*. This value will be available in tasks
+depending on it. If a task has several dependencies, *results* will be an array.
+
+Assuming that we have two tasks *task1* and *task2* written in Groovy:
+
+[source, groovy]
+----
+// task1
+result = "task1";
+----
+
+[source, groovy]
+----
+// task2
+result = "task2";
+----
+
+and *task3* that depends on tasks *task1* and *task2*, then, you can access result values defined by the parents as follows:
+
+[source, groovy]
+----
+// task3
+println(results[0]);
+// will print "task1"
+println(results[1]);
+// will print "task2"
+----
+
+NOTE: results will be aggregated according to the order declared in the dependency list. Consequently, if the xml *depends* tag of *task3* contains the list [task1, task2] (see the xml example below), then results[0] will contain the result of *task1* and results[1] the result of *task2*. On the contrary, if the depends list is [task2, task1], then results[0] will contain the result of *task2* and results[1] the result of *task1*.
+
+[source, xml]
+----
+<depends>
+        <task ref="task1"/>
+        <task ref="task2"/>
+</depends>
+----
+
+For nearly all script languages, the *results* variable contains a list of http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/common/task/TaskResult.html[TaskResult java object].
+In order to access the result value, the value() method of this object must be called.
+Example for Python/Jython:
+[source, python]
+----
+print results[0].value()
+----
+
+==== Assigning metadata to result variable
+
+Result metadata can contain additional information associated with the result. In order to store metadata information, use the following syntax, if task2 depends on task1:
+
+[source, groovy]
+----
+// task1
+result = "task1";
+resultMetadata.put("mymetadata", "myvalue")
+----
+
+[source, groovy]
+----
+// task2
+println(results[0].getMetadata());
+----
+
+It is up to the user code to decide the metadata semantics, but some specific metadata can have a meaning when downloading or previewing results from the *Scheduler portal*:
+
+- *file.name* : the name of the file, including the extension, which will be used when storing the result in binary format.
++
+[source, groovy]
+----
+// fileNameTask
+file = new File("balloon13.png")
+result = file.getBytes()
+resultMetadata.put("file.name","balloon13.png")
+----
+
+- *file.extension* : the extension, which will be appended to the automatically generated name, when storing the result in binary format
++
+[source, groovy]
+----
+// fileExtensionTask
+file = new File("balloon13.png")
+result = file.getBytes()
+resultMetadata.put("file.extension",".png")
+----
+
+- *content.type* : the display format, which will be used when previewing the file in the browser. Open the following https://www.iana.org/assignments/media-types/media-types.xhtml[link] for the complete list of mime-types.
++
+[source, groovy]
+----
+// contentTypeTask
+file = new File("balloon13.png")
+result = file.getBytes()
+resultMetadata.put("content.type","image/png")
+----
+
 
 === Control Flow Scripts
 
@@ -1392,6 +934,50 @@ if (SelectionUtils.checkOSName("windows")) {
 }
 ----
 
+You can use variables on the selection script, these variables must be visible within the task
+context, i.e., declared on job scope, on task scope, or result variable from a previous task. In the last
+case is mandatory that the task that declares the inherited variable precedes the task using the variable. Below
+an example jon in XML format that uses a task variable to select Unix/Linux as operating system, in this example
+variable *operating_system* (task scope) resolves to variable *operating_system_workflow* (job scope).
+
+[source, xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<job
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="urn:proactive:jobdescriptor:3.10"
+     xsi:schemaLocation="urn:proactive:jobdescriptor:3.10 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.10/schedulerjob.xsd"
+    name="variable solving"
+    priority="normal"
+    onTaskError="continueJobExecution"
+     maxNumberOfExecution="2"
+>
+  <variables>
+    <variable name="operating_system_workflow" value="linux" model=""/>
+  </variables>
+  <taskFlow>
+    <task name="Groovy_Task0">
+      <description>
+        <![CDATA[ The simplest task, ran by a groovy engine. ]]>
+      </description>
+      <variables>
+        <variable name="operating_system" value="$operating_system_workflow" inherited="false" />
+      </variables>
+      <scriptExecutable>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+                import org.ow2.proactive.scripting.helper.selection.SelectionUtils
+                selected = SelectionUtils.checkOSName(variables.get("operating_system"))
+            ]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+  </taskFlow>
+</job>
+----
+
 [[_pre_post_clean]]
 === Pre, Post & Clean Scripts
 
@@ -1407,6 +993,25 @@ is a script that removes files from a specific directory once the task is finish
 ----
 Files.deleteIfExists(new File("/tmp/working_dir/").toPath())
 ----
+
+
+==== File transfer
+
+===== Input/Output Data in Shared Directory
+
+The easiest way to use your data on computing machines is to set up a *shared directory* available on all Compute Hosts. For
+Linux it's typically an NFS directory, for Windows it could be an SMB network share. Then, in tasks you can manipulate
+files seamlessly across ProActive Nodes.
+
+[source, java]
+----
+File inputData = new File("/data/username/inputfile");
+----
+
+This approach has some limitations though:
+
+* The path to the shared folder should be *identical* on all Compute Hosts
+* It can be difficult to use with *heterogeneous resources*, e.g. Linux and Windows hosts
 
 === Run computation with your system account
 
@@ -1645,8 +1250,120 @@ Notifications will only be sent for jobs whose generic information contains user
 SubmitJobNoWait and SubmitJobAndWait templates under *Controls* menu allow you to submit a workflow from another workflow using *schedulerapi*.
 
 In order to submit a workflow, you need to put the URL of that workflow in the Task Variables under the key *workflowURL*. You can use any URL that points to
-a valid workflow xml file. For example, you can add the workflow that you want to execute into *Catalog*, then retrieve its URL by indicating its Bucket ID
-and workflow name. Moreover, SubmitJobAndWait will wait for the completion of the submitted workflow before proceeding further with the execution of the dependant tasks.
+a valid workflow xml file. For example, you can add the workflow that you want to execute into *Catalog*, then retrieve its URL by indicating its Bucket name
+and Workflow name. Moreover, SubmitJobAndWait will wait for the completion of the submitted workflow before proceeding further with the execution of the dependant tasks.
+
+==== Data Spaces
+
+===== Global and User Spaces
+
+If a shared folder is not an option in your environment, the ProActive Scheduler provides a convenient way to access
+your data. It has two types of storage on the host where the server is running:
+
+* A *Global Space* where anyone can read/write files
+* An *User Space* which is a personal user data storage
+
+By default, these spaces are linked to folders in the *data* directory of the ProActive Scheduler host:
+
+ * `PROACTIVE_HOME/data/defaultglobal`
+ * `PROACTIVE_HOME/data/defaultuser`
+
+But it can be changed in `PROACTIVE_HOME/config/scheduler/settings.ini`.
+
+===== Local Space
+
+All files that are stored in these spaces can be read from all computing nodes. However, data transfer is declarative and not explicit.
+You need to define which files have to be transferred from a data space to computing nodes by using *input files* and reciprocally from computing nodes to a data space by defining *output files*:
+
+[source, xml]
+----
+<task name="task1">
+    ...
+    <inputFiles>
+        <files includes="tata" accessMode="transferFromGlobalSpace"/>
+    </inputFiles>
+    <outputFiles>
+        <files includes="titi*" accessMode="transferToGlobalSpace"/>
+    </outputFiles>
+    ...
+</task>
+----
+
+Upon the execution of the previous example, Proactive Scheduler automatically transfers all files to a ProActive Node where the task will be executed. The files are put in a special place called *Local Space* on the ProActive Node. It corresponds to the working directory of a task when the task is in fork mode (default).
+From a task point of view, files can be accessed normally like shown below:
+
+[source, java]
+----
+File inputFile = new File("tata")
+----
+
+Then, based on the previous task definition, all the files whose the name starts with _titi_ (e.g titi, titi2, etc.) produced by _task1_ will be transferred back automatically to Global Space by the Scheduler once the task is finished.
+
+Files can be also transferred from/to User Space by specifying `transferFromUserSpace`/`transferToUserSpace`.
+
+Before running your jobs you should first *upload* your files into either Global or User Space. To do it you can export folders linked to
+these spaces by one of the standard protocols like *FTP*, *NFS*, or use available web interfaces like
+http://pyd.io[Pydio^].
+
+It is possible to use wildcards in transfer directives, such as:
+
+[source, xml]
+----
+<task name="task1">
+    ...
+    <inputFiles>
+        <files includes="**/tata" accessMode="transferFromGlobalSpace"/>
+    </inputFiles>
+    <outputFiles>
+        <files includes="*" accessMode="transferToGlobalSpace"/>
+    </outputFiles>
+    ...
+</task>
+----
+
+More information of pattern syntax can be found in the https://docs.oracle.com/javase/7/docs/api/java/nio/file/FileSystem.html#getPathMatcher(java.lang.String)[FileSystem class JDK documentation].
+
+
+===== Cache Space
+
+In addition to transferring to the Task *Local Space*, it is also possible to transfer files to the Node host *Cache Space*.
+
+From the Node host point of view, the Cache Space is *unique* and shared for all tasks and all ProActive Nodes deployed on the host.
+
+Transfers to the cache are *not concurrent*, only a single task can transfer to the cache at the same time. I.e if multiple tasks are run in parallel on the same hosts and they all transfer to the cache, these transfers will be executed sequentially.
+
+If a file declared for the transfer is newer than the existing version in the cache, the file will be updated.
+
+In order to transfer files to the cache, simply use the cache transfer directives inside your job:
+
+[source, xml]
+----
+<task name="task1">
+    ...
+    <inputFiles>
+        <files includes="tata" accessMode="cacheFromGlobalSpace"/>
+        <files includes="toto" accessMode="cacheFromUserSpace"/>
+    </inputFiles>
+    ...
+</task>
+----
+
+The files will not be transferred to the Local Space of the task, so it will not be possible to access these files from the current directory.
+
+In order to access these files, use the *cachespace* variable which contains the location of the cache, for example in groovy:
+
+[source, groovy]
+----
+inputFile = new File(cachespace, "tata")
+----
+
+There are no transfer directives to transfer output files *from* the cache. Output files transfers are only possible from the *Local Space*.
+
+Files in the cache space are *automatically deleted* after a given period. The default invalidation period is two weeks, which means that files older than two weeks will be automatically deleted.
+
+In order to change this period, the ProActive Node must be started with the property *node.dataspace.cache.invalidation.period* (in miliseconds).
+
+The property *node.dataspace.cachedir* can also be used to control the cache location on the node.
 
 === Control and Validation
 
@@ -2118,6 +1835,7 @@ you will benefit from live validation and completion!
 === Studio Tasks
 include::./references/Tasks.adoc[]
 
+[[_variables_quick_reference]]
 === Variables quick reference
 include::./references/VariablesReference.adoc[]
 

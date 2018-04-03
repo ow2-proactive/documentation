@@ -1,21 +1,21 @@
 :docinfo:
 = Machine Learning Open Studio
 include::../common-settings.adoc[]
-:toc-title: MLOS User Guide
+:toc-title: ML-OS User Guide
 
 == Overview
 
-=== What's Machine Learning Open Studio (MLOS)?
+=== What is Machine Learning Open Studio (ML-OS)?
 
 include::references/Overview.adoc[]
 
 === Glossary
 
-include::../Glossary.adoc[]
+include::references/Glossary.adoc[]
 
-== Get started
+== Get Started
 
-To submit your first Machine Learning workflow to *ProActive Scheduler*, link:../admin/ProActiveAdminGuide.html#_getting_started[install] it in
+To submit your first Machine Learning workflow to *ProActive Scheduler*, link:https://doc.activeeon.com/dev/admin/ProActiveAdminGuide.html#_run_the_proactive_scheduler[install] it in
 your environment (default credentials: admin/admin) or just use our demo platform http://try.activeeon.com[try.activeeon.com^].
 
 *ProActive Scheduler* provides comprehensive interfaces that allow to:
@@ -26,10 +26,11 @@ your environment (default credentials: admin/admin) or just use our demo platfor
 - http://try.activeeon.com//cloud-automation[Add services^]
 
 We also provide REST and command line interfaces for advanced users.
+http://try.activeeon.com/rest[try.activeeon.com/rest^]
 
 == Create a First Predictive Solution
 
-Suppose you need to predict houses prices based on these information(features) provided by the estate agency:
+Suppose you need to predict houses prices based on this information (features) provided by the estate agency:
 
 - *CRIM* per capita crime rate by town
 - *ZN* proportion of residential lawd zoned for lots over 25000
@@ -50,22 +51,22 @@ Predicting houses prices is a complex problem, but we can simplify it a bit for 
 
 === Manage the Canvas
 
-To use Machine Learning Open Studio, you need to add the *Machine Learning Bucket* as main catalog in the Proactive Studio. This bucket contains a set of generic tasks that enables you to upload and prepare data, train a model and test it.
+To use Machine Learning Open Studio, you need to add the *Machine Learning Bucket* as main catalog in the ProActive Studio. This bucket contains a set of generic tasks that enables you to upload and prepare data, train a model and test it.
 
-1. Open http://try.activeeon.com/studio[Proactive Workflow Studio^] home page.
+A. Open http://try.activeeon.com/studio[ProActive Workflow Studio^] home page.
 
-3. Create a new workflow.
+B. Create a new workflow.
 
-4. Fill the Workflow `General Parameters`.
+C. Fill the Workflow `General Parameters`.
 
-2. Click on `Catalog` menu then `Set Bucket as Main Catalog Menu` and select `machine-learning` bucket.
-This can also be achieved by adding `/templates/machine-learning` at the end of the URL of the proactive workflow studio.
+D. Click on `Catalog` menu then `Set Bucket as Main Catalog Menu` and select `machine-learning` bucket.
+This can also be achieved by adding `/templates/machine-learning` at the end of the URL of the proActive workflow studio.
 
-3. Click on `Catalog` menu then `Add Bucket as Extra Catalog Menu` and select `data-visualization` bucket.
+E. Click on `Catalog` menu then `Add Bucket as Extra Catalog Menu` and select `data-visualization` bucket.
+
+F. Organize your canvas.
 
 NOTE: Set Bucket as Main Catalog Menu allows the user to change the bucket used to get workflows from the Catalog in the studio. By selecting a bucket, the user can change the content of the main Catalog menu (named as the current bucket) to get workflows from another bucket as templates.
-
-4. Organize your canvas.
 
 image::manage_canvas.gif[100000,2000]
 
@@ -73,16 +74,16 @@ image::manage_canvas.gif[100000,2000]
 
 To upload data into the Workflow, you need to use a dataset stored in a CSV file.
 
-1. Once your dataset has been converted to *CSV* format, upload it into a cloud storage service for example https://www.aws.amazon.com/s3‎[Amazon S3^]. For this tutorial, we will use Boston house prices dataset available on this link:
+A. Once your dataset has been converted to *CSV* format, upload it into a cloud storage service for example https://www.aws.amazon.com/s3‎[Amazon S3^]. For this tutorial, we will use Boston house prices dataset available on this link:
 https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/boston-houses-prices.csv
 
-2. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the Proactive Workflow Studio.
+B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the ProActive Workflow Studio.
 
-3. Click on the task and click `General Parameters` in the left to change the default parameters of this task.
+C. Click on the task and click `General Parameters` in the left to change the default parameters of this task.
 
-4. Put in *FILE_URL* variable the S3 link to upload your dataset.
+D. Put in *FILE_URL* variable the S3 link to upload your dataset.
 
-5. Set the other parameters according to your dataset format.
+E. Set the other parameters according to your dataset format.
 
 This task uploads the data into the workflow that we can for model training and testing.
 
@@ -96,34 +97,34 @@ This step consists of preparing the data for the training and testing of the pre
 
 To do this, we use the <<Split_Data>> Task in the machine_learning bucket.
 
-1. Drag and drop the <<Split_Data>> Task into the canvas, and connect it to the <<Import_Data>> or <<Load_Boston_Dataset>> Task.
+A. Drag and drop the <<Split_Data>> Task into the canvas, and connect it to the <<Import_Data>> or <<Load_Boston_Dataset>> Task.
 
-2. By default, the default ratio is 0.7. this means that 0.7 of the dataset will be used for training the model and 0.3 for testing it.
+B. By default, the ratio is 0.7 this means that 70% of the dataset will be used for training the model and 0.3 for testing it.
 
-3. Click the <<Split_Data>> Task and set the <<TRAIN_SIZE>> variable to 0.6.
+C. Click the <<Split_Data>> Task and set the *TRAIN_SIZE* variable to 0.6.
 
 image::prepare_data.gif[100000,2000]
 
-=== Train a Predictive model
+=== Train a Predictive Model
 
 Using Machine Learning Open Studio, you can easily create different machine learning models in a single experiment and compare their results. This type of experimentation helps you find the best solution for your problem.
 You can also enrich the `machine-learning` bucket by adding new machine learning algorithms and publish or customize an existing task according to your requirements as the tasks are open source.
 
 NOTE: To change the code of a task click on it and click the `Task Implementation`. You can also add new variables to a specific task.
 
-In this experiment, we will create two different types of models and then compare their scores to decide which algorithm is most suitable to our problem. As the Boston dataset used for this example consists of predicting price of houses (continuous label). As such, we need to deal with a regression predictive problem.
+In this step, we will create two different types of models and then compare their scores to decide which algorithm is most suitable to our problem. As the Boston dataset used for this example consists of predicting price of houses (continuous label). As such, we need to deal with a regression predictive problem.
 
 To solve this problem, we have to choose a regression algorithm to train the predictive model. To see the available regression algorithms available on the Machine Learning Open Studio, see *ML Regression* Section in the *machine-learning* bucket.
 
 For this example, we will use <<Linear_Regression>> Task and <<Support_Vector_Regression>> Task.
 
-1. Find the <<Linear_Regression>> Task and <<Support_Vector_Regression>> Task and drag them into the canvas.
+A. Find the <<Linear_Regression>> Task and <<Support_Vector_Regression>> Task and drag them into the canvas.
 
-2. Find the `Train_Mode` Task and drag it twice into the canvas.
+B. Find the <<Train_Model>> Task and drag it twice into the canvas.
 
-3. Connect the <<Split_Data>> Task to  the two <<Train_Model>> Tasks in order to give it access to the training data. Connect then the <<Support_Vector_Regression>> Task to the first <<Train_Model>> Task and <<Support_Vector_Regression>> to the second <<Train_Model>> Task.
+C. Connect the <<Split_Data>> Task to  the two <<Train_Model>> Tasks in order to give it access to the training data. Connect then the <<Linear_Regression>> Task to the first <<Train_Model>> Task and <<Support_Vector_Regression>> to the second <<Train_Model>> Task.
 
-4. To be able to download the model learned by each algorithm, drag two <<Load_Model>> Tasks and connect them to each <<Train_Model>> Task.
+D. To be able to download the model learned by each algorithm, drag two <<Load_Trained_Model>> Tasks and connect them to each <<Train_Model>> Task.
 
 image::train.gif[100000,2000]
 
@@ -131,43 +132,43 @@ image::train.gif[100000,2000]
 
 To evaluate the two learned predictive models, we will use the testing data that was separated out by the <<Split_Data>> Task to score our trained models. We can then compare the results of the two models to see which generated better results.
 
-1. Find the <<Predict_Model>> Task and drag and drop it twice into the canvas.
+A. Find the <<Predict_Model>> Task and drag and drop it twice into the canvas.
 
-2. Connect the first <<Predict_Model>> Task to the <<Train_Model>> Task that's connected to <<Support_Vector_Regression>> Task.
+B. Connect the first <<Predict_Model>> Task to the <<Train_Model>> Task that is connected to <<Support_Vector_Regression>> Task.
 
-3. Connect the second <<Predict_Model>> Task to the <<Train_Model>> Task that's connected to `Liner_Regression` Task.
+C. Connect the second <<Predict_Model>> Task to the <<Train_Model>> Task that is connected to <<Linear_Regression>> Task.
 
-4. Find the <<Export_Result>> Task in the Machine Learning bucket and drag and drop it twice into the canvas.
+D. Find the <<Export_Results>> Task in the Machine Learning bucket and drag and drop it twice into the canvas.
 
-5. Connect each <<Export_Result>> Task with <<Predict_Model>>.
+E. Connect each <<Export_Results>> Task with <<Predict_Model>>.
 
 image::test.gif[100000,2000]
 
-NOTE: if you have a pkl predictive model that you have learned using another platform and you need to test it in the Machine Learning Open Studio, you can load it using *Load_Model* Task.
+NOTE: if you have a pickled file (.pkl) containing a predictive model that you have learned using another platform and you need to test it in the Machine Learning Open Studio, you can load it using *Load_Trained_Model* Task.
 
 === Run the Experiment and Preview the Results
 
-Now the workflow is completed and should look like this:
+Now the workflow is completed, let's execute it by:
 
-1. Click the *Execute* button on the menu to run the workflow.
+A. Click the *Execute* button on the menu to run the workflow.
 
-2. Click the *Scheduling & Orchestration* button to track the workflow execution progress.
+B. Click the *Scheduling & Orchestration* button to track the workflow execution progress.
 
-3. Click the Visualization tab and track the progress of your workflow execution (a green check mark appears on each Task when its execution is finished).
+C. Click the Visualization tab and track the progress of your workflow execution (a green check mark appears on each Task when its execution is finished).
 
-4. Visualize the output logs by clicking on the output tab and check the streaming check box.
+D. Visualize the output logs by clicking on the output tab and check the streaming check box.
 
-5. Click the `Tasks` tab and click open the `Preview` tab and then click whether on `Open in browser` to preview the results on your browser or on `Save as file` to download the results locally.
+E. Click the *Tasks* tab, select an *Export_Results* task and click on the *Preview* tab, then click either on *Open in browser* to preview the results on your browser or on *Save as file* to download the results locally.
 
 image::execute.gif[100000,2000]
 
 == Customize the Machine Learning Bucket
 
-=== Create or Update a ML task
+=== Create or Update a ML Task
 
 *Machine Learning Bucket* contains various open source tasks that can be easily used by a simple drag and drop.
 
-It is possible to enrich the Machine Learning Bucket by adding your own tasks. (see section 4.5)
+It is possible to enrich the Machine Learning Bucket by adding your own tasks. (see section 4.3)
 
 It is also possible to customize the code of the generic Machine Learning tasks. In this case, you need to drag and drop the targeted task to modify its code in the *Task Implementation* section.
 
@@ -181,19 +182,19 @@ We used a `Docker fork environment` for all the Machine Learning tasks. *activee
 
 NOTE: The use of docker containers is recommended as that way other tasks will not be affected by change. Docker containers provide isolation so that the host machine’s software stays the same. More details available on https://www.activeeon.com/public_content/documentation/latest/user/ProActiveUserGuide.html#_fork_environment[Proactive User Guide^]
 
-=== Publish a ML task
+=== Publish a ML Task
 
-The `Catalog` menu provides the possibility for a user to publish new created or/and update tasks inside *Machine Learning Bucket*, you need just to click on `Catalog` Menu then `Publish current Workflow to the Catalog`.
-Choose `machine-leaning` Bucket to store your new added workflow on it.
+The `Catalog` menu provides the possibility for a user to publish newly created or/and update tasks inside *Machine Learning Bucket*, you need just to click on `Catalog` Menu then `Publish current Workflow to the Catalog`.
+Choose `machine-leaning` Bucket to store your newly added workflow on it.
 If the Task with the same name already exists in the 'machine-leaning' bucket, then, it will be updated.
 We recommend to submit Tasks with a commit message for easier differentiation between the different submitted versions.
 
-NOTE: More details available on https://www.activeeon.com/public_content/documentation/latest/user/ProActiveUserGuide.html#_publish_current_workflow_to_the_catalog[Proactive User Guide^]
+NOTE: More details available on https://www.activeeon.com/public_content/documentation/latest/user/ProActiveUserGuide.html#_publish_current_workflow_to_the_catalog[ProActive User Guide^]
 
 === Create a ML Workflow
 
 The link:http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial, window="_blank"] on link:http://try.activeeon.com[try.activeeon.com, window="_blank"]
-shows you how to build a simple Machine learning workflow using Machine Learning Open Studio.
+shows you how to build a simple workflow using ProActive Studio.
 
 We show below an example of a workflow created with the Studio:
 
@@ -211,81 +212,122 @@ NOTE: The workflow represented in the above is available on the 'machine-learnin
 
 == Machine Learning Workflows Examples
 
-The Machine Learning Open Studio provides a fast, easy and practice way to execute different workflows using the machine learning  bucket. We present useful machine learning workflows for different applications in the following sub-sections.
+The Machine Learning Open Studio provides a fast, easy and practical way to execute different workflows using the machine learning  bucket. We present useful machine learning workflows for different applications in the following sub-sections.
 
-To test these workflows, you need to add the *machine-Learning-workflows Bucket* as main catalog in the Proactive Studio.
+To test these workflows, you need to add the *machine-Learning-workflows Bucket* as main catalog in the ProActive Studio.
 
-1. Open http://try.activeeon.com/studio[Proactive Workflow Studio^] home page.
+A. Open http://try.activeeon.com/studio[ProActive Workflow Studio^] home page.
 
-3. Create a new workflow.
+B. Create a new workflow.
 
-2. Click on `Catalog` menu then `Add Bucket as Extra Catalog Menu` and select `machine-learning-workflows` bucket.
+C. Click on `Catalog` menu then `Add Bucket as Extra Catalog Menu` and select `machine-learning-workflows` bucket.
 
-4. Open this added extra catalog menu and drag and drop the workflow example of your choice.
+D. Open this added extra catalog menu and drag and drop the workflow example of your choice.
 
-5. Execute the chosed workflow, track its progress and preview its results.
+E. Execute the chosen workflow, track its progress and preview its results.
 
-More details about these workflows is available in this link:https://www.activeeon.com/resources/automated-machine-learning-activeeon.pdf[link]
+More details about these workflows are available in this in link:https://www.activeeon.com/resources/automated-machine-learning-activeeon.pdf[ActiveEon's Machine Learning Documentation]
+
 
 === Basic Machine Learning
 
-*simple_clustering:* trains and tests a clustering model using Mean_shift algorithm.
+The following workflows present some machine learning basic examples. These workflows are built using generic Machine learning and data visualization tasks available on the Machine Learning and Data Visualization buckets.
 
-*simple_collaborative_filtering:* create a movie recommender engine using collaborative filtering algorithm
+*Diabetics_Detection_using_K_means:* trains and tests a clustering model using Mean_shift algorithm.
 
-*simple_linear_regression:*  trains and tests a clustering model using Mean_shift algorithm.
+*House_Price_Prediction_using_Linear_Regression:*  trains and tests a regression model using Mean_shift algorithm.
 
-*simple_logistic_regression:*  trains and tests a predictive model using logistic_regressive algorithm.
+*Iris_Flowers_Classification_using_Logistic_Regression:*  trains and tests a predictive model using logistic_regressive algorithm.
+
+*Movies_Recommendation:* create a movie recommendation engine using collaborative filtering algorithm.
 
 === Image Analysis
 
+The following workflows present useful computer vision applications using Convolutional Neural Networks based on deep learning for image recognition, object detection, anomaly detection, and image segmentation. Open source libraries, such as TensorFlow, Keras, Caffe, OpenCV, PyTorch and scikit-learn are used as backend for AI workflows.
+
 video::XEMm47GwCn8[youtube, width=700, height=400 start=0, position=center]
 
-*Anomaly_Detection_Demo:* checks if exists an anomaly in a certain scene using the YOLO library. However, we show a scene where only people are allowed on a pedestrian street. Anything detected other than people is considered as anomaly.
+*Keras_Image_Classification:* classifies an input image using deep ConvNets (specifically, VGG16) pre-trained on the ImageNet dataset.
 
-*Pytorch_Demo_Obj_Seg_Prediction:* returns the horse segments of a given input image.
+*Pytorch_Image_Object_Segmentation:* returns the horse segments of a given input image.
 
-*Pytorch_Demo_Obj_Seg_Training:* trains an image segmentation algorithm using PyTorch* to segment horses. It segments horses in the input image using a deep neural network (DNN).
+*Pytorch_Train_Image_Object_Segmentation:* trains an image segmentation algorithm using PyTorch* to segment horses. It segments horses in the input image using a deep neural network (DNN).
 
-*Tensorflow_Demo_Image_Classification:* classifies a input image using deep ConvNets (specifically, VGG16)* pre-trained on the ImageNet dataset.
+*Tensorflow_Parallel_Image_Prediction:* predicts three different images of flower species in parallel.
 
-*Tensorflow_Demo_Parallel_Prediction:* predicts three different images of flower species in parallel.
+*Tensorflow_Image_Prediction:* returns the flower species of a given input image.
 
-*Tensorflow_Demo_Prediction:* returns the flower specie of a given input image.
+*Tensorflow_Train_Image_Classifier:* trains a deep ConvNets (specifically, Inception)* to recognize flower species.
 
-*Tensorflow_Demo_Training:* trains a deep ConvNets (specifically, Inception)* to recognize flower species.
+*YOLO_Image_Object_Detection:* detects real-world objects in a image with the YOLO* library using a pre-trained.
 
-*YOLO_Demo_Object_Detection:* detects real-world objects in a image with the YOLO* library using a pre-trained.
+*YOLO_Image_Anomaly_Detection:* checks if an anomaly exists in a certain scene using the YOLO library. However, we show a scene where only people are allowed on a pedestrian street. Anything detected other than people is considered as anomaly.
+
+*YOLO_Demo_Object_Detection:* detects real-world objects in a image with the YOLO* library using a pre-trained model.
 
 === Log Analysis
 
-*real_time_apache_intrusion_detection:* detects intrusions in apache logs.
+The following workflows are designed to detect anomalies in log files. They are constructed using generic tasks which are available on the `machine-learning` and `data-visualization` buckets.
 
-*supervised_classification:* detects anomalies in HDFS logs based on a supervised algorithm.
+*Anomaly_Detection_in_Apache_Logs:* detects intrusions in apache logs using a predictive model trained using Support Vector Machines algorithm.
 
-*supervised_learning:* trains an anomaly detection model for logs using various supervised machine learning algorithms.
+*Anomaly_detection_in_HDFS_Blocks:* trains and test an anomaly detection model for detecting anomalies in HDFS Blocks.
 
-*unsupervised_classification:* detects anomalies in HDFS logs based on an unsupervised algorithm.
+*Anomaly_detection_in_HDFS_Nodes:* trains and test an anomaly detection model for detecting anomalies in HDFS Nodes.
 
-*unsupervised_learning:* trains an anomaly detection model for logs using various unsupervised machine learning algorithms.
+== Deep Learning Workflows Examples
 
-=== Text Analysis
+ML-OS provides a fast, easy and practical way to execute deep learning workflows. In the following sub-sections, we present useful deep learning workflows for text and image classification and generation.
 
-*unsupervised_learning*
+video::FwMPR87wzoo[youtube, width=700, height=400 start=0, position=center]
 
-=== Visdom
+You can test these workflows by following these steps :
 
-video::bQpwS2nMAZY[youtube, width=700, height=400 start=0, position=center]
+A. Open http://try.activeeon.com/studio[ProActive Workflow Studio^] home page.
 
-*Visdom_Plot_Example:* returns numerous examples of plots covered by Visdom.
+B. Create a new workflow.
 
-*Visdom_Realtime_Apache_Intrusion_Detection:*  broadcasts in real time some visualizations of the analytic results provided by the Apache log intrusion detector.
+C. Click on `Catalog` menu then `Add Bucket as Extra Catalog Menu` and select `deep-learning-workflows` bucket.
 
-*Visdom_Realtime_Digit_Classification:* evaluates in real time the performance of a simple Convolutional Neural Network (CNN) for MNIST* handwritten digit classification during the training and test processes.
+D. Open this added extra catalog menu and drag and drop the workflow example of your choice.
 
-*Visdom_Realtime_HDFS_Anomaly_Detection:* broadcasts in real time some visualizations of the analytic results provided by the supervised anomaly detector for HDFS logs developed by ActiveEon.
+E. Execute the chosen workflow, track its progress and preview its results.
 
-*Visdom_Service_Example:* evaluates in real time the performance of a simple Convolutional Neural Network (CNN) for MNIST* handwritten digit classification during the training and test processes.
+=== Azure Cognitive Services
+
+The following workflows present useful examples composed by pre-built Azure cognitive services available on `azure-cognitive-services` bucket.
+
+*Emotion_Detection_in_Bing_News:* is a mashup that searches for images of a person using Azure Bing Image Search then performs an emotion detection using Azure Emotion API.
+
+*Sentiment_Analysis_in_Bing_News:* is a mashup that searches for news related to a given search term using Azure Bing News API then performs a sentiment analysis using Azure Text Analytics API.
+
+=== Microsoft Cognitive Toolkit
+
+The following workflows present useful examples for predictive models training and test using Microsoft Cognitive Toolkit (CNTK).
+
+*CNTK_ConvNet:* trains a Convolutional Neural Network (CNN) on CIFAR-10 dataset.
+
+*CNTK_SimpleNet:* trains a 2-layer fully connected deep neural network with 50 hidden dimensions per layer.
+
+*GAN_Generate_Fake_MNIST_Images:* generates fake MNIST images using a Generative Adversarial Network (GAN).
+
+*DCGAN_Generate_Fake_MNIST_Images:* generates fake MNIST images using a Deep Convolutional Generative Adversarial Network (DCGAN).
+
+=== Mixed Workflows
+
+The following workflow presents an example of a workflow built using pre-built Azure cognitive services tasks available on the `azure-cognitive-services` bucket and custom AI tasks available on the `deep-learning` bucket.
+
+*Custom_Sentiment_Analysis:* is a mashup that searches for news related to a given search term using Azure Bing News API then performs a sentiment analysis using a custom deep learning based pretrained model.
+
+=== Custom AI Workflows
+
+The following workflows present an example of workflows built using custom AI tasks available on the `deep-learning` bucket. Such tasks enable you to train and test your own AI models by a simple drag and drop of custom AI task.
+
+*IMDB_Sentiment_Analysis:* trains a model for opinions identification and categorization expressed in a piece of text, especially in order to determine the opinion of IMDB users regarding specific movies [positive or negative].
+
+*Image_Classification:* uses a pre-trained deep neural network to classify ants and bees images.
+
+*Language_Detection:* involves building an RNN model from a lot of text data of respective languages and then identifying the test data (text) among the trained models.
 
 == References
 
@@ -304,12 +346,12 @@ This bucket offers different options, you can customize it by adding new tasks o
 [cols="17%,17%,20%,20%", options="header"]
 |===
 | Features | Targets | Dimensionality | Samples Total
-| Real, positive | Real 5. -5O | 13 | 506
+| Real, positive | Real 5. -50 | 13 | 506
 |===
 
 *How to use this task:*
 
-- The Boston House-Prices is a dataset regression, you can only use it with a regression algorithm, such as Linear Regression and Support Vector Regression.
+- The Boston House-Prices is a dataset for regression, you can only use it with a regression algorithm, such as Linear Regression and Support Vector Regression.
 
 - After this task, you can use the <<Split_Data>> task to divide the dataset into training and testing sets.
 
@@ -380,17 +422,17 @@ NOTE: More information about this dataset can be found http://scikit-learn.org/s
 | Boolean [True or False]
 |===
 
-WARNING: Your CSV file should be in a table format. See the example below.
+NOTE: Your CSV file should be in a table format. See the example below.
 
 image::csv_file_organisation.png[align="center"]
 
-===== Load_Model
+===== Load_Trained_Model
 
 *Task Overview:* Load a trained model, and use it to make predictions for new coming data.
 
 *Task Variables:*
 
-.Load_Model_Task variables
+.Load_Trained_Model_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -416,7 +458,7 @@ default:  https://s3.eu-west-2.amazonaws.com/activeeon-public/models/pima-indian
 | Put the URL of the raw log file that you need to parse.
 | String
 | `PATTERNS_FILE`
-| Put the URL of the CSV file that contains the different REGEX expressions of each possible pattern
+| Put the URL of the CSV file that contains the different RegEx expressions of each possible pattern
   and their corresponding variables.
   The csv file must contain three columns (See the example below):
 
@@ -441,13 +483,13 @@ default:  https://s3.eu-west-2.amazonaws.com/activeeon-public/models/pima-indian
 
 image::pattern_file.png[align="center"]
 
-*How to use this task:* Could be connected with <<Filter_Data>> task and feature extraction's tasks.
+*How to use this task:* Could be connected with <<Filter_Data>> task and <<Feature_Vector_Extractor>> tasks.
 
 ==== Data Preprocessing
 
 ===== Add_Data
 
-*Task Overview:* Concatenate the new added data to the original input data.
+*Task Overview:* Concatenate the newly added data to the original input data.
 
 *Task Variables:*
 
@@ -487,10 +529,11 @@ NOTE: More details about the source code of this task can be found https://panda
 | The URL of the file containing the labels that you need to concatenate.
 | String
 | `FILE_DELIMITER`
-| Delimiter to use.
+|Delimiter to use.
+| String
 |===
 
-*How to use this task:* Could be used after <<Feature_Extraction>> and <<Import_Data>> tasks.
+*How to use this task:* Could be used after <<Feature_Vector_Extractor>> and <<Import_Data>> tasks.
 
 NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/merging.html[here^].
 
@@ -504,7 +547,7 @@ NOTE: More details about the source code of this task can be found https://panda
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `Query`
+| `QUERY`
 | The query string to evaluate.
 | String
 | `FILTERED_FILE_OUPUT`
@@ -525,11 +568,11 @@ NOTE: More details about the source code of this task can be found https://panda
 |===
 | *Variable name* | *Description* | *Type*
 | `TRAIN_SIZE`
-| This parameter must be float within the range (0, 100), not including the values 0 and 100. *default* = 0.7
+| This parameter must be float within the range (0.0, 1.0), not including the values 0.0 and 1.0. *default* = 0.7
 | Float
 |===
 
-*How to use this task:* Should be used after Train and Predict tasks.
+*How to use this task:* Should be used before Train and Predict tasks.
 
 NOTE: More details about the source code of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html[here^].
 
@@ -659,7 +702,7 @@ NOTE: More information about this task can be found http://scikit-learn.org/stab
 | Integer (default=100)
 | `N_JOBS`
 | Number of CPU cores used. If given a value of -1, all cores are used.
-| Integer (default=100)
+| Integer (default=1)
 |===
 
 *How to use this task:* Should be connected with <<Train_Model>> or <<Train_Clustering_Model>> and <<Predict_Model>> or <<Predict_Clustering_Model>>.
@@ -727,7 +770,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 
 *Task Variables:*
 
-.Support_Vector_Machines_Task variables
+.Linear_Regression_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -758,7 +801,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 | String, optional (default=’rbf’)
 | `EPSILON`
 | It specifies the epsilon-tube within which no penalty is associated in the training loss function with points predicted within a distance epsilon from the actual value.
-| Float, optional (default=1.0)
+| Float, optional (default=0.1)
 |===
 
 *How to use this task:*  Should be connected with <<Train_Model>> or <<Train_Clustering_Model>> and <<Predict_Model>> or <<Predict_Clustering_Model>>.
@@ -767,13 +810,13 @@ NOTE: More information about the source of this task can be found http://scikit-
 
 ==== ML Clustering
 
-===== Kmeans
+===== K_Means
 
 *Task Overview:* K-means clustering aims to partition n observations into k clusters in which each observation belongs to the cluster with the nearest mean, serving as a prototype of the cluster
 
 *Task Variables:*
 
-.Support_Vector_Regression_Task variables
+.K_Means_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -810,7 +853,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 | Integer (default=1)
 |===
 
-*How to use this task:* Should be connected with <<Train_Model>> or <<Train_Clustering_Model>> and `Predict_Model` or <<Predict_Clustering_Model>>.
+*How to use this task:* Should be connected with <<Train_Model>> or <<Train_Clustering_Model>> and <<Predict_Model>> or <<Predict_Clustering_Model>>.
 
 NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.cluster.MeanShift.html[here^].
 
@@ -846,9 +889,346 @@ NOTE: More information about the source of this task can be found http://scikit-
 
 *Task Overview:* Generate predictions using a trained model.
 
-*How to use this task:* Should be used after the `Train_Model` Task.
+*How to use this task:* Should be used after the <<Train_Model>> Task.
 
 NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/supervised_learning.html#supervised-learning[here^].
+
+=== Deep Learning Bucket
+
+The `deep-learning` bucket contains diverse generic deep learning tasks that enable you to easily compose workflows for predictive models learning and testing. This bucket can be easily customized according to your needs.
+It offers different options, you can customize it by adding new tasks or update the existing tasks.
+
+==== Input and Output
+
+===== Import_Image_Dataset
+
+*Task Overview:* Load and return an image dataset. Each unique label should have its own folder which should contain its related images.
+
+*Task Variables:*
+
+.Import_Image_Dataset_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DATASET_URL`
+| URL pointing to the zip folder containing the needed data.
+| String
+| `TRAIN_SPLIT`
+| Must be a float within the range (0.0, 1.0), not including the values 0.0 and 1.0.
+| Float (default=1)
+| `TEST_SPLIT`
+| Must be a float within the range (0.0, 1.0), not including the values 0.0 and 1.0.
+| Float (default=0.3)
+| `VALIDATION_SPLIT`
+| Must be a float within the range (0.0, 1.0), not including the values 0.0 and 1.0.
+| Float (default=0.1)
+|===
+
+*How to use this task:* Should be connected with <<Train_Image_Model>> or <<Predict_Image_Model>>.
+
+NOTE: Torchvision were used to preprocess and load the dataset.
+
+===== Export_Model
+
+*Task Overview:* Export a trained model by a deep learning algorithm.
+
+*How to use this task:* Should be connected with <<Train_Image_Model>> or <<Train_Text_Model>>.
+
+===== Import_Model
+
+*Task Overview:* Import a trained model by a deep learning algorithm.
+
+*Task Variables:*
+
+.Import_Model_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `MODEL_URL`
+| URL pointing to the zip folder containing the needed model.
+|===
+
+*How to use this task:* Should be connected with <<Predict_Text_Model>> or <<Predict_Image_Model>>.
+
+===== Import_Text_Dataset
+
+*Task Overview:* Import data from external sources. Each unique label must have its own folder which should contain its related text file. If your data is unlabeled, use the name 'unlabeled' for the folder containing your text file.
+
+*Task Variables:*
+
+.Import_Text_Dataset_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DATASET_URL`
+| URL pointing to the zip folder containing the needed data.
+| String
+| `TRAIN_SPLIT`
+| Must be a float within the range (0.0, 1.0), not including the values 0.0 and 1.0.
+| Float (default=1)
+| `TEST_SPLIT`
+| Must be a float within the range (0.0, 1.0), not including the values 0.0 and 1.0.
+| Float (default=0.3)
+| `VALIDATION_SPLIT`
+| Must be a float within the range (0.0, 1.0), not including the values 0.0 and 1.0.
+| Float (default=0.1)
+| `TOY_MODE`
+| Use a subset of the data to train the model fastly.
+| Boolean (default=True)
+| `TOKENIZER`
+| Transform the text into tokens. Different options are available (str.split,moses,spacy,revtok,subword)
+| List (default=str.split)
+| `SENTENCE_SEPARATOR`
+| Split the text into separated paragraphs, separated lines, separated words. Choose your own separator.
+| String (default=\r)
+| `CHARSET`
+| Encode to be used to read the text.
+| String (default='utf-8')
+| `IS_LABELED_DATA`
+|  True if data is labeled.
+| Boolean (default=True)
+|===
+
+*How to use this task:* Should be connected with <<Train_Text_Model>> or <<Predict_Text_Model>>.
+
+NOTE: Torchtext were used to preprocess and load the text input. More information about this library can be found https://github.com/pytorch/text[here^].
+
+===== Export Results
+
+*Task Overview:* Export the results of the predictions generated by the trained model.
+
+*Task Variables:*
+
+.Export_Results_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `OUTPUT_FILE`
+| Converts the prediction results to HTML or CSV file.
+| List (default='HTML')
+|===
+
+*How to use this task:* Should be used after <<Predict_Text_Model>> or <<Predict_Image_Model>> tasks.
+
+===== Export Images
+
+*Task Overview:* Download a zip file of your results.
+
+*How to use this task:* Should be connected to <<Predict_Image_Model>> task.
+
+==== Image Classification
+
+===== AlexNet
+
+*Task Overview:* AlexNet is the name of a Convolutional Neural Network (CNN), originally written with CUDA to run with GPU support, which competed in the ImageNet Large Scale Visual Recognition Challenge in 2012.
+
+*How to use this task:* Should be connected to <<Train_Image_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/torchvision/models.html[AlexNet^].
+
+===== DenseNet-161
+
+*Task Overview:* Densely Connected Convolutional Network (DenseNet) is a network architecture where each layer is directly connected to every other layer in a feed-forward fashion (within each dense block).
+
+*How to use this task:* Should be connected to <<Train_Image_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/torchvision/models.html[DenseNet-161^].
+
+===== ResNet-18
+
+*Task Overview:* Deep Residual Networks (ResNet-18) is a deep convolutional neural network, trained on 1.28 million ImageNet training images, coming from 1000 classes.
+
+*How to use this task:* Should be connected to <<Train_Image_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/torchvision/models.html[ResNet-18^].
+
+===== VGG-16
+
+*Task Overview:* The VGG-16 is an image classification convolutional neural network.
+
+*How to use this task:* Should be connected to <<Train_Image_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/torchvision/models.html[VGG-16^].
+
+==== Text Classification
+
+===== GRU
+*Task Overview:* Gated recurrent units (GRUs) are a gating mechanism in recurrent neural networks.
+
+*Task Variables:*
+
+.GRU_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `EMBEDDING_DIM`
+| The dimension of the vectors that will be used to map words in some languages.
+| Integer (default=50)
+| `HIDDEN_DIM`
+| Hidden dimension of the neural network.
+| Integer (default=40)
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=2)
+| `DROPOUT`
+| Percentage of the neurons that will be ignored during the training.
+| Float (default=0.5)
+|===
+
+*How to use this task:* Should be connected to <<Train_Text_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/nn.html#torch.nn.GRU[GRU^].
+
+===== LSTM
+
+*Task Overview:* Long short-term memory (LSTM) units (or blocks) are a building unit for layers of a recurrent neural network (RNN).
+
+*Task Variables:*
+
+.LSTM_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `EMBEDDING_DIM`
+| The dimension of the vectors that will be used to map words in some languages.
+| Integer (default=50)
+| `HIDDEN_DIM`
+| Hidden dimension of the neural network.
+| Integer (default=40)
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=2)
+| `DROPOUT`
+| Percentage of the neurons that will be ignored during the training.
+| Float (default=0.5)
+|===
+
+*How to use this task:* Should be connected to <<Train_Text_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/nn.html#torch.nn.LSTM[LSTM^].
+
+===== RNN
+
+*Task Overview:* A recurrent neural network (RNN) is a class of artificial neural network where connections between units form a directed graph along a sequence.
+
+*Task Variables:*
+
+.RNN_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `EMBEDDING_DIM`
+| The dimension of the vectors that will be used to map words in some languages.
+| Integer (default=50)
+| `HIDDEN_DIM`
+| Hidden dimension of the neural network.
+| Integer (default=40)
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=2)
+| `DROPOUT`
+| Percentage of the neurons that will be ignored during the training.
+| Float (default=0.5)
+|===
+
+*How to use this task:* Should be connected to <<Train_Text_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/nn.html#torch.nn.RNN[RNN^].
+
+==== Train Model
+
+===== Train_Image_Model
+
+*Task Overview:* Train a model using a Convolutional Neural Network (CNN) algorithm.
+
+*Task Variables:*
+
+.Train_Image_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `NUM_EPOCHS`
+| Number of times all of the training vectors are used once to update the weights.
+| Integer (default=1)
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=4)
+| `NUM_WORKERS`
+| Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+| Integer (default=2)
+|===
+
+*How to use this task:* Could be connected to <<Predict_Image_Model>> and <<Export_Model>> tasks.
+
+===== Train_Text_Model
+
+*Task Overview:* A recurrent neural network (RNN) is a class of artificial neural network where connections between units form a directed graph along a sequence.
+
+*Task Variables:*
+
+.Train_Text_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `LEARNING_RATE`
+| Determines how quickly or how slowly you want to update the parameters.
+| Float (default=0.001)
+| `OPTIMIZER`
+| Choose the optimization algorithm that would help you to minimize the Loss function. Different options are available (42B, 840B, twitter.27B,6B).
+| List (default=Adam)
+| `LOSS_FUNCTION`
+| Choose the function that will be used to compute the loss. Different options are available (Adam,RMS, SGD, Adagrad, Adadelta).
+| List (default=NLLLoss)
+| `EPOCHS`
+| Number of times all of the training vectors are used once to update the weights.
+| Integer (default=10)
+| `TRAINABLE`
+| True if you want to update the embedding vectors during the training process.
+| Boolean (default=False)
+| `GLOVE`
+| Choose the glove vectors that need to be used for words embedding. Different options are available (42B, 840B, twitter.27B,6B)
+| List (default=6B)
+| `USE_GPU`
+| True if you need to execute the training task in a GPU node.
+| Boolean (default=True)
+|===
+
+*How to use this task:* Could be connected to <<Predict_Text_Model>> and <<Export_Model>> tasks.
+
+==== Predict
+
+===== Predict_Image_Model
+
+*Task Overview:* Generate predictions using a trained model.
+
+.Predict_Text_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=4)
+| `NUM_WORKERS`
+| Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+| Integer (default=2)
+|===
+
+*How to use this task:* Should be used after the <<Train_Image_Model>> or <<Export_Model>> Task.
+
+===== Predict_Text_Model
+
+*Task Overview:* Generate predictions using a trained model.
+
+.Predict_Text_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `LOSS_FUNCTION`
+| Choose the function that will be used to compute the loss. Different options are available (Adam,RMS, SGD, Adagrad, Adadelta).
+| List (default=NLLLoss)
+|===
+
+*How to use this task:* Should be used after the <<Train_Text_Model>> or <<Export_Model>> Task.
 
 === Data Visualization Bucket
 *Visdom Bucket* integrates generic tasks that can be easily used to broadcast visualizations of the analytic results provided by ML tasks. These visualization are created, organized, and shared using https://github.com/facebookresearch/visdom[Visdom^], a flexible tool proposed by Facebook Research.
@@ -857,7 +1237,9 @@ It provides a large set of plots that can be organized programmatically or throu
 
 Visdom bucket provides a fast, easy and practice way to execute different workflows generating these diverse visualizations that are automatically cached by the Visdom Server.
 
-==== Bind_or_Start_Visdom_Service
+==== Visdom
+
+===== Bind_or_Start_Visdom_Service
 
 *Task Overview:* Bind or/and Start Visdom server.
 
@@ -868,8 +1250,9 @@ Visdom bucket provides a fast, easy and practice way to execute different workfl
 |===
 | *Variable name* | *Description* | *Type*
 | `service_model`
-| The Visdom service to start. The Visdom Service available in http://try.activeeon.com//cloud-automation[Proactive Cloud Automation^] is used by default. (default="http://models.activeeon.com/pca/visdom")
-| String
+| The Visdom service to start. The Visdom Service available in http://try.activeeon.com//cloud-automation[ProActive Cloud Automation^] is used by default.
+| String (default=
+"http://models.activeeon.com/pca/visdom")
 | `instance_name`
 | The instance name of the server to use to broadcast visualization
 | String (default="visdom-server-1")
@@ -877,7 +1260,7 @@ Visdom bucket provides a fast, easy and practice way to execute different workfl
 
 WARNING: If two workflows use the same service instance names, then, their generated plots will be created on the same service instance.
 
-==== Visdom_Client_Example
+===== Visdom_Client_Example
 
 *Task Overview:* Connect and plot a text into the Visdom Server.
 
@@ -887,20 +1270,20 @@ To adapt according to the plots that you need to visualize
 
 *How to use this task:*  Customize this task by putting the source code generating your code in the `Task Implementation` section
 
-WARNING: This task has to be connected to the <<Bind_or_Start_Visdom_Service_Task>>. The Visdom server should be up in order to be able to broadcast visualizations.
+WARNING: This task has to be connected to the <<Bind_or_Start_Visdom_Service>> Task. The Visdom server should be up in order to be able to broadcast visualizations.
 
-==== Terminate_Visdom_Service
+===== Terminate_Visdom_Service
 
 *Task Overview:*  Stop and remove the Visdom Server.
 
 *Task Variables:*
 
-.Terminate_Visdom_Service variables
+.Terminate_Visdom_Service_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
 | `service_model`
-| The Visdom service to start. The Visdom Service available in http://try.activeeon.com//cloud-automation[Proactive Cloud Automation^] is used by default. (default="http://models.activeeon.com/pca/visdom")
+| The Visdom service to start. The Visdom Service available in http://try.activeeon.com//cloud-automation[ProActive Cloud Automation^] is used by default. (default="http://models.activeeon.com/pca/visdom")
 | String
 | `instance_name`
 | The instance name of the server to use to broadcast visualization
@@ -911,19 +1294,20 @@ WARNING: This task has to be connected to the <<Bind_or_Start_Visdom_Service_Tas
 
 NOTE: This task will immediately stop the service.
 
-==== Visdom_Terminate_Service_Until_Validation
+===== Visdom_Terminate_Service_Until_Validation
 
 *Task Overview:* wait for the validation of the job by the user to stop and remove the Visdom Server.
 
 *Task Variables:*
 
-.Visdom_Terminate_Service_Until_Validation variables
+.Visdom_Terminate_Service_Until_Validation_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
 | `service_model`
-| The Visdom service to start. The Visdom Service available in http://try.activeeon.com//cloud-automation[Proactive Cloud Automation^] is used by default. (default="http://models.activeeon.com/pca/visdom")
-| String
+| The Visdom service to start. The Visdom Service available in http://try.activeeon.com//cloud-automation[ProActive Cloud Automation^] is used by default.
+| String (default=
+"http://models.activeeon.com/pca/visdom")
 | `instance_name`
 | The instance name of the server to use to broadcast visualization
 | String (default="visdom-server-1")
@@ -931,6 +1315,34 @@ NOTE: This task will immediately stop the service.
 
 *How to use this task:* This task can be connected to <<Visdom_Client_Example>>. Visualize, then, stop the Visdom Service.
 
-NOTE: This task will stop the service once the user has validated this requirement using http://try.activeeon.com//cloud-automation[Proactive Cloud Automation^] portal.
+NOTE: This task will stop the service once the user has validated this requirement using http://try.activeeon.com//cloud-automation[ProActive Cloud Automation^] portal.
+
+===== Visdom_Visualize_Results
+
+*Task Overview:* plot the different results obtained by a predictive model using Visdom
+
+*Task Variables:*
+|===
+| *Variable name* | *Description* | *Type*
+| `TARGETED_CLASS`
+| The targeted class that you need to track
+| String
+|===
+
+*How to use this task:*  This task has to be connected to the <<Bind_or_Start_Visdom_Service>> Task. The Visdom server should be up in order to be able to broadcast visualizations.
+
+==== Visdom Worflows
+
+The following workflows present some examples using Visdom service to visualize the results obtained while training and testing some predictive models.
+
+video::bQpwS2nMAZY[youtube, width=700, height=400 start=0, position=center]
+
+*Visdom_Plot_Example:* returns numerous examples of plots covered by Visdom.
+
+*Visdom_Realtime_Apache_Intrusion_Detection:*  broadcasts in real time some visualizations of the analytic results provided by the Apache log intrusion detector.
+
+*Visdom_Service_Example:* evaluates in real time the performance of a simple Convolutional Neural Network (CNN) for MNIST* handwritten digit classification during the training and test processes.
+
+A demo video of these workflows is available in https://www.youtube.com/user/ActiveEonCompany[ActiveEon Youtube Channel^].
 
 
