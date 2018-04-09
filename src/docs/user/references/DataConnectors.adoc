@@ -1,0 +1,133 @@
+
+The `data-connectors` bucket contains diverse generic data connectors for the most frequently used data storage systems (File, SQL, NoSQL, Cloud, ERP). The aim of a data connector is to facilitate and simplify importing data from external sources into your workflows.
+
+=== File
+The File connectors allow to import and export data from HTTP, FTP and SFTP servers.
+We begin by presenting FTP and SFTP connectors then, URL connector.
+
+==== FTP and SFTP connectors
+
+*Task Variables:*
+The FTP and SFTP connectors share the same list of variables. Consequently, we describe them in the following table using a unique notation.
+`<PROTOCOL>` can take one of the following values: {`FTP`, `SFTP`}
+
+.FTP/SFTP_Connector_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `<PROTOCOL>_HOSTNAME`
+| IP address of the server host. Default value is `localhost`.
+| String
+| `<PROTOCOL>_PORT`
+| Listening port. If not specified, the corresponding default values will be used.
+| Integer
+| `<PROTOCOL>_LOCAL_RELATIVE_PATH`
+| Local relative path from which we upload (or to which we download) file(s). It can contain either a path to a file, a directory terminated by / or an empty value for the root.
+| String
+| `<PROTOCOL>_REMOTE_RELATIVE_PATH`
+| Remote relative path to which we upload (or from which we download) file(s).
+| String
+| `<PROTOCOL>_MODE`
+| Transfer mode.
+| PA:LIST(GET, PUT)`
+| `<PROTOCOL>_EXTRACT_ARCHIVE`
+| Used only when `<PROTOCOL>_MODE=GET`. If set to `true`, the imported file will be extracted if it is an archive.
+|  Boolean [true or false]
+| `<PROTOCOL>_USERNAME`
+| Username to use for the authentication.
+|  String
+|===
+
+*How to use this task:* The task requires the following third-party credential: `{key: <PROTOCOL>://<username>@<hostname>, value: <PROTOCOL>_PASSWORD}`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+
+==== URL connector
+
+The URL connector allows, in addition, to import data using HTTP and HTTPS protocols.
+*Task Variables:*
+
+.URL_Connector_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `FILE_URL`
+| Link to a file accessible using HTTP, HTTPS, SFTP or FTP protocols.
+
+  FTP and SFTP urls must have the following patterns:
+
+- `\ftp://<username>:<password>@<hostname>:<port>/<path>`
+
+- `sftp://<username>@<host>[:<port>][/<directory>]`
+
+| String
+| `FTP_LOCAL_RELATIVE_PATH`
+|  Local relative path from which we upload (or to which we download) file(s).
+  LOCAL_RELATIVE_PATH can contain either a path to a file, a directory terminated by / or an empty value for the root.
+| String
+| `EXTRACT_ARCHIVE`
+| If set to `true`, the imported file will be extracted if it is an archive.
+| Boolean [true or false]
+|===
+
+=== SQL
+The SQL connectors allow to import data from Relational DataBase Management Systems (RDBMS).
+Currently, we have connectors for Mysql, Oracle, Postgres and Sql server.
+
+*Task Variables:*
+All SQL connectors share the same list of variables. Consequently, we describe them in the following table using a unique notation.
+`<RDBMS_NAME>` can take one of the following values: {`POSTGRES`, `ORACLE`, `SQL_SERVER`, `MYSQL`}
+
+.SQL_Connector_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `<RDBMS_NAME>_HOSTNAME`
+| Label or the IP address of the server hosting the database. Default value is `localhost`.
+| String
+| `<RDBMS_NAME>_PORT`
+| Listening port. If not specified, the corresponding default values will be used.
+| Integer
+| `<RDBMS_NAME>_DATABASE`
+| Database name.
+| String
+| `<RDBMS_NAME>_QUERY`
+| Requires an SQL query or a table name to fetch data from.
+| String
+|===
+
+*How to use this task:* This task uses the task variable `RMDB_DRIVER` as a driver to connect to the database. For each connector, a default driver is specified. To use another driver, make sure you have it properly installed before. If the imported data is labeled, a user can specify the label column name in the `LABEL` task variable.
+The task requires the following third-party credentials: `<RDBMS_NAME>_USERNAME` and `<RDBMS_NAME>_PASSWORD`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+The imported data is exported in a JSON format using the variable `DATAFRAME_JSON`.
+
+=== NoSQL
+The NoSQL connectors allow to import data from NoSQL Databases.
+Currently, we have connectors for MongoDB and Cassandra.
+
+*Task Variables:*
+
+`<NoSQL_NAME>` can take one of the following values: {`CASSANDRA`, `MONGODB`}
+
+.NoSQL_Connector_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `<NoSQL_NAME>_HOSTNAME`
+| Label or the IP address of the server hosting the database. Default value is `localhost`.
+| String
+| `<NoSQL_NAME>_PORT`
+| Listening port. If not specified, the corresponding default values will be used.
+| Integer
+| `MONGODB_DATABASE` or `CASSANDRA_KEYSPACE`
+| Equivalent to the database name.
+| String
+| `<NoSQL_NAME>_QUERY`
+| Requires a NoSQL query to fetch data.
+| String
+| `MONGODB_COLLECTION`
+| Equivalent to the table in a RDBMS.
+| String
+|===
+
+*How to use this task:* This task uses the task variable `NOSQL_DRIVER` as a driver to connect to the database. For each connector, a default driver is specified. To use another driver, make sure you have it properly installed before. If the imported data is labeled, a user can specify the label column name in the `LABEL` task variable.
+The task requires the following third-party credentials: `<NoSQL_NAME>_USERNAME` and `<NoSQL_NAME>_PASSWORD`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+The imported data is exported in a JSON format using the variable `DATAFRAME_JSON`.
+
