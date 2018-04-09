@@ -185,8 +185,6 @@ For example:
 </task>
 ----
 
-[[_dynamic_variables]]
-
 =====  Icon management variables
 
 There are specific variables that are dedicated to icon management.
@@ -194,6 +192,8 @@ The icon for Job level is specified inside Workflow Generic Information -`workfl
 
 Job and task icons should be related to their specific nature.
 These variables are used in the Proactive portals for correct visualization of workflows with icons.
+
+[[_dynamic_variables]]
 
 ==== Dynamic Variables
 
