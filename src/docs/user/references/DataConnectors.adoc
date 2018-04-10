@@ -11,7 +11,7 @@ We begin by presenting FTP and SFTP connectors then, URL connector.
 The FTP and SFTP connectors share the same list of variables. Consequently, we describe them in the following table using a unique notation.
 `<PROTOCOL>` can take one of the following values: {`FTP`, `SFTP`}
 
-.FTP/SFTP_Connector variables
+.FTP/SFTP Connector variables
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Level* | *Required?*  | *Type*  | *Default/Examples*
@@ -68,7 +68,7 @@ The URL connector allows, in addition, to import data using HTTP and HTTPS proto
 
 *Variables:*
 
-.URL_Connector variables
+.URL Connector variables
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Level* | *Required?*  | *Type*  | *Default/Examples*
@@ -110,7 +110,7 @@ Currently, we have connectors for Mysql, Oracle, Postgres and Sql server.
 All SQL connectors share the same list of variables. Consequently, we describe them in the following table using a unique notation.
 `<RDBMS_NAME>` can take one of the following values: {`POSTGRES`, `ORACLE`, `SQL_SERVER`, `MYSQL`}
 
-.SQL_Connector_Task variables
+.SQL Connector_Task variables
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Level* | *Required?*  | *Type*  | *Default/Examples*
@@ -164,7 +164,7 @@ Currently, we have connectors for MongoDB and Cassandra.
 
 `<NoSQL_NAME>` can take one of the following values: {`CASSANDRA`, `MONGODB`}
 
-.NoSQL_Connector variables
+.NoSQL Connector variables
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Level* | *Required?*  | *Type*  | *Default/Examples*
