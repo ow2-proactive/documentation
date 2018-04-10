@@ -209,7 +209,7 @@ Currently, we have connectors for MongoDB and Cassandra.
 | Task
 | Yes
 | String
-| e.g. cx_oracle, psycopg2
+| e.g. pymongo
 |===
 
 *How to use this task:* This task uses the driver given in `NOSQL_DRIVER` to connect to MongoDB. To use another driver, make sure you have it properly installed before.  (e.g. using `pip install <NOSQL_DRIVER>`).
