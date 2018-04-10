@@ -110,7 +110,7 @@ Currently, we have connectors for Mysql, Oracle, Postgres and Sql server.
 All SQL connectors share the same list of variables. Consequently, we describe them in the following table using a unique notation.
 `<RDBMS_NAME>` can take one of the following values: {`POSTGRES`, `ORACLE`, `SQL_SERVER`, `MYSQL`}
 
-.SQL Connector_Task variables
+.SQL Connector variables
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Level* | *Required?*  | *Type*  | *Default/Examples*
