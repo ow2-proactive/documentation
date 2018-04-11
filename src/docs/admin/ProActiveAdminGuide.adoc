@@ -537,9 +537,9 @@ See <<_pamr_protocol_properties>> reference for a detailed explanation of each p
 === Policies
 
 You can limit the utilization of resources connected to the ProActive Scheduler in different ways. When you create node
-sources you can use a node source *policy*.
+sources you can use a node source *policy*. A node source policy is a set of rules and conditions which describes when and how many nodes have to be selected for computations. 
 
-NOTE: *Node source policy* is a set of rules and conditions which describes when and how many nodes have to be selected for computations.
+NOTE: Node source policy are enforced for *non-admin* users *only*, and will have no effect for a user granted with the administrator privileges.
 
 Each node source policy regardless it specifics has a common part where you describe users' and groups' permissions.
 When you create a policy you must specify them:
