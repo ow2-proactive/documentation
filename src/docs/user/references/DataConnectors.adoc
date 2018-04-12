@@ -104,11 +104,11 @@ The URL connector allows, in addition, to import data using HTTP and HTTPS proto
 
 === SQL
 The SQL connectors allow to import data from Relational DataBase Management Systems (RDBMS).
-Currently, we have connectors for Mysql, Oracle, Postgres and Sql server.
+Currently, we have connectors for Mysql, Oracle, Postgres, Greenplum and Sql server.
 
 *Variables:*
 All SQL connectors share the same list of variables. Consequently, we describe them in the following table using a unique notation.
-`<RDBMS_NAME>` can take one of the following values: {`POSTGRES`, `ORACLE`, `SQL_SERVER`, `MYSQL`}
+`<RDBMS_NAME>` can take one of the following values: {`POSTGRES`, `GPDB`, `ORACLE`, `SQL_SERVER`, `MYSQL`}
 
 .SQL Connector variables
 [cols="2,5,2,2,2,2"]
