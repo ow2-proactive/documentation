@@ -124,7 +124,7 @@ B. Find the <<Train_Model>> Task and drag it twice into the canvas.
 
 C. Connect the <<Split_Data>> Task to  the two <<Train_Model>> Tasks in order to give it access to the training data. Connect then the <<Linear_Regression>> Task to the first <<Train_Model>> Task and <<Support_Vector_Regression>> to the second <<Train_Model>> Task.
 
-D. To be able to download the model learned by each algorithm, drag two <<Load_Trained_Model>> Tasks and connect them to each <<Train_Model>> Task.
+D. To be able to download the model learned by each algorithm, drag two <<Import_Model>> Tasks and connect them to each <<Train_Model>> Task.
 
 image::train.gif[100000,2000]
 
@@ -144,7 +144,7 @@ E. Connect each <<Export_Results>> Task with <<Predict_Model>>.
 
 image::test.gif[100000,2000]
 
-NOTE: if you have a pickled file (.pkl) containing a predictive model that you have learned using another platform and you need to test it in the Machine Learning Open Studio, you can load it using *Load_Trained_Model* Task.
+NOTE: if you have a pickled file (.pkl) containing a predictive model that you have learned using another platform and you need to test it in the Machine Learning Open Studio, you can load it using *Import_Model* Task.
 
 === Run the Experiment and Preview the Results
 
@@ -428,13 +428,13 @@ NOTE: Your CSV file should be in a table format. See the example below.
 
 image::csv_file_organisation.png[align="center"]
 
-===== Load_Trained_Model
+===== Import_Model
 
 *Task Overview:* Load a trained model, and use it to make predictions for new coming data.
 
 *Task Variables:*
 
-.Load_Trained_Model_Task variables
+.Import_Model_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -945,7 +945,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 
 *Task Overview:* Generate predictions using a trained model.
 
-*How to use this task:* Should be used after the <<Train_Anomaly_Model>> Task.
+*How to use this task:* Should be used after the <<Train_Model>> Task.
 
 NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/supervised_learning.html#supervised-learning[here^].
 
