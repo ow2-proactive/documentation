@@ -275,6 +275,8 @@ The following workflows are designed to detect anomalies in log files. They are 
 
 *Anomaly_detection_in_HDFS_Nodes:* trains and test an anomaly detection model for detecting anomalies in HDFS Nodes.
 
+*Unsupervised_Anomaly_Detection:* detects anomalies using an Unsupervised One-Class SVM.
+
 == Deep Learning Workflows Examples
 
 ML-OS provides a fast, easy and practical way to execute deep learning workflows. In the following sub-sections, we present useful deep learning workflows for text and image classification and generation.
@@ -664,6 +666,52 @@ N.B: separate the different variables with a comma ','
 
 *How to use this task:* Should be connected with specific machine learning algorithms suitable to this representation.
 
+==== ML Anomaly Detection
+
+===== Local_Outlier_Factor
+
+*Task Overview:* Local Outlier Factor is an unsupervised outlier detection method which computes the local density deviation of a given data point with respect to its neighbors. It considers as outlier samples that have a substantially lower density than their neighbors.
+
+*Task Variables:*
+
+.Local_Outlier_Factor_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `N_NEIGHBORS`
+| Number of neighbors to use by default for kneighbors queries. If n_neighbors is larger than the number of samples provided, all samples will be used.
+| Integer, Optional (default=20)
+| `N_JOBS`
+| The number of parallel jobs to run for neighbors search. If -1, then the number of jobs is set to the number of CPU cores.
+| Integer, Optional (default=1)
+
+|===
+
+NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.LocalOutlierFactor.html[here^].
+
+===== One_Class_SVM
+
+*Task Overview:* One-class SVM is an unsupervised algorithm that learns a decision function for novelty detection: classifying new data as similar or different to the training set.
+
+*Task Variables:*
+
+.One_Class_SVM_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `NU`
+| An upper bound on the fraction of training errors and a lower bound of the fraction of support vectors. Should be in the interval [0, 1].
+| Float, Optional (default=0.5)
+| `KERNEL`
+|  Specifies the kernel type to be used in the algorithm. It must be one of ‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’, ‘precomputed’ or a callable. If none is given, ‘rbf’ will be used. If a callable is given it is used to precompute the kernel matrix.
+| string, Optional (default='rbf')
+| `GAMMA`
+| Kernel coefficient for ‘rbf’, ‘poly’ and ‘sigmoid’. If gamma is ‘auto’ then 1/n_features will be used instead.
+| Float, Optional (default='auto')
+|===
+
+NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.svm.OneClassSVM.html[here^].
+
 ==== ML Classification
 
 ===== Gaussian_Naive_Bayes
@@ -859,53 +907,15 @@ NOTE: More information about the source of this task can be found http://scikit-
 
 NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.cluster.MeanShift.html[here^].
 
-==== Anomaly Detection
-
-===== Local_Outlier_Factor
-
-*Task Overview:* Local Outlier Factor is an unsupervised outlier detection method which computes the local density deviation of a given data point with respect to its neighbors. It considers as outlier samples that have a substantially lower density than their neighbors.
-
-*Task Variables:*
-
-.Local_Outlier_Factor_Task variables
-[cols="2,5,2"]
-|===
-| *Variable name* | *Description* | *Type*
-| `N_NEIGHBORS`
-| Number of neighbors to use by default for kneighbors queries. If n_neighbors is larger than the number of samples provided, all samples will be used.
-| Integer, Optional (default=20)
-| `N_JOBS`
-| The number of parallel jobs to run for neighbors search. If -1, then the number of jobs is set to the number of CPU cores.
-| Integer, Optional (default=1)
-
-|===
-
-NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.LocalOutlierFactor.html[here^].
-
-===== One_Class_SVM
-
-*Task Overview:* One-class SVM is an unsupervised algorithm that learns a decision function for novelty detection: classifying new data as similar or different to the training set.
-
-*Task Variables:*
-
-.One_Class_SVM_Task variables
-[cols="2,5,2"]
-|===
-| *Variable name* | *Description* | *Type*
-| `NU`
-| An upper bound on the fraction of training errors and a lower bound of the fraction of support vectors. Should be in the interval [0, 1].
-| Float, Optional (default=0.5)
-| `KERNEL`
-|  Specifies the kernel type to be used in the algorithm. It must be one of ‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’, ‘precomputed’ or a callable. If none is given, ‘rbf’ will be used. If a callable is given it is used to precompute the kernel matrix.
-| string, Optional (default='rbf')
-| `GAMMA`
-| Kernel coefficient for ‘rbf’, ‘poly’ and ‘sigmoid’. If gamma is ‘auto’ then 1/n_features will be used instead.
-| Float, Optional (default='auto')
-|===
-
-NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.svm.OneClassSVM.html[here^].
-
 ==== Train
+
+===== Train_Anomaly_Model
+
+*Task Overview:* Train an anomaly model.
+
+*How to use this task:* Should be connected to <<Local_Outlier_Factor>> task or <<One_Class_SVM>> task.
+
+NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/outlier_detection.html[here^].
 
 ===== Train_Clustering_Model
 
@@ -923,15 +933,15 @@ NOTE: More information about the source of this task can be found http://scikit-
 
 NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/supervised_learning.html#supervised-learning[here^].
 
-===== Train_Anomaly_Model
+==== Predict
 
-*Task Overview:* Train an anomaly model.
+===== Predict_Anomaly_Model
 
-*How to use this task:* Should be connected to <<Local_Outlier_Factor>> task or <<One_Class_SVM>> task.
+*Task Overview:* Generate predictions using a trained model.
+
+*How to use this task:* Should be used after the <<Train_Model>> Task.
 
 NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/outlier_detection.html[here^].
-
-==== Predict
 
 ===== Predict_Clustering_Model
 
@@ -948,14 +958,6 @@ NOTE: More information about the source of this task can be found http://scikit-
 *How to use this task:* Should be used after the <<Train_Model>> Task.
 
 NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/supervised_learning.html#supervised-learning[here^].
-
-===== Predict_Anomaly_Model
-
-*Task Overview:* Generate predictions using a trained model.
-
-*How to use this task:* Should be used after the <<Train_Model>> Task.
-
-NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/outlier_detection.html[here^].
 
 === Deep Learning Bucket
 
