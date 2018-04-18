@@ -1763,6 +1763,9 @@ println outFile.text
 
 The complete description of user and global space APIs can be found in the http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient JavaDoc].
 
+== Data Connectors
+
+include::./references/DataConnectors.adoc[]
 
 == Fork environment
 A fork execution environment is a new Java Virtual Machine (JVM) which is started exclusively to execute a task. Starting a

@@ -1,0 +1,218 @@
+
+The `data-connectors` bucket contains diverse generic data connectors for the most frequently used data storage systems (File, SQL, NoSQL, Cloud, ERP). The aim of a data connector is to facilitate and simplify importing data from external sources into your workflows.
+
+=== File
+The File connectors allow to import and export data from HTTP, FTP and SFTP servers.
+We begin by presenting FTP and SFTP connectors then, URL connector.
+
+==== FTP and SFTP connectors
+
+*Variables:*
+The FTP and SFTP connectors share the same list of variables. Consequently, we describe them in the following table using a unique notation.
+`<PROTOCOL>` can take one of the following values: {`FTP`, `SFTP`}
+
+.FTP/SFTP Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Level* | *Required?*  | *Type*  | *Default/Examples*
+| `<PROTOCOL>_HOSTNAME`
+| IP address of the server host.
+| Workflow, Task
+| Yes
+| String
+| `localhost`
+| `<PROTOCOL>_PORT`
+| Listening port.
+| Workflow, Task
+| No
+| Integer
+| e.g. 21, 22
+| `<PROTOCOL>_LOCAL_RELATIVE_PATH`
+| Local `relative` path from which we upload (or to which we download) file(s).
+It can contain either a path to a file, a directory terminated by `/` or an empty value for the root.
+| Workflow, Task
+| No
+| String
+| e.g. localDirectory/, example.zip
+| `<PROTOCOL>_REMOTE_RELATIVE_PATH`
+| Remote `relative` path to which we upload (or from which we download) file(s).
+| Workflow, Task
+| Yes
+| String
+| e.g. remoteDirectory/, test.txt
+| `<PROTOCOL>_MODE`
+| Transfer mode.
+| Workflow, Task
+| Yes
+| PA:LIST(GET, PUT)
+| GET
+| `<PROTOCOL>_EXTRACT_ARCHIVE`
+| Used only when `<PROTOCOL>_MODE=GET`. If set to `true`, the imported file will be extracted if it is an archive.
+| Workflow, Task
+| Yes
+|  Boolean [true or false]
+| false
+| `<PROTOCOL>_USERNAME`
+| Username to use for the authentication.
+| Workflow, Task
+| Yes
+|  String
+| e.g. \ftp://someuser@example.com
+|===
+
+*How to use this task:* The task requires the following third-party credential: `{key: <PROTOCOL>://<username>@<hostname>, value: <PROTOCOL>_PASSWORD}`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+
+==== URL connector
+
+The URL connector allows, in addition, to import data using HTTP and HTTPS protocols.
+
+*Variables:*
+
+.URL Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Level* | *Required?*  | *Type*  | *Default/Examples*
+| `FILE_URL`
+| Link to a file accessible using HTTP, HTTPS, SFTP or FTP protocols.
+
+  FTP and SFTP urls must have the following patterns:
+
+- `\ftp://<username>[:<password>]@<hostname>[:<port>]/<relativePath>`
+
+- `sftp://<username>[:<password>]@<hostname>[:<port>]/<relativePath>`
+
+| Task
+| Yes
+| String
+| e.g. sftp://user:pass@example.com/test.txt
+| `FTP_LOCAL_RELATIVE_PATH`
+|  Local relative path from which we upload (or to which we download) file(s).
+  LOCAL_RELATIVE_PATH can contain either a path to a file, a directory terminated by `/` or an empty value for the root.
+| Task
+| No
+| String
+| e.g. localDirectory/, example.zip
+| `EXTRACT_ARCHIVE`
+| If set to `true`, the imported file will be extracted if it is an archive.
+| Task
+| Yes
+| Boolean [true or false]
+| false
+|===
+
+*How to use this task:* We highly recommend the user to not provide his password within the URL and to instead use the third-party credential mechanism as follows: `{key: <PROTOCOL>://<username>@<hostname>, value: <PROTOCOL>_PASSWORD}`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+
+=== SQL
+The SQL connectors allow to import data from Relational DataBase Management Systems (RDBMS).
+Currently, we have connectors for Mysql, Oracle, Postgres, Greenplum and Sql server.
+
+*Variables:*
+All SQL connectors share the same list of variables. Consequently, we describe them in the following table using a unique notation.
+`<RDBMS_NAME>` can take one of the following values: {`POSTGRES`, `GPDB`, `ORACLE`, `SQL_SERVER`, `MYSQL`}
+
+.SQL Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Level* | *Required?*  | *Type*  | *Default/Examples*
+| `<RDBMS_NAME>_HOSTNAME`
+| Label or the IP address of the server hosting the database.
+| Workflow
+| Yes
+| String
+| `localhost`
+| `<RDBMS_NAME>_PORT`
+| Listening port.
+| Workflow
+| No
+| Integer
+| e.g. 5432, 1521
+| `<RDBMS_NAME>_DATABASE`
+| Database name.
+| Workflow
+| Yes
+| String
+| e.g. activeeon
+| `<RDBMS_NAME>_QUERY`
+| Requires an SQL query or a table name to fetch data from.
+| Workflow, Task
+| Yes
+| String
+| e.g. select * from users
+| `LABEL`
+| Used when the imported data is labeled. Then, the user can specify the label column name.
+| Task
+| No
+| String
+| e.g. class
+| `<RDBMS_NAME>_RMDB_DRIVER`
+| The driver to connect to the database.
+| Task
+| Yes
+| String
+| e.g. cx_oracle, psycopg2
+|===
+
+*How to use this task:* This task uses the driver given in `RMDB_DRIVER` to connect to the database. To use another driver, make sure you have it properly installed before (e.g. using `pip install <RMDBS_DRIVER>`).
+The task requires the following third-party credentials: `<RDBMS_NAME>_USERNAME` and `<RDBMS_NAME>_PASSWORD`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+The imported data is exported in a JSON format using the variable `DATAFRAME_JSON`.
+
+=== NoSQL
+The NoSQL connectors allow to import data from NoSQL Databases.
+Currently, we have connectors for MongoDB and Cassandra.
+
+*Variables:*
+
+`<NoSQL_NAME>` can take one of the following values: {`CASSANDRA`, `MONGODB`}
+
+.NoSQL Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Level* | *Required?*  | *Type*  | *Default/Examples*
+| `<NoSQL_NAME>_HOSTNAME`
+| Label or the IP address of the server hosting the database.
+| Workflow
+| Yes
+| String
+| `localhost`
+| `<NoSQL_NAME>_PORT`
+| Listening port.
+| Workflow
+| No
+| Integer
+| e.g. 27018, 9042
+| `MONGODB_DATABASE` or `CASSANDRA_KEYSPACE`
+| Equivalent to the database name.
+| Workflow
+| Yes
+| String
+| e.g. activeeon
+| `<NoSQL_NAME>_QUERY`
+| Requires a NoSQL query to fetch data.
+| Workflow, Task
+| No (depends on the NoSQL database)
+| String
+| e.g. {"class":2}
+| `MONGODB_COLLECTION`
+| Equivalent to a `table` in a RDBMS.
+| Workflow, Task
+| Yes
+| String
+| e.g. users
+| `LABEL`
+| Used when the imported data is labeled. Then, the user can specify the label column name.
+| Task
+| No
+| String
+| e.g. class
+| `NOSQL_DRIVER`
+| The driver to connect to MongoDB.
+| Task
+| Yes
+| String
+| e.g. pymongo
+|===
+
+*How to use this task:* This task uses the driver given in `NOSQL_DRIVER` to connect to MongoDB. To use another driver, make sure you have it properly installed before.  (e.g. using `pip install <NOSQL_DRIVER>`).
+The task requires the following third-party credentials: `<NoSQL_NAME>_USERNAME` and `<NoSQL_NAME>_PASSWORD`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+The imported data is exported in a JSON format using the variable `DATAFRAME_JSON`.
+

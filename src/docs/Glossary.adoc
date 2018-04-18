@@ -90,9 +90,17 @@ of a <<_glossary_workflow,*Workflow*>>.
 Job::
   An instance of a <<_glossary_workflow,*Workflow*>> submitted to the <<_glossary_proactive_scheduler,*ProActive Scheduler*>>. Sometimes also used as a synonym for <<_glossary_workflow,*Workflow*>>.
 
+[[_glossary_job_icon]]
+Job Icon::
+  An icon representing the Job and displayed in portals. The Job Icon is defined by the Generic Information *workflow.icon*.
+
 [[_glossary_task]]
 Task::
   A unit of computation handled by <<_glossary_proactive_scheduler,*ProActive Scheduler*>>. Both <<_glossary_workflow,*Workflows*>> and <<_glossary_job,*Jobs*>> are made of *Tasks*.
+
+[[_glossary_task_icon]]
+Task Icon::
+  An icon representing the Task and displayed in the Studio portal. The Task Icon is defined by the Task Generic Information *task.icon*.
 
 [[_glossary_node_source]]
 Node Source::
