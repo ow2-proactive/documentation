@@ -69,6 +69,10 @@ Examples of *Compute Hosts*:
 * All desktop machines in an organisation that have <<_glossary_proactive_agent,*ProActive Agents*>> installed.
 ====
 
+[[_glossary_node_source]]
+Node Source::
+  A set of <<_glossary_proactive_node,*ProActive Nodes*>> deployed using the same deployment mechanism and sharing the same access policy.
+
 `PROACTIVE_HOME`::
   The path to the extracted archive of <<_glossary_proactive_scheduler,*ProActive Scheduler*>> release, either on the <<_glossary_server_host,*Server Host*>> or on a <<_glossary_compute_host,*Compute Host*>>.
 
@@ -90,21 +94,73 @@ of a <<_glossary_workflow,*Workflow*>>.
 Job::
   An instance of a <<_glossary_workflow,*Workflow*>> submitted to the <<_glossary_proactive_scheduler,*ProActive Scheduler*>>. Sometimes also used as a synonym for <<_glossary_workflow,*Workflow*>>.
 
+[[_glossary_job_id]]
+Job Id::
+  An integer identifier which uniquely represents a Job inside the <<_glossary_proactive_scheduler,*ProActive Scheduler*>>.
+
 [[_glossary_job_icon]]
 Job Icon::
   An icon representing the Job and displayed in portals. The Job Icon is defined by the Generic Information *workflow.icon*.
 
 [[_glossary_task]]
 Task::
-  A unit of computation handled by <<_glossary_proactive_scheduler,*ProActive Scheduler*>>. Both <<_glossary_workflow,*Workflows*>> and <<_glossary_job,*Jobs*>> are made of *Tasks*.
+  A unit of computation handled by <<_glossary_proactive_scheduler,*ProActive Scheduler*>>. Both <<_glossary_workflow,*Workflows*>> and <<_glossary_job,*Jobs*>> are made of *Tasks*. A Task must define a <<_glossary_task_executable,*ProActive Task Executable*>> and can also define <<_glossary_additional_task_scripts, additional task scripts>>
+
+[[_glossary_task_id]]
+Task Id::
+  An integer identifier which uniquely represents a Task inside a Job <<_glossary_proactive_scheduler,*ProActive Scheduler*>>. Task ids are only unique inside a given Job.
+
+[[_glossary_task_executable]]
+Task Executable::
+  The main executable definition of a <<_glossary_task,*ProActive Task*>>. A Task Executable can either be a <<_glossary_task_executable_script,*Script Task*>>, a <<_glossary_task_executable_java,*Java Task*>> or a <<_glossary_task_executable_native,*Native Task*>>.
+
+[[_glossary_task_executable_script]]
+Script Task::
+  A <<_glossary_task_executable,*Task Executable*>> defined as a script execution.
+
+[[_glossary_task_executable_java]]
+Java Task::
+  A <<_glossary_task_executable,*Task Executable*>> defined as a Java class execution.
+
+[[_glossary_task_executable_native]]
+Native Task::
+  A <<_glossary_task_executable,*Task Executable*>> defined as a native command execution.
+
+[[_glossary_additional_task_scripts]]
+Additional Task Scripts::
+   A collection of scripts part of a <<_glossary_task,*ProActive Task*>> definition which can be used in complement to the main <<_glossary_task_executable,*Task Executable*>>. Additional Task scripts can either be <<_glossary_selection_script,*Selection Script*>>, <<_glossary_fork_environment_script,*Fork Environment Script*>>, <<_glossary_pre_script,*Pre Script*>>, <<_glossary_post_script,*Post Script*>>, <<_glossary_control_flow_script,*Control Flow Script*>> or <<_glossary_clean_script,*Cleaning Script*>>
+
+[[_glossary_selection_script]]
+Selection Script::
+  A script part of a <<_glossary_task,*ProActive Task*>> definition and used to select a specific <<_glossary_proactive_node,*ProActive Node*>> to execute a <<_glossary_task,*ProActive Task*>>.
+
+[[_glossary_fork_environment_script]]
+Fork-Environment Script::
+  A script part of a <<_glossary_task,*ProActive Task*>> definition and run on the <<_glossary_proactive_node,*ProActive Node*>> selected to execute the Task to configure the forked Java Virtual Machine to execute the task.
+
+[[_glossary_pre_script]]
+Pre Script::
+  A script part of a <<_glossary_task,*ProActive Task*>> definition and run inside the forked Java Virtual Machine, before the <<_glossary_task_executable,*Task Executable*>>.
+
+[[_glossary_post_script]]
+Post Script::
+  A script part of a <<_glossary_task,*ProActive Task*>> definition and run inside the forked Java Virtual Machine, after the <<_glossary_task_executable,*Task Executable*>>
+
+[[_glossary_control_flow_script]]
+Control Flow Script::
+  A script part of a <<_glossary_task,*ProActive Task*>> definition and run inside the forked Java Virtual Machine, after the <<_glossary_task_executable,*Task Executable*>>, to determine control flow actions.
+
+[[_glossary_clean_script]]
+Cleaning Script::
+  A script part of a <<_glossary_task,*ProActive Task*>> definition and run after the <<_glossary_task_executable,*Task Executable*>> and before releasing the <<_glossary_proactive_node,*ProActive Node*>> to the <<_glossary_resource_manager,*Resource Manager*>>.
+
+[[_glossary_script_bindings]]
+Script Bindings::
+   Named objects which can be used inside a <<_glossary_task_executable_script,*Script Task*>> or inside <<_glossary_additional_task_scripts,*Additional Task Scripts*>> and automatically defined by the <<_glossary_proactive_scheduler,*ProActive Scheduler*>>. The type of each script binding depends on the script language used.
 
 [[_glossary_task_icon]]
 Task Icon::
   An icon representing the Task and displayed in the Studio portal. The Task Icon is defined by the Task Generic Information *task.icon*.
-
-[[_glossary_node_source]]
-Node Source::
-  A set of <<_glossary_proactive_node,*ProActive Nodes*>> deployed using the same deployment mechanism and sharing the same access policy.
 
 [[_glossary_proactive_agent]]
 ProActive Agent::
