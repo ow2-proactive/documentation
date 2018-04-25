@@ -132,11 +132,11 @@ Additional Task Scripts::
 
 [[_glossary_selection_script]]
 Selection Script::
-  A script part of a <<_glossary_task,*ProActive Task*>> definition and used to select a specific <<_glossary_proactive_node,*ProActive Node*>> to execute a <<_glossary_task,*ProActive Task*>>.
+  A script part of a <<_glossary_task,*ProActive Task*>> definition and used to select a specific <<_glossary_proactive_node,*ProActive Node*>> to execute a ProActive Task.
 
 [[_glossary_fork_environment_script]]
-Fork-Environment Script::
-  A script part of a <<_glossary_task,*ProActive Task*>> definition and run on the <<_glossary_proactive_node,*ProActive Node*>> selected to execute the Task to configure the forked Java Virtual Machine to execute the task.
+Fork Environment Script::
+  A script part of a <<_glossary_task,*ProActive Task*>> definition and run on the <<_glossary_proactive_node,*ProActive Node*>> selected to execute the Task. Fork Environment script is used to configure the forked Java Virtual Machine process which executes the task.
 
 [[_glossary_pre_script]]
 Pre Script::
@@ -144,11 +144,27 @@ Pre Script::
 
 [[_glossary_post_script]]
 Post Script::
-  A script part of a <<_glossary_task,*ProActive Task*>> definition and run inside the forked Java Virtual Machine, after the <<_glossary_task_executable,*Task Executable*>>
+  A script part of a <<_glossary_task,*ProActive Task*>> definition and run inside the forked Java Virtual Machine, after the <<_glossary_task_executable,*Task Executable*>>.
 
 [[_glossary_control_flow_script]]
 Control Flow Script::
   A script part of a <<_glossary_task,*ProActive Task*>> definition and run inside the forked Java Virtual Machine, after the <<_glossary_task_executable,*Task Executable*>>, to determine control flow actions.
+
+[[_glossary_control_flow_action]]
+Control Flow Action::
+  A dynamic workflow action performed after the execution of a <<_glossary_task,*ProActive Task*>>. Possible control flow actions are <<_glossary_control_flow_action_branch,*Branch*>>, <<_glossary_control_flow_action_loop,*Loop*>> or <<_glossary_control_flow_action_replicate,*Replicate*>>.
+
+[[_glossary_control_flow_action_branch]]
+Branch::
+  A dynamic workflow action performed after the execution of a <<_glossary_task,*ProActive Task*>> similar to an IF/THEN/ELSE structure.
+
+[[_glossary_control_flow_action_loop]]
+Loop::
+  A dynamic workflow action performed after the execution of a <<_glossary_task,*ProActive Task*>> similar to a FOR structure.
+
+[[_glossary_control_flow_action_replicate]]
+Replicate::
+  A dynamic workflow action performed after the execution of a <<_glossary_task,*ProActive Task*>> similar to a PARALLEL FOR structure.
 
 [[_glossary_clean_script]]
 Cleaning Script::
@@ -156,7 +172,7 @@ Cleaning Script::
 
 [[_glossary_script_bindings]]
 Script Bindings::
-   Named objects which can be used inside a <<_glossary_task_executable_script,*Script Task*>> or inside <<_glossary_additional_task_scripts,*Additional Task Scripts*>> and automatically defined by the <<_glossary_proactive_scheduler,*ProActive Scheduler*>>. The type of each script binding depends on the script language used.
+   Named objects which can be used inside a <<_glossary_task_executable_script,*Script Task*>> or inside <<_glossary_additional_task_scripts,*Additional Task Scripts*>> and which are automatically defined by the <<_glossary_proactive_scheduler,*ProActive Scheduler*>>. The type of each script binding depends on the script language used.
 
 [[_glossary_task_icon]]
 Task Icon::

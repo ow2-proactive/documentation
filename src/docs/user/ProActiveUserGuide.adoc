@@ -1571,7 +1571,7 @@ credentials:
 mysqlPassword = credentials.get('MY_MYSQL_PASSWORD')
 ----
 
-NOTE: The `credentials` <<_glossary_script_bindings,script binding>> can also be used in other <<_glossary_additional_task_scripts,scripts>> defined inside a <<_glossary_task,ProActive Task>>.
+NOTE: The `credentials` <<_glossary_script_bindings,script binding>> can also be used in <<_glossary_additional_task_scripts,additional scripts>> defined inside a <<_glossary_task,ProActive Task>>.
 To know in which scripts `credentials` is available, refer to the <<_variables_quick_reference,variables quick reference>>.
 
 ==== In Java Task
@@ -1634,9 +1634,9 @@ key is not present, no replacement occurs):
 
 From a <<_glossary_task_executable_script,Script Task>>, several APIs are accessible via Java objects bound to dedicated <<_glossary_script_bindings,script bindings>>:
 
-- Scheduler API : using the `schedulerapi` binding, it is possible to interact directly with the scheduler and do several operations such as submitting jobs, waiting for tasks, listing running jobs etc.
+- Scheduler API : using the `schedulerapi` binding, it is possible to interact directly with the scheduler server and do several operations (submit jobs, wait for tasks termination, list running jobs, etc.).
 - DataSpace API : the `userspaceuri` or `globalspaceuri` bindings allow to manipulate files present in User or Global spaces. Operations include listing, uploading, downloading, or deleting files.
-- Synchronization API : using the `synchronizationapi` binding, it is possible to handle advanced dynamic task synchronization.
+- Synchronization API : using the `synchronizationapi` binding, it is possible to handle advanced task synchronization dynamically.
 
 === Scheduler API
 
@@ -1674,7 +1674,7 @@ println taskResult.getOutput().getAllLogs(false)
 
 The complete API description can be found in the http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/SchedulerNodeClient.html[SchedulerNodeClient JavaDoc].
 
-NOTE: The `schedulerapi` <<_glossary_script_bindings,script binding>> can also be used in other <<_glossary_additional_task_scripts,scripts>> defined inside a <<_glossary_task,ProActive Task>>.
+NOTE: The `schedulerapi` <<_glossary_script_bindings,script binding>> can also be used in <<_glossary_additional_task_scripts,additional scripts>> defined inside a <<_glossary_task,ProActive Task>>.
 To know in which scripts `schedulerapi` is available, refer to the <<_variables_quick_reference,variables quick reference>>.
 
 === DataSpace API
@@ -1710,20 +1710,20 @@ println outFile.text
 
 The complete description of user and global space APIs can be found in the http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient JavaDoc].
 
-NOTE: The `userspaceapi` and `globalspaceapi` <<_glossary_script_bindings,script bindings>> can also be used in other <<_glossary_additional_task_scripts,scripts>> defined inside a <<_glossary_task,ProActive Task>>.
+NOTE: The `userspaceapi` and `globalspaceapi` <<_glossary_script_bindings,script bindings>> can also be used in <<_glossary_additional_task_scripts,additional scripts>> defined inside a <<_glossary_task,ProActive Task>>.
 To know in which scripts these bindings are available, refer to the <<_variables_quick_reference,variables quick reference>>.
 
 [[_task_synchronization_api]]
 === Synchronization API
 
-Task synchronization is traditionally handled by the ProActive Scheduler through <<Dependency, Task Dependencies>>, where dependant ProActive Tasks are started only after their parents Tasks completed.
+Task synchronization is traditionally handled by the ProActive Scheduler through <<Dependency, Task Dependencies>>, where dependent ProActive Tasks are started only after their parents Tasks completed.
 
 In some cases, *static task dependencies* are not enough to synchronize tasks execution.
 
-This is the case when a task depends on the state of another task executed by a different branch of a workflow, a sibling task or even another job/workflow.
+This is the case when a task depends on the state of another task executed in a different branch of a workflow, a sibling task or even another job/workflow.
 
 For example, let's suppose workflow _A_ contains a single task _A_1_ starting an apache server. Task _A_1_ starts the server and remains alive while the server is up.
-When workflow _A_ is killed, task _A_1_ stops the apache server.
+When workflow _A_ is killed, task _A_1_ stops the Apache server.
 
 A task _B_1_ of another workflow _B_ wants to interact with this server.
 
@@ -1735,34 +1735,54 @@ Task _B_1_ can use Task Synchonization API to wait until the apache server is ad
 
 As we can see, Task Synchronization API can be used for two-ways synchronization.
 
-==== API Usage
+==== Usage
 
 *Task Synchronization API* is a *Java API* defined by the following https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/Synchronization.html[API documentation].
 
 The Synchronization API is connected to a centralized *Synchronization Service*. This service ensures that each request is executed atomically, and that changes are persisted on disk.
 
-The *Synchronization Service* works as a _Key-Value Store_ organized in *channels*. Each *channel* acts as a private _Key-Value Store_ or _Hash Map_.
+The Synchronization API is available inside ProActive Tasks through the `synchronizationapi` <<_glossary_script_bindings,script binding>>.
+
+
+===== Channels
+
+The *Synchronization Service* works as a _Key-Value Store_ organized in *channels*. Each *channel* acts as a private _Key-Value Store_.
 
 This means that each _put_ operation is identified by a 3-tuple: _<Channel_identifier, Key_binding, Value>_.
 
-The Synchronization API is available inside ProActive Tasks through the `synchronizationapi` <<_glossary_script_bindings,script binding>>.
+Users of the Synchronization API are responsible to create *channels* as fit their needs. Channels have no notion of *ownership*, a channel created by workflow A started by user _Alice_ can be used by workflow B started by user _Bob_.
 
-Users of the Synchronization API are responsible to create *channels* as fit their needs. For example, a channel which is used inside a specific job should be created inside some *initialization task* at the beginning of this job, and deleted in some *cleaning task* at the end.
+This is because Synchronization API is often used to synchronize workflow tasks across multiple users.
+
+Therefore, *channel naming* is important and should be precise enough to avoid accidental overlap. Channels should be created when needed and deleted after use.
+
+For example, a channel which is used only inside a specific job instance (to synchronize tasks withing this job) should be created inside some *initialization task* at the beginning of this job, and deleted in some *cleaning task* at the end. The channel name should contain the <<_glossary_job_id, Job Id>>.
+
 When channels are created, the user can decide if the channel should be persisted on disk or kept in memory only.
+
+On startup, the Synchronization Service contains only the persistent channels which were previously created using the Synchronization API. In-memory channels created before the reboot of the scheduler are lost.
+
+===== API Description
 
 The Synchronization API is similar to the https://docs.oracle.com/javase/8/docs/api/java/util/Map.html[Java 8 Map interface], with the following differences:
 
- * Each operation must take a _channel identifier_ parameter. Some methods like _createChannel_ allows to manipulate channels.
+ * It contains methods to create/delete _channels_ and methods to interact with the _channel Map_ itself.
 
- * The Synchronization API supports https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html[Java 8 lambdas]. All methods present in the https://docs.oracle.com/javase/8/docs/api/java/util/Map.html[Java 8 Map interface] are implemented, but lambdas must be passed as string arguments defining http://groovy-lang.org/closures.html[Groovy Closures].
+ * Each channel Map operations must take a _channel identifier_ parameter.
+
+ * The Synchronization API supports https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html[Java 8 lambdas], but lambdas must be passed as string arguments defining http://groovy-lang.org/closures.html[Groovy Closures]. For example, `+compute("channel1", "key1", "{k, x -> x+1}")+` instead of `+compute("channel1", "key1", (k, x) -> x+1)+`.
 
  * The Synchronization Service guaranties that multiple operations, coming from different ProActive Tasks, will all be executed *atomically*.
 
- * In addition to the methods present in the https://docs.oracle.com/javase/8/docs/api/java/util/Map.html[Java 8 Map interface], Synchronization API provides *blocking methods* to wait for a specific *condition* on a channel.
+ * In addition to the methods present in the https://docs.oracle.com/javase/8/docs/api/java/util/Map.html[Java 8 Map interface], Synchronization API provides *blocking methods* to wait for a specific _condition_ on a channel.
  This is mainly why this API is called *Synchronization*, it allows for different ProActive Tasks to be blocked until specific conditions are met.
 
+ * When an error occurs during the Groovy Closure compilation or execution, dedicated exceptions (https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/CompilationException.html[CompilationException] or https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/ClosureEvaluationException.html[ClosureEvaluationException]) will be thrown.
 
-==== Example 1 : Simple Key/Value With Selection Script
+
+==== Examples
+
+===== Example 1 : Simple Key/Value With Selection Script
 
 In this first example, we will show how one task can delay the execution of another task using the Synchronization API and a <<_selection,selection script>>.
 
@@ -1817,7 +1837,7 @@ NOTE: It is also possible to debug the operations performed on the Synchronizati
 
 The Complete Workflow example can be downloaded link:examples/KeyValue.xml[here].
 
-==== Example 2 : Simple Key/Value with Explicit Wait
+===== Example 2 : Simple Key/Value with Explicit Wait
 
 In this second example, we will show how one task can delay the execution of another task using the Synchronization API and an explicit wait call.
 
@@ -1833,7 +1853,7 @@ println "Task B has been unlocked by Task A"
 ```
 
 As you can see, the https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/Synchronization.html#waitUntil-java.lang.String-java.lang.String-java.lang.String-[waitUntil] method expects a https://docs.oracle.com/javase/8/docs/api/java/util/function/BiPredicate.html?is-external=true[BiPredicate] defined as a string http://groovy-lang.org/closures.html[Groovy Closure].
-
+The predicate receives two parameters: `k` contains the key, and `x` contains the binding associated with this key.
 This predicate is evaluated on the *lock* binding, and waits until this binding *== false*.
 
 Here is the output of the Example 2 workflow:
@@ -1848,7 +1868,7 @@ Here is the output of the Example 2 workflow:
 
 The Complete Workflow example can be downloaded link:examples/KeyValueWait.xml[here].
 
-==== Example 3 : Critical Section
+===== Example 3 : Critical Section
 
 In this last example, we will show how we can create a *critical section* inside a workflow, which means, a section of the workflow which can only be accessed by a configurable number of *slots*.
 
@@ -1875,12 +1895,12 @@ When the computation is terminated, it releases the slot by incrementing back th
 ```groovy
 println "Waiting for available slot"
 jobid = variables.get("PA_JOB_ID")
-synchronizationapi.waitUntilThen(jobid, "available_slots", "{k, x -> x > 0}", "{ k, x -> x - 1}")
+synchronizationapi.waitUntilThen(jobid, "available_slots", "{k, x -> x > 0}", "{k, x -> x - 1}")
 println "Enter critical section"
 // simulate some computation
 Thread.sleep(10000)
 println "Release slot"
-synchronizationapi.compute(jobid,"available_slots", "{ k, x -> x + 1}")
+synchronizationapi.compute(jobid,"available_slots", "{k, x -> x + 1}")
 ```
 
 As you can see, the first method used in this section is https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/Synchronization.html#waitUntilThen-java.lang.String-java.lang.String-java.lang.String-java.lang.String-[waitUntilThen]. This method expects both a https://docs.oracle.com/javase/8/docs/api/java/util/function/BiPredicate.html?is-external=true[BiPredicate] and a https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html?is-external=true[BiFunction] defined as strings http://groovy-lang.org/closures.html[Groovy Closure].
