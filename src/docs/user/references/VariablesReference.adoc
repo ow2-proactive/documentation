@@ -236,25 +236,32 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | <<_fork_environment, environment>>
 | bash, cmd, perl, R, PowerShell
 
-| *Scheduler API*. Scheduler API variable is a http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/SchedulerNodeClient.html[SchedulerNodeClient java object] which can connect to the scheduler and interact directly with its API.
+| *Scheduler API*. Scheduler API variable is a http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/SchedulerNodeClient.html[SchedulerNodeClient java object] which can connect to the ProActive Scheduler frontend and interact directly with its <<_scheduler_and_dataspace_apis,API>>.
 | schedulerapi.connect()
 | -
 | -
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
 | bash, cmd, perl, R, PowerShell
 
-| *UserSpace API*. UserSpace API variable is a http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient java object] which can connect to the user space and interact directly with its API.
+| *UserSpace API*. UserSpace API variable is a http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient java object] which can connect to the <<_global_and_user_spaces,User Space>> and interact directly with its <<_scheduler_and_dataspace_apis,API>>.
 | userspaceapi.connect()
 | -
 | -
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
 | bash, cmd, perl, R, PowerShell
 
-| *GlobalSpace API*. GlobalSpace API variable is a http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient java object] which can connect to the global space and interact directly with its API.
+| *GlobalSpace API*. GlobalSpace API variable is a http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient java object] which can connect to the <<_global_and_user_spaces,Global Space>> and interact directly with its <<_scheduler_and_dataspace_apis,API>>.
 | globalspaceapi.connect()
 | -
 | -
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
+| bash, cmd, perl, R, PowerShell
+
+| *Synchronization API*. Synchronization API variable is a https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/Synchronization.html[Synchronization java object] which can connect to the Synchronization Service and interact directly with its <<_task_synchronization_api,API>>.
+| synchronizationapi.createChannel("channel1", false)
+| -
+| -
+| all scripts
 | bash, cmd, perl, R, PowerShell
 
 |===

@@ -909,11 +909,11 @@ They are used in the ProActive Scheduler to:
 [[_selection]]
 === Selection of ProActive Nodes
 
-A selection script provides an ability for the Scheduler to execute tasks on particular ProActive nodes.
+A <<_glossary_selection_script, selection script>> provides an ability for the Scheduler to execute tasks on particular ProActive nodes.
 E.g. you can specify that a task must be executed on a Unix/Linux system.
 
-A selection script is always executed before the task itself on any candidate node:
-the execution of a selection script must set the boolean variable selected,
+A <<_glossary_selection_script, selection script>> is always executed before the task itself on any candidate node:
+the execution of a <<_glossary_selection_script, selection script>> must set the boolean variable selected,
 that indicates if the candidate node is suitable for the execution of the associated task.
 
 A Java helper *org.ow2.proactive.scripting.helper.selection.SelectionUtils* is provided for allowing
@@ -934,7 +934,7 @@ if (SelectionUtils.checkOSName("windows")) {
 }
 ----
 
-You can use variables on the selection script, these variables must be visible within the task
+You can use variables on the <<_glossary_selection_script, selection script>>, these variables must be visible within the task
 context, i.e., declared on job scope, on task scope, or result variable from a previous task. In the last
 case is mandatory that the task that declares the inherited variable precedes the task using the variable. Below
 an example jon in XML format that uses a task variable to select Unix/Linux as operating system, in this example
@@ -1185,7 +1185,7 @@ application. The VNC output will be forwarded to the your browser and you will b
 application.
 
 The task that you want to visualize must output a special string using the following format:
-*PA_REMOTE_CONNECTION;JOB_ID;TASK_ID;vnc;HOSTNAME:PORT* where *JOB_ID* must be the current job id, *TASK_ID* the current task id
+*PA_REMOTE_CONNECTION;JOB_ID;TASK_ID;vnc;HOSTNAME:PORT* where *JOB_ID* must be the current _job id_, *TASK_ID* the current _task id_
 and *HOSTNAME:PORT* the hostname and port where the VNC server runs.
 
 It is the task's responsibility to print the string.
@@ -1253,9 +1253,17 @@ In order to submit a workflow, you need to put the URL of that workflow in the T
 a valid workflow xml file. For example, you can add the workflow that you want to execute into *Catalog*, then retrieve its URL by indicating its Bucket name
 and Workflow name. Moreover, SubmitJobAndWait will wait for the completion of the submitted workflow before proceeding further with the execution of the dependant tasks.
 
-==== Data Spaces
+=== Control and Validation
 
-===== Global and User Spaces
+In order to better control your workflows, two templates *Web Validation* and *Email Validation* are provided under the *Manuals* menu. These templates aim at validating part of your workflows manually. The tasks after the validation template will only be executed
+once you validate it. You can put your description of the validation under the *content* variable in *Web Validation* template, and under *message* variable in *Email Validation* template. Three options are provided, the *Yes* option indicates that you want
+to validate the workflow and continue the execution of the rest tasks; the *Maybe* option means that you do not know what to do for the moment; the *No* option denotes that you do not want to validate the workflow, and the remaining of the workflow will be paused.
+
+In order to validate your workflow using *Web Validation*, you need to go to the *ProActive Notification & Validation* portal, the workflow will be validated by clicking on one of the three buttons. By using *Email Validation*, you will receive an email with three links, the workflow can be validated by clicking on one of the links.
+
+== Data Spaces
+
+=== Global and User Spaces
 
 If a shared folder is not an option in your environment, the ProActive Scheduler provides a convenient way to access
 your data. It has two types of storage on the host where the server is running:
@@ -1270,7 +1278,7 @@ By default, these spaces are linked to folders in the *data* directory of the Pr
 
 But it can be changed in `PROACTIVE_HOME/config/scheduler/settings.ini`.
 
-===== Local Space
+=== Local Space
 
 All files that are stored in these spaces can be read from all computing nodes. However, data transfer is declarative and not explicit.
 You need to define which files have to be transferred from a data space to computing nodes by using *input files* and reciprocally from computing nodes to a data space by defining *output files*:
@@ -1324,7 +1332,7 @@ It is possible to use wildcards in transfer directives, such as:
 More information of pattern syntax can be found in the https://docs.oracle.com/javase/7/docs/api/java/nio/file/FileSystem.html#getPathMatcher(java.lang.String)[FileSystem class JDK documentation].
 
 
-===== Cache Space
+=== Cache Space
 
 In addition to transferring to the Task *Local Space*, it is also possible to transfer files to the Node host *Cache Space*.
 
@@ -1364,76 +1372,6 @@ Files in the cache space are *automatically deleted* after a given period. The d
 In order to change this period, the ProActive Node must be started with the property *node.dataspace.cache.invalidation.period* (in miliseconds).
 
 The property *node.dataspace.cachedir* can also be used to control the cache location on the node.
-
-=== Control and Validation
-
-In order to better control your workflows, two templates *Web Validation* and *Email Validation* are provided under the *Manuals* menu. These templates aim at validating part of your workflows manually. The tasks after the validation template will only be executed
-once you validate it. You can put your description of the validation under the *content* variable in *Web Validation* template, and under *message* variable in *Email Validation* template. Three options are provided, the *Yes* option indicates that you want
-to validate the workflow and continue the execution of the rest tasks; the *Maybe* option means that you do not know what to do for the moment; the *No* option denotes that you do not want to validate the workflow, and the remaining of the workflow will be paused.
-
-In order to validate your workflow using *Web Validation*, you need to go to the *ProActive Notification & Validation* portal, the workflow will be validated by clicking on one of the three buttons. By using *Email Validation*, you will receive an email with three links, the workflow can be validated by clicking on one of the links.
-
-=== LDAP Query Tasks
-
-==== Description
-
-This task features the LDAP searching operation.
-
-==== LDAP query task variables table
-
-The next parameters are provided as task variables:
- 
-[width="100%",frame="topbot",options="header"]
-|===
-|Parameter Name | Description | Example
-|ldapURL|URL the LDAP server|`ldap://localhost:389` (unsecured) or `ldaps://127.0.0.1:636` (secured)
-|ldapDnBase|The base distinguished name of the catalog| `dc=yourOrganization,dc=com`
-|ldapUsername|The username | `cn=admin` for global admin or `cn=yourName,ou=users` for a specific user
-|ldapSearchBase|base domain name for ldap queries|`dc=specificDepartment` or can be empty for base DN search
-|ldapSearchFilter|LDAP search filter|`(objectclass=*)`
-|ldapSelectedAttributes|list of attributes to retrieve|`attributeName1,attributeName2`
-
-|===
-
-If any of these variables must stay private you'll need to set them as third-party credentials (details are given below).
-
-==== Authenticate with Third-party credentials
-
-In order to be able to authenticate to the LDAP server you need to define for the right Scheduler user the `ldapPassword` in the <<_third_party_credentials,Third-party credentials>>.
-
-
-
-==== Result of task
-
-The task provides a specific variable for the result, which is called `result`.
-
-The <<_retrieve_results, task result >>  is a String in JSON format.
-
-
-===== Output example 
-
-Successful task :
-```{.json}
-{"status":"Ok","attributes":[{"loginShell":"/bin/csh","uid":"yaro","userPassword":"[B@2d6a9952","homeDirectory":"/home/users/yaro","uidNumber":"1000","givenName":"yaro","objectClass":"inetOrgPerson","sn":"yaya","gidNumber":"500","cn":"yaro"}]}
-```
-
-Failed task :
-```{.json}
-{"status":"Error","errorMessage":"javax.naming.NameNotFoundException: [LDAP: error code 32 - No Such Object]; remaining name 'cn=yaro,dc=activeeon,dc=com1'"}
-```
-
-==== Secure connection to LDAP server
-
-In order to use secure connection for the LDAP server, specify a correct LDAP over SSL URL (for example ldaps://localhost:636).
-
-In order to be able to connect to a LDAP server, a valid certificate is needed.
-
-When a self-signed certificate is used, the certificate needs to be added to the trusted certificates of the JRE provided with the Scheduler.
-
-Below is an example for adding a certificate to a Java cacerts file:
-----
-keytool -import -alias ldap-self-signed -keystore </pathToScheduler/jre/lib/security/cacerts> -file ldaps.crt -storepass changeit
-----
 
 == Workflow Storage and Versioning
 
@@ -1624,7 +1562,7 @@ Remove credential:
 
 ==== In a Script Task
 
-In a Script Task, the `credentials` map contains all user's
+In a <<_glossary_task_executable_script, Script Task>>, the `credentials` <<_glossary_script_bindings,script binding>> is a hash map containing all user's
 credentials:
 
 [source,groovy]
@@ -1633,9 +1571,12 @@ credentials:
 mysqlPassword = credentials.get('MY_MYSQL_PASSWORD')
 ----
 
+NOTE: The `credentials` <<_glossary_script_bindings,script binding>> can also be used in <<_glossary_additional_task_scripts,additional scripts>> defined inside a <<_glossary_task,ProActive Task>>.
+To know in which scripts `credentials` is available, refer to the <<_variables_quick_reference,variables quick reference>>.
+
 ==== In Java Task
 
-In Java, the method `getThirdPartyCredential` of `JavaExecutable`
+In a <<_glossary_task_executable_java, Java Task>>, the method `getThirdPartyCredential` of `JavaExecutable`
 returns the credential corresponding to the key passed as parameter:
 
 [source,java]
@@ -1669,7 +1610,7 @@ credential:
 
 ==== In a Native Task
 
-Finally, a credential can be passed to a Native Task via
+Finally, a credential can be passed to a <<_glossary_task_executable_native,Native Task>> via
 argumens. Note that, as with Java Task parameters, the `$credentials_`
 prefix is necessary. In the example below, `/bin/echo` will be called
 with the value corresponding to the key `MY_MYSQL_PASSWORD` (if the
@@ -1688,15 +1629,18 @@ key is not present, no replacement occurs):
 </task>
 ----
 
-== Scheduler and DataSpace APIs
-From a ProActive task, several APIs are accessible via Java objects bound to dedicated variables:
+[[_task_apis]]
+== Scheduler, DataSpace, and Synchronization APIs
 
-- Scheduler API : using the "schedulerapi" variable, it is possible to interact directly with the scheduler and do several operations such as submitting jobs, waiting for tasks, listing running jobs etc.
-- DataSpace API : the "userspaceuri" or "globalspaceuri" variables allow to manipulate files present in User or Global spaces. Operations include listing, uploading, downloading, or deleting files.
+From a <<_glossary_task_executable_script,Script Task>>, several APIs are accessible via Java objects bound to dedicated <<_glossary_script_bindings,script bindings>>:
+
+- Scheduler API : using the `schedulerapi` binding, it is possible to interact directly with the scheduler server and do several operations (submit jobs, wait for tasks termination, list running jobs, etc.).
+- DataSpace API : the `userspaceuri` or `globalspaceuri` bindings allow to manipulate files present in User or Global spaces. Operations include listing, uploading, downloading, or deleting files.
+- Synchronization API : using the `synchronizationapi` binding, it is possible to handle advanced task synchronization dynamically.
 
 === Scheduler API
 
-From inside a task script, you can use the Scheduler API variable like the following:
+From inside a <<_glossary_task_executable_script,Script Task>>, you can use the Scheduler API binding like the following:
 
 [source,groovy]
 ----
@@ -1730,13 +1674,16 @@ println taskResult.getOutput().getAllLogs(false)
 
 The complete API description can be found in the http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/SchedulerNodeClient.html[SchedulerNodeClient JavaDoc].
 
+NOTE: The `schedulerapi` <<_glossary_script_bindings,script binding>> can also be used in <<_glossary_additional_task_scripts,additional scripts>> defined inside a <<_glossary_task,ProActive Task>>.
+To know in which scripts `schedulerapi` is available, refer to the <<_variables_quick_reference,variables quick reference>>.
+
 === DataSpace API
 
 The traditional way to transfer files from the user or global space to a task is by using file transfer directives as described in chapter <<_data_spaces>>.
 
 Where file transfer directives are sufficient to cover usual cases, it is sometimes necessary to manipulate directly the dataspace API to have a finer control level.
 
-Below is an example use of this api :
+Below is an example use of this api inside a <<_glossary_task_executable_script,Script Task>>:
 
 [source,groovy]
 ----
@@ -1762,6 +1709,254 @@ println outFile.text
 ----
 
 The complete description of user and global space APIs can be found in the http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient JavaDoc].
+
+NOTE: The `userspaceapi` and `globalspaceapi` <<_glossary_script_bindings,script bindings>> can also be used in <<_glossary_additional_task_scripts,additional scripts>> defined inside a <<_glossary_task,ProActive Task>>.
+To know in which scripts these bindings are available, refer to the <<_variables_quick_reference,variables quick reference>>.
+
+[[_task_synchronization_api]]
+=== Synchronization API
+
+Task synchronization is traditionally handled by the ProActive Scheduler through <<Dependency, Task Dependencies>>, where dependent ProActive Tasks are started only after their parents Tasks completed.
+
+In some cases, *static task dependencies* are not enough to synchronize tasks execution.
+
+This is the case when a task depends on the state of another task executed in a different branch of a workflow, a sibling task or even another job/workflow.
+
+For example, let's suppose workflow _A_ contains a single task _A_1_ starting an apache server. Task _A_1_ starts the server and remains alive while the server is up.
+When workflow _A_ is killed, task _A_1_ stops the Apache server.
+
+A task _B_1_ of another workflow _B_ wants to interact with this server.
+
+*Problem:* task _B_1_ does not know if the apache server is up and how to contact it.
+
+Using *Task Synchonization API*, task _A_1_ can advertise the server URL to the Synchronization Service.
+
+Task _B_1_ can use Task Synchonization API to wait until the apache server is advertised, it can also perform the necessary operations and advertise task _A_1_ that the operation is complete and the apache server can be terminated.
+
+As we can see, Task Synchronization API can be used for two-ways synchronization.
+
+==== Usage
+
+*Task Synchronization API* is a *Java API* defined by the following https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/Synchronization.html[API documentation].
+
+The Synchronization API is connected to a centralized *Synchronization Service*. This service ensures that each request is executed atomically, and that changes are persisted on disk.
+
+The Synchronization API is available inside ProActive Tasks through the `synchronizationapi` <<_glossary_script_bindings,script binding>>.
+
+
+===== Channels
+
+The *Synchronization Service* works as a _Key-Value Store_ organized in *channels*. Each *channel* acts as a private _Key-Value Store_.
+
+This means that each _put_ operation is identified by a 3-tuple: _<Channel_identifier, Key_binding, Value>_.
+
+Users of the Synchronization API are responsible to create *channels* as fit their needs. Channels have no notion of *ownership*, a channel created by workflow A started by user _Alice_ can be used by workflow B started by user _Bob_.
+
+This is because Synchronization API is often used to synchronize workflow tasks across multiple users.
+
+Therefore, *channel naming* is important and should be precise enough to avoid accidental overlap. Channels should be created when needed and deleted after use.
+
+For example, a channel which is used only inside a specific job instance (to synchronize tasks withing this job) should be created inside some *initialization task* at the beginning of this job, and deleted in some *cleaning task* at the end. The channel name should contain the <<_glossary_job_id, Job Id>>.
+
+When channels are created, the user can decide if the channel should be persisted on disk or kept in memory only.
+
+On startup, the Synchronization Service contains only the persistent channels which were previously created using the Synchronization API. In-memory channels created before the reboot of the scheduler are lost.
+
+===== API Description
+
+The Synchronization API is similar to the https://docs.oracle.com/javase/8/docs/api/java/util/Map.html[Java 8 Map interface], with the following differences:
+
+ * It contains methods to create/delete _channels_ and methods to interact with the _channel Map_ itself.
+
+ * Each channel Map operations must take a _channel identifier_ parameter.
+
+ * The Synchronization API supports https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html[Java 8 lambdas], but lambdas must be passed as string arguments defining http://groovy-lang.org/closures.html[Groovy Closures]. For example, `+compute("channel1", "key1", "{k, x -> x+1}")+` instead of `+compute("channel1", "key1", (k, x) -> x+1)+`.
+
+ * The Synchronization Service guaranties that multiple operations, coming from different ProActive Tasks, will all be executed *atomically*.
+
+ * In addition to the methods present in the https://docs.oracle.com/javase/8/docs/api/java/util/Map.html[Java 8 Map interface], Synchronization API provides *blocking methods* to wait for a specific _condition_ on a channel.
+ This is mainly why this API is called *Synchronization*, it allows for different ProActive Tasks to be blocked until specific conditions are met.
+
+ * When an error occurs during the Groovy Closure compilation or execution, dedicated exceptions (https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/CompilationException.html[CompilationException] or https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/ClosureEvaluationException.html[ClosureEvaluationException]) will be thrown.
+
+
+==== Examples
+
+===== Example 1 : Simple Key/Value With Selection Script
+
+In this first example, we will show how one task can delay the execution of another task using the Synchronization API and a <<_selection,selection script>>.
+
+image::KeyValue.png[Key/Value With Selection Script, , title="Key/Value With Selection Script"]
+
+This workflow contains the following Tasks:
+
+ * *Init*: Initialize the channel. This task creates a channel using the current _job id_. It also sets a `lock` binding in the key/value store with an initial _true_ value.
+```groovy
+jobid = variables.get("PA_JOB_ID")
+synchronizationapi.createChannel(jobid, false)
+synchronizationapi.put(jobid, "lock", true)
+println "Channel " + jobid + " created."
+```
+
+ * *TaskB_Wait*: Wait to be unlocked. This task will not be executed until the `lock` binding changed to _false_. A <<_selection, selection script>> allows to handle this verification:
+```groovy
+selected = !(synchronizationapi.get(variables.get("PA_JOB_ID"), "lock"))
+```
+
+ * *TaskA*: Unlock TaskB. This task will sleep for a few seconds and then unlock TaskB using the Synchronization API:
+```groovy
+println "Sleeping 5 seconds"
+Thread.sleep(5000)
+println "Unlocking Task B"
+synchronizationapi.put(variables.get("PA_JOB_ID"), "lock", false)
+```
+
+ * *Clean*: Delete the channel. This task simply deletes the channel used in this job. As there is no automatic mechanism to remove channels, it is necessary to delete them explicitely when they are not used any more.
+```groovy
+jobid = variables.get("PA_JOB_ID")
+synchronizationapi.deleteChannel(jobid )
+println "Channel " + jobid + " deleted."
+```
+
+Here is output of the Key/Value workflow:
+```
+[28t2@trydev.activeeon.com;14:24:22] Channel 28 created.
+[28t0@trydev.activeeon.com;14:24:28] Sleeping 5 seconds
+[28t0@trydev.activeeon.com;14:24:33] Unlocking Task B
+[28t1@trydev.activeeon.com;14:24:40] Task B has been unlocked by Task A
+[28t3@trydev.activeeon.com;14:24:46] Channel 28 deleted.
+```
+
+NOTE: It is also possible to debug the operations performed on the Synchronization Store. This is possible by using the *Server Logs* associated with the job. Server Logs are very verbose, the _[Synchronization]_ pattern helps to find logs associated with the Synchronization API:
+```
+[2018-04-24 14:24:22,685 de72716883 INFO            o.o.p.s.u.TaskLogger] task 28t2 (Init) [Synchronization]Created new memory channel '28'
+[2018-04-24 14:24:22,786 de72716883 INFO            o.o.p.s.u.TaskLogger] task 28t2 (Init) [Synchronization][Channel=28] Put true on key 'lock', previous value was null
+[2018-04-24 14:24:34,431 de72716883 INFO            o.o.p.s.u.TaskLogger] task 28t0 (TaskA) [Synchronization][Channel=28] Put false on key 'lock', previous value was true
+[2018-04-24 14:24:46,882 de72716883 INFO            o.o.p.s.u.TaskLogger] task 28t3 (Clean) [Synchronization]Deleted memory channel '28'
+```
+
+The Complete Workflow example can be downloaded link:examples/KeyValue.xml[here].
+
+===== Example 2 : Simple Key/Value with Explicit Wait
+
+In this second example, we will show how one task can delay the execution of another task using the Synchronization API and an explicit wait call.
+
+This example is very similar to the first example, but instead of delaying the execution of TaskB using a selection script, TaskB will start its execution and explicitly call the Synchronization API to wait.
+
+ * Tasks *Init*, *TaskA* and *Clean* do not change
+
+ * *TaskB_Wait* is modified. The selection script is removed and instead the following code is used in the main task definition:
+```groovy
+println "Waiting for Task A"
+synchronizationapi.waitUntil(variables.get("PA_JOB_ID"), "lock", "{k, x -> x == false}")
+println "Task B has been unlocked by Task A"
+```
+
+As you can see, the https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/Synchronization.html#waitUntil-java.lang.String-java.lang.String-java.lang.String-[waitUntil] method expects a https://docs.oracle.com/javase/8/docs/api/java/util/function/BiPredicate.html?is-external=true[BiPredicate] defined as a string http://groovy-lang.org/closures.html[Groovy Closure].
+The predicate receives two parameters: `k` contains the key, and `x` contains the binding associated with this key.
+This predicate is evaluated on the *lock* binding, and waits until this binding *== false*.
+
+Here is the output of the Example 2 workflow:
+```
+[29t2@trydev.activeeon.com;14:43:42] Channel 29 created.
+[29t0@trydev.activeeon.com;14:43:49] Sleeping 5 seconds
+[29t1@trydev.activeeon.com;14:43:48] Waiting for Task A
+[29t0@trydev.activeeon.com;14:43:54] Unlocking Task B
+[29t1@trydev.activeeon.com;14:43:55] Task B has been unlocked by Task A
+[29t3@trydev.activeeon.com;14:44:01] Channel 29 deleted.
+```
+
+The Complete Workflow example can be downloaded link:examples/KeyValueWait.xml[here].
+
+===== Example 3 : Critical Section
+
+In this last example, we will show how we can create a *critical section* inside a workflow, which means, a section of the workflow which can only be accessed by a configurable number of *slots*.
+
+The _Critical Section_ workflow is defined with a <<_replicate, Replicate Control Structure>>:
+
+image::CriticalSection.png[Critical Section, , title="Critical Section"]
+
+It contains the following Tasks:
+
+ * *Init*: Initialize the channel. This task creates a channel using the current _job id_. It also sets a `available_slots` binding in the key/value store with an initial value based on the workflow user-defined `NB_SLOTS` <<_job_variables, job variable>>.
+```groovy
+jobid = variables.get("PA_JOB_ID")
+synchronizationapi.createChannel(jobid, false)
+synchronizationapi.put(jobid, "available_slots", Integer.parseInt(variables.get("NB_SLOTS")))
+println "Channel " + jobid + " created."
+```
+This tasks also define a <<_control_flow_scripts, control flow script>> used to define the number of replicated tasks. The number of replicated tasks is parametrized with the user-defined `NB_TASKS` <<_job_variables, job variable>>:
+```groovy
+runs=Integer.parseInt(variables.get("NB_TASKS"))
+```
+
+ * *Section*: Wait for the critical section to be available. This task will block until the number of available slots is greater than 0. As soon as at least one slot is available, it decrements the `available_slots` counter and perform some computation.
+When the computation is terminated, it releases the slot by incrementing back the `available_slots` counter.
+```groovy
+println "Waiting for available slot"
+jobid = variables.get("PA_JOB_ID")
+synchronizationapi.waitUntilThen(jobid, "available_slots", "{k, x -> x > 0}", "{k, x -> x - 1}")
+println "Enter critical section"
+// simulate some computation
+Thread.sleep(10000)
+println "Release slot"
+synchronizationapi.compute(jobid,"available_slots", "{k, x -> x + 1}")
+```
+
+As you can see, the first method used in this section is https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/Synchronization.html#waitUntilThen-java.lang.String-java.lang.String-java.lang.String-java.lang.String-[waitUntilThen]. This method expects both a https://docs.oracle.com/javase/8/docs/api/java/util/function/BiPredicate.html?is-external=true[BiPredicate] and a https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html?is-external=true[BiFunction] defined as strings http://groovy-lang.org/closures.html[Groovy Closure].
+
+The semantic of this method is to wait until the predicate is met and, as soon as it is, immediately perform a remapping.
+
+In our scenario, the number of available slots is immediately decremented to reserve a slot and enter the critical section.
+
+Releasing of the slot is performed at the end of the task using the https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/Synchronization.html#compute-java.lang.String-java.lang.String-java.lang.String-[compute] method.
+
+ * *Clean*: Delete the channel. Same code as the previous examples.
+
+Here is the output of the Example 3 workflow:
+```
+[3t0@trydev.activeeon.com;16:14:14] Channel 3 created.
+[3t1@trydev.activeeon.com;16:14:22] Waiting for available slot
+[3t4@trydev.activeeon.com;16:14:22] Waiting for available slot
+[3t3@trydev.activeeon.com;16:14:22] Waiting for available slot
+[3t5@trydev.activeeon.com;16:14:22] Waiting for available slot
+[3t1@trydev.activeeon.com;16:14:23] Enter critical section
+[3t4@trydev.activeeon.com;16:14:23] Enter critical section
+[3t4@trydev.activeeon.com;16:14:33] Release slot
+[3t1@trydev.activeeon.com;16:14:33] Release slot
+[3t3@trydev.activeeon.com;16:14:33] Enter critical section
+[3t5@trydev.activeeon.com;16:14:34] Enter critical section
+[3t6@trydev.activeeon.com;16:14:38] Waiting for available slot
+[3t3@trydev.activeeon.com;16:14:43] Release slot
+[3t5@trydev.activeeon.com;16:14:44] Release slot
+[3t6@trydev.activeeon.com;16:14:44] Enter critical section
+[3t6@trydev.activeeon.com;16:14:54] Release slot
+[3t2@trydev.activeeon.com;16:14:59] Channel 3 deleted.
+```
+
+We can see that no more than two replicated tasks enter the critical section at the same time, and that releasing slots allows new tasks to enter the critical section.
+
+The Complete Workflow example can be downloaded link:examples/CriticalSection.xml[here].
+
+CAUTION: Implementing the Critical Section example using <<_selection,selection scripts>> rather than explicit wait methods is more *complex*.
+The reason behind is that selection scripts are meant to be *stateless*.
+The same selection script is executed on all ProActive Nodes by the Scheduler before deciding if a Node can be used to execute a single Task.
+In our use case, we must both decide *atomically* if a slot is available (_stateless_) and reserve a slot (_stateful_). This decision will be performed *simultaneously* on all available ProActive Nodes.
+An example implementation can be downloaded link:examples/CriticalSectionWithSelectionScripts.xml[here]. It makes use of a `reserved_slots` binding containing a set of `task ids`.
+
+==== Conclusion
+
+Task Synchronization API can be used for multiple dynamic synchronization patterns such as:
+
+ * *Cross-workflow* synchronization
+
+ * *Critical Sections*
+
+ * *Barriers* (Wait for several parallel tasks to reach a certain point)
+
+ * *Producer / Consumer*
+
+A complete example of Producer / Consumer, _ServiceDeployerConsumer_ can be downloaded link:examples/ServiceDeployerConsumer.xml[here].
 
 == Data Connectors
 
@@ -1823,6 +2018,9 @@ include::./references/JobPlannerServiceReference.adoc[]
 == Addons
 
 include::./references/StatisticsOnProActiveJobsAndResourceUsageReference.adoc[]
+
+include::./references/LDAPQueryTasks.adoc[]
+
 
 == Reference
 

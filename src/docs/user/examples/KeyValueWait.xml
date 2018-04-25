@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="urn:proactive:jobdescriptor:3.10"
+     xsi:schemaLocation="urn:proactive:jobdescriptor:3.10 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.10/schedulerjob.xsd"
+    name="KeyValueWait" 
+    priority="normal"
+    onTaskError="continueJobExecution"
+     maxNumberOfExecution="2">
+  <taskFlow>
+    <task name="TaskA">
+      <description>
+        <![CDATA[ Unblock TaskB after 5 seconds ]]>
+      </description>
+      <depends>
+        <task ref="Init"/>
+      </depends>
+      <scriptExecutable>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+println "Sleeping 5 seconds"
+Thread.sleep(5000)
+println "Unlocking Task B"
+synchronizationapi.put(variables.get("PA_JOB_ID"), "lock", false)
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+    <task name="TaskB_Wait">
+      <description>
+        <![CDATA[ Wait for unblock ]]>
+      </description>
+      <depends>
+        <task ref="Init"/>
+      </depends>
+      <scriptExecutable>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+println "Waiting for Task A"
+synchronizationapi.waitUntil(variables.get("PA_JOB_ID"), "lock", "{k, x -> x == false}")
+println "Task B has been unlocked by Task A"
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+    <task name="Init">
+      <description>
+        <![CDATA[ Initialize Channel ]]>
+      </description>
+      <scriptExecutable>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+jobid = variables.get("PA_JOB_ID")
+synchronizationapi.createChannel(jobid, false)
+synchronizationapi.put(jobid, "lock", true)
+println "Channel " + jobid + " created."
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+    <task name="Clean">
+      <description>
+        <![CDATA[ Clean channel ]]>
+      </description>
+      <depends>
+        <task ref="TaskA"/>
+        <task ref="TaskB_Wait"/>
+      </depends>
+      <scriptExecutable>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+jobid = variables.get("PA_JOB_ID")
+synchronizationapi.deleteChannel(jobid )
+println "Channel " + jobid + " deleted."
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+  </taskFlow>
+</job>
