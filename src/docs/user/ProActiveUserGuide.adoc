@@ -1716,6 +1716,8 @@ To know in which scripts these bindings are available, refer to the <<_variables
 [[_task_synchronization_api]]
 === Synchronization API
 
+This Synchronization API allows for both communication and synchronization between Tasks and between Jobs dynamically at execution. It is based on a Key-Value Store offering atomic operations. It enables to easily put into action all classical synchronization patterns: Critical Sections and Mutual Exclusion, Rendez-vous, Barriers, Producer/Consumer...
+
 Task synchronization is traditionally handled by the ProActive Scheduler through <<Dependency, Task Dependencies>>, where dependent ProActive Tasks are started only after their parents Tasks completed.
 
 In some cases, *static task dependencies* are not enough to synchronize tasks execution.
@@ -1734,6 +1736,8 @@ Using *Task Synchonization API*, task _A_1_ can advertise the server URL to the 
 Task _B_1_ can use Task Synchonization API to wait until the apache server is advertised, it can also perform the necessary operations and advertise task _A_1_ that the operation is complete and the apache server can be terminated.
 
 As we can see, Task Synchronization API can be used for two-ways synchronization.
+
+Synchronizations can be used in any part of a Task (Pre/Post/Clean Scripts, Task Implementation, Selection Script). Using Synchronization API within Selection Scripts is a way to avoid a Task to be started (consuming a Node) and to be actually doing nothing, just waiting for a specific condition to occur.
 
 ==== Usage
 
