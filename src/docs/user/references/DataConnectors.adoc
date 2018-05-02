@@ -216,3 +216,78 @@ Currently, we have connectors for MongoDB and Cassandra.
 The task requires the following third-party credentials: `<NoSQL_NAME>_USERNAME` and `<NoSQL_NAME>_PASSWORD`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 The imported data is exported in a JSON format using the variable `DATAFRAME_JSON`.
 
+=== Cloud
+
+Cloud data connectors allow to interact with cloud storage services. Currently we provide support for Amazon S3, Azure Storage and Azure Data Lake.
+
+==== Azure Data Lake
+
+The Azure Data Lake connector allows to upload U-SQL scripts and then execute them as Data Lake Analytics (DLA) jobs. It requires an existing Data Lake Analytics account and its corresponding Data Lake Store account. The connector workflow consists of three tasks:
+
+* _Submit_job_: Connects to Azure Data Lake and submits the provided script.
+* _Wait_for_job_: Periodically monitors the DLA job status until its finalization.
+* _Display_result_: Downloads the result file and displays it.
+
+*Variables:*
+
+.Azure Data Lake Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Level* | *Required?* | *Type*  | *Default/Examples*
+| `AZ_DLA_ACCOUNT`
+| Data Lake *Analytics* account to be used. It should already exist.
+| Workflow
+| Yes
+| String
+| e.g. my_dla_account
+| `AZ_DLS_ACCOUNT`
+| Data Lake *Store* account to be used.  It should already exist.
+| Workflow
+| Yes
+| String
+| e.g. my_dls_account
+| `AZ_DLA_JOB`
+| Name to identify the job to be submitted.
+| Workflow
+| Yes
+| String
+| e.g. my_dla_job
+| `AZ_DLA_SCRIPT`
+| Name of the text file containing the U-SQL script to submit. The file must be located in the *Global Space* directory. An example file is provided.
+| Workflow
+| Yes
+| String
+v|default (example): usql.txt
+e.g. my_usql_script.txt
+| `AZ_DLA_OUTPUT`
+| Name of the output file to store the result of the script.
+| Workflow
+| Yes
+| String
+| e.g. my_output_file.csv
+| `AZ_CRON_MONITOR`
+| Cron expression to determine how frequently to monitor the completion of the job.
+| Workflow
+| Yes
+| String
+v|Default: "* * * * \*"
+(every minute)
+e.g. "*/2 * * * *"
+(every 2 minutes)
+|===
+
+*How to use these tasks:*
+
+Azure Data Lake tasks require your Azure login credentials to be set as third-party credentials (`key:value` pairs); this is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+
+You have two options for providing your login credentials:
+
+* Standard Azure login: `AZ_U:your_user` (usually an email). `AZ_P:your_password`.
+* Using an link:https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?toc=%2Fazure%2Fazure-resource-manager%2Ftoc.json&view=azure-cli-latest[Azure service principal]: `AZ_U:appId`. `AZ_P:password`. `AZ_T:tenant`. By default, if `AZ_T` is set, the tasks will attempt to connect through a service principal.
+
+[NOTE]
+====
+.The Output File
+* Instead of hardcoding the name of your output file in your U-SQL script, you can use the placeholder `OUTPUT_FILE`, which is automatically replaced by the value of `AZ_DLA_OUTPUT`.
+* Once downloaded, the output file will be stored in your *User Space* (and _not_ in the Global Space).
+====
