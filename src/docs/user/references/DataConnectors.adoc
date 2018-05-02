@@ -253,12 +253,12 @@ The Azure Data Lake connector allows to upload U-SQL scripts and then execute th
 | String
 | e.g. my_dla_job
 | `AZ_DLA_SCRIPT`
-| Name of the text file containing the U-SQL script to submit. The file must be located in the *Global Space* directory. An example file is provided.
+| File name of the U-SQL script to submit. The file must be located in the *Global Space* directory. An example file `script.usql` is provided.
 | Workflow
 | Yes
 | String
-v|default (example): usql.txt
-e.g. my_usql_script.txt
+v|Sample file: script.usql
+e.g. my_usql_script.usql
 | `AZ_DLA_OUTPUT`
 | Name of the output file to store the result of the script.
 | Workflow
