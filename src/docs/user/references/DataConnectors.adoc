@@ -222,10 +222,10 @@ Cloud data connectors allow to interact with cloud storage services. Currently w
 
 ==== Azure Data Lake
 
-The Azure Data Lake connector allows to upload U-SQL scripts and then execute them as Data Lake Analytics jobs. It requires an existing Data Lake Analytics account and its corresponding Data Lake Store account. The workflow consists of three tasks:
+The Azure Data Lake connector allows to upload U-SQL scripts and then execute them as Data Lake Analytics (DLA) jobs. It requires an existing Data Lake Analytics account and its corresponding Data Lake Store account. The connector workflow consists of three tasks:
 
 * _Submit_job_: Connects to Azure Data Lake and submits the provided script.
-* _Wait_for_job_: Periodically monitors the job status until its finalization.
+* _Wait_for_job_: Periodically monitors the DLA job status until its finalization.
 * _Display_result_: Downloads the result file and displays it.
 
 *Variables:*
@@ -235,13 +235,13 @@ The Azure Data Lake connector allows to upload U-SQL scripts and then execute th
 |===
 | *Variable name* | *Description* | *Level* | *Required?* | *Type*  | *Default/Examples*
 | `AZ_DLA_ACCOUNT`
-| Data Lake *Analytics* account to be used. It _must_ already exist.
+| Data Lake *Analytics* account to be used. It should already exist.
 | Workflow
 | Yes
 | String
 | e.g. my_dla_account
 | `AZ_DLS_ACCOUNT`
-| Data Lake *Store* account to be used.  It _must_ already exist.
+| Data Lake *Store* account to be used.  It should already exist.
 | Workflow
 | Yes
 | String
@@ -253,7 +253,7 @@ The Azure Data Lake connector allows to upload U-SQL scripts and then execute th
 | String
 | e.g. my_dla_job
 | `AZ_DLA_SCRIPT`
-| Text file containing the U-SQL script to submit. The file _must_ be located in the *Global Space* directory. An example file is provided.
+| Name of the text file containing the U-SQL script to submit. The file must be located in the *Global Space* directory. An example file is provided.
 | Workflow
 | Yes
 | String
