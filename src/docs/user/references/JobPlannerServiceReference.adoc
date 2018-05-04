@@ -93,6 +93,9 @@ An inclusion or exclusion calendar can become not retrievable if it cannot be do
 
 To create new calendars definitions, use the <<_glossary_job_planner_portal, *Job Planner Portal*>>, Calendar Definition page. When clicking the "+" button, a calendar definition is created with default parameters.
 
+image::calendar_definition.png[align="center"]
+
+
 Click on a Calendar Definition to modify it. Its fields will be visible on the main panel ("Calendar Definition"). The name of the Calendars Definition must be unique in a bucket. The cron expression can be set using the widget, or manually with the "Advanced" tab. The resulting cron expression is shown under the widget.
 
 Changes made in the Calendar Definition panel will be automatically saved. When a calendar definition is selected, it can be removed by clicking on the trash button.
@@ -100,15 +103,24 @@ Changes made in the Calendar Definition panel will be automatically saved. When 
 ==== Associating workflows to Calendar Definitions
 
 Once a workflow has been published to the <<_glossary_catalog, *Catalog*>>, it can be planned with the <<_glossary_job_planner_portal, *Job Planner Portal*>>, Calendar Association page. To plan a workflow, you need to associate it to a Calendar Definition.
+
+image::calendar_wf_association.png[align="center"]
+
 On this page, select an already existing Calendar Definition and add/remove workflows associated to it.
 When creating an association, it is possible to set the workflows variables.
+
+image::calendar_wf_association_2.png[align="center"]
 
 This page can also be opened when clicking on the "plan" button on the <<_glossary_workflow_studio, *Studio*>> or the <<_glossary_scheduler_web_interface, *Scheduler Portal*>>.
 
 ==== Execution Planning visualisation
 
 On the <<_glossary_job_planner_portal, *Job Planner Portal*>>, Execution Planning page, you can see the recurrence of calendar definitions.
-You can select one or several Calendar Definitions on the left panel and associated workflows will appear on the right panel. Then, there are 3 ways to visualize the recurrence on the Execution Planning panel:
+You can select one or several Calendar Definitions on the left panel and associated workflows will appear on the right panel. 
+
+image::calendar_planning.png[align="center"]
+
+Then, there are 3 ways to visualize the recurrence on the Execution Planning panel:
 
     - "Sort by workflow" tab: For each workflow, a list of execution time is displayed. The combo box allows you to choose the period of the execution planning. If several workflows are associated to one Calendar Definition, they will be grouped.
     If a workflow is associated to several Calendar Definitions, it will appear several times.  The name of the Calendar Definition is always displayed next to the workflow name, in order to know which Calendar Definition is related to the given executions.
