@@ -1,5 +1,5 @@
 
-The `data-connectors` bucket contains diverse generic data connectors for the most frequently used data storage systems (File, SQL, NoSQL, Cloud, ERP). The aim of a data connector is to facilitate and simplify importing data from external sources into your workflows.
+The `data-connectors` bucket contains diverse generic data connectors for the most frequently used data storage systems (File, SQL, NoSQL, Cloud, ERP). The aim of a data connector is to facilitate and simplify data access from your workflows to external data sources.
 
 === File
 The File connectors allow to import and export data from HTTP, FTP and SFTP servers.
@@ -8,6 +8,7 @@ We begin by presenting FTP and SFTP connectors then, URL connector.
 ==== FTP and SFTP connectors
 
 *Variables:*
+
 The FTP and SFTP connectors share the same list of variables. Consequently, we describe them in the following table using a unique notation.
 `<PROTOCOL>` can take one of the following values: {`FTP`, `SFTP`}
 
@@ -60,7 +61,9 @@ It can contain either a path to a file, a directory terminated by `/` or an empt
 | e.g. \ftp://someuser@example.com
 |===
 
-*How to use this task:* The task requires the following third-party credential: `{key: <PROTOCOL>://<username>@<hostname>, value: <PROTOCOL>_PASSWORD}`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+*How to use this task:*
+
+The task requires the following third-party credential: `{key: <PROTOCOL>://<username>@<hostname>, value: <PROTOCOL>_PASSWORD}`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 ==== URL connector
 
@@ -100,13 +103,20 @@ The URL connector allows, in addition, to import data using HTTP and HTTPS proto
 | false
 |===
 
-*How to use this task:* We highly recommend the user to not provide his password within the URL and to instead use the third-party credential mechanism as follows: `{key: <PROTOCOL>://<username>@<hostname>, value: <PROTOCOL>_PASSWORD}`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+*How to use this task:*
+
+We highly recommend the user to not provide his password within the URL and to instead use the third-party credential mechanism as follows: `{key: <PROTOCOL>://<username>@<hostname>, value: <PROTOCOL>_PASSWORD}`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 === SQL
-The SQL connectors allow to import data from Relational DataBase Management Systems (RDBMS).
+The SQL connectors allow to import and export data from and to Relational DataBase Management Systems (RDBMS).
 Currently, we have connectors for Mysql, Oracle, Postgres, Greenplum and Sql server.
 
+SQL connectors workflows are composed of two tasks: an import task and an export task.
+
+
+
 *Variables:*
+
 All SQL connectors share the same list of variables. Consequently, we describe them in the following table using a unique notation.
 `<RDBMS_NAME>` can take one of the following values: {`POSTGRES`, `GPDB`, `ORACLE`, `SQL_SERVER`, `MYSQL`}
 
@@ -131,90 +141,155 @@ All SQL connectors share the same list of variables. Consequently, we describe t
 | Workflow
 | Yes
 | String
-| e.g. activeeon
+| e.g. MY_DATABASE
 | `<RDBMS_NAME>_QUERY`
 | Requires an SQL query or a table name to fetch data from.
-| Workflow, Task
+| Import Task
 | Yes
 | String
-| e.g. select * from users
+| e.g.
+
+```SELECT * from MY_TABLE```
 | `LABEL`
-| Used when the imported data is labeled. Then, the user can specify the label column name.
-| Task
+| If the imported data is labeled for machine learning, a label attribute can be specified using this variable.
+| Import Task
 | No
 | String
 | e.g. class
+| `<RDBMS_NAME>_OUTPUT_FILE`
+| Relative path in the data space used to save the results in a CSV file.
+| Import Task
+| No
+| String
+| e.g. `path/to/my/output.csv`
+| `<RDBMS_NAME>_TABLE`
+| The table to insert data into.
+| Export Task
+| Yes
+| String
+| e.g. MY_TABLE
+| `INSERT_MODE`
+a| Indicates the behavior to follow when the table exists in the database amongst:
+
+  * fail: If table exists, do nothing.
+  * replace: If table exists, drop it, recreate it, and insert data.
+  * append: (default) If table exists, insert data. Create if does not exist.
+
+| Export Task
+| Yes
+| String
+| _
+| `INPUT_FILE`
+a| * It can be a relative path in the dataspace of a csv file containing the data to import.
+* or a valid URL amongst `http`, `ftp`, `s3`, and `file`.
+| Export Task
+| Yes
+| String
+| e.g. `path/to/data.csv` or
+http://link/to/my/data/csv
 | `<RDBMS_NAME>_RMDB_DRIVER`
 | The driver to connect to the database.
-| Task
+| Import Task
+Export Task
 | Yes
 | String
 | e.g. cx_oracle, psycopg2
 |===
 
-*How to use this task:* This task uses the driver given in `RMDB_DRIVER` to connect to the database. To use another driver, make sure you have it properly installed before (e.g. using `pip install <RMDBS_DRIVER>`).
-The task requires the following third-party credentials: `<RDBMS_NAME>_USERNAME` and `<RDBMS_NAME>_PASSWORD`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
-The imported data is exported in a JSON format using the variable `DATAFRAME_JSON`.
+*How to use this task:*
+
+When you drag & drop an SQL connector, two tasks will be appended to your workflow: an import task and an export task. You can keep one of them depending on your needs and remove the other or you can use them both.
+
+This task uses the driver given in `RMDB_DRIVER` to connect to the database. To use another driver, make sure you have it properly installed before (e.g. using `pip install <RMDBS_DRIVER>`).
+
+The task requires the following third-party credentials: `<RDBMS_NAME>_USERNAME` and `<RDBMS_NAME>_PASSWORD` ; this is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+
+In the import mode, the output containing the imported data takes one or many of the following forms:
+
+* in a _CSV_ format to saved to:
+ ** the `<RDBMS_NAME>_OUTPUT_FILE` in the data space if specified by the user
+ ** _and_ to the `result` variable to make is previewable in the scheduler portal and to make it accessible for the next tasks.
+* in a _JSON_ format using the variable `DATAFRAME_JSON`.
 
 === NoSQL
 The NoSQL connectors allow to import data from NoSQL Databases.
 Currently, we have connectors for MongoDB and Cassandra.
 
-*Variables:*
+==== MongoDB
 
-`<NoSQL_NAME>` can take one of the following values: {`CASSANDRA`, `MONGODB`}
+*Variables:*
 
 .NoSQL Connector variables
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Level* | *Required?*  | *Type*  | *Default/Examples*
-| `<NoSQL_NAME>_HOSTNAME`
+| `MONGODB_HOSTNAME`
 | Label or the IP address of the server hosting the database.
-| Workflow
+| Workflow, Import Task, Export Task
 | Yes
 | String
 | `localhost`
-| `<NoSQL_NAME>_PORT`
+| `MONGODB_PORT`
 | Listening port.
-| Workflow
+| Workflow, Import Task, Export Task
 | No
 | Integer
-| e.g. 27018, 9042
-| `MONGODB_DATABASE` or `CASSANDRA_KEYSPACE`
-| Equivalent to the database name.
-| Workflow
+| 27018
+| `MONGODB_DATABASE`
+| Database to use. In export mode, it is created if it does not exist.
+| Workflow, Import Task, Export Task
 | Yes
 | String
-| e.g. activeeon
-| `<NoSQL_NAME>_QUERY`
-| Requires a NoSQL query to fetch data.
-| Workflow, Task
-| No (depends on the NoSQL database)
-| String
-| e.g. {"class":2}
+| e.g. my_database
 | `MONGODB_COLLECTION`
-| Equivalent to a `table` in a RDBMS.
-| Workflow, Task
+| Collection to use. In export mode, it is created if it does not exist.
+| Workflow, Import Task, Export Task
 | Yes
 | String
-| e.g. users
+| e.g. my_collection
+| `MONGODB_QUERY`
+| Requires a NoSQL query to fetch data. If empty (`{}`), it will fetch all documents.
+| Import Task
+| No
+| String
+| {}
+| `MONGODB_OUTPUT`
+| Relative path in the data space used to save the results in a JSON file.
+| Import Task
+| No
+| String
+| e.g. path/to/my/output.json
 | `LABEL`
-| Used when the imported data is labeled. Then, the user can specify the label column name.
-| Task
+| If the imported data is labeled for machine learning, a label attribute can be specified using this variable.
+| Import Task
 | No
 | String
 | e.g. class
-| `NOSQL_DRIVER`
-| The driver to connect to MongoDB.
-| Task
+
+| `MONGODB_INPUT`
+a| A JSON Object/Array to be inserted in MongoDB. This variable can:
+
+   * A String describing the JSON Object/Array
+   * A relative path in the data space of a JSON file.
+| Export Task
 | Yes
 | String
-| e.g. pymongo
+| e.g.
+
+`{"document":{"key":"value"}}`
+
+or `path/to/input.json`
 |===
 
-*How to use this task:* This task uses the driver given in `NOSQL_DRIVER` to connect to MongoDB. To use another driver, make sure you have it properly installed before.  (e.g. using `pip install <NOSQL_DRIVER>`).
-The task requires the following third-party credentials: `<NoSQL_NAME>_USERNAME` and `<NoSQL_NAME>_PASSWORD`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
-The imported data is exported in a JSON format using the variable `DATAFRAME_JSON`.
+*How to use this task:*
+
+The task requires the following third-party credentials: `MONGODB_USERNAME` and `MONGODB_PASSWORD`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+
+In the import mode, the output containing the imported data takes one or many of the following forms:
+
+* in a JSON format to saved to:
+ ** the `MONGODB_OUTPUT` file in the data space if specified by the user
+ ** _and_ to the `result` variable to make is previewable in the scheduler portal and to make it accessible for the next tasks.
 
 === Cloud
 
