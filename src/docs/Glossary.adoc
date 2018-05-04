@@ -25,10 +25,10 @@ NOTE: Please note the difference between *Scheduler* and <<_glossary_proactive_s
 REST API:: ProActive component that provides RESTful API for the <<_glossary_resource_manager,*Resource Manager*>>, the <<_glossary_scheduler,*Scheduler*>> and the <<_glossary_catalog, *Catalog*>>.
 
 [[_glossary_rm_web_interface]]
-Resource Manager Web Interface:: ProActive component that provides a web interface to the <<_glossary_resource_manager,*Resource Manager*>>.
+Resource Manager Web Interface:: ProActive component that provides a web interface to the <<_glossary_resource_manager,*Resource Manager*>>. Also called Resource Manager Portal.
 
 [[_glossary_scheduler_web_interface]]
-Scheduler Web Interface:: ProActive component that provides a web interface to the <<_glossary_scheduler,*Scheduler*>>.
+Scheduler Web Interface:: ProActive component that provides a web interface to the <<_glossary_scheduler,*Scheduler*>>. Also called Scheduler Portal.
 
 [[_glossary_workflow_studio]]
 Workflow Studio:: ProActive component that provides a web interface for designing <<_glossary_workflow,*Workflows*>>.
@@ -72,6 +72,19 @@ Examples of *Compute Hosts*:
 [[_glossary_node_source]]
 Node Source::
   A set of <<_glossary_proactive_node,*ProActive Nodes*>> deployed using the same deployment mechanism and sharing the same access policy.
+
+[[_glossary_node_source_infrastructure]]
+Node Source Infrastructure::
+  The configuration attached to a <<_glossary_node_source,*Node Source*>> which defines the deployment mechanism used to deploy <<_glossary_proactive_node,*ProActive Nodes*>>.
+
+[[_glossary_node_source_policy]]
+Node Source Policy::
+  The configuration attached to a <<_glossary_node_source,*Node Source*>> which defines the <<_glossary_proactive_node,*ProActive Nodes*>> acquisition and access policies.
+
+[[_glossary_scheduling_policy]]
+Scheduling Policy::
+  The policy used by the <<_glossary_proactive_scheduler,*ProActive Scheduler*>> to determine how <<_glossary_job,*Jobs*>> and <<_glossary_job,*Tasks*>> are scheduled.
+
 
 `PROACTIVE_HOME`::
   The path to the extracted archive of <<_glossary_proactive_scheduler,*ProActive Scheduler*>> release, either on the <<_glossary_server_host,*Server Host*>> or on a <<_glossary_compute_host,*Compute Host*>>.
