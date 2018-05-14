@@ -291,3 +291,82 @@ You have two options for providing your login credentials:
 * Instead of hardcoding the name of your output file in your U-SQL script, you can use the placeholder `OUTPUT_FILE`, which is automatically replaced by the value of `AZ_DLA_OUTPUT`.
 * Once downloaded, the output file will be stored in your *User Space* (and _not_ in the Global Space).
 ====
+
+=== ERP
+
+Proactive's ERP connectors enable communication and data exchange with popular ERP software providers.
+
+==== SAP ECC
+
+This connector allows you to interact with an SAP ECC system (not S/4HANA) by means of Remote Function Calls (RFC).
+
+*Variables:*
+
+.SAP ECC Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Level* | *Required?* | *Type*  | *Default/Examples*
+| `JCO_ FUNCTION`
+| The name of a remote-enabled function module on your SAP System. You can verify the available functions in your ECC transaction SE37.
+| Workflow
+| Yes
+| String
+| e.g. RFC_SYSTEM_INFO
+|===
+
+*How to use this connector:*
+
+In order to securely connect to your SAP ECC system, you first need to store your SAP logon information as ProActive's link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials]. The required credentials are:
+
+.SAP connection credentials
+[cols="1,3,1"]
+|===
+| *Credential* | *Description* | *Example*
+| `JCO_ASHOST`
+| Application server host IP.
+| 10.10.10.1
+| `JCO_SYSNR`
+| System number.
+| 00
+| `JCO_CLIENT`
+| Client number.
+| 100
+| `JCO_USER`
+| SAP logon user name.
+| myuser
+| `JCO_PASSWD`
+| SAP logon password (it will be hidden).
+| mypassword
+| `JCO_LANG`
+| Preferred language.
+| EN
+| `JCO_SAPROUTER`
+| _(Optional)_ An SAP Router string, in case you are connecting from an external
+               network. It is important that you keep the /H/ tags.
+| /H/192.168.0.1/H/
+|===
+
+Once the credentials are set, the workflow can be executed. If the connection is successful, the connection attributes will be listed as output. *NB.* Proactive's SAP connector provides libraries to connect to an SAP server from a 64-bit OS (Windows, Linux, MacOS); libraries for other OS can be obtained through SAP Marketplace.
+
+.Querying for a function
+The SAP connector will search for the function module provided as the `JCO_FUNCTION` variable. If the function module exists and is remote-enabled, the script will display the function's parameters (import, export, tables) right after the Connection attributes.
+
+.Executing a function
+The SAP connector includes an example of how to execute and handle the result of a function using the default `RFC_SYSTEM_INFO`, which returns a structure containing the System's information. After the function is executed, the result can be accessed through the method `getExportParameterList()`.
+
+[source,groovy]
+----
+// execute RFC_SYSTEM_INFO function
+sapFunction.execute(destination)
+// obtain structure RFCSI_EXPORT
+JCoStructure structure = sapFunction.getExportParameterList().getStructure("RFCSI_EXPORT")
+if (structure != null) {
+  println("System info:")
+  // loop on structure to get the info
+  for(JCoField field : structure) {
+    println(field.getName() + " : " + field.getString())
+  }
+}
+----
+
+Further information and examples using the SAP JCO library are available in the link:https://help.hana.ondemand.com/javadoc/index.html[SAP Cloud Platform SDK Documentation] and the SAP Java Connector documentation, accessible through link:https://websmp201.sap-ag.de/[SAP Service Marketplace].
