@@ -298,7 +298,7 @@ Proactive's ERP connectors enable communication and data exchange with popular E
 
 ==== SAP ECC
 
-This connector allows you to interact with an SAP ECC system (not S/4HANA) by means of remote function calls (RFC).
+This connector allows you to interact with an SAP ECC system (not S/4HANA) by means of Remote Function Calls (RFC).
 
 *Variables:*
 
@@ -307,7 +307,7 @@ This connector allows you to interact with an SAP ECC system (not S/4HANA) by me
 |===
 | *Variable name* | *Description* | *Level* | *Required?* | *Type*  | *Default/Examples*
 | `JCO_ FUNCTION`
-| the name of a remote-enabled function module on your SAP System. You can verify the available functions in your ECC transaction SE37.
+| The name of a remote-enabled function module on your SAP System. You can verify the available functions in your ECC transaction SE37.
 | Workflow
 | Yes
 | String
@@ -349,7 +349,7 @@ In order to securely connect to your SAP ECC system, you first need to store you
 Once the credentials are set, the workflow can be executed. If the connection is successful, the connection attributes will be listed as output. *NB.* Proactive's SAP connector provides libraries to connect to an SAP server from a 64-bit OS (Windows, Linux, MacOS); libraries for other OS can be obtained through SAP Marketplace.
 
 .Querying for a function
-The SAP connector will search for the function module provided as the `JCO_FUNCTION` variable. If the function module exists and is remote-enable, the script will display the function's parameters (import, export, tables) right after the Connection attributes.
+The SAP connector will search for the function module provided as the `JCO_FUNCTION` variable. If the function module exists and is remote-enabled, the script will display the function's parameters (import, export, tables) right after the Connection attributes.
 
 .Executing a function
 The SAP connector includes an example of how to execute and handle the result of a function using the default `RFC_SYSTEM_INFO`, which returns a structure containing the System's information. After the function is executed, the result can be accessed through the method `getExportParameterList()`.
