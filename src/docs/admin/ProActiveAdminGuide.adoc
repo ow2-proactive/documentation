@@ -491,7 +491,7 @@ Cluster Node::
 
 [[_glossary_ns_native_scheduler]]
 Native Scheduler::
-  A software which dispatch <<_glossary_ns_cluster_job,cluster jobs>> on <_glossary_ns_node,cluster nodes>>, also known as Cluster Manager.
+  A software which dispatch <<_glossary_ns_cluster_job,cluster jobs>> on <<_glossary_ns_node,cluster nodes>>, also known as Cluster Manager.
 
 [[_glossary_ns_cluster_job]]
 Cluster Job::
