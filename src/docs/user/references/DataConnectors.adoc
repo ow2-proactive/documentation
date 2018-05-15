@@ -63,7 +63,7 @@ It can contain either a path to a file, a directory terminated by `/` or an empt
 
 *How to use this task:*
 
-The task requires the following third-party credential: `{key: <PROTOCOL>://<username>@<hostname>, value: <PROTOCOL>_PASSWORD}`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+The task requires the following third-party credentials: `{key: <PROTOCOL>://<username>@<hostname>, value: <PROTOCOL>_PASSWORD}`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 ==== URL connector
 
@@ -105,11 +105,11 @@ The URL connector allows, in addition, to import data using HTTP and HTTPS proto
 
 *How to use this task:*
 
-We highly recommend the user to not provide his password within the URL and to instead use the third-party credential mechanism as follows: `{key: <PROTOCOL>://<username>@<hostname>, value: <PROTOCOL>_PASSWORD}`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+We highly recommend the user to not provide his password within the URL and to instead use the third-party credentials mechanism as follows: `{key: <PROTOCOL>://<username>@<hostname>, value: <PROTOCOL>_PASSWORD}`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 === SQL
 The SQL connectors allow to import and export data from and to Relational DataBase Management Systems (RDBMS).
-Currently, we have connectors for Mysql, Oracle, Postgres, Greenplum and Sql server.
+Currently, we have connectors for MySQL, Oracle, PostgreSQL, Greenplum and SQL Server.
 
 SQL connectors workflows are composed of two tasks: an import task and an export task.
 
@@ -149,7 +149,7 @@ All SQL connectors share the same list of variables. Consequently, we describe t
 | String
 | e.g.
 
-```SELECT * from MY_TABLE```
+```SELECT * FROM ...```
 | `LABEL`
 | If the imported data is labeled for machine learning, a label attribute can be specified using this variable.
 | Import Task
@@ -219,7 +219,7 @@ Currently, we have connectors for MongoDB and Cassandra.
 
 *Variables:*
 
-.NoSQL Connector variables
+.MongoDB Connector variables
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Level* | *Required?*  | *Type*  | *Default/Examples*
