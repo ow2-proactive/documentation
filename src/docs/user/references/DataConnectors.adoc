@@ -291,6 +291,148 @@ In the import mode, the output containing the imported data takes one or many of
  ** the `MONGODB_OUTPUT` file in the data space if specified by the user
  ** _and_ to the `result` variable to make is previewable in the scheduler portal and to make it accessible for the next tasks.
 
+==== Cassandra
+
+*Variables:*
+
+.Cassandra Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Level* | *Required?*  | *Type*  | *Default/Examples*
+| `CASSANDRA_HOSTNAME`
+| Label or the IP address of the server hosting the database.
+| Workflow, Import Task, Export Task
+| Yes
+| String
+| `localhost`
+| `CASSANDRA_PORT`
+| Listening port.
+| Workflow, Import Task, Export Task
+| No
+| Integer
+| `27018`
+| `CASSANDRA_KEYSPACE`
+| Keyspace to use.
+| Workflow, Import Task, Export Task
+| Yes
+| String
+| e.g. `my_keyspace`
+| `CASSANDRA_QUERY`
+| Query to fetch data.
+| Import Task
+| Yes
+| String
+| `SELECT * FROM ...`
+| `CASSANDRA_OUTPUT`
+| Relative path in the data space used to save the results in a CSV file.
+| Import Task
+| No
+| String
+| e.g. `path/to/my/output.csv`
+| `LABEL`
+| If the imported data is labeled for machine learning, a label attribute can be specified using this variable.
+| Import Task
+| No
+| String
+| e.g. class
+| `CASSANDRA_TABLE`
+| Data is stored in tables containing rows of columns, similar to SQL definitions.. It is created if it does not exist.
+| Export Task
+| Yes
+| String
+| e.g. `my_table`
+| `CASSANDRA_PRIMARY_KEY`
+| A primary key identifies the location and order of stored data. The primary key is defined when the table is created and cannot be altered.
+| Export Task
+| Yes
+| String
+| e.g. `(my_primary_key)` or `(attr_1, attr_2)`
+| `CASSANDRA_INPUT`
+a| Path of the CSV file that contains data to be imported. This variable can:
+
+   * A URL. Valid URL schemes include http, ftp, s3, and file.
+   * A relative path in the data space of a CSV file.
+| Export Task
+| Yes
+| String
+| e.g. `path/to/input.csv`
+|===
+
+*How to use this task:*
+
+The task requires the following third-party credentials: `CASSANDRA_USERNAME` and `CASSANDRA_PASSWORD`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+
+In the import mode, the output containing the imported data takes one or many of the following forms:
+
+* a CSV format to saved to:
+ ** the `CASSANDRA_OUTPUT` file in the data space if specified by the user
+ ** _and_ to the `result` variable to make is previewable in the scheduler portal and to make it accessible for the next tasks.
+
+==== ElasticSearch
+
+*Variables:*
+
+.ElasticSearch Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Level* | *Required?*  | *Type*  | *Default/Examples*
+| `ELASTICSEARCH_HOSTNAME`
+| Label or the IP address of the ElasticSearch server.
+| Workflow
+| Yes
+| String
+| `localhost`
+| `ELASTICSEARCH_PORT`
+| Listening port.
+| Workflow
+| No
+| Integer
+| `9200`
+| `ELASTICSEARCH_INDEX`
+| Index to use. In export mode, it is created if it does not exist.
+| Import Task, Export Task
+| Yes
+| String
+| e.g. my_index
+| `ELASTICSEARCH_QUERY`
+| A query to fetch data. If empty, it will fetch all documents from the index by default.
+| Import Task
+| No
+| String
+| `{ "query": { "match_all": {} } }`
+| `ELASTICSEARCH_SIZE`
+| Maximum number of results to return.
+| Import Task
+| No
+| Integer
+| `10`
+| `ELASTICSEARCH_DOC_TYPE`
+| The documents type.
+| Import Task
+| Yes
+| String
+| e.g. my_doc_type
+| `ELASTICSEARCH_INPUT`
+a| A JSON Object/Array to be indexed in ElasticSearch. This variable can:
+
+   * A String describing the JSON Object/Array
+   * A relative path in the data space of a JSON file.
+| Export Task
+| Yes
+| String
+| e.g.
+
+`{"document":{"key":"value"}}`
+
+or `path/to/input.json`
+|===
+
+*How to use this task:*
+
+The task requires the following third-party credentials: `ELASTICSEARCH_USERNAME` and `ELASTICSEARCH_PASSWORD`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+
+In the import mode, the output containing the imported data takes the form of a JSON format to saved to the `result` variable to make is previewable in the scheduler portal and to make it accessible for the next tasks.
+
 === Cloud
 
 Cloud data connectors allow to interact with cloud storage services. Currently we provide support for Amazon S3, Azure Storage and Azure Data Lake.
