@@ -1,0 +1,41 @@
+The following terms are used as ProActive Cloud Automation (PCA) main concepts:
+
+[[_definition_Service]]
+Service::
+A set of workflows representing Actions and having the same Service ID.
+
+[[_definition_Activated_Service]]
+Activated Service or Service Instance::
+A Service ID and an Instance ID.
+
+[[_definition_Activated_Service]]
+Activated Service or Service Instance::
+A Service ID and an Instance ID.
+
+[[_definition_Action]]
+Activated Service or Service Instance::
+An action is defined by a Service ID and an Instance ID. There are two Specific kinds of Actions: 
+- *Activation* Actions that can start a service instance (from state VOID)
+- *Finishing* Actions that can stop a service instance (to state FINISHED)
+
+[[_definition_States]]
+States::
+The specific states that are defined in PCA are VOID, FINISHED, ERROR, KILLED.
+
+- *VOID* Implicit State before a Service is Activated
+- *FINISHED* Implicit State after a Service is terminated/no longer Activated
+- *ERROR* Something wrong happened
+- *KILLED* When PCA abnormally forces an Activated Service to terminate.
+
+NOTE: Please note that users are free to define their own custom States (e.g. RUNNING, SUSPENDED, ...)
+
+[[_definition_Endpoints]]
+Endpoints::
+Endpoints are a list of Key/Value, 
+  e.g. [(Swarm, <smarmendpoint>), (HDFS, <hdfs-endpoint>), (Spark, <spark-endpoint>)]
+
+[[_definition_Service_Name_Infrastructure_Name]]
+Service_Name, Infrastructure_Name::
+Service_Name, Infrastructure_Name are Service specific, PCA does not know about them.
+If a service wants it, it can be stored in the data associated to a service.
+

@@ -1,0 +1,49 @@
+The following terms are used as ProActive Cloud Automation (PCA) main concepts:
+
+[[_Standard_Behavior_Service_Transitions]]
+Service Transitions::
+For an Activated Service, in State=CUR_STATE, one can apply all Actions that have: pca.states = (CUR_STATE, xyz_state) or pca.states = (ALL, xyz_state) 
+After executing the Action Wf, if everything goes right, the AS will be in State xyz_state.
+
+[[_Standard_Behavior_Transitioning]]
+Transitioning::
+An Activated Service can be in a Specific State of Transitioning. In that case the state is labeled with the transition, for instance  "RUNNING --> FINISHED". No new Action can be started on a transitioning AS. 
+- When a PCA Workflow deploys a Service, it keeps the Nodes needed to execute the service Busy (with a Sleep on one or several Tasks).
+One can use those Tasks to stream output (log) of the Service such that it does appear in the Scheduler. We will try to add to that stream all outputs of the installed services (e.g. getting all the logs from Swarm, HDFS, Spark at the same time in the Scheduler portal).
+The Nodes being used can be taken from an existing Node Source (e.g. ServiceNodeSource), or launched specifically at the beginning of the deployment (e.g. starting a NodeSource on Azure Cloud).
+
+[[_Standard_Behavior_End_of_Transitioning]]
+End of Transitioning::
+There is no implicit detection of the end of a transitioning state. A wf that carries on a transition has to inform PCA that the transition is actually successfully finished.
+
+[[_Standard_Behavior_Workflows_for_Service_Deployment]]
+Workflows for Service Deployment::
+A workflow that deploys a Service will wait (Sleep Loop) for a state change of the service instance and terminate in a correct manner at that point. There are 2 possibilities:
+- Wait until the beginning of the Transition: e.g. no longer State RUNNING. (The state can be "RUNNING --> FINISHED".)
+- Wait until the end of the Transition: e.g. FINISHED
+   (The state cannot be Transitioning, neither RUNNING, but has to have reached rather "FINISHED".)
+   This is the preferred choice to avoid the service nodes being given to another Task/Service before a    
+   Delete action actually remove the service artifacts.
+
+[[_Standard_Behavior_Submission_of_a_Workflow_by_PCA]]
+Submission of a Workflow by PCA::
+To execute an Action, PCA will submit a Workflow to the scheduler, using as Variable Map all the Variables that have been collected and updated so far for that service. A first Task in the Wf is expected to collect all the values, even those not explicitly being Wf Variables.
+
+[[_Standard_Behavior_Information_of_Service_Instance]]
+Information of  Service Instance::
+A PCA Workflow and third parties can get access to information about a Service Instance through PCA service. It allows for instance a Delete action to get the URLs of the Nodes where the service is deployed, or the Docker Containers that are being used and need to be killed to terminate the service instance.
+E.g. A PCA workflow that starts Docker containers on the nodes is expected to store the Docker Ids in PCA for that service instance.
+
+[[_Standard_Behavior_Variables_stored_in_a_Service_Instance]]
+Variables stored in a Service Instance::
+From the beginning of its Activation, when an Action is executed, the Variables/Values of the action Workflows are stored and append within the PCA service for that service instance. When a Variable already existed in the list, its value is updated with the last workflow value (AddAll).
+
+[[_Standard_Behavior_Workflows_executed_by_a_Service_Instance]]
+Workflows executed by a Service Instance::
+From the beginning of its Activation, until it reaches the FINISH state, a Service Instance  has in PCA service (and accessible through the API) the ordered list of Job Id that has been executed as Action on it.
+Besides the Job ids, PCA service does not duplicate and store any information about the Job. The PCA portal will get those information from the Scheduler.
+
+[[_Standard_Behavior_Endpoints]]
+Endpoints::
+Endpoints are a list of Key/Value, 
+  e.g. [(Swarm, <smarmendpoint>), (HDFS, <hdfs-endpoint>), (Spark, <spark-endpoint>)]
