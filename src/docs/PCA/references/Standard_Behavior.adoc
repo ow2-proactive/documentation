@@ -2,7 +2,7 @@ The following terms are used as ProActive Cloud Automation (PCA) main concepts:
 
 [[_Standard_Behavior_Service_Transitions]]
 Service Transitions::
-For an Activated Service, in State=CUR_STATE, one can apply all Actions that have: pca.states = (CUR_STATE, xyz_state) or pca.states = (ALL, xyz_state) 
+For an Activated Service, in state=CUR_STATE, one can apply all Actions that have: pca.states = (CUR_STATE, xyz_state) or pca.states = (ALL, xyz_state) 
 After executing the Action Wf, if everything goes right, the AS will be in State xyz_state.
 
 [[_Standard_Behavior_Transitioning]]
