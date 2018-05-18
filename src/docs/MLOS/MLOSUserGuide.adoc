@@ -333,6 +333,10 @@ The following workflows present an example of workflows built using custom AI ta
 
 *Fake_Celebrity_Faces_Generation:* generates a wild diversity of fake faces using a GAN model that was trained based on thousands of real celebrity photos.
 
+*Image_Segmentation:* trains and predicts a segmentation model using SegNet network on http://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]
+
+NOTE: It is recommended to use an enabled-GPU node to run the deep learning tasks.
+
 == References
 
 === Machine Learning Bucket
@@ -964,11 +968,28 @@ NOTE: More information about the source of this task can be found http://scikit-
 The `deep-learning` bucket contains diverse generic deep learning tasks that enable you to easily compose workflows for predictive models learning and testing. This bucket can be easily customized according to your needs.
 It offers different options, you can customize it by adding new tasks or update the existing tasks.
 
+NOTE: It is recommended to use an enabled-GPU machine to run the deep learning tasks.
+
 ==== Input and Output
 
 ===== Import_Image_Dataset
 
-*Task Overview:* Load and return an image dataset. Each unique label should have its own folder which should contain its related images.
+*Task Overview:* Load and return an image dataset.
+There are some simple rules for organizing your files and folders.
+
+. _Image Recognition Dataset:_ Each label must have its own folder which should contain its related images. For instance, to recognize if there are ants or bees in an image, you should organize your folders as follows:
+.. data
+... ants (RGB images file formats: .jpg, .png, etc)
+... bees (RGB images file formats: .jpg, .png, etc)
+
+NOTE: You can find an example of the organization of the folders at: https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/ants_vs_bees.zip
+
+. _Image Segmentation Dataset:_ Images and labels should be organized as follows:
+.. data
+... images (RGB images file formats: .jpg, .png, etc)
+... classes (RGB images file formats: .jpg, .png, etc)
+
+NOTE: You can find an example of the organization of the folders at: https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/oxford.zip
 
 *Task Variables:*
 
@@ -988,9 +1009,19 @@ It offers different options, you can customize it by adding new tasks or update 
 | `VALIDATION_SPLIT`
 | Must be a float within the range (0.0, 1.0), not including the values 0.0 and 1.0.
 | Float (default=0.1)
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default.
+. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DATASET_TYPE`
+| Enter the type of your dataset. There are two possible types: classification or segmentation
+| List [Classification or Segmentation]
 |===
 
-*How to use this task:* Should be connected with <<Train_Image_Model>> or <<Predict_Image_Model>>.
+*How to use this task:* Should be connected with <<Train_Image_Segmentation_Model>>, <<Train_Image_Classification_Model>> or <<Predict_Image_Classification_Model>>, <<Predict_Image_Segmentation_Model>>.
 
 NOTE: Torchvision were used to preprocess and load the dataset.
 
@@ -1014,7 +1045,7 @@ NOTE: Torchvision were used to preprocess and load the dataset.
 | URL pointing to the zip folder containing the needed model.
 |===
 
-*How to use this task:* Should be connected with <<Predict_Text_Model>> or <<Predict_Image_Model>>.
+*How to use this task:* Should be connected with <<Predict_Text_Classification_Model>> or <<Predict_Image_Classification_Model>>,  <<Predict_Image_Segmentation_Model>>.
 
 ===== Import_Text_Dataset
 
@@ -1055,7 +1086,7 @@ NOTE: Torchvision were used to preprocess and load the dataset.
 | Boolean (default=True)
 |===
 
-*How to use this task:* Should be connected with <<Train_Text_Model>> or <<Predict_Text_Model>>.
+*How to use this task:* Should be connected with <<Train_Text_Classification_Model>> or <<Predict_Text_Classification_Model>>.
 
 NOTE: Torchtext were used to preprocess and load the text input. More information about this library can be found https://github.com/pytorch/text[here^].
 
@@ -1088,7 +1119,23 @@ NOTE: Torchtext were used to preprocess and load the text input. More informatio
 
 *Task Overview:* AlexNet is the name of a Convolutional Neural Network (CNN), originally written with CUDA to run with GPU support, which competed in the ImageNet Large Scale Visual Recognition Challenge in 2012.
 
-*How to use this task:* Should be connected to <<Train_Image_Model>> task.
+*How to use this task:* Should be connected to <<Train_Image_Classification_Model>> task.
+
+.AlexNet_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default.
+. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `USE_PRETRAINED_MODEL`
+| Enter the type of your dataset. There are two possible types: classification or segmentation
+| Boolean (default=True)
+|===
 
 NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/torchvision/models.html[AlexNet^].
 
@@ -1096,25 +1143,141 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 
 *Task Overview:* Densely Connected Convolutional Network (DenseNet) is a network architecture where each layer is directly connected to every other layer in a feed-forward fashion (within each dense block).
 
-*How to use this task:* Should be connected to <<Train_Image_Model>> task.
+*How to use this task:* Should be connected to <<Train_Image_Classification_Model>> task.
 
 NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/torchvision/models.html[DenseNet-161^].
+
+.DenseNet-161_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default.
+. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `USE_PRETRAINED_MODEL`
+| Enter the type of your dataset. There are two possible types: classification or segmentation
+| Boolean (default=True)
+|===
 
 ===== ResNet-18
 
 *Task Overview:* Deep Residual Networks (ResNet-18) is a deep convolutional neural network, trained on 1.28 million ImageNet training images, coming from 1000 classes.
 
-*How to use this task:* Should be connected to <<Train_Image_Model>> task.
+*How to use this task:* Should be connected to <<Train_Image_Classification_Model>> task.
 
 NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/torchvision/models.html[ResNet-18^].
+
+.ResNet-161_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default.
+. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `USE_PRETRAINED_MODEL`
+| Enter the type of your dataset. There are two possible types: classification or segmentation
+| Boolean (default=True)
+|===
 
 ===== VGG-16
 
 *Task Overview:* The VGG-16 is an image classification convolutional neural network.
 
-*How to use this task:* Should be connected to <<Train_Image_Model>> task.
+*How to use this task:* Should be connected to <<Train_Image_Classification_Model>> task.
 
 NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/torchvision/models.html[VGG-16^].
+
+.VGG-16_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default.
+. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `USE_PRETRAINED_MODEL`
+| Enter the type of your dataset. There are two possible types: classification or segmentation
+| Boolean (default=True)
+|===
+
+==== Image Segmentation
+===== FCN
+*Task Overview:* The FCN16 combines layers of the feature hierarchy and refines the spatial precision of the output.
+
+*How to use this task:* Should be connected to <<Train_Image_Segmentation_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on https://arxiv.org/abs/1605.06211[FCN^].
+
+.FCN_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default.
+. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `IM_SIZE`
+| Insert  (width, height)  of the images as a tuple with 2 elements.
+| Integer (default=(64, 64))
+|===
+===== SegNet
+*Task Overview:*  is a deep convolutional encoder-decoder architecture for robust semantic pixel-wise labelling.
+
+*How to use this task:* Should be connected to <<Train_Image_Segmentation_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on http://mi.eng.cam.ac.uk/projects/segnet/[SegNet^].
+
+.SegNet_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default.
+. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `IM_SIZE`
+| Insert  (width, height)  of the images as a tuple with 2 elements.
+| Integer (default=(64, 64))
+|===
+===== UNet
+*Task Overview:*  consists of a contracting path to capture context and a symmetric expanding path that enables precise localization.
+
+*How to use this task:* Should be connected to <<Train_Image_Segmentation_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on https://arxiv.org/abs/1505.04597[UNet^].
+
+.UNet_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default.
+. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `IM_SIZE`
+| Insert  (width, height)  of the images as a tuple with 2 elements.
+| Integer (default=(64, 64))
+|===
 
 ==== Text Classification
 
@@ -1203,7 +1366,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 
 ==== Train Model
 
-===== Train_Image_Model
+===== Train_Image_Classification_Model
 
 *Task Overview:* Train a model using a Convolutional Neural Network (CNN) algorithm.
 
@@ -1224,9 +1387,43 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 | Integer (default=2)
 |===
 
-*How to use this task:* Could be connected to <<Predict_Image_Model>> and <<Export_Model>> tasks.
+*How to use this task:* Could be connected to <<Predict_Image_Classification_Model>> and <<Export_Model>> tasks.
 
-===== Train_Text_Model
+===== Train_Image_Segmentation_Model
+
+*Task Overview:* Train a model using an image segmentation algorithm.
+
+*Task Variables:*
+
+.Train_Image_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `NUM_EPOCHS`
+| Number of times all of the training vectors are used once to update the weights.
+| Integer (default=1)
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=4)
+| `NUM_WORKERS`
+| Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+| Integer (default=2)
+| `NUM_CLASSES`
+| Number of classes.
+| Integer
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default.
+. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+|===
+
+*How to use this task:* Could be connected to <<Predict_Image_Segmentation_Model>> and <<Export_Model>> tasks.
+
+
+===== Train_Text_Classification_Model
 
 *Task Overview:* A recurrent neural network (RNN) is a class of artificial neural network where connections between units form a directed graph along a sequence.
 
@@ -1259,11 +1456,11 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 | Boolean (default=True)
 |===
 
-*How to use this task:* Could be connected to <<Predict_Text_Model>> and <<Export_Model>> tasks.
+*How to use this task:* Could be connected to <<Predict_Text_Classification_Model>> and <<Export_Model>> tasks.
 
 ==== Predict
 
-===== Predict_Image_Model
+===== Predict_Image_Classification_Model
 
 *Task Overview:* Generate predictions using a trained model.
 
@@ -1279,9 +1476,9 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 | Integer (default=2)
 |===
 
-*How to use this task:* Should be used after the <<Train_Image_Model>> or <<Export_Model>> Task.
+*How to use this task:* Should be used after the <<Train_Image_Classification_Model>> or <<Export_Model>> Task.
 
-===== Predict_Text_Model
+===== Predict_Text_Classification_Model
 
 *Task Overview:* Generate predictions using a trained model.
 
@@ -1294,7 +1491,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 | List (default=NLLLoss)
 |===
 
-*How to use this task:* Should be used after the <<Train_Text_Model>> or <<Export_Model>> Task.
+*How to use this task:* Should be used after the <<Train_Text_Classification_Model>> or <<Export_Model>> Task.
 
 === Data Visualization Bucket
 *Visdom Bucket* integrates generic tasks that can be easily used to broadcast visualizations of the analytic results provided by ML tasks. These visualization are created, organized, and shared using https://github.com/facebookresearch/visdom[Visdom^], a flexible tool proposed by Facebook Research.
@@ -1305,13 +1502,13 @@ Visdom bucket provides a fast, easy and practice way to execute different workfl
 
 ==== Visdom
 
-===== Bind_or_Start_Visdom_Service
+===== Start_Visdom_Service
 
 *Task Overview:* Bind or/and Start Visdom server.
 
 *Task Variables:*
 
-.Bind_or_Start_Visdom_Service_Task variables
+.Start_Visdom_Service_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -1319,7 +1516,7 @@ Visdom bucket provides a fast, easy and practice way to execute different workfl
 | The Visdom service to start. The Visdom Service available in http://try.activeeon.com//cloud-automation[ProActive Cloud Automation^] is used by default.
 | String (default=
 "http://models.activeeon.com/pca/visdom")
-| `instance_name`
+| `visdom_instance_name`
 | The instance name of the server to use to broadcast visualization
 | String (default="visdom-server-1")
 |===
@@ -1336,22 +1533,22 @@ To adapt according to the plots that you need to visualize
 
 *How to use this task:*  Customize this task by putting the source code generating your code in the `Task Implementation` section
 
-WARNING: This task has to be connected to the <<Bind_or_Start_Visdom_Service>> Task. The Visdom server should be up in order to be able to broadcast visualizations.
+WARNING: This task has to be connected to the <<Start_Visdom_Service>> Task. The Visdom server should be up in order to be able to broadcast visualizations.
 
-===== Terminate_Visdom_Service
+===== Stop_Visdom_Service
 
 *Task Overview:*  Stop and remove the Visdom Server.
 
 *Task Variables:*
 
-.Terminate_Visdom_Service_Task variables
+.Stop_Visdom_Service_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
 | `service_model`
 | The Visdom service to start. The Visdom Service available in http://try.activeeon.com//cloud-automation[ProActive Cloud Automation^] is used by default. (default="http://models.activeeon.com/pca/visdom")
 | String
-| `instance_name`
+| `visdom_instance_name`
 | The instance name of the server to use to broadcast visualization
 | String (default="visdom-server-1")
 |===
@@ -1360,13 +1557,13 @@ WARNING: This task has to be connected to the <<Bind_or_Start_Visdom_Service>> T
 
 NOTE: This task will immediately stop the service.
 
-===== Visdom_Terminate_Service_Until_Validation
+===== Stop_Visdom_Service_After_Validation
 
 *Task Overview:* wait for the validation of the job by the user to stop and remove the Visdom Server.
 
 *Task Variables:*
 
-.Visdom_Terminate_Service_Until_Validation_Task variables
+.Stop_Visdom_Service_After_Validation_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -1374,7 +1571,7 @@ NOTE: This task will immediately stop the service.
 | The Visdom service to start. The Visdom Service available in http://try.activeeon.com//cloud-automation[ProActive Cloud Automation^] is used by default.
 | String (default=
 "http://models.activeeon.com/pca/visdom")
-| `instance_name`
+| `visdom_instance_name`
 | The instance name of the server to use to broadcast visualization
 | String (default="visdom-server-1")
 |===
@@ -1395,7 +1592,7 @@ NOTE: This task will stop the service once the user has validated this requireme
 | String
 |===
 
-*How to use this task:*  This task has to be connected to the <<Bind_or_Start_Visdom_Service>> Task. The Visdom server should be up in order to be able to broadcast visualizations.
+*How to use this task:*  This task has to be connected to the <<Start_Visdom_Service>> Task. The Visdom server should be up in order to be able to broadcast visualizations.
 
 ==== Visdom Worflows
 
