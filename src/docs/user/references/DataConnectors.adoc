@@ -169,19 +169,23 @@ All SQL connectors share the same list of variables. Consequently, we describe t
 | String
 | e.g. MY_TABLE
 | `INSERT_MODE`
-a| Indicates the behavior to follow when the table exists in the database amongst:
+| Indicates the behavior to follow when the table exists in the database amongst:
 
-  * fail: If table exists, do nothing.
-  * replace: If table exists, drop it, recreate it, and insert data.
-  * append: (default) If table exists, insert data. Create if does not exist.
+  - fail: If table exists, do nothing.
+  
+  - replace: If table exists, drop it, recreate it, and insert data.
+  
+  - append: (default) If table exists, insert data. Create if does not exist.
 
 | Export Task
 | Yes
 | String
 | _
 | `INPUT_FILE`
-a| * It can be a relative path in the dataspace of a csv file containing the data to import.
-* or a valid URL amongst `http`, `ftp`, `s3`, and `file`.
+| - It can be a relative path in the dataspace of a csv file containing the data to import.
+
+- or a valid URL amongst `http`, `ftp`, `s3`, and `file`.
+
 | Export Task
 | Yes
 | String
@@ -267,10 +271,12 @@ Currently, we have connectors for MongoDB and Cassandra.
 | e.g. class
 
 | `MONGODB_INPUT`
-a| A JSON Object/Array to be inserted in MongoDB. This variable can:
+| A JSON Object/Array to be inserted in MongoDB. This variable can:
 
-   * A String describing the JSON Object/Array
-   * A relative path in the data space of a JSON file.
+   - A String describing the JSON Object/Array
+   
+   - A relative path in the data space of a JSON file.
+   
 | Export Task
 | Yes
 | String
@@ -348,10 +354,12 @@ In the import mode, the output containing the imported data takes one or many of
 | String
 | e.g. `(my_primary_key)` or `(attr_1, attr_2)`
 | `CASSANDRA_INPUT`
-a| Path of the CSV file that contains data to be imported. This variable can:
+| Path of the CSV file that contains data to be imported. This variable can:
 
-   * A URL. Valid URL schemes include http, ftp, s3, and file.
-   * A relative path in the data space of a CSV file.
+   - A URL. Valid URL schemes include http, ftp, s3, and file.
+   
+   - A relative path in the data space of a CSV file.
+   
 | Export Task
 | Yes
 | String
@@ -413,10 +421,12 @@ In the import mode, the output containing the imported data takes one or many of
 | String
 | e.g. my_doc_type
 | `ELASTICSEARCH_INPUT`
-a| A JSON Object/Array to be indexed in ElasticSearch. This variable can:
+| A JSON Object/Array to be indexed in ElasticSearch. This variable can:
 
-   * A String describing the JSON Object/Array
-   * A relative path in the data space of a JSON file.
+   - A String describing the JSON Object/Array
+   
+   - A relative path in the data space of a JSON file.
+   
 | Export Task
 | Yes
 | String
