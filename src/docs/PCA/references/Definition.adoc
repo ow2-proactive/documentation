@@ -6,17 +6,17 @@ A set of workflows representing Actions and having the same Service ID.
 
 [[_definition_Activated_Service]]
 Activated Service or Service Instance::
-A Service ID and an Instance ID.
-
-[[_definition_Activated_Service]]
-Activated Service or Service Instance::
-A Service ID and an Instance ID.
+An Activated Service is an instance of a service. It is characterized by a Service ID and an Instance ID.
 
 [[_definition_Action]]
-Activated Service or Service Instance::
-An action is defined by a Service ID and an Instance ID. There are two Specific kinds of Actions: 
+Action::
+An action will launch a workflow on an instance modifying its status.
+An action is characterized by < a Service ID called pca.service.id in the liste of the workflow Generic Information + a workflow ID + a state called pca.states in the liste of the workflow Generic Information> 
+There are two Specific kinds of Actions: 
 - *Activation* Actions that can start a service instance (from state VOID)
 - *Finishing* Actions that can stop a service instance (to state FINISHED)
+
+image::PCA_service_instance_action.png[align=center]
 
 [[_definition_States]]
 States::
