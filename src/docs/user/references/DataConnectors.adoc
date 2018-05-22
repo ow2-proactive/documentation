@@ -492,6 +492,7 @@ or https://s3.eu-west-2.amazonaws.com/activeeon-public/images/logo.jpg
 | e.g. `eu-west-2`, `us-east-1`
 | `S3_REMOTE_RELATIVE_PATH`
 | Prefix (relative path) used to store the uploaded data in the given bucket under the given path.
+If empty, the data will be uploaded to the bucket root folder.
 | Export Task
 | No
 | String
