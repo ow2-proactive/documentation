@@ -1,12 +1,16 @@
-The following terms are used as ProActive Cloud Automation (PCA) main concepts:
+The following terms are used as ProActive Cloud Automation (PCA) definition and main concepts:
 
 [[_definition_Service]]
 Service::
 A set of workflows representing Actions and having the same Service ID.
 
+image::PCA_service.png[align=center]
+
 [[_definition_Activated_Service]]
 Activated Service or Service Instance::
 An Activated Service is an instance of a service. It is characterized by a Service ID and an Instance ID.
+
+image::PCA_activated_services.png[align=center]
 
 [[_definition_Action]]
 Action::
@@ -15,8 +19,6 @@ An action is characterized by < a Service ID called pca.service.id in the liste 
 There are two Specific kinds of Actions: 
 - *Activation* Actions that can start a service instance (from state VOID)
 - *Finishing* Actions that can stop a service instance (to state FINISHED)
-
-image::PCA_service_instance_action.png[align=center]
 
 [[_definition_States]]
 States::
