@@ -447,6 +447,63 @@ In the import mode, the output containing the imported data takes the form of a 
 
 Cloud data connectors allow to interact with cloud storage services. Currently we provide support for Amazon S3, Azure Storage and Azure Data Lake.
 
+==== Amazon S3
+
+The Amazon S3 connector allows to upload and download data from S3. The connector workflow consists of two tasks:
+
+* Import_from_S3: Downloads files or folders recursively from S3 to the global space.
+* Export_to_S3: Uploads files or folders recursively from the global space to S3.
+
+*Variables:*
+
+.Amazon S3 Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Level* | *Required?* | *Type*  | *Default/Examples*
+| `S3_LOCAL_RELATIVE_PATH`
+| Relative path to a folder in the data space to which the downloaded file(s) will be saved in import mode. In export mode, it should point to an existing file/folder that needs to be uploaded.
+| Import Task, Export Task
+| Yes
+| String
+| e.g. `path/to/input/file.file`
+
+or `path/to/input/folder/`
+
+or `path/to/output/folder/`
+| `S3_URL`
+| A valid URL to an existing S3 object that can be a file or a folder.
+| Import Task
+| Yes
+| String
+| e.g. https://s3.eu-west-2.amazonaws.com/activeeon-public/images/
+
+or https://s3.eu-west-2.amazonaws.com/activeeon-public/images/logo.jpg
+| `S3_BUCKET`
+| S3 Bucket name. If it does not exist, a new bucket is created (if possible) and assigned the specified region `S3_REGION`.
+| Export Task
+| Yes
+| String
+| e.g. activeeon-public
+| `S3_REGION`
+| A _valid_ AWS region code that corresponds to the region of the indicated bucket.
+| Export Task
+| Yes
+| String
+| e.g. `eu-west-2`, `us-east-1`
+| `S3_REMOTE_RELATIVE_PATH`
+| Prefix (relative path) used to store the uploaded data in the given bucket under the given path.
+| Export Task
+| No
+| String
+| e.g. `path/to/output/`
+
+or `path/to/input/file/or/folder`
+|===
+
+*How to use these tasks:*
+
+Amazon S3 connector tasks require your AWS credential keys (`S3_ACCESS_KEY`, `S3_SECRET_KEY`) to be set as third-party credentials (`key:value` pairs); this is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+
 ==== Azure Data Lake
 
 The Azure Data Lake connector allows to upload U-SQL scripts and then execute them as Data Lake Analytics (DLA) jobs. It requires an existing Data Lake Analytics account and its corresponding Data Lake Store account. The connector workflow consists of three tasks:
