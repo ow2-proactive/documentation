@@ -15,7 +15,7 @@ The FTP and SFTP connectors share the same list of variables. Consequently, we d
 .FTP/SFTP Connector variables
 [cols="2,5,2,2,2,2"]
 |===
-| *Variable name* | *Description* | *Level* | *Required?*  | *Type*  | *Default/Examples*
+| *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
 | `<PROTOCOL>_HOSTNAME`
 | IP address of the server host.
 | Workflow, Task
@@ -74,7 +74,7 @@ The URL connector allows, in addition, to import data using HTTP and HTTPS proto
 .URL Connector variables
 [cols="2,5,2,2,2,2"]
 |===
-| *Variable name* | *Description* | *Level* | *Required?*  | *Type*  | *Default/Examples*
+| *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
 | `FILE_URL`
 | Link to a file accessible using HTTP, HTTPS, SFTP or FTP protocols.
 
@@ -123,7 +123,7 @@ All SQL connectors share the same list of variables. Consequently, we describe t
 .SQL Connector variables
 [cols="2,5,2,2,2,2"]
 |===
-| *Variable name* | *Description* | *Level* | *Required?*  | *Type*  | *Default/Examples*
+| *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
 | `<RDBMS_NAME>_HOSTNAME`
 | Label or the IP address of the server hosting the database.
 | Workflow
@@ -226,7 +226,7 @@ Currently, we have connectors for MongoDB and Cassandra.
 .MongoDB Connector variables
 [cols="2,5,2,2,2,2"]
 |===
-| *Variable name* | *Description* | *Level* | *Required?*  | *Type*  | *Default/Examples*
+| *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
 | `MONGODB_HOSTNAME`
 | Label or the IP address of the server hosting the database.
 | Workflow, Import Task, Export Task
@@ -304,7 +304,7 @@ In the import mode, the output containing the imported data takes one or many of
 .Cassandra Connector variables
 [cols="2,5,2,2,2,2"]
 |===
-| *Variable name* | *Description* | *Level* | *Required?*  | *Type*  | *Default/Examples*
+| *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
 | `CASSANDRA_HOSTNAME`
 | Label or the IP address of the server hosting the database.
 | Workflow, Import Task, Export Task
@@ -383,7 +383,7 @@ In the import mode, the output containing the imported data takes one or many of
 .ElasticSearch Connector variables
 [cols="2,5,2,2,2,2"]
 |===
-| *Variable name* | *Description* | *Level* | *Required?*  | *Type*  | *Default/Examples*
+| *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
 | `ELASTICSEARCH_HOSTNAME`
 | Label or the IP address of the ElasticSearch server.
 | Workflow
@@ -459,7 +459,7 @@ The Amazon S3 connector allows to upload and download data from S3. The connecto
 .Amazon S3 Connector variables
 [cols="2,5,2,2,2,2"]
 |===
-| *Variable name* | *Description* | *Level* | *Required?* | *Type*  | *Default/Examples*
+| *Variable name* | *Description* | *Scope* | *Required?* | *Type*  | *Default/Examples*
 | `S3_LOCAL_RELATIVE_PATH`
 | Relative path to a folder in the data space to which the downloaded file(s) will be saved in import mode. In export mode, it should point to an existing file/folder that needs to be uploaded.
 | Import Task, Export Task
@@ -518,7 +518,7 @@ The Azure Data Lake connector allows to upload U-SQL scripts and then execute th
 .Azure Data Lake Connector variables
 [cols="2,5,2,2,2,2"]
 |===
-| *Variable name* | *Description* | *Level* | *Required?* | *Type*  | *Default/Examples*
+| *Variable name* | *Description* | *Scope* | *Required?* | *Type*  | *Default/Examples*
 | `AZ_DLA_ACCOUNT`
 | Data Lake *Analytics* account to be used. It should already exist.
 | Workflow
@@ -590,7 +590,7 @@ This connector allows you to interact with an SAP ECC system (not S/4HANA) by me
 .SAP ECC Connector variables
 [cols="2,5,2,2,2,2"]
 |===
-| *Variable name* | *Description* | *Level* | *Required?* | *Type*  | *Default/Examples*
+| *Variable name* | *Description* | *Scope* | *Required?* | *Type*  | *Default/Examples*
 | `JCO_ FUNCTION`
 | The name of a remote-enabled function module on your SAP System. You can verify the available functions in your ECC transaction SE37.
 | Workflow
