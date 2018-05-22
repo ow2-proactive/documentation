@@ -1,5 +1,5 @@
 :docinfo:
-= ProActive Cloud Automation
+= ProActive Cloud Automation (PCA)
 include::../common-settings.adoc[]
 :toc-title: PCA User Guide
 
@@ -7,11 +7,7 @@ include::../common-settings.adoc[]
 
 include::references/Overview.adoc[]
 
-=== Glossary
-
-include::references/Glossary.adoc[]
-
-=== Definition
+=== Definitions and Concepts
 
 include::references/Definition.adoc[]
 
@@ -20,5 +16,9 @@ include::references/Definition.adoc[]
 include::references/Standard_Behavior.adoc[]
 
 == Get Started
+
+=== ProActive Cloud Automation (PCA) Portal
+
+include::references/Portal.adoc[]
 
 
