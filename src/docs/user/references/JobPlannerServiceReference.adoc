@@ -61,7 +61,7 @@ Job Planner uses a  Calendar Definition to know how the job will be planned over
 
 image::calendar_definition_inclusions_exclusions.png[align="center"]
 
-Based on the above configuration the following JSON object will be stored in the <<_glossary_catalog, *Catalog*>>.
+Based on the above configuration, the following JSON object will be stored in the <<_glossary_catalog, *Catalog*>>.
 
 ----
 {
@@ -100,7 +100,7 @@ Based on the above configuration the following JSON object will be stored in the
 
 ==== Description
 
-The description allows user that don't understand the cron expression to know when it will occur. It might also be used for other purpose, for example saying when to use a Calendar Definition.
+The description allows users who are not familiar with cron expressions to know when it will occur. It might also be used for other purpose, for example saying when to use a Calendar Definition.
 
 ==== Cron
 
