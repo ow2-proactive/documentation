@@ -53,45 +53,62 @@ If nothing is displayed, it means the selected Calendar Definitions have no recu
 
 Job Planner uses a  Calendar Definition to know how the job will be planned over the time. As shown on the example below, this definition is composed of 4 fields:
 
- - a cron expression to define the recurrence (every morning at 6am, etc.)
  - a description (saying what the cron expression means, when to use the Calendar Definition, etc.)
+ - a cron expression to define the recurrence (every morning at 6am, etc.)
  - a set of inclusions calendars to add specific job executions which cannot be defined by a cron expression (holidays, etc.)
  - a set of exclusions calendars to exclude specific occurrences of the job executions defined in cron and inclusion definitions (maintenances operations, holidays, etc.)
 		
 
+image::calendar_definition_inclusions_exclusions.png[align="center"]
+
+Based on the above configuration the following JSON object will be stored in the <<_glossary_catalog, *Catalog*>>.
+
 ----
 {
-	"cron": "0 23 0 ? * MON,TUE,WED,THU,FRI *",
-	"inclusion_calendars": [
-				{     
-				"calendar": {"url": "http://localhost:8080/calendar1.ics"},
-				"description": "Executes 23 minutes past every hour, on working days.",
-				"rule": { "action": "EXECUTE_AT_START" }
-				}
-			     ],
-	"exclusion_calendars": [
-				{     
-				"calendar": {"url": "http://localhost:8080/calendar2.ics"},
-				"rule": { "action": "POSTPONE_TO_NEXT_WORKING_DAY" }
-				},
-				{     
-				"calendar": {"url": "http://localhost:8080/calendar3.ics"},
-				"rule": { "action": "CANCEL_NEXT_EXECUTION" }
-				}
-			     ]
+   "description":"Every Week Day at 9:00 AM including holidays (except Christmas and Easter holidays)",
+   "cron":"0 0 9 ? * MON-FRI *",
+   "inclusion_calendars":[
+      {
+         "calendar":{
+            "url":"http://localhost:8080/all_holidays_calendar.ics"
+         },
+         "rule":{
+            "action":"EXECUTE_AT_START"
+         }
+      }
+   ],
+   "exclusion_calendars":[
+      {
+         "calendar":{
+            "url":"http://localhost:8080/christmas_holidays_calendar.ics"
+         },
+         "rule":{
+            "action":"CANCEL_NEXT_EXECUTION"
+         }
+      },
+      {
+         "calendar":{
+            "url":"http://localhost:8080/easter_holidays_calendar.ics"
+         },
+         "rule":{
+            "action":"CANCEL_NEXT_EXECUTION"
+         }
+      }
+   ]
 }
 ----
-
-==== Cron
-
-The aim of the cron expression is to launch the planned workflow according to the cron syntax.
-One can see the cron expression "0 23 0 ? * MON,TUE,WED,THU,FRI *", which follows the quartz cron expression syntax explained in the
-<<_job_planner_cron_expression_syntax, Quartz Cron Expression Syntax>> section. The cron expression in this example
- executes 23 minutes past every hour, on working days (Monday to Friday).
 
 ==== Description
 
 The description allows user that don't understand the cron expression to know when it will occur. It might also be used for other purpose, for example saying when to use a Calendar Definition.
+
+==== Cron
+
+The aim of the cron expression is to launch the planned workflow according to the cron syntax.
+One can see the cron expression "0 0 9 ? * MON-FRI *", which follows the quartz cron expression syntax explained in the
+<<_job_planner_cron_expression_syntax, Quartz Cron Expression Syntax>> section. The cron expression in this example
+ executes at 9:00 AM on working days (Monday to Friday).
+
 
 ==== Inclusion Calendar
 
