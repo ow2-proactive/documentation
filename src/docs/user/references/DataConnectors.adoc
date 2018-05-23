@@ -575,6 +575,7 @@ You have two options for providing your login credentials:
 .The Output File
 * Instead of hardcoding the name of your output file in your U-SQL script, you can use the placeholder `OUTPUT_FILE`, which is automatically replaced by the value of `AZ_DLA_OUTPUT`.
 * Once downloaded, the output file will be stored in your *User Space* (and _not_ in the Global Space).
+* You can visualize a table-like version of your output data in the _Preview_ tab of the Display_result task.
 ====
 
 === ERP
