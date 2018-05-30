@@ -69,7 +69,10 @@ Your ProActive Scheduler is ready to execute <<_glossary_job,*Jobs*>>!
 
 All configuration files of ProActive Scheduler can be found under `PROACTIVE_HOME`.
 
+=== General configuration
+
 .ProActive Scheduler configuration files
+
 |===
 |Component | Description|File |Reference
 
@@ -91,7 +94,30 @@ All configuration files of ProActive Scheduler can be found under `PROACTIVE_HOM
 |User permissions|config/security.java.policy-server|<<_user_permissions>>
 |LDAP configuration|config/authentication/ldap.cfg|<<_ldap>>
 
+.5+^.^|Database
+|Scheduler configuration|config/scheduler/database.properties|<<Database configuration>>
+|Resource Manager configuration|config/rm/database.properties|<<Database configuration>>
+|Scheduling-api microservice|dist/war/scheduling-api/WEB-INF/classes/application.properties|<<Database configuration>>
+|Job-planner microservice|dist/war/job-planner/WEB-INF/classes/application.properties|<<Database configuration>>
+|Catalog microservice|dist/war/catalog/WEB-INF/classes/application.properties|<<Database configuration>>
+
 |===
+
+=== Database configuration
+
+Scheduler, Resource Mananger, and three microservices require to have direct access to database.
+Thus they have to be properly configured to have access to database.
+
+To configure Scheduler or Resource Mananger, one have to modify config/scheduler/database.properties
+and config/rm/database.properties respectively. It is necaessary to configure five following preperties:
+`hibernate.connection.driver_class`, `hibernate.connection.url`, `hibernate.dialect`,
+`hibernate.connection.username`, and `hibernate.connection.password`.
+
+
+Microservice database configuration is always in `/dist/war/MICROSERVICE-NAME/classes/applicaiton.properties`.
+To configure database connection it is necessary to configure five following properties:
+`spring.datasource.url`, `spring.datasource.username`, `spring.datasource.password`,
+`spring.datasource.driver-class-name`, and `spring.jpa.database-platform`.
 
 
 == Installation on a Cluster
