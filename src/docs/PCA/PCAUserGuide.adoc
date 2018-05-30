@@ -11,21 +11,41 @@ include::references/Overview.adoc[]
 
 include::references/Definition.adoc[]
 
-=== Standard behavior
+=== Standard Transitions
 
-include::references/Standard_Behavior.adoc[]
+include::references/Standard_Transitions.adoc[]
 
-== Get Started
+== ProActive Cloud Automation (PCA) Portal
 
-=== ProActive Cloud Automation (PCA) Portal
+=== Overall View
 
-include::references/Portal.adoc[]
+include::references/Overall_view.adoc[]
 
-== Deploy HDFS-SPARK Platform
+=== Detailed View
 
-=== Deployment of HDFS and SPARK platform
+include::references/Detailed_view.adoc[]
+
+== Examples
+
+=== Swarm, HDFS and SPARK
 
 include::references/HDFS-SPARK.adoc[]
+
+=== Storm
+
+include::references/Storm.adoc[]
+
+=== Zookeeper
+
+image::PCA_zookeeper.png[align=center]
+
+=== Kafka
+
+image::PCA_kafka.png[align=center]
+
+=== Visdom
+
+image::PCA_visdom.png[align=center]
 
 == HOW TO
 
