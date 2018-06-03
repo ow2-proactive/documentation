@@ -507,7 +507,7 @@ Amazon S3 connector tasks require your AWS credential keys (`S3_ACCESS_KEY`, `S3
 
 ==== Azure Data Lake
 
-The Azure Data Lake connector allows to upload U-SQL scripts and then execute them as Data Lake Analytics (DLA) jobs. It requires an existing Data Lake Analytics account and its corresponding Data Lake Store account. The connector workflow consists of three tasks:
+The Azure Data Lake connector allows to upload U-SQL scripts and then execute them as Data Lake Analytics (DLA) jobs. It requires an existing Data Lake Analytics account with its corresponding Data Lake Store account. The connector workflow consists of three tasks:
 
 * _Submit_job_: Connects to Azure Data Lake and submits the provided script.
 * _Wait_for_job_: Periodically monitors the DLA job status until its finalization.
@@ -520,17 +520,11 @@ The Azure Data Lake connector allows to upload U-SQL scripts and then execute th
 |===
 | *Variable name* | *Description* | *Scope* | *Required?* | *Type*  | *Default/Examples*
 | `AZ_DLA_ACCOUNT`
-| Data Lake *Analytics* account to be used. It should already exist.
+| Data Lake Analytics account to be used. It should already exist.
 | Workflow
 | Yes
 | String
 | e.g. my_dla_account
-| `AZ_DLS_ACCOUNT`
-| Data Lake *Store* account to be used.  It should already exist.
-| Workflow
-| Yes
-| String
-| e.g. my_dls_account
 | `AZ_DLA_JOB`
 | Name to identify the job to be submitted.
 | Workflow
