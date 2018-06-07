@@ -4,7 +4,7 @@ This deployment is done in one step
 
 - *Deploy Storm* 
 
-image::PCA_storm.png[align=center]
+image::PCA_storm.png[align=center, width=512, height=256]
 
 At the end, the instance state is at RUNNING. 
 One action is possible at this step; it is to finish the instance. 
@@ -13,7 +13,7 @@ image::PCA_storm1.png[align=center]
 
 You can also access to the instance endpoint (Storm UI).
 
-image::PCA_storm2.png[align=center]
+image::PCA_storm2.png[align=center, width=512, height=256]
 
 
 - *Finish Storm* 
@@ -21,9 +21,9 @@ image::PCA_storm2.png[align=center]
 The running instance can be finished by executing the available action when the instance is at the RUNNING state.
 You have to give the instance name you want to finish.
 
-image::PCA_storm3.png[align=center]
+image::PCA_storm3.png[align=center, width=512, height=256]
 
 At the end, the instance is listed in the finished instances.
 
-image::PCA_storm4.png[align=center]
+image::PCA_storm4.png[align=center, width=512, height=256]
 

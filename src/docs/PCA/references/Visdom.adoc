@@ -4,12 +4,14 @@ This deployment is done in one step
 
 - *Deploy Visdom* 
 
-image::PCA_visdom.png[align=center]
+image::PCA_visdom.png[align=center, width=512, height=256]
 
-At the end, the state of the instance is RUNNING. 
+At the end, the state of the instance is RUNNING.
+After the deployment, the server can be used after to provide diverse visualizations with Machine Learning solutions. 
+
 Two actions are possible at this step; stop or finish the instance. 
 
-image::PCA_visdom1.png[align=center]
+image::PCA_visdom2.png[align=center, width=512, height=256]
 
 You can also access to the instance endpoint (Visdom UI).
 
@@ -20,7 +22,7 @@ image::PCA_visdom3.png[align=center]
 The running instance can be sopped by executing the stop action when the instance is in the RUNNING state.
 You have to give the instance name. 
 
-image::PCA_visdom5.png[align=center]
+image::PCA_visdom5.png[align=center, width=512, height=256]
 
 At the end, the state of the instance is STOPPED. You can not access to the instance endpoint. But two actions are possible; restart or finish the instance.
 
