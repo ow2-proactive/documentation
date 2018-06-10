@@ -15,7 +15,7 @@ image::PCA_visdom2.png[align=center, width=512, height=256]
 
 You can also access to the instance endpoint (Visdom UI).
 
-image::PCA_visdom3.png[align=center]
+image::PCA_visdom3.png[align=center, width=512, height=256]
 
 - *Stop Visdom* 
 
@@ -26,14 +26,14 @@ image::PCA_visdom5.png[align=center, width=512, height=256]
 
 At the end, the state of the instance is STOPPED. You can not access to the instance endpoint. But two actions are possible; restart or finish the instance.
 
-image::PCA_visdom6.png[align=center]
+image::PCA_visdom6.png[align=center, width=512, height=256]
 
 - *Finish Visdom* 
 
 The running instance can be finished by executing the available action when the instance is in the RUNNING state.
 You have to give the instance name you want to finish.
 
-image::PCA_visdom4.png[align=center]
+image::PCA_visdom4.png[align=center, width=512, height=256]
 
 
 
