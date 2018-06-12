@@ -553,6 +553,12 @@ v|Default: "* * * * \*"
 (every minute)
 e.g. "*/2 * * * *"
 (every 2 minutes)
+| `AZ_SUBSCRIPTION`
+| _Optional_ variable to set an Azure subscription when not using the default one. Value can be a subscription's _name_ or _id_.
+| Workflow
+| No
+| String
+| e.g. Pay-As-You-Go
 |===
 
 *How to use these tasks:*
