@@ -655,4 +655,6 @@ if (structure != null) {
 }
 ----
 
+For a more detailed guide of ProActive's SAP ECC connector, please refer to link:https://www.activeeon.com/resources/SAPConnector.pdf[this document].
+
 Further information and examples using the SAP JCO library are available in the link:https://help.hana.ondemand.com/javadoc/index.html[SAP Cloud Platform SDK Documentation] and the SAP Java Connector documentation, accessible through link:https://websmp201.sap-ag.de/[SAP Service Marketplace].
