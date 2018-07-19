@@ -69,7 +69,10 @@ Your ProActive Scheduler is ready to execute <<_glossary_job,*Jobs*>>!
 
 All configuration files of ProActive Scheduler can be found under `PROACTIVE_HOME`.
 
+=== General configuration
+
 .ProActive Scheduler configuration files
+
 |===
 |Component | Description|File |Reference
 
@@ -91,7 +94,30 @@ All configuration files of ProActive Scheduler can be found under `PROACTIVE_HOM
 |User permissions|config/security.java.policy-server|<<_user_permissions>>
 |LDAP configuration|config/authentication/ldap.cfg|<<_ldap>>
 
+.5+^.^|Database
+|Scheduler configuration|config/scheduler/database.properties|<<Database configuration>>
+|Resource Manager configuration|config/rm/database.properties|<<Database configuration>>
+|Scheduling-api microservice|dist/war/scheduling-api/WEB-INF/classes/application.properties|<<Database configuration>>
+|Job-planner microservice|dist/war/job-planner/WEB-INF/classes/application.properties|<<Database configuration>>
+|Catalog microservice|dist/war/catalog/WEB-INF/classes/application.properties|<<Database configuration>>
+
 |===
+
+=== Database configuration
+
+Scheduler, Resource Mananger, and three microservices require to have direct access to the database.
+Thus, they must each have a correct database configuration.
+
+To configure Scheduler or Resource Mananger, one have to modify `config/scheduler/database.properties`
+and `config/rm/database.properties` respectively. The following five properties must be configured:
+`hibernate.connection.driver_class`, `hibernate.connection.url`, `hibernate.dialect`,
+`hibernate.connection.username`, and `hibernate.connection.password`.
+
+For each microservice, a microservice configuration file can be found in: `/dist/war/MICROSERVICE-NAME/classes/application.properties`.
+The `job-planner`, `catalog` and `scheduling-api` microservices must contain a database configuration.
+In their application.properties file, you need to set the following five properties:
+`spring.datasource.url`, `spring.datasource.username`, `spring.datasource.password`,
+`spring.datasource.driver-class-name`, and `spring.jpa.database-platform`.
 
 
 == Installation on a Cluster
