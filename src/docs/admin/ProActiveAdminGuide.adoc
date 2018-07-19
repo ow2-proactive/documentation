@@ -105,7 +105,7 @@ All configuration files of ProActive Scheduler can be found under `PROACTIVE_HOM
 
 === Database configuration
 
-Scheduler, Resource Mananger, and three microservices require to have direct access to database.
+Scheduler, Resource Mananger, and three microservices require to have direct access to the database.
 Thus, they must each have a correct database configuration.
 
 To configure Scheduler or Resource Mananger, one have to modify `config/scheduler/database.properties`
@@ -113,7 +113,7 @@ and `config/rm/database.properties` respectively. The following five properties 
 `hibernate.connection.driver_class`, `hibernate.connection.url`, `hibernate.dialect`,
 `hibernate.connection.username`, and `hibernate.connection.password`.
 
-For each microservice, a microservice configuration file can be found in: `/dist/war/MICROSERVICE-NAME/classes/applicaiton.properties`.
+For each microservice, a microservice configuration file can be found in: `/dist/war/MICROSERVICE-NAME/classes/application.properties`.
 The `job-planner`, `catalog` and `scheduling-api` microservices must contain a database configuration.
 In their application.properties file, you need to set the following five properties:
 `spring.datasource.url`, `spring.datasource.username`, `spring.datasource.password`,
