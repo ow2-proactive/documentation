@@ -2042,7 +2042,7 @@ expression `pa.scheduler.core.automaticremovejobcronexpression`.
 As the `pa.scheduler.job.removeFromDataBase` property is set to `true` by default,
 a query is executed in-base to remove all jobs that qualify for the bulk removal.
 
-==== Database impact on performance
+==== Database impact on job submission performance
 
 The choice of the database provider can influence the Scheduler and Resource Manager performance overall.
 In the following figure, we see the job submission time between different database providers:
@@ -2071,6 +2071,26 @@ hibernate.connection.url=jdbc:hsqldb:mem:rm;hsqldb.tx=mvcc;hsqldb.lob_file_scale
 ```
 
 To switch to a standalone database, see <<_perf_tuning_db>>.
+
+==== Database impact on task creation performance
+
+The choice of the database provider influences task creation time.
+In the following figure, we see the task creation time for different database providers:
+
+image::grouped-bar-direct-labels.png[align="center"]
+
+Each experiment, consists of submitting one replicated job with some number of replicated tasks, and measuring
+time to create all these replicated tasks.
+
+//MariaDB
+//10K - 95s
+//20K - 296s
+//Default
+//10K - 750s
+//20K - 1750s
+//In-memory
+//10K - 85s
+//20K - 238s
 
 === Tuning Linux for 15K nodes
 

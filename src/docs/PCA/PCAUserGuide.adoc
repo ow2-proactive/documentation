@@ -1,0 +1,65 @@
+:docinfo:
+= ProActive Cloud Automation (PCA)
+include::../common-settings.adoc[]
+:toc-title: PCA User Guide
+
+
+== Main principles of PCA
+
+include::references/Overview.adoc[]
+
+=== Definitions and Concepts
+
+include::references/Definition.adoc[]
+
+=== Standard Transitions
+
+include::references/Standard_Transitions.adoc[]
+
+== PCA Portal
+
+=== Overall View
+
+include::references/Overall_view.adoc[]
+
+=== Detailed View
+
+include::references/Detailed_view.adoc[]
+
+== Examples
+
+=== Swarm, HDFS and SPARK
+
+include::references/HDFS-SPARK.adoc[]
+
+=== Storm
+
+include::references/Storm.adoc[]
+
+=== Kafka
+
+The Kafka service allows to deploy through ProActive Cloud Automation (PCA) Portal a Kafka broker. 
+
+image::PCA_kafka.png[align=center, width=512, height=180]
+
+The instance will be in the state RUNNING after the deployment.
+
+image::PCA_kafka1.png[align=center, width=512, height=256]
+
+It can be finished after to release the ressources.
+
+image::PCA_kafka2.png[align=center, width=512, height=180]
+
+=== Zookeeper
+
+The Zookeeper instance lifecycle management is similar to the Kafka one. 
+
+image::PCA_zookeeper.png[align=center,width=512, height=180]
+
+=== Visdom
+
+include::references/Visdom.adoc[]
+
+
+
+
