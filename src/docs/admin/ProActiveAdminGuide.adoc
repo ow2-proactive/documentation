@@ -2123,7 +2123,7 @@ recovery feature enabled, when the Scheduler restarts it will retrieve the *prev
 and the execution of the tasks will continue and finish as if there was no failure of the Scheduler.
 
 WARNING: The nodes and task recovery feature is *not* applicable when the Scheduler is cleanly stopped or exits normally.
-This is a mechanism that is *only* applicable upon failure of the Scheduler (machine crash, abrupt exit).
+This is a mechanism that is *only* applicable upon *failure* of the Scheduler (machine crash, abrupt exit).
 
 === How Does Nodes and Task Recovery Work?
 
@@ -2148,10 +2148,19 @@ To handle the particular situation in which the Scheduler is down when a running
 
 === Nodes and Task Recovery Configuration
 
-WARNING: The nodes and task recovery feature requires a proper configuration to ensure that nodes and tasks are *kept
-alive* during the down time of the Scheduler.
+==== Restrictions
+
+The nodes recovery is not available for Scheduler settings that use the PAMR protocol. This is because this
+communication protocol relies on router endpoint identifiers that are regenerated when connections are reestablished.
+
+The nodes recovery is also not available on the Nodes that are launched at the Scheduler startup by default. However
+you get the choice to activate or deactivate the feature when you create your own Node Source. By default, the nodes
+recovery is activated for any new Node Source.
 
 ==== How to make sure that nodes and task recovery is enabled
+
+WARNING: The nodes and task recovery feature requires a proper configuration to ensure that nodes and tasks are *kept
+alive* during the down time of the Scheduler.
 
 * *Resource Manager* configuration (`PROACTIVE_HOME/config/rm/settings.ini`)
 +
