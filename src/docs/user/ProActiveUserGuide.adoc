@@ -106,24 +106,36 @@ with the official https://docs.docker.com/compose/[Docker Compose documentation^
 To get started: a simple Docker Compose example is explained below.
 
 The content of the _Script_ section (equal to the content of a Docker Compose file) is:
----
+----
 helloworld:
     image: busybox
     command: echo "Hello ProActive"
----
+----
 The above example describes a container which is called 'helloworld'. That container is created from a busybox image,
  which will run the command 'echo "Hello ProActive"'
 
 === Docker task advanced options
 
-The Docker task allows to add command options for the `docker-compose up` command.
-You can specify these options by supplying a space character separated list in the <<_glossary_generic_information>>.
-Use the key "docker-compose-up-options" and supply, as value, for example "--option1 --option2", this leads to a command
- similar to "docker-compose up --option1 --option2".
+The Docker task allows to set parameters to the `docker-compose` tool with regards to the docker-compose CLI https://docs.docker.com/compose/reference/overview/[reference].
 
-If splitting by space is prohibitive you can specify the split regex in the <<_glossary_generic_information>> with the
-key "docker-compose-options-split-regex", if you supply e.g. "!SPLIT!" as value, then your "docker-compose-up-options"
- will need to look like this "--option1!SPLIT!--option2".
+----
+docker-compose [general parameters] COMMAND [options]
+----
+
+It support general parameters as well as commands options (we currently only support options for the `up` command).
+You can specify these options by supplying a space character separated list in the <<_glossary_generic_information, generic informations>>.
+
+* To define a _general parameter_, use the key *docker-compose-options* and supply "--verbose" as an example value.
+* To define a _docker-compose up option_, use the key *docker-compose-up-options* and supply "--exit-code-from helloworld".
+
+The two latter generic informations will be used to generate the following command:
+
+----
+docker-compose --verbose up --exit-code-from helloworld
+----
+
+If splitting by space is prohibitive you can specify the split regex in the <<_glossary_generic_information, generic informations>> with the
+key *docker-compose-options-split-regex*. If you supply e.g. "!SPLIT!" as value, then your *docker-compose-up-options* will need to look like this: "--option1!SPLIT!--option2".
 
 === Native application
 
