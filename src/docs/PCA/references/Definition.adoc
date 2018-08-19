@@ -14,8 +14,9 @@ image::PCA_activated_services.png[align=center, width=512, height=256]
 
 [[_definition_Action]]
 Action::
-An action will launch a workflow on an instance modifying its status.
-An action is characterized by < a Service ID called pca.service.id in the liste of the workflow Generic Information + a workflow ID + a state called pca.states in the liste of the workflow Generic Information> 
+An Action will launch a workflow on an instance modifying its status. An action is characterized by < a Service ID called pca.service.id in the liste of the workflow Generic Information + a workflow ID + a state called pca.states in the liste of the workflow Generic Information>.
+An Action goes from an Initial state, and conduct to a Target state after the transition is completed.
+An Action must be deterministic: for an Initial given state, an action can conduct to a unique Target State.
 There are two Specific kinds of Actions: 
 - *Activation* Actions that can start a service instance (from state VOID)
 - *Finishing* Actions that can stop a service instance (to state FINISHED)
