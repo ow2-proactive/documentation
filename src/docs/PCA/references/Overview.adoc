@@ -1,3 +1,6 @@
-*ProActive Cloud Automation (PCA)* allows to automate service deployment, together with their life-cycle management. Services are instantiated by workflows (executed as a Job by the Scheduler), and related workflows allow to move services from state to state. At any point in time, each service instance has a specific state (RUNNING, ERROR, FINISH, etc.). 
-Attached to each Service Instance, PCA service stores several information: 
-Service Instance Id, Service Id, State, the ordered list of Jobs executed for the service, a set of Variables with Values (a Map, that includes for instance service endpoint).
+*ProActive Cloud Automation (PCA)* allows to automate service deployment, together with their life-cycle management. Services are instantiated by workflows (executed as a Job by the Scheduler), and related workflows allow to move instances from a state to another one. 
+
+At any point in time, each service instance has a specific state (RUNNING, ERROR, FINISH, etc.). 
+
+Attached to each Service Instance, PCA service stores several information such as: 
+Service Instance Id, Service Id, Service Instance State, the ordered list of Jobs executed for the service, a set of Variables with Values (a Map, that includes for instance service endpoint), etc.

@@ -2,7 +2,7 @@
 = ProActive Cloud Automation (PCA)
 include::../common-settings.adoc[]
 :toc-title: PCA User Guide
-
+:table-caption: Table of Contents -- PCA
 
 == Main principles of PCA
 
@@ -12,7 +12,7 @@ include::references/Overview.adoc[]
 
 include::references/Definition.adoc[]
 
-=== Standard Behaviors
+=== Standard Transitions
 
 include::references/Standard_Transitions.adoc[]
 
