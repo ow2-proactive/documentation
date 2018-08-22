@@ -14,16 +14,19 @@ image::PCA_activated_services.png[align=center, width=512, height=256]
 
 [[_definition_Action]]
 Action::
-An Action will launch a workflow on an instance modifying its status. An action is characterized by < a Service ID called pca.service.id in the liste of the workflow Generic Information + a workflow ID + a state called pca.states in the liste of the workflow Generic Information>.
-An Action goes from an Initial state, and conduct to a Target state after the transition is completed.
-An Action must be deterministic: for an Initial given state, an action can conduct to a unique Target State.
-There are two Specific kinds of Actions: 
-- *Activation* Actions that can start a service instance (from state VOID)
-- *Finishing* Actions that can stop a service instance (to state FINISHED)
+An Action will launch a workflow on an instance modifying its state. An action is characterized by < a Service ID called pca.service.id in the list of the workflow Generic Information + a workflow ID + a state called « pca.states » in the list of the workflow Generic Information>.
+
+An Action goes from an initial state, and conducts to a target state after the transition is completed.
+As an Action must be deterministic, for an initial given state it can conduct to a unique target state.
+
+There are three specific kinds of Actions: 
+- *Activation:* Actions that can start a service instance (from state VOID)
+- *Finishing:* Actions that can stop a service instance (to state FINISHED)
+- *Killing:* PCA is trying to force a service instance to terminate (to state KILLED) 
 
 [[_definition_States]]
 States::
-The specific states that are defined in PCA are VOID, FINISHED, ERROR, KILLED.
+The specific states that are pre-defined in PCA are VOID, FINISHED, ERROR, KILLED.
 
 - *VOID* Implicit State before a Service is Activated
 - *FINISHED* Implicit State after a Service is terminated/no longer Activated
