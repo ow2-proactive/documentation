@@ -42,7 +42,7 @@ The Kafka service allows to deploy through ProActive Cloud Automation (PCA) Port
 
 image::PCA_kafka.png[align=center, width=512, height=180]
 
-The instance will be in the state RUNNING after the deployment.
+The Service Instance will be in the State RUNNING after the deployment.
 
 image::PCA_kafka1.png[align=center, width=512, height=256]
 
@@ -52,7 +52,7 @@ image::PCA_kafka2.png[align=center, width=512, height=180]
 
 === Zookeeper
 
-The Zookeeper instance lifecycle management is similar to the Kafka one. 
+The Zookeeper Service Instance lifecycle management is similar to the Kafka one. 
 
 image::PCA_zookeeper.png[align=center,width=512, height=180]
 
