@@ -60,3 +60,7 @@ smart-watch.iml
 *.iml
 
 src/docs/admin/references/properties/
+
+.bundle/
+Gemfile.lock
+vendor/

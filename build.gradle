@@ -21,6 +21,7 @@ asciidoctor {
     sources {
         include 'user/ProActiveUserGuide.adoc'
         include 'MLOS/MLOSUserGuide.adoc'
+        include 'PCA/PCAUserGuide.adoc'
         include 'admin/ProActiveAdminGuide.adoc'
         include 'admin/AdminTutorials.adoc'
         include 'admin/Catalog.adoc'

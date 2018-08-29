@@ -1,5 +1,6 @@
 :docinfo:
-= ProActive Workflows & Scheduling
+
+= ProActive Workflows & Scheduling -- Admin Guide
 include::../common-settings.adoc[]
 :toc-title: Administration Guide
 
@@ -69,7 +70,10 @@ Your ProActive Scheduler is ready to execute <<_glossary_job,*Jobs*>>!
 
 All configuration files of ProActive Scheduler can be found under `PROACTIVE_HOME`.
 
+=== General configuration
+
 .ProActive Scheduler configuration files
+
 |===
 |Component | Description|File |Reference
 
@@ -91,7 +95,30 @@ All configuration files of ProActive Scheduler can be found under `PROACTIVE_HOM
 |User permissions|config/security.java.policy-server|<<_user_permissions>>
 |LDAP configuration|config/authentication/ldap.cfg|<<_ldap>>
 
+.5+^.^|Database
+|Scheduler configuration|config/scheduler/database.properties|<<Database configuration>>
+|Resource Manager configuration|config/rm/database.properties|<<Database configuration>>
+|Scheduling-api microservice|dist/war/scheduling-api/WEB-INF/classes/application.properties|<<Database configuration>>
+|Job-planner microservice|dist/war/job-planner/WEB-INF/classes/application.properties|<<Database configuration>>
+|Catalog microservice|dist/war/catalog/WEB-INF/classes/application.properties|<<Database configuration>>
+
 |===
+
+=== Database configuration
+
+Scheduler, Resource Mananger, and three microservices require to have direct access to the database.
+Thus, they must each have a correct database configuration.
+
+To configure Scheduler or Resource Mananger, one have to modify `config/scheduler/database.properties`
+and `config/rm/database.properties` respectively. The following five properties must be configured:
+`hibernate.connection.driver_class`, `hibernate.connection.url`, `hibernate.dialect`,
+`hibernate.connection.username`, and `hibernate.connection.password`.
+
+For each microservice, a microservice configuration file can be found in: `/dist/war/MICROSERVICE-NAME/classes/application.properties`.
+The `job-planner`, `catalog` and `scheduling-api` microservices must contain a database configuration.
+In their application.properties file, you need to set the following five properties:
+`spring.datasource.url`, `spring.datasource.username`, `spring.datasource.password`,
+`spring.datasource.driver-class-name`, and `spring.jpa.database-platform`.
 
 
 == Installation on a Cluster
@@ -491,7 +518,7 @@ Cluster Node::
 
 [[_glossary_ns_native_scheduler]]
 Native Scheduler::
-  A software which dispatch <<_glossary_ns_cluster_job,cluster jobs>> on <_glossary_ns_node,cluster nodes>>, also known as Cluster Manager.
+  A software which dispatch <<_glossary_ns_cluster_job,cluster jobs>> on <<_glossary_ns_node,cluster nodes>>, also known as Cluster Manager.
 
 [[_glossary_ns_cluster_job]]
 Cluster Job::
@@ -2016,7 +2043,7 @@ expression `pa.scheduler.core.automaticremovejobcronexpression`.
 As the `pa.scheduler.job.removeFromDataBase` property is set to `true` by default,
 a query is executed in-base to remove all jobs that qualify for the bulk removal.
 
-==== Database impact on performance
+==== Database impact on job submission performance
 
 The choice of the database provider can influence the Scheduler and Resource Manager performance overall.
 In the following figure, we see the job submission time between different database providers:
@@ -2045,6 +2072,26 @@ hibernate.connection.url=jdbc:hsqldb:mem:rm;hsqldb.tx=mvcc;hsqldb.lob_file_scale
 ```
 
 To switch to a standalone database, see <<_perf_tuning_db>>.
+
+==== Database impact on task creation performance
+
+The choice of the database provider influences task creation time.
+In the following figure, we see the task creation time for different database providers:
+
+image::grouped-bar-direct-labels.png[align="center"]
+
+Each experiment, consists of submitting one replicated job with some number of replicated tasks, and measuring
+time to create all these replicated tasks.
+
+//MariaDB
+//10K - 95s
+//20K - 296s
+//Default
+//10K - 750s
+//20K - 1750s
+//In-memory
+//10K - 85s
+//20K - 238s
 
 === Tuning Linux for 15K nodes
 
@@ -2077,7 +2124,7 @@ recovery feature enabled, when the Scheduler restarts it will retrieve the *prev
 and the execution of the tasks will continue and finish as if there was no failure of the Scheduler.
 
 WARNING: The nodes and task recovery feature is *not* applicable when the Scheduler is cleanly stopped or exits normally.
-This is a mechanism that is *only* applicable upon failure of the Scheduler (machine crash, abrupt exit).
+This is a mechanism that is *only* applicable upon *failure* of the Scheduler (machine crash, abrupt exit).
 
 === How Does Nodes and Task Recovery Work?
 
@@ -2102,10 +2149,19 @@ To handle the particular situation in which the Scheduler is down when a running
 
 === Nodes and Task Recovery Configuration
 
-WARNING: The nodes and task recovery feature requires a proper configuration to ensure that nodes and tasks are *kept
-alive* during the down time of the Scheduler.
+==== Restrictions
+
+The nodes recovery is not available for Scheduler settings that use the PAMR protocol. This is because this
+communication protocol relies on router endpoint identifiers that are regenerated when connections are reestablished.
+
+The nodes recovery is also not available on the Nodes that are launched at the Scheduler startup by default. However
+you get the choice to activate or deactivate the feature when you create your own Node Source. By default, the nodes
+recovery is activated for any new Node Source.
 
 ==== How to make sure that nodes and task recovery is enabled
+
+WARNING: The nodes and task recovery feature requires a proper configuration to ensure that nodes and tasks are *kept
+alive* during the down time of the Scheduler.
 
 * *Resource Manager* configuration (`PROACTIVE_HOME/config/rm/settings.ini`)
 +
