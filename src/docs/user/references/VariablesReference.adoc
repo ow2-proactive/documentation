@@ -145,11 +145,53 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | all scripts
 | -
 
-| *Task Success*. A variable accessible only from the clean script. It is a boolean value which is _true_ is the task succeeded and _false_ if the task failed.
+| *Task Success*. A variable accessible only from the clean script. It is a boolean value which is _true_ if the task succeeded and _false_ if the task failed.
 | variables.get( "PA_TASK_SUCCESS" )
 | $variables_PA_TASK_SUCCESS
 | -
 | <<_pre_post_clean, clean>>
+| -
+
+| *Node URL*. The URL of the node which executes the current task.
+| variables.get( "PA_NODE_URL" )
+| $variables_PA_NODE_URL
+| ${PA_NODE_URL}
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>, <<_pre_post_clean, clean>>
+| -
+
+| *Node URL (Selection Script)*. The URL of the node which executes the selection script. See <<_selection>>.
+| selected = (nodeurl == "pnp://mymachine:14200/Node1")
+| -
+| -
+| <<_selection, selection>>
+| -
+
+| *Node Name*. The name of the node which executes the current task.
+| variables.get( "PA_NODE_NAME" )
+| $variables_PA_NODE_NAME
+| ${PA_NODE_NAME}
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>, <<_pre_post_clean, clean>>
+| -
+
+| *Node Name (Selection Script)*. The name of the node which executes the selection script. See <<_selection>>.
+| selected = (nodename == "Node1")
+| -
+| -
+| <<_selection, selection>>
+| -
+
+| *Node Host*. The hostname of the node which executes the current task.
+| variables.get( "PA_NODE_HOST" )
+| $variables_PA_NODE_HOST
+| ${PA_NODE_HOST}
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>, <<_pre_post_clean, clean>>
+| -
+
+| *Node Host (Selection Script)*. The hostname of the node which executes the selection script. See <<_selection>>.
+| selected = (nodehost == "mymachine")
+| -
+| -
+| <<_selection, selection>>
 | -
 
 | *Third party credentials*. Credentials stored on the server for this user account. See <<_managing_third_party_credentials>>
