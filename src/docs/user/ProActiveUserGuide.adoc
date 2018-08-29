@@ -925,7 +925,7 @@ A <<_glossary_selection_script, selection script>> provides an ability for the S
 E.g. you can specify that a task must be executed on a Unix/Linux system.
 
 A <<_glossary_selection_script, selection script>> is always executed before the task itself on any candidate node:
-the execution of a <<_glossary_selection_script, selection script>> must set the boolean variable selected,
+the execution of a <<_glossary_selection_script, selection script>> must set the boolean variable `selected`,
 that indicates if the candidate node is suitable for the execution of the associated task.
 
 A Java helper *org.ow2.proactive.scripting.helper.selection.SelectionUtils* is provided for allowing
@@ -946,10 +946,10 @@ if (SelectionUtils.checkOSName("windows")) {
 }
 ----
 
-You can use variables on the <<_glossary_selection_script, selection script>>, these variables must be visible within the task
+You can use variables inside the <<_glossary_selection_script, selection script>>, these variables must be visible within the task
 context, i.e., declared on job scope, on task scope, or result variable from a previous task. In the last
-case is mandatory that the task that declares the inherited variable precedes the task using the variable. Below
-an example jon in XML format that uses a task variable to select Unix/Linux as operating system, in this example
+case, it is mandatory that the task which declares the inherited variable precedes the task using the variable. Below
+is an example job in XML format which uses a task variable to select Unix/Linux as operating system. In this example,
 variable *operating_system* (task scope) resolves to variable *operating_system_workflow* (job scope).
 
 [source, xml]
