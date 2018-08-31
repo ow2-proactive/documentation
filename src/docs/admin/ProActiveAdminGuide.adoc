@@ -69,6 +69,7 @@ Your ProActive Scheduler is ready to execute <<_glossary_job,*Jobs*>>!
 
 The minimum requirements can be found in the Data Sheet. Please find an up to date Data Sheet in the in the link:https://www.activeeon.com/about/resources[resources].
 
+The `proactive-server` script allocates 4GB heap space. One can change the allocated heap by changing the corresponding options in the `JAVA_OPTS` variable in the `proactive-server` script.
 
 == ProActive Scheduler configuration
 
