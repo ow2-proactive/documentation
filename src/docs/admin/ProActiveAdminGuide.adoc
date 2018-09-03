@@ -69,11 +69,24 @@ Your ProActive Scheduler is ready to execute <<_glossary_job,*Jobs*>>!
 
 The minimum requirements can be found in the Data Sheet. Please find an up to date Data Sheet in the in the link:https://www.activeeon.com/about/resources[resources].
 
-The `proactive-server` script allocates 4GB heap space. One can change the allocated heap by changing the corresponding options in the `JAVA_OPTS` variable in the `proactive-server` script.
-
 == ProActive Scheduler configuration
 
 All configuration files of ProActive Scheduler can be found under `PROACTIVE_HOME`.
+
+=== Java Virtual Machine Configuration
+
+Various command-line tools shipped with ProActive (bin/proactive-server, bin/proactive-node) start a Java Virtual Machine.
+The parameters of the JVM can be modified by editing DEFAULT_JVM_OPTS= in the corresponding script both in Linux and Windows.
+
+For example, to set the maximum heap capacity on the JVM to 6GB in Linux:
+
+Change the line
+`DEFAULT_JVM_OPTS='"-server" "-Dfile.encoding=UTF-8" "-Xms4g"'`
+
+into
+
+`DEFAULT_JVM_OPTS='"-server" "-Dfile.encoding=UTF-8" "-Xms4g" "-Xmx6g"'`
+
 
 === General configuration
 
