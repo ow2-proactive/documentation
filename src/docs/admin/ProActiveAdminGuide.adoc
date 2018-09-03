@@ -73,7 +73,7 @@ The minimum requirements can be found in the Data Sheet. Please find an up to da
 
 All configuration files of ProActive Scheduler can be found under `PROACTIVE_HOME`.
 
-=== Java Virtual Machine Configuration
+=== Java Virtual Machine configuration
 
 Various command-line tools shipped with ProActive (bin/proactive-server, bin/proactive-node) start a Java Virtual Machine.
 The parameters of the JVM can be modified by editing DEFAULT_JVM_OPTS= in the corresponding script both in Linux and Windows.
