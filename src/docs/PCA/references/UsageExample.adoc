@@ -1,0 +1,45 @@
+In this section, we show how to start a PCA service and how to use actions that manage its life cycle. To do that, we choose MongoDB PCA service as a running example.
+
+- *Start MongoDB*
+
+To start the mongoDB service, you have to go to the cloud automation section in the automation dashboard portal and choose MongoDB service from the service activation tab.
+At this point, you can provide values for variables that help configure this service then press execute.
+
+image::start_mongo.png[align=center, width=512, height=256]
+
+Once the MongoDB service is deployed, the state of the instance becomes RUNNING.
+At this stage, you can interact with the database provided by this PCA service.
+For this, you might need a host and a port number that can be retrieved from the endpoint displayed in the info window as shown bellow:
+
+image::endpoint_mongo.png[align=center, width=512, height=256]
+
+Two actions are possible at this step; pause or finish the instance.
+
+image::actions_mongo.png[align=center, width=512, height=256]
+
+- *Pause MongoDB*
+
+The running instance can be paused by executing the pause action when the instance is in the RUNNING state.
+The pause action suspends only processes in the specified containers to release resources without losing data/container.
+
+image::pause_mongo.png[align=center, width=512, height=256]
+
+From the pause state, two actions are possible; resume or finish the instance.
+
+image::actions1_mongo.png[align=center, width=512, height=256]
+
+- *Resume MongoDB*
+
+The resume action allows to restart a paused instance while preserving previous state of the database. The instance is the RUNNING state.
+
+image::resume_mongo.png[align=center, width=512, height=256]
+
+- *Finish MongoDB*
+
+When the user does not need this PCA service anymore, he can delete it to release resources using the finish action.
+This action can be applied when the instance is in the RUNNING or PAUSED state.
+
+image::finish_mongo.png[align=center, width=512, height=256]
+
+
+
