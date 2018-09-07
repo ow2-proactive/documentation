@@ -65,10 +65,28 @@ The URLs of the Scheduler, Resource Manager, REST API and Web Interfaces are dis
 
 Your ProActive Scheduler is ready to execute <<_glossary_job,*Jobs*>>!
 
+=== Minimum requirements
+
+The minimum requirements can be found in the Data Sheet. Please find an up to date Data Sheet in the in the link:https://www.activeeon.com/about/resources[resources].
 
 == ProActive Scheduler configuration
 
 All configuration files of ProActive Scheduler can be found under `PROACTIVE_HOME`.
+
+=== Java Virtual Machine configuration
+
+Various command-line tools shipped with ProActive (bin/proactive-server, bin/proactive-node) start a Java Virtual Machine.
+The parameters of the JVM can be modified by editing DEFAULT_JVM_OPTS= in the corresponding script both in Linux and Windows.
+
+For example, to set the maximum heap capacity on the JVM to 6GB in Linux:
+
+Change the line
+`DEFAULT_JVM_OPTS='"-server" "-Dfile.encoding=UTF-8" "-Xms4g"'`
+
+into
+
+`DEFAULT_JVM_OPTS='"-server" "-Dfile.encoding=UTF-8" "-Xms4g" "-Xmx6g"'`
+
 
 === General configuration
 
@@ -780,7 +798,7 @@ root@osboxes:/tmp/activeeon_enterprise-node-linux-x64-8.1.0-SNAPSHOT/logs# qstat
 
 Job ID                    Name             User            Time Use S Queue
 ------------------------- ---------------- --------------- -------- - -----
-241.osboxes                STDIN            osboxes                0 R batch          
+241.osboxes                STDIN            osboxes                0 R batch
 
 root@osboxes:/tmp/activeeon_enterprise-node-linux-x64-8.1.0-SNAPSHOT/logs# qstat -f 241
 
@@ -942,7 +960,7 @@ See <<_pamr_protocol_properties>> reference for a detailed explanation of each p
 === Policies
 
 You can limit the utilization of resources connected to the ProActive Scheduler in different ways. When you create node
-sources you can use a node source *policy*. A node source policy is a set of rules and conditions which describes when and how many nodes have to be selected for computations. 
+sources you can use a node source *policy*. A node source policy is a set of rules and conditions which describes when and how many nodes have to be selected for computations.
 
 NOTE: Node source policy are enforced for *non-admin* users *only*, and will have no effect for a user granted with the administrator privileges.
 
@@ -1677,7 +1695,7 @@ When HTTPS is set up, you can automatically redirect any HTTP request from
 users to the secured version of the protocol to make sure exchanged information
 is protected. It requires to enable `web.redirect_http_to_https`.
 
-Unlike other web applications, the Scheduler, the Resource Manager and the studio web portals together with the 
+Unlike other web applications, the Scheduler, the Resource Manager and the studio web portals together with the
 Proactive cloud watch, Cloud automation service, Job planner and Notification service
 require manual configuration based on your HTTPS settings. The configuration
 files to edit are respectively in
@@ -1906,8 +1924,8 @@ As expected, if 10 replicated tasks requiring software_A,software_B licenses are
 
 === Email notification
 
-The email notification addons includes an utility Java class but also a Groovy 
-task (accessible from the Studio Web app) that allow to send an email 
+The email notification addons includes an utility Java class but also a Groovy
+task (accessible from the Studio Web app) that allow to send an email
 from a ProActive Workflow.
 
 The task assumes that configuration for connecting to an SMTP server is done using
