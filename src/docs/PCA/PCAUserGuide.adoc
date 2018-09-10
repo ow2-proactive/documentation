@@ -1,9 +1,8 @@
 :docinfo:
-= ProActive Cloud Automation (PCA)
-include::../common-settings.adoc[]
 :toc: 
 :toc-title: PCA User Guide
-:table-caption: Table of Contents -- PCA
+= ProActive Cloud Automation (PCA)
+include::../common-settings.adoc[]
 
 == Main principles of PCA
 
@@ -36,7 +35,3 @@ In this section, we provide a quick reference about how to configure and start s
 
 include::references/reference.adoc[]
 
-== External documentation links
-=== https://doc.activeeon.com/dev/user/ProActiveUserGuide.html/[User Guide^]
-=== https://doc.activeeon.com/dev/MLOS/MLOSUserGuide.html/[Machine Learning Open Studio User Guide^]
-=== https://doc.activeeon.com/dev/admin/ProActiveAdminGuide.html/[Administration Guide^]
