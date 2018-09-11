@@ -485,8 +485,8 @@ since it is automatically detected.
 
 For instance to install the latest windows agent go
 link:http://jenkins.activeeon.com/job/agent-windows/lastSuccessfulBuild/artifact/[here]
-and select the installer right for your platform, in my case `	ProActiveAgent-8.3.0-standalone-x64-setup.exe`.
-Download this file. Now open a command prompt as administrator and go to the directory
+and select the installer right for your platform, in my case `ProActiveAgent-8.3.0-standalone-x64-setup.exe`.
+Now open a command prompt as administrator and go to the directory
 where the installer resides. Then run the command below so it will install the
 Proactive windows agent from the prompt. Note that any previous installation will
 be uninstalled first before installing the new version.
@@ -506,6 +506,8 @@ You can also activate compatibility mode from the command line if you have any p
 
 ```
 set __COMPAT_LAYER=WINXPSP3
+ProactiveAgent-8.3.0-standalone-x64-setup.exe /S /USER=proactive /PASSWORD=proactive
+unset __COMPAT_LAYER
 ```
 
 ==== Configuring Linux Or Windows Agents For Auto-Update
