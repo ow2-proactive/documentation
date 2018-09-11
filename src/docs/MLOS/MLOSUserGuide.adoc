@@ -348,6 +348,28 @@ WARNING: It is recommended to use an enabled-GPU node to run the deep learning t
 The `machine-learning` bucket contains diverse generic machine learning tasks that enable you to easily compose workflows for predictive models learning and testing. This bucket can be easily customized according to your needs.
 This bucket offers different options, you can customize it by adding new tasks or update the existing tasks.
 
+ALl the tasks included in this bucket have som common task variables that we describe in the table below.
+
+*Common Task Variables:*
+
+.Common_Machine_Learning_Tasks variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `Docker_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `Docker_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String (default="activeeon/dlm3"
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `LIMIT_OUTPUT_VIEW`
+|  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
+| Int (default=-1) (-1 means preview all the rows)
+|===
+
 ==== Public Datasets
 
 ===== Load_Boston_Dataset
@@ -429,9 +451,6 @@ NOTE: More information about this dataset can be found http://scikit-learn.org/s
 | `FILE_DELIMITER`
 | Delimiter to use.
 | String
-| `IS_LABELED_DATA`
-| True if your data have label data.
-| Boolean [True or False]
 |===
 
 NOTE: Your CSV file should be in a table format. See the example below.
@@ -499,55 +518,135 @@ image::pattern_file.png[align="center"]
 
 ==== Data Preprocessing
 
-===== Add_Data
+===== Drop_Columns
 
-*Task Overview:* Concatenate the newly added data to the original input data.
-
-*Task Variables:*
-
-.Add_Data_Task variables
-[cols="2,5,2"]
-|===
-| *Variable name* | *Description* | *Type*
-| `FILE_URL`
-| Put the URL of the data that you need to add.
-| String
-| `FILE_DELIMITER`
-| Delimiter to use.
-| String
-| `IS_LABELED_DATA`
-| TRUE if the data is labeled.
-| Boolean [True or False]
-| `IGNORE_INDEX`
-| False if you need to ignore the index of the input data.
-| Boolean [True or False]
-|===
-
-*How to use this task:* It should be used after <<Import_Data>> task.
-
-NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/merging.html[here^].
-
-===== Add_Label
-
-*Task Overview:* Add a new label column to the original input data.
+*Task Overview:* Drop the columns specified in `COLUMNS_NAME` variable.
 
 *Task Variables:*
 
-.Add_Label_Task variables
+.Drop_Columns_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `FILE_URL`
-| The URL of the file containing the labels that you need to concatenate.
-| String
-| `FILE_DELIMITER`
-|Delimiter to use.
+| `COLUMNS_NAME`
+| The list of columns that need to be dropped. Columns names should be separated by a comma.
 | String
 |===
 
-*How to use this task:* Could be used after <<Feature_Vector_Extractor>> and <<Import_Data>> tasks.
+NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.drop.html[here^].
 
-NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/merging.html[here^].
+===== Drop_NaNs
+
+*Task Overview:* Replace inf values to NaNs in a first place then drop objects on a given axis where alternately any or all of the data are missing.
+
+NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/version/0.21/generated/pandas.DataFrame.dropna.html[here^].
+
+===== Encode_Data
+
+*Task Overview:* Encode the values of the columns specified in `COLUMNS_NAME` variable with integer values between 0 and "the number of unique variables"-1.
+
+*Task Variables:*
+
+.Encode_Data_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `COLUMNS_NAME`
+| The list of columns that need to be encoded. Columns names should be separated by a comma.
+| String
+|===
+
+NOTE: More details about the source code of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html[here^].
+
+===== Fill_NaNs
+
+*Task Overview:* Fill NA/NaN values using the specified method.
+
+*Task Variables:*
+
+.Fill_NaNs_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `FILL_MAP`
+| Refers to the value to use to fill holes (e.g. 0).
+| Int
+|===
+
+NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.fillna.html[here^].
+
+===== Filter_Columns
+
+*Task Overview:* Subset columns of a dataframe according to the specified list of coluumns in  the `COLUMNS_NAME` variable.
+
+*Task Variables:*
+
+.Filter_Columns_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `COLUMNS_NAME`
+| The list of columns to restrict to. Columns names should be separated by a comma.
+| String
+|===
+
+NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.filter.html[here^].
+
+===== Merge_Data
+
+*Task Overview:* Merge DataFrame objects by performing a database-style join operation based on a specific reference column specified in the `REF_COLUMN` variable.
+
+*Task Variables:*
+
+.Merge_Data_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `REF_COLUMN`
+| The list of columns to restrict to. Columns names should be separated by a comma.
+| String
+|===
+
+NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.merge.html[here^].
+
+===== Scale_Data
+
+*Task Overview:* Scale a dataset based on a robust scaler or standard scaler.
+
+*Task Variables:*
+
+.Scale_Data_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `SCALER_NAME`
+| The list of columns to restrict to. Columns names should be separated by a comma.
+| List [RobustScaler, StandardScaler] (default=RobustScaler)
+| `COLUMNS_NAME`
+| The list of columns that will be scaled. column names should be separated by a comma.
+| String
+|===
+
+NOTE: More details about the source code of this task can be found http://scikit-learn.org/stable/modules/preprocessing.html[here^].
+
+===== Split_Data
+
+*Task Overview:* Separate data into train and test subsets.
+
+*Task Variables:*
+
+.Split_Data_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `TRAIN_SIZE`
+| This parameter must be float within the range (0.0, 1.0), not including the values 0.0 and 1.0. *default* = 0.7
+| Float
+|===
+
+*How to use this task:* It should be used before Train and Predict tasks.
+
+NOTE: More details about the source code of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html[here^].
 
 ===== Filter_Data
 
@@ -569,110 +668,50 @@ NOTE: More details about the source code of this task can be found https://panda
 
 NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.query.html?highlight=query[here^].
 
-===== Split_Data
-
-*Task Overview:* Separate data into train and test subsets.
-
-*Task Variables:*
-
-.Split_Data_Task variables
-[cols="2,5,2"]
-|===
-| *Variable name* | *Description* | *Type*
-| `TRAIN_SIZE`
-| This parameter must be float within the range (0.0, 1.0), not including the values 0.0 and 1.0. *default* = 0.7
-| Float
-|===
-
-*How to use this task:* It should be used before Train and Predict tasks.
-
-NOTE: More details about the source code of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html[here^].
-
 ==== Feature Extraction
 
-===== Feature_Vector_Extractor
+===== Summarize_Data
 
-*Task Overview:* Encode *structured* data into numerical feature vectors whereby machine learning models can be applied.
-
-*Task Variables:*
-
-.Feature_Vector_Extractor_Task variables
-[cols="2,5,2"]
-|===
-| *Variable name* | *Description* | *Type*
-| `SESSION_COLUMN`
-| the ID of the entity that you need to represent (to group by).
-| String
-| `FILE_OUT_FEATURES`
-| The extension of the file where the resulted features will be saved.
-| String [CSV or HTML]
-| `PATTERN_COLUMN`
-| The index of column containing the log patterns.[specific to features extraction from logs]
-| String
-| `PATTERNS_COUNT_FEATURES`
-| True if you need to extract count the number of occurrence of each pattern per session.
-| Boolean [True or False]
-| `STATE_VARIABLES`
-| The different variables that need to be considered to extract features according to their content.
-
-N.B: separate the different variables with a comma ','
-| String
-| `COUNT_VARIABLES`
-| Refers to the different variables that need to be considered to count their distinct content.
-| String
-
-N.B: separate the different variables with a comma ','
-| `STATE_COUNT_FEATURES_VARIABLES`
-| True if you nedd to extract state and count features per session.
-| Boolean [True or False]
-|===
-
-*How to use this task:* Could be connected with <<Add_Label>> if you need to train a model using supervised learning algorithms or with <<Train_Clustering_Model>> if you need to train a model using unsupervised machine learning techniques.
-
-===== Time_Series_Feature_Extractor
-
-*Task Overview:* Extract features by considering the temporal distribution of data.
+*Task Overview:* Calculate the histogram of a dataframe based on a reference column that need to be specified in the variable `REF_COLUMN`.
 
 *Task Variables:*
 
-.Time_Series_Feature_Extractor_Task variables
+.Summarize_Data_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `SESSION_COLUMN`
-| The column name of the entity that you need to represent.
+| `GLOBAL_MODEL_TYPE`
+| The model that will be used to summarize data.
+| List [KMeans, PolynomialFeatures] (default=KMeans)
+| `REF_COLUMN`
+| The column that will be used to group by the different histogram measures.
 | String
-| `SLIDING_STEP`
-| The number of minutes to jump while navigating from a window to another one.
-| Integer (in Minutes)
-| `WINDOW_SIZE`
-| The window size in Minutes.
-| Integer (in Minutes)
-| `START_DATE_TIME`
-| The date starting from it the time series vectors representing each entity [Session] will be
-  extracted.
-| date
-| `PATTERN_COLUMN`
-| The column name containing the log patterns.[specific to features extraction from logs]
-| String
-| `PATTERNS_COUNT_FEATURES`
-| True if you need to extract count the number of occurrence of each pattern per session and window.
-| Boolean [True or False]
-| `STATE_VARIABLES`
-| The name of columns to use as features by counting the number of occurrence of their distinct
-  content per session and window.
-
-  N.B: separate the different variables with a comma ','
-| String
-| `STATE_COUNT_FEATURES_VARIABLES`
-| True if you need to extract state and count features that you already specified in *COUNT_VARIABLES*
-  and *STATE_VARIABLES*.
-
- N.B: separate the different variables with a comma ','
-| String [True of False]
 |===
 
-*How to use this task:* It should be connected with specific machine learning algorithms suitable to this representation.
+NOTE: More details about the source code of this task can be found https://docs.scipy.org/doc/numpy/reference/generated/numpy.histogram.html[here^].
+
+===== Tsfresh_Features_Extraction
+
+*Task Overview:* Calculate a comprehensive number of time series features based on the library TSFRESH.
+
+*Task Variables:*
+
+.Tsfresh_Features_Extraction_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `TIME_COLULN`
+| The column that contains the values of the time series
+| String
+| `REF_COLUMN`
+| The column that will be used to group by the different features.
+| String
+| `ALL_FEATURES`
+| False if you do not need to extract all the possible features extractable by the library TSFRESH.
+| Boolean [default = False]
+|===
+
+NOTE: More details about the source code of this task can be found https://tsfresh.readthedocs.io/en/latest/text/list_of_features.html[here^].
 
 ==== ML Anomaly Detection
 
