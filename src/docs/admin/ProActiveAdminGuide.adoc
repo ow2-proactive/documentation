@@ -509,6 +509,35 @@ set __COMPAT_LAYER=WINXPSP3
 ProactiveAgent-8.3.0-standalone-x64-setup.exe /S /USER=proactive /PASSWORD=proactive
 ```
 
+
+More command line options below. Note that these opitons are only available when using
+the `/S` silent option, which is also included on the list for completness.
+
+[cols=2*]
+|===
+
+|`/S` | Run silently without graphical interface, uninstall any previous installation
+
+|`/UN` | Run the uninstall only
+
+|`/ALLOW` | Allow all users to control the service
+
+|`/USER=user` | Associate `user` account to manage proactive agent service, creates user if does not exist
+
+|`/PASSWORD=pass` | Define password for the proactive agent `user`
+
+|`/DOMAIN=dom` | Specify `dom` as the windows domain
+
+|`/LOG_DIR=path` | Define `path` where the agent log files, default is `$PROGRAMFILES\ProActiveAgent\logs`
+
+|`/CONFIG_DIR=path` | Define `path` where the configuration files are stored, default is `$PROGRAMFILES\ProActiveAgent\config`
+
+|`/USE_ACC` | Use current user's account home as `/CONFIG_DIR` and `/LOG_DIR`
+
+|===
+
+
+
 ==== Configuring Linux Or Windows Agents For Auto-Update
 
 The *Linux* or *Windows Agents* can be configured to automatically synchronize the node libary (node.jar) with the ProActive server.
