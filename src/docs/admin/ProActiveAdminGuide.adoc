@@ -507,7 +507,6 @@ You can also activate compatibility mode from the command line if you have any p
 ```
 set __COMPAT_LAYER=WINXPSP3
 ProactiveAgent-8.3.0-standalone-x64-setup.exe /S /USER=proactive /PASSWORD=proactive
-unset __COMPAT_LAYER
 ```
 
 ==== Configuring Linux Or Windows Agents For Auto-Update
