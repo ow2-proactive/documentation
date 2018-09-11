@@ -470,6 +470,43 @@ The main troubles you may have to face are the following ones:
 * You get an *authentication error*: this is probably due to your default credentials file which cannot be found. In the "Connection" tab of the Configuration Editor (Figure 5.4, “Configuration Editor window - Connection Tab (Resource Manager Registration)”), you can choose the credentials file you want. You can select, for instance, the credentials file located at PROACTIVE_HOME/config/authentication/scheduler.cred or your own credentials file.
 * The node seems to be well started but you cannot see it in the Resource Manager interface : in this case, make sure that the *port number* is the good one. Do not forget that the runtime port number is incremented from the initial ProActive Resource Manager port number. You can see exactly on which port your runtime has been started looking at the log file described above.
 
+==== Install Agent Windows Using Silent Mode
+
+When installing the agent in batch on several desktop machines one might use the
+command line installer instead of the graphical one. This eases to deploy several
+installations in parallel. To do so it is requiered to have remote access to
+command prompt with full admin priviledges.
+
+The silent option works to execute the installer directly on the command line
+without the need for a graphical interfaces. When the silent option is activated
+we need to provide at least user and password as parameters, domain name is optional
+since it is automatically detected.
+
+
+For instance to install the latest windows agent go
+link:http://jenkins.activeeon.com/job/agent-windows/lastSuccessfulBuild/artifact/[here]
+and select the installer right for your platform, in my case `	ProActiveAgent-8.3.0-standalone-x64-setup.exe`.
+Download this file. Now open a command prompt as administrator and go to the directory
+where the installer resides. Then run the command below so it will install the
+Proactive windows agent from the prompt. Note that any previous installation will
+be uninstalled first before installing the new version.
+
+
+```
+ProactiveAgent-8.3.0-standalone-x64-setup.exe /S /USER=proactive /PASSWORD=proactive
+```
+
+Optionally you can add a domain name.
+
+```
+ProactiveAgent-8.3.0-standalone-x64-setup.exe /S /USER=proactive /PASSWORD=proactive /DOMAIN=mydomain
+```
+
+You can also activate compatibility mode from the command line if you have any problems:
+
+```
+set __COMPAT_LAYER=WINXPSP3
+```
 
 ==== Configuring Linux Or Windows Agents For Auto-Update
 
