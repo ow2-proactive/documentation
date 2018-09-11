@@ -366,7 +366,7 @@ ALl the tasks included in this bucket have som common task variables that we des
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LIMIT_OUTPUT_VIEW`
-| Specifies how many rows of the CSV will be previewed in the browser to check each task results.
+|  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
 | Int (default=-1) (-1 means preview all the rows)
 |===
 
@@ -529,7 +529,7 @@ image::pattern_file.png[align="center"]
 |===
 | *Variable name* | *Description* | *Type*
 | `COLUMNS_NAME`
-| The list of columns that nedd to be dropped. columns names should be separated by a comma.
+| The list of columns that need to be dropped. Columns names should be separated by a comma.
 | String
 |===
 
@@ -552,7 +552,7 @@ NOTE: More details about the source code of this task can be found https://panda
 |===
 | *Variable name* | *Description* | *Type*
 | `COLUMNS_NAME`
-| The list of columns that nedd to be encoded. columns names should be separated by a comma.
+| The list of columns that need to be encoded. Columns names should be separated by a comma.
 | String
 |===
 
@@ -586,7 +586,7 @@ NOTE: More details about the source code of this task can be found https://panda
 |===
 | *Variable name* | *Description* | *Type*
 | `COLUMNS_NAME`
-| The list of columns to restrict to. column names should be separated by a comma.
+| The list of columns to restrict to. Columns names should be separated by a comma.
 | String
 |===
 
@@ -594,7 +594,7 @@ NOTE: More details about the source code of this task can be found https://panda
 
 ===== Merge_Data
 
-*Task Overview:* Merge DataFrame objects by performing a database-style join operation based on a specific referene column specified in the `REF_COLUMN` variable.
+*Task Overview:* Merge DataFrame objects by performing a database-style join operation based on a specific reference column specified in the `REF_COLUMN` variable.
 
 *Task Variables:*
 
@@ -603,7 +603,7 @@ NOTE: More details about the source code of this task can be found https://panda
 |===
 | *Variable name* | *Description* | *Type*
 | `REF_COLUMN`
-| The list of columns to restrict to. columns names should be separated by a comma.
+| The list of columns to restrict to. Columns names should be separated by a comma.
 | String
 |===
 
@@ -620,7 +620,7 @@ NOTE: More details about the source code of this task can be found https://panda
 |===
 | *Variable name* | *Description* | *Type*
 | `SCALER_NAME`
-| The list of columns to restrict to. columns names should be separated by a comma.
+| The list of columns to restrict to. Columns names should be separated by a comma.
 | List [RobustScaler, StandardScaler] (default=RobustScaler)
 | `COLUMNS_NAME`
 | The list of columns that will be scaled. column names should be separated by a comma.
@@ -681,7 +681,7 @@ NOTE: More details about the source code of this task can be found https://panda
 |===
 | *Variable name* | *Description* | *Type*
 | `GLOBAL_MODEL_TYPE`
-| The model that will be used to summarize grouped by data.
+| The model that will be used to summarize data.
 | List [KMeans, PolynomialFeatures] (default=KMeans)
 | `REF_COLUMN`
 | The column that will be used to group by the different histogram measures.
