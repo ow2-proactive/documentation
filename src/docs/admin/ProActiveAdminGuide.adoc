@@ -483,8 +483,8 @@ we need to provide at least user and password as parameters, domain name is opti
 since it is automatically detected.
 
 
-For instance to install the latest windows agent
-and select the installer right for your platform, for instance `ProActiveAgent-8.3.0-standalone-x64-setup.exe`.
+First download the latest windows agent
+right for your platform, for instance `ProActiveAgent-8.3.0-standalone-x64-setup.exe`.
 Now open a command prompt as administrator and go to the directory
 where the installer resides. Then run the command below so it will install the
 Proactive windows agent from the prompt. Note that any previous installation will
