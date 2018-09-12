@@ -472,24 +472,11 @@ The main troubles you may have to face are the following ones:
 
 ==== Install Agent Windows Using Silent Mode
 
-When installing the agent in batch on several desktop machines one might use the
-command line installer instead of the graphical one. This eases to deploy several
-installations in parallel. To do so it is requiered to have remote access to
-command prompt with full admin priviledges.
+The automated installation can be run through a command line (cmd.exe) with administrator priviledge.
+This can be useful to trigger installation. In order to launch the silent installation, the /S option must be passed in the command line to the ProActive Windows Agent installer.
+Several options are required, such as the user and password.
 
-The silent option works to execute the installer directly on the command line
-without the need for a graphical interfaces. When the silent option is activated
-we need to provide at least user and password as parameters, domain name is optional
-since it is automatically detected.
-
-
-First download the latest windows agent
-right for your platform, for instance `ProActiveAgent-8.3.0-standalone-x64-setup.exe`.
-Now open a command prompt as administrator and go to the directory
-where the installer resides. Then run the command below so it will install the
-Proactive windows agent from the prompt. Note that any previous installation will
-be uninstalled first before installing the new version.
-
+Here is an example of automated installation command:
 
 ```
 ProactiveAgent-8.3.0-standalone-x64-setup.exe /S /USER=proactive /PASSWORD=proactive
@@ -509,8 +496,9 @@ ProactiveAgent-8.3.0-standalone-x64-setup.exe /S /USER=proactive /PASSWORD=proac
 ```
 
 
-More command line options below. Note that these opitons are only available when using
-the `/S` silent option, which is also included on the list for completness.
+Here is the full list of command line options which can be passed to the installer:
+
+
 
 [cols=2*]
 |===
