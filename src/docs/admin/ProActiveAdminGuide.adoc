@@ -1927,6 +1927,19 @@ As expected, if 10 replicated tasks requiring software_A,software_B licenses are
 
 == Addons
 
+=== Get Notification on Job Events Configuration
+
+In order to enable this functionality the following properties should be set in `config/scheduler/setting.ini`:
+
+[source, groovy]
+----
+pa.scheduler.notifications.email.enabled = true
+pa.scheduler.notifications.email.from = username@example.com
+----
+
+To configure the email sender on Scheduler, the configuration file `config/scheduler/emailnotification.properties` should be filled in, please refer to
+link:../admin/ProActiveAdminGuide.html#_smtp_configuration_examples[SMTP configuration examples] for examples.
+
 === Email notification
 
 The email notification addons includes an utility Java class but also a Groovy
