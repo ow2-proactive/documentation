@@ -3,12 +3,21 @@
 :toc-title: PWS User Guide
 = ProActive Workflows & Scheduling -- User Guide
 include::../common-settings.adoc[]
+:sectnums!:
 == All documentation links
-=== https://doc.activeeon.com/dev/user/ProActiveUserGuide.html[ProActive Workflow&Scheduler User Guide]
-=== https://doc.activeeon.com/dev/MLOS/MLOSUserGuide.html[Machine Learning Open Studio User Guide]
-=== https://doc.activeeon.com/dev/PCA/PCAUserGuide.html[ProActive Cloud Automation User Guide]
-=== https://doc.activeeon.com/dev/admin/ProActiveAdminGuide.html[ProActive Workflow&Scheduler Administration Guide]
+=== link:../user/ProActiveUserGuide.html[User Guide]
+ProActive Workflow & Scheduler User Guide (Workflows, Tasks, Jobs Submission, Resource Management)
 
+=== link:../MLOS/MLOSUserGuide.html[ML Open Studio] 
+Machine Learning Open Studio User Guide (ready to use palettes with ML Tasks & Workflows)
+
+=== link:../PCA/PCAUserGuide.html[Cloud Automation]
+ProActive Cloud Automation User Guide (automate deployment and management of Services).
+
+=== link:../admin/ProActiveAdminGuide.html[Admin Guide]
+ProActive Workflow & Scheduler Administration Guide (Installation, networks, nodes, clusters, users, permissions)
+
+:sectnums:
 == Overview
 
 include::../Overview.adoc[]
