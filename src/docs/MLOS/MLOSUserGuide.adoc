@@ -135,29 +135,31 @@ For this example, we will use <<Linear_Regression>> Task and <<Support_Vector_Re
 
 A. Find the <<Linear_Regression>> Task and <<Support_Vector_Regression>> Task and drag them into the canvas.
 
-B. Find the <<Train_Model>> Task and drag it twice into the canvas.
+B. Find the <<Train_Model>> Task and drag it twice into the canvas and set its LABEL_COLUMN variable to LABEL.
 
 C. Connect the <<Split_Data>> Task to  the two <<Train_Model>> Tasks in order to give it access to the training data. Connect then the <<Linear_Regression>> Task to the first <<Train_Model>> Task and <<Support_Vector_Regression>> to the second <<Train_Model>> Task.
 
-D. To be able to download the model learned by each algorithm, drag two <<Import_Model>> Tasks and connect them to each <<Train_Model>> Task.
+D. To be able to download the model learned by each algorithm, drag two <<Download_Model>> Tasks and connect them to each <<Train_Model>> Task.
 
-image::train.gif[100000,2000]
+image::train_a_predictive_model.png[100000,2000]
 
 === Test the Predictive Model
 
 To evaluate the two learned predictive models, we will use the testing data that was separated out by the <<Split_Data>> Task to score our trained models. We can then compare the results of the two models to see which generated better results.
 
-A. Find the <<Predict_Model>> Task and drag and drop it twice into the canvas.
+A. Find the <<Predict_Model>> Task and drag and drop it twice into the canvas and set its LABEL_COLUMN variable to LABEL.
 
 B. Connect the first <<Predict_Model>> Task to the <<Train_Model>> Task that is connected to <<Support_Vector_Regression>> Task.
 
 C. Connect the second <<Predict_Model>> Task to the <<Train_Model>> Task that is connected to <<Linear_Regression>> Task.
 
-D. Find the <<Export_Results>> Task in the Machine Learning bucket and drag and drop it twice into the canvas.
+D. Connect the second <<Predict_Model>> Task to the <<Split_Data>> Task
 
-E. Connect each <<Export_Results>> Task with <<Predict_Model>>.
+E. Find the <<Preview_Results>> Task in the Machine Learning bucket and drag and drop it twice into the canvas.
 
-image::test.gif[100000,2000]
+F. Connect each <<Preview_Results>> Task with <<Predict_Model>>.
+
+image::test_the_predictive_model.png[100000,2000]
 
 NOTE: if you have a pickled file (.pkl) containing a predictive model that you have learned using another platform and you need to test it in the Machine Learning Open Studio, you can load it using *Import_Model* Task.
 
@@ -349,8 +351,9 @@ NOTE: Instead of training a model from scratch, you can use a pre-trained sentim
 
 *Fake_Celebrity_Faces_Generation:* generates a wild diversity of fake faces using a GAN model that was trained based on thousands of real celebrity photos. The pre-trained GAN model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/Epoch+018.pt[link^]
 
-*Image_Segmentation:* trains and predicts a segmentation model using SegNet network on http://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]
-NOTE: Instead of training a model from scratch, you can use a pre-trained image segmentation model which is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_segnet.zip[link^]
+*Image_Segmentation:* predicts a segmentation model using SegNet network on http://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]. The pre-trained image segmentation model which is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_segnet.zip[link^]
+
+*Object_Detection:* detects objects using a pre-trained https://pjreddie.com/media/files/papers/YOLOv3.pdf[YOLO v3 model^] on http://cocodataset.org/#home[COCO dataset^] proposed by Microsoft Research. The pre-trained model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/yolo3_coco.zip[link^].
 
 WARNING: It is recommended to use an enabled-GPU node to run the deep learning tasks.
 
@@ -583,7 +586,7 @@ NOTE: More details about the source code of this task can be found http://scikit
 | *Variable name* | *Description* | *Type*
 | `FILL_MAP`
 | Refers to the value to use to fill holes (e.g. 0).
-| Int
+| Integer
 |===
 
 NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.fillna.html[here^].
@@ -1033,19 +1036,23 @@ NOTE: It is recommended to use an enabled-GPU machine to run the deep learning t
 *Task Overview:* Load and return an image dataset.
 There are some simple rules for organizing your files and folders.
 
-. _Image Recognition Dataset:_ Each label must have its own folder which should contain its related images. For instance, to recognize if there are ants or bees in an image, you should organize your folders as follows:
-.. data
-... ants (RGB images file formats: .jpg, .png, etc)
-... bees (RGB images file formats: .jpg, .png, etc)
+. _Image Classification Dataset:_ Each class must have its own folder which should contain its related images. The Figure below shows how your folders and files should be organized.
+
+image::image_classification.png[400,2000]
 
 NOTE: You can find an example of the organization of the folders at: https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/ants_vs_bees.zip
 
-. _Image Segmentation Dataset:_ Images and labels should be organized as follows:
-.. data
-... images (RGB images file formats: .jpg, .png, etc)
-... classes (RGB images file formats: .jpg, .png, etc)
+. _Image Segmentation Dataset:_ Two folders are required: the first folder should contain the RGB images in JPG format and another folder should contain its corresponding annotations in http://hostrobots.ox.ac.uk/pascal/VOC/voc2012/index.html[PASCAL VOC^] format. RGB images and annotations should be organized as follows:
+
+image::image_segmentation.png[400,2000]
 
 NOTE: You can find an example of the organization of the folders at: https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/oxford.zip
+
+. _Object Detection Dataset:_ Two folders are demanded: the first folder should contain the RGB images in JPG format and another folder should contain its corresponding anotations in XML format using http://host.robots.ox.ac.uk/pascal/VOC/voc2012/index.html[PASCAL VOC^] format or TXT format using COCO format (http://cocodataset.org/#home). The RGB images and annotations should be organized as follows:
+
+image::object_detection.png[400,2000]
+
+NOTE: In these links, you can find an example of the organization of the folders using https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/pascal_voc.zip[Pascal_VOC Dataset^] and https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/pascal_coco.zip[COCO Dataset^].
 
 *Task Variables:*
 
@@ -1200,7 +1207,7 @@ NOTE: Torchtext were used to preprocess and load the text input. More informatio
 | If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
 | `USE_PRETRAINED_MODEL`
-| Enter the type of your dataset. There are two possible types: classification or segmentation
+| Parameter to use a pre-trained model for training.  If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
 | Boolean (default=True)
 |===
 
@@ -1225,7 +1232,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 | If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
 | `USE_PRETRAINED_MODEL`
-| Enter the type of your dataset. There are two possible types: classification or segmentation
+| Parameter to use a pre-trained model for training.  If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
 | Boolean (default=True)
 |===
 
@@ -1248,7 +1255,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 | If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
 | `USE_PRETRAINED_MODEL`
-| Enter the type of your dataset. There are two possible types: classification or segmentation
+| Parameter to use a pre-trained model for training.  If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
 | Boolean (default=True)
 |===
 
@@ -1271,7 +1278,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 | If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
 | `USE_PRETRAINED_MODEL`
-| Enter the type of your dataset. There are two possible types: classification or segmentation
+| Parameter to use a pre-trained model for training.  If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
 | Boolean (default=True)
 |===
 
@@ -1296,6 +1303,9 @@ NOTE: Pytorch were used to build the model architecture based on https://github.
 | `IM_SIZE`
 | Insert  (width, height)  of the images as a tuple with 2 elements.
 | Integer (default=(64, 64))
+| `NUM_CLASSES`
+| Number of classes.
+| Integer (default=5)
 |===
 ===== SegNet
 *Task Overview:*  is a deep convolutional encoder-decoder architecture for robust semantic pixel-wise labelling.
@@ -1317,6 +1327,9 @@ NOTE: Pytorch were used to build the model architecture based on https://github.
 | `IM_SIZE`
 | Insert  (width, height)  of the images as a tuple with 2 elements.
 | Integer (default=(64, 64))
+| `NUM_CLASSES`
+| Number of classes.
+| Integer (default=5)
 |===
 ===== UNet
 *Task Overview:*  consists of a contracting path to capture context and a symmetric expanding path that enables precise localization.
@@ -1338,7 +1351,122 @@ NOTE: Pytorch were used to build the model architecture based on https://github.
 | `IM_SIZE`
 | Insert  (width, height)  of the images as a tuple with 2 elements.
 | Integer (default=(64, 64))
+| `NUM_CLASSES`
+| Number of classes.
+| Integer (default=5)
 |===
+
+==== Object Detection
+
+===== SSD
+
+*Task Overview:*  produces a fixed-size collection of bounding boxes and scores for the presence of object class instances in those boxes, followed by a non-maximum suppression step to produce the final detections. For more details click on this https://www.cs.unc.edu/~wliu/papers/ssd.pdf[link^]
+
+*How to use this task:* It should be connected to  <<Train_Object_Detection_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on https://github.com/amdegroot/ssd.pytorch[SSD^].
+
+.SSD_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `START_ITERATION`
+| Initial iteration.
+| Integer (default=0)
+| `MAX_ITERATION`
+| Maximum iteration.
+| Integer (default=5)
+| `LR_STEPS`
+| Learning steps update for SGD (Stochastic Gradient Descent).
+| Integer (default=5)
+| `LR_FACTOR`
+| Learning rate update for SGD.
+| Float (default= 1e-3) Range in [0, 1].
+| `GAMMA`
+| Gamma update for SGD.
+| Float (default=0.1) Range in [0, 1].
+| `MIN_SIZES`
+| Minimum object size for detection by specifying numerical values or reference areas on screen. Objects smaller than that are ignored.
+| Integer (default= [30, 60, 111, 162, 213, 264])
+| `MAX_SIZES`
+| Maximum object size for detection by specifying numerical values or reference areas on screen. Objects larger than that are ignored.
+| Integer (default= [60, 111, 162, 213, 264, 315])
+| `LEARNING_RATE`
+| Initial learning rate.
+| Float (default= 1e-8) Range in [0, 1].
+| `MOMENTUM`
+| Momentum value for optimization.
+| Float (default=0.9) Range in [0, 1].
+| `WEIGHT_DECAY`
+| Weight decay for SGD
+| Float (default= 5e-4) Range in [0, 1].
+| `IMG_SIZE`
+| Insert (width, height) of the images as a tuple with 2 elements.
+| Integer (default=(300, 300))
+| `NUM_CLASSES`
+| Number of classes.
+| Integer (default=21)
+| `LABEL_PATH`
+| The URL of the file containing the class names of the dataset.
+| String (default=(https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/voc.names))
+| `USE_PRETRAINED_MODEL`
+| Parameter to use pre-trained model for training. If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
+| Boolean (default=True)
+|===
+
+NOTE: The default parameters of the SSD network were set for the PASCAL VOC dataset (http://host.robots.ox.ac.uk/pascal/VOC/voc2012/). If you'd like to use another dataset, you probably need to change the default parameters.
+
+===== YOLO
+
+*Task Overview:* You only look once (YOLO) is a  single neural network to predict bounding boxes and class probabilities. For more details click on this https://pjreddie.com/media/files/papers/YOLOv3.pdf[link^]
+
+*How to use this task:* It should be connected to  <<Train_Object_Detection_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on https://github.com/eriklindernoren/PyTorch-YOLOv3[YOLO^].
+
+.YOLO_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `LEARNING_RATE`
+| Initial learning rate
+| Float  (default= 0.0005) Range in [0, 1].
+| `MOMENTUM`
+| Momentum value for optimization.
+| Float (default=0.9) Range in [0, 1].
+| `WEIGHT_DECAY`
+| Weight decay for SGD
+| Float (default= 5e-4) Range in [0, 1].
+| `IMG_SIZE`
+| Insert (width, height) of the images as a tuple with 2 elements.
+| Integer (default=(414, 416))
+| `NUM_CLASSES`
+| Number of classes.
+| Integer (default=81)
+| `CONF_THRESHOLD`
+| This parameter shows how certain it is that the predicted bounding box actually encloses some object. This score doesn’t say anything about what kind of object is in the box, just if the shape of the box is any good.
+| Float (default=0.5) Range in [0, 1].
+| `NMS_THRESHOLD`
+| This parameter will select only the most accurate (highest probability) one of the boxes.
+| Float (default=0.45) Range in [0, 1].
+| LABEL_PATH
+| The URL of the file containing the class names of the dataset.
+| String (default=(https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/coco.names))
+|===
+
+NOTE: The default parameters of the YOLO network were set for the COCO dataset (http://cocodataset.org/#home). If you'd like to use another dataset, you probably need to change the default parameters.
 
 ==== Text Classification
 
@@ -1433,7 +1561,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 
 *Task Variables:*
 
-.Train_Image_Model variables
+.Train_Image_Classification_Model variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -1462,7 +1590,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 
 *Task Variables:*
 
-.Train_Image_Model variables
+.Train_Image_Segmentation_Model variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -1475,9 +1603,6 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 | `NUM_WORKERS`
 | Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
 | Integer (default=2)
-| `NUM_CLASSES`
-| Number of classes.
-| Integer
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
@@ -1495,7 +1620,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 
 *Task Variables:*
 
-.Train_Text_Model variables
+.Train_Text_Classification_Model variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -1524,13 +1649,42 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 
 *How to use this task:* Could be connected to <<Predict_Text_Classification_Model>> and <<Export_Model>> tasks.
 
+===== Train_Object_Detection_Model
+
+*Task Overview:* Train a model using an image segmentation algorithm.
+
+*Task Variables:*
+
+.Train_Object_Detection_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `NUM_EPOCHS`
+| Number of times all of the training vectors are used once to update the weights.
+| Integer (default=1)
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=4)
+| `NUM_WORKERS`
+| Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+| Integer (default=2)
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+|===
+
+
+
 ==== Predict
 
 ===== Predict_Image_Classification_Model
 
 *Task Overview:* Generate predictions using a trained model.
 
-.Predict_Text_Model variables
+.Predict_Image_Classification_Model variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -1554,7 +1708,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 
 *Task Overview:* Generate predictions using a trained segmentation model.
 
-.Predict_Text_Model variables
+.Predict_Image_Segmentation_Model variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -1594,6 +1748,31 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 |===
 
 *How to use this task:* It should be used after the <<Train_Text_Classification_Model>> or <<Export_Model>> Task.
+
+===== Predict_Object_Detection_Model
+
+*Task Overview:* Generate predictions using a trained object detection model.
+
+.Predict_Object_Detection_Model Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=4)
+| `NUM_WORKERS`
+| Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+| Integer (default=2)
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+|===
+
+*How to use this task:* It should be used after the <<Predict_Object_Detection_Model>> or <<Export_Model>> Task.
+
 
 === Data Visualization Bucket
 *Visdom Bucket* integrates generic tasks that can be easily used to broadcast visualizations of the analytic results provided by ML tasks. These visualization are created, organized, and shared using https://github.com/facebookresearch/visdom[Visdom^], a flexible tool proposed by Facebook Research.
