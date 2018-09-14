@@ -6,13 +6,13 @@ include::../common-settings.adoc[]
 :sectnums!:
 == All documentation links
 === link:../user/ProActiveUserGuide.html[User Guide]
-ProActive Workflow & Scheduler User Guide (Workflows, Tasks, Jobs Submission, Resource Management)
+ProActive Workflow & Scheduler (PWS) User Guide (Workflows, Tasks, Jobs Submission, Resource Management)
 
 === link:../MLOS/MLOSUserGuide.html[ML Open Studio] 
-Machine Learning Open Studio User Guide (ready to use palettes with ML Tasks & Workflows)
+Machine Learning Open Studio (ML-OS) User Guide (ready to use palettes with ML Tasks & Workflows)
 
 === link:../PCA/PCAUserGuide.html[Cloud Automation]
-ProActive Cloud Automation User Guide (automate deployment and management of Services).
+ProActive Cloud Automation (PCA) User Guide (automate deployment and management of Services).
 
 === link:../admin/ProActiveAdminGuide.html[Admin Guide]
 ProActive Workflow & Scheduler Administration Guide (Installation, networks, nodes, clusters, users, permissions)
