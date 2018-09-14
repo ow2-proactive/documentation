@@ -484,6 +484,60 @@ The main troubles you may have to face are the following ones:
 * You get an *authentication error*: this is probably due to your default credentials file which cannot be found. In the "Connection" tab of the Configuration Editor (Figure 5.4, “Configuration Editor window - Connection Tab (Resource Manager Registration)”), you can choose the credentials file you want. You can select, for instance, the credentials file located at PROACTIVE_HOME/config/authentication/scheduler.cred or your own credentials file.
 * The node seems to be well started but you cannot see it in the Resource Manager interface : in this case, make sure that the *port number* is the good one. Do not forget that the runtime port number is incremented from the initial ProActive Resource Manager port number. You can see exactly on which port your runtime has been started looking at the log file described above.
 
+==== Automate Windows Agent Installation
+
+The automated installation can be run through a command line (cmd.exe) with administrator priviledge.
+This can be useful to trigger installation. In order to launch the silent installation, the /S option must be passed in the command line to the ProActive Windows Agent installer.
+Several options are required, such as the user and password.
+
+Here is an example of automated installation command:
+
+```
+ProactiveAgent-8.3.0-standalone-x64-setup.exe /S /USER=proactive /PASSWORD=proactive
+```
+
+Optionally you can add a domain name.
+
+```
+ProactiveAgent-8.3.0-standalone-x64-setup.exe /S /USER=proactive /PASSWORD=proactive /DOMAIN=mydomain
+```
+
+You can also activate compatibility mode from the command line if you have any problems:
+
+```
+set __COMPAT_LAYER=WINXPSP3
+ProactiveAgent-8.3.0-standalone-x64-setup.exe /S /USER=proactive /PASSWORD=proactive
+```
+
+
+Here is the full list of command line options which can be passed to the installer:
+
+
+
+[cols=2*]
+|===
+
+|`/S` | Run silently without graphical interface, uninstall any previous installation.
+
+|`/UN` | Run the uninstall only.
+
+|`/ALLOW` | Allow all users to control the service.
+
+|`/USER=user` | Associate `user` account to manage proactive agent service, create user if it does not exist.
+
+|`/PASSWORD=pass` | Define password for the proactive agent `user`.
+
+|`/DOMAIN=dom` | Specify `dom` as the windows domain, by default domain will be set to the machine host name.
+
+|`/LOG_DIR=path` | Define `path` where the agent log files, default is `$PROGRAMFILES\ProActiveAgent\logs`.
+
+|`/CONFIG_DIR=path` | Define `path` where the configuration files are stored, default is `$PROGRAMFILES\ProActiveAgent\config`.
+
+|`/USE_ACC` | Use current user's account home as `/CONFIG_DIR` and `/LOG_DIR`.
+
+|===
+
+
 
 ==== Configuring Linux Or Windows Agents For Auto-Update
 
@@ -1935,6 +1989,19 @@ softwareA,softwareB
 As expected, if 10 replicated tasks requiring software_A,software_B licenses are submitted, they will be executed 3 by 3.
 
 == Addons
+
+=== Get Notification on Job Events Configuration
+
+In order to enable this functionality the following properties should be set in `config/scheduler/setting.ini`:
+
+[source, groovy]
+----
+pa.scheduler.notifications.email.enabled = true
+pa.scheduler.notifications.email.from = username@example.com
+----
+
+To configure the email sender on Scheduler, the configuration file `config/scheduler/emailnotification.properties` should be filled in, please refer to
+link:../admin/ProActiveAdminGuide.html#_smtp_configuration_examples[SMTP configuration examples] for examples.
 
 === Email notification
 

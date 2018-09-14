@@ -1252,16 +1252,6 @@ Add a "NOTIFICATION_EVENTS" Generic information, to list events on which a user 
 
 Scheduler can send email to the users when one of the above events is received.
 
-To enable this functionality, the following properties should be set in `config/scheduler/setting.ini`:
-
-[source, groovy]
-----
-pa.scheduler.notifications.email.enabled = true
-pa.scheduler.notifications.email.from = username@example.com
-----
-
-To configure the email sender on Scheduler, the configuration file `config/scheduler/emailnotification.properties` should be filled in.
-
 Notifications will only be sent for jobs whose generic information contains user's email address under the "EMAIL" key. Example:
 
 [source, xml]
@@ -1271,6 +1261,9 @@ Notifications will only be sent for jobs whose generic information contains user
     <info name="NOTIFICATION_EVENTS" value="Job paused, Job resumed"/>
 </genericInformation>
 ----
+
+To enable this functionality, the configuration need to be done following the steps introduced in
+link:../admin/ProActiveAdminGuide.html#_get_notification_on_job_events_configuration[Get Notification on Job Events Configuration].
 
 === Chaining Jobs
 
