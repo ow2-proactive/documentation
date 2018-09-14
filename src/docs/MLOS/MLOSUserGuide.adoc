@@ -1038,19 +1038,19 @@ There are some simple rules for organizing your files and folders.
 
 . _Image Classification Dataset:_ Each class must have its own folder which should contain its related images. The Figure below shows how your folders and files should be organized.
 
-image::image_classification.png[400,2000]
+image::image_classification.png[400,400]
 
 NOTE: You can find an example of the organization of the folders at: https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/ants_vs_bees.zip
 
 . _Image Segmentation Dataset:_ Two folders are required: the first folder should contain the RGB images in JPG format and another folder should contain its corresponding annotations in http://hostrobots.ox.ac.uk/pascal/VOC/voc2012/index.html[PASCAL VOC^] format. RGB images and annotations should be organized as follows:
 
-image::image_segmentation.png[400,2000]
+image::image_segmentation.png[550,500]
 
 NOTE: You can find an example of the organization of the folders at: https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/oxford.zip
 
 . _Object Detection Dataset:_ Two folders are demanded: the first folder should contain the RGB images in JPG format and another folder should contain its corresponding anotations in XML format using http://host.robots.ox.ac.uk/pascal/VOC/voc2012/index.html[PASCAL VOC^] format or TXT format using COCO format (http://cocodataset.org/#home). The RGB images and annotations should be organized as follows:
 
-image::object_detection.png[400,2000]
+image::object_detection.png[550,500]
 
 NOTE: In these links, you can find an example of the organization of the folders using https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/pascal_voc.zip[Pascal_VOC Dataset^] and https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/pascal_coco.zip[COCO Dataset^].
 
@@ -1461,9 +1461,12 @@ NOTE: Pytorch were used to build the model architecture based on https://github.
 | `NMS_THRESHOLD`
 | This parameter will select only the most accurate (highest probability) one of the boxes.
 | Float (default=0.45) Range in [0, 1].
-| LABEL_PATH
+| `LABEL_PATH`
 | The URL of the file containing the class names of the dataset.
 | String (default=(https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/coco.names))
+| `USE_PRETRAINED_MODEL`
+| Parameter to use pre-trained model for training. If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
+| Boolean (default=True)
 |===
 
 NOTE: The default parameters of the YOLO network were set for the COCO dataset (http://cocodataset.org/#home). If you'd like to use another dataset, you probably need to change the default parameters.
@@ -1651,7 +1654,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 
 ===== Train_Object_Detection_Model
 
-*Task Overview:* Train a model using an image segmentation algorithm.
+*Task Overview:* Train a model using an object detection algorithm.
 
 *Task Variables:*
 
