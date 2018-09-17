@@ -16,7 +16,7 @@ The FTP and SFTP connectors share the same list of variables. Consequently, we d
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
-| `<PROTOCOL>_HOSTNAME`
+| `<PROTOCOL>_HOST`
 | IP address of the server host.
 | Workflow, Task
 | Yes
@@ -113,8 +113,6 @@ Currently, we have connectors for MySQL, Oracle, PostgreSQL, Greenplum and SQL S
 
 SQL connectors workflows are composed of two tasks: an import task and an export task.
 
-
-
 *Variables:*
 
 All SQL connectors share the same list of variables. Consequently, we describe them in the following table using a unique notation.
@@ -124,7 +122,7 @@ All SQL connectors share the same list of variables. Consequently, we describe t
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
-| `<RDBMS_NAME>_HOSTNAME`
+| `<RDBMS_NAME>_HOST`
 | Label or the IP address of the server hosting the database.
 | Workflow
 | Yes
@@ -136,6 +134,12 @@ All SQL connectors share the same list of variables. Consequently, we describe t
 | No
 | Integer
 | e.g. 5432, 1521
+| `<RDBMS_NAME>_USER`
+| Username to use for connecting to the database.
+| Workflow
+| Yes
+| String
+|
 | `<RDBMS_NAME>_DATABASE`
 | Database name.
 | Workflow
@@ -162,6 +166,15 @@ All SQL connectors share the same list of variables. Consequently, we describe t
 | No
 | String
 | e.g. `path/to/my/output.csv`
+| `<RDBMS_NAME>_OUTPUT_TYPE`
+| Task result output type (HTML` or `CSV`).
+If set to `HTML`, it allows to preview the results in Scheduler Portal in HTML format.
+| Import Task
+| No
+| String
+| Values: `{CSV, HTML}`.
+
+Default: `CSV`
 | `<RDBMS_NAME>_TABLE`
 | The table to insert data into.
 | Export Task
@@ -206,7 +219,7 @@ When you drag & drop an SQL connector, two tasks will be appended to your workfl
 
 This task uses the driver given in `RMDB_DRIVER` to connect to the database. To use another driver, make sure you have it properly installed before (e.g. using `pip install <RMDBS_DRIVER>`).
 
-The task requires the following third-party credentials: `<RDBMS_NAME>_USERNAME` and `<RDBMS_NAME>_PASSWORD` ; this is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+The task requires the following third-party credential: {key: `<mysql|postgres|mssql|oracle|gpdb>://<<RDBMS_NAME>_USER>@<<RDBMS_NAME>_HOST>:<<RDBMS_NAME>_PORT>`, value: `<RDBMS_NAME>_PASSWORD`}. ; this is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 In the import mode, the output containing the imported data takes one or many of the following forms:
 
@@ -227,7 +240,7 @@ Currently, we have connectors for MongoDB and Cassandra.
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
-| `MONGODB_HOSTNAME`
+| `MONGODB_HOST`
 | Label or the IP address of the server hosting the database.
 | Workflow, Import Task, Export Task
 | Yes
@@ -239,6 +252,12 @@ Currently, we have connectors for MongoDB and Cassandra.
 | No
 | Integer
 | 27018
+| `MONGODB_USER`
+| Username to use for connecting to MongoDB server if authentification is required.
+| Workflow
+| No
+| String
+|
 | `MONGODB_DATABASE`
 | Database to use. In export mode, it is created if it does not exist.
 | Workflow, Import Task, Export Task
@@ -289,7 +308,7 @@ or `path/to/input.json`
 
 *How to use this task:*
 
-The task requires the following third-party credentials: `MONGODB_USERNAME` and `MONGODB_PASSWORD`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+The task might require (if the MongoDB server requires authentification) a `MONGODB_USER`  in addition to the following third-party credential: {key: `mongodb://<MONGODB_USER>@<MONGODB_HOST>:<MONGODB_PORT>`, value: `MONGODB_PASSWORD`}. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 In the import mode, the output containing the imported data takes one or many of the following forms:
 
@@ -305,7 +324,7 @@ In the import mode, the output containing the imported data takes one or many of
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
-| `CASSANDRA_HOSTNAME`
+| `CASSANDRA_HOST`
 | Label or the IP address of the server hosting the database.
 | Workflow, Import Task, Export Task
 | Yes
@@ -368,7 +387,7 @@ In the import mode, the output containing the imported data takes one or many of
 
 *How to use this task:*
 
-The task requires the following third-party credentials: `CASSANDRA_USERNAME` and `CASSANDRA_PASSWORD`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+The task might require (if applicable)  the following third-party credentials: `CASSANDRA_USERNAME` and `CASSANDRA_PASSWORD`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 In the import mode, the output containing the imported data takes one or many of the following forms:
 
@@ -384,7 +403,7 @@ In the import mode, the output containing the imported data takes one or many of
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
-| `ELASTICSEARCH_HOSTNAME`
+| `ELASTICSEARCH_HOST`
 | Label or the IP address of the ElasticSearch server.
 | Workflow
 | Yes
@@ -396,6 +415,12 @@ In the import mode, the output containing the imported data takes one or many of
 | No
 | Integer
 | `9200`
+| `ELASTICSEARCH_USER`
+| Username to use for connecting to Elasticsearch server if authentification is required.
+| Workflow
+| No
+| String
+|
 | `ELASTICSEARCH_INDEX`
 | Index to use. In export mode, it is created if it does not exist.
 | Import Task, Export Task
@@ -439,7 +464,7 @@ or `path/to/input.json`
 
 *How to use this task:*
 
-The task requires the following third-party credentials: `ELASTICSEARCH_USERNAME` and `ELASTICSEARCH_PASSWORD`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+The task might require (if the Elasticsearch server requires authentification) an `ELASTICSEARCH_USER` in addition to the following third-party credential: {key: `elasticsearch://<ELASTICSEARCH_USER>@<ELASTICSEARCH_HOST>:<ELASTICSEARCH_PORT>`, value: `ELASTICSEARCH_PASSWORD`>. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 In the import mode, the output containing the imported data takes the form of a JSON format to saved to the `result` variable to make is previewable in the scheduler portal and to make it accessible for the next tasks.
 
