@@ -1992,7 +1992,7 @@ As expected, if 10 replicated tasks requiring software_A,software_B licenses are
 
 Scheduler has `Earliest deadline first policy` (EDF policy) that priorities jobs with deadlines.
 
-The EDF Policy considers two Generic Info variables: `JOB_DDL` and `JOB_EXEC_TIME`.
+The EDF Policy considers two Generic Information items: `JOB_DDL` and `JOB_EXEC_TIME`.
 
 `JOB_DDL` represents job deadline. Job deadline can be set in one of the following format:
 
@@ -2023,7 +2023,7 @@ between `effectiveDeadline` and `expectedJobFinishingTime`.
 If job deadline is absolute then `effectiveDeadline` equals to job deadline.
 If job deadline is relative then `effectiveDeadline` equals to `submittedTime` + deadline.
 
-`expectedJobFinishingTime` equals to current date time + job exepcted execution time.
+`expectedJobFinishingTime` equals to current date time + job expected execution time.
 
 To use the EDF policy, edit the file `PROACTIVE_HOME/config/scheduler/settings.ini` and change the following line:
 
