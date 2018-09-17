@@ -1988,6 +1988,55 @@ softwareA,softwareB
 
 As expected, if 10 replicated tasks requiring software_A,software_B licenses are submitted, they will be executed 3 by 3.
 
+=== Earliest deadline first policy
+
+Scheduler has `Earliest deadline first policy` (EDF policy) that priorities jobs with deadlines.
+
+The EDF Policy considers two Generic Info variables: `JOB_DDL` and `JOB_EXEC_TIME`.
+
+`JOB_DDL` represents job deadline. Job deadline can be set in one of the following format:
+
+1. absolute format: `YYYY-MM-dd`T`HH:mm:ss+ZZ`, e.g. `2018-08-14T08:40:30+02:00`
+
+2. relative format: `+HH:mm:ss` , e.g. `+12:30:00`, `+5:30:00`, or `+mm:ss`, e.g. `+4:30`, or `+ss`, e.g. `+45` (45 seconds)
+
+`JOB_EXEC_TIME` represents job exepcted execution time in the following format: `HH:mm:ss` , e.g. `12:30:00`, `5:30:00`,
+or `mm:ss`, e.g. `4:30`, or `ss`, e.g. `45` (45 seconds).
+
+EDF Policy applies 6 following rules until at least one rule sorts two jobs:
+
+1. compare priority
+
+2. job with deadline has advantage over job without deadline
+
+3. job that is already started has advantage over job that is not started yet
+
+4. job that started earlier has advantage over job that started later
+
+5. compare distance between job expected finishing time and deadline, job with smallest distance gets an advantage
+
+6. job with smallest submitted time
+
+Distance between job expected finishing time and deadline computed as a difference
+between `effectiveDeadline` and `expectedJobFinishingTime`.
+
+If job deadline is absolute then `effectiveDeadline` equals to job deadline.
+If job deadline is relative then `effectiveDeadline` equals to `submittedTime` + deadline.
+
+`expectedJobFinishingTime` equals to current date time + job exepcted execution time.
+
+To use the EDF policy, edit the file `PROACTIVE_HOME/config/scheduler/settings.ini` and change the following line:
+
+----
+pa.scheduler.policy=org.ow2.proactive.scheduler.policy.ExtendedSchedulerPolicy
+----
+
+to:
+
+----
+pa.scheduler.policy=org.ow2.proactive.scheduler.policy.edf.EDFPolicyExtended
+----
+
 == Addons
 
 === Get Notification on Job Events Configuration
