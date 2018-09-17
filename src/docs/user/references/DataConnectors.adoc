@@ -16,7 +16,7 @@ The FTP and SFTP connectors share the same list of variables. Consequently, we d
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
-| `<PROTOCOL>_HOSTNAME`
+| `<PROTOCOL>_HOST`
 | IP address of the server host.
 | Workflow, Task
 | Yes
@@ -124,7 +124,7 @@ All SQL connectors share the same list of variables. Consequently, we describe t
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
-| `<RDBMS_NAME>_HOSTNAME`
+| `<RDBMS_NAME>_HOST`
 | Label or the IP address of the server hosting the database.
 | Workflow
 | Yes
@@ -227,7 +227,7 @@ Currently, we have connectors for MongoDB and Cassandra.
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
-| `MONGODB_HOSTNAME`
+| `MONGODB_HOST`
 | Label or the IP address of the server hosting the database.
 | Workflow, Import Task, Export Task
 | Yes
@@ -305,7 +305,7 @@ In the import mode, the output containing the imported data takes one or many of
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
-| `CASSANDRA_HOSTNAME`
+| `CASSANDRA_HOST`
 | Label or the IP address of the server hosting the database.
 | Workflow, Import Task, Export Task
 | Yes
@@ -384,7 +384,7 @@ In the import mode, the output containing the imported data takes one or many of
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
-| `ELASTICSEARCH_HOSTNAME`
+| `ELASTICSEARCH_HOST`
 | Label or the IP address of the ElasticSearch server.
 | Workflow
 | Yes
