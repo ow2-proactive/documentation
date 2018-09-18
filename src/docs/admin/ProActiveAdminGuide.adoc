@@ -1990,7 +1990,7 @@ As expected, if 10 replicated tasks requiring software_A,software_B licenses are
 
 === Earliest deadline first (EDF) policy
 
-To use the earliest deadline first (EDP) policy,  edit the file `PROACTIVE_HOME/config/scheduler/settings.ini` and change the following line:
+To use the earliest deadline first (EDF) policy,  edit the file `PROACTIVE_HOME/config/scheduler/settings.ini` and change the following line:
 
 ----
 pa.scheduler.policy=org.ow2.proactive.scheduler.policy.ExtendedSchedulerPolicy

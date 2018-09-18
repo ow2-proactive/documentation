@@ -1988,7 +1988,7 @@ See link:../admin/ProActiveAdminGuide.html#_scheduling_policies[Admin Guide] to 
 
 === Earliest deadline first (EDF) policy
 
-Scheduler has `Earliest deadline first policy` (EDF policy) that priorities jobs with deadlines.
+Scheduler has `Earliest deadline first policy` (EDF policy) that prioritizes jobs with deadlines.
 Overall, the general principal is the following: a job that needs to be started as soon as possible to meet its deadline
 taking into account its execution time has higher priority.
 
@@ -2018,7 +2018,7 @@ Here is the ordered list of rules for the EDF policy:
 
 2. job with deadline has priority over job without deadline
 
-3. job that is already started has priority over job that is not started yet
+3. job that is already started has priority over job that has not yet started
 
 4. job that started earlier has priority over job that was started later
 
