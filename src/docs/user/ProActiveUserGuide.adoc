@@ -1986,9 +1986,11 @@ A complete example of Producer / Consumer, _ServiceDeployerConsumer_ can be down
 
 See link:../admin/ProActiveAdminGuide.html#_scheduling_policies[Admin Guide] to congifure scheduling policies.
 
-=== Earliest deadline first policy
+=== Earliest deadline first (EDF) policy
 
 Scheduler has `Earliest deadline first policy` (EDF policy) that priorities jobs with deadlines.
+Overall, the general principal is the following: a job that needs to be started as soon as possible to meet its deadline
+taking into account its execution time has higher priority.
 
 The EDF policy considers two Generic Information items: `JOB_DDL` and `JOB_EXEC_TIME`.
 
@@ -1996,37 +1998,33 @@ The EDF policy considers two Generic Information items: `JOB_DDL` and `JOB_EXEC_
 
 1. absolute format: `YYYY-MM-dd`T`HH:mm:ss+ZZ`, e.g. `2018-08-14T08:40:30+02:00`
 
-2. relative format: `+HH:mm:ss` , e.g. `+12:30:00`, `+5:30:00`, or `+mm:ss`, e.g. `+4:30`, or `+ss`, e.g. `+45` (45 seconds)
+2. relative (to the submission time) format: `+HH:mm:ss` , e.g. `+5:30:00`, or `+mm:ss`, e.g. `+4:30`, or `+ss`, e.g. `+45` (45 seconds)
+
+If job deadline is absolute then its value equals to `JOB_DDL`.
+
+If job deadline is relative then its value equals to `submission time` + `JOB_DDL`.
 
 `JOB_EXEC_TIME` represents job expected execution time in the following format: `HH:mm:ss` , e.g. `12:30:00`, `5:30:00`,
 or `mm:ss`, e.g. `4:30`, or `ss`, e.g. `45` (45 seconds).
 
-EDF policy orders jobs by applying following rules.
-Each rule takes two jobs and define if some of these jobs are more important than another.
-But it is possible that rule cannot figure out which of two jobs are more important.
-Thus EDF policy applies these rule (in the given order) until one rule which actually sorts two jobs.
-List of the EDF policy rules:
+EDF policy orders jobs by applying the rules below.
+The rule considers jobs at submission time when they are still pending, and orders them by priority.
 
-1. compare priority
 
-2. job with deadline has advantage over job without deadline
+Thus EDF policy applies these rules (in the given order) until one rule actually applies.
+Here is the ordered list of rules for the EDF policy:
 
-3. job that is already started has advantage over job that is not started yet
+1. compare job's intrinsic priority (HIGHEST, HIGH, NORMAL, LOW, LOWEST)
 
-4. job that is started earlier has advantage over job that is started later
+2. job with deadline has priority over job without deadline
 
-5. compare distance between job expected finishing time and deadline, job with smallest distance gets an advantage
+3. job that is already started has priority over job that is not started yet
 
-6. job with smallest submitted time.
+4. job that started earlier has priority over job that was started later
 
-Distance between job expected finishing time and deadline computed as a difference
-between `effectiveDeadline` and `expectedJobFinishingTime`.
+5. job with the earliest `JOB_DDL` minus `JOB_EXEC_TIME` has a priority
 
-If job deadline is absolute then `effectiveDeadline` equals to job deadline.
-If job deadline is relative then `effectiveDeadline` equals to `submittedTime` + deadline.
-
-`expectedJobFinishingTime` equals to current date time + job expected execution time.
-
+6. job with earliest submission time.
 
 == Data Connectors
 

@@ -1945,7 +1945,7 @@ More over, the native Python Script Engine depends on the py4j library in order 
 
 Further information can be found https://www.py4j.org/install.html[in the official py4j documentation^].
 
-[[_scheduling_policies ]]
+[[_scheduling_policies]]
 == Extending ProActive Scheduling Policy
 
 In order to decide which pending Tasks are executed, the ProActive Scheduler uses a <<_glossary_scheduling_policy,*Scheduling Policy*>>.
@@ -1988,9 +1988,9 @@ softwareA,softwareB
 
 As expected, if 10 replicated tasks requiring software_A,software_B licenses are submitted, they will be executed 3 by 3.
 
-=== Earliest deadline first policy
+=== Earliest deadline first (EDF) policy
 
-To use the earliest deadline first policy (EDF policy), edit the file `PROACTIVE_HOME/config/scheduler/settings.ini` and change the following line:
+To use the earliest deadline first (EDP) policy,  edit the file `PROACTIVE_HOME/config/scheduler/settings.ini` and change the following line:
 
 ----
 pa.scheduler.policy=org.ow2.proactive.scheduler.policy.ExtendedSchedulerPolicy
