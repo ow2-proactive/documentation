@@ -1982,6 +1982,52 @@ Task Synchronization API can be used for multiple dynamic synchronization patter
 
 A complete example of Producer / Consumer, _ServiceDeployerConsumer_ can be downloaded link:examples/ServiceDeployerConsumer.xml[here].
 
+== Scheduling policies
+
+See link:../admin/ProActiveAdminGuide.html#_scheduling_policies[Admin Guide] to congifure scheduling policies.
+
+=== Earliest deadline first policy
+
+Scheduler has `Earliest deadline first policy` (EDF policy) that priorities jobs with deadlines.
+
+The EDF policy considers two Generic Information items: `JOB_DDL` and `JOB_EXEC_TIME`.
+
+`JOB_DDL` represents job deadline. Job deadline can be set in one of the following format:
+
+1. absolute format: `YYYY-MM-dd`T`HH:mm:ss+ZZ`, e.g. `2018-08-14T08:40:30+02:00`
+
+2. relative format: `+HH:mm:ss` , e.g. `+12:30:00`, `+5:30:00`, or `+mm:ss`, e.g. `+4:30`, or `+ss`, e.g. `+45` (45 seconds)
+
+`JOB_EXEC_TIME` represents job expected execution time in the following format: `HH:mm:ss` , e.g. `12:30:00`, `5:30:00`,
+or `mm:ss`, e.g. `4:30`, or `ss`, e.g. `45` (45 seconds).
+
+EDF policy orders jobs by applying following rules.
+Each rule takes two jobs and define if some of these jobs are more important than another.
+But it is possible that rule cannot figure out which of two jobs are more important.
+Thus EDF policy applies these rule (in the given order) until one rule which actually sorts two jobs.
+List of the EDF policy rules:
+
+1. compare priority
+
+2. job with deadline has advantage over job without deadline
+
+3. job that is already started has advantage over job that is not started yet
+
+4. job that is started earlier has advantage over job that is started later
+
+5. compare distance between job expected finishing time and deadline, job with smallest distance gets an advantage
+
+6. job with smallest submitted time.
+
+Distance between job expected finishing time and deadline computed as a difference
+between `effectiveDeadline` and `expectedJobFinishingTime`.
+
+If job deadline is absolute then `effectiveDeadline` equals to job deadline.
+If job deadline is relative then `effectiveDeadline` equals to `submittedTime` + deadline.
+
+`expectedJobFinishingTime` equals to current date time + job expected execution time.
+
+
 == Data Connectors
 
 include::./references/DataConnectors.adoc[]
