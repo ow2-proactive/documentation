@@ -1954,7 +1954,25 @@ This policy allows, for example, to execute task in a First-In-First-Out order o
 
 The default Scheduling Policy can be extended to perfectly fit with an organization scheduling constraints.
 
+Moreover, policy can be changed dynamically throught Java API `org.ow2.proactive.scheduler.common.Scheduler::changePolicy(String policyClassName)`.
+
 In the following example, we show how a different policy can be used to control Task Scheduling.
+
+
+=== Earliest deadline first (EDF) policy
+
+To use the earliest deadline first (EDF) policy,  edit the file `PROACTIVE_HOME/config/scheduler/settings.ini` and change the following line:
+
+----
+pa.scheduler.policy=org.ow2.proactive.scheduler.policy.ExtendedSchedulerPolicy
+----
+
+to:
+
+----
+pa.scheduler.policy=org.ow2.proactive.scheduler.policy.edf.EDFPolicyExtended
+----
+
 
 === License Policy Example
 
@@ -1987,20 +2005,6 @@ softwareA,softwareB
 ----
 
 As expected, if 10 replicated tasks requiring software_A,software_B licenses are submitted, they will be executed 3 by 3.
-
-=== Earliest deadline first (EDF) policy
-
-To use the earliest deadline first (EDF) policy,  edit the file `PROACTIVE_HOME/config/scheduler/settings.ini` and change the following line:
-
-----
-pa.scheduler.policy=org.ow2.proactive.scheduler.policy.ExtendedSchedulerPolicy
-----
-
-to:
-
-----
-pa.scheduler.policy=org.ow2.proactive.scheduler.policy.edf.EDFPolicyExtended
-----
 
 == Addons
 

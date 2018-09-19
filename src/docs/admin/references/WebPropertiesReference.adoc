@@ -1,6 +1,10 @@
 REST API Properties are read when ProActive Scheduler is started therefore you need to restart it
 to apply changes.
 
+The REST API documentation can be found at _SCHEDULER_URL/rest/doc_.
+
+TIP: The REST API documentation for our try platform is available at https://try.activeeon.com/rest/doc/
+
 The default configuration file is _SCHEDULER_HOME/web/settings.ini_.
 
 [source]
