@@ -268,15 +268,17 @@ especially if those are desktop machines where people perform their daily activi
 
 The ProActive Agent for Linux can be downloaded from ActiveEon's http://www.activeeon.com/community-downloads[website^].
 
-To install the ProActive Agent on Debian based distributions:
+To install the ProActive Agent on Debian based distributions (the archive name will vary depending on the version and architecture):
 
-    sudo dpkg -i proactive-agent-standalone.deb
+    sudo dpkg -i proactive-agent.deb
 
 TIP: Some extra dependencies might be required, to install them: `sudo apt-get -f install`
 
-To install the ProActive Agent on Redhat based distributions:
+To install the ProActive Agent on Redhat based distributions (the archive name will vary depending on the version and architecture):
 
-    sudo rpm -i proactive-agent-standalone.deb
+    sudo rpm -i proactive-agent.rpm
+
+TIP: Some extra dependencies might be required, to install them you need to install each dependency individually using `sudo yum install`
 
 By default the Linux Agent will launch locally as many nodes as the number of
 CPU cores available on the host minus one. The URL to use for connecting nodes
