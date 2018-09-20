@@ -1,8 +1,23 @@
 :docinfo:
+:toc:
+:toc-title: ML-OS User Guide
 = Machine Learning Open Studio
 include::../common-settings.adoc[]
-:toc-title: ML-OS User Guide
+:sectnums!:
+== All documentation links
+=== link:../user/ProActiveUserGuide.html[User Guide]
+ProActive Workflow & Scheduler (PWS) User Guide (Workflows, Tasks, Jobs Submission, Resource Management)
 
+=== link:../MLOS/MLOSUserGuide.html[ML Open Studio] 
+Machine Learning Open Studio (ML-OS) User Guide (ready to use palettes with ML Tasks & Workflows)
+
+=== link:../PCA/PCAUserGuide.html[Cloud Automation]
+ProActive Cloud Automation (PCA) User Guide (automate deployment and management of Services)
+
+=== link:../admin/ProActiveAdminGuide.html[Admin Guide]
+Administration Guide (Installation, networks, nodes, clusters, users, permissions)
+
+:sectnums:
 == Overview
 
 === What is Machine Learning Open Studio (ML-OS)?
@@ -120,29 +135,31 @@ For this example, we will use <<Linear_Regression>> Task and <<Support_Vector_Re
 
 A. Find the <<Linear_Regression>> Task and <<Support_Vector_Regression>> Task and drag them into the canvas.
 
-B. Find the <<Train_Model>> Task and drag it twice into the canvas.
+B. Find the <<Train_Model>> Task and drag it twice into the canvas and set its LABEL_COLUMN variable to LABEL.
 
 C. Connect the <<Split_Data>> Task to  the two <<Train_Model>> Tasks in order to give it access to the training data. Connect then the <<Linear_Regression>> Task to the first <<Train_Model>> Task and <<Support_Vector_Regression>> to the second <<Train_Model>> Task.
 
-D. To be able to download the model learned by each algorithm, drag two <<Import_Model>> Tasks and connect them to each <<Train_Model>> Task.
+D. To be able to download the model learned by each algorithm, drag two <<Download_Model>> Tasks and connect them to each <<Train_Model>> Task.
 
-image::train.gif[100000,2000]
+image::train_a_predictive_model.png[100000,2000]
 
 === Test the Predictive Model
 
 To evaluate the two learned predictive models, we will use the testing data that was separated out by the <<Split_Data>> Task to score our trained models. We can then compare the results of the two models to see which generated better results.
 
-A. Find the <<Predict_Model>> Task and drag and drop it twice into the canvas.
+A. Find the <<Predict_Model>> Task and drag and drop it twice into the canvas and set its LABEL_COLUMN variable to LABEL.
 
 B. Connect the first <<Predict_Model>> Task to the <<Train_Model>> Task that is connected to <<Support_Vector_Regression>> Task.
 
 C. Connect the second <<Predict_Model>> Task to the <<Train_Model>> Task that is connected to <<Linear_Regression>> Task.
 
-D. Find the <<Export_Results>> Task in the Machine Learning bucket and drag and drop it twice into the canvas.
+D. Connect the second <<Predict_Model>> Task to the <<Split_Data>> Task
 
-E. Connect each <<Export_Results>> Task with <<Predict_Model>>.
+E. Find the <<Preview_Results>> Task in the Machine Learning bucket and drag and drop it twice into the canvas.
 
-image::test.gif[100000,2000]
+F. Connect each <<Preview_Results>> Task with <<Predict_Model>>.
+
+image::test_the_predictive_model.png[100000,2000]
 
 NOTE: if you have a pickled file (.pkl) containing a predictive model that you have learned using another platform and you need to test it in the Machine Learning Open Studio, you can load it using *Import_Model* Task.
 
@@ -334,8 +351,9 @@ NOTE: Instead of training a model from scratch, you can use a pre-trained sentim
 
 *Fake_Celebrity_Faces_Generation:* generates a wild diversity of fake faces using a GAN model that was trained based on thousands of real celebrity photos. The pre-trained GAN model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/Epoch+018.pt[link^]
 
-*Image_Segmentation:* trains and predicts a segmentation model using SegNet network on http://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]
-NOTE: Instead of training a model from scratch, you can use a pre-trained image segmentation model which is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_segnet.zip[link^]
+*Image_Segmentation:* predicts a segmentation model using SegNet network on http://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]. The pre-trained image segmentation model which is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_segnet.zip[link^]
+
+*Object_Detection:* detects objects using a pre-trained https://pjreddie.com/media/files/papers/YOLOv3.pdf[YOLO v3 model^] on http://cocodataset.org/#home[COCO dataset^] proposed by Microsoft Research. The pre-trained model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/yolo3_coco.zip[link^].
 
 WARNING: It is recommended to use an enabled-GPU node to run the deep learning tasks.
 
@@ -345,6 +363,28 @@ WARNING: It is recommended to use an enabled-GPU node to run the deep learning t
 
 The `machine-learning` bucket contains diverse generic machine learning tasks that enable you to easily compose workflows for predictive models learning and testing. This bucket can be easily customized according to your needs.
 This bucket offers different options, you can customize it by adding new tasks or update the existing tasks.
+
+ALl the tasks included in this bucket have som common task variables that we describe in the table below.
+
+*Common Task Variables:*
+
+.Common_Machine_Learning_Tasks variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `Docker_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `Docker_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String (default="activeeon/dlm3"
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `LIMIT_OUTPUT_VIEW`
+|  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
+| Int (default=-1) (-1 means preview all the rows)
+|===
 
 ==== Public Datasets
 
@@ -427,9 +467,6 @@ NOTE: More information about this dataset can be found http://scikit-learn.org/s
 | `FILE_DELIMITER`
 | Delimiter to use.
 | String
-| `IS_LABELED_DATA`
-| True if your data have label data.
-| Boolean [True or False]
 |===
 
 NOTE: Your CSV file should be in a table format. See the example below.
@@ -497,55 +534,135 @@ image::pattern_file.png[align="center"]
 
 ==== Data Preprocessing
 
-===== Add_Data
+===== Drop_Columns
 
-*Task Overview:* Concatenate the newly added data to the original input data.
-
-*Task Variables:*
-
-.Add_Data_Task variables
-[cols="2,5,2"]
-|===
-| *Variable name* | *Description* | *Type*
-| `FILE_URL`
-| Put the URL of the data that you need to add.
-| String
-| `FILE_DELIMITER`
-| Delimiter to use.
-| String
-| `IS_LABELED_DATA`
-| TRUE if the data is labeled.
-| Boolean [True or False]
-| `IGNORE_INDEX`
-| False if you need to ignore the index of the input data.
-| Boolean [True or False]
-|===
-
-*How to use this task:* It should be used after <<Import_Data>> task.
-
-NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/merging.html[here^].
-
-===== Add_Label
-
-*Task Overview:* Add a new label column to the original input data.
+*Task Overview:* Drop the columns specified in `COLUMNS_NAME` variable.
 
 *Task Variables:*
 
-.Add_Label_Task variables
+.Drop_Columns_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `FILE_URL`
-| The URL of the file containing the labels that you need to concatenate.
-| String
-| `FILE_DELIMITER`
-|Delimiter to use.
+| `COLUMNS_NAME`
+| The list of columns that need to be dropped. Columns names should be separated by a comma.
 | String
 |===
 
-*How to use this task:* Could be used after <<Feature_Vector_Extractor>> and <<Import_Data>> tasks.
+NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.drop.html[here^].
 
-NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/merging.html[here^].
+===== Drop_NaNs
+
+*Task Overview:* Replace inf values to NaNs in a first place then drop objects on a given axis where alternately any or all of the data are missing.
+
+NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/version/0.21/generated/pandas.DataFrame.dropna.html[here^].
+
+===== Encode_Data
+
+*Task Overview:* Encode the values of the columns specified in `COLUMNS_NAME` variable with integer values between 0 and "the number of unique variables"-1.
+
+*Task Variables:*
+
+.Encode_Data_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `COLUMNS_NAME`
+| The list of columns that need to be encoded. Columns names should be separated by a comma.
+| String
+|===
+
+NOTE: More details about the source code of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html[here^].
+
+===== Fill_NaNs
+
+*Task Overview:* Fill NA/NaN values using the specified method.
+
+*Task Variables:*
+
+.Fill_NaNs_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `FILL_MAP`
+| Refers to the value to use to fill holes (e.g. 0).
+| Integer
+|===
+
+NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.fillna.html[here^].
+
+===== Filter_Columns
+
+*Task Overview:* Subset columns of a dataframe according to the specified list of coluumns in  the `COLUMNS_NAME` variable.
+
+*Task Variables:*
+
+.Filter_Columns_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `COLUMNS_NAME`
+| The list of columns to restrict to. Columns names should be separated by a comma.
+| String
+|===
+
+NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.filter.html[here^].
+
+===== Merge_Data
+
+*Task Overview:* Merge DataFrame objects by performing a database-style join operation based on a specific reference column specified in the `REF_COLUMN` variable.
+
+*Task Variables:*
+
+.Merge_Data_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `REF_COLUMN`
+| The list of columns to restrict to. Columns names should be separated by a comma.
+| String
+|===
+
+NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.merge.html[here^].
+
+===== Scale_Data
+
+*Task Overview:* Scale a dataset based on a robust scaler or standard scaler.
+
+*Task Variables:*
+
+.Scale_Data_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `SCALER_NAME`
+| The list of columns to restrict to. Columns names should be separated by a comma.
+| List [RobustScaler, StandardScaler] (default=RobustScaler)
+| `COLUMNS_NAME`
+| The list of columns that will be scaled. column names should be separated by a comma.
+| String
+|===
+
+NOTE: More details about the source code of this task can be found http://scikit-learn.org/stable/modules/preprocessing.html[here^].
+
+===== Split_Data
+
+*Task Overview:* Separate data into train and test subsets.
+
+*Task Variables:*
+
+.Split_Data_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `TRAIN_SIZE`
+| This parameter must be float within the range (0.0, 1.0), not including the values 0.0 and 1.0. *default* = 0.7
+| Float
+|===
+
+*How to use this task:* It should be used before Train and Predict tasks.
+
+NOTE: More details about the source code of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html[here^].
 
 ===== Filter_Data
 
@@ -567,110 +684,50 @@ NOTE: More details about the source code of this task can be found https://panda
 
 NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.query.html?highlight=query[here^].
 
-===== Split_Data
-
-*Task Overview:* Separate data into train and test subsets.
-
-*Task Variables:*
-
-.Split_Data_Task variables
-[cols="2,5,2"]
-|===
-| *Variable name* | *Description* | *Type*
-| `TRAIN_SIZE`
-| This parameter must be float within the range (0.0, 1.0), not including the values 0.0 and 1.0. *default* = 0.7
-| Float
-|===
-
-*How to use this task:* It should be used before Train and Predict tasks.
-
-NOTE: More details about the source code of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html[here^].
-
 ==== Feature Extraction
 
-===== Feature_Vector_Extractor
+===== Summarize_Data
 
-*Task Overview:* Encode *structured* data into numerical feature vectors whereby machine learning models can be applied.
-
-*Task Variables:*
-
-.Feature_Vector_Extractor_Task variables
-[cols="2,5,2"]
-|===
-| *Variable name* | *Description* | *Type*
-| `SESSION_COLUMN`
-| the ID of the entity that you need to represent (to group by).
-| String
-| `FILE_OUT_FEATURES`
-| The extension of the file where the resulted features will be saved.
-| String [CSV or HTML]
-| `PATTERN_COLUMN`
-| The index of column containing the log patterns.[specific to features extraction from logs]
-| String
-| `PATTERNS_COUNT_FEATURES`
-| True if you need to extract count the number of occurrence of each pattern per session.
-| Boolean [True or False]
-| `STATE_VARIABLES`
-| The different variables that need to be considered to extract features according to their content.
-
-N.B: separate the different variables with a comma ','
-| String
-| `COUNT_VARIABLES`
-| Refers to the different variables that need to be considered to count their distinct content.
-| String
-
-N.B: separate the different variables with a comma ','
-| `STATE_COUNT_FEATURES_VARIABLES`
-| True if you nedd to extract state and count features per session.
-| Boolean [True or False]
-|===
-
-*How to use this task:* Could be connected with <<Add_Label>> if you need to train a model using supervised learning algorithms or with <<Train_Clustering_Model>> if you need to train a model using unsupervised machine learning techniques.
-
-===== Time_Series_Feature_Extractor
-
-*Task Overview:* Extract features by considering the temporal distribution of data.
+*Task Overview:* Calculate the histogram of a dataframe based on a reference column that need to be specified in the variable `REF_COLUMN`.
 
 *Task Variables:*
 
-.Time_Series_Feature_Extractor_Task variables
+.Summarize_Data_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `SESSION_COLUMN`
-| The column name of the entity that you need to represent.
+| `GLOBAL_MODEL_TYPE`
+| The model that will be used to summarize data.
+| List [KMeans, PolynomialFeatures] (default=KMeans)
+| `REF_COLUMN`
+| The column that will be used to group by the different histogram measures.
 | String
-| `SLIDING_STEP`
-| The number of minutes to jump while navigating from a window to another one.
-| Integer (in Minutes)
-| `WINDOW_SIZE`
-| The window size in Minutes.
-| Integer (in Minutes)
-| `START_DATE_TIME`
-| The date starting from it the time series vectors representing each entity [Session] will be
-  extracted.
-| date
-| `PATTERN_COLUMN`
-| The column name containing the log patterns.[specific to features extraction from logs]
-| String
-| `PATTERNS_COUNT_FEATURES`
-| True if you need to extract count the number of occurrence of each pattern per session and window.
-| Boolean [True or False]
-| `STATE_VARIABLES`
-| The name of columns to use as features by counting the number of occurrence of their distinct
-  content per session and window.
-
-  N.B: separate the different variables with a comma ','
-| String
-| `STATE_COUNT_FEATURES_VARIABLES`
-| True if you need to extract state and count features that you already specified in *COUNT_VARIABLES*
-  and *STATE_VARIABLES*.
-
- N.B: separate the different variables with a comma ','
-| String [True of False]
 |===
 
-*How to use this task:* It should be connected with specific machine learning algorithms suitable to this representation.
+NOTE: More details about the source code of this task can be found https://docs.scipy.org/doc/numpy/reference/generated/numpy.histogram.html[here^].
+
+===== Tsfresh_Features_Extraction
+
+*Task Overview:* Calculate a comprehensive number of time series features based on the library TSFRESH.
+
+*Task Variables:*
+
+.Tsfresh_Features_Extraction_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `TIME_COLULN`
+| The column that contains the values of the time series
+| String
+| `REF_COLUMN`
+| The column that will be used to group by the different features.
+| String
+| `ALL_FEATURES`
+| False if you do not need to extract all the possible features extractable by the library TSFRESH.
+| Boolean [default = False]
+|===
+
+NOTE: More details about the source code of this task can be found https://tsfresh.readthedocs.io/en/latest/text/list_of_features.html[here^].
 
 ==== ML Anomaly Detection
 
@@ -979,19 +1036,23 @@ NOTE: It is recommended to use an enabled-GPU machine to run the deep learning t
 *Task Overview:* Load and return an image dataset.
 There are some simple rules for organizing your files and folders.
 
-. _Image Recognition Dataset:_ Each label must have its own folder which should contain its related images. For instance, to recognize if there are ants or bees in an image, you should organize your folders as follows:
-.. data
-... ants (RGB images file formats: .jpg, .png, etc)
-... bees (RGB images file formats: .jpg, .png, etc)
+. _Image Classification Dataset:_ Each class must have its own folder which should contain its related images. The Figure below shows how your folders and files should be organized.
+
+image::image_classification.png[400,400]
 
 NOTE: You can find an example of the organization of the folders at: https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/ants_vs_bees.zip
 
-. _Image Segmentation Dataset:_ Images and labels should be organized as follows:
-.. data
-... images (RGB images file formats: .jpg, .png, etc)
-... classes (RGB images file formats: .jpg, .png, etc)
+. _Image Segmentation Dataset:_ Two folders are required: the first folder should contain the RGB images in JPG format and another folder should contain its corresponding annotations in http://hostrobots.ox.ac.uk/pascal/VOC/voc2012/index.html[PASCAL VOC^] format. RGB images and annotations should be organized as follows:
+
+image::image_segmentation.png[550,500]
 
 NOTE: You can find an example of the organization of the folders at: https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/oxford.zip
+
+. _Object Detection Dataset:_ Two folders are demanded: the first folder should contain the RGB images in JPG format and another folder should contain its corresponding anotations in XML format using http://host.robots.ox.ac.uk/pascal/VOC/voc2012/index.html[PASCAL VOC^] format or TXT format using COCO format (http://cocodataset.org/#home). The RGB images and annotations should be organized as follows:
+
+image::object_detection.png[550,500]
+
+NOTE: In these links, you can find an example of the organization of the folders using https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/pascal_voc.zip[Pascal_VOC Dataset^] and https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/pascal_coco.zip[COCO Dataset^].
 
 *Task Variables:*
 
@@ -1146,7 +1207,7 @@ NOTE: Torchtext were used to preprocess and load the text input. More informatio
 | If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
 | `USE_PRETRAINED_MODEL`
-| Enter the type of your dataset. There are two possible types: classification or segmentation
+| Parameter to use a pre-trained model for training.  If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
 | Boolean (default=True)
 |===
 
@@ -1171,7 +1232,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 | If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
 | `USE_PRETRAINED_MODEL`
-| Enter the type of your dataset. There are two possible types: classification or segmentation
+| Parameter to use a pre-trained model for training.  If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
 | Boolean (default=True)
 |===
 
@@ -1194,7 +1255,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 | If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
 | `USE_PRETRAINED_MODEL`
-| Enter the type of your dataset. There are two possible types: classification or segmentation
+| Parameter to use a pre-trained model for training.  If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
 | Boolean (default=True)
 |===
 
@@ -1217,7 +1278,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 | If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
 | `USE_PRETRAINED_MODEL`
-| Enter the type of your dataset. There are two possible types: classification or segmentation
+| Parameter to use a pre-trained model for training.  If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
 | Boolean (default=True)
 |===
 
@@ -1242,6 +1303,9 @@ NOTE: Pytorch were used to build the model architecture based on https://github.
 | `IM_SIZE`
 | Insert  (width, height)  of the images as a tuple with 2 elements.
 | Integer (default=(64, 64))
+| `NUM_CLASSES`
+| Number of classes.
+| Integer (default=5)
 |===
 ===== SegNet
 *Task Overview:*  is a deep convolutional encoder-decoder architecture for robust semantic pixel-wise labelling.
@@ -1263,6 +1327,9 @@ NOTE: Pytorch were used to build the model architecture based on https://github.
 | `IM_SIZE`
 | Insert  (width, height)  of the images as a tuple with 2 elements.
 | Integer (default=(64, 64))
+| `NUM_CLASSES`
+| Number of classes.
+| Integer (default=5)
 |===
 ===== UNet
 *Task Overview:*  consists of a contracting path to capture context and a symmetric expanding path that enables precise localization.
@@ -1284,7 +1351,125 @@ NOTE: Pytorch were used to build the model architecture based on https://github.
 | `IM_SIZE`
 | Insert  (width, height)  of the images as a tuple with 2 elements.
 | Integer (default=(64, 64))
+| `NUM_CLASSES`
+| Number of classes.
+| Integer (default=5)
 |===
+
+==== Object Detection
+
+===== SSD
+
+*Task Overview:*  produces a fixed-size collection of bounding boxes and scores for the presence of object class instances in those boxes, followed by a non-maximum suppression step to produce the final detections. For more details click on this https://www.cs.unc.edu/~wliu/papers/ssd.pdf[link^]
+
+*How to use this task:* It should be connected to  <<Train_Object_Detection_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on https://github.com/amdegroot/ssd.pytorch[SSD^].
+
+.SSD_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `START_ITERATION`
+| Initial iteration.
+| Integer (default=0)
+| `MAX_ITERATION`
+| Maximum iteration.
+| Integer (default=5)
+| `LR_STEPS`
+| Learning steps update for SGD (Stochastic Gradient Descent).
+| Integer (default=5)
+| `LR_FACTOR`
+| Learning rate update for SGD.
+| Float (default= 1e-3) Range in [0, 1].
+| `GAMMA`
+| Gamma update for SGD.
+| Float (default=0.1) Range in [0, 1].
+| `MIN_SIZES`
+| Minimum object size for detection by specifying numerical values or reference areas on screen. Objects smaller than that are ignored.
+| Integer (default= [30, 60, 111, 162, 213, 264])
+| `MAX_SIZES`
+| Maximum object size for detection by specifying numerical values or reference areas on screen. Objects larger than that are ignored.
+| Integer (default= [60, 111, 162, 213, 264, 315])
+| `LEARNING_RATE`
+| Initial learning rate.
+| Float (default= 1e-8) Range in [0, 1].
+| `MOMENTUM`
+| Momentum value for optimization.
+| Float (default=0.9) Range in [0, 1].
+| `WEIGHT_DECAY`
+| Weight decay for SGD
+| Float (default= 5e-4) Range in [0, 1].
+| `IMG_SIZE`
+| Insert (width, height) of the images as a tuple with 2 elements.
+| Integer (default=(300, 300))
+| `NUM_CLASSES`
+| Number of classes.
+| Integer (default=21)
+| `LABEL_PATH`
+| The URL of the file containing the class names of the dataset.
+| String (default=(https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/voc.names))
+| `USE_PRETRAINED_MODEL`
+| Parameter to use pre-trained model for training. If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
+| Boolean (default=True)
+|===
+
+NOTE: The default parameters of the SSD network were set for the PASCAL VOC dataset (http://host.robots.ox.ac.uk/pascal/VOC/voc2012/). If you'd like to use another dataset, you probably need to change the default parameters.
+
+===== YOLO
+
+*Task Overview:* You only look once (YOLO) is a  single neural network to predict bounding boxes and class probabilities. For more details click on this https://pjreddie.com/media/files/papers/YOLOv3.pdf[link^]
+
+*How to use this task:* It should be connected to  <<Train_Object_Detection_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on https://github.com/eriklindernoren/PyTorch-YOLOv3[YOLO^].
+
+.YOLO_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `LEARNING_RATE`
+| Initial learning rate
+| Float  (default= 0.0005) Range in [0, 1].
+| `MOMENTUM`
+| Momentum value for optimization.
+| Float (default=0.9) Range in [0, 1].
+| `WEIGHT_DECAY`
+| Weight decay for SGD
+| Float (default= 5e-4) Range in [0, 1].
+| `IMG_SIZE`
+| Insert (width, height) of the images as a tuple with 2 elements.
+| Integer (default=(414, 416))
+| `NUM_CLASSES`
+| Number of classes.
+| Integer (default=81)
+| `CONF_THRESHOLD`
+| This parameter shows how certain it is that the predicted bounding box actually encloses some object. This score doesn’t say anything about what kind of object is in the box, just if the shape of the box is any good.
+| Float (default=0.5) Range in [0, 1].
+| `NMS_THRESHOLD`
+| This parameter will select only the most accurate (highest probability) one of the boxes.
+| Float (default=0.45) Range in [0, 1].
+| `LABEL_PATH`
+| The URL of the file containing the class names of the dataset.
+| String (default=(https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/coco.names))
+| `USE_PRETRAINED_MODEL`
+| Parameter to use pre-trained model for training. If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
+| Boolean (default=True)
+|===
+
+NOTE: The default parameters of the YOLO network were set for the COCO dataset (http://cocodataset.org/#home). If you'd like to use another dataset, you probably need to change the default parameters.
 
 ==== Text Classification
 
@@ -1379,7 +1564,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 
 *Task Variables:*
 
-.Train_Image_Model variables
+.Train_Image_Classification_Model variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -1408,7 +1593,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 
 *Task Variables:*
 
-.Train_Image_Model variables
+.Train_Image_Segmentation_Model variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -1421,9 +1606,6 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 | `NUM_WORKERS`
 | Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
 | Integer (default=2)
-| `NUM_CLASSES`
-| Number of classes.
-| Integer
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
@@ -1441,7 +1623,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 
 *Task Variables:*
 
-.Train_Text_Model variables
+.Train_Text_Classification_Model variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -1470,13 +1652,42 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 
 *How to use this task:* Could be connected to <<Predict_Text_Classification_Model>> and <<Export_Model>> tasks.
 
+===== Train_Object_Detection_Model
+
+*Task Overview:* Train a model using an object detection algorithm.
+
+*Task Variables:*
+
+.Train_Object_Detection_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `NUM_EPOCHS`
+| Number of times all of the training vectors are used once to update the weights.
+| Integer (default=1)
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=4)
+| `NUM_WORKERS`
+| Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+| Integer (default=2)
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+|===
+
+
+
 ==== Predict
 
 ===== Predict_Image_Classification_Model
 
 *Task Overview:* Generate predictions using a trained model.
 
-.Predict_Text_Model variables
+.Predict_Image_Classification_Model variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -1500,7 +1711,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 
 *Task Overview:* Generate predictions using a trained segmentation model.
 
-.Predict_Text_Model variables
+.Predict_Image_Segmentation_Model variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -1540,6 +1751,31 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 |===
 
 *How to use this task:* It should be used after the <<Train_Text_Classification_Model>> or <<Export_Model>> Task.
+
+===== Predict_Object_Detection_Model
+
+*Task Overview:* Generate predictions using a trained object detection model.
+
+.Predict_Object_Detection_Model Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=4)
+| `NUM_WORKERS`
+| Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+| Integer (default=2)
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+|===
+
+*How to use this task:* It should be used after the <<Predict_Object_Detection_Model>> or <<Export_Model>> Task.
+
 
 === Data Visualization Bucket
 *Visdom Bucket* integrates generic tasks that can be easily used to broadcast visualizations of the analytic results provided by ML tasks. These visualization are created, organized, and shared using https://github.com/facebookresearch/visdom[Visdom^], a flexible tool proposed by Facebook Research.

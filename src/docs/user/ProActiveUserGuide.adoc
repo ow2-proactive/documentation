@@ -1,8 +1,23 @@
 :docinfo:
+:toc: 
+:toc-title: PWS User Guide
 = ProActive Workflows & Scheduling -- User Guide
 include::../common-settings.adoc[]
-:toc-title: User Guide
+:sectnums!:
+== All documentation links
+=== link:../user/ProActiveUserGuide.html[User Guide]
+ProActive Workflow & Scheduler (PWS) User Guide (Workflows, Tasks, Jobs Submission, Resource Management)
 
+=== link:../MLOS/MLOSUserGuide.html[ML Open Studio] 
+Machine Learning Open Studio (ML-OS) User Guide (ready to use palettes with ML Tasks & Workflows)
+
+=== link:../PCA/PCAUserGuide.html[Cloud Automation]
+ProActive Cloud Automation (PCA) User Guide (automate deployment and management of Services)
+
+=== link:../admin/ProActiveAdminGuide.html[Admin Guide]
+Administration Guide (Installation, networks, nodes, clusters, users, permissions)
+
+:sectnums:
 == Overview
 
 include::../Overview.adoc[]
@@ -1237,16 +1252,6 @@ Add a "NOTIFICATION_EVENTS" Generic information, to list events on which a user 
 
 Scheduler can send email to the users when one of the above events is received.
 
-To enable this functionality, the following properties should be set in `config/scheduler/setting.ini`:
-
-[source, groovy]
-----
-pa.scheduler.notifications.email.enabled = true
-pa.scheduler.notifications.email.from = username@example.com
-----
-
-To configure the email sender on Scheduler, the configuration file `config/scheduler/emailnotification.properties` should be filled in.
-
 Notifications will only be sent for jobs whose generic information contains user's email address under the "EMAIL" key. Example:
 
 [source, xml]
@@ -1256,6 +1261,9 @@ Notifications will only be sent for jobs whose generic information contains user
     <info name="NOTIFICATION_EVENTS" value="Job paused, Job resumed"/>
 </genericInformation>
 ----
+
+To enable this functionality, the configuration need to be done following the steps introduced in
+link:../admin/ProActiveAdminGuide.html#_get_notification_on_job_events_configuration[Get Notification on Job Events Configuration].
 
 === Chaining Jobs
 
@@ -1973,6 +1981,50 @@ Task Synchronization API can be used for multiple dynamic synchronization patter
  * *Producer / Consumer*
 
 A complete example of Producer / Consumer, _ServiceDeployerConsumer_ can be downloaded link:examples/ServiceDeployerConsumer.xml[here].
+
+== Scheduling policies
+
+See link:../admin/ProActiveAdminGuide.html#_scheduling_policies[Admin Guide] to congifure scheduling policies.
+
+=== Earliest deadline first (EDF) policy
+
+Scheduler has `Earliest deadline first policy` (EDF policy) that prioritizes jobs with deadlines.
+Overall, the general principal is the following: a job that needs to be started as soon as possible to meet its deadline
+taking into account its execution time has higher priority.
+
+The EDF policy considers two Generic Information items: `JOB_DDL` and `JOB_EXEC_TIME`.
+
+`JOB_DDL` represents job deadline. Job deadline can be set in one of the following format:
+
+1. absolute format: `YYYY-MM-dd`T`HH:mm:ss+ZZ`, e.g. `2018-08-14T08:40:30+02:00`
+
+2. relative (to the submission time) format: `+HH:mm:ss` , e.g. `+5:30:00`, or `+mm:ss`, e.g. `+4:30`, or `+ss`, e.g. `+45` (45 seconds)
+
+If job deadline is absolute then its value equals to `JOB_DDL`.
+
+If job deadline is relative then its value equals to `submission time` + `JOB_DDL`.
+
+`JOB_EXEC_TIME` represents job expected execution time in the following format: `HH:mm:ss` , e.g. `12:30:00`, `5:30:00`,
+or `mm:ss`, e.g. `4:30`, or `ss`, e.g. `45` (45 seconds).
+
+EDF policy orders jobs by applying the rules below.
+The rule considers jobs at submission time when they are still pending, and orders them by priority.
+
+
+Thus EDF policy applies these rules (in the given order) until one rule actually applies.
+Here is the ordered list of rules for the EDF policy:
+
+1. compare job's intrinsic priority (HIGHEST, HIGH, NORMAL, LOW, LOWEST)
+
+2. job with deadline has priority over job without deadline
+
+3. job that is already started has priority over job that has not yet started
+
+4. job that started earlier has priority over job that was started later
+
+5. job with the earliest `JOB_DDL` minus `JOB_EXEC_TIME` has a priority
+
+6. job with earliest submission time.
 
 == Data Connectors
 

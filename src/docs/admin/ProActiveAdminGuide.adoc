@@ -1,9 +1,23 @@
 :docinfo:
-
+:toc: 
+:toc-title: PWS Admin Guide
 = ProActive Workflows & Scheduling -- Admin Guide
 include::../common-settings.adoc[]
-:toc-title: Administration Guide
+:sectnums!:
+== All documentation links
+=== link:../user/ProActiveUserGuide.html[User Guide]
+ProActive Workflow & Scheduler (PWS) User Guide (Workflows, Tasks, Jobs Submission, Resource Management)
 
+=== link:../MLOS/MLOSUserGuide.html[ML Open Studio] 
+Machine Learning Open Studio (ML-OS) User Guide (ready to use palettes with ML Tasks & Workflows)
+
+=== link:../PCA/PCAUserGuide.html[Cloud Automation]
+ProActive Cloud Automation (PCA) User Guide (automate deployment and management of Services)
+
+=== link:../admin/ProActiveAdminGuide.html[Admin Guide]
+Administration Guide (Installation, networks, nodes, clusters, users, permissions)
+
+:sectnums:
 == Overview
 
 include::../Overview.adoc[]
@@ -65,10 +79,28 @@ The URLs of the Scheduler, Resource Manager, REST API and Web Interfaces are dis
 
 Your ProActive Scheduler is ready to execute <<_glossary_job,*Jobs*>>!
 
+=== Minimum requirements
+
+The minimum requirements can be found in the Data Sheet. Please find an up to date Data Sheet in the in the link:https://www.activeeon.com/about/resources[resources].
 
 == ProActive Scheduler configuration
 
 All configuration files of ProActive Scheduler can be found under `PROACTIVE_HOME`.
+
+=== Java Virtual Machine configuration
+
+Various command-line tools shipped with ProActive (bin/proactive-server, bin/proactive-node) start a Java Virtual Machine.
+The parameters of the JVM can be modified by editing DEFAULT_JVM_OPTS= in the corresponding script both in Linux and Windows.
+
+For example, to set the maximum heap capacity on the JVM to 6GB in Linux:
+
+Change the line
+`DEFAULT_JVM_OPTS='"-server" "-Dfile.encoding=UTF-8" "-Xms4g"'`
+
+into
+
+`DEFAULT_JVM_OPTS='"-server" "-Dfile.encoding=UTF-8" "-Xms4g" "-Xmx6g"'`
+
 
 === General configuration
 
@@ -454,6 +486,60 @@ The main troubles you may have to face are the following ones:
 * You get an *authentication error*: this is probably due to your default credentials file which cannot be found. In the "Connection" tab of the Configuration Editor (Figure 5.4, “Configuration Editor window - Connection Tab (Resource Manager Registration)”), you can choose the credentials file you want. You can select, for instance, the credentials file located at PROACTIVE_HOME/config/authentication/scheduler.cred or your own credentials file.
 * The node seems to be well started but you cannot see it in the Resource Manager interface : in this case, make sure that the *port number* is the good one. Do not forget that the runtime port number is incremented from the initial ProActive Resource Manager port number. You can see exactly on which port your runtime has been started looking at the log file described above.
 
+==== Automate Windows Agent Installation
+
+The automated installation can be run through a command line (cmd.exe) with administrator priviledge.
+This can be useful to trigger installation. In order to launch the silent installation, the /S option must be passed in the command line to the ProActive Windows Agent installer.
+Several options are required, such as the user and password.
+
+Here is an example of automated installation command:
+
+```
+ProactiveAgent-8.3.0-standalone-x64-setup.exe /S /USER=proactive /PASSWORD=proactive
+```
+
+Optionally you can add a domain name.
+
+```
+ProactiveAgent-8.3.0-standalone-x64-setup.exe /S /USER=proactive /PASSWORD=proactive /DOMAIN=mydomain
+```
+
+You can also activate compatibility mode from the command line if you have any problems:
+
+```
+set __COMPAT_LAYER=WINXPSP3
+ProactiveAgent-8.3.0-standalone-x64-setup.exe /S /USER=proactive /PASSWORD=proactive
+```
+
+
+Here is the full list of command line options which can be passed to the installer:
+
+
+
+[cols=2*]
+|===
+
+|`/S` | Run silently without graphical interface, uninstall any previous installation.
+
+|`/UN` | Run the uninstall only.
+
+|`/ALLOW` | Allow all users to control the service.
+
+|`/USER=user` | Associate `user` account to manage proactive agent service, create user if it does not exist.
+
+|`/PASSWORD=pass` | Define password for the proactive agent `user`.
+
+|`/DOMAIN=dom` | Specify `dom` as the windows domain, by default domain will be set to the machine host name.
+
+|`/LOG_DIR=path` | Define `path` where the agent log files, default is `$PROGRAMFILES\ProActiveAgent\logs`.
+
+|`/CONFIG_DIR=path` | Define `path` where the configuration files are stored, default is `$PROGRAMFILES\ProActiveAgent\config`.
+
+|`/USE_ACC` | Use current user's account home as `/CONFIG_DIR` and `/LOG_DIR`.
+
+|===
+
+
 
 ==== Configuring Linux Or Windows Agents For Auto-Update
 
@@ -782,7 +868,7 @@ root@osboxes:/tmp/activeeon_enterprise-node-linux-x64-8.1.0-SNAPSHOT/logs# qstat
 
 Job ID                    Name             User            Time Use S Queue
 ------------------------- ---------------- --------------- -------- - -----
-241.osboxes                STDIN            osboxes                0 R batch          
+241.osboxes                STDIN            osboxes                0 R batch
 
 root@osboxes:/tmp/activeeon_enterprise-node-linux-x64-8.1.0-SNAPSHOT/logs# qstat -f 241
 
@@ -944,7 +1030,7 @@ See <<_pamr_protocol_properties>> reference for a detailed explanation of each p
 === Policies
 
 You can limit the utilization of resources connected to the ProActive Scheduler in different ways. When you create node
-sources you can use a node source *policy*. A node source policy is a set of rules and conditions which describes when and how many nodes have to be selected for computations. 
+sources you can use a node source *policy*. A node source policy is a set of rules and conditions which describes when and how many nodes have to be selected for computations.
 
 NOTE: Node source policy are enforced for *non-admin* users *only*, and will have no effect for a user granted with the administrator privileges.
 
@@ -1679,7 +1765,7 @@ When HTTPS is set up, you can automatically redirect any HTTP request from
 users to the secured version of the protocol to make sure exchanged information
 is protected. It requires to enable `web.redirect_http_to_https`.
 
-Unlike other web applications, the Scheduler, the Resource Manager and the studio web portals together with the 
+Unlike other web applications, the Scheduler, the Resource Manager and the studio web portals together with the
 Proactive cloud watch, Cloud automation service, Job planner and Notification service
 require manual configuration based on your HTTPS settings. The configuration
 files to edit are respectively in
@@ -1861,7 +1947,7 @@ More over, the native Python Script Engine depends on the py4j library in order 
 
 Further information can be found https://www.py4j.org/install.html[in the official py4j documentation^].
 
-
+[[_scheduling_policies]]
 == Extending ProActive Scheduling Policy
 
 In order to decide which pending Tasks are executed, the ProActive Scheduler uses a <<_glossary_scheduling_policy,*Scheduling Policy*>>.
@@ -1870,7 +1956,25 @@ This policy allows, for example, to execute task in a First-In-First-Out order o
 
 The default Scheduling Policy can be extended to perfectly fit with an organization scheduling constraints.
 
+Moreover, policy can be changed dynamically throught Java API `org.ow2.proactive.scheduler.common.Scheduler::changePolicy(String policyClassName)`.
+
 In the following example, we show how a different policy can be used to control Task Scheduling.
+
+
+=== Earliest deadline first (EDF) policy
+
+To use the earliest deadline first (EDF) policy,  edit the file `PROACTIVE_HOME/config/scheduler/settings.ini` and change the following line:
+
+----
+pa.scheduler.policy=org.ow2.proactive.scheduler.policy.ExtendedSchedulerPolicy
+----
+
+to:
+
+----
+pa.scheduler.policy=org.ow2.proactive.scheduler.policy.edf.EDFPolicyExtended
+----
+
 
 === License Policy Example
 
@@ -1906,10 +2010,23 @@ As expected, if 10 replicated tasks requiring software_A,software_B licenses are
 
 == Addons
 
+=== Get Notification on Job Events Configuration
+
+In order to enable this functionality the following properties should be set in `config/scheduler/setting.ini`:
+
+[source, groovy]
+----
+pa.scheduler.notifications.email.enabled = true
+pa.scheduler.notifications.email.from = username@example.com
+----
+
+To configure the email sender on Scheduler, the configuration file `config/scheduler/emailnotification.properties` should be filled in, please refer to
+link:../admin/ProActiveAdminGuide.html#_smtp_configuration_examples[SMTP configuration examples] for examples.
+
 === Email notification
 
-The email notification addons includes an utility Java class but also a Groovy 
-task (accessible from the Studio Web app) that allow to send an email 
+The email notification addons includes an utility Java class but also a Groovy
+task (accessible from the Studio Web app) that allow to send an email
 from a ProActive Workflow.
 
 The task assumes that configuration for connecting to an SMTP server is done using
