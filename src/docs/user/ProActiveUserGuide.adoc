@@ -2034,7 +2034,7 @@ EDF policy sends 3 types of email notifications:
 
 1. (Arriving soon) When job deadline is at risk (if the job is not started in the next X minutes, its deadline will be missed)
 
-2. When job most likely will miss its deadline (we already at the moment that job will miss its dealine, if `JOB_EXEC_TIME` is precise)
+2. When job will likely miss its deadline (i.e if the provided `JOB_EXEC_TIME` exceeds the left time until the deadline)
 
 3. (Arriving soon) When job is already missed its deadline.
 
