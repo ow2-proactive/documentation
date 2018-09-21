@@ -2028,6 +2028,21 @@ Here is the ordered list of rules for the EDF policy:
 
 6. job with earliest submission time.
 
+==== Email notificaions
+
+EDF policy sends 3 types of email notifications, when:
+
+1. [UNDER CONSTRUCTION] job deadline is at risk (if we do not start job in next X minutes we will miss its deadline)
+
+2. job most likely will miss its deadline (we already at the moment that job will miss its dealine, if `JOB_EXEC_TIME` is precise)
+
+3. [UNDER CONSTRUCTION] job is already missed its deadline.
+
+Policy sends emails to the address specified in `EMAIL` Generic Information of the job.
+
+To enable email notifications see link:../admin/ProActiveAdminGuide.html#_get_notifications[Admin Guide].
+
+
 == Data Connectors
 
 include::./references/DataConnectors.adoc[]

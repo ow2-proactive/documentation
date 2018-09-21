@@ -2012,6 +2012,7 @@ As expected, if 10 replicated tasks requiring software_A,software_B licenses are
 
 == Addons
 
+[[_get_notifications]]
 === Get Notification on Job Events Configuration
 
 In order to enable this functionality the following properties should be set in `config/scheduler/setting.ini`:
