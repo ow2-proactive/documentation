@@ -2030,13 +2030,13 @@ Here is the ordered list of rules for the EDF policy:
 
 ==== Email notificaions
 
-EDF policy sends 3 types of email notifications, when:
+EDF policy sends 3 types of email notifications:
 
-1. [UNDER CONSTRUCTION] job deadline is at risk (if we do not start job in next X minutes we will miss its deadline)
+1. [UNDER CONSTRUCTION] when job deadline is at risk (if we do not start job in next X minutes we will miss its deadline)
 
-2. job most likely will miss its deadline (we already at the moment that job will miss its dealine, if `JOB_EXEC_TIME` is precise)
+2. when job most likely will miss its deadline (we already at the moment that job will miss its dealine, if `JOB_EXEC_TIME` is precise)
 
-3. [UNDER CONSTRUCTION] job is already missed its deadline.
+3. [UNDER CONSTRUCTION] when job is already missed its deadline.
 
 Policy sends emails to the address specified in `EMAIL` Generic Information of the job.
 
