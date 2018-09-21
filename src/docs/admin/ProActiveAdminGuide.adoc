@@ -1536,7 +1536,12 @@ The file `PROACTIVE_HOME/config/security.java.policy-server` allows to configure
 
 * Deploy ProActive Nodes
 * Execute jobs
-* Pause the Scheduler
+* Perform administrator actions from the scheduler portal like:
+** Start the scheduler: Jobs can be submitted. Getting the jobs results is possible.
+** Stop the scheduler: Jobs cannot be submitted anymore. This terminates every submitted jobs. Getting the jobs results is possible.
+** Freeze the scheduler: Every running tasks are terminated, but the pending jobs wait for the scheduler to resume.
+** Pause the scheduler: Every running jobs are terminated.
+** Kill the scheduler: Nothing can be done.
 * etc
 
 == Monitor the cluster state
