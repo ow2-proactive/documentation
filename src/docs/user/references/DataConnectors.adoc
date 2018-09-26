@@ -613,7 +613,7 @@ The Azure Blob Storage connector allows to upload and download unstructured data
 
 *Variables:*
 
-.Amazon S3 Connector variables
+.Azure Blob Storage Connector variables
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Scope* | *Required?* | *Type*  | *Default/Examples*
