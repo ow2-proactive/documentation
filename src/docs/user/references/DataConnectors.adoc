@@ -470,7 +470,7 @@ In the import mode, the output containing the imported data takes the form of a 
 
 === Cloud
 
-Cloud data connectors allow to interact with cloud storage services. Currently we provide support for Amazon S3, Azure Storage and Azure Data Lake.
+Cloud data connectors allow to interact with cloud storage services. Currently we provide support for Amazon S3, Azure Blob Storage and Azure Data Lake.
 
 ==== Amazon S3
 
@@ -602,6 +602,52 @@ You have two options for providing your login credentials:
 * Once downloaded, the output file will be stored in your *User Space* (and _not_ in the Global Space).
 * You can visualize a table-like version of your output data in the _Preview_ tab of the Display_result task.
 ====
+
+==== Azure Blob Storage
+
+
+The Azure Blob Storage connector allows to upload and download unstructured data (documents, videos, photos, audio files, presentations, web pages ...) from Azure Blob Storage. The connector workflow consists of two tasks:
+
+* Import_from_azure_blob: Downloads blob(s) from Azure Blob Storage to the global space. Note that a virtual folder structure is possible in Azure Blob Storage. In that case, blobs are locally downloaded respecting this structure.
+* Export_to_azure_blob: Uploads file(s) or directories recursively from the global space to Azure Blob Storage.
+
+*Variables:*
+
+.Amazon S3 Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?* | *Type*  | *Default/Examples*
+| `INPUT_PATH`
+| Relative path to a directory in the data space to which the downloaded blob(s) will be saved in. INPUT_PATH can contain either a path to a file, a directory terminated by / or an empty value for the root.
+| Import Task
+| No
+| String
+| e.g. `path/to/input/file.file`
+
+or `path/to/input/folder/`
+
+| `BLOB_NAME`
+| A valid blob name to an existing blob object in the import mode. If the value is empty, we import the entire container. For the export, it corresponds to either to the uploaded object name or to the root folder in the virtual structure.
+| Import Task, Export Task
+| No
+| String
+| e.g. `doc.txt`
+
+or `images/logo.jpg`
+
+or `folder`
+| `CONTAINER_NAME`
+| Azure storage container name. For the export mode, if it does not exist, a new container will be created (if possible).
+| Import Task, Export Task
+| Yes
+| String
+| e.g. `azure-storage-container`
+|===
+
+*How to use these tasks:*
+
+Azure Blob Storage connector tasks require your Azure Storage credential keys (`STORAGE_ACCOUNT`, `ACCOUNT_KEY`) to be set as third-party credentials (`key:value` pairs); this is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+
 
 === ERP
 
