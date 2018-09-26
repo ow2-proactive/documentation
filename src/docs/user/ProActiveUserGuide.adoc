@@ -211,8 +211,11 @@ Scripts can also be used to decorate tasks with specific actions, we support
 <<_pre_post_clean,pre>>, <<_pre_post_clean,post>>, <<_pre_post_clean,clean>> and <<_selection,selection>> scripts.
 
 ==== Python Script Engine
+We support both Jython and Python Script Engines. Jython is an implementation of the Python programming language designed to run on the Java platform, Jython programs use Java classes instead of Python modules.
+The advantage of using our Jython Script Engine is that you do not need to do any installation. It includes some modules in the standard Python programming language distribution, but lacking the modules implemented originally in C.
+Besides, the libraries such as numpy, matplotlib, pandas, etc. are not supported by Jython. And the libraries which depends on numpy such as TensorFlow, PyTorch and Keras etc. are not supported neither.
 
-You can drag and drop a 'Python_Task' template from the 'Tasks' menu in order to use Python Script Engine. You can also personalize the Python version that you want to use.
+In order to support native Python, we provide also a Python Script Engine. To use the Python Script Engine, the 'Language' field should be put to 'cpython'. By using Python Script Engine, you can personalize the Python version that you want to use.
 Since there are many different versions of Python (mainly Python2 and Python3) which are not compatible, ProActive supports all the Python versions (Python2, Python3, etc).
 By default, the Python used to execute the Script is the default Python version on your machine. In order to use another Python version to execute
 the task, it is required to put a key 'PYTHON_COMMAND' in Generic Info, and its value is the path (symbolic or absolute, for example 'python3' or
@@ -221,6 +224,32 @@ it is put in the job level this version of Python will be used for all the tasks
 and the corresponding py4j module as well. Please refer to
 link:../admin/ProActiveAdminGuide.html#_python_script_engine_python_task[Python Script Engine (Python task)] for the introduction about the installation of Python Script Engine.
 
+Here is an workflow example (in xml format) about a simple Python task:
+
+[source, xml]
+----
+  <taskFlow>
+    <task name="Python_Task" >
+      <description>
+        <![CDATA[ The simplest task, ran by a python engine. ]]>
+      </description>
+      <genericInformation>
+        <info name="PYTHON_COMMAND" value="python3"/>
+      </genericInformation>
+      <scriptExecutable>
+        <script>
+          <code language="cpython">
+            <![CDATA[
+import platform
+print("The current version of python you are using is: " + platform.python_version())
+print("Hello World")
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+  </taskFlow>
+----
 
 === MPI application
 
