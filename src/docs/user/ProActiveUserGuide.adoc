@@ -211,13 +211,48 @@ Scripts can also be used to decorate tasks with specific actions, we support
 <<_pre_post_clean,pre>>, <<_pre_post_clean,post>>, <<_pre_post_clean,clean>> and <<_selection,selection>> scripts.
 
 ==== Python Script Engine
+We support both Jython and Python Script Engines. Jython is an implementation of the Python programming language designed to run on the Java platform, Jython programs use Java classes instead of Python modules.
+The advantage of using our Jython Script Engine is that you do not need to do any installation. It includes some modules in the standard Python programming language distribution, but lacking the modules implemented originally in C.
+Besides, the libraries such as numpy, matplotlib, pandas, etc. are not supported by Jython. And the libraries which depends on numpy such as TensorFlow, PyTorch and Keras etc. are not supported neither.
 
+In order to support native Python, we provide also a Python Script Engine. To use the Python Script Engine, the 'Language' field should be put to 'cpython'. By using Python Script Engine, you can personalize the Python version that you want to use.
 Since there are many different versions of Python (mainly Python2 and Python3) which are not compatible, ProActive supports all the Python versions (Python2, Python3, etc).
-By default, the Python used to execute the Script is the default Python version on your machine. In order to use another Python version to execute
-the task, it is required to put a key 'PYTHON_COMMAND' in Generic Info, and its value is the path (symbolic or absolute, for example 'python3' or
-/usr/local/opt/python3/bin/python3.6) to the python executable that you want to use. If the Generic Info is put at task level this version of Python will be only used for this task, if
-it is put in the job level this version of Python will be used for all the tasks in this job. Of course the required Python needs to be installed on your machine,
-and the corresponding py4j module as well.
+By default, the Python used to execute the script is the default Python version on your machine. In order to use another Python version to execute
+the task, it is required to add a 'PYTHON_COMMAND' link:../user/ProActiveUserGuide.html#_glossary_generic_information[Generic Information]. Its value should contain the symbolic or absolute path to the desired python command to run (for example 'python3' or '/usr/local/opt/python3/bin/python3.6'). If the link:../user/ProActiveUserGuide.html#_glossary_generic_information[Generic Information] is put at task level this version of Python will be only used for this task, if
+it is put in the job level this version of Python will be used for all the tasks in this job.
+
+For every tasks which use the native python script engine:
+
+- Python must be installed on the ProActive Node which will be used to execute the task.
+- The py4j module must be installed. Please refer to
+link:../admin/ProActiveAdminGuide.html#_python_script_engine_python_task[Python Script Engine (Python task)] for the introduction about the installation of Python Script Engine.
+
+Here is a workflow example (in xml format) about a simple Python task:
+
+[source, xml]
+----
+  <taskFlow>
+    <task name="Python_Task" >
+      <description>
+        <![CDATA[ The simplest task, ran by a python engine. ]]>
+      </description>
+      <genericInformation>
+        <info name="PYTHON_COMMAND" value="python3"/>
+      </genericInformation>
+      <scriptExecutable>
+        <script>
+          <code language="cpython">
+            <![CDATA[
+import platform
+print("The current version of python you are using is: " + platform.python_version())
+print("Hello World")
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+  </taskFlow>
+----
 
 === MPI application
 
