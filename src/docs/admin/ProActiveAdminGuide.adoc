@@ -85,6 +85,17 @@ Your ProActive Scheduler is ready to execute <<_glossary_job,*Jobs*>>!
 
 The minimum requirements can be found in the Data Sheet. Please find an up to date Data Sheet in the in the link:https://www.activeeon.com/about/resources[resources].
 
+=== Scheduler Life-Cycle Management
+
+Under the Admin menu from the scheduler portal, the following administrator actions are proposed :
+
+* Start the scheduler: Jobs can be submitted. Getting the jobs results is possible. The scheduler can be stopped, frozen, paused or killed.
+* Stop the scheduler: Jobs cannot be submitted anymore. This terminates every submitted jobs. Getting the jobs results is possible. The scheduler can be started or killed.
+* Freeze the scheduler: Every running tasks run to completion, but the running jobs wait for the scheduler to resume. The scheduler can be stopped, resumed or killed.
+* Resume the scheduler: If the scheduler is Paused or Frozen.
+* Pause the scheduler: Every running jobs run to completion. The scheduler can be stopped, resumed or killed.
+* Kill the scheduler: Similar to Ctrl-C. No interation can be done anymore.
+
 == ProActive Scheduler configuration
 
 All configuration files of ProActive Scheduler can be found under `PROACTIVE_HOME`.
@@ -1536,12 +1547,7 @@ The file `PROACTIVE_HOME/config/security.java.policy-server` allows to configure
 
 * Deploy ProActive Nodes
 * Execute jobs
-* Perform administrator actions from the scheduler portal like:
-** Start the scheduler: Jobs can be submitted. Getting the jobs results is possible.
-** Stop the scheduler: Jobs cannot be submitted anymore. This terminates every submitted jobs. Getting the jobs results is possible.
-** Freeze the scheduler: Every running tasks are terminated, but the pending jobs wait for the scheduler to resume.
-** Pause the scheduler: Every running jobs are terminated.
-** Kill the scheduler: Nothing can be done.
+* Pause the Scheduler
 * etc
 
 == Monitor the cluster state
