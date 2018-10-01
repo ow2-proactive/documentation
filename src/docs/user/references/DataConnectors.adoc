@@ -528,7 +528,7 @@ or `path/to/input/file/or/folder`
 
 *How to use these tasks:*
 
-Amazon S3 connector tasks require your AWS credential keys (`S3_ACCESS_KEY`, `S3_SECRET_KEY`) to be set as third-party credentials (`key:value` pairs); this is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+Amazon S3 connector tasks require your AWS credential keys to be set as a third-party credential (`key:value` pairs) where {key: ACCESS_KEY, value: SECRET_KEY}; this is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 ==== Azure Data Lake
 
@@ -646,7 +646,7 @@ or `folder`
 
 *How to use these tasks:*
 
-Azure Blob Storage connector tasks require your Azure Storage credential keys (`STORAGE_ACCOUNT`, `ACCOUNT_KEY`) to be set as third-party credentials (`key:value` pairs); this is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+Azure Blob Storage connector tasks require your azure storage account and account key to be set as a third-party credential (`key:value` pairs) where {key: STORAGE_ACCOUNT, value: ACCOUNT_KEY}; this is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 
 === ERP
