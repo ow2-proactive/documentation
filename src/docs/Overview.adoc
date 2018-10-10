@@ -9,3 +9,19 @@ It can be interactively configured to address specific domains, for instance Fin
 Finally, at the bottom right is the Resource manager interface that manage and automate resource provisioning
 on any Public Cloud, on any virtualization software, on any container system, and on any Physical Machine of any OS.
 All the components you see come with fully Open and modern REST APIs. 
+
+image::automation-dashboard-catalog.png[align=center]
+
+Workflows can be stored in buckets in the Catalog. Full RBAC together with powerful versioning is supported and users can share easily workflows and templates.
+
+image::cloud-automation-on-demand-paas.png[align=center]
+
+Manage easily your PaaS Services On-Demand with a full Life-Cycle Management.
+
+image::job-planner.png[align=center]
+
+Schedule recurring Jobs. Forecast and check future executions. Control recurring jobs from a single end-point. 
+
+image::scalable-elastic-resources.png[align=center]
+
+Dynamically scale up and down your infrastructure according to your needs.
