@@ -1,4 +1,4 @@
-*ProActive Scheduler* is a comprehensive Open Source *job scheduler and Orchestrator*, also featuring *Workflows* and *Resource Management*.The user specifies the computation in terms of a series of computation
+*ProActive Scheduler* is a comprehensive Open Source *job scheduler and Orchestrator*, also featuring *Workflows* and *Resource Management*. The user specifies the computation in terms of a series of computation
  steps along with their execution and data dependencies. The Scheduler executes this computation on a cluster
  of computation resources, each step on the best-fit resource and in parallel wherever its possible.
 
@@ -13,16 +13,16 @@ All the components you see come with fully Open and modern REST APIs.
 image::automation-dashboard-catalog.png[align=center]
 
 The screenshot above shows the *Catalog Portal*, where one can store Workflows, Calendars, Scripts, etc.
-Powerful versioning together with full access control (RBAC) is supported, and users can share easily workflows and templates between teams, and various environments (Dev., Test., Staging, Prod).
+Powerful versioning together with full access control (RBAC) is supported, and users can share easily Workflows and templates between teams, and various environments (Dev, Test, Staging and Prod).
 
 image::job-planner.png[align=center]
 
 The screenshot above shows the *Job Planer portal*, allowing to automate and schedule recurring Jobs. 
-From left to right, you can define and use *calendars*, associate workflows to calendars, visualize the *execution planning* for the future, as well as actual executions of the past. 
+From left to right, you can define and use *calendars*, associate Workflows to calendars, visualize the *execution planning* for the future, as well as actual executions of the past. 
 
 image::cloud-automation-on-demand-paas.png[align=center]
 
-The screenshot above shows the *Cloud Automation* portal that is actually a PaaS automation tool. It allows you to easily manage any On-Demand Services with full Life-Cycle Management (create, deploy, suspend, resume, terminate).
+The screenshot above shows the *Cloud Automation* portal that is actually a PaaS automation tool. It allows you to easily manage any On-Demand Services with full Life-Cycle Management (create, deploy, suspend, resume and terminate).
 
 image::scalable-elastic-resources.png[align=center]
 
