@@ -1077,6 +1077,15 @@ This approach has some limitations though:
 * The path to the shared folder should be *identical* on all Compute Hosts
 * It can be difficult to use with *heterogeneous resources*, e.g. Linux and Windows hosts
 
+==== Save script
+
+===== Save the pre-script in a file and skip its execution
+
+Instead of executing the pre-script, we also provide to save the pre-script in a file and skip the execution. To do so, a Generic Information is required for the desired task, with the key
+"PRE_SCRIPT_AS_FILE", and the path of the file that you want to save your pre-script as its value. The path can be an absolute path, then the file will be stored in this absolute path. It can
+ also be a relative path, then the file will be stored in the Local Space. If you don't give a specific extension in the path, the extension will be automatically assigned to the corresponding one of the language selected for this pre-script.
+
+
 === Run computation with your system account
 
 It is possible to start a task under the job owner if the system is configured for that purpose.
