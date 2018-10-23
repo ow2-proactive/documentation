@@ -1512,13 +1512,15 @@ NOTE: Please follow the graphiql endpoint: `http://localhost:8080/catalog/graphi
 
 == Usage of Catalog from GUI
 
-The GUI interaction with the Catalog can be done in two places: Studio portal and Workflow Catalog Portal.
+The GUI interaction with the Catalog can be done in two places: Studio portal and Catalog Portal.
 The portals follow the concepts of the Catalog: Workflows store inside buckets, the Workflow can have several revisions, each Workflow have specific description.
-The view of Workflows from Catalog in Studio and from Workflow Catalog Portal follow the same view logic. The page is separated in 3 sections.
+The view of Workflows from Catalog in Studio and from Catalog Portal follow the same view logic. The page is separated in 3 sections.
 The approach is selecting the needed information from left to right. First user should choose the required bucket, then the user can observe all the Workflows in the selected bucket. When the user select the Workflow it will be shown all existing revisions of the Workflow. By selecting a revision you will be able to see the the description about the workflow revision.
 
 === Studio
 Inside Studio portal there is present a `Catalog` menu. With help of this menu the user can directly interact from studio view with Catalog storage.
+
+image::studio_catalog_menu.png[align=center]
 
 ==== Publish current Workflow to the Catalog
 The Catalog menu will provide possibility for an user directly save inside Catalog the created in studio Workflow: `Publish current Workflow to the Catalog`.
@@ -1533,8 +1535,11 @@ This option will open the Workflow from Catalog as new Workflow in Studio
 `Append to current Workflow`
 When the user choose this option, it's supposed that the user wants to append the Workflow from Catalog to Workflow already opened inside studio. Please open the Workflow to which you want to append before.
 
-=== Workflow Catalog Portal
-The Workflow Catalog Portal provides interfaces for easy administering the Catalog. The most important of provided features will be described next.
+=== Catalog Portal
+The Catalog Portal provides the capability to store objects like Workflows, Calendars, Scripts, etc.
+Powerful versioning together with full access control (RBAC) is supported, and users can share easily workflows and templates between teams, and various environments (Dev, Test, Staging, Prod).
+
+image::catalog-portal-context-menu.png[align=center]
 
 ==== Creating the new buckets
 You need to press `plus` button from above of buckets. In opened window you need to specify Bucket name and associate with user group.
@@ -1554,7 +1559,7 @@ For removing Workflows, first the user should select the bucket containing the W
 ===== Importing/Exporting Workflows into the Catalog
 You can export Workflows to an archive, to share them more easily (email, usb key,..), and then import the entire archive from the Catalog.
 
-To export the selected Workflows as a ZIP archive from Workflow Catalog portal: select a bucket, then the targeted Workflows (you can select multiple Workflows with pressed CTRL button). Press "Download Workflows" button from portal view. You'll get a ZIP file that can be transferred on an other Scheduler.
+To export the selected Workflows as a ZIP archive from Catalog portal: select a bucket, then the targeted Workflows (you can select multiple Workflows with pressed CTRL button). Press "Download Workflows" button from portal view. You'll get a ZIP file that can be transferred on an other Scheduler.
 To import the zip archive of Workflows to the Catalog from portal, select the bucket where the Workflows will be added. Then press `Upload Workflows` button in portal and follow the instructions `Upload a ZIP archive of Workflows` opened window.
 
 ==== List revisions of Workflow
