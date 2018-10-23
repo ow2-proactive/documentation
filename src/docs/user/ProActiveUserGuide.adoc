@@ -1535,9 +1535,9 @@ This option will open the Workflow from Catalog as new Workflow in Studio
 `Append to current Workflow`
 When the user choose this option, it's supposed that the user wants to append the Workflow from Catalog to Workflow already opened inside studio. Please open the Workflow to which you want to append before.
 
-=== Workflow Catalog
-The Workflow Catalog provides the capability to store objects like Workflows, Calendars, Scripts, etc.
-Powerful versioning together with full access control (RBAC) is supported, and users can share easily workflows and templates between teams, and various environments (Dev., Test., Staging, Prod).
+=== Catalog Portal
+The Catalog Portal provides the capability to store objects like Workflows, Calendars, Scripts, etc.
+Powerful versioning together with full access control (RBAC) is supported, and users can share easily workflows and templates between teams, and various environments (Dev, Test, Staging, Prod).
 
 image::catalog-portal-context-menu.png[align=center]
 
