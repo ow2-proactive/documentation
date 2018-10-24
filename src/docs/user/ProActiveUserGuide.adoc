@@ -1518,59 +1518,88 @@ The view of Workflows from Catalog in Studio and from Catalog Portal follow the 
 The approach is selecting the needed information from left to right. First user should choose the required bucket, then the user can observe all the Workflows in the selected bucket. When the user select the Workflow it will be shown all existing revisions of the Workflow. By selecting a revision you will be able to see the the description about the workflow revision.
 
 === Studio
-Inside Studio portal there is present a `Catalog` menu. With help of this menu the user can directly interact from studio view with Catalog storage.
+Inside the Studio portal there is a `Catalog` menu from which a user can directly interact with the Catalog storage.
 
 image::studio_catalog_menu.png[align=center]
 
 ==== Publish current Workflow to the Catalog
-The Catalog menu will provide possibility for an user directly save inside Catalog the created in studio Workflow: `Publish current Workflow to the Catalog`.
-In opened window for publishing the current Workflow to Catalog the user can choose the `Bucket` where the Workflow will be stored and `commit message`.
-If the Workflow with the same name is already exists in specified bucket in the Catalog, it will be created the new revision of this Workflow.
-We recommend to specify commit message for easier differentiation the versions of a Workflow.
+Workflows created in the studio can be saved inside a bucket in the Catalog by using the `Publish current Workflow to the Catalog` action.
+When saving a Workflow in the Catalog, users can add a specific `commit message`.
+If the Workflow with the same name already exists in the specified bucket, a new revision of the Workflow is created.
+We recommend to always specify a commit messages at any commit for an easier differentiation between stored versions.
 
 ==== Get a Workflow from the Catalog
 When the Workflow is selected from Catalog you have two options:
-`Open as a new Workflow`
-This option will open the Workflow from Catalog as new Workflow in Studio
-`Append to current Workflow`
-When the user choose this option, it's supposed that the user wants to append the Workflow from Catalog to Workflow already opened inside studio. Please open the Workflow to which you want to append before.
+
+1. `Open as a new Workflow`: Open the Workflow from Catalog as new Workflow in Studio.
+
+2. `Append to current Workflow`: Append the selected Workflow from the Catalog to the Workflow already opened inside the studio.
+
+
+==== Set Bucket as Main Catalog Menu
+
+To make it easy to use templates stored in the catalog when designing a workflow, we added a main bucket dropdown menu. 
+
+The main bucket dropdown can be changed by clicking on `Catlog` -> `Set Bucket as Main Catalog Menu` menu button.
+
+image::studio-catalog-main-menu.png[align=center]
+
+==== Add Bucket as Extra Catalog Menu
+This allows the user to add a an extra bucket dropdown menu in the studio. By selecting a bucket, the user can add a new Catalog menu that will contain its workflows.
+
 
 === Catalog Portal
 The Catalog Portal provides the capability to store objects like Workflows, Calendars, Scripts, etc.
-Powerful versioning together with full access control (RBAC) is supported, and users can share easily workflows and templates between teams, and various environments (Dev, Test, Staging, Prod).
+Powerful versioning together with full access control (RBAC) is supported, and users can share easily Workflows, templates, and other objects between teams, and various environments (Dev, Test, Staging, Prod).
 
 image::catalog-portal-context-menu.png[align=center]
 
-==== Creating the new buckets
-You need to press `plus` button from above of buckets. In opened window you need to specify Bucket name and associate with user group.
-For security reason there are groups associated to buckets. The user from same group can view the content of bucket.
-There is a special default group - `no group` in the dropdown list of window. The bucket associated with this default group can be viewed by any user.
+==== Creating new buckets
+Create a new bucket easily by clicking on the `plus` button. 
 
-==== Set Bucket as Catalog Menu
-This allows the user to change the bucket used to get workflows from the Catalog in the studio. By selecting a bucket, the user can change the content of the main Catalog menu (named as the current bucket) to get workflows from another bucket as templates.
-This can also be achieved by adding `/templates/bucket_name` at the end of the URL.
+image::create-new-bucket.png[align=left]
 
-==== Add Bucket as Extra Catalog Menu
-This allows the user to add a bucket for templates in the studio. By selecting a bucket, the user can add a new Catalog menu that will contain its workflows.
+In the `Create the new bucket` window is possible to associate a bucket to a specific user's group. 
 
-==== Removing Workflows inside bucket
-For removing Workflows, first the user should select the bucket containing the Workflows. Then the user can select multiple Workflows with pressed CTRL button. To delete the selected Workflows push the `trash` button.
+By doing so, only users from the same group will be able to access the content of the bucket.
 
-===== Importing/Exporting Workflows into the Catalog
-You can export Workflows to an archive, to share them more easily (email, usb key,..), and then import the entire archive from the Catalog.
+The content of the buckets associated with the default - `no group`  is accessible by any user, regardless of the groups they belong to.
 
-To export the selected Workflows as a ZIP archive from Catalog portal: select a bucket, then the targeted Workflows (you can select multiple Workflows with pressed CTRL button). Press "Download Workflows" button from portal view. You'll get a ZIP file that can be transferred on an other Scheduler.
-To import the zip archive of Workflows to the Catalog from portal, select the bucket where the Workflows will be added. Then press `Upload Workflows` button in portal and follow the instructions `Upload a ZIP archive of Workflows` opened window.
+==== Removing Objects inside bucket
+Select the objects to remove (CTRL + left click to select multiple objects) and click on the `trash` button. 
 
-==== List revisions of Workflow
-The last revision of the Catalog is always displayed on the portal. In order to see all revisions of selected Workflow, please click on `clock` button inside description area.
-The revisions are shown in chronological order by commit time.
+WARNING: All the bucket content will be removed from the database and it cannot be restored.
 
-==== Restore the revision
-Usually users work on the last version of a workflow. But in some cases, user could need to get back to a specific revision.
-For this case there is a dedicated button: `Restore the revision`. Once the workflow is selected, click on the 'clock' button to expand all revisions.
-By simply selecting the required revision from list and clicking `Restore`, the selected revision will become the last version of Workflow.
+==== Exporting/Importing Objects into the Catalog
+Catalog Objects can be exported to a local archive, and share them easily by email, cloud, etc.  The same archive can be imported again in the Catalog on the same scheduler or in a different one.
 
+TIP: Use this feature to easily share Catalog objects across different environments.
+
+To export the selected objects as a ZIP archive, press the download button from portal view. 
+
+image::download-catalog-objects.png[align=left]
+
+To import, either a downloaded catalog archive zip file or a single object, click on the upload button and follow the instructions :
+
+image::upload-catalog-objects.png[align=left]
+
+* *Object Kind*: The kind of object to add. New Kinds can be added by clicking the `plus` button.
+
+* *Content Type*: The Content Type is used to indicate the media type of the resource. New content Types can be added by clicking the `plus` button. 
+
+WARNING: In case of uploading an archive, all the objects in the zip must have the same Kind and Content Type.
+
+
+==== Catalog Object Versioning
+The HEAD of a Catalog object corresponds to the last commit and it is displayed on the portal. 
+
+In order to see all the commits of the selected Object, please click on the `clock` button inside the description area.
+
+The commits are shown in chronological order by commit time. 
+
+It is possible to restore any previous commit to the HEAD position by clicking the restore button. 
+
+image::revisions-catalog.png[align=center]
 
 == Third-party credentials
 
