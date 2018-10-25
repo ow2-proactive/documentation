@@ -4,9 +4,9 @@
 
 image::architecture.png[align=center]
 
-On the top left is the Studio interface that allows you to build Workflows.
-It can be interactively configured to address specific domains, for instance Finance, Big Data, IoT, Artificial Intelligence (AI). See for instance the Documentation of Machine Learning Open Studio https://www.activeeon.com/public_content/documentation/latest/MLOS/MLOSUserGuide.html[here^], and try it online https://try.activeeon.com/studio/#workflows/templates/machine-learning[here^]. In the middle is the Scheduler that enables an enterprise to orchestrate and automate Multi-users, Multi-application Jobs.
-Finally, at the bottom right is the Resource manager interface that manage and automate resource provisioning
+On the top left there is the *Studio* interface which allows you to build Workflows.
+It can be interactively configured to address specific domains, for instance Finance, Big Data, IoT, Artificial Intelligence (AI). See for instance the Documentation of *Machine Learning Open Studio* https://www.activeeon.com/public_content/documentation/latest/MLOS/MLOSUserGuide.html[here^], and try it online https://try.activeeon.com/studio/#workflows/templates/machine-learning[here^]. In the middle there is the *Scheduler* which enables an enterprise to orchestrate and automate Multi-users, Multi-application Jobs.
+Finally, at the bottom right is the *Resource manager* interface which manages and automates resource provisioning
 on any Public Cloud, on any virtualization software, on any container system, and on any Physical Machine of any OS.
 All the components you see come with fully Open and modern REST APIs. 
 
@@ -22,7 +22,7 @@ From left to right, you can define and use *calendars*, associate Workflows to c
 
 image::cloud-automation-on-demand-paas.png[align=center]
 
-The screenshot above shows the *Cloud Automation* portal that is actually a PaaS automation tool. It allows you to easily manage any On-Demand Services with full Life-Cycle Management (create, deploy, suspend, resume and terminate).
+The screenshot above shows the *Cloud Automation* portal which is actually a PaaS automation tool. It allows you to easily manage any On-Demand Services with full Life-Cycle Management (create, deploy, suspend, resume and terminate).
 
 image::scalable-elastic-resources.png[align=center]
 
