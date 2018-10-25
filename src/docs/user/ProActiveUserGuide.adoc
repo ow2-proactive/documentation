@@ -1525,32 +1525,32 @@ image::studio_catalog_menu.png[align=center]
 ==== Publish current Workflow to the Catalog
 Workflows created in the studio can be saved inside a bucket in the Catalog by using the `Publish current Workflow to the Catalog` action.
 When saving a Workflow in the Catalog, users can add a specific `commit message`.
-If the Workflow with the same name already exists in the specified bucket, a new revision of the Workflow is created.
-We recommend to always specify a commit messages at any commit for an easier differentiation between stored versions.
+If a Workflow with the same name already exists in the specified bucket, a new revision of the Workflow is created.
+We recommend to always specify commit messages at any commit for an easier differentiation between stored versions.
 
 ==== Get a Workflow from the Catalog
 When the Workflow is selected from Catalog you have two options:
 
-1. `Open as a new Workflow`: Open the Workflow from Catalog as new Workflow in Studio.
+1. `Open as a new Workflow`: Open the Workflow from Catalog as a new Workflow in Studio.
 
-2. `Append to current Workflow`: Append the selected Workflow from the Catalog to the Workflow already opened inside the studio.
+2. `Append to current Workflow`: Append the selected Workflow from the Catalog to the Workflow already opened inside the Studio.
 
 
 ==== Set Bucket as Main Catalog Menu
 
-To make it easy to use templates stored in the catalog when designing a workflow, we added a main bucket dropdown menu. 
+We added a main bucket dropdown menu in order to make it easy to use templates stored in the catalog when designing a workflow.. 
 
-The main bucket dropdown can be changed by clicking on `Catlog` -> `Set Bucket as Main Catalog Menu` menu button.
+The main bucket dropdown can be changed by clicking on the `Catlog` -> `Set Bucket as Main Catalog Menu` menu button.
 
 image::studio-catalog-main-menu.png[align=center]
 
 ==== Add Bucket as Extra Catalog Menu
-This allows the user to add a an extra bucket dropdown menu in the studio. By selecting a bucket, the user can add a new Catalog menu that will contain its workflows.
+This allows the user to add an extra bucket dropdown menu in the Studio. By selecting a bucket, the user can add a new Catalog menu to display additional Workflows.
 
 
 === Catalog Portal
 The Catalog Portal provides the capability to store objects like Workflows, Calendars, Scripts, etc.
-Powerful versioning together with full access control (RBAC) is supported, and users can share easily Workflows, templates, and other objects between teams, and various environments (Dev, Test, Staging, Prod).
+Powerful versioning together with full access control (RBAC) is supported, and users can easily share Workflows, templates, and other objects between teams, and various environments (Dev, Test, Staging, Prod).
 
 image::catalog-portal-context-menu.png[align=center]
 
@@ -1559,13 +1559,13 @@ Create a new bucket easily by clicking on the `plus` button.
 
 image::create-new-bucket.png[align=left]
 
-In the `Create the new bucket` window is possible to associate a bucket to a specific user's group. 
+In the `Create the new bucket` window, it is possible to associate a bucket to a specific users group. 
 
 By doing so, only users from the same group will be able to access the content of the bucket.
 
 The content of the buckets associated with the default - `no group`  is accessible by any user, regardless of the groups they belong to.
 
-==== Removing Objects inside bucket
+==== Removing Objects Inside a Bucket
 Select the objects to remove (CTRL + left click to select multiple objects) and click on the `trash` button. 
 
 WARNING: All the bucket content will be removed from the database and it cannot be restored.
@@ -1597,7 +1597,7 @@ In order to see all the commits of the selected Object, please click on the `clo
 
 The commits are shown in chronological order by commit time. 
 
-It is possible to restore any previous commit to the HEAD position by clicking the restore button. 
+It is possible to restore any previous commit to the HEAD position by clicking the `restore` button. 
 
 image::revisions-catalog.png[align=center]
 
