@@ -1568,7 +1568,7 @@ The selected deep-learning-workflows Bucket now appears as a menu in the Studio.
 
 image::studio-catalog-main-menu4.png[align=center]
 
-You can repeat the operation as many times as you which to add other specific Menus you might need for your workflow design. See image below.
+You can repeat the operation as many times as you wish in order to add other specific Menus you might need for your workflow design. See image below.
 
 image::studio-catalog-main-menu5.png[align=center]
 
@@ -1592,7 +1592,7 @@ The content of the buckets associated with the default - `no group`  is accessib
 ==== Removing Objects Inside a Bucket
 Select the objects to remove (CTRL + left click to select multiple objects) and click on the `trash` button. 
 
-WARNING: All the bucket content will be removed from the database and it cannot be restored.
+WARNING: All the object's content will be removed from the database and it cannot be restored.
 
 ==== Exporting/Importing Objects into the Catalog
 Catalog Objects can be exported to a local archive, and share them easily by email, cloud, etc.  The same archive can be imported again in the Catalog on the same scheduler or in a different one.
