@@ -95,6 +95,7 @@ Under the Admin menu from the scheduler portal, the following administrator acti
 * Resume the scheduler: If the scheduler is Paused or Frozen.
 * Pause the scheduler: Every running jobs run to completion. The scheduler can be stopped, resumed or killed.
 * Kill the scheduler: Similar to Ctrl-C. No interation can be done anymore.
+* Shutdown the scheduler: The scheduler is frozen and killed.
 
 == ProActive Scheduler configuration
 
