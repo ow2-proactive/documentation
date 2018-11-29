@@ -7,63 +7,61 @@ We begin by presenting FTP and SFTP connectors then, URL connector.
 
 ==== FTP and SFTP connectors
 
+
+The FTP and SFTP file connector workflows consists of two tasks:
+
+* Import_from_FTP/SFTP_Server: Downloads files or folders recursively from an FTP/SFTP server to the data space.
+* Export_to_FTP/SFTP_Serve: Uploads files or folders recursively from the data space to an FTP/SFTP server.
+
 *Variables:*
 
-The FTP and SFTP connectors share the same list of variables. Consequently, we describe them in the following table using a unique notation.
-`<PROTOCOL>` can take one of the following values: {`FTP`, `SFTP`}
+The FTP and SFTP workflow tasks share the same list of variables. Consequently, we describe them in the following table using a unique notation.
 
 .FTP/SFTP Connector variables
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
-| `<PROTOCOL>_HOST`
-| IP address of the server host.
-| Workflow, Task
+| `HOST`
+| Server host.
+| Task
 | Yes
 | String
 | `localhost`
-| `<PROTOCOL>_PORT`
+| `USERNAME`
+| Username to use for the authentication.
+| Task
+| Yes
+|  String
+| e.g. toto
+| `PORT`
 | Listening port.
-| Workflow, Task
+| Task
 | No
 | Integer
 | e.g. 21, 22
-| `<PROTOCOL>_LOCAL_RELATIVE_PATH`
-| Local `relative` path from which we upload (or to which we download) file(s).
-It can contain either a path to a file, a directory terminated by `/` or an empty value for the root.
-| Workflow, Task
+| `FILE_PATTERN`
+| Either a file name or a wildcard string pattern.
+| Task
+| Yes
+| String
+| e.g. file.txt, \*.txt, **
+| `LOCAL_BASE`
+| Either a `global` path or a local `relative` path from which we export (or to which we import) file(s). It can be either a directory terminated by `/` or an empty value for the root.
+| Task
 | No
 | String
-| e.g. localDirectory/, example.zip
-| `<PROTOCOL>_REMOTE_RELATIVE_PATH`
-| Remote `relative` path to which we upload (or from which we download) file(s).
-| Workflow, Task
-| Yes
+| e.g. localDirectory/, /global/path/localDirectory/
+| `REMOTE_BASE`
+| Remote `relative` path on the server to which we export (or from which we import) file(s). It can be either a path to a folder terminated by `/` or an empty value for the root.
+| Task
+| No
 | String
-| e.g. remoteDirectory/, test.txt
-| `<PROTOCOL>_MODE`
-| Transfer mode.
-| Workflow, Task
-| Yes
-| PA:LIST(GET, PUT)
-| GET
-| `<PROTOCOL>_EXTRACT_ARCHIVE`
-| Used only when `<PROTOCOL>_MODE=GET`. If set to `true`, the imported file will be extracted if it is an archive.
-| Workflow, Task
-| Yes
-|  Boolean [true or false]
-| false
-| `<PROTOCOL>_USERNAME`
-| Username to use for the authentication.
-| Workflow, Task
-| Yes
-|  String
-| e.g. \ftp://someuser@example.com
+| e.g. remoteDirectory/
 |===
 
 *How to use this task:*
 
-The task requires the following third-party credentials: `{key: <PROTOCOL>://<username>@<hostname>, value: <PROTOCOL>_PASSWORD}`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+The task requires the following third-party credentials: `{key: <PROTOCOL>://<username>@<hostname>, value: PASSWORD}` where `<PROTOCOL>` can take one of the following values: {`FTP`, `SFTP`}. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 ==== URL connector
 
@@ -76,20 +74,13 @@ The URL connector allows, in addition, to import data using HTTP and HTTPS proto
 |===
 | *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
 | `FILE_URL`
-| Link to a file accessible using HTTP, HTTPS, SFTP or FTP protocols.
-
-  FTP and SFTP urls must have the following patterns:
-
-- `\ftp://<username>[:<password>]@<hostname>[:<port>]/<relativePath>`
-
-- `sftp://<username>[:<password>]@<hostname>[:<port>]/<relativePath>`
-
+| Link to a file accessible using HTTP or HTTP protocols.
 | Task
 | Yes
 | String
-| e.g. sftp://user:pass@example.com/test.txt
-| `FTP_LOCAL_RELATIVE_PATH`
-|  Local relative path from which we upload (or to which we download) file(s).
+| e.g. http://www.pdf995.com/samples/pdf.pdf
+| `LOCAL_BASE`
+|  Local relative path to which we download file(s).
   LOCAL_RELATIVE_PATH can contain either a path to a file, a directory terminated by `/` or an empty value for the root.
 | Task
 | No
@@ -102,10 +93,6 @@ The URL connector allows, in addition, to import data using HTTP and HTTPS proto
 | Boolean [true or false]
 | false
 |===
-
-*How to use this task:*
-
-We highly recommend the user to not provide his password within the URL and to instead use the third-party credentials mechanism as follows: `{key: <PROTOCOL>://<username>@<hostname>, value: <PROTOCOL>_PASSWORD}`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 === SQL
 The SQL connectors allow to import and export data from and to Relational DataBase Management Systems (RDBMS).
