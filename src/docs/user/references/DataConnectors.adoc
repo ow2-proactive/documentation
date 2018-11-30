@@ -11,7 +11,7 @@ We begin by presenting FTP and SFTP connectors then, URL connector.
 The FTP and SFTP file connector workflows consists of two tasks:
 
 * Import_from_FTP/SFTP_Server: Downloads files or folders recursively from an FTP/SFTP server to the data space.
-* Export_to_FTP/SFTP_Serve: Uploads files or folders recursively from the data space to an FTP/SFTP server.
+* Export_to_FTP/SFTP_Serve: Uploads files or folders recursively from the data space (global or user space) to an FTP/SFTP server.
 
 *Variables:*
 
