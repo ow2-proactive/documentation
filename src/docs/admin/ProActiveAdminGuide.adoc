@@ -844,7 +844,7 @@ println "Hello World"
 </job>
 ```
 
-It is also possible to define in a ProActive Task or Job the `#BATCH` generic information. This parameter allows to provide custom arguments to `nsSubmitCommand`.
+It is also possible to define in a ProActive Task or Job the `NS_BATCH` generic information. This parameter allows to provide custom arguments to `nsSubmitCommand`.
 
 For example, to submit a task on the PBS Node source, using a specific PBS queue and reserve for this task 2 cluster nodes with 2 cpu each:
 
@@ -855,7 +855,7 @@ For example, to submit a task on the PBS Node source, using a specific PBS queue
   </description>
   <genericInformation>
     <info name="NS" value="PBS"/>
-    <info name="#BATCH" value="-q queue1 -lnodes=2:ppn=2"/>
+    <info name="NS_BATCH" value="-q queue1 -lnodes=2:ppn=2"/>
   </genericInformation>
   <scriptExecutable>
     <script>
