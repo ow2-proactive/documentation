@@ -152,22 +152,36 @@ into
 
 === Database configuration
 
-Scheduler, Resource Mananger, and three microservices require to have direct access to the database.
+Scheduler, Resource Mananger, and four microservices require to have direct access to the database.
 Thus, they must each have a correct database configuration.
 
-To configure Scheduler or Resource Mananger, one have to modify `config/scheduler/database.properties`
-and `config/rm/database.properties` respectively. The following five properties must be configured:
-`hibernate.connection.driver_class`, `hibernate.connection.url`, `hibernate.dialect`,
-`hibernate.connection.username`, and `hibernate.connection.password`.
+To configure Scheduler or Resource Mananger, one have to modify *PROACTIVE_HOME/config/scheduler/database.properties*
+and *PROACTIVE_HOME/config/rm/database.properties* respectively.
 
-For each microservice, a microservice configuration file can be found in: `/dist/war/MICROSERVICE-NAME/classes/application.properties`.
-The `job-planner`, `catalog` and `scheduling-api` microservices must contain a database configuration.
-In their application.properties file, you need to set the following five properties:
-`spring.datasource.url`, `spring.datasource.username`, `spring.datasource.password`,
-`spring.datasource.driver-class-name`, and `spring.jpa.database-platform`.
+The following five properties must be configured:
 
-Moreover, it is mandatory to put the proper database driver in `PROACTIVE_HOME/addons` folder, e.g. if you want to use MySQL 5.7 database,
-then you have to download the database driver and put it at: `PROACTIVE_HOME/addons/mysql-connector-java-8.0.11.jar`.
+* `hibernate.connection.driver_class`
+* `hibernate.connection.url`
+* `hibernate.dialect`
+* `hibernate.connection.username`
+* `hibernate.connection.password`
+
+TIP: There are usefull templates for different databases in *PROACTVE_HOME/config/scheduler/templates/* and *PROACTVE_HOME/config/rm/templates/*.
+
+The *job-planner*, *catalog*, *scheduling-api*, and *proactive-cloud-watch* microservices must contain a database configuration.
+For each microservice, a microservice configuration file can be found in: *PROACTIVE_HOME/dist/war/MICROSERVICE-NAME/WEB-INF/classes/application.properties*.
+In their *application.properties* file, you need to set the following five properties:
+
+* `spring.datasource.url`
+* `spring.datasource.username`
+* `spring.datasource.password`
+* `spring.datasource.driverClassName`
+* `spring.jpa.database-platform`
+
+Moreover, it is mandatory to put the proper database driver in *PROACTIVE_HOME/addons* folder, e.g. if you want to use MySQL 5.7 database,
+then you have to download the database driver and put it at: *PROACTIVE_HOME/addons/mysql-connector-java-8.0.11.jar*.
+
+Scheduler, and 3 microservices (*scheduling-api*, *job-planner*, and *proactive-cloud-watch*) have to point to the same database.
 
 == Installation on a Cluster
 
