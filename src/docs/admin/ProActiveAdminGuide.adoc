@@ -152,7 +152,7 @@ into
 
 === Database configuration
 
-Scheduler, Resource Mananger, and four microservices require to have direct access to the database.
+Scheduler, Resource Mananger, and some microservices require to have direct access to the database.
 Thus, they must each have a correct database configuration.
 
 To configure Scheduler or Resource Mananger, one have to modify *PROACTIVE_HOME/config/scheduler/database.properties*
