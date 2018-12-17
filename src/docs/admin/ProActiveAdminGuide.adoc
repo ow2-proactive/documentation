@@ -2023,6 +2023,7 @@ softwareA,softwareB
 ----
 
 As expected, if 10 replicated tasks requiring software_A,software_B licenses are submitted, they will be executed 3 by 3.
+The REQUIRED_LICENSES generic information can either be set at the task level or the job level.
 
 == Addons
 
