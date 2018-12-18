@@ -2006,24 +2006,24 @@ to:
 pa.scheduler.policy=org.ow2.proactive.scheduler.policy.license.LicenseSchedulingPolicy
 ----
 
-The LicenSchedulingPolicy requires an extra configuration:
-
-The maximum number of licenses per software must be specified into `PROACTIVE_HOME/config/scheduler/license.properties` like this
+The LicenseSchedulingPolicy requires an extra configuration: the maximum number of licenses per software must be specified into
+`PROACTIVE_HOME/config/scheduler/license.properties` like this
 
 ----
 software_A = 3
 software_B = 2
 ----
 
-From now, given a task, user can specify which software licenses are required, by adding the REQUIRED_LICENSES generic information,
+From now, at a job or a task level, user can specify which software licenses are required, by adding the REQUIRED_LICENSES generic information,
 which value can be
 
 ----
 softwareA,softwareB
 ----
 
-As expected, if 10 replicated tasks requiring software_A,software_B licenses are submitted, they will be executed 3 by 3.
-The REQUIRED_LICENSES generic information can either be set at the task level or the job level.
+As expected, if 10 tasks requiring software_A,software_B licenses are submitted, they will be executed 2 by 2, according to the software with the fewest licenses.
+The same logic is applied at the job level, whatever the number of tasks composing each job, since all tasks of the same job share the same license.
+Moreover, user can combine both levels.
 
 == Addons
 
