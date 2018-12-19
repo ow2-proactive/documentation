@@ -109,15 +109,12 @@ At the left part, are illustrated the **General Parameters** of the workflow wit
 - `Job Priority`: the priority assigned to the workflow. It is by default set to `NORMAL`, but can be increased or decreased once the job is submitted. 
 
 
+=== Docker_Compose task
 
-
-
-=== Docker task
-
-In order for Docker tasks to work, the _Node_ must have Docker and Docker Compose installed, please refer to the official
+In order for Docker_Compose tasks to work, the _Node_ must have Docker and Docker Compose installed, please refer to the official
  Docker documentation to see how to install http://docs.docker.com/engine/installation/[Docker^] and https://docs.docker.com/compose/install/[Docker Compose^].
 
-A Docker task expects the content of a Docker Compose file inside the _Script_ section. You can find out how to write Docker Compose files
+A Docker_Compose task expects the content of a Docker Compose file inside the _Script_ section. You can find out how to write Docker Compose files
 with the official https://docs.docker.com/compose/[Docker Compose documentation^].
 
 To get started: a simple Docker Compose example is explained below.
@@ -130,8 +127,6 @@ helloworld:
 ----
 The above example describes a container which is called 'helloworld'. That container is created from a busybox image,
  which will run the command 'echo "Hello ProActive"'
-
-=== Docker task advanced options
 
 The Docker task allows to set parameters to the `docker-compose` tool with regard to the docker-compose CLI https://docs.docker.com/compose/reference/overview/[reference].
 
@@ -153,6 +148,28 @@ docker-compose --verbose up --exit-code-from helloworld
 
 If splitting by space is prohibitive you can specify the split regex in the <<_glossary_generic_information, generic informations>> with the
 key *docker-compose-options-split-regex*. If you supply e.g. "!SPLIT!" as value, then your *docker-compose-up-options* will need to look like this: "--option1!SPLIT!--option2".
+
+=== Docker_File task
+
+The basic behavior of a Docker_File task is create an image with Docker build and create a container based on the built image. At the end of the job, the created image and container are deleted. And, advanced options will allow to do more specific actions.
+
+In order for Docker_File tasks to work, the _Node_ must have Docker installed, please refer to the official
+ Docker documentation to see how to install http://docs.docker.com/engine/installation/[Docker^]
+
+A Docker_File task expects the content of a Dockerfile inside the _Script_ section. You can find out how to write Dockerfile
+with the official https://docs.docker.com/engine/reference/builder/[Dockerfile documentation^].
+
+To get started: a simple Docker_File task example is explained below.
+
+The content of the _Script_ section (equal to the content of a Dockerfile) is:
+----
+FROM ubuntu:18.04
+RUN echo "Hello ProActive »
+RUN sleep 30
+----
+The above example is a simple task that will create an image with Docker build.
+After that a container, which will run the commands 'echo "Hello ProActive"' and 'sleep 30', is created from the built image.
+
 
 === Native application
 
