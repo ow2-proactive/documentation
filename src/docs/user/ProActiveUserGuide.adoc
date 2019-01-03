@@ -1286,19 +1286,21 @@ If the task has not *IN_ERROR* status, the _Mark as finished and resume_ option 
 
 Add a "NOTIFICATION_EVENTS" Generic information in the workflow level, to list events on which a user wants to be notified. List is comma-separated and should be taken from(events are not case sensitive):
 
-* *Job change priority*
-* *Job In-Error*
-* *Job paused*
-* *Job pending to finished*
-* *Job pending to running*
-* *Job restarted from error*
-* *Job resumed*
-* *Job running to finished*
-* *Job submitted*
+* *Job change priority (or JOB_CHANGE_PRIORITY)*
+* *Job In-Error (or JOB_IN_ERROR)*
+* *Job paused (or JOB_PAUSED)*
+* *Job pending to finished (or JOB_PENDING_TO_FINISHED)*
+* *Job pending to running (or JOB_PENDING_TO_RUNNING)*
+* *Job restarted from error (or JOB_RESTARTED_FROM_ERROR)*
+* *Job resumed (or JOB_RESUMED)*
+* *Job running to finished (or JOB_RUNNING_TO_FINISHED)*
+* *Job submitted (or JOB_SUBMITTED)*
 
 Scheduler can send email to the users when one of the above events is received.
 
-Notifications will only be sent for jobs whose generic information (workflow level) contains user's email address under the "EMAIL" key. Example:
+If a user wants to be notified by all these events, the "NOTIFICATION_EVENTS" Generic information should have "All" (not case sensitive) as its value.
+
+Notifications will only be sent for jobs whose generic information (workflow level) contains user's email address(es) under the "EMAIL" key, if multiple email addresses need to be used, they should be seperated by comma. Example:
 
 [source, xml]
 ----
