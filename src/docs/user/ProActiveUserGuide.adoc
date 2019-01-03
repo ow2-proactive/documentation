@@ -1305,7 +1305,7 @@ Notifications will only be sent for jobs whose generic information (workflow lev
 [source, xml]
 ----
 <genericInformation>
-    <info name="EMAIL" value="user@example.com"/>
+    <info name="EMAIL" value="user0@example.com, user1@example.com"/>
     <info name="NOTIFICATION_EVENTS" value="Job paused, Job resumed"/>
 </genericInformation>
 ----
