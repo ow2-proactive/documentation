@@ -1548,16 +1548,31 @@ When the Workflow is selected from Catalog you have two options:
 
 
 ==== Set Bucket as Main Catalog Menu
+In the `Catalog` dropdown menu, you can select a catalog Bucket to be used as the main Menu in the Studio. This makes it easier to use specific templates stored in a specific Bucket of the Catalog when designing a Workflow.
 
-We added a main bucket dropdown menu in order to make it easy to use templates stored in the catalog when designing a workflow. 
+The main bucket dropdown can be changed by clicking on the `Catalog` → `Set Bucket as Main Catalog Menu` entry. See image below.
 
-The main bucket dropdown can be changed by clicking on the `Catalog` -> `Set Bucket as Main Catalog Menu` menu button.
+image::studio-catalog-main-menu1.png[align=center]
 
-image::studio-catalog-main-menu.png[align=center]
+The name of selected Bucket now appears at the top of the Studio, and all its Workflows are now readily available in a Menu.
+
+image::studio-catalog-main-menu2.png[align=center]
+
 
 ==== Add Bucket as Extra Catalog Menu
-This allows the user to add an extra bucket dropdown menu in the Studio. By selecting a bucket, the user can add a new Catalog menu to display additional Workflows.
+This allows the user to add extra buckets from the Catalog as dropdown menus in the Studio.
 
+Add a new menu by clicking on the `Catalog` → `Add Bucket as Extra Catalog Menu` entry. See image below. 
+
+image::studio-catalog-main-menu3.png[align=center]
+
+The selected deep-learning-workflows Bucket now appears as a menu in the Studio. See image below.
+
+image::studio-catalog-main-menu4.png[align=center]
+
+You can repeat the operation as many times as you wish in order to add other specific Menus you might need for your workflow design. See image below.
+
+image::studio-catalog-main-menu5.png[align=center]
 
 === Catalog Portal
 The Catalog Portal provides the capability to store objects like Workflows, Calendars, Scripts, etc.
@@ -1579,7 +1594,7 @@ The content of the buckets associated with the default - `no group`  is accessib
 ==== Removing Objects Inside a Bucket
 Select the objects to remove (CTRL + left click to select multiple objects) and click on the `trash` button. 
 
-WARNING: All the bucket content will be removed from the database and it cannot be restored.
+WARNING: All the object's content will be removed from the database and it cannot be restored.
 
 ==== Exporting/Importing Objects into the Catalog
 Catalog Objects can be exported to a local archive, and share them easily by email, cloud, etc.  The same archive can be imported again in the Catalog on the same scheduler or in a different one.
