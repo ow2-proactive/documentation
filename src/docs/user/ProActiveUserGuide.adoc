@@ -674,7 +674,7 @@ include::./references/Variables.adoc[]
 Another way to propagate data from a task to another relies on *result* variable.
 Anywhere in a task (usually at the end) you can set a value to a reserved
 variable named *result*. This value will be available in tasks
-depending on it. If a task has several dependencies, *results* will be an array.
+depending on it. If a task has one or several dependencies, *results* will always be an array.
 
 Assuming that we have two tasks *task1* and *task2* written in Groovy:
 
