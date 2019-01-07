@@ -111,13 +111,13 @@ At the left part, are illustrated the **General Parameters** of the workflow wit
 
 === Docker_Compose task
 
-In order for Docker_Compose tasks to work, the _Node_ must have Docker and Docker Compose installed, please refer to the official
+In order for Docker_Compose tasks to work, the _Node_ must have Docker and Docker Compose installed. Please refer to the official
  Docker documentation to see how to install http://docs.docker.com/engine/installation/[Docker^] and https://docs.docker.com/compose/install/[Docker Compose^].
 
 A Docker_Compose task expects the content of a Docker Compose file inside the _Script_ section. You can find out how to write Docker Compose files
-with the official https://docs.docker.com/compose/[Docker Compose documentation^].
+in the official https://docs.docker.com/compose/[Docker Compose documentation^].
 
-To get started: a simple Docker Compose example is explained below.
+To get started, a simple Docker Compose example is explained below.
 
 The content of the _Script_ section (equal to the content of a Docker Compose file) is:
 ----
@@ -151,27 +151,30 @@ key *docker-compose-options-split-regex*. If you supply e.g. "!SPLIT!" as value,
 
 === Docker_File task
 
-The basic behavior of a Docker_File task is create an image with Docker build and create a container based on the built image. At the end of the job, the created image and container are deleted. And, advanced options will allow to do more specific actions.
+The basic behavior of a Docker_File task is to create an image with Docker build and to create a container based on the built image. At the end of the job, the created image and container are deleted. Advanced options will allow to parametrize these actions.
 
-In order for Docker_File tasks to work, the _Node_ must have Docker installed, please refer to the official
+In order for Docker_File tasks to work, the _Node_ must have Docker installed. Please refer to the official
  Docker documentation to see how to install http://docs.docker.com/engine/installation/[Docker^]
 
 A Docker_File task expects the content of a Dockerfile inside the _Script_ section. You can find out how to write Dockerfile
-with the official https://docs.docker.com/engine/reference/builder/[Dockerfile documentation^].
+in the official https://docs.docker.com/engine/reference/builder/[Dockerfile documentation^].
 
-To get started: a simple Docker_File task example is explained below.
 
-The content of the _Script_ section (equal to the content of a Dockerfile) is:
+The Docker_File task will run a combination of docker commands to build, start, stop and remove containers. 
+
+To get started, a simple Docker_File task can be tested by using this Dockerfile as the content of the _Script_ section (task implementation)
+
 ----
 FROM ubuntu:18.04
-RUN echo "Hello ProActive »
+RUN echo "Hello ProActive" 
 RUN sleep 30
 ----
-The above example is a simple task that will create an image with Docker build.
-After that a container, which will run the commands 'echo "Hello ProActive"' and 'sleep 30', is created from the built image.
 
+It will create an image using the Docker build command, by specifying commands to start (echo and sleep) for every running containers from this image. At the end the built image and the started container are deleted.
 
-* The Docker_File task allows to set parameters to the `docker-build` command with regard to the docker-build CLI https://docs.docker.com/engine/reference/builder/[reference].
+The build, start, stop and remove commands can be parametrized through optional command line options explained after.
+
+* The Docker_File task allows to set parameters to the `docker build` command with regard to the docker-build CLI https://docs.docker.com/engine/reference/builder/[reference].
 ----
 docker build [OPTIONS] PATH | URL | -
 ----
@@ -180,7 +183,7 @@ To define a _docker-build option_, use the generic information *docker-build-opt
 
 For instance by using the docker-build-options generic information with the value --add-host, a custom host-to-IP mapping will be added to the image.
 
-* The Docker_File task allows to set parameters to the `docker-run` command with regard to the docker-run CLI https://docs.docker.com/engine/reference/run/[reference].
+* The Docker_File task allows to set parameters to the `docker run` command with regard to the docker-run CLI https://docs.docker.com/engine/reference/run/[reference].
 ----
 docker run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
 ----
@@ -189,7 +192,7 @@ To define a _docker-run option_, use the generic information *docker-run-options
 
 For instance by using the docker-run-options generic information with the value -d=true, the container will be started in detached mode.
 
-* The Docker_File task allows to set parameters to the `docker-stop` command with regard to the docker-stop CLI https://docs.docker.com/engine/reference/commandline/stop/[reference].
+* The Docker_File task allows to set parameters to the `docker stop` command with regard to the docker-stop CLI https://docs.docker.com/engine/reference/commandline/stop/[reference].
 ----
 docker stop [OPTIONS] CONTAINER [CONTAINER...]
 ----
@@ -198,7 +201,7 @@ To define a _docker-run option_, use the generic information *docker-stop-option
 
 For instance by using the docker-stop-options generic information with the value --time 30, the container will be stopped after 30s.
 
-* The Docker_File task allows to set parameters to the `docker-rmi` command with regard to the docker-rmi CLI https://docs.docker.com/engine/reference/commandline/rmi/#options[reference].
+* The Docker_File task allows to set parameters to the `docker rmi` command with regard to the docker-rmi CLI https://docs.docker.com/engine/reference/commandline/rmi/#options[reference].
 ----
 docker rmi [OPTIONS] IMAGE [IMAGE...]
 ----
