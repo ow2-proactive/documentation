@@ -224,11 +224,11 @@ This feature is showcased through two workflow templates: SQL_Pooled_Connection_
 The SQL_Pooled_Connection_Query workflow is based on the replicate control flow where the split task is Open_Pooled_Connection, the process task is Execute_Query_Statements and finally the merge task is Merge_Result_Set.
 The SQL_Pooled_Connection_Update workflow is composed of two tasks: Open_Pooled_Connection and Execute_Update_Statements.
 
-having the same workflow and task variables.
-
 *Variables:*
 
-.SQL Pooled Connection variables
+Both workflows share the same list of variables. share the same list of variables. Consequently, we describe them in the same following table.
+
+.Workflows' variables
 [cols="2,5,2,2,2,3"]
 |===
 | *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
@@ -277,7 +277,7 @@ The scheduler should be configured in non-fork mode to execute tasks in a single
 
 To be executed, each workflow requires the jdbc connector jar file of the used rdbms to connect to the database. Make sure you have it properly copied into the addons directory ($PROACTIVE_HOME/addons) of the scheduler.
 
-In case where the password is required, you have to add the following third-party credential: {key: `<mysql|postgresql|sqlserver|oracle|hsqldb>://<USERNAME>@<HOST>:<PORT>`, value: `<RDBMS_NAME>_PASSWORD`}. ; this is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+In case the password is required, you have to add the following third-party credential: {key: `<mysql|postgresql|sqlserver|oracle|hsqldb>://<USERNAME>@<HOST>:<PORT>`, value: `<RDBMS_NAME>_PASSWORD`}. ; this is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 === NoSQL
 The NoSQL connectors allow to import data from NoSQL Databases.
