@@ -127,6 +127,10 @@ Examples: PA:MODEL_FROM_URL(file:///srv/machines_list_model.txt), if the file ma
 * *PA:CRON* : variable syntax must be a valid cron expression as defined in the  http://www.sauronsoftware.it/projects/cron4j/manual.php#p02[cron4j manual]. +
 Examples: PA:CRON will accept "5 * * * \*" but not "* * * *" (missing minutes sub-pattern).
 * *PA:SPEL(SpEL expression)* : variable syntax will be evaluated by a https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[SpEL] expression. Refer to next paragraph.
+* *PA:CATALOG_OBJECT* : variable syntax must be a valid expression that matches the following pattern: `bucketName/objectName[/revision]`.
+Note that the revision sub-pattern is a hash code number represented by 13 digit. +
+Examples: PA:CATALOG_OBJECT will accept "bucket-example/object-example/1539310165443" and "bucket-example/object-example" but not "bucket-example/object-example/153931016" (invalid revision number) and "bucket-example/" (missing object name).
+
 
 ====== Spring Expression Language Model
 

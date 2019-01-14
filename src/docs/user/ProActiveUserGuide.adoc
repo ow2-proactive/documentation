@@ -17,6 +17,8 @@ ProActive Cloud Automation (PCA) User Guide (automate deployment and management 
 === link:../admin/ProActiveAdminGuide.html[Admin Guide]
 Administration Guide (Installation, networks, nodes, clusters, users, permissions)
 
+*API documentation: &emsp; https://try.activeeon.com/rest/doc/[Scheduler REST] &emsp; link:../user/ProActiveUserGuide.html#_scheduler_command_line[Scheduler CLI] &emsp; https://doc.activeeon.com/javadoc/latest/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html[Scheduler Java] &emsp; https://doc.activeeon.com/javadoc/latest/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html[Workflow Creation Java] &emsp; https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client[Python Client]*
+
 :sectnums:
 == Overview
 
@@ -107,18 +109,15 @@ At the left part, are illustrated the **General Parameters** of the workflow wit
 - `Job Priority`: the priority assigned to the workflow. It is by default set to `NORMAL`, but can be increased or decreased once the job is submitted. 
 
 
+=== Docker_Compose task
 
-
-
-=== Docker task
-
-In order for Docker tasks to work, the _Node_ must have Docker and Docker Compose installed, please refer to the official
+In order for Docker_Compose tasks to work, the _Node_ must have Docker and Docker Compose installed. Please refer to the official
  Docker documentation to see how to install http://docs.docker.com/engine/installation/[Docker^] and https://docs.docker.com/compose/install/[Docker Compose^].
 
-A Docker task expects the content of a Docker Compose file inside the _Script_ section. You can find out how to write Docker Compose files
-with the official https://docs.docker.com/compose/[Docker Compose documentation^].
+A Docker_Compose task expects the content of a Docker Compose file inside the _Script_ section. You can find out how to write Docker Compose files
+in the official https://docs.docker.com/compose/[Docker Compose documentation^].
 
-To get started: a simple Docker Compose example is explained below.
+To get started, a simple Docker Compose example is explained below.
 
 The content of the _Script_ section (equal to the content of a Docker Compose file) is:
 ----
@@ -129,9 +128,7 @@ helloworld:
 The above example describes a container which is called 'helloworld'. That container is created from a busybox image,
  which will run the command 'echo "Hello ProActive"'
 
-=== Docker task advanced options
-
-The Docker task allows to set parameters to the `docker-compose` tool with regard to the docker-compose CLI https://docs.docker.com/compose/reference/overview/[reference].
+The Docker_Compose task allows to set parameters to the `docker-compose` tool with regard to the docker-compose CLI https://docs.docker.com/compose/reference/overview/[reference].
 
 ----
 docker-compose [general parameters] COMMAND [options]
@@ -151,6 +148,66 @@ docker-compose --verbose up --exit-code-from helloworld
 
 If splitting by space is prohibitive you can specify the split regex in the <<_glossary_generic_information, generic informations>> with the
 key *docker-compose-options-split-regex*. If you supply e.g. "!SPLIT!" as value, then your *docker-compose-up-options* will need to look like this: "--option1!SPLIT!--option2".
+
+=== Docker_File task
+
+The basic behavior of a Docker_File task is to create an image with Docker build and to create a container based on the built image. At the end of the job, the created image and container are deleted. Advanced options will allow to parametrize these actions.
+
+In order for Docker_File tasks to work, the _Node_ must have Docker installed. Please refer to the official
+ Docker documentation to see how to install http://docs.docker.com/engine/installation/[Docker^]
+
+A Docker_File task expects the content of a Dockerfile inside the _Script_ section. You can find out how to write Dockerfile
+in the official https://docs.docker.com/engine/reference/builder/[Dockerfile documentation^].
+
+
+The Docker_File task will run a combination of docker commands to build, start, stop and remove containers. 
+
+To get started, a simple Docker_File task can be tested by using this Dockerfile as the content of the _Script_ section (task implementation)
+
+----
+FROM ubuntu:18.04
+RUN echo "Hello ProActive" 
+RUN sleep 30
+----
+
+It will create an image using the Docker build command, by specifying commands to start (echo and sleep) for every running containers from this image. At the end the built image and the started container are deleted.
+
+The build, start, stop and remove commands can be parametrized through optional command line options explained after.
+
+* The Docker_File task allows to set parameters to the `docker build` command with regard to the docker-build CLI https://docs.docker.com/engine/reference/builder/[reference].
+----
+docker build [OPTIONS] PATH | URL | -
+----
+
+To define a _docker-build option_, use the generic information *docker-build-options* 
+
+For instance by using the docker-build-options generic information with the value --add-host, a custom host-to-IP mapping will be added to the image.
+
+* The Docker_File task allows to set parameters to the `docker run` command with regard to the docker-run CLI https://docs.docker.com/engine/reference/run/[reference].
+----
+docker run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
+----
+
+To define a _docker-run option_, use the generic information *docker-run-options* 
+
+For instance by using the docker-run-options generic information with the value -d=true, the container will be started in detached mode.
+
+* The Docker_File task allows to set parameters to the `docker stop` command with regard to the docker-stop CLI https://docs.docker.com/engine/reference/commandline/stop/[reference].
+----
+docker stop [OPTIONS] CONTAINER [CONTAINER...]
+----
+
+To define a _docker-run option_, use the generic information *docker-stop-options* 
+
+For instance by using the docker-stop-options generic information with the value --time 30, the container will be stopped after 30s.
+
+* The Docker_File task allows to set parameters to the `docker rmi` command with regard to the docker-rmi CLI https://docs.docker.com/engine/reference/commandline/rmi/#options[reference].
+----
+docker rmi [OPTIONS] IMAGE [IMAGE...]
+----
+
+To define a _docker-rmi option_, use the generic information *docker-rmi-options* 
+
 
 === Native application
 
@@ -209,13 +266,48 @@ Scripts can also be used to decorate tasks with specific actions, we support
 <<_pre_post_clean,pre>>, <<_pre_post_clean,post>>, <<_pre_post_clean,clean>> and <<_selection,selection>> scripts.
 
 ==== Python Script Engine
+We support both Jython and Python Script Engines. Jython is an implementation of the Python programming language designed to run on the Java platform, Jython programs use Java classes instead of Python modules.
+The advantage of using our Jython Script Engine is that you do not need to do any installation. It includes some modules in the standard Python programming language distribution, but lacking the modules implemented originally in C.
+Besides, the libraries such as numpy, matplotlib, pandas, etc. are not supported by Jython. And the libraries which depends on numpy such as TensorFlow, PyTorch and Keras etc. are not supported neither.
 
+In order to support native Python, we provide also a Python Script Engine. To use the Python Script Engine, the 'Language' field should be put to 'cpython'. By using Python Script Engine, you can personalize the Python version that you want to use.
 Since there are many different versions of Python (mainly Python2 and Python3) which are not compatible, ProActive supports all the Python versions (Python2, Python3, etc).
-By default, the Python used to execute the Script is the default Python version on your machine. In order to use another Python version to execute
-the task, it is required to put a key 'PYTHON_COMMAND' in Generic Info, and its value is the path (symbolic or absolute, for example 'python3' or
-/usr/local/opt/python3/bin/python3.6) to the python executable that you want to use. If the Generic Info is put at task level this version of Python will be only used for this task, if
-it is put in the job level this version of Python will be used for all the tasks in this job. Of course the required Python needs to be installed on your machine,
-and the corresponding py4j module as well.
+By default, the Python used to execute the script is the default Python version on your machine. In order to use another Python version to execute
+the task, it is required to add a 'PYTHON_COMMAND' link:../user/ProActiveUserGuide.html#_glossary_generic_information[Generic Information]. Its value should contain the symbolic or absolute path to the desired python command to run (for example 'python3' or '/usr/local/opt/python3/bin/python3.6'). If the link:../user/ProActiveUserGuide.html#_glossary_generic_information[Generic Information] is put at task level this version of Python will be only used for this task, if
+it is put in the job level this version of Python will be used for all the tasks in this job.
+
+For every tasks which use the native python script engine:
+
+- Python must be installed on the ProActive Node which will be used to execute the task.
+- The py4j module must be installed. Please refer to
+link:../admin/ProActiveAdminGuide.html#_python_script_engine_python_task[Python Script Engine (Python task)] for the introduction about the installation of Python Script Engine.
+
+Here is a workflow example (in xml format) about a simple Python task:
+
+[source, xml]
+----
+  <taskFlow>
+    <task name="Python_Task" >
+      <description>
+        <![CDATA[ The simplest task, ran by a python engine. ]]>
+      </description>
+      <genericInformation>
+        <info name="PYTHON_COMMAND" value="python3"/>
+      </genericInformation>
+      <scriptExecutable>
+        <script>
+          <code language="cpython">
+            <![CDATA[
+import platform
+print("The current version of python you are using is: " + platform.python_version())
+print("Hello World")
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+  </taskFlow>
+----
 
 === MPI application
 
@@ -1040,6 +1132,15 @@ This approach has some limitations though:
 * The path to the shared folder should be *identical* on all Compute Hosts
 * It can be difficult to use with *heterogeneous resources*, e.g. Linux and Windows hosts
 
+==== Save script
+
+===== Save the pre-script in a file and skip its execution
+
+Instead of executing the pre-script, we also provide to save the pre-script in a file and skip the execution. To do so, a Generic Information is required for the desired task, with the key
+"PRE_SCRIPT_AS_FILE", and the path of the file that you want to save your pre-script as its value. The path should contain a file name. It can be an absolute path, then the file will be stored in this absolute path. It can
+ also be a relative path, then the file will be stored in the link:../user/ProActiveUserGuide.html#_local_space[Local Space]. If you don't give a specific extension in the path, the extension will be automatically assigned to the corresponding one of the language selected for this pre-script.
+
+
 === Run computation with your system account
 
 It is possible to start a task under the job owner if the system is configured for that purpose.
@@ -1238,26 +1339,28 @@ If the task has not *IN_ERROR* status, the _Mark as finished and resume_ option 
 === Get Notifications on Job Events
 
 
-Add a "NOTIFICATION_EVENTS" Generic information, to list events on which a user wants to be notified. List is comma-separated and should be taken from(events are not case sensitive):
+Add a "NOTIFICATION_EVENTS" Generic information in the workflow level, to list events on which a user wants to be notified. List is comma-separated and should be taken from(events are not case sensitive):
 
-* *Job change priority*
-* *Job In-Error*
-* *Job paused*
-* *Job pending to finished*
-* *Job pending to running*
-* *Job restarted from error*
-* *Job resumed*
-* *Job running to finished*
-* *Job submitted*
+* *Job change priority (or JOB_CHANGE_PRIORITY)*
+* *Job In-Error (or JOB_IN_ERROR)*
+* *Job paused (or JOB_PAUSED)*
+* *Job pending to finished (or JOB_PENDING_TO_FINISHED)*
+* *Job pending to running (or JOB_PENDING_TO_RUNNING)*
+* *Job restarted from error (or JOB_RESTARTED_FROM_ERROR)*
+* *Job resumed (or JOB_RESUMED)*
+* *Job running to finished (or JOB_RUNNING_TO_FINISHED)*
+* *Job submitted (or JOB_SUBMITTED)*
 
 Scheduler can send email to the users when one of the above events is received.
 
-Notifications will only be sent for jobs whose generic information contains user's email address under the "EMAIL" key. Example:
+If a user wants to be notified by all these events, the "NOTIFICATION_EVENTS" Generic information should have "All" (not case sensitive) as its value.
+
+Notifications will only be sent for jobs whose generic information (workflow level) contains user's email address(es) under the "EMAIL" key, if multiple email addresses need to be used, they should be seperated by comma. Example:
 
 [source, xml]
 ----
 <genericInformation>
-    <info name="EMAIL" value="user@example.com"/>
+    <info name="EMAIL" value="user0@example.com, user1@example.com"/>
     <info name="NOTIFICATION_EVENTS" value="Job paused, Job resumed"/>
 </genericInformation>
 ----
@@ -1475,60 +1578,109 @@ NOTE: Please follow the graphiql endpoint: `http://localhost:8080/catalog/graphi
 
 == Usage of Catalog from GUI
 
-The GUI interaction with the Catalog can be done in two places: Studio portal and Workflow Catalog Portal.
+The GUI interaction with the Catalog can be done in two places: Studio portal and Catalog Portal.
 The portals follow the concepts of the Catalog: Workflows store inside buckets, the Workflow can have several revisions, each Workflow have specific description.
-The view of Workflows from Catalog in Studio and from Workflow Catalog Portal follow the same view logic. The page is separated in 3 sections.
+The view of Workflows from Catalog in Studio and from Catalog Portal follow the same view logic. The page is separated in 3 sections.
 The approach is selecting the needed information from left to right. First user should choose the required bucket, then the user can observe all the Workflows in the selected bucket. When the user select the Workflow it will be shown all existing revisions of the Workflow. By selecting a revision you will be able to see the the description about the workflow revision.
 
 === Studio
-Inside Studio portal there is present a `Catalog` menu. With help of this menu the user can directly interact from studio view with Catalog storage.
+Inside the Studio portal there is a `Catalog` menu from which a user can directly interact with the Catalog storage.
+
+image::studio_catalog_menu.png[align=center]
 
 ==== Publish current Workflow to the Catalog
-The Catalog menu will provide possibility for an user directly save inside Catalog the created in studio Workflow: `Publish current Workflow to the Catalog`.
-In opened window for publishing the current Workflow to Catalog the user can choose the `Bucket` where the Workflow will be stored and `commit message`.
-If the Workflow with the same name is already exists in specified bucket in the Catalog, it will be created the new revision of this Workflow.
-We recommend to specify commit message for easier differentiation the versions of a Workflow.
+Workflows created in the studio can be saved inside a bucket in the Catalog by using the `Publish current Workflow to the Catalog` action.
+When saving a Workflow in the Catalog, users can add a specific `commit message`.
+If a Workflow with the same name already exists in the specified bucket, a new revision of the Workflow is created.
+We recommend to always specify commit messages at any commit for an easier differentiation between stored versions.
 
 ==== Get a Workflow from the Catalog
 When the Workflow is selected from Catalog you have two options:
-`Open as a new Workflow`
-This option will open the Workflow from Catalog as new Workflow in Studio
-`Append to current Workflow`
-When the user choose this option, it's supposed that the user wants to append the Workflow from Catalog to Workflow already opened inside studio. Please open the Workflow to which you want to append before.
 
-=== Workflow Catalog Portal
-The Workflow Catalog Portal provides interfaces for easy administering the Catalog. The most important of provided features will be described next.
+1. `Open as a new Workflow`: Open the Workflow from Catalog as a new Workflow in Studio.
 
-==== Creating the new buckets
-You need to press `plus` button from above of buckets. In opened window you need to specify Bucket name and associate with user group.
-For security reason there are groups associated to buckets. The user from same group can view the content of bucket.
-There is a special default group - `no group` in the dropdown list of window. The bucket associated with this default group can be viewed by any user.
+2. `Append to current Workflow`: Append the selected Workflow from the Catalog to the Workflow already opened inside the Studio.
 
-==== Set Bucket as Catalog Menu
-This allows the user to change the bucket used to get workflows from the Catalog in the studio. By selecting a bucket, the user can change the content of the main Catalog menu (named as the current bucket) to get workflows from another bucket as templates.
-This can also be achieved by adding `/templates/bucket_name` at the end of the URL.
+
+==== Set Bucket as Main Catalog Menu
+In the `Catalog` dropdown menu, you can select a catalog Bucket to be used as the main Menu in the Studio. This makes it easier to use specific templates stored in a specific Bucket of the Catalog when designing a Workflow.
+
+The main bucket dropdown can be changed by clicking on the `Catalog` → `Set Bucket as Main Catalog Menu` entry. See image below.
+
+image::studio-catalog-main-menu1.png[align=center]
+
+The name of selected Bucket now appears at the top of the Studio, and all its Workflows are now readily available in a Menu.
+
+image::studio-catalog-main-menu2.png[align=center]
+
 
 ==== Add Bucket as Extra Catalog Menu
-This allows the user to add a bucket for templates in the studio. By selecting a bucket, the user can add a new Catalog menu that will contain its workflows.
+This allows the user to add extra buckets from the Catalog as dropdown menus in the Studio.
 
-==== Removing Workflows inside bucket
-For removing Workflows, first the user should select the bucket containing the Workflows. Then the user can select multiple Workflows with pressed CTRL button. To delete the selected Workflows push the `trash` button.
+Add a new menu by clicking on the `Catalog` → `Add Bucket as Extra Catalog Menu` entry. See image below. 
 
-===== Importing/Exporting Workflows into the Catalog
-You can export Workflows to an archive, to share them more easily (email, usb key,..), and then import the entire archive from the Catalog.
+image::studio-catalog-main-menu3.png[align=center]
 
-To export the selected Workflows as a ZIP archive from Workflow Catalog portal: select a bucket, then the targeted Workflows (you can select multiple Workflows with pressed CTRL button). Press "Download Workflows" button from portal view. You'll get a ZIP file that can be transferred on an other Scheduler.
-To import the zip archive of Workflows to the Catalog from portal, select the bucket where the Workflows will be added. Then press `Upload Workflows` button in portal and follow the instructions `Upload a ZIP archive of Workflows` opened window.
+The selected deep-learning-workflows Bucket now appears as a menu in the Studio. See image below.
 
-==== List revisions of Workflow
-The last revision of the Catalog is always displayed on the portal. In order to see all revisions of selected Workflow, please click on `clock` button inside description area.
-The revisions are shown in chronological order by commit time.
+image::studio-catalog-main-menu4.png[align=center]
 
-==== Restore the revision
-Usually users work on the last version of a workflow. But in some cases, user could need to get back to a specific revision.
-For this case there is a dedicated button: `Restore the revision`. Once the workflow is selected, click on the 'clock' button to expand all revisions.
-By simply selecting the required revision from list and clicking `Restore`, the selected revision will become the last version of Workflow.
+You can repeat the operation as many times as you wish in order to add other specific Menus you might need for your workflow design. See image below.
 
+image::studio-catalog-main-menu5.png[align=center]
+
+=== Catalog Portal
+The Catalog Portal provides the capability to store objects like Workflows, Calendars, Scripts, etc.
+Powerful versioning together with full access control (RBAC) is supported, and users can easily share Workflows, templates, and other objects between teams, and various environments (Dev, Test, Staging, Prod).
+
+image::catalog-portal-context-menu.png[align=center]
+
+==== Creating new buckets
+Create a new bucket easily by clicking on the `plus` button. 
+
+image::create-new-bucket.png[align=left]
+
+In the `Create the new bucket` window, it is possible to associate a bucket to a specific users group. 
+
+By doing so, only users from the same group will be able to access the content of the bucket.
+
+The content of the buckets associated with the default - `no group`  is accessible by any user, regardless of the groups they belong to.
+
+==== Removing Objects Inside a Bucket
+Select the objects to remove (CTRL + left click to select multiple objects) and click on the `trash` button. 
+
+WARNING: All the object's content will be removed from the database and it cannot be restored.
+
+==== Exporting/Importing Objects into the Catalog
+Catalog Objects can be exported to a local archive, and share them easily by email, cloud, etc.  The same archive can be imported again in the Catalog on the same scheduler or in a different one.
+
+TIP: Use this feature to easily share Catalog objects across different environments.
+
+To export the selected objects as a ZIP archive, press the download button from portal view. 
+
+image::download-catalog-objects.png[align=left]
+
+To import, either a downloaded catalog archive zip file or a single object, click on the upload button and follow the instructions :
+
+image::upload-catalog-objects.png[align=left]
+
+* *Object Kind*: The kind of object to add. New Kinds can be added by clicking the `plus` button.
+
+* *Content Type*: The Content Type is used to indicate the media type of the resource. New content Types can be added by clicking the `plus` button. 
+
+WARNING: In case of uploading an archive, all the objects in the zip must have the same Kind and Content Type.
+
+
+==== Catalog Object Versioning
+The HEAD of a Catalog object corresponds to the last commit and it is displayed on the portal. 
+
+In order to see all the commits of the selected Object, please click on the `clock` button inside the description area.
+
+The commits are shown in chronological order by commit time. 
+
+It is possible to restore any previous commit to the HEAD position by clicking the `restore` button. 
+
+image::revisions-catalog.png[align=center]
 
 == Third-party credentials
 
@@ -2025,6 +2177,21 @@ Here is the ordered list of rules for the EDF policy:
 5. job with the earliest `JOB_DDL` minus `JOB_EXEC_TIME` has a priority
 
 6. job with earliest submission time.
+
+==== Email notificaions
+
+EDF policy sends 3 types of email notifications:
+
+1. (Arriving soon) When job deadline is at risk (if the job is not started in the next X minutes, its deadline will be missed)
+
+2. When job will likely miss its deadline (i.e if the provided `JOB_EXEC_TIME` exceeds the left time until the deadline)
+
+3. (Arriving soon) When job is already missed its deadline.
+
+Policy sends emails to the address specified in `EMAIL` Generic Information of the job.
+
+To enable email notifications see link:../admin/ProActiveAdminGuide.html#_get_notifications[Admin Guide].
+
 
 == Data Connectors
 
