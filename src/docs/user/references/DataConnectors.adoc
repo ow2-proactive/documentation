@@ -156,7 +156,7 @@ All SQL connectors share the same list of variables. Consequently, we describe t
 | String
 | e.g. `path/to/my/output.csv`
 | `<RDBMS_NAME>_OUTPUT_TYPE`
-| Task result output type (HTML` or `CSV`).
+| Task result output type (`HTML` or `CSV`).
 If set to `HTML`, it allows to preview the results in Scheduler Portal in HTML format.
 | Import Task
 | No
@@ -182,7 +182,7 @@ Default: `CSV`
 | Export Task
 | Yes
 | String
-| _
+| Default: `append`
 | `INPUT_FILE`
 | - It can be a relative path in the dataspace of a csv file containing the data to import.
 
@@ -273,11 +273,11 @@ Both workflows share the same list of variables. Consequently, we describe them 
 
 *How to use these workflows:*
 
-The scheduler should be configured in non-fork mode to execute tasks in a single JVM rather than starting a dedicated JVM to run the task (In $PROACTIVE_HOME/config/scheduler/settings.ini, put pa.scheduler.task.fork=false).
+The scheduler should be configured in non-fork mode to execute tasks in a single JVM rather than starting a dedicated JVM to run the task (In $PROACTIVE_HOME/config/scheduler/settings.ini, set pa.scheduler.task.fork=false).
 
 To be executed, each workflow requires the jdbc connector jar file of the used rdbms to connect to the database. Make sure you have it properly copied into the addons directory ($PROACTIVE_HOME/addons) of the scheduler.
 
-In case the password is required, you have to add the following third-party credential: {key: `<mysql|postgresql|sqlserver|oracle|hsqldb>://<USERNAME>@<HOST>:<PORT>`, value: `<RDBMS_NAME>_PASSWORD`}. ; this is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+In case the password is required, you have to add the following third-party credential: {key: `<mysql|postgresql|sqlserver|oracle|hsqldb>://<USERNAME>@<HOST>:<PORT>`, value: `<RDBMS_NAME>_PASSWORD`}. This is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 === NoSQL
 The NoSQL connectors allow to import data from NoSQL Databases.
@@ -541,7 +541,7 @@ The Amazon S3 connector allows to upload and download data from S3. The connecto
 | Import Task, Export Task
 | Yes
 | String
-| e.g. `path/to/input/file.file`
+| e.g. `path/to/input/file`
 
 or `path/to/input/folder/`
 
