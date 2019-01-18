@@ -151,16 +151,16 @@ key *docker-compose-options-split-regex*. If you supply e.g. "!SPLIT!" as value,
 
 === Docker_File task
 
-The basic behavior of a Docker_File task is to create an image with Docker build and to create a container based on the built image. At the end of the job, the created image and container are deleted. Advanced options will allow to parametrize these actions.
+The basic behavior of a Docker_File task is to build an image and run a container using the built image. At the end of the task (the dockerfile execution), the container is stooped and the image is deleted. 
+
+Advanced options will allow to parametrize these actions.
 
 In order for Docker_File tasks to work, the _Node_ must have Docker installed. Please refer to the official
- Docker documentation to see how to install http://docs.docker.com/engine/installation/[Docker^]
+ Docker documentation to see how to install http://docs.docker.com/engine/installation/[Docker^].
 
-A Docker_File task expects the content of a Dockerfile inside the _Script_ section. You can find out how to write Dockerfile
+To use a Docker_File task, put the content of a Dockerfile inside the _Task Implementation_ section. You can find out how to write Dockerfile
 in the official https://docs.docker.com/engine/reference/builder/[Dockerfile documentation^].
-
-
-The Docker_File task will run a combination of docker commands to build, start, stop and remove containers. 
+When the Docker_File task is launched, a succession of docker commands is to build image, run container, stop container and remove image. 
 
 To get started, a simple Docker_File task can be tested by using this Dockerfile as the content of the _Script_ section (task implementation)
 
@@ -201,6 +201,8 @@ To define a _docker-run option_, use the generic information *docker-stop-option
 
 For instance by using the docker-stop-options generic information with the value --time 30, the container will be stopped after 30s.
 
+TIP:  a parameter *docker.file.keepcontainer* is defined in the dockerfile script engine properties file (in config/scriptengines/ folder). Put the value to *yes* if you do not want to stop the container.
+
 * The Docker_File task allows to set parameters to the `docker rmi` command with regard to the docker-rmi CLI https://docs.docker.com/engine/reference/commandline/rmi/#options[reference].
 ----
 docker rmi [OPTIONS] IMAGE [IMAGE...]
@@ -208,6 +210,7 @@ docker rmi [OPTIONS] IMAGE [IMAGE...]
 
 To define a _docker-rmi option_, use the generic information *docker-rmi-options* 
 
+TIP:  a parameter *docker.file.keepimage* is defined in the dockerfile script engine properties file (in config/scriptengines/ folder). Put the value to *yes* if you do not want to delete the built image.
 
 === Native application
 
