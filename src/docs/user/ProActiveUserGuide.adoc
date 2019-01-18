@@ -160,7 +160,7 @@ In order for Docker_File tasks to work, the _Node_ must have Docker installed. P
 
 To use a Docker_File task, put the content of a Dockerfile inside the _Task Implementation_ section. You can find out how to write Dockerfile
 in the official https://docs.docker.com/engine/reference/builder/[Dockerfile documentation^]. 
-A Docker_File task allows executing a succession of docker commands according to lifecycle of Docker containers. In order, docker build, docker run, docker stop, and docker rmi are ran when a Docker_File task is executed.
+A Docker_File task allows executing a succession of docker commands according to the lifecycle of Docker containers. In order, docker build, docker run, docker stop, and docker rmi are ran when a Docker_File task is executed.
 
 To get started, a simple Docker_File task can be tested by using this Dockerfile as the content of the _Script_ section (task implementation)
 
