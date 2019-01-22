@@ -66,9 +66,9 @@ If a job has been PENDING before starting, depending on the scale you have selec
 
 The length of the displayed planned jobs can be :
 
-    - the expected execution time given by users in the workflow with the Generic Information : JOB_EXEC_TIME
-    - if the workflow doesn't have any JOB_EXEC_TIME Generic Information, it will be the average execution time
-    - if the workflow doesn't have any JOB_EXEC_TIME Generic Information and has never been executed with the association, it will be a default 15 minutes duration.
+    - the expected execution time given by users in the workflow with the Generic Information : `JOB_EXEC_TIME`
+    - if the workflow doesn't have any `JOB_EXEC_TIME` Generic Information, it will be the average execution time
+    - if the workflow doesn't have any `JOB_EXEC_TIME` Generic Information and has never been executed with the association, it will be a default 15 minutes duration.
 
 If you select a calendar that will occur frequently (such as "every_10_min"), you might encounter troubles with big scales (such as "year"). The Gantt chart will take a long time to load and events will be too condensed to be readable. This is why for these kind of calendars, it is easier to select a smaller scale (such as "1 hour"). You can also select only the calendars you need to see before opening the Gantt chart modal, to make it load faster.
 
