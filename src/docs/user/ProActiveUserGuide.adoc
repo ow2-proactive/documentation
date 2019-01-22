@@ -109,18 +109,15 @@ At the left part, are illustrated the **General Parameters** of the workflow wit
 - `Job Priority`: the priority assigned to the workflow. It is by default set to `NORMAL`, but can be increased or decreased once the job is submitted. 
 
 
+=== Docker_Compose task
 
-
-
-=== Docker task
-
-In order for Docker tasks to work, the _Node_ must have Docker and Docker Compose installed, please refer to the official
+In order for Docker_Compose tasks to work, the _Node_ must have Docker and Docker Compose installed. Please refer to the official
  Docker documentation to see how to install http://docs.docker.com/engine/installation/[Docker^] and https://docs.docker.com/compose/install/[Docker Compose^].
 
-A Docker task expects the content of a Docker Compose file inside the _Script_ section. You can find out how to write Docker Compose files
-with the official https://docs.docker.com/compose/[Docker Compose documentation^].
+A Docker_Compose task expects the content of a Docker Compose file inside the _Script_ section. You can find out how to write Docker Compose files
+in the official https://docs.docker.com/compose/[Docker Compose documentation^].
 
-To get started: a simple Docker Compose example is explained below.
+To get started, a simple Docker Compose example is explained below.
 
 The content of the _Script_ section (equal to the content of a Docker Compose file) is:
 ----
@@ -131,9 +128,7 @@ helloworld:
 The above example describes a container which is called 'helloworld'. That container is created from a busybox image,
  which will run the command 'echo "Hello ProActive"'
 
-=== Docker task advanced options
-
-The Docker task allows to set parameters to the `docker-compose` tool with regard to the docker-compose CLI https://docs.docker.com/compose/reference/overview/[reference].
+The Docker_Compose task allows to set parameters to the `docker-compose` tool with regard to the docker-compose CLI https://docs.docker.com/compose/reference/overview/[reference].
 
 ----
 docker-compose [general parameters] COMMAND [options]
@@ -153,6 +148,69 @@ docker-compose --verbose up --exit-code-from helloworld
 
 If splitting by space is prohibitive you can specify the split regex in the <<_glossary_generic_information, generic informations>> with the
 key *docker-compose-options-split-regex*. If you supply e.g. "!SPLIT!" as value, then your *docker-compose-up-options* will need to look like this: "--option1!SPLIT!--option2".
+
+=== Docker_File task
+
+The main behavior of a Docker_File task is to first build an image and then run a container instance from it. Once the execution is done, the container is stopped and the built image is deleted. 
+
+Advanced options will allow to parametrize these actions.
+
+In order for Docker_File tasks to work, the _Node_ must have Docker installed. Please refer to the official
+ Docker documentation to see how to install http://docs.docker.com/engine/installation/[Docker^].
+
+To use a Docker_File task, put the content of a Dockerfile inside the _Task Implementation_ section. You can find out how to write Dockerfile
+in the official https://docs.docker.com/engine/reference/builder/[Dockerfile documentation^]. 
+A Docker_File task allows executing a succession of docker commands according to the lifecycle of Docker containers. In order, docker build, docker run, docker stop, and docker rmi are ran when a Docker_File task is executed.
+
+To get started, a simple Docker_File task can be tested by using this Dockerfile as the content of the _Script_ section (task implementation)
+
+----
+FROM ubuntu:18.04
+RUN echo "Hello ProActive" 
+RUN sleep 30
+----
+
+It will create an image using the Docker build command, by specifying commands to start (echo and sleep) for every running containers from this image. At the end the built image and the started container are deleted.
+
+The build, start, stop and remove commands can be parametrized through optional command line options explained after.
+
+* The Docker_File task allows to set parameters to the `docker build` command with regard to the docker-build CLI https://docs.docker.com/engine/reference/builder/[reference].
+----
+docker build [OPTIONS] PATH | URL | -
+----
+
+To define a _docker-build option_, use the generic information *docker-build-options* 
+
+For instance by using the docker-build-options generic information with the value --add-host, a custom host-to-IP mapping will be added to the image.
+
+* The Docker_File task allows to set parameters to the `docker run` command with regard to the docker-run CLI https://docs.docker.com/engine/reference/run/[reference].
+----
+docker run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
+----
+
+To define a _docker-run option_, use the generic information *docker-run-options* 
+
+For instance by using the docker-run-options generic information with the value -d=true, the container will be started in detached mode.
+
+* The Docker_File task allows to set parameters to the `docker stop` command with regard to the docker-stop CLI https://docs.docker.com/engine/reference/commandline/stop/[reference].
+----
+docker stop [OPTIONS] CONTAINER [CONTAINER...]
+----
+
+To define a _docker-run option_, use the generic information *docker-stop-options* 
+
+For instance by using the docker-stop-options generic information with the value --time 30, the container will be stopped after 30s.
+
+TIP:  a parameter *docker.file.keepcontainer* is defined in the dockerfile script engine properties file (in config/scriptengines/ folder). Put the value to *yes* if you do not want to stop the container.
+
+* The Docker_File task allows to set parameters to the `docker rmi` command with regard to the docker-rmi CLI https://docs.docker.com/engine/reference/commandline/rmi/#options[reference].
+----
+docker rmi [OPTIONS] IMAGE [IMAGE...]
+----
+
+To define a _docker-rmi option_, use the generic information *docker-rmi-options* 
+
+TIP:  a parameter *docker.file.keepimage* is defined in the dockerfile script engine properties file (in config/scriptengines/ folder). Put the value to *yes* if you do not want to delete the built image.
 
 === Native application
 
