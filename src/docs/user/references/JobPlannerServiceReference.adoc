@@ -28,6 +28,9 @@ When creating an association, it is possible to set the workflows variables.
 
 image::calendar_wf_association_2.png[align="center"]
 
+The created association can be deactivated by clicking on the unlink button. This means that the workflows won't be submitted for the next calendar occurrences, but it will still be visible on the Execution Planning and the Gantt chart. You can reactivate it with the link button.
+On the left panel, you can easily see the number of associated workflows to each calendar, and how many of them are activated.
+
 This page can also be opened when clicking on the "plan" button on the <<_glossary_workflow_studio, *Studio*>> or the <<_glossary_scheduler_web_interface, *Scheduler Portal*>>.
 
 ==== Execution Planning visualisation
@@ -48,6 +51,28 @@ Then, there are 3 ways to visualize the recurrence on the Execution Planning pan
 
 If a calendar has no association, you can still select it and see its recurrence on the Execution Planning panel.
 If nothing is displayed, it means the selected Calendar Definitions have no recurrence on the selected period.
+
+You can also use the Gantt chart to visualize the executions:
+
+image::calendar_planning_gantt.png[align="center"]
+
+In addition to the Execution Planning panel, the Gantt chart allows you to see the past jobs. You can see information such as their status at the Gantt generation time, statistics on their execution time, their submission time... You can see them in the tooltips, when passing your mouse over a specific job.
+
+The planned jobs (in orange) are on the row just above the actual jobs so that you can easily compare what was planned and what actually happened. You can use the legend button for a better understanding of the colors.
+
+image::calendar_planning_gantt_legend.png[align="center"]
+
+If a job has been PENDING before starting, depending on the scale you have selected, you can see a yellow part on the displayed job. This corresponds to the time the job was PENDING and helps to highlight a resource problem.
+
+The length of the displayed planned jobs can be :
+
+    - the expected execution time given by users in the workflow with the Generic Information : JOB_EXEC_TIME
+    - if the workflow doesn't have any JOB_EXEC_TIME Generic Information, it will be the average execution time
+    - if the workflow doesn't have any JOB_EXEC_TIME Generic Information and has never been executed with the association, it will be a default 15 minutes duration.
+
+If you select a calendar that will occur frequently (such as "every_10_min"), you might encounter troubles with big scales (such as "year"). The Gantt chart will take a long time to load and events will be too condensed to be readable. This is why for these kind of calendars, it is easier to select a smaller scale (such as "1 hour"). You can also select only the calendars you need to see before opening the Gantt chart modal, to make it load faster.
+
+The "Save Gantt" button will take a screenshot of the visible part of the Gantt chart. Like for Gantt chart loading, it might take a while if there are too many events. You can also chose a smaller scale and select only the calendars you need.
 
 === Calendar Definition Syntax
 
