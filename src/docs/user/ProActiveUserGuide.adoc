@@ -1369,7 +1369,7 @@ Notifications will only be sent for jobs whose generic information (workflow lev
 ----
 
 To enable this functionality, the configuration need to be done following the steps introduced in
-link:../admin/ProActiveAdminGuide.html#_get_notification_on_job_events_configuration[Get Notification on Job Events Configuration].
+link:../admin/ProActiveAdminGuide.html#_get_notifications[Get Notification on Job Events Configuration].
 
 === Chaining Jobs
 
