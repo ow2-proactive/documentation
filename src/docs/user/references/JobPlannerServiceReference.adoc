@@ -28,7 +28,7 @@ When creating an association, it is possible to set the workflows variables.
 
 image::calendar_wf_association_2.png[align="center"]
 
-The created association can be deactivated by clicking on the unlink button. This means that the workflows won't be submitted for the next calendar occurrences, but it will still be visible on the Execution Planning and the Gantt chart. You can reactivate it with the link button.
+The created association can be deactivated by clicking on the `unlink` button. This means that the workflows won't be submitted for the next calendar occurrences, but it will still be visible on the Execution Planning and the Gantt chart. You can reactivate it with the `link` button.
 On the left panel, you can easily see the number of associated workflows to each calendar, and how many of them are activated.
 
 This page can also be opened when clicking on the "plan" button on the <<_glossary_workflow_studio, *Studio*>> or the <<_glossary_scheduler_web_interface, *Scheduler Portal*>>.
