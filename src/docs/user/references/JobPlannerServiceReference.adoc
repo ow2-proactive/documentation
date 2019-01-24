@@ -2,9 +2,10 @@
 === Introduction
 The <<_glossary_job_planner,*Job Planner*>> schedules <<_glossary_workflow,*Workflows*>>.
  A <<_glossary_workflow,*Workflow*>> is scheduled by the <<_glossary_job_planner,*Job Planner*>> if
-  it is associated to a <<_glossary_calendars_definition,*Calendar Definition*>>.
+  it is associated to a <<_glossary_calendars_definition,*Calendar Definition*>>. A <<_glossary_calendars_definition,*Calendar Definition*>> can have several <<_glossary_workflow,*Workflows*>> associated to it. Each of them can easily be activated and deactivated.
+  The <<_glossary_workflow,*Workflows*>> variables can be set when associating them to calendars.
 
-=== Job Planner Submission
+=== Creation of a Planning
 
 ==== Creating Calendar Definitions
 
@@ -33,14 +34,17 @@ On the left panel, you can easily see the number of associated workflows to each
 
 This page can also be opened when clicking on the "plan" button on the <<_glossary_workflow_studio, *Studio*>> or the <<_glossary_scheduler_web_interface, *Scheduler Portal*>>.
 
-==== Execution Planning visualisation
+=== Execution Planning visualisation and GANTT
 
-On the <<_glossary_job_planner_portal, *Job Planner Portal*>>, Execution Planning page, you can see the recurrence of calendar definitions.
-You can select one or several Calendar Definitions on the left panel and associated workflows will appear on the right panel. 
+On the <<_glossary_job_planner_portal, *Job Planner Portal*>>, Execution Planning page, you can see the recurrence of <<_glossary_calendars_definition,*Calendar Definitions*>> .
+You can select one or several Calendar Definitions on the left panel and associated workflows will appear on the right panel.
+There are 2 ways to visualize planning of the selected Calendar Definitions:
+    - by workflow, Chronologically or on a standard Calendar
+    - with a GANTT chart
 
-image::calendar_planning.png[align="center"]
+==== Visualization by workflow, Chronologically or on a standard Calendar
 
-Then, there are 3 ways to visualize the recurrence on the Execution Planning panel:
+There are 3 different tabs for the planning visualization:
 
     - "Sort by workflow" tab: For each workflow, a list of execution time is displayed. The combo box allows you to choose the period of the execution planning. If several workflows are associated to one Calendar Definition, they will be grouped.
     If a workflow is associated to several Calendar Definitions, it will appear several times.  The name of the Calendar Definition is always displayed next to the workflow name, in order to know which Calendar Definition is related to the given executions.
@@ -49,26 +53,50 @@ Then, there are 3 ways to visualize the recurrence on the Execution Planning pan
     - "Calendar" tab : You can see the execution planning of the selected Calendar Definitions, by year/month/week or day. In the year and month views, you can see the number of executions in one month/day.
     If you click on it, you can see more details on which workflows are executed and when. In the week view, if several workflows are executed at the same time, you will only be able to see one at a time.
 
+image::calendar_planning.png[align="center"]
+
 If a calendar has no association, you can still select it and see its recurrence on the Execution Planning panel.
 If nothing is displayed, it means the selected Calendar Definitions have no recurrence on the selected period.
+
+==== GANTT Visualization of the Job Planning
 
 You can also use the Gantt chart to visualize the executions:
 
 image::calendar_planning_gantt.png[align="center"]
 
-In addition to the Execution Planning panel, the Gantt chart allows you to see the past jobs. You can see information such as their status at the Gantt generation time, statistics on their execution time, their submission time, etc. You can see them in the tooltips, when passing your mouse over a specific job.
+In addition to the Execution Planning panel, the Gantt chart allows you to see the past job history, the current one being executed, as well as the future ones, all in a comprehensive interactive view. In this view, you will easily see the potential difference between the `Planned Submission time` and the `Actual Start Time` of the Jobs. You will also get estimations of the `Finished Time`, taking into account the `Actual Start Time`.
+Moreover, you can visualize the Job that stayed PENDING for some time (in Yellow), as well as the Jobs that had issues and got KILLED, CANCELLED, or FAILED (in red).
 
 The planned jobs (in orange) are on the row just above the actual jobs so that you can easily compare what was planned and what actually executed. You can use the legend button for a better understanding of the colors.
 
 image::calendar_planning_gantt_legend.png[align="center"]
 
-If a job has been PENDING before starting, depending on the scale you have selected, you can see a yellow part on the displayed job. This corresponds to the time the job was PENDING and helps to highlight a resource problem.
-
-The length of the displayed planned jobs can be :
+The length of the displayed planned jobs can be:
 
     - the expected execution time given by users in the workflow with the Generic Information: `JOB_EXEC_TIME`
     - if the workflow doesn't have any `JOB_EXEC_TIME` Generic Information, it will be the average execution time computed from the past association executions
-    - if the workflow doesn't have any `JOB_EXEC_TIME` Generic Information and has never been executed with the association, it will be a default 15 minutes duration.
+    - if the workflow doesn't have any `JOB_EXEC_TIME` Generic Information and has never been executed with the association, it will be a default 15 minutes duration
+
+image::calendar_planning_gantt_tooltip.png[align="center"]
+
+If a job has been PENDING before starting, depending on the scale you have selected, you can see a yellow part on the displayed job. This corresponds to the time the job was PENDING and helps to highlight a resource problem.
+
+You can see more information jobs in the tooltips, when passing your mouse over a specific job:
+
+    - `Workflow` and `bucket name`
+    - `Job ID`: the ID given by the scheduler when a job has been submitted
+    - `Status`: the status of the job when the Gantt has been generated
+    - `User estimated execution duration`: Generic Information `JOB_EXEC_TIME` given by users in the workflow. This information doesn't appear if the Generic Information is not defined in the workflow.
+    - `Submission time`: the time when the job had been submitted by the job planner.
+    - `Actual start time`: the time when the job has started. If it has been PENDING before starting, `Submission time` and `Actual start time` will be different.
+    - `Actual finish time`: the time when the job has finished (event if it was killed, cancelled or that it failed)
+    - `Full duration (wall time)`: the duration of the job, from the time it was submitted (`Submission time`) to the time it finished (`Actual finish time`)
+    - `Average execution time`: the average duration of the workflow submitted with this specific calendar by the job planner
+    - `Minimal execution time`: the minimal duration of the workflow submitted with this specific calendar by the job planner
+    - `Maximal execution time`: the maximal duration of the workflow submitted with this specific calendar by the job planner
+    - `Displayed with [...]`: which one of the values above was used to display the bar representing the job
+
+Depending on the status of the job, the information won't be the same. For example, if the job is RUNNING or STALLED, `Actual finish time` will be replaced by `Planned finish time`: the time when the job should finish, depending on when it started or how long it has been delayed.
 
 TIP: If you select a calendar that will occur frequently (such as "every_10_min"), you might encounter troubles with big scales (such as "year"). The Gantt chart will take a long time to load and events will be too condensed to be readable. This is why for these kind of calendars, it is easier to select a smaller scale (such as "1 hour"). You can also select only the calendars you need to see before opening the Gantt chart modal, to make it load faster.
 
