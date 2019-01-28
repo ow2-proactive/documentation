@@ -87,7 +87,7 @@ You can see more information jobs in the tooltips, when passing your mouse over 
     - `Job ID`: the ID given by the scheduler when a job has been submitted
     - `Status`: the status of the job when the Gantt has been generated
     - `User estimated execution duration`: Generic Information `JOB_EXEC_TIME` given by users in the workflow. This information doesn't appear if the Generic Information is not defined in the workflow.
-    - `Submission time`: the time when the job had been submitted by the job planner.
+    - `Submission time`: the time when the job had been submitted by the job planner
     - `Actual start time`: the time when the job has started. If it has been PENDING before starting, `Submission time` and `Actual start time` will be different.
     - `Actual finish time`: the time when the job has finished (event if it was killed, cancelled or that it failed)
     - `Full duration (wall time)`: the duration of the job, from the time it was submitted (`Submission time`) to the time it finished (`Actual finish time`)
