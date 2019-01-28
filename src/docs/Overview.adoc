@@ -20,6 +20,11 @@ image::job-planner.png[align=center]
 The screenshot above shows the *Job Planner Portal*, allowing to automate and schedule recurring Jobs.
 From left to right, you can define and use *Calendar Definitions* , associate *Workflows* to calendars, visualize the *execution planning* for the future, as well as actual executions of the past.
 
+image::calendar_planning_gantt.png[align=center]
+
+The Gantt screenshot above shows past job history, current and future ones, all in a comprehensive interactive view.
+You easily see the potential differences between Planned Submission Time and Actual Start Time of the Jobs, get estimations of the Finished Time, visualize the Job that stayed PENDING for some time (in Yellow) and the Jobs that had issues and got KILLED, CANCELLED, or FAILED (in red).
+
 image::cloud-automation-on-demand-paas.png[align=center]
 
 The screenshot above shows the *Cloud Automation* portal which is actually a PaaS automation tool. It allows you to easily manage any On-Demand Services with full Life-Cycle Management (create, deploy, suspend, resume and terminate).
