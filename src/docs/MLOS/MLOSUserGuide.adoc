@@ -336,25 +336,25 @@ NOTE: Instead of training a model from scratch, you can use a pre-trained sentim
 
 WARNING: It is recommended to use an enabled-GPU node to run the deep learning tasks.
 
-=== Custom AI Workflows - Other libraries
+//=== Custom AI Workflows - Other libraries
 
-The following workflows present useful computer vision applications using Convolutional Neural Networks based on deep learning for image recognition, object detection, anomaly detection, and image segmentation. Open source libraries, such as TensorFlow, Keras, Caffe, OpenCV, PyTorch and scikit-learn are used as backend for AI workflows.
+//The following workflows present useful computer vision applications using Convolutional Neural Networks based on deep learning for image recognition, object detection, anomaly detection, and image segmentation. Open source libraries, such as TensorFlow, Keras, Caffe, OpenCV, PyTorch and scikit-learn are used as backend for AI workflows.
 
-video::XEMm47GwCn8[youtube, width=700, height=400 start=0, position=center]
+//video::XEMm47GwCn8[youtube, width=700, height=400 start=0, position=center]
 
-*Keras_Image_Classification:* classifies an input image using deep ConvNets (specifically, VGG16) pre-trained on the ImageNet dataset.
+//*Keras_Image_Classification:* classifies an input image using deep ConvNets (specifically, VGG16) pre-trained on the ImageNet dataset.
 
-*Pytorch_Image_Object_Segmentation:* returns the horse segments of a given input image.
+//*Pytorch_Image_Object_Segmentation:* returns the horse segments of a given input image.
 
-*Pytorch_Train_Image_Object_Segmentation:* trains an image segmentation algorithm using PyTorch* to segment horses. It segments horses in the input image using a deep neural network (DNN).
+//*Pytorch_Train_Image_Object_Segmentation:* trains an image segmentation algorithm using PyTorch* to segment horses. It segments horses in the input image using a deep neural network (DNN).
 
-*Tensorflow_Parallel_Image_Prediction:* predicts three different images of flower species in parallel.
+//*Tensorflow_Parallel_Image_Prediction:* predicts three different images of flower species in parallel.
 
-*Tensorflow_Image_Prediction:* returns the flower species of a given input image.
+//*Tensorflow_Image_Prediction:* returns the flower species of a given input image.
 
-*Tensorflow_Train_Image_Classifier:* trains a deep ConvNets (specifically, Inception)* to recognize flower species.
+//*Tensorflow_Train_Image_Classifier:* trains a deep ConvNets (specifically, Inception)* to recognize flower species.
 
-WARNING: It is recommended to use an enabled-GPU node to run the deep learning tasks.
+//WARNING: It is recommended to use an enabled-GPU node to run the deep learning tasks.
 
 
 == References
@@ -2237,81 +2237,43 @@ Visdom bucket provides a fast, easy and practice way to execute different workfl
 
 ==== Visdom
 
-===== Start_Visdom_Service
+===== Visdom_Service_Start
 
 *Task Overview:* Bind or/and Start Visdom server.
 
 *Task Variables:*
 
-.Start_Visdom_Service_Task variables
+.Visdom_Service_Start_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `visdom_service_id`
+| `SERVICE_ID`
 | The id of the Visdom service.
 | String (default="Visdom")
-| `visdom_instance_name`
+| `INSTANCE_NAME`
 | The instance name of the server to use to broadcast visualization
-| String (default="visdom-server-1")
+| String (default="visdom-server")
 |===
 
 WARNING: If two workflows use the same service instance names, then, their generated plots will be created on the same service instance.
 
-===== Visdom_Client_Example
+===== Visdom_Service_Actions
 
-*Task Overview:* Connect and plot a text into the Visdom Server.
-
-*Task Variables:*
-
-To adapt according to the plots that you need to visualize
-
-*How to use this task:*  Customize this task by putting the source code generating your code in the `Task Implementation` section
-
-WARNING: This task has to be connected to the <<Start_Visdom_Service>> Task. The Visdom server should be up in order to be able to broadcast visualizations.
-
-===== Stop_Visdom_Service
-
-*Task Overview:*  Stop and remove the Visdom Server.
+*Task Overview:* Manage the life-cycle of Visdom PCA service. It allows to trigger three possible actions: Pause_Visdom, Resume_Visdom and Finish_Visdom.
 
 *Task Variables:*
 
-.Stop_Visdom_Service_Task variables
+.Visdom_Service_Actions_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `visdom_service_id`
-| The id of the Visdom service.
-| String (default="Visdom")
-| `visdom_instance_name`
+| `INSTANCE_NAME`
 | The instance name of the server to use to broadcast visualization
-| String (default="visdom-server-1")
+| String (default="visdom-server")
+| `INSTANCE_ACTION`
+| Three possible actions: Pause_Visdom, Resume_Visdom and Finish_Visdom.
+| List (default="Finish_Visdom")
 |===
-
-*How to use this task:* This task can be connected to <<Visdom_Client_Example>>. Visualize, then, stop the Visdom Service.
-
-NOTE: This task will immediately stop the service.
-
-===== Stop_Visdom_Service_After_Validation
-
-*Task Overview:* wait for the validation of the job by the user to stop and remove the Visdom Server.
-
-*Task Variables:*
-
-.Stop_Visdom_Service_After_Validation_Task variables
-[cols="2,5,2"]
-|===
-| *Variable name* | *Description* | *Type*
-| `visdom_service_id`
-| The id of the Visdom service.
-| String (default="Visdom")
-| `visdom_instance_name`
-| The instance name of the server to use to broadcast visualization
-| String (default="visdom-server-1")
-|===
-
-*How to use this task:* This task can be connected to <<Visdom_Client_Example>>. Visualize, then, stop the Visdom Service.
-
-NOTE: This task will stop the service once the user has validated this requirement using http://try.activeeon.com//cloud-automation[ProActive Cloud Automation^] portal.
 
 ===== Visdom_Visualize_Results
 
@@ -2327,7 +2289,20 @@ NOTE: This task will stop the service once the user has validated this requireme
 
 *How to use this task:*  This task has to be connected to the <<Start_Visdom_Service>> Task. The Visdom server should be up in order to be able to broadcast visualizations.
 
-==== Visdom Worflows
+===== Visdom_Plots
+
+*Task Overview:* return numerous examples of plots covered by Visdom.
+
+*Task Variables:*
+|===
+| *Variable name* | *Description* | *Type*
+| `VISDOM_ENDPOINT`
+| The visdom endpoint to be used.
+| URL
+|===
+
+
+==== Visdom Workflows
 
 The following workflows present some examples using Visdom service to visualize the results obtained while training and testing some predictive models.
 
@@ -2335,9 +2310,7 @@ video::bQpwS2nMAZY[youtube, width=700, height=400 start=0, position=center]
 
 *Visdom_Plot_Example:* returns numerous examples of plots covered by Visdom.
 
-*Visdom_Realtime_Apache_Intrusion_Detection:*  broadcasts in real time some visualizations of the analytic results provided by the Apache log intrusion detector.
-
-*Visdom_Service_Example:* evaluates in real time the performance of a simple Convolutional Neural Network (CNN) for MNIST* handwritten digit classification during the training and test processes.
+*Visdom_Real_time_Digit_Classification:* shows an example of realtime plotting using the Visdom server for training a convolutional neural network (CNN) for MNIST digit classification.
 
 A demo video of these workflows is available in https://www.youtube.com/user/ActiveEonCompany[ActiveEon Youtube Channel^].
 
