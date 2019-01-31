@@ -2,9 +2,9 @@
 === Introduction
 The <<_glossary_job_planner,*Job Planner*>> schedules <<_glossary_workflow,*Workflows*>> at specific points in time which are defined by <<_glossary_calendars_definition,*Calendars*>>.
 
- A <<_glossary_workflow,*Workflow*>> is scheduled by the <<_glossary_job_planner,*Job Planner*>> if
-  it is associated to a <<_glossary_calendars_definition,*Calendar Definition*>>. A <<_glossary_calendars_definition,*Calendar Definition*>> can have several <<_glossary_workflow,*Workflows*>> associated to it. Each of them can easily be activated and deactivated.
-  The <<_glossary_workflow,*Workflows*>> variables can be set with specific values when associating them to a <<_glossary_calendars_definition,*calendar*>>..
+A <<_glossary_workflow,*Workflow*>> is scheduled by the <<_glossary_job_planner,*Job Planner*>> if
+it is associated to a <<_glossary_calendars_definition,*Calendar Definition*>>. A <<_glossary_calendars_definition,*Calendar Definition*>> can have several <<_glossary_workflow,*Workflows*>> associated to it. Each of them can easily be activated and deactivated.
+The <<_glossary_workflow,*Workflows*>> variables can be set with specific values when associating them to a calendar.
 
 === Creation of a Planning
 
