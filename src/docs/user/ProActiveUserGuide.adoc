@@ -1581,17 +1581,17 @@ NOTE: Please follow the graphiql endpoint: `http://localhost:8080/catalog/graphi
 
 == Usage of Catalog from GUI
 
-The GUI interaction with the Catalog can be done in two places: Studio portal and Catalog Portal.
+The GUI interaction with the Catalog can be done in two places: Studio and Catalog Portal.
 The portals follow the concepts of the Catalog: Workflows are stored inside buckets, a workflow has some metadata and can have several revisions.
 
-The Catalog view in the Studio or in the Catalog Portal allow to browse all the workflows in the Catalog grouped by buckets and to list all the revisions of a workflow along with their commit message.
+The Catalog view in the Studio or in the Catalog Portal allows to browse all the workflows in the Catalog grouped by buckets and to list all the revisions of a workflow along with their commit message.
 
 === Studio
-Inside the Studio portal there is a `Catalog` menu from which a user can directly interact with the Catalog to import or publish Workflows.
+Inside the Studio, there is a `Catalog` menu from which a user can directly interact with the Catalog to import or publish Workflows.
 
 image::studio_catalog_menu.png[align=center]
 
-Besides, the Palette of the Studio lists the user's favourite buckets to allow easy import of workflows from the Catalog with a simple Drag & Drop.
+Additionally, the Palette of the Studio lists the user's favourite buckets to allow easy import of workflows from the Catalog with a simple Drag & Drop.
 
 image::studio-palette.png[align=center]
 
@@ -1609,7 +1609,7 @@ When the Workflow is selected from Catalog you have two options:
 2. `Append to current Workflow`: Append the selected Workflow from the Catalog to the Workflow already opened inside the Studio.
 
 ==== Add Bucket Menu to the Palette
-The Palette makes it easier to use specific templates stored in a specific Bucket of the Catalog when designing a Workflow.
+The Palette makes it easier to use workflows stored in a specific Bucket of the Catalog as templates when designing a Workflow.
 
 To add a bucket from the Catalog as a dropdown menu in the Palette:  Click on `View` → `Add Bucket Menu to the Palette` or you press the image:studio-palette-add.png[+, 32, 32] button in the palette.
 A window will show up to ask you which bucket you want to add to the Palette as in the image below.
@@ -1625,9 +1625,9 @@ You can repeat the operation as many times as you wish in order to add other spe
 image::studio-catalog-main-menu5.png[align=center]
 
 ==== Change Palette Preset
-The Studio offers the possibility to set a Preset for the Palette. This makes it easier to load the palette with a predefined set of default buckets.
+The Studio offers the possibility to set a Preset for the Palette. This makes it easier to load the Palette with a predefined set of default buckets.
 Presets are generally arranged by theme (Basic Examples, Machine Learning, Deep Learning, Big Data, etc.)
-The palette preset can be changed by clicking `View` → `Change Palette Preset`. This will show a window with the actual list of presets as in the image below.
+The Palette's preset can be changed by clicking `View` → `Change Palette Preset`. This will show a window with the current list of presets as in the image below.
 
 image::studio-catalog-main-menu1.png[align=center]
 
