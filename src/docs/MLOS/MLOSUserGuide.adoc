@@ -247,7 +247,6 @@ E. Execute the chosen workflow, track its progress and preview its results.
 
 More details about these workflows are available in this in link:https://www.activeeon.com/resources/automated-machine-learning-activeeon.pdf[ActiveEon's Machine Learning Documentation]
 
-
 === Basic Machine Learning
 
 The following workflows present some machine learning basic examples. These workflows are built using generic Machine learning and data visualization tasks available on the Machine Learning and Data Visualization buckets.
@@ -260,6 +259,13 @@ The following workflows present some machine learning basic examples. These work
 
 *Movies_Recommendation:* create a movie recommendation engine using collaborative filtering algorithm.
 
+=== Basic AutoML
+
+The following workflows present some machine learning basic examples using AutoML generic tasks available in the machine-learning bucket.
+
+*Breast_Cancer_Detection_Using_AutoSklearn_Classifier:* tests several machine learning pipelines and selects the best model for Cancer Breast detection.
+
+*California_Housing_Prediction_Using_TPOT_Regressor:* tests several machine learning pipelines and selects the best model for California housing prediction.
 
 === Log Analysis
 
@@ -473,7 +479,6 @@ NOTE: More information about this dataset can be found http://scikit-learn.org/s
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
 |===
-
 
 *How to use this task:* It should be used after the <<Train_Model>> tasks.
 
@@ -1035,6 +1040,159 @@ N.B: separate the different variables with a comma ','
 
 *How to use this task:* Could be connected with <<Train_Model>> if you need to train a model using unsupervised machine learning techniques.
 
+==== AutoML
+
+===== TPOT_Classifier
+
+*Task Overview:* TPOT_Classifier performs an intelligent search over machine learning pipelines that can contain supervised classification models, preprocessors, feature selection techniques, and any other estimator or transformer that follows the scikit-learn API.
+*Task Variables:*
+
+.TPOT_Classifier_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `Docker_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `Docker_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String (default="activeeon/dlm3"
+| `TASK_ENABLED`
+| If True, This task code will be executed.
+| Boolean (default=True)
+| `GENERATIONS`
+| Number of iterations to the run pipeline optimization process.
+| Integer (default=3)
+| `SCORING`
+| Function used to evaluate the quality of a given pipeline for the classification problem.
+| List (default=accuracy)
+| `CV`
+| Cross-validation strategy used when evaluating pipelines.
+| Integer (default=5)
+| `VERBOSITY`
+| How much information TPOT communicates while it's running. Possible inputs : 0, 1, 2, 3.
+| Integer (default=1)
+|===
+
+*How to use this task:* It should be connected with <<Train_Model>> .
+
+NOTE: More information about this task can be found https://epistasislab.github.io/tpot/api/#classification[here^].
+
+===== AutoSklearn_Classifier
+
+*Task Overview:* AutoSklearn_Classifier leverages recent advantages in Bayesian optimization, meta-learning and ensemble construction to performs an intelligent search over machine learning classification algorithms.
+
+.TPOT_Classifier_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `Docker_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `Docker_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String (default="activeeon/dlm3"
+| `TASK_ENABLED`
+| If True, This task code will be executed.
+| Boolean (default=True)
+| `TASK_TIME`
+| Time limit in seconds for the search of appropriate models. .
+| Integer (default=30)
+| `RUN_TIME`
+| Time limit for a single call to the machine learning model. Model fitting will be stopped if the machine learning algorithm runs over the time limit.
+| Integer (default=27)
+| `SAMPLING`
+| If True, the defined resampling strategy will be applied.
+| Boolean (default=True)
+| `RESAMPLING_STRATEGY`
+| Strategy to handle overfitting.
+| String (default='cv')
+| `FOLDS`
+| Number of folds fro cross-validation.
+| Integer (default=5)
+|===
+
+*How to use this task:* It should be connected with <<Train_Model>>.
+
+[NOTE]
+====
+. The labels of the selected Dataset have to be numerical.
+. More information about this task can be found https://automl.github.io/auto-sklearn/stable/api.html?highlight=classification#classification[here^].
+====
+
+===== TPOT_Regressor
+
+*Task Overview:* TTPOT_Regressor performs an intelligent search over machine learning pipelines that can contain supervised regression models, preprocessors, feature selection techniques, and any other estimator or transformer.
+*Task Variables:*
+
+.TPOT_Classifier_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `Docker_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `Docker_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String (default="activeeon/dlm3"
+| `TASK_ENABLED`
+| If True, This task code will be executed.
+| Boolean (default=True)
+| `GENERATIONS`
+| Number of iterations to the run pipeline optimization process.
+| Integer (default=3)
+| `SCORING`
+| Function used to evaluate the quality of a given pipeline for the regression problem.
+| List (default=neg_mean_squared_error)
+| `CV`
+| Cross-validation strategy used when evaluating pipelines.
+| Integer (default=5)
+| `VERBOSITY`
+| How much information TPOT communicates while it's running. Possible inputs : 0, 1, 2, 3.
+| Integer (default=1)
+|===
+
+*How to use this task:* It should be connected with <<Train_Model>> .
+
+NOTE: More information about this task can be found https://epistasislab.github.io/tpot/api/#regression[here^].
+
+===== AutoSklearn_Regressor
+
+*Task Overview:* AutoSklearn_Regressor leverages recent advantages in Bayesian optimization, meta-learning and ensemble construction to performs an intelligent search over machine learning regression algorithms.
+
+.TPOT_Classifier_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `Docker_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `Docker_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String (default="activeeon/dlm3"
+| `TASK_ENABLED`
+| If True, This task code will be executed.
+| Boolean (default=True)
+| `TASK_TIME`
+| Time limit in seconds for the search of appropriate models. .
+| Integer (default=120)
+| `RUN_TIME`
+| Time limit for a single call to the machine learning model. Model fitting will be stopped if the machine learning algorithm runs over the time limit.
+| Integer (default=30)
+| `SAMPLING`
+| If True, the defined resampling strategy will be applied.
+| Boolean (default=False)
+| `RESAMPLING_STRATEGY`
+| Strategy to handle overfitting.
+| String (default='cv')
+| `FOLDS`
+| Number of folds fro cross-validation.
+| Integer (default=5)
+|===
+
+*How to use this task:* It should be connected with <<Train_Model>> .
+
+NOTE: More information about this task can be found https://automl.github.io/auto-sklearn/stable/api.html?highlight=classification#regression[here^].
 
 ==== ML Classification
 
