@@ -1122,7 +1122,7 @@ NOTE: More information about this task can be found https://epistasislab.github.
 
 ===== TPOT_Regressor
 
-*Task Overview:* TTPOT_Regressor performs an intelligent search over machine learning pipelines that can contain supervised regression models, preprocessors, feature selection techniques, and any other estimator or transformer.
+*Task Overview:* TPOT_Regressor performs an intelligent search over machine learning pipelines that can contain supervised regression models, preprocessors, feature selection techniques, and any other estimator or transformer.
 *Task Variables:*
 
 .TPOT_Regressor_Task variables
