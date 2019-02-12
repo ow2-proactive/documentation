@@ -1082,7 +1082,7 @@ NOTE: More information about this task can be found https://epistasislab.github.
 
 *Task Overview:* AutoSklearn_Classifier leverages recent advantages in Bayesian optimization, meta-learning and ensemble construction to performs an intelligent search over machine learning classification algorithms.
 
-.TPOT_Classifier_Task variables
+.AutoSklearn_Classifier_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -1125,7 +1125,7 @@ NOTE: More information about this task can be found https://epistasislab.github.
 *Task Overview:* TTPOT_Regressor performs an intelligent search over machine learning pipelines that can contain supervised regression models, preprocessors, feature selection techniques, and any other estimator or transformer.
 *Task Variables:*
 
-.TPOT_Classifier_Task variables
+.TPOT_Regressor_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -1160,7 +1160,7 @@ NOTE: More information about this task can be found https://epistasislab.github.
 
 *Task Overview:* AutoSklearn_Regressor leverages recent advantages in Bayesian optimization, meta-learning and ensemble construction to performs an intelligent search over machine learning regression algorithms.
 
-.TPOT_Classifier_Task variables
+.AutoSklearn_Regressor_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
