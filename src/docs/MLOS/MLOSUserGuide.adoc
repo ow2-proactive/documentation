@@ -378,7 +378,7 @@ learning rates, or the number of hidden layers in a deep neural network).
 
 *Task Overview:* Is a multi-modal function, used to test the performance of optimization algorithms.
 
-.Load_Boston_Dataset_Task variables
+.Himmelblau_Function_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -398,11 +398,11 @@ learning rates, or the number of hidden layers in a deep neural network).
 
 ==== Tuning Algorithms
 
-===== Bayesian Minimization
+===== Bayesian_Minimization
 
 *Task Overview:*  is an estimator that minimizes the posterior expected value of a loss function.
 
-.Load_Boston_Dataset_Task variables
+.Bayesian_Minimization_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
