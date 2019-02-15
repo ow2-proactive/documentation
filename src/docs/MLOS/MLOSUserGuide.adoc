@@ -367,9 +367,7 @@ WARNING: It is recommended to use an enabled-GPU node to run the deep learning t
 
 === AutoML Optimization Bucket
 
-The `auto-ml optimization` bucket contains multiple tuning workflows that can be easily used to find the
-operating parameters for any system whose performance can be measured as a function of adjustable parameters. These algorithms are specially used for automated tuning of the hyperparameters of machine learning systems (e.g.,
-learning rates, or the number of hidden layers in a deep neural network).
+The `auto-ml-optimization` bucket contains multiple tuning workflows that can be easily used to find the operating parameters for any system whose performance can be measured as a function of adjustable parameters. These algorithms are specially used for automated tuning of the hyperparameters of machine learning systems (e.g. learning rates, or the number of hidden layers in a deep neural network).
 
 //NOTE: The proposed tuning algorithms uses as a backend the https://scikit-learn.org/stable/[Chocolate library^].
 ==== Objective Functions
@@ -390,7 +388,7 @@ learning rates, or the number of hidden layers in a deep neural network).
 | String (default="activeeon/dlm3")
 | `INPUT_VARIABLES`
 | Specifies the x and y values.
-| Dictionary (default={"x": 3.5976705887960527, "y": -1.8471754188451843})
+| JSON format (default={"x": 3.5976705887960527, "y": -1.8471754188451843})
 | `TOKEN`
 |  Specifies the id for the tested parameters.
 | String (default=-1)
@@ -411,9 +409,9 @@ learning rates, or the number of hidden layers in a deep neural network).
 | String (default=auto-ml-optimization/Himmelblau_Function)
 | `SEARCH_SPACE`
 |  Specifies the representation of the search space which has to be defined using dictionaries.
-| Dictionary (see search space representation below)
+| JSON format (see search space representation below)
 | `MAX_ITERATIONS`
-|  Specifies the number of maximum iterations .
+|  Specifies the number of maximum iterations.
 | int (default=2)
 | `SAMPLES_PER_ITERATION`
 |  Specifies the number of samples per iteration.
@@ -430,9 +428,6 @@ learning rates, or the number of hidden layers in a deep neural network).
 
 This subsection describes common building blocks to define a search space:
 
-    - Distribution
-    - ContinuousDistribution : Representation of continuous distributions.
-    - QuantizedDistribution : Representation of quantized distributions.
     - uniform : Uniform continuous distribution.
     - quantized_uniform : Uniform discrete distribution.
     - log : Logarithmic uniform continuous distribution.
