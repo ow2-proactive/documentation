@@ -365,14 +365,87 @@ WARNING: It is recommended to use an enabled-GPU node to run the deep learning t
 
 == References
 
+=== AutoML Optimization Bucket
+
+The `auto-ml optimization` bucket contains multiple tuning workflows that can be easily used to find the
+operating parameters for any system whose performance can be measured as a function of adjustable parameters. These algorithms are specially used for automated tuning of the hyperparameters of machine learning systems (e.g.,
+learning rates, or the number of hidden layers in a deep neural network).
+
+//NOTE: The proposed tuning algorithms uses as a backend the https://scikit-learn.org/stable/[Chocolate library^].
+==== Objective Functions
+
+===== Himmelblau_Function
+
+*Task Overview:* Is a multi-modal function, used to test the performance of optimization algorithms.
+
+.Load_Boston_Dataset_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `Docker_ENABLED`
+|If True,  the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `Docker_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String (default="activeeon/dlm3")
+| `input_variables`
+| Specifies the x and y values.
+| Dictionary (default={"x": 3.5976705887960527, "y": -1.8471754188451843})
+| `token`
+|  Specifies the id for the tested parameters.
+| String (default=-1)
+|===
+
+==== Tuning Algorithms
+
+===== Bayesian Minimization
+
+*Task Overview:*  is an estimator that minimizes the posterior expected value of a loss function.
+
+.Load_Boston_Dataset_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `call_workflow`
+| Specifies the path of the workflow that we need to optimize.
+| String (default=auto-ml-optimization/Himmelblau_Function)
+| `search_space`
+|  Specifies the representation of the search space which has to be defined using dictionaries.
+| Dictionary (see search space representation below)
+| `max_iterations`
+|  Specifies the number of maximum iterations .
+| int (default=2)
+| `samples_per_iteration`
+|  Specifies the number of samples per iteration.
+| String (default=-1)
+| `visdom_enabled`
+|  If True, the results will be plotted in real time in teh Visdom dashboard.
+| String (default=-1)
+| `Docker_ENABLED`
+|   If True,  the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+|===
+
+*How to define the search space:*
+
+This subsection describes common building blocks to define a search space:
+
+    - Distribution
+    - ContinuousDistribution : Representation of continuous distributions.
+    - QuantizedDistribution : Representation of quantized distributions.
+    - uniform : Uniform continuous distribution.
+    - quantized_uniform : Uniform discrete distribution.
+    - log : Logarithmic uniform continuous distribution.
+    - quantized_log : Logarithmic uniform discrete distribution.
+    - choice : Uniform choice distribution between non-numeric samples.
+
+
 === Machine Learning Bucket
 
 The `machine-learning` bucket contains diverse generic machine learning tasks that enable you to easily compose workflows for predictive models learning and testing. This bucket can be easily customized according to your needs.
 This bucket offers different options, you can customize it by adding new tasks or update the existing tasks.
 
-
 NOTE: All machine learning tasks were implemented using https://scikit-learn.org/stable/[Scikit-learn library^].
-
 
 ==== Public Datasets
 
@@ -533,7 +606,6 @@ NOTE: More information about this dataset can be found http://scikit-learn.org/s
 | `LIMIT_OUTPUT_VIEW`
 |  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
 | Int (default=-1) (-1 means preview all the rows)
-
 | `FILE_URL`
 | Enter you URL of the CSV file.
 | String
