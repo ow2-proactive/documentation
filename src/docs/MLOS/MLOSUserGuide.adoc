@@ -435,7 +435,7 @@ This subsection describes common building blocks to define a search space:
     - QuantizedDistribution : Representation of quantized distributions.
     - uniform : Uniform continuous distribution.
     - quantized_uniform : Uniform discrete distribution.
-    - log : Logarithmic uniform continuous distribution.
+    - log : Logarithmic Uniform continuous distribution.
     - quantized_log : Logarithmic uniform discrete distribution.
     - choice : Uniform choice distribution between non-numeric samples.
 
