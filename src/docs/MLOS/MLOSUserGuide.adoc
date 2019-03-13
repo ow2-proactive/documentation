@@ -325,7 +325,7 @@ The following workflow presents an example of a workflow built using pre-built A
 
 === Custom AI Workflows - Pytorch library
 
-The following workflows present an example of workflows built using custom AI tasks available on the `deep-learning` bucket. Such tasks enable you to train and test your own AI models by a simple drag and drop of custom AI task.
+The following workflows present examples of workflows built using custom AI tasks available on the `deep-learning` bucket. Such tasks enable you to train and test your own AI models by a simple drag and drop of custom AI task.
 
 *IMDB_Sentiment_Analysis:* trains a model for opinions identification and categorization expressed in a piece of text, especially in order to determine the opinion of IMDB users regarding specific movies [positive or negative].
 NOTE: Instead of training a model from scratch, you can use a pre-trained sentiment analysis model which is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/basic_sentiment_analysis.zip[link^].
@@ -367,44 +367,23 @@ WARNING: It is recommended to use an enabled-GPU node to run the deep learning t
 
 === AutoML Optimization Bucket
 
-The `auto-ml-optimization` bucket contains multiple tuning workflows that can be easily used to find the operating parameters for any system whose performance can be measured as a function of adjustable parameters. These algorithms are specially used for automated tuning of the hyperparameters of machine learning systems (e.g. learning rates, or the number of hidden layers in a deep neural network).
-
-//NOTE: The proposed tuning algorithms uses as a backend the https://scikit-learn.org/stable/[Chocolate library^].
-==== Objective Functions
-
-===== Himmelblau_Function
-
-*Task Overview:* Is a multi-modal function, used to test the performance of optimization algorithms.
-
-.Himmelblau_Function_Task variables
-[cols="2,5,2"]
-|===
-| *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-|If True,  the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3")
-| `INPUT_VARIABLES`
-| Specifies the x and y values.
-| JSON format (default={"x": 3.5976705887960527, "y": -1.8471754188451843})
-| `TOKEN`
-|  Specifies the id for the tested parameters.
-| String (default=-1)
-|===
+The `auto-ml-optimization` bucket contains the Multi_Tuners_AutoML workflow that can be easily used to find the operating parameters for any system whose performance can be measured as a function of adjustable parameters.
+This bucket also comes with a set of workflows' examples that demonstrates how we can optimize mathematical functions, MLOS workflows and machine/deep learning algorithms from scripts using AutoML tuners.
 
 ==== Tuning Algorithms
 
-===== Bayesian_Minimization
+===== Multi_Tuners_AutoML
 
 *Task Overview:*  is an estimator that minimizes the posterior expected value of a loss function.
 
-.Bayesian_Minimization_Task variables
+.Multi_Tuners_AutoML_Task variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `CALL_WORKFLOW`
+| `TUNING_ALGORITHM`
+| Specifies the tuner algorithm that will be used for hyperparameters optimization.
+| List(Bayes, Grid, Random, QuasiRandom, CMAES, MOCMAES) default=Bayes
+| `WORKFLOW_TO_OPTIMIZE`
 | Specifies the path of the workflow that we need to optimize.
 | String (default=auto-ml-optimization/Himmelblau_Function)
 | `SEARCH_SPACE`
@@ -412,15 +391,15 @@ The `auto-ml-optimization` bucket contains multiple tuning workflows that can be
 | JSON format (see search space representation below)
 | `MAX_ITERATIONS`
 |  Specifies the number of maximum iterations.
-| int (default=2)
-| `SAMPLES_PER_ITERATION`
+| Int (default=2)
+| `PARALLEL_SAMPLES_PER_LOOP`
 |  Specifies the number of samples per iteration.
-| String (default=-1)
+| Int (default=-1)
 | `VISDOM_ENABLED`
-|  If True, the results will be plotted in real time in teh Visdom dashboard.
-| String (default=-1)
+|  If True, the results will be plotted in real time in the Visdom dashboard.
+| Int (default=-1)
 | `DOCKER_ENABLED`
-|   If True,  the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+|   If True, the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
 |===
 
@@ -434,6 +413,72 @@ This subsection describes common building blocks to define a search space:
     - quantized_log : Logarithmic uniform discrete distribution.
     - choice : Uniform choice distribution between non-numeric samples.
 
+*Which tuner algorithm to choose?*
+
+The choice of the tuner depends on the following aspects:
+
+    - Time required to evalute the model.
+    - Number of hyperparameters to optimize.
+    - Type of variable.
+    - The size of the search space.
+
+In the following, we briefly describe the different tuners proposed by the Multi_Tuners_Automl workflow:
+
+    - *Grid sampling* applies when all variables are discrete and the number of possibilities is low.
+      A grid search is a naive approach that will simply try all possibilities making the search extremely long even for medium sized problems.
+
+    - *Random sampling* is an alternative to grid search when the number of discrete parameters to optimize and the time required for each evaluation is high.
+      Random search picks the point randomly from the configuration space.
+
+    - *QuasiRandom sampling* ensures a much more uniform exploration of the search space than traditional pseudo random.
+      Thus, quasi random sampling is preferable when not all variables are discrete, the number of dimensions is high and the time required to evaluate a solution is high.
+
+    - *Bayes search* models the search space using gaussian process regression, which allows to have an estimate of the loss function and the uncertainty on that estimate at every point of the search space.
+      Modeling the search space suffers from the curse of dimensionality, which makes this method more suitable when the number of dimensions is low.
+
+    - *CMAES search* is one of the most powerful black-box optimization algorithm.
+      However, it requires a significant number of model evaluation (in the order of 10 to 50 times the number of dimensions) to converge to an optimal solution.
+      This search method is more suitable when the time required for a model evaluation is relatively low.
+
+    - *MOCMAES search* is a multi-objective algorithm optimizing multiple tradeoffs simultaneously.
+      To do that, MOCMAES employs a number of CMAES algorithms.
+
+
+==== Objective ML Examples
+
+The following workflows represent some machine learning and deep learning algorithms that can be optimized:
+
+*Diabetics Detection Using Logistic Regression:* train a logistic regression model using MLOS machine learning generic tasks in order to detect diabetics.
+
+*CIFAR10 CNN:* train a simple deep CNN on the CIFAR10 images dataset using the Keras library.
+
+*Image Object Detection:* train a YOLO model on the coco dataset using MLOS deep learning generic tasks.
+
+*Multiple SVM Models:* train multiple types of SVMs models that can be optimized using AutoML.
+
+==== Objective Function Examples
+
+The following workflows represent some mathematical functions that can be optimized by the AutoML tuners.
+
+*Himmelblau_Function:* is a multi-modal function, used to test the performance of optimization algorithms.
+
+//.Himmelblau_Function_Workflow variables
+//[cols="2,5,2"]
+//|===
+//| *Variable name* | *Description* | *Type*
+//| `DOCKER_ENABLED`
+//|If True,  the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+//| Boolean (default=True)
+//| `DOCKER_IMAGE`
+//| Specifies the docker image that will be used to execute the task.
+//| String (default="activeeon/dlm3")
+//| `INPUT_VARIABLES`
+//| Specifies the x and y values.
+//| JSON format (default={"x": 3.5976705887960527, "y": -1.8471754188451843})
+//| `TOKEN`
+//|  Specifies the id for the tested parameters.
+//| String (default=-1)
+//|===
 
 === Machine Learning Bucket
 
@@ -475,7 +520,6 @@ NOTE: All machine learning tasks were implemented using https://scikit-learn.org
 |  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
 | Int (default=-1) (-1 means preview all the rows)
 |===
-
 
 *How to use this task:*
 
@@ -1287,6 +1331,9 @@ NOTE: More information about this task can be found https://automl.github.io/aut
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the gaussian naive bayes algorithm. Check the list of parameters http://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html[here^].
+| JSON format
 |===
 
 *How to use this task:* It should be connected with <<Train_Model>> or <<Predict_Model>>.
@@ -1311,18 +1358,21 @@ NOTE: More information about this task can be found http://scikit-learn.org/stab
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
-| `PENALTY`
-| Used to specify the norm used in the penalization. The ‘newton-cg’, ‘sag’ and ‘lbfgs’ solvers support only l2 penalties. *default*=‘l2’
-| String
-| `SOLDER`
-| Algorithm to use in the optimization problem.
-| ‘newton-cg’, ‘lbfgs’, ‘liblinear’, ‘sag’, ‘saga’, default: ‘liblinear’
-| `MAX_ITERATIONS`
-| Useful only for the newton-cg, sag and lbfgs solvers. Maximum number of iterations taken for the solvers to converge.
-| Integer (default=100)
-| `N_JOBS`
-| Number of CPU cores used. If given a value of -1, all cores are used.
-| Integer (default=1)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the logistic regression algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html[here^].
+| JSON format
+//| `PENALTY`
+//| Used to specify the norm used in the penalization. The ‘newton-cg’, ‘sag’ and ‘lbfgs’ solvers support only l2 penalties. *default*=‘l2’
+//| String
+//| `SOLDER`
+//| Algorithm to use in the optimization problem.
+//| ‘newton-cg’, ‘lbfgs’, ‘liblinear’, ‘sag’, ‘saga’, default: ‘liblinear’
+//| `MAX_ITERATIONS`
+//| Useful only for the newton-cg, sag and lbfgs solvers. Maximum number of iterations taken for the solvers to converge.
+//| Integer (default=100)
+//| `N_JOBS`
+//| Number of CPU cores used. If given a value of -1, all cores are used.
+//| Integer (default=1)
 |===
 
 *How to use this task:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
@@ -1348,12 +1398,15 @@ NOTE: More information about the source code of this task can be found http://sc
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
-| `C`
-| Penalty parameter C of the error term.
-| Float, optional (default=1.0)
-| `KERNEL`
-| Specifies the kernel type to be used in the algorithm. It must be one of ‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’,‘precomputed’ or a callable.
-| string, optional (default=’rbf’)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the support vector machines algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html[here^].
+| JSON format
+//| `C`
+//| Penalty parameter C of the error term.
+//| Float, optional (default=1.0)
+//| `KERNEL`
+//| Specifies the kernel type to be used in the algorithm. It must be one of ‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’,‘precomputed’ or a callable.
+//| string, optional (default=’rbf’)
 |===
 
 *How to use this task:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
@@ -1381,21 +1434,24 @@ NOTE: More information about the source of this task can be found http://scikit-
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
-| `N_ITERATIONS`
-| Penalty parameter C of the error term.
-| Integer, optional (default=300)
-| `ALPHA_1`
-| Hyper-parameter : shape parameter for the Gamma distribution prior over the alpha parameter.
-| Float (default=1.e-6)
-| `ALPHA_2`
-| Hyper-parameter : inverse scale parameter (rate parameter) for the Gamma distribution prior over the alpha parameter.
-| Float (default=1.e-6)
-| `LAMBDA_1`
-| Hyper-parameter : shape parameter for the Gamma distribution prior over the lambda parameter.
-| Float (default=1.e-6)
-| `LAMBDA_2`
-| Hyper-parameter : inverse scale parameter (rate parameter) for the Gamma distribution prior over the lambda parameter.
-| Float (default=1.e-6)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the bayesian ridge regression algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html[here^].
+| JSON format
+//| `N_ITERATIONS`
+//| Penalty parameter C of the error term.
+//| Integer, optional (default=300)
+//| `ALPHA_1`
+//| Hyper-parameter : shape parameter for the Gamma distribution prior over the alpha parameter.
+//| Float (default=1.e-6)
+//| `ALPHA_2`
+//| Hyper-parameter : inverse scale parameter (rate parameter) for the Gamma distribution prior over the alpha parameter.
+//| Float (default=1.e-6)
+//| `LAMBDA_1`
+//| Hyper-parameter : shape parameter for the Gamma distribution prior over the lambda parameter.
+//| Float (default=1.e-6)
+//| `LAMBDA_2`
+//| Hyper-parameter : inverse scale parameter (rate parameter) for the Gamma distribution prior over the lambda parameter.
+//| Float (default=1.e-6)
 |===
 
 *How to use this task:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
@@ -1421,9 +1477,12 @@ NOTE: More information about the source of this task can be found http://scikit-
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
-| `N_JOBS`
-| Penalty parameter C of the error term.
-| Integer (default=1)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the linear regression algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html[here^].
+| JSON format
+//| `N_JOBS`
+//| Penalty parameter C of the error term.
+//| Integer (default=1)
 |===
 
 *How to use this task:* IT should be connected with <<Train_Model>> and <<Predict_Model>>.
@@ -1449,15 +1508,18 @@ NOTE: More information about the source of this task can be found http://scikit-
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
-| `C`
-| Penalty parameter C of the error term.
-| Float, optional (default=1.0)
-| `KERNEL`
-| Specifies the kernel type to be used in the algorithm. It must be one of ‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’, ‘precomputed’ or a callable.
-| String, optional (default=’rbf’)
-| `EPSILON`
-| It specifies the epsilon-tube within which no penalty is associated in the training loss function with points predicted within a distance epsilon from the actual value.
-| Float, optional (default=0.1)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the support vector regression algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html[here^].
+| JSON format
+//| `C`
+//| Penalty parameter C of the error term.
+//| Float, optional (default=1.0)
+//| `KERNEL`
+//| Specifies the kernel type to be used in the algorithm. It must be one of ‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’, ‘precomputed’ or a callable.
+//| String, optional (default=’rbf’)
+//| `EPSILON`
+//| It specifies the epsilon-tube within which no penalty is associated in the training loss function with points predicted within a distance epsilon from the actual value.
+//| Float, optional (default=0.1)
 |===
 
 *How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
@@ -1485,12 +1547,15 @@ NOTE: More information about the source of this task can be found http://scikit-
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
-| `N_ESTIMATORS`
-| Number of base estimators in the ensemble.
-| Integer, Optional (default=100)
-| `N_JOBS`
-| The number of parallel jobs to run for neighbors search. If -1, then the number of jobs is set to the number of CPU cores.
-| Integer, Optional (default=1)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the isolation forest algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html[here^].
+| JSON format
+//| `N_ESTIMATORS`
+//| Number of base estimators in the ensemble.
+//| Integer, Optional (default=100)
+//| `N_JOBS`
+//| The number of parallel jobs to run for neighbors search. If -1, then the number of jobs is set to the number of CPU cores.
+//| Integer, Optional (default=1)
 
 |===
 
@@ -1515,15 +1580,18 @@ NOTE: More information about the source of this task can be found https://scikit
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
-| `NU`
-| An upper bound on the fraction of training errors and a lower bound of the fraction of support vectors. It should be in the interval [0, 1].
-| Float, Optional (default=0.5)
-| `KERNEL`
-|  Specifies the kernel type to be used in the algorithm. It must be one of ‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’, ‘precomputed’ or a callable. If none is given, ‘rbf’ will be used. If a callable is given it is used to precompute the kernel matrix.
-| string, Optional (default='rbf')
-| `GAMMA`
-| Kernel coefficient for ‘rbf’, ‘poly’ and ‘sigmoid’. If gamma is ‘auto’ then 1/n_features will be used instead.
-| Float, Optional (default='auto')
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the one class algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.svm.OneClassSVM.html[here^].
+| JSON format
+//| `NU`
+//| An upper bound on the fraction of training errors and a lower bound of the fraction of support vectors. It should be in the interval [0, 1].
+//| Float, Optional (default=0.5)
+//| `KERNEL`
+//|  Specifies the kernel type to be used in the algorithm. It must be one of ‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’, ‘precomputed’ or a callable. If none is given, ‘rbf’ will be used. If a callable is given it is used to precompute the kernel matrix.
+//| string, Optional (default='rbf')
+//| `GAMMA`
+//| Kernel coefficient for ‘rbf’, ‘poly’ and ‘sigmoid’. If gamma is ‘auto’ then 1/n_features will be used instead.
+//| Float, Optional (default='auto')
 |===
 
 NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.svm.OneClassSVM.html[here^].
@@ -1549,15 +1617,18 @@ NOTE: More information about the source of this task can be found http://scikit-
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
-| `N_CLUSTERS`
-| The number of clusters to form as well as the number of centroids to generate
-| Integer, optional (default=8)
-| `MAX_ITERATIONS`
-| Maximum number of iterations of the k-means algorithm for a single run.
-| Integer, optional (default=300)
-| `N_JOBS`
-| The number of jobs to use for the computation. This works by computing each of the n_init runs in parallel. If -1 all CPUs are used. If 1 is given, no parallel computing code is used at all
-| Integer, optional (default=1)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the Kmeans algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
+| JSON format
+//| `N_CLUSTERS`
+//| The number of clusters to form as well as the number of centroids to generate
+//| Integer, optional (default=8)
+//| `MAX_ITERATIONS`
+//| Maximum number of iterations of the k-means algorithm for a single run.
+//| Integer, optional (default=300)
+//| `N_JOBS`
+//| The number of jobs to use for the computation. This works by computing each of the n_init runs in parallel. If -1 all CPUs are used. If 1 is given, no parallel computing code is used at all
+//| Integer, optional (default=1)
 |===
 
 *How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
@@ -1583,12 +1654,15 @@ NOTE: More information about the source of this task can be found http://scikit-
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
-| `CLUSTER_ALL`
-| The number of clusters to form as well as the number of centroids to generate.
-| Boolean [True or False]
-| `N_JOBS`
-| If true, then all points are clustered, even those orphans that are not within any kernel. Orphans are assigned to the nearest kernel. If false, then orphans are given cluster label -1.
-| Integer (default=1)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the Mean Shift algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.cluster.MeanShift.html[here^].
+| JSON format
+//| `CLUSTER_ALL`
+//| The number of clusters to form as well as the number of centroids to generate.
+//| Boolean [True or False]
+//| `N_JOBS`
+//| If true, then all points are clustered, even those orphans that are not within any kernel. Orphans are assigned to the nearest kernel. If false, then orphans are given cluster label -1.
+//| Integer (default=1)
 |===
 
 *How to use this task:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
@@ -2349,8 +2423,6 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 | Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
 | Integer (default=1)
 |===
-
-
 
 ==== Predict
 
