@@ -382,7 +382,7 @@ This bucket also comes with a set of workflows' examples that demonstrates how w
 | *Variable name* | *Description* | *Type*
 | `TUNING_ALGORITHM`
 | Specifies the tuner algorithm that will be used for hyperparameters optimization.
-| List(Bayes,Grid,Random,QuasiRandom,CMAES,MOCMAES) default=Bayes
+| List(Bayes, Grid, Random, QuasiRandom, CMAES, MOCMAES) default=Bayes
 | `WORKFLOW_TO_OPTIMIZE`
 | Specifies the path of the workflow that we need to optimize.
 | String (default=auto-ml-optimization/Himmelblau_Function)
@@ -391,13 +391,13 @@ This bucket also comes with a set of workflows' examples that demonstrates how w
 | JSON format (see search space representation below)
 | `MAX_ITERATIONS`
 |  Specifies the number of maximum iterations.
-| int (default=2)
+| Int (default=2)
 | `PARALLEL_SAMPLES_PER_LOOP`
 |  Specifies the number of samples per iteration.
-| String (default=-1)
+| Int (default=-1)
 | `VISDOM_ENABLED`
 |  If True, the results will be plotted in real time in the Visdom dashboard.
-| String (default=-1)
+| Int (default=-1)
 | `DOCKER_ENABLED`
 |   If True, the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
@@ -452,7 +452,7 @@ The following workflows represent some machine learning and deep learning algori
 
 *CIFAR10 CNN:* train a simple deep CNN on the CIFAR10 images dataset using the Keras library.
 
-*Image Object Detection:* train a YOLO model on the cooco dataset using MLOS deep learning generic tasks.
+*Image Object Detection:* train a YOLO model on the coco dataset using MLOS deep learning generic tasks.
 
 *Multiple SVM Models:* train multiple types of SVMs models that can be optimized using AutoML.
 
