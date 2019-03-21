@@ -385,7 +385,7 @@ This bucket also comes with a set of workflows' examples that demonstrates how w
 | List(Bayes, Grid, Random, QuasiRandom, CMAES, MOCMAES) default=Bayes
 | `WORKFLOW_TO_OPTIMIZE`
 | Specifies the path of the workflow that we need to optimize.
-| String (default=auto-ml-optimization/Himmelblau_Function)
+| String [default=auto-ml-optimization/Himmelblau_Function]
 | `SEARCH_SPACE`
 |  Specifies the representation of the search space which has to be defined using dictionaries.
 | JSON format (see search space representation below)
@@ -512,7 +512,7 @@ NOTE: All machine learning tasks were implemented using https://scikit-learn.org
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -551,7 +551,7 @@ NOTE: More information about this dataset can be found http://scikit-learn.org/s
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -586,7 +586,7 @@ NOTE: More information about this dataset can be found http://scikit-learn.org/s
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -609,7 +609,7 @@ NOTE: More information about this dataset can be found http://scikit-learn.org/s
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -638,7 +638,7 @@ NOTE: More information about this dataset can be found http://scikit-learn.org/s
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -672,7 +672,7 @@ image::csv_file_organisation.png[align="center"]
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -699,7 +699,7 @@ default:  https://s3.eu-west-2.amazonaws.com/activeeon-public/models/pima-indian
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -777,7 +777,7 @@ image::pattern_file.png[align="center"]
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -799,7 +799,7 @@ image::pattern_file.png[align="center"]
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -831,7 +831,7 @@ NOTE: More details about the source code of this task can be found https://panda
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -858,7 +858,7 @@ NOTE: More details about the source code of this task can be found http://scikit
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -884,7 +884,7 @@ NOTE: More details about the source code of this task can be found https://panda
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -910,7 +910,7 @@ NOTE: More details about the source code of this task can be found https://panda
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -936,7 +936,7 @@ NOTE: More details about the source code of this task can be found https://panda
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -968,7 +968,7 @@ NOTE: More details about the source code of this task can be found http://scikit
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -997,7 +997,7 @@ NOTE: More details about the source code of this task can be found http://scikit
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -1022,7 +1022,7 @@ NOTE: More details about the source code of this task can be found http://scikit
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -1054,7 +1054,7 @@ NOTE: More details about the source code of this task can be found https://panda
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -1083,7 +1083,7 @@ NOTE: More details about the source code of this task can be found https://docs.
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -1118,7 +1118,7 @@ NOTE: More details about the source code of this task can be found https://tsfre
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -1168,7 +1168,7 @@ N.B: separate the different variables with a comma ','
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If True, This task code will be executed.
 | Boolean (default=True)
@@ -1205,7 +1205,7 @@ NOTE: More information about this task can be found https://epistasislab.github.
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If True, This task code will be executed.
 | Boolean (default=True)
@@ -1220,7 +1220,7 @@ NOTE: More information about this task can be found https://epistasislab.github.
 | Boolean (default=True)
 | `RESAMPLING_STRATEGY`
 | Strategy to handle overfitting.
-| String (default='cv')
+| String [default='cv']
 | `FOLDS`
 | Number of folds fro cross-validation.
 | Integer (default=5)
@@ -1249,7 +1249,7 @@ NOTE: More information about this task can be found https://epistasislab.github.
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If True, This task code will be executed.
 | Boolean (default=True)
@@ -1286,7 +1286,7 @@ NOTE: More information about this task can be found https://epistasislab.github.
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If True, This task code will be executed.
 | Boolean (default=True)
@@ -1301,7 +1301,7 @@ NOTE: More information about this task can be found https://epistasislab.github.
 | Boolean (default=False)
 | `RESAMPLING_STRATEGY`
 | Strategy to handle overfitting.
-| String (default='cv')
+| String [default='cv']
 | `FOLDS`
 | Number of folds fro cross-validation.
 | Integer (default=5)
@@ -1327,7 +1327,7 @@ NOTE: More information about this task can be found https://automl.github.io/aut
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -1354,7 +1354,7 @@ NOTE: More information about this task can be found http://scikit-learn.org/stab
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -1394,7 +1394,7 @@ NOTE: More information about the source code of this task can be found http://sc
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -1430,7 +1430,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -1473,7 +1473,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -1504,7 +1504,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -1543,7 +1543,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -1576,7 +1576,7 @@ NOTE: More information about the source of this task can be found https://scikit
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -1613,7 +1613,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -1650,7 +1650,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the docker image that will be used to execute the task.
-| String (default="activeeon/dlm3"
+| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -1669,13 +1669,214 @@ NOTE: More information about the source of this task can be found http://scikit-
 
 NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.cluster.MeanShift.html[here^].
 
+
+==== ML Ensemble Learning
+
+===== AdaBoost
+
+*Task Overview:* AdaBoost combines weak classifier algorithm into a single strong classifier.
+
+*Task Variables:*
+
+.AdaBoost_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the AdaBoost algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
+| JSON format
+| `TYPE`
+| Enter the type of algorithm. There are two possible: classification or regression.
+| List [Classification or Regression]
+//| `N_CLUSTERS`
+//| The number of clusters to form as well as the number of centroids to generate
+//| Integer, optional (default=8)
+//| `MAX_ITERATIONS`
+//| Maximum number of iterations of the k-means algorithm for a single run.
+//| Integer, optional (default=300)
+//| `N_JOBS`
+//| The number of jobs to use for the computation. This works by computing each of the n_init runs in parallel. If -1 all CPUs are used. If 1 is given, no parallel computing code is used at all
+//| Integer, optional (default=1)
+|===
+
+*How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
+
+NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html[here^].
+
+===== CatBoost
+
+*Task Overview:* CatBoost is a gradient boosting which helps to reduce overfitting. It can be used to solve both classification and regression challenge.
+
+*Task Variables:*
+
+.CatBoost_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the CatBoost algorithm. Check the list of parameters https://github.com/catboost[here^].
+| JSON format
+| `TYPE`
+| Enter the type of algorithm. There are two possible: classification or regression.
+| List [Classification or Regression]
+//| `N_CLUSTERS`
+//| The number of clusters to form as well as the number of centroids to generate
+//| Integer, optional (default=8)
+//| `MAX_ITERATIONS`
+//| Maximum number of iterations of the k-means algorithm for a single run.
+//| Integer, optional (default=300)
+//| `N_JOBS`
+//| The number of jobs to use for the computation. This works by computing each of the n_init runs in parallel. If -1 all CPUs are used. If 1 is given, no parallel computing code is used at all
+//| Integer, optional (default=1)
+|===
+
+*How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
+
+NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
+
+===== Gradient_Boosting
+
+*Task Overview:* Gradient Boosting is an algorithm for regression and classification problems. It produces a prediction model in the form of an ensemble of weak prediction models.
+*Task Variables:*
+
+.Gradient_Boosting_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the Gradient Boosting algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingClassifier.html[here^].
+| JSON format
+| `TYPE`
+| Enter the type of algorithm. There are two possible: classification or regression.
+| List [Classification or Regression]
+//| `N_CLUSTERS`
+//| The number of clusters to form as well as the number of centroids to generate
+//| Integer, optional (default=8)
+//| `MAX_ITERATIONS`
+//| Maximum number of iterations of the k-means algorithm for a single run.
+//| Integer, optional (default=300)
+//| `N_JOBS`
+//| The number of jobs to use for the computation. This works by computing each of the n_init runs in parallel. If -1 all CPUs are used. If 1 is given, no parallel computing code is used at all
+//| Integer, optional (default=1)
+|===
+
+*How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
+
+NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
+
+===== Random_Forest
+
+*Task Overview:* Random Forest is an algorithm for regression, classification and other tasks that operates by constructing a multitude of decision trees at training time.
+*Task Variables:*
+
+.Random_Forest_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the Random Forest algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html[here^].
+| JSON format
+| `TYPE`
+| Enter the type of algorithm. There are two possible: classification or regression.
+| List [Classification or Regression]
+//| `N_CLUSTERS`
+//| The number of clusters to form as well as the number of centroids to generate
+//| Integer, optional (default=8)
+//| `MAX_ITERATIONS`
+//| Maximum number of iterations of the k-means algorithm for a single run.
+//| Integer, optional (default=300)
+//| `N_JOBS`
+//| The number of jobs to use for the computation. This works by computing each of the n_init runs in parallel. If -1 all CPUs are used. If 1 is given, no parallel computing code is used at all
+//| Integer, optional (default=1)
+|===
+
+*How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
+
+NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
+
+===== XGBoost
+
+*Task Overview:* XGBoost is an implementation of gradient boosted decision trees designed for speed and performance.
+
+*Task Variables:*
+
+.XGBoost_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the XGBoost algorithm. Check the list of parameters https://xgboost.readthedocs.io/en/latest/python/python_api.html[here^].
+| JSON format
+| `TYPE`
+| Enter the type of algorithm. There are two possible: classification or regression.
+| List [Classification or Regression]
+//| `N_CLUSTERS`
+//| The number of clusters to form as well as the number of centroids to generate
+//| Integer, optional (default=8)
+//| `MAX_ITERATIONS`
+//| Maximum number of iterations of the k-means algorithm for a single run.
+//| Integer, optional (default=300)
+//| `N_JOBS`
+//| The number of jobs to use for the computation. This works by computing each of the n_init runs in parallel. If -1 all CPUs are used. If 1 is given, no parallel computing code is used at all
+//| Integer, optional (default=1)
+|===
+
+*How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
+
+NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html[here^].
+
 ==== Train
 
 ===== Train_Model
 
 *Task Overview:* Train a model using a classification, a regression or an anomaly algorithm.
 
-*How to use this task:* It should be used after a classification, a regression or an anomaly algorithm, such as <<Support_Vector_Machines>>, <<Gaussian_Naive_Bayes>>, <<Linear_Regression>>, <<Bayesian_Ridge_Regression>>, <<Linear_Regression>>, <<Support_Vector_Regression>>, <<Isolation_Forest>> and <<One_Class_SVM>>.
+*How to use this task:* It should be used after a classification, a regression or an anomaly algorithm, such as <<Support_Vector_Machines>>, <<Gaussian_Naive_Bayes>>, <<Linear_Regression>>, <<Bayesian_Ridge_Regression>>, <<Linear_Regression>>, <<Support_Vector_Regression>>, <<Isolation_Forest>>, <<One_Class_SVM>>, <<AdaBoost>>, <<CatBoost>>, <<Gradient_Boosting>>, <<Random_Forest>>, and <<XGBoost>>.
 
 [NOTE]
 ====
@@ -1847,10 +2048,10 @@ NOTE: Not all deep networks support the ONNX model yet. You can download ONNX mo
 | List (default=str.split)
 | `SENTENCE_SEPARATOR`
 | Split the text into separated paragraphs, separated lines, separated words. Choose your own separator.
-| String (default=\r)
+| String [default=\r]
 | `CHARSET`
 | Encode to be used to read the text.
-| String (default='utf-8')
+| String [default='utf-8']
 | `IS_LABELED_DATA`
 |  True if data is labeled.
 | Boolean (default=True)
@@ -2128,7 +2329,7 @@ NOTE: Pytorch were used to build the model architecture based on https://github.
 | Integer (default=21)
 | `LABEL_PATH`
 | The URL of the file containing the class names of the dataset.
-| String (default=(https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/voc.names))
+| String [default=(https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/voc.names)]
 | `USE_PRETRAINED_MODEL`
 | Parameter to use pre-trained model for training. If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
 | Boolean (default=True)
@@ -2177,7 +2378,7 @@ NOTE: Pytorch were used to build the model architecture based on https://github.
 | Float (default=0.45) Range in [0, 1].
 | `LABEL_PATH`
 | The URL of the file containing the class names of the dataset.
-| String (default=(https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/coco.names))
+| String [default=(https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/coco.names)]
 | `USE_PRETRAINED_MODEL`
 | Parameter to use pre-trained model for training. If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
 | Boolean (default=True)
@@ -2552,10 +2753,10 @@ Visdom bucket provides a fast, easy and practice way to execute different workfl
 | *Variable name* | *Description* | *Type*
 | `SERVICE_ID`
 | The id of the Visdom service.
-| String (default="Visdom")
+| String [default="Visdom"]
 | `INSTANCE_NAME`
 | The instance name of the server to use to broadcast visualization
-| String (default="visdom-server")
+| String [default="visdom-server"]
 |===
 
 WARNING: If two workflows use the same service instance names, then, their generated plots will be created on the same service instance.
@@ -2572,7 +2773,7 @@ WARNING: If two workflows use the same service instance names, then, their gener
 | *Variable name* | *Description* | *Type*
 | `INSTANCE_NAME`
 | The instance name of the server to use to broadcast visualization
-| String (default="visdom-server")
+| String [default="visdom-server"]
 | `INSTANCE_ACTION`
 | Three possible actions: Pause_Visdom, Resume_Visdom and Finish_Visdom.
 | List (default="Finish_Visdom")
