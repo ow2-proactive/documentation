@@ -1687,9 +1687,28 @@ The accounting information can be accessed only through a *JMX client* or the Pr
 
 === Metric to monitor Scheduler load
 
+*Needed Nodes* metric shows how much more nodes Scheduler needs to schedule all possible tasks,
+e.g. there are 4 nodes and all of them are busy, but *Needed Nodes* shows 10, which means if you would have
+14 nodes instead of 4, all of these nodes would be busy. Please notice, that *Needed Nodes* shows how much
+nodes could be used right now, however, it does not say how to create those nodes, e.g. Selection Script of the
+task could require some specific nodes, so *Needed Nodes* could be positive while we still could have free nodes -
+they can be inappropriate for current task.
+
+  
+You can find this metric in multiple places. In RM you can see it, in Nodes History:
+
 image::neededNodes-rm-nodeshistory.png[align="center"]
+
+In Nodes State:
+
 image::neededNodes-rm-nodesstate.png[align="center"]
+
+And you can find it in RM detailed statistic:
+
 image::neededNodes-rm-stats.png[align="center"]
+
+Also, you can find *Needed Nodes* where Scheduler status is:
+
 image::neededNodes-scheduler.png[align="center"]
 
 == Run Computation with a user's system account
