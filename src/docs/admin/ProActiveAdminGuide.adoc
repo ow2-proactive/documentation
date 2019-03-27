@@ -1598,7 +1598,7 @@ The node has never been added to the ProActive Resource Manager and won't be usa
 * `Busy` - Node has been given to user to execute computations.
 * `To be removed` - Node is busy but requested to be removed. So it will be removed once the client will release it.
 * `Down` - Node is unreachable or down and cannot be used anymore.
-* `Needed` - Metric shows how much more nodes Scheduler needs to schedule all possible tasks.
+* `Needed` - Metric shows how many additional nodes the Scheduler needs to schedule all pending tasks.
 
 The state of a ProActive Node is managed by the Resource Manager. However, each Node has a
 <<_nodes_locking,user managed lock status>>.
@@ -1688,10 +1688,14 @@ The accounting information can be accessed only through a *JMX client* or the Pr
 
 === Metric to monitor Scheduler load
 
-*Needed Nodes* metric shows how much more nodes Scheduler needs to schedule all possible tasks,
+*Needed Nodes* metric shows how many additional nodes the Scheduler needs to schedule all pending tasks,
 e.g. there are 4 nodes and all of them are busy, but *Needed Nodes* shows 10, which means if you would have
 14 nodes instead of 4, all of these nodes would be busy.
-Please notice, that *Needed Nodes* shows how many more nodes could be used right now. However, it does not give indication on the kind of nodes needed, e.g. Selection Script of the task could require some specific nodes, thus *Needed Nodes* could be positive while we still have free nodes (they can be inappropriate for the current task).
+Please notice, that *Needed Nodes* shows how many more nodes could be used right now.
+However, it does not give any indication about the kind of nodes needed,
+e.g. Selection Script of the task could require some specific nodes,
+thus *Needed Nodes* could be positive despite still having free nodes
+(they can be inappropriate for the current task).
 
 
 You can find this metric in multiple places. In RM portal you can see it in Nodes History:
