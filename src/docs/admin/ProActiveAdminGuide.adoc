@@ -1684,6 +1684,14 @@ More precisely, for a specific node provider, it is the sum of all time interval
 The accounting information can be accessed only through a *JMX client* or the ProActive Resource Manager *command line*.
 
 [[_run_as_me]]
+
+=== Metric to monitor Scheduler load
+
+image::neededNodes-rm-nodeshistory.png[align="center"]
+image::neededNodes-rm-nodesstate.png[align="center"]
+image::neededNodes-rm-stats.png[align="center"]
+image::neededNodes-scheduler.png[align="center"]
+
 == Run Computation with a user's system account
 
 Configure a ProActive Node to execute tasks under a user's system account by ticking the
