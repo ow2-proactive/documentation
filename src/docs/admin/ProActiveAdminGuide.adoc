@@ -1684,8 +1684,6 @@ More precisely, for a specific node provider, it is the sum of all time interval
 
 The accounting information can be accessed only through a *JMX client* or the ProActive Resource Manager *command line*.
 
-[[_run_as_me]]
-
 === Metric to monitor Scheduler load
 
 *Needed Nodes* metric shows how many additional nodes the Scheduler needs to schedule all pending tasks,
@@ -1713,6 +1711,8 @@ image::neededNodes-rm-stats.png[align="center"]
 Also, you can find *Needed Nodes* in the Scheduler portal where the Scheduler status is displayed:
 
 image::neededNodes-scheduler.png[align="center"]
+
+[[_run_as_me]]
 
 == Run Computation with a user's system account
 
