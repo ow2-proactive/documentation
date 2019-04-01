@@ -274,7 +274,7 @@ TIP: If all the nodes of an Openstack instance are removed, the instance will be
 
 Other properties for the node deployment in the *Create Openstack Node Source* are:
 
-    -   *connectorIaasURL:* Connector-iaas is a ProActive used to interact with IaaS like Openstack. By default it runs on the following URL *rmHostname/connector-iaas*.
+    -   *connectorIaasURL:* Connector-iaas is a ProActive service used to interact with IaaS like Openstack. By default it runs on the following URL *rmHostname/connector-iaas*.
 
     -   *rmHostname:* The hostname or the public IP address of the Resource Manager. This address needs to be accessible from the Openstack server.
 
