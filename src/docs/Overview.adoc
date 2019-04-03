@@ -32,6 +32,3 @@ The screenshot above shows the *Cloud Automation* portal which is actually a Paa
 image::scalable-elastic-resources.png[align=center]
 
 The screenshots above taken from the *Resource Manager* portal shows that you can configure ProActive Scheduler to *dynamically scale up and down* the infrastructure being used (e.g. the number of VMs you buy on Clouds) according to the actual workload to execute.
-
-image::job-planner-gantt-overview.png[align=center]
-
