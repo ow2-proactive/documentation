@@ -1,9 +1,10 @@
 
 === Introduction
-The <<_glossary_job_planner,*Job Planner*>> schedules <<_glossary_workflow,*Workflows*>>.
- A <<_glossary_workflow,*Workflow*>> is scheduled by the <<_glossary_job_planner,*Job Planner*>> if
-  it is associated to a <<_glossary_calendars_definition,*Calendar Definition*>>. A <<_glossary_calendars_definition,*Calendar Definition*>> can have several <<_glossary_workflow,*Workflows*>> associated to it. Each of them can easily be activated and deactivated.
-  The <<_glossary_workflow,*Workflows*>> variables can be set when associating them to calendars.
+The <<_glossary_job_planner,*Job Planner*>> schedules <<_glossary_workflow,*Workflows*>> at specific points in time which are defined by <<_glossary_calendars_definition,*Calendars*>>.
+
+A <<_glossary_workflow,*Workflow*>> is scheduled by the <<_glossary_job_planner,*Job Planner*>> if
+it is associated to a <<_glossary_calendars_definition,*Calendar Definition*>>. A <<_glossary_calendars_definition,*Calendar Definition*>> can have several <<_glossary_workflow,*Workflows*>> associated to it. Each of them can easily be activated and deactivated.
+The <<_glossary_workflow,*Workflows*>> variables can be set with specific values when associating them to a calendar.
 
 === Creation of a Planning
 
@@ -25,7 +26,7 @@ Once a workflow has been published to the <<_glossary_catalog, *Catalog*>>, it c
 image::calendar_wf_association.png[align="center"]
 
 On this page, select an already existing Calendar Definition and add/remove workflows associated to it.
-When creating an association, it is possible to set the workflows variables.
+When creating an association, it is possible to set the workflows variables with specific values, that can be different from the default values stored in the Catalog for that workflow.
 
 image::calendar_wf_association_2.png[align="center"]
 
@@ -38,8 +39,11 @@ This page can also be opened when clicking on the "plan" button on the <<_glossa
 
 On the <<_glossary_job_planner_portal, *Job Planner Portal*>>, Execution Planning page, you can see the recurrence of <<_glossary_calendars_definition,*Calendar Definitions*>> .
 You can select one or several Calendar Definitions on the left panel and associated workflows will appear on the right panel.
-There are 2 ways to visualize planning of the selected Calendar Definitions:
-    - by workflow, Chronologically or on a standard Calendar
+There are 4 ways to visualize planning of the selected Calendar Definitions:
+
+    - by workflow
+    - Chronologically
+    - On a standard Calendar
     - with a GANTT chart
 
 ==== Visualization by workflow, Chronologically or on a standard Calendar
@@ -60,7 +64,7 @@ If nothing is displayed, it means the selected Calendar Definitions have no recu
 
 ==== GANTT Visualization of the Job Planning
 
-You can also use the Gantt chart to visualize the executions:
+You can also use the Gantt chart ("Open Gantt" button at the top) to visualize the executions:
 
 image::calendar_planning_gantt.png[align="center"]
 

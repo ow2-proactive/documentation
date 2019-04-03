@@ -1598,6 +1598,7 @@ The node has never been added to the ProActive Resource Manager and won't be usa
 * `Busy` - Node has been given to user to execute computations.
 * `To be removed` - Node is busy but requested to be removed. So it will be removed once the client will release it.
 * `Down` - Node is unreachable or down and cannot be used anymore.
+* `Needed` - Metric shows how many additional nodes the Scheduler needs to schedule all pending tasks.
 
 The state of a ProActive Node is managed by the Resource Manager. However, each Node has a
 <<_nodes_locking,user managed lock status>>.
@@ -1683,7 +1684,36 @@ More precisely, for a specific node provider, it is the sum of all time interval
 
 The accounting information can be accessed only through a *JMX client* or the ProActive Resource Manager *command line*.
 
+=== Metric to monitor Scheduler load
+
+*Needed Nodes* metric shows how many additional nodes the Scheduler needs to schedule all pending tasks,
+e.g. there are 4 nodes and all of them are busy, but *Needed Nodes* shows 10, which means if you would have
+14 nodes instead of 4, all of these nodes would be busy.
+Please notice, that *Needed Nodes* shows how many more nodes could be used right now.
+However, it does not give any indication about the kind of nodes needed,
+e.g. Selection Script of the task could require some specific nodes,
+thus *Needed Nodes* could be positive despite still having free nodes
+(they can be inappropriate for the current task).
+
+
+You can find this metric in multiple places. In RM portal you can see it in Nodes History:
+
+image::neededNodes-rm-nodeshistory.png[align="center"]
+
+In Nodes State:
+
+image::neededNodes-rm-nodesstate.png[align="center"]
+
+And you can find it in RM portal detailed statistics:
+
+image::neededNodes-rm-stats.png[align="center"]
+
+Also, you can find *Needed Nodes* in the Scheduler portal where the Scheduler status is displayed:
+
+image::neededNodes-scheduler.png[align="center"]
+
 [[_run_as_me]]
+
 == Run Computation with a user's system account
 
 Configure a ProActive Node to execute tasks under a user's system account by ticking the

@@ -130,7 +130,8 @@ Examples: PA:CRON will accept "5 * * * \*" but not "* * * *" (missing minutes su
 * *PA:CATALOG_OBJECT* : variable syntax must be a valid expression that matches the following pattern: `bucketName/objectName[/revision]`.
 Note that the revision sub-pattern is a hash code number represented by 13 digit. +
 Examples: PA:CATALOG_OBJECT will accept "bucket-example/object-example/1539310165443" and "bucket-example/object-example" but not "bucket-example/object-example/153931016" (invalid revision number) and "bucket-example/" (missing object name).
-
+* *PA:JSON* : variable syntax must be a valid JSON expression as defined in http://www.json.org/[JSON doc]. +
+Examples: PA:JSON will accept {"name": "John", "city":"New York"} and empty values like {} or [{},{}], but not ["test" : 123] (Unexpected character ':') and {test : 123} (Unexpected character 't').
 
 ====== Spring Expression Language Model
 
