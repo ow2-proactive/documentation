@@ -727,6 +727,18 @@ block.
 
 include::./references/Variables.adoc[]
 
+=== Job Result
+
+Job has set of tasks. Job does not have its own result, but each task have its own result. However, some task results can be marked as *Precious* one.
+We consider them as job's results it is result of all *Precious* tasks.
+
+Job has map associated to it, which is called *Result Map*. Each task can contribute to this *Result Map*, see <<_contribute_to_result_map>>.
+
+After job is finished, you can see its *Result Map* and list of *Precious* task results in the Scheduler portal:
+
+image::scheduler-result-map.png[align=center]
+
+
 === Task result
 
 Another way to propagate data from a task to another relies on *result* variable.
@@ -825,6 +837,16 @@ file = new File("balloon13.png")
 result = file.getBytes()
 resultMetadata.put("content.type","image/png")
 ----
+
+[[_contribute_to_result_map]]
+==== Contributing to Result Map
+
+Each task can contribute to the Job's *Result Map*. Consider groovy example:
+[source, groovy]
+----
+resultMap.put("filename", "results.txt")
+----
+
 
 
 === Control Flow Scripts
