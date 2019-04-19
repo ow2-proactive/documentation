@@ -1069,7 +1069,7 @@ When you create a policy you must specify them:
 
 * *nodeUsers* - utilization permission that defines who can get nodes for computations from this node source. It has to take one of the following values:
 ** `ME` - only the node source creator
-** `users=user1,user2;groups=group1,group2;tokens=t1,t2` - only specific users, groups or tokens. I.e. users=user1 - node access is limited to user1; users=user1;groups=group1 - node access is limited to user1 and all users from group group1; users=user1;tokens=t1 - node access is limited to user1 or anyone who specified token t1. If node access is protected by a token, node will not be found by the ProActive Resource Manager when trying to execute workflows, unless the corresponding token is specified inside the workflow(s).
+** `users=user1,user2;groups=group1,group2;tokens=t1,t2` - only specific users, groups or tokens. I.e. users=user1 - node access is limited to user1; users=user1;groups=group1 - node access is limited to user1 and all users from group group1; users=user1;tokens=t1 - node access is limited to user1 or anyone who specified token t1. If node access is protected by a token, node will not be found by the ProActive Resource Manager when trying to execute workflows, unless the corresponding token is specified inside the workflow(s). To exclude specific users or groups use users=!user1,!user2;groups=!group1,!group2. Tokens can not be excluded, and mixing inclusion with exclusion is not permitted (i.e. users=user1,!user2;groups=!group1,group2).
 ** `ALL` - everybody can use nodes from this node source
 
 NOTE: To specify a token inside a chosen workflow, add the key/value pair *NODE_ACCESS_TOKEN:<token>* to its generic information.

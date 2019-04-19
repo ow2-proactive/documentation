@@ -13,7 +13,9 @@ Node sources were designed in a way that:
  I.e. users=user1 - node access is limited to user1; users=user1;groups=group1 - node access is limited to
  user1 and all users from group group1; users=user1;tokens=t1 - node access is limited to user1 or anyone
  who specified token t1. If node access is protected by a token, node will not be found by the resource
- manager (getNodes request) unless the corresponding token is specified.
+ manager (getNodes request) unless the corresponding token is specified. To exclude specific users or groups
+ use users=!user1,!user2;groups=!group1,!group2. Tokens can not be excluded, and mixing inclusion with exclusion
+ is not permitted (i.e. users=user1,!user2;groups=!group1,group2).
 *** +ALL+ - Everybody
 ** nodeProviders - Provider permission defines who can add nodes to this node source. It should take one of the following values:
 *** +ME+ - Only the node source creator
