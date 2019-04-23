@@ -727,17 +727,6 @@ block.
 
 include::./references/Variables.adoc[]
 
-=== Job Result
-
-Job has set of tasks. Job does not have its own result, but each task have its own result. However, some task results can be marked as *Precious* one.
-We consider them as job's results it is result of all *Precious* tasks.
-
-Job has map associated to it, which is called *Result Map*. Each task can contribute to this *Result Map*, see <<_contribute_to_result_map>>.
-
-After job is finished, you can see its *Result Map* and list of *Precious* task results in the Scheduler portal:
-
-image::scheduler-result-map.png[align=center]
-
 
 === Task result
 
@@ -789,7 +778,7 @@ Example for Python/Jython:
 print results[0].value()
 ----
 
-==== Assigning metadata to result variable
+==== Assigning metadata to task result
 
 Result metadata can contain additional information associated with the result. In order to store metadata information, use the following syntax, if task2 depends on task1:
 
@@ -838,10 +827,26 @@ result = file.getBytes()
 resultMetadata.put("content.type","image/png")
 ----
 
-[[_contribute_to_result_map]]
-==== Contributing to Result Map
+=== Job Results
 
-Each task can contribute to the Job's *Result Map*. Consider groovy example:
+Job Results are composed of two things: *Job Result List* and *Job Result Map*.
+Each task can contribute as for *Job Result List* as for *Job Result Map*.
+After job is finished, you can see Job Results in the Scheduler portal:
+
+image::scheduler-result-map.png[align=center]
+
+==== Job Result List
+
+Each task has its own result. However, some task results can be marked as *Task Result Added to Job Result* one, we add these task results to the *Job Result List*.
+You can mark your task in Studio:
+
+image::precious-result.png[align=center]
+
+
+==== Job Result Map
+
+Job has key-value map associated to it, which is called *Job Result Map*. Each task can contribute to this *Job Result Map*. Consider groovy example:
+
 [source, groovy]
 ----
 resultMap.put("filename", "results.txt")
