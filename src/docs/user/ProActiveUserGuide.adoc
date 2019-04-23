@@ -829,7 +829,7 @@ resultMetadata.put("content.type","image/png")
 
 === Job Results
 
-Job Results are composed of two things: *Job Result List* and *Job Result Map*.
+Job Results are composed of two elements: *Job Result List* and *Job Result Map*.
 Each task can contribute as for *Job Result List* as for *Job Result Map*.
 After job is finished, you can see Job Results in the Scheduler portal:
 
@@ -850,7 +850,7 @@ In the Job xml schema it is available as `preciousResult`:
 
 ==== Job Result Map
 
-Job has key-value map associated to it, which is called *Job Result Map*. Each task can contribute to this *Job Result Map*. Consider groovy example:
+Job has key-value map associated to it, which is called *Job Result Map*. Each task can contribute to this *Job Result Map*. Consider the following groovy example:
 
 [source, groovy]
 ----
