@@ -831,7 +831,7 @@ resultMetadata.put("content.type","image/png")
 
 Job Results are composed of two elements: *Job Result List* and *Job Result Map*.
 Each task can contribute as for *Job Result List* as for *Job Result Map*.
-After job is finished, you can see Job Results in the Scheduler portal:
+Once the job is finished, you can download/visualize Job Results from the Scheduler portal:
 
 image::scheduler-result-map.png[align=center]
 
