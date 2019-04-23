@@ -727,6 +727,7 @@ block.
 
 include::./references/Variables.adoc[]
 
+
 === Task result
 
 Another way to propagate data from a task to another relies on *result* variable.
@@ -777,7 +778,7 @@ Example for Python/Jython:
 print results[0].value()
 ----
 
-==== Assigning metadata to result variable
+==== Assigning metadata to task result
 
 Result metadata can contain additional information associated with the result. In order to store metadata information, use the following syntax, if task2 depends on task1:
 
@@ -825,6 +826,37 @@ file = new File("balloon13.png")
 result = file.getBytes()
 resultMetadata.put("content.type","image/png")
 ----
+
+=== Job Results
+
+Job Results are composed of two elements: *Job Result List* and *Job Result Map*.
+Each task can contribute as for *Job Result List* as for *Job Result Map*.
+Once the job is finished, you can download/visualize Job Results from the Scheduler portal:
+
+image::scheduler-result-map.png[align=center]
+
+==== Job Result List
+
+Each task has its own result. However, some task results can be marked as *Task Result Added to Job Result*. In that case, this task result will be added to the *Job Result List*.
+You can mark your task in Studio:
+
+image::precious-result.png[align=center]
+
+In the Job xml schema it is available as `preciousResult`:
+
+``` {.xml}
+<task name="Init_Task" preciousResult="true" >
+```
+
+==== Job Result Map
+
+Job has key-value map associated to it, which is called *Job Result Map*. Each task can contribute to this *Job Result Map*. Consider the following groovy example:
+
+[source, groovy]
+----
+resultMap.put("filename", "results.txt")
+----
+
 
 
 === Control Flow Scripts
