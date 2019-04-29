@@ -838,7 +838,7 @@ image::scheduler-result-map.png[align=center]
 
 ==== Job Result List
 
-Each task has its own result (see secion <<_task_result>>). However, some task results can be marked as *Task Result Added to Job Result*. In that case, this task result will be added to the *Job Result List*.
+Each task has its own result (see section <<_task_result>>). However, some task results can be marked as *Task Result Added to Job Result*. In that case, this task result will be added to the *Job Result List*.
 You can mark your task in the Studio:
 
 image::precious-result.png[align=center]
