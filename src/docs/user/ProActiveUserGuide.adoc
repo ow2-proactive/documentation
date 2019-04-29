@@ -851,10 +851,13 @@ In the Job xml schema it is available as `preciousResult`:
 
 ==== Job Result Map
 
-Job has key-value map associated to it, which is called *Job Result Map*.
-Each task can contribute to this *Job Result Map*. It is write-only map,
-such as task cannot see what other task wrote to this map.
-However, task can rewrite existing values. This map contains String as a key,
+In addition to the *Job Results List*,
+a Job can also store some results into a dedicated key-value map,
+which is called *Job Result Map*. Every task can contribute to this *Job Result Map*.
+It is a write-only map, in such a way that a task cannot see
+what other tasks already wrote to the result map.
+When several tasks write the same key to the result map,
+the last write always takes precedence. This map contains String as a key,
 and https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html[Serializable ^] as value.
 
 Consider the following groovy example.
