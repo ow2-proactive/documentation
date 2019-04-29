@@ -727,6 +727,7 @@ block.
 
 include::./references/Variables.adoc[]
 
+[[_task_result]]
 
 === Task result
 
@@ -837,8 +838,8 @@ image::scheduler-result-map.png[align=center]
 
 ==== Job Result List
 
-Each task has its own result. However, some task results can be marked as *Task Result Added to Job Result*. In that case, this task result will be added to the *Job Result List*.
-You can mark your task in Studio:
+Each task has its own result (see secion <<_task_result>>). However, some task results can be marked as *Task Result Added to Job Result*. In that case, this task result will be added to the *Job Result List*.
+You can mark your task in the Studio:
 
 image::precious-result.png[align=center]
 
@@ -850,13 +851,33 @@ In the Job xml schema it is available as `preciousResult`:
 
 ==== Job Result Map
 
-Job has key-value map associated to it, which is called *Job Result Map*. Each task can contribute to this *Job Result Map*. Consider the following groovy example:
+Job has key-value map associated to it, which is called *Job Result Map*.
+Each task can contribute to this *Job Result Map*. It is write-only map,
+such as task cannot see what other task wrote to this map.
+However, task can rewrite existing values. This map contains String as a key,
+and https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html[Serializable ^] as value.
 
+Consider the following groovy example.
+
+`Task 1` writes to *Job Result Map*:
 [source, groovy]
 ----
 resultMap.put("filename", "results.txt")
+resultMap.put("latestError", "no error")
 ----
 
+`Task 2` writes to *Job Result Map*:
+[source, groovy]
+----
+resultMap.put("latestError", "wrong user id")
+----
+
+Once the job is finished, *Job Result Map* would contain:
+[source, groovy]
+----
+"filename" -> "results.txt"
+"latestError" -> "wrong user id"
+----
 
 
 === Control Flow Scripts
