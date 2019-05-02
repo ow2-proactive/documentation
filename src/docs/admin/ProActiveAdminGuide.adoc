@@ -152,22 +152,36 @@ into
 
 === Database configuration
 
-Scheduler, Resource Mananger, and three microservices require to have direct access to the database.
+Scheduler, Resource Mananger, and some microservices require to have direct access to the database.
 Thus, they must each have a correct database configuration.
 
-To configure Scheduler or Resource Mananger, one have to modify `config/scheduler/database.properties`
-and `config/rm/database.properties` respectively. The following five properties must be configured:
-`hibernate.connection.driver_class`, `hibernate.connection.url`, `hibernate.dialect`,
-`hibernate.connection.username`, and `hibernate.connection.password`.
+To configure Scheduler or Resource Mananger, one have to modify *PROACTIVE_HOME/config/scheduler/database.properties*
+and *PROACTIVE_HOME/config/rm/database.properties* respectively.
 
-For each microservice, a microservice configuration file can be found in: `/dist/war/MICROSERVICE-NAME/classes/application.properties`.
-The `job-planner`, `catalog` and `scheduling-api` microservices must contain a database configuration.
-In their application.properties file, you need to set the following five properties:
-`spring.datasource.url`, `spring.datasource.username`, `spring.datasource.password`,
-`spring.datasource.driver-class-name`, and `spring.jpa.database-platform`.
+The following five properties must be configured:
 
-Moreover, it is mandatory to put the proper database driver in `PROACTIVE_HOME/addons` folder, e.g. if you want to use MySQL 5.7 database,
-then you have to download the database driver and put it at: `PROACTIVE_HOME/addons/mysql-connector-java-8.0.11.jar`.
+* `hibernate.connection.driver_class`
+* `hibernate.connection.url`
+* `hibernate.dialect`
+* `hibernate.connection.username`
+* `hibernate.connection.password`
+
+TIP: There are usefull templates for different databases in *PROACTVE_HOME/config/scheduler/templates/* and *PROACTVE_HOME/config/rm/templates/*.
+
+The *job-planner*, *catalog*, *scheduling-api*, and *proactive-cloud-watch* microservices must contain a database configuration.
+For each microservice, a microservice configuration file can be found in: *PROACTIVE_HOME/dist/war/MICROSERVICE-NAME/WEB-INF/classes/application.properties*.
+In their *application.properties* file, you need to set the following five properties:
+
+* `spring.datasource.url`
+* `spring.datasource.username`
+* `spring.datasource.password`
+* `spring.datasource.driverClassName`
+* `spring.jpa.database-platform`
+
+Moreover, it is mandatory to put the proper database driver in *PROACTIVE_HOME/addons* folder, e.g. if you want to use MySQL 5.7 database,
+then you have to download the database driver and put it at: *PROACTIVE_HOME/addons/mysql-connector-java-8.0.11.jar*.
+
+Scheduler, and 3 microservices (*scheduling-api*, *job-planner*, and *proactive-cloud-watch*) have to point to the same database.
 
 == Installation on a Cluster
 
@@ -844,7 +858,7 @@ println "Hello World"
 </job>
 ```
 
-It is also possible to define in a ProActive Task or Job the `#BATCH` generic information. This parameter allows to provide custom arguments to `nsSubmitCommand`.
+It is also possible to define in a ProActive Task or Job the `NS_BATCH` generic information. This parameter allows to provide custom arguments to `nsSubmitCommand`.
 
 For example, to submit a task on the PBS Node source, using a specific PBS queue and reserve for this task 2 cluster nodes with 2 cpu each:
 
@@ -855,7 +869,7 @@ For example, to submit a task on the PBS Node source, using a specific PBS queue
   </description>
   <genericInformation>
     <info name="NS" value="PBS"/>
-    <info name="#BATCH" value="-q queue1 -lnodes=2:ppn=2"/>
+    <info name="NS_BATCH" value="-q queue1 -lnodes=2:ppn=2"/>
   </genericInformation>
   <scriptExecutable>
     <script>
@@ -1584,6 +1598,7 @@ The node has never been added to the ProActive Resource Manager and won't be usa
 * `Busy` - Node has been given to user to execute computations.
 * `To be removed` - Node is busy but requested to be removed. So it will be removed once the client will release it.
 * `Down` - Node is unreachable or down and cannot be used anymore.
+* `Needed` - Metric shows how many additional nodes the Scheduler needs to schedule all pending tasks.
 
 The state of a ProActive Node is managed by the Resource Manager. However, each Node has a
 <<_nodes_locking,user managed lock status>>.
@@ -1669,7 +1684,36 @@ More precisely, for a specific node provider, it is the sum of all time interval
 
 The accounting information can be accessed only through a *JMX client* or the ProActive Resource Manager *command line*.
 
+=== Metric to monitor Scheduler load
+
+*Needed Nodes* metric shows how many additional nodes the Scheduler needs to schedule all pending tasks,
+e.g. there are 4 nodes and all of them are busy, but *Needed Nodes* shows 10, which means if you would have
+14 nodes instead of 4, all of these nodes would be busy.
+Please notice, that *Needed Nodes* shows how many more nodes could be used right now.
+However, it does not give any indication about the kind of nodes needed,
+e.g. Selection Script of the task could require some specific nodes,
+thus *Needed Nodes* could be positive despite still having free nodes
+(they can be inappropriate for the current task).
+
+
+You can find this metric in multiple places. In RM portal you can see it in Nodes History:
+
+image::neededNodes-rm-nodeshistory.png[align="center"]
+
+In Nodes State:
+
+image::neededNodes-rm-nodesstate.png[align="center"]
+
+And you can find it in RM portal detailed statistics:
+
+image::neededNodes-rm-stats.png[align="center"]
+
+Also, you can find *Needed Nodes* in the Scheduler portal where the Scheduler status is displayed:
+
+image::neededNodes-scheduler.png[align="center"]
+
 [[_run_as_me]]
+
 == Run Computation with a user's system account
 
 Configure a ProActive Node to execute tasks under a user's system account by ticking the
@@ -2006,23 +2050,24 @@ to:
 pa.scheduler.policy=org.ow2.proactive.scheduler.policy.license.LicenseSchedulingPolicy
 ----
 
-The LicenSchedulingPolicy requires an extra configuration:
-
-The maximum number of licenses per software must be specified into `PROACTIVE_HOME/config/scheduler/license.properties` like this
+The LicenseSchedulingPolicy requires an extra configuration: the maximum number of licenses per software must be specified into
+`PROACTIVE_HOME/config/scheduler/license.properties` like this
 
 ----
 software_A = 3
 software_B = 2
 ----
 
-From now, given a task, user can specify which software licenses are required, by adding the REQUIRED_LICENSES generic information,
+From now, at a job or a task level, user can specify which software licenses are required, by adding the REQUIRED_LICENSES generic information,
 which value can be
 
 ----
 softwareA,softwareB
 ----
 
-As expected, if 10 replicated tasks requiring software_A,software_B licenses are submitted, they will be executed 3 by 3.
+As expected, if 10 tasks requiring software_A,software_B licenses are submitted, they will be executed 2 by 2, according to the software with the fewest licenses.
+The same logic is applied at the job level, whatever the number of tasks composing each job, since all tasks of the same job share the same license.
+Moreover, user can combine both levels.
 
 == Addons
 
