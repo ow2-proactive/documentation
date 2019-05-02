@@ -2242,7 +2242,7 @@ Here is the ordered list of rules for the EDF policy:
 
 6. job with earliest submission time.
 
-==== Email notificaions
+==== Email notifications
 
 EDF policy sends 3 types of email notifications:
 
@@ -2250,7 +2250,7 @@ EDF policy sends 3 types of email notifications:
 
 2. When job will likely miss its deadline (i.e if the provided `JOB_EXEC_TIME` exceeds the left time until the deadline)
 
-3. (Arriving soon) When job is already missed its deadline.
+3. (Arriving soon) When job has already missed its deadline.
 
 Policy sends emails to the address specified in `EMAIL` Generic Information of the job.
 
