@@ -1,8 +1,25 @@
 :docinfo:
-= ProActive Workflows & Scheduling
+:toc: 
+:toc-title: PWS User Guide
+= ProActive Workflows & Scheduling -- User Guide
 include::../common-settings.adoc[]
-:toc-title: User Guide
+:sectnums!:
+== All documentation links
+=== link:../user/ProActiveUserGuide.html[User Guide]
+ProActive Workflow & Scheduler (PWS) User Guide (Workflows, Tasks, Jobs Submission, Resource Management)
 
+=== link:../MLOS/MLOSUserGuide.html[ML Open Studio] 
+Machine Learning Open Studio (ML-OS) User Guide (ready to use palettes with ML Tasks & Workflows)
+
+=== link:../PCA/PCAUserGuide.html[Cloud Automation]
+ProActive Cloud Automation (PCA) User Guide (automate deployment and management of Services)
+
+=== link:../admin/ProActiveAdminGuide.html[Admin Guide]
+Administration Guide (Installation, networks, nodes, clusters, users, permissions)
+
+*API documentation: &emsp; https://try.activeeon.com/rest/doc/[Scheduler REST] &emsp; link:../user/ProActiveUserGuide.html#_scheduler_command_line[Scheduler CLI] &emsp; https://doc.activeeon.com/javadoc/latest/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html[Scheduler Java] &emsp; https://doc.activeeon.com/javadoc/latest/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html[Workflow Creation Java] &emsp; https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client[Python Client]*
+
+:sectnums:
 == Overview
 
 include::../Overview.adoc[]
@@ -92,28 +109,108 @@ At the left part, are illustrated the **General Parameters** of the workflow wit
 - `Job Priority`: the priority assigned to the workflow. It is by default set to `NORMAL`, but can be increased or decreased once the job is submitted. 
 
 
+=== Docker_Compose task
 
-
-
-=== Docker task
-
-In order for Docker tasks to work, the _Node_ must have Docker and Docker Compose installed, please refer to the official
+In order for Docker_Compose tasks to work, the _Node_ must have Docker and Docker Compose installed. Please refer to the official
  Docker documentation to see how to install http://docs.docker.com/engine/installation/[Docker^] and https://docs.docker.com/compose/install/[Docker Compose^].
 
-A Docker task expects the content of a Docker Compose file inside the _Script_ section. You can find out how to write Docker Compose files
-with the official https://docs.docker.com/compose/[Docker Compose documentation^].
+A Docker_Compose task expects the content of a Docker Compose file inside the _Script_ section. You can find out how to write Docker Compose files
+in the official https://docs.docker.com/compose/[Docker Compose documentation^].
 
-To get started: a simple Docker Compose example is explained below.
+To get started, a simple Docker Compose example is explained below.
 
 The content of the _Script_ section (equal to the content of a Docker Compose file) is:
----
+----
 helloworld:
     image: busybox
     command: echo "Hello ProActive"
----
+----
 The above example describes a container which is called 'helloworld'. That container is created from a busybox image,
  which will run the command 'echo "Hello ProActive"'
 
+The Docker_Compose task allows to set parameters to the `docker-compose` tool with regard to the docker-compose CLI https://docs.docker.com/compose/reference/overview/[reference].
+
+----
+docker-compose [general parameters] COMMAND [options]
+----
+
+It supports general parameters as well as commands options (we currently only support options for the `up` command).
+You can specify these options by supplying a space character separated list in the <<_glossary_generic_information, generic informations>>.
+
+* To define a _general parameter_, use the key *docker-compose-options* and supply "--verbose" as an example value.
+* To define a _docker-compose up option_, use the key *docker-compose-up-options* and supply "--exit-code-from helloworld".
+
+The two latter generic informations will be used to generate the following command:
+
+----
+docker-compose --verbose up --exit-code-from helloworld
+----
+
+If splitting by space is prohibitive you can specify the split regex in the <<_glossary_generic_information, generic informations>> with the
+key *docker-compose-options-split-regex*. If you supply e.g. "!SPLIT!" as value, then your *docker-compose-up-options* will need to look like this: "--option1!SPLIT!--option2".
+
+=== Docker_File task
+
+The main behavior of a Docker_File task is to first build an image and then run a container instance from it. Once the execution is done, the container is stopped and the built image is deleted. 
+
+Advanced options will allow to parametrize these actions.
+
+In order for Docker_File tasks to work, the _Node_ must have Docker installed. Please refer to the official
+ Docker documentation to see how to install http://docs.docker.com/engine/installation/[Docker^].
+
+To use a Docker_File task, put the content of a Dockerfile inside the _Task Implementation_ section. You can find out how to write Dockerfile
+in the official https://docs.docker.com/engine/reference/builder/[Dockerfile documentation^]. 
+A Docker_File task allows executing a succession of docker commands according to the lifecycle of Docker containers. In order, docker build, docker run, docker stop, and docker rmi are ran when a Docker_File task is executed.
+
+To get started, a simple Docker_File task can be tested by using this Dockerfile as the content of the _Script_ section (task implementation)
+
+----
+FROM ubuntu:18.04
+RUN echo "Hello ProActive" 
+RUN sleep 30
+----
+
+It will create an image using the Docker build command, by specifying commands to start (echo and sleep) for every running containers from this image. At the end the built image and the started container are deleted.
+
+The build, start, stop and remove commands can be parametrized through optional command line options explained after.
+
+* The Docker_File task allows to set parameters to the `docker build` command with regard to the docker-build CLI https://docs.docker.com/engine/reference/builder/[reference].
+----
+docker build [OPTIONS] PATH | URL | -
+----
+
+To define a _docker-build option_, use the generic information *docker-build-options* 
+
+For instance by using the docker-build-options generic information with the value --add-host, a custom host-to-IP mapping will be added to the image.
+
+* The Docker_File task allows to set parameters to the `docker run` command with regard to the docker-run CLI https://docs.docker.com/engine/reference/run/[reference].
+----
+docker run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
+----
+
+To define a _docker-run option_, use the generic information *docker-run-options* 
+
+For instance by using the docker-run-options generic information with the value -d=true, the container will be started in detached mode.
+
+* The Docker_File task allows to set parameters to the `docker stop` command with regard to the docker-stop CLI https://docs.docker.com/engine/reference/commandline/stop/[reference].
+----
+docker stop [OPTIONS] CONTAINER [CONTAINER...]
+----
+
+To define a _docker-run option_, use the generic information *docker-stop-options* 
+
+For instance by using the docker-stop-options generic information with the value --time 30, the container will be stopped after 30s.
+
+TIP:  a parameter *docker.file.keepcontainer* is defined in the dockerfile script engine properties file (in config/scriptengines/ folder). Put the value to *yes* if you do not want to stop the container.
+
+* The Docker_File task allows to set parameters to the `docker rmi` command with regard to the docker-rmi CLI https://docs.docker.com/engine/reference/commandline/rmi/#options[reference].
+----
+docker rmi [OPTIONS] IMAGE [IMAGE...]
+----
+
+To define a _docker-rmi option_, use the generic information *docker-rmi-options* 
+
+TIP:  a parameter *docker.file.keepimage* is defined in the dockerfile script engine properties file (in config/scriptengines/ folder). Put the value to *yes* if you do not want to delete the built image.
 
 === Native application
 
@@ -132,6 +229,15 @@ link:examples/native_task.xml[XML workflow^] or you can also build one yourself 
 Native application by nature can be tied to a given operating system so
 if you have different nodes at your disposal, you might need to select a suitable node to run your native task.
 This can be achieved using <<_selection,selection script>>.
+
+=== PHP Task
+
+The PHP task executes a PHP script on a ProActive Node’s local PHP installation. The PHP script will be downloaded from the dataspace. So, the PHP script must be present in the dataspace beforehand. The task can also be modified to download the PHP script from other sources. Log forwarding and log streaming during PHP execution is conveniently available through the Scheduler portal.
+
+==== Node configuration
+For a ProActive Node to execute a PHP script, PHP must be installed on the machine of the ProActive Node. The PHP task has a selection script which validates a correct PHP installation by searching the PATH and validating if the PHP can be executed successfully. The static selection script validates the PHP execution once and stores the result in the cache, so removing or installing PHP requires a restart of the node or a switch to the dynamic selection script.
+The selection script in the PHP task does not validate the PHP version, therefore it is advised to use the same PHP version on the ProActive Nodes or to improve the selection script itself.
+
 
 === Scripting language support
 
@@ -163,13 +269,48 @@ Scripts can also be used to decorate tasks with specific actions, we support
 <<_pre_post_clean,pre>>, <<_pre_post_clean,post>>, <<_pre_post_clean,clean>> and <<_selection,selection>> scripts.
 
 ==== Python Script Engine
+We support both Jython and Python Script Engines. Jython is an implementation of the Python programming language designed to run on the Java platform, Jython programs use Java classes instead of Python modules.
+The advantage of using our Jython Script Engine is that you do not need to do any installation. It includes some modules in the standard Python programming language distribution, but lacking the modules implemented originally in C.
+Besides, the libraries such as numpy, matplotlib, pandas, etc. are not supported by Jython. And the libraries which depends on numpy such as TensorFlow, PyTorch and Keras etc. are not supported neither.
 
+In order to support native Python, we provide also a Python Script Engine. To use the Python Script Engine, the 'Language' field should be put to 'cpython'. By using Python Script Engine, you can personalize the Python version that you want to use.
 Since there are many different versions of Python (mainly Python2 and Python3) which are not compatible, ProActive supports all the Python versions (Python2, Python3, etc).
-By default, the Python used to execute the Script is the default Python version on your machine. In order to use another Python version to execute
-the task, it is required to put a key 'PYTHON_COMMAND' in Generic Info, and its value is the path (symbolic or absolute, for example 'python3' or
-/usr/local/opt/python3/bin/python3.6) to the python executable that you want to use. If the Generic Info is put at task level this version of Python will be only used for this task, if
-it is put in the job level this version of Python will be used for all the tasks in this job. Of course the required Python needs to be installed on your machine,
-and the corresponding py4j module as well.
+By default, the Python used to execute the script is the default Python version on your machine. In order to use another Python version to execute
+the task, it is required to add a 'PYTHON_COMMAND' link:../user/ProActiveUserGuide.html#_glossary_generic_information[Generic Information]. Its value should contain the symbolic or absolute path to the desired python command to run (for example 'python3' or '/usr/local/opt/python3/bin/python3.6'). If the link:../user/ProActiveUserGuide.html#_glossary_generic_information[Generic Information] is put at task level this version of Python will be only used for this task, if
+it is put in the job level this version of Python will be used for all the tasks in this job.
+
+For every tasks which use the native python script engine:
+
+- Python must be installed on the ProActive Node which will be used to execute the task.
+- The py4j module must be installed. Please refer to
+link:../admin/ProActiveAdminGuide.html#_python_script_engine_python_task[Python Script Engine (Python task)] for the introduction about the installation of Python Script Engine.
+
+Here is a workflow example (in xml format) about a simple Python task:
+
+[source, xml]
+----
+  <taskFlow>
+    <task name="Python_Task" >
+      <description>
+        <![CDATA[ The simplest task, ran by a python engine. ]]>
+      </description>
+      <genericInformation>
+        <info name="PYTHON_COMMAND" value="python3"/>
+      </genericInformation>
+      <scriptExecutable>
+        <script>
+          <code language="cpython">
+            <![CDATA[
+import platform
+print("The current version of python you are using is: " + platform.python_version())
+print("Hello World")
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+  </taskFlow>
+----
 
 === MPI application
 
@@ -301,14 +442,16 @@ Unless your account belongs to an administrator group, you can only see the logs
 
 - `Job standard output/error logs`: +
 To view the standard output or error logs associated with a job, select a job from the job list and then on the _Output_ tab in the bottom right panel. +
-To view logs of a currently running job, you need to click on the _Streaming_ checkbox, the logs panel will be updated as soon as new log lines will be printed by this job.  +
-If the job is terminated, you can click on the _Fetch output_ button to view the final output of the job. +
+Click on _Streaming Output_ checkbox to auto-fetch logs for running tasks of the entire Job. The logs panel will be updated as soon as new log lines will be printed by this job. +
+You cannot select a specific Task in the streaming mode. If you activate streaming while some Tasks are already finished, you will get the logs of those Tasks as well. +
+Click on _Finished Tasks Output_ button to retrieve logs for already finished tasks. For all the finished Tasks within the Job, or for the selected Task. +
+The command does work when Job is still in Running state, as well as when Job is Finished. +
 Logs are limited to 1024 lines. Should your job logs be longer, you can select the _Full logs (download)_ option from the drop down list.
 
 - `Task standard output/error logs`: +
 To view the standard output or error logs associated with a task, select a job from the job list and a task from the task list. +
 Then in the _Output_ tab, choose _Selected task_ from the drop down list. +
-Once the task is terminated, you will be able to click on the _Fetch output_ button to see the standard output or error associated with the task. +
+Once the task is terminated, you will be able to click on the _Finished Tasks Output_ button to see the standard output or error associated with the task. +
 It is not possible to view the streaming logs of single task, only the job streaming logs are available.
 
 - `Job server logs`: +
@@ -395,589 +538,6 @@ Process*1 : DEF
 Process : ABC
 Split : {0=abc, 1=def}
 ----
-
-== Data Management
-
-One of the major questions after having learned to submit and execute simple tasks is how to handle data.
-
-ProActive Scheduler provides two mechanisms for accessing and propagating data down the execution chain. One is based on <<_variable_based_propagation,variables>> and the other on <<_file_based_propagation,files>>.
-
-=== Variable based propagation
-
-Variables used for data access and propagation exist in three flavors:
-
-- <<_workflow_variables,Workflow variables>>
-- <<_generic_information>>
-- <<_passing_data_between_tasks_using_results,Result variables>>
-
-Their usage depends of the context (see <<_variables_quick_reference>>).
-
-==== Workflow variables
-
-===== Job variables
-
-In a workflow you can define *job variables* that can be used in all tasks.
-
-A job variable is defined using the following attributes:
-
-* *name*: the name of the variable
-* *value*: the value of the variable
-* *model*: the type of the value (optional). See section <<_variable_model,Variable Model>>
-
-
-[[_templating]]
-Variables are very useful to use workflows as templates where only a few parameters change for each
-execution. Upon submission you can define variable values either from <<_scheduler_command_line, CLI>> or from
-the Web interfaces.
-
-The following example shows how to define a job variable:
-[source, xml]
-----
-<job ... >
-    <variables>
-        <variable name="variable" value="value" model=""/>
-    </variables>
-    ...
-</job>
-----
-
-*Job variables* can be referenced anywhere in the workflow, including other job variables.
-
-The syntax for referencing a variable is the pattern `${variable_name}` (case-sensitive), for example:
-
-[source, xml]
-----
-<nativeExecutable>
-    <staticCommand value="${variable}" />
-</nativeExecutable>
-----
-
-===== Task variables
-
-Similarly to job variables, *Task variables* can be defined inside a task. Task variables scope is strictly limited to the task definition.
-
-A task variable is defined using the following attributes:
-
-* *name*: the name of the variable
-* *value*: the value of the variable
-* *inherited*: asserts whether the propagated value should be use instead of the *value* value. If _true_, the *value* field can be empty. As a consequence, inheritance requires to declare the variable value at Workflow level
-* *model*: the type of the value (optional). See section <<_variable_model,Variable Model>>
-
-For example:
-[source, xml]
-----
-<task ... >
-    <variables>
-        <variable name="variable" value="value" inherited="false" model=""/>
-    </variables>
-    ...
-</task>
-----
-Task variables can be used similarly to job variables using the pattern `${variable_name}` but only inside the task where the variable is defined.
-
-Task variables override job variables, this means that if a job variable and a task variable are defined with the same name, the task variable value will be used inside the task, and the job variable value will be used elsewhere in the job.
-
-===== Variable Model
-
-Job and Task variables can define a `model` attribute which let the workflow designer control the variable value syntax.
-A workflow designer can for example decide that the variable NUMBER_OF_ENTRIES is expected to be convertible to an Integer ranged between 0 and 20.
-
-The workflow designer will then provide a default value to the variable NUMBER_OF_ENTRIES, for example "10". This workflow is valid as "10" can be converted to an Integer and is between 0 and 20.
-
-When submitting the workflow, it will be possible to choose a new value for the variable NUMBER_OF_ENTRIES.
-If the user submitting the workflow chooses for example the value -5, the validation will fail and an error message will appear.
-
-====== Available Models
-
-The following list describes the various model syntaxes available:
-
-* *PA:BOOLEAN* : variable is either "true", "false", "0" or "1".
-* *PA:INTEGER* , *PA:INTEGER[min,max]* : variable can be converted to https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Integer.html[java.lang.Integer], and eventually is contained in the range [min, max]. +
-Examples : PA:INTEGER will accept "-5" but not "1.4", PA:INTEGER[0,20] will accept "12" but not "25".
-* *PA:LONG* , *PA:LONG[min,max]* : same as above with https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Long.html[java.lang.Long].
-* *PA:FLOAT* , *PA:FLOAT[min,max]* : same as above with https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Float.html[java.lang.Float]. +
-Examples: PA:FLOAT[-0.33,5.99] will accept "3.5" but not "6".
-* *PA:DOUBLE* , *PA:DOUBLE[min,max]* : same as above with https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Double.html[java.lang.Double].
-* *PA:SHORT* , *PA:SHORT[min,max]* : same as above with https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Short.html[java.lang.Short].
-* *PA:URL* : variable can be converted to https://docs.oracle.com/javase/7/docs/api/index.html?java/net/URL.html[java.net.URL]. +
-Examples: PA:URL will accept "http://mysite.com" but not "c:/Temp".
-* *PA:URI* : variable can be converted to https://docs.oracle.com/javase/7/docs/api/index.html?java/net/URI.html[java.net.URI]. +
-Examples: PA:URI will accept "/tmp/file" but not "c:\a^~to" due to invalid characters.
-* *PA:DATETIME(format)* , *PA:DATETIME(format)[min,max]* : variable can be converted to a https://docs.oracle.com/javase/7/docs/api/index.html?java/util/Date.html[java.util.Date] using the format specified (see the format definition syntax in the https://docs.oracle.com/javase/7/docs/api/index.html?java/text/SimpleDateFormat.html[SimpleDateFormat] class). +
-A range can also be used in the PA:DATETIME model. In that case, each bound of the range must match the date format used. +
-+
-Examples: +
-PA:DATETIME(yyyy-MM-dd) will accept "2014-12-01" but not "2014". +
-PA:DATETIME(yyyy-MM-dd)[2014-01-01, 2015-01-01] will accept "2014-12-01" but not "2015-03-01". +
-PA:DATETIME(yyyy-MM-dd)[2014, 2015] will result in an error during the workflow definition as the range bounds [2014, 2015] are not using the format yyyy-MM-dd.
-* *PA:LIST(item1,item2,...)* : variable must be one of the values defined in the list. +
-Examples: PA:LIST(a,b,c) will accept "a", "b", "c" but no other value.
-* *PA:REGEXP(pattern)* : variable syntax must match the regular expression defined in the pattern. The regular expression syntax is described in class https://docs.oracle.com/javase/7/docs/api/index.html?java/util/regex/Pattern.html[Pattern]. +
-Examples: PA:REGEXP([a-z]+) will accept "abc", "foo", but not "Foo".
-* *PA:MODEL_FROM_URL(url)* : variable syntax must match the model fetched from the given url. This can be used for example when the model needs to represent a list of elements which may evolve over time and is updated inside a file. Such as a list of machines in an infrastructure, a list of users, etc. +
-Examples: PA:MODEL_FROM_URL(file:///srv/machines_list_model.txt), if the file machines_list_model.txt contains PA:LIST(host1,host2), will accept only "host1" and "host2", but may accept other values as the machines_list_model file changes.
-* *PA:CRON* : variable syntax must be a valid cron expression as defined in the  http://www.sauronsoftware.it/projects/cron4j/manual.php#p02[cron4j manual]. +
-Examples: PA:CRON will accept "5 * * * \*" but not "* * * *" (missing minutes sub-pattern).
-* *PA:SPEL(SpEL expression)* : variable syntax will be evaluated by a https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[SpEL] expression. Refer to next paragraph.
-
-====== Spring Expression Language Model
-
-The PA:SPEL(expr) model allows to define expressions able to validate a variable value or not. Additionally, this model can be used to validate multiple variable values or to dynamically update other variables.
-The syntax of the SpEL expression is defined by the https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[Spring Expression Language reference].
-
-In order to interact with variables, the expression has access to the following properties:
-
-* *#value* : this property will contain the value of the current variable defined by the user.
-* *variables['variable_name']* : this property array contains all the variables of the same context (for example of the same task for a task variable).
-
-The SpEL expression must return a *boolean value*, `true` if the value is correct, `false` otherwise, returning another type will raise an error.
-
-* *Example of SpEL simple validations:* +
-+
-PA:SPEL(#value == 'abc') : will accept the value if it's the 'abc' string +
-PA:SPEL(T(Integer).parseInt(#value) > 10) : will accept the value if it's an integer greater than 10. +
-+
-Note that #value always contains a string and must be converted to other types if needed. +
-+
-* *Example of SpEL multiple validations:* +
-+
-PA:SPEL(variables['var1'] + variables['var2'] == 'abcdef') : will be accepted if the string concatenation of variable var1 and var2 is 'abcdef'. +
-PA:SPEL(T(Integer).parseInt(variables['var1']) + T(Integer).parseInt(variables['var2']) < 100) : will be accepted if the sum of variables var1 and var2 are smaller than 100. +
-+
-* *Example of SpEL variable inference:* +
-+
-PA:SPEL( variables['var2'] == '' ? (variables['var2'] = variables['var1']) instanceof T(String) : true ) : if the variable var2 is empty, it will use the value of variable var1 instead. +
-+
-Note that the SpEL expression must always return a boolean value, this is why in this last expression we use the instanceof keyword to avoid returning a string value.
-
-
-===== ProActive system variables
-
-Some variables are explicitly defined by the Scheduler to retrieve runtime information about a job or a task.
-
-Here is the list of ProActive system variables:
-
-.ProActive variables
-[cols="2,5,2"]
-|===
-| *Variable name* | *Description* | *Type*
-| `PA_JOB_ID`
-| The current job ID.
-| String
-
-| `PA_JOB_NAME`
-| The current job name.
-| String
-
-| `PA_TASK_ID`
-| The current task ID.
-| String
-
-| `PA_TASK_NAME`
-| The current task name.
-| String
-
-| `PA_TASK_ITERATION`
-| The current iteration index, when using <<_loop,looping>>, starts at 0.
-| Integer
-
-| `PA_TASK_REPLICATION`
-| The current iteration index, when using a <<_replicate,replication>>, starts at 0.
-| Integer
-
-| `PA_TASK_PROGRESS_FILE`
-| The path to the progress file, used to set the task's progress.
-
-  You can import and use the utility class `org.ow2.proactive.scripting.helper.progress.ProgressFile` to read/write values to the file identified by this variable.
-| String
-
-| `PA_SCHEDULER_HOME`
-| The path to Scheduler home, where the Scheduler or the Node is installed.
-| String
-
-| `PA_NODESFILE`
-| The path to the hostfile when using a <<_multi_node_task,multi nodes task>>.
-| String
-
-| `PA_NODESNUMBER`
-| The number of acquired nodes when using a <<_multi_node_task,multi nodes task>>.
-| Integer
-
-| `PA_USER`
-| The username of the ProActive user who has submitted the job.
-| String
-
-|===
-
-They can be used inside the workflow with the pattern syntax, for example:
-
-[source, xml]
-----
-<task ...>
-    ...
-     <forkEnvironment workingDir="/opt/${PA_JOB_ID}"></forkEnvironment>
-    ...
-</task>
-----
-
-===== Dynamic replacements
-
-It is possible to combine recursive definitions of variables.
-
-For example, one could write:
-----
-<task ...>
-    ...
-     <forkEnvironment workingDir="/opt/${DIRECTORY_${PA_TASK_REPLICATION}}"></forkEnvironment>
-    ...
-</task>
-----
-
-In that case, the variable `DIRECTORY_0` or `DIRECTORY_1`, etc (depending on the replication index) will be used in the working dir attribute.
-
-Pattern variable replacements may be performed at submission time or at execution time:
-
-- A replacement performed at *execution time* means that the replacement is executed only when the task enclosing the replacement is executed.
-- A replacement performed at *submission time* means that the replacement is directly executed when the job is submitted to the scheduler.
-
-Replacements directly using global job or task variables will always be performed at submission time.
-
-In the following example, the description replacement is performed at submission time:
-
-[source, xml]
-----
-<job ... >
-    <variables>
-        <variable name="description" value="My ProActive workflow"/>
-    </variables>
-    ...
-    <task ... >
-        <description>${description}</description>
-
-    </task>
-</job>
-----
-
-Replacements using system variables, such as the workingDir example above, will always be performed at execution time.
-
-
-===== Variables map and propagation
-
-In addition to the ability to use variables directly inside the workflow with the pattern syntax, it is also possible to use
-all type of variables inside scripts thanks to the `variables` map.
-
-Inside a script, `variables` is bound to a http://docs.oracle.com/javase/8/docs/api/java/util/Map.html[Map^].
-The syntax to access it might differ given the script engine you are using.
-
-For example in a *Groovy* script task, you can use:
-
-[source, groovy]
-----
-String var = variables.get("one_variable")
-variables.put("other_variable", "foo")
-----
-
-The first line access the variable `one_variable` from the `variables` map.
-The second line stores in the variables map a new variable called `other_variable`.
-
-System variables can also be accessed from the `variables` map, for example:
-
-[source, groovy]
-----
-println variables.get("PA_JOB_ID") // will display the id of the current job
-----
-
-From a native executable, for instance a Shell script, variables are accessible through environment variables.
-
-[source, bash]
-----
-#!/bin/bash
-echo $variables_PA_TASK_NAME
-----
-
-WARNING: In native tasks and Bash/CMD script engines, variables can be read but not written to.
-
-The `variables` map is propagated down the execution chain. If a task modifies a variable in the variables map, or add a new variable, all dependent tasks will have access to this modification.
-
-For example:
-
-[source, groovy]
-----
-// task1
-String var = variables.get("one_variable")
-variables.put("one_variable", "foo")
-variables.put("other_variable", "bar")
-----
-
-[source, groovy]
-----
-// task2 depends on task1
-println variables.get("one_variable") // will display "foo"
-println variables.get("other_variable") // will display "bar"
-----
-
-If a task depends on several tasks and each task modifies the same variable, the final value of the variable
-which is propagated down the execution chain, depends on the *order of task execution*.
-Therefore, the users need to take appropriate measures to prevent any undesired effects of such race conditions.
-
-You can set any link:http://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html[Java serializable object, window="_blank"]
- as a variable value. They will be converted into strings using
-http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()[toString()^]
- method when required, for instance, to make those values available as environment variables in native tasks.
-
-==== Generic Information
-
-In addition to variables, another key/value structure can be accessed inside a script: *_Generic Information_*.
-
-Generic information semantics differ from <<_workflow_variables>> semantics in the following way:
-
- * Generic information can be accessed inside a script, but cannot be modified.
- * Generic information can be defined at *job level* or at *task level*. If the same generic information is defined at job level and at task level, the latter value takes precedence inside the task scope.
- * Generic information cannot be used directly inside the workflow with the syntax ${} (See  <<_workflow_variables>>).
- * Generic information are used in general internally by the scheduler, for example to provide information to the scheduling loop on how to handle the task. An example of such generic information is the _START_AT_ info used inside <<_cron_tasks>>.
- * Generic information can use in their definition job/task variables patterns, pattern replacements can be done at execution time when using task generic information.
-
-Example of generic information definition:
-
-For example:
-[source, xml]
-----
-<task ... >
-    <genericInformation>
-        <info name="ginfo" value="${test}"/>
-    </genericInformation>
-    ...
-</task>
-----
-
-==== Passing data between tasks using results
-
-Another important mechanism of data exchange is the task *result* variable. Anywhere in a task (usually at the end) you can set a value to a reserved
-variable named *result* using any Java object. This value will be available in tasks depending on it. Moreover, in case of several dependencies,
-results will be aggregated into a new array variable named *results*.
-
-Assuming that we have two tasks *task1* and *task2* written in Groovy:
-
-[source, groovy]
-----
-// task1
-result = "task1";
-----
-
-[source, groovy]
-----
-// task2
-result = "task2";
-----
-
-and *task3* that depends on tasks *task1* and *task2*, then, you can access result values defined by the parents as follows:
-
-[source, groovy]
-----
-// task3
-println(results[0]);
-// will print "task1"
-println(results[1]);
-// will print "task2"
-----
-
-NOTE: results will be aggregated according to the order declared in the dependency list. Consequently, if the xml *depends* tag of *task3* contains the list [task1, task2] (see the xml example below), then results[0] will contain the result of *task1* and results[1] the result of *task2*. On the contrary, if the depends list is [task2, task1], then results[0] will contain the result of *task2* and results[1] the result of *task1*.
-
-[source, xml]
-----
-<depends>
-        <task ref="task1"/>
-        <task ref="task2"/>
-</depends>
-----
-
-For nearly all script languages, the *results* variable contains a list of http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/common/task/TaskResult.html[TaskResult java object].
-In order to access the result value, the value() method of this object must be called.
-Example for Python/Jython:
-[source, python]
-----
-print results[0].value()
-----
-
-==== Result metadata
-
-Result metadata can contain additional information associated with the result. In order to store metadata information, use the following syntax, if task2 depends on task1:
-
-[source, groovy]
-----
-// task1
-result = "task1";
-resultMetadata.put("mymetadata", "myvalue")
-----
-
-[source, groovy]
-----
-// task2
-println(results[0].getMetadata());
-----
-
-It is up to the user code to decide the metadata semantics, but some specific metadata can have a meaning when downloading or previewing results from the *Scheduler portal*:
-
-- *file.name* : the name of the file, including the extension, which will be used when storing the result in binary format.
-+
-[source, groovy]
-----
-// fileNameTask
-file = new File("balloon13.png")
-result = file.getBytes()
-resultMetadata.put("file.name","balloon13.png")
-----
-
-- *file.extension* : the extension, which will be appended to the automatically generated name, when storing the result in binary format
-+
-[source, groovy]
-----
-// fileExtensionTask
-file = new File("balloon13.png")
-result = file.getBytes()
-resultMetadata.put("file.extension",".png")
-----
-
-- *content.type* : the display format, which will be used when previewing the file in the browser. Open the following https://www.iana.org/assignments/media-types/media-types.xhtml[link] for the complete list of mime-types.
-+
-[source, groovy]
-----
-// contentTypeTask
-file = new File("balloon13.png")
-result = file.getBytes()
-resultMetadata.put("content.type","image/png")
-----
-
-=== File based propagation
-
-==== Input/Output Data in Shared Directory
-
-The easiest way to use your data on computing machines is to set up a *shared directory* available on all Compute Hosts. For
-Linux it's typically an NFS directory, for Windows it could be an SMB network share. Then, in tasks you can manipulate
-files seamlessly across ProActive Nodes.
-
-[source, java]
-----
-File inputData = new File("/data/username/inputfile");
-----
-
-This approach has some limitations though:
-
-* The path to the shared folder should be *identical* on all Compute Hosts
-* It can be difficult to use with *heterogeneous resources*, e.g. Linux and Windows hosts
-
-==== Data Spaces
-
-===== Global and User Spaces
-
-If a shared folder is not an option in your environment, the ProActive Scheduler provides a convenient way to access
-your data. It has two types of storage on the host where the server is running:
-
-* A *Global Space* where anyone can read/write files
-* An *User Space* which is a personal user data storage
-
-By default, these spaces are linked to folders in the *data* directory of the ProActive Scheduler host:
-
- * `PROACTIVE_HOME/data/defaultglobal`
- * `PROACTIVE_HOME/data/defaultuser`
-
-But it can be changed in `PROACTIVE_HOME/config/scheduler/settings.ini`.
-
-===== Local Space
-
-All files that are stored in these spaces can be read from all computing nodes. However, data transfer is declarative and not explicit.
-You need to define which files have to be transferred from a data space to computing nodes by using *input files* and reciprocally from computing nodes to a data space by defining *output files*:
-
-[source, xml]
-----
-<task name="task1">
-    ...
-    <inputFiles>
-        <files includes="tata" accessMode="transferFromGlobalSpace"/>
-    </inputFiles>
-    <outputFiles>
-        <files includes="titi*" accessMode="transferToGlobalSpace"/>
-    </outputFiles>
-    ...
-</task>
-----
-
-Upon the execution of the previous example, Proactive Scheduler automatically transfers all files to a ProActive Node where the task will be executed. The files are put in a special place called *Local Space* on the ProActive Node. It corresponds to the working directory of a task when the task is in fork mode (default).
-From a task point of view, files can be accessed normally like shown below:
-
-[source, java]
-----
-File inputFile = new File("tata")
-----
-
-Then, based on the previous task definition, all the files whose the name starts with _titi_ (e.g titi, titi2, etc.) produced by _task1_ will be transferred back automatically to Global Space by the Scheduler once the task is finished.
-
-Files can be also transferred from/to User Space by specifying `transferFromUserSpace`/`transferToUserSpace`.
-
-Before running your jobs you should first *upload* your files into either Global or User Space. To do it you can export folders linked to
-these spaces by one of the standard protocols like *FTP*, *NFS*, or use available web interfaces like
-http://pyd.io[Pydio^].
-
-It is possible to use wildcards in transfer directives, such as:
-
-[source, xml]
-----
-<task name="task1">
-    ...
-    <inputFiles>
-        <files includes="**/tata" accessMode="transferFromGlobalSpace"/>
-    </inputFiles>
-    <outputFiles>
-        <files includes="*" accessMode="transferToGlobalSpace"/>
-    </outputFiles>
-    ...
-</task>
-----
-
-More information of pattern syntax can be found in the https://docs.oracle.com/javase/7/docs/api/java/nio/file/FileSystem.html#getPathMatcher(java.lang.String)[FileSystem class JDK documentation].
-
-
-===== Cache Space
-
-In addition to transferring to the Task *Local Space*, it is also possible to transfer files to the Node host *Cache Space*.
-
-From the Node host point of view, the Cache Space is *unique* and shared for all tasks and all ProActive Nodes deployed on the host.
-
-Transfers to the cache are *not concurrent*, only a single task can transfer to the cache at the same time. I.e if multiple tasks are run in parallel on the same hosts and they all transfer to the cache, these transfers will be executed sequentially.
-
-If a file declared for the transfer is newer than the existing version in the cache, the file will be updated.
-
-In order to transfer files to the cache, simply use the cache transfer directives inside your job:
-
-[source, xml]
-----
-<task name="task1">
-    ...
-    <inputFiles>
-        <files includes="tata" accessMode="cacheFromGlobalSpace"/>
-        <files includes="toto" accessMode="cacheFromUserSpace"/>
-    </inputFiles>
-    ...
-</task>
-----
-
-The files will not be transferred to the Local Space of the task, so it will not be possible to access these files from the current directory.
-
-In order to access these files, use the *cachespace* variable which contains the location of the cache, for example in groovy:
-
-[source, groovy]
-----
-inputFile = new File(cachespace, "tata")
-----
-
-There are no transfer directives to transfer output files *from* the cache. Output files transfers are only possible from the *Local Space*.
-
-Files in the cache space are *automatically deleted* after a given period. The default invalidation period is two weeks, which means that files older than two weeks will be automatically deleted.
-
-In order to change this period, the ProActive Node must be started with the property *node.dataspace.cache.invalidation.period* (in miliseconds).
-
-The property *node.dataspace.cachedir* can also be used to control the cache location on the node.
-
 
 == Workflow concepts
 
@@ -1162,6 +722,168 @@ block.
 
 -   If the child of a *replicate* task is a task block, the whole block
  will be replicated and not only the child of the initiator.
+
+=== Variables
+
+include::./references/Variables.adoc[]
+
+[[_task_result]]
+
+=== Task result
+
+Another way to propagate data from a task to another relies on *result* variable.
+Anywhere in a task (usually at the end) you can set a value to a reserved
+variable named *result*. This value will be available in tasks
+depending on it. If a task has one or several dependencies, *results* will always be an array.
+
+Assuming that we have two tasks *task1* and *task2* written in Groovy:
+
+[source, groovy]
+----
+// task1
+result = "task1";
+----
+
+[source, groovy]
+----
+// task2
+result = "task2";
+----
+
+and *task3* that depends on tasks *task1* and *task2*, then, you can access result values defined by the parents as follows:
+
+[source, groovy]
+----
+// task3
+println(results[0]);
+// will print "task1"
+println(results[1]);
+// will print "task2"
+----
+
+NOTE: results will be aggregated according to the order declared in the dependency list. Consequently, if the xml *depends* tag of *task3* contains the list [task1, task2] (see the xml example below), then results[0] will contain the result of *task1* and results[1] the result of *task2*. On the contrary, if the depends list is [task2, task1], then results[0] will contain the result of *task2* and results[1] the result of *task1*.
+
+[source, xml]
+----
+<depends>
+        <task ref="task1"/>
+        <task ref="task2"/>
+</depends>
+----
+
+For nearly all script languages, the *results* variable contains a list of http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/common/task/TaskResult.html[TaskResult java object].
+In order to access the result value, the value() method of this object must be called.
+Example for Python/Jython:
+[source, python]
+----
+print results[0].value()
+----
+
+==== Assigning metadata to task result
+
+Result metadata can contain additional information associated with the result. In order to store metadata information, use the following syntax, if task2 depends on task1:
+
+[source, groovy]
+----
+// task1
+result = "task1";
+resultMetadata.put("mymetadata", "myvalue")
+----
+
+[source, groovy]
+----
+// task2
+println(results[0].getMetadata());
+----
+
+It is up to the user code to decide the metadata semantics, but some specific metadata can have a meaning when downloading or previewing results from the *Scheduler portal*:
+
+- *file.name* : the name of the file, including the extension, which will be used when storing the result in binary format.
++
+[source, groovy]
+----
+// fileNameTask
+file = new File("balloon13.png")
+result = file.getBytes()
+resultMetadata.put("file.name","balloon13.png")
+----
+
+- *file.extension* : the extension, which will be appended to the automatically generated name, when storing the result in binary format
++
+[source, groovy]
+----
+// fileExtensionTask
+file = new File("balloon13.png")
+result = file.getBytes()
+resultMetadata.put("file.extension",".png")
+----
+
+- *content.type* : the display format, which will be used when previewing the file in the browser. Open the following https://www.iana.org/assignments/media-types/media-types.xhtml[link] for the complete list of mime-types.
++
+[source, groovy]
+----
+// contentTypeTask
+file = new File("balloon13.png")
+result = file.getBytes()
+resultMetadata.put("content.type","image/png")
+----
+
+=== Job Results
+
+Job Results are composed of two elements: *Result List* and *Result Map*.
+Each task can contribute as for *Result List* as for *Result Map*.
+Once the job is finished, you can download/visualize Job Results from the Scheduler portal:
+
+image::scheduler-result-map.png[align=center]
+
+==== Result List
+
+Each task has its own result (see section <<_task_result>>).
+However, some task results can be marked as *Task Result Added to Job Result*.
+In that case, this task result will be added to the *Result List*.
+You can mark your task in the Studio:
+
+image::precious-result.png[align=center]
+
+In the Job xml schema it is available as `preciousResult`:
+
+``` {.xml}
+<task name="Init_Task" preciousResult="true" >
+```
+
+==== Result Map
+
+In addition to the *Results List*,
+a Job can also store some results into a dedicated key-value map,
+which is called *Result Map*. Every task can contribute to this *Result Map*.
+It is a write-only map, in such a way that a task cannot see
+what other tasks already wrote to the result map.
+When several tasks write the same key to the result map,
+the last write always takes precedence. This map contains String as a key,
+and https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html[Serializable ^] as value.
+
+Consider the following groovy example.
+
+`Task 1` writes to *Result Map*:
+[source, groovy]
+----
+resultMap.put("filename", "results.txt")
+resultMap.put("latestError", "no error")
+----
+
+`Task 2` writes to *Result Map*:
+[source, groovy]
+----
+resultMap.put("latestError", "wrong user id")
+----
+
+Once the job is finished, *Result Map* would contain:
+[source, groovy]
+----
+"filename" -> "results.txt"
+"latestError" -> "wrong user id"
+----
+
 
 === Control Flow Scripts
 
@@ -1367,11 +1089,11 @@ They are used in the ProActive Scheduler to:
 [[_selection]]
 === Selection of ProActive Nodes
 
-A selection script provides an ability for the Scheduler to execute tasks on particular ProActive nodes.
+A <<_glossary_selection_script, selection script>> provides an ability for the Scheduler to execute tasks on particular ProActive nodes.
 E.g. you can specify that a task must be executed on a Unix/Linux system.
 
-A selection script is always executed before the task itself on any candidate node:
-the execution of a selection script must set the boolean variable selected,
+A <<_glossary_selection_script, selection script>> is always executed before the task itself on any candidate node:
+the execution of a <<_glossary_selection_script, selection script>> must set the boolean variable `selected`,
 that indicates if the candidate node is suitable for the execution of the associated task.
 
 A Java helper *org.ow2.proactive.scripting.helper.selection.SelectionUtils* is provided for allowing
@@ -1392,6 +1114,50 @@ if (SelectionUtils.checkOSName("windows")) {
 }
 ----
 
+You can use variables inside the <<_glossary_selection_script, selection script>>, these variables must be visible within the task
+context, i.e., declared on job scope, on task scope, or result variable from a previous task. In the last
+case, it is mandatory that the task which declares the inherited variable precedes the task using the variable. Below
+is an example job in XML format which uses a task variable to select Unix/Linux as operating system. In this example,
+variable *operating_system* (task scope) resolves to variable *operating_system_workflow* (job scope).
+
+[source, xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<job
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="urn:proactive:jobdescriptor:3.10"
+     xsi:schemaLocation="urn:proactive:jobdescriptor:3.10 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.10/schedulerjob.xsd"
+    name="variable solving"
+    priority="normal"
+    onTaskError="continueJobExecution"
+     maxNumberOfExecution="2"
+>
+  <variables>
+    <variable name="operating_system_workflow" value="linux" model=""/>
+  </variables>
+  <taskFlow>
+    <task name="Groovy_Task0">
+      <description>
+        <![CDATA[ The simplest task, ran by a groovy engine. ]]>
+      </description>
+      <variables>
+        <variable name="operating_system" value="$operating_system_workflow" inherited="false" />
+      </variables>
+      <scriptExecutable>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+                import org.ow2.proactive.scripting.helper.selection.SelectionUtils
+                selected = SelectionUtils.checkOSName(variables.get("operating_system"))
+            ]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+  </taskFlow>
+</job>
+----
+
 [[_pre_post_clean]]
 === Pre, Post & Clean Scripts
 
@@ -1407,6 +1173,34 @@ is a script that removes files from a specific directory once the task is finish
 ----
 Files.deleteIfExists(new File("/tmp/working_dir/").toPath())
 ----
+
+
+==== File transfer
+
+===== Input/Output Data in Shared Directory
+
+The easiest way to use your data on computing machines is to set up a *shared directory* available on all Compute Hosts. For
+Linux it's typically an NFS directory, for Windows it could be an SMB network share. Then, in tasks you can manipulate
+files seamlessly across ProActive Nodes.
+
+[source, java]
+----
+File inputData = new File("/data/username/inputfile");
+----
+
+This approach has some limitations though:
+
+* The path to the shared folder should be *identical* on all Compute Hosts
+* It can be difficult to use with *heterogeneous resources*, e.g. Linux and Windows hosts
+
+==== Save script
+
+===== Save the pre-script in a file and skip its execution
+
+Instead of executing the pre-script, we also provide to save the pre-script in a file and skip the execution. To do so, a Generic Information is required for the desired task, with the key
+"PRE_SCRIPT_AS_FILE", and the path of the file that you want to save your pre-script as its value. The path should contain a file name. It can be an absolute path, then the file will be stored in this absolute path. It can
+ also be a relative path, then the file will be stored in the link:../user/ProActiveUserGuide.html#_local_space[Local Space]. If you don't give a specific extension in the path, the extension will be automatically assigned to the corresponding one of the language selected for this pre-script.
+
 
 === Run computation with your system account
 
@@ -1580,7 +1374,7 @@ application. The VNC output will be forwarded to the your browser and you will b
 application.
 
 The task that you want to visualize must output a special string using the following format:
-*PA_REMOTE_CONNECTION;JOB_ID;TASK_ID;vnc;HOSTNAME:PORT* where *JOB_ID* must be the current job id, *TASK_ID* the current task id
+*PA_REMOTE_CONNECTION;JOB_ID;TASK_ID;vnc;HOSTNAME:PORT* where *JOB_ID* must be the current _job id_, *TASK_ID* the current _task id_
 and *HOSTNAME:PORT* the hostname and port where the VNC server runs.
 
 It is the task's responsibility to print the string.
@@ -1606,47 +1400,42 @@ If the task has not *IN_ERROR* status, the _Mark as finished and resume_ option 
 === Get Notifications on Job Events
 
 
-Add a "NOTIFICATION_EVENTS" Generic information, to list events on which a user wants to be notified. List is comma-separated and should be taken from(events are not case sensitive):
+Add a "NOTIFICATION_EVENTS" Generic information in the workflow level, to list events on which a user wants to be notified. List is comma-separated and should be taken from(events are not case sensitive):
 
-* *Job change priority*
-* *Job In-Error*
-* *Job paused*
-* *Job pending to finished*
-* *Job pending to running*
-* *Job restarted from error*
-* *Job resumed*
-* *Job running to finished*
-* *Job submitted*
+* *Job change priority (or JOB_CHANGE_PRIORITY)*
+* *Job In-Error (or JOB_IN_ERROR)*
+* *Job paused (or JOB_PAUSED)*
+* *Job pending to finished (or JOB_PENDING_TO_FINISHED)*
+* *Job pending to running (or JOB_PENDING_TO_RUNNING)*
+* *Job restarted from error (or JOB_RESTARTED_FROM_ERROR)*
+* *Job resumed (or JOB_RESUMED)*
+* *Job running to finished (or JOB_RUNNING_TO_FINISHED)*
+* *Job submitted (or JOB_SUBMITTED)*
 
 Scheduler can send email to the users when one of the above events is received.
 
-To enable this functionality, the following properties should be set in `config/scheduler/setting.ini`:
+If a user wants to be notified by all these events, the "NOTIFICATION_EVENTS" Generic information should have "All" (not case sensitive) as its value.
 
-[source, groovy]
-----
-pa.scheduler.notifications.email.enabled = true
-pa.scheduler.notifications.email.from = username@example.com
-----
-
-To configure the email sender on Scheduler, the configuration file `config/scheduler/emailnotification.properties` should be filled in.
-
-Notifications will only be sent for jobs whose generic information contains user's email address under the "EMAIL" key. Example:
+Notifications will only be sent for jobs whose generic information (workflow level) contains user's email address(es) under the "EMAIL" key, if multiple email addresses need to be used, they should be seperated by comma. Example:
 
 [source, xml]
 ----
 <genericInformation>
-    <info name="EMAIL" value="user@example.com"/>
+    <info name="EMAIL" value="user0@example.com, user1@example.com"/>
     <info name="NOTIFICATION_EVENTS" value="Job paused, Job resumed"/>
 </genericInformation>
 ----
+
+To enable this functionality, the configuration need to be done following the steps introduced in
+link:../admin/ProActiveAdminGuide.html#_get_notifications[Get Notification on Job Events Configuration].
 
 === Chaining Jobs
 
 SubmitJobNoWait and SubmitJobAndWait templates under *Controls* menu allow you to submit a workflow from another workflow using *schedulerapi*.
 
 In order to submit a workflow, you need to put the URL of that workflow in the Task Variables under the key *workflowURL*. You can use any URL that points to
-a valid workflow xml file. For example, you can add the workflow that you want to execute into *Catalog*, then retrieve its URL by indicating its Bucket ID
-and workflow name. Moreover, SubmitJobAndWait will wait for the completion of the submitted workflow before proceeding further with the execution of the dependant tasks.
+a valid workflow xml file. For example, you can add the workflow that you want to execute into *Catalog*, then retrieve its URL by indicating its Bucket name
+and Workflow name. Moreover, SubmitJobAndWait will wait for the completion of the submitted workflow before proceeding further with the execution of the dependant tasks.
 
 === Control and Validation
 
@@ -1656,67 +1445,117 @@ to validate the workflow and continue the execution of the rest tasks; the *Mayb
 
 In order to validate your workflow using *Web Validation*, you need to go to the *ProActive Notification & Validation* portal, the workflow will be validated by clicking on one of the three buttons. By using *Email Validation*, you will receive an email with three links, the workflow can be validated by clicking on one of the links.
 
-=== LDAP Query Tasks
+== Data Spaces
 
-==== Description
+=== Global and User Spaces
 
-This task features the LDAP searching operation.
+If a shared folder is not an option in your environment, the ProActive Scheduler provides a convenient way to access
+your data. It has two types of storage on the host where the server is running:
 
-==== LDAP query task variables table
+* A *Global Space* where anyone can read/write files
+* An *User Space* which is a personal user data storage
 
-The next parameters are provided as task variables:
- 
-[width="100%",frame="topbot",options="header"]
-|===
-|Parameter Name | Description | Example
-|ldapURL|URL the LDAP server|`ldap://localhost:389` (unsecured) or `ldaps://127.0.0.1:636` (secured)
-|ldapDnBase|The base distinguished name of the catalog| `dc=yourOrganization,dc=com`
-|ldapUsername|The username | `cn=admin` for global admin or `cn=yourName,ou=users` for a specific user
-|ldapSearchBase|base domain name for ldap queries|`dc=specificDepartment` or can be empty for base DN search
-|ldapSearchFilter|LDAP search filter|`(objectclass=*)`
-|ldapSelectedAttributes|list of attributes to retrieve|`attributeName1,attributeName2`
+By default, these spaces are linked to folders in the *data* directory of the ProActive Scheduler host:
 
-|===
+ * `PROACTIVE_HOME/data/defaultglobal`
+ * `PROACTIVE_HOME/data/defaultuser`
 
-If any of these variables must stay private you'll need to set them as third-party credentials (details are given below).
+But it can be changed in `PROACTIVE_HOME/config/scheduler/settings.ini`.
 
-==== Authenticate with Third-party credentials
+=== Local Space
 
-In order to be able to authenticate to the LDAP server you need to define for the right Scheduler user the `ldapPassword` in the <<_third_party_credentials,Third-party credentials>>.
+All files that are stored in these spaces can be read from all computing nodes. However, data transfer is declarative and not explicit.
+You need to define which files have to be transferred from a data space to computing nodes by using *input files* and reciprocally from computing nodes to a data space by defining *output files*:
 
-
-
-==== Result of task
-
-The task provides a specific variable for the result, which is called `result`.
-
-The <<_retrieve_results, task result >>  is a String in JSON format.
-
-
-===== Output example 
-
-Successful task :
-```{.json}
-{"status":"Ok","attributes":[{"loginShell":"/bin/csh","uid":"yaro","userPassword":"[B@2d6a9952","homeDirectory":"/home/users/yaro","uidNumber":"1000","givenName":"yaro","objectClass":"inetOrgPerson","sn":"yaya","gidNumber":"500","cn":"yaro"}]}
-```
-
-Failed task :
-```{.json}
-{"status":"Error","errorMessage":"javax.naming.NameNotFoundException: [LDAP: error code 32 - No Such Object]; remaining name 'cn=yaro,dc=activeeon,dc=com1'"}
-```
-
-==== Secure connection to LDAP server
-
-In order to use secure connection for the LDAP server, specify a correct LDAP over SSL URL (for example ldaps://localhost:636).
-
-In order to be able to connect to a LDAP server, a valid certificate is needed.
-
-When a self-signed certificate is used, the certificate needs to be added to the trusted certificates of the JRE provided with the Scheduler.
-
-Below is an example for adding a certificate to a Java cacerts file:
+[source, xml]
 ----
-keytool -import -alias ldap-self-signed -keystore </pathToScheduler/jre/lib/security/cacerts> -file ldaps.crt -storepass changeit
+<task name="task1">
+    ...
+    <inputFiles>
+        <files includes="tata" accessMode="transferFromGlobalSpace"/>
+    </inputFiles>
+    <outputFiles>
+        <files includes="titi*" accessMode="transferToGlobalSpace"/>
+    </outputFiles>
+    ...
+</task>
 ----
+
+Upon the execution of the previous example, Proactive Scheduler automatically transfers all files to a ProActive Node where the task will be executed. The files are put in a special place called *Local Space* on the ProActive Node. It corresponds to the working directory of a task when the task is in fork mode (default).
+From a task point of view, files can be accessed normally like shown below:
+
+[source, java]
+----
+File inputFile = new File("tata")
+----
+
+Then, based on the previous task definition, all the files whose the name starts with _titi_ (e.g titi, titi2, etc.) produced by _task1_ will be transferred back automatically to Global Space by the Scheduler once the task is finished.
+
+Files can be also transferred from/to User Space by specifying `transferFromUserSpace`/`transferToUserSpace`.
+
+Before running your jobs you should first *upload* your files into either Global or User Space. To do it you can export folders linked to
+these spaces by one of the standard protocols like *FTP*, *NFS*, or use available web interfaces like
+http://pyd.io[Pydio^].
+
+It is possible to use wildcards in transfer directives, such as:
+
+[source, xml]
+----
+<task name="task1">
+    ...
+    <inputFiles>
+        <files includes="**/tata" accessMode="transferFromGlobalSpace"/>
+    </inputFiles>
+    <outputFiles>
+        <files includes="*" accessMode="transferToGlobalSpace"/>
+    </outputFiles>
+    ...
+</task>
+----
+
+More information of pattern syntax can be found in the https://docs.oracle.com/javase/7/docs/api/java/nio/file/FileSystem.html#getPathMatcher(java.lang.String)[FileSystem class JDK documentation].
+
+
+=== Cache Space
+
+In addition to transferring to the Task *Local Space*, it is also possible to transfer files to the Node host *Cache Space*.
+
+From the Node host point of view, the Cache Space is *unique* and shared for all tasks and all ProActive Nodes deployed on the host.
+
+Transfers to the cache are *not concurrent*, only a single task can transfer to the cache at the same time. I.e if multiple tasks are run in parallel on the same hosts and they all transfer to the cache, these transfers will be executed sequentially.
+
+If a file declared for the transfer is newer than the existing version in the cache, the file will be updated.
+
+In order to transfer files to the cache, simply use the cache transfer directives inside your job:
+
+[source, xml]
+----
+<task name="task1">
+    ...
+    <inputFiles>
+        <files includes="tata" accessMode="cacheFromGlobalSpace"/>
+        <files includes="toto" accessMode="cacheFromUserSpace"/>
+    </inputFiles>
+    ...
+</task>
+----
+
+The files will not be transferred to the Local Space of the task, so it will not be possible to access these files from the current directory.
+
+In order to access these files, use the *cachespace* variable which contains the location of the cache, for example in groovy:
+
+[source, groovy]
+----
+inputFile = new File(cachespace, "tata")
+----
+
+There are no transfer directives to transfer output files *from* the cache. Output files transfers are only possible from the *Local Space*.
+
+Files in the cache space are *automatically deleted* after a given period. The default invalidation period is two weeks, which means that files older than two weeks will be automatically deleted.
+
+In order to change this period, the ProActive Node must be started with the property *node.dataspace.cache.invalidation.period* (in miliseconds).
+
+The property *node.dataspace.cachedir* can also be used to control the cache location on the node.
 
 == Workflow Storage and Versioning
 
@@ -1733,26 +1572,34 @@ Listing the Catalog for existing Buckets is done using the following HTTP reques
 
     GET http://localhost:8080/catalog/buckets
 
-It is also possible to list all Workflows inside a particular Bucket using its `bucket_id`:
+It is also possible to list all Workflows inside a particular Bucket using its `bucketName`:
 
-    GET http://localhost:8080/catalog/buckets/{bucket_id}/resources
+    GET http://localhost:8080/catalog/buckets/{bucketName}/resources
 
 Then, we can fetch a particular Workflow based on its `name`:
 
-    GET http://localhost:8080/catalog/buckets/{bucket_id}/resources/{name}
+    GET http://localhost:8080/catalog/buckets/{bucketName}/resources/{name}
 
 NOTE: By default, the Catalog will always return the latest version of the Workflows.
+
+=== Bucket naming requirements
+
+Every bucket is identified by a unique bucket name. The bucket naming should follow the following rules:
+
+* The bucket name must be between 3 and 63 characters long and can contain only lower-case characters, numbers, and dashes.
+
+* A bucket name must start with a lowercase letter and cannot terminate with a dash.
 
 === Workflow versioning
 
 The Catalog provides versioning of Workflows. You can list all the revisions of a particular Workflow using the HTTP request:
 
-    GET http://localhost:8080/catalog/buckets/{bucketId}/resources/{name}/revisions
+    GET http://localhost:8080/catalog/buckets/{bucketName}/resources/{name}/revisions
 
 The revision of Workflow is identified by `commit_time`. Commit time specifies the time when the Workflow's version was added in the Catalog.
 You can fetch a Workflow detailed metadata information using its `name` and `commit_time`:
 
-    GET http://localhost:8080/catalog/buckets/{bucketId}/resources/{name}/revisions/{commit_time}
+    GET http://localhost:8080/catalog/buckets/{bucketName}/resources/{name}/revisions/{commit_time}
 
 A Workflow Revision is created from a ProActive XML <<_glossary_workflow,*Workflow*>> definition.
 Beside from the _id_, _name_ and _project_name_ of the Workflow, a few more information are indexed from the XML content such as _<<_generic_information>>_ and _<<_workflow_variables>>_.
@@ -1774,11 +1621,11 @@ The sessionId is validated against the Scheduler REST api, so if the Catalog doe
 
 From REST API it's possible to retrieve the raw content of a specific revision of Workflow. For this case it's required to specify `name` and `commit_time` of the Workflow's  revision:
 
-    GET http://localhost:8080/catalog/buckets/{bucketId}/resources/{name}/revisions/{commit_time}/raw
+    GET http://localhost:8080/catalog/buckets/{bucketName}/resources/{name}/revisions/{commit_time}/raw
 
 In order to get the raw content of a last revision of a Workflow use next REST API endpoint:
 
-    GET http://localhost:8080/catalog//buckets/{bucketId}/resources/{name}/raw
+    GET http://localhost:8080/catalog//buckets/{bucketName}/resources/{name}/raw
 
 In this case you need to provide only the `name` of a Workflow.
 
@@ -1792,60 +1639,112 @@ NOTE: Please follow the graphiql endpoint: `http://localhost:8080/catalog/graphi
 
 == Usage of Catalog from GUI
 
-The GUI interaction with the Catalog can be done in two places: Studio portal and Workflow Catalog Portal.
-The portals follow the concepts of the Catalog: Workflows store inside buckets, the Workflow can have several revisions, each Workflow have specific description.
-The view of Workflows from Catalog in Studio and from Workflow Catalog Portal follow the same view logic. The page is separated in 3 sections.
-The approach is selecting the needed information from left to right. First user should choose the required bucket, then the user can observe all the Workflows in the selected bucket. When the user select the Workflow it will be shown all existing revisions of the Workflow. By selecting a revision you will be able to see the the description about the workflow revision.
+The GUI interaction with the Catalog can be done in two places: Studio and Catalog Portal.
+The portals follow the concepts of the Catalog: Workflows are stored inside buckets, a workflow has some metadata and can have several revisions.
+
+The Catalog view in the Studio or in the Catalog Portal allows to browse all the workflows in the Catalog grouped by buckets and to list all the revisions of a workflow along with their commit message.
 
 === Studio
-Inside Studio portal there is present a `Catalog` menu. With help of this menu the user can directly interact from studio view with Catalog storage.
+Inside the Studio, there is a `Catalog` menu from which a user can directly interact with the Catalog to import or publish Workflows.
+
+image::studio_catalog_menu.png[align=center]
+
+Additionally, the Palette of the Studio lists the user's favourite buckets to allow easy import of workflows from the Catalog with a simple Drag & Drop.
+
+image::studio-palette.png[align=center]
 
 ==== Publish current Workflow to the Catalog
-The Catalog menu will provide possibility for an user directly save inside Catalog the created in studio Workflow: `Publish current Workflow to the Catalog`.
-In opened window for publishing the current Workflow to Catalog the user can choose the `Bucket` where the Workflow will be stored and `commit message`.
-If the Workflow with the same name is already exists in specified bucket in the Catalog, it will be created the new revision of this Workflow.
-We recommend to specify commit message for easier differentiation the versions of a Workflow.
+Workflows created in the studio can be saved inside a bucket in the Catalog by using the `Publish current Workflow to the Catalog` action.
+When saving a Workflow in the Catalog, users can add a specific `commit message`.
+If a Workflow with the same name already exists in the specified bucket, a new revision of the Workflow is created.
+We recommend to always specify commit messages at any commit for an easier differentiation between stored versions.
 
 ==== Get a Workflow from the Catalog
 When the Workflow is selected from Catalog you have two options:
-`Open as a new Workflow`
-This option will open the Workflow from Catalog as new Workflow in Studio
-`Append to current Workflow`
-When the user choose this option, it's supposed that the user wants to append the Workflow from Catalog to Workflow already opened inside studio. Please open the Workflow to which you want to append before.
 
-=== Workflow Catalog Portal
-The Workflow Catalog Portal provides interfaces for easy administering the Catalog. The most important of provided features will be described next.
+1. `Open as a new Workflow`: Open the Workflow from Catalog as a new Workflow in Studio.
 
-==== Creating the new buckets
-You need to press `plus` button from above of buckets. In opened window you need to specify Bucket name and associate with user group.
-For security reason there are groups associated to buckets. The user from same group can view the content of bucket.
-There is a special default group - `no group` in the dropdown list of window. The bucket associated with this default group can be viewed by any user.
+2. `Append to current Workflow`: Append the selected Workflow from the Catalog to the Workflow already opened inside the Studio.
 
-==== Set Bucket as Catalog Menu
-This allows the user to change the bucket used to get workflows from the Catalog in the studio. By selecting a bucket, the user can change the content of the main Catalog menu (named as the current bucket) to get workflows from another bucket as templates.
-This can also be achieved by adding `/templates/bucket_name` at the end of the URL.
+==== Add Bucket Menu to the Palette
+The Palette makes it easier to use workflows stored in a specific Bucket of the Catalog as templates when designing a Workflow.
 
-==== Add Bucket as Extra Catalog Menu
-This allows the user to add a bucket for templates in the studio. By selecting a bucket, the user can add a new Catalog menu that will contain its workflows.
+To add a bucket from the Catalog as a dropdown menu in the Palette:  Click on `View` → `Add Bucket Menu to the Palette` or you press the image:studio-palette-add.png[+, 32, 32] button in the palette.
+A window will show up to ask you which bucket you want to add to the Palette as in the image below.
 
-==== Removing Workflows inside bucket
-For removing Workflows, first the user should select the bucket containing the Workflows. Then the user can select multiple Workflows with pressed CTRL button. To delete the selected Workflows push the `trash` button.
+image::studio-catalog-main-menu3.png[align=center]
 
-===== Importing/Exporting Workflows into the Catalog
-You can export Workflows to an archive, to share them more easily (email, usb key,..), and then import the entire archive from the Catalog.
+The selected `Data Connectors` Bucket now appears as a menu in the Studio. See the image below.
 
-To export the selected Workflows as a ZIP archive from Workflow Catalog portal: select a bucket, then the targeted Workflows (you can select multiple Workflows with pressed CTRL button). Press "Download Workflows" button from portal view. You'll get a ZIP file that can be transferred on an other Scheduler.
-To import the zip archive of Workflows to the Catalog from portal, select the bucket where the Workflows will be added. Then press `Upload Workflows` button in portal and follow the instructions `Upload a ZIP archive of Workflows` opened window.
+image::studio-catalog-main-menu4.png[align=center]
 
-==== List revisions of Workflow
-The last revision of the Catalog is always displayed on the portal. In order to see all revisions of selected Workflow, please click on `clock` button inside description area.
-The revisions are shown in chronological order by commit time.
+You can repeat the operation as many times as you wish in order to add other specific Menus you might need for your workflow design. See the image below.
 
-==== Restore the revision
-Usually users work on the last version of a workflow. But in some cases, user could need to get back to a specific revision.
-For this case there is a dedicated button: `Restore the revision`. Once the workflow is selected, click on the 'clock' button to expand all revisions.
-By simply selecting the required revision from list and clicking `Restore`, the selected revision will become the last version of Workflow.
+image::studio-catalog-main-menu5.png[align=center]
 
+==== Change Palette Preset
+The Studio offers the possibility to set a Preset for the Palette. This makes it easier to load the Palette with a predefined set of default buckets.
+Presets are generally arranged by theme (Basic Examples, Machine Learning, Deep Learning, Big Data, etc.)
+The Palette's preset can be changed by clicking `View` → `Change Palette Preset`. This will show a window with the current list of presets as in the image below.
+
+image::studio-catalog-main-menu1.png[align=center]
+
+After changing the preset, its name appears at the top of the Studio and all its buckets are added to the Palette.
+
+image::studio-catalog-main-menu2.png[align=center]
+
+=== Catalog Portal
+The Catalog Portal provides the capability to store objects like Workflows, Calendars, Scripts, etc.
+Powerful versioning together with full access control (RBAC) is supported, and users can easily share Workflows, templates, and other objects between teams, and various environments (Dev, Test, Staging, Prod).
+
+image::catalog-portal-context-menu.png[align=center]
+
+==== Creating new buckets
+Create a new bucket easily by clicking on the `plus` button. 
+
+image::create-new-bucket.png[align=left]
+
+In the `Create the new bucket` window, it is possible to associate a bucket to a specific users group. 
+
+By doing so, only users from the same group will be able to access the content of the bucket.
+
+The content of the buckets associated with the default - `no group`  is accessible by any user, regardless of the groups they belong to.
+
+==== Removing Objects Inside a Bucket
+Select the objects to remove (CTRL + left click to select multiple objects) and click on the `trash` button. 
+
+WARNING: All the object's content will be removed from the database and it cannot be restored.
+
+==== Exporting/Importing Objects into the Catalog
+Catalog Objects can be exported to a local archive, and share them easily by email, cloud, etc.  The same archive can be imported again in the Catalog on the same scheduler or in a different one.
+
+TIP: Use this feature to easily share Catalog objects across different environments.
+
+To export the selected objects as a ZIP archive, press the download button from portal view. 
+
+image::download-catalog-objects.png[align=left]
+
+To import, either a downloaded catalog archive zip file or a single object, click on the upload button and follow the instructions :
+
+image::upload-catalog-objects.png[align=left]
+
+* *Object Kind*: The kind of object to add. New Kinds can be added by clicking the `plus` button.
+
+* *Content Type*: The Content Type is used to indicate the media type of the resource. New content Types can be added by clicking the `plus` button. 
+
+WARNING: In case of uploading an archive, all the objects in the zip must have the same Kind and Content Type.
+
+
+==== Catalog Object Versioning
+The HEAD of a Catalog object corresponds to the last commit and it is displayed on the portal. 
+
+In order to see all the commits of the selected Object, please click on the `clock` button inside the description area.
+
+The commits are shown in chronological order by commit time. 
+
+It is possible to restore any previous commit to the HEAD position by clicking the `restore` button. 
+
+image::revisions-catalog.png[align=center]
 
 == Third-party credentials
 
@@ -1899,7 +1798,7 @@ Remove credential:
 
 ==== In a Script Task
 
-In a Script Task, the `credentials` map contains all user's
+In a <<_glossary_task_executable_script, Script Task>>, the `credentials` <<_glossary_script_bindings,script binding>> is a hash map containing all user's
 credentials:
 
 [source,groovy]
@@ -1908,9 +1807,12 @@ credentials:
 mysqlPassword = credentials.get('MY_MYSQL_PASSWORD')
 ----
 
+NOTE: The `credentials` <<_glossary_script_bindings,script binding>> can also be used in <<_glossary_additional_task_scripts,additional scripts>> defined inside a <<_glossary_task,ProActive Task>>.
+To know in which scripts `credentials` is available, refer to the <<_variables_quick_reference,variables quick reference>>.
+
 ==== In Java Task
 
-In Java, the method `getThirdPartyCredential` of `JavaExecutable`
+In a <<_glossary_task_executable_java, Java Task>>, the method `getThirdPartyCredential` of `JavaExecutable`
 returns the credential corresponding to the key passed as parameter:
 
 [source,java]
@@ -1944,7 +1846,7 @@ credential:
 
 ==== In a Native Task
 
-Finally, a credential can be passed to a Native Task via
+Finally, a credential can be passed to a <<_glossary_task_executable_native,Native Task>> via
 argumens. Note that, as with Java Task parameters, the `$credentials_`
 prefix is necessary. In the example below, `/bin/echo` will be called
 with the value corresponding to the key `MY_MYSQL_PASSWORD` (if the
@@ -1963,15 +1865,18 @@ key is not present, no replacement occurs):
 </task>
 ----
 
-== Scheduler and DataSpace APIs
-From a ProActive task, several APIs are accessible via Java objects bound to dedicated variables:
+[[_task_apis]]
+== Scheduler, DataSpace, and Synchronization APIs
 
-- Scheduler API : using the "schedulerapi" variable, it is possible to interact directly with the scheduler and do several operations such as submitting jobs, waiting for tasks, listing running jobs etc.
-- DataSpace API : the "userspaceuri" or "globalspaceuri" variables allow to manipulate files present in User or Global spaces. Operations include listing, uploading, downloading, or deleting files.
+From a <<_glossary_task_executable_script,Script Task>>, several APIs are accessible via Java objects bound to dedicated <<_glossary_script_bindings,script bindings>>:
+
+- Scheduler API : using the `schedulerapi` binding, it is possible to interact directly with the scheduler server and do several operations (submit jobs, wait for tasks termination, list running jobs, etc.).
+- DataSpace API : the `userspaceuri` or `globalspaceuri` bindings allow to manipulate files present in User or Global spaces. Operations include listing, uploading, downloading, or deleting files.
+- Synchronization API : using the `synchronizationapi` binding, it is possible to handle advanced task synchronization dynamically.
 
 === Scheduler API
 
-From inside a task script, you can use the Scheduler API variable like the following:
+From inside a <<_glossary_task_executable_script,Script Task>>, you can use the Scheduler API binding like the following:
 
 [source,groovy]
 ----
@@ -2005,13 +1910,16 @@ println taskResult.getOutput().getAllLogs(false)
 
 The complete API description can be found in the http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/SchedulerNodeClient.html[SchedulerNodeClient JavaDoc].
 
+NOTE: The `schedulerapi` <<_glossary_script_bindings,script binding>> can also be used in <<_glossary_additional_task_scripts,additional scripts>> defined inside a <<_glossary_task,ProActive Task>>.
+To know in which scripts `schedulerapi` is available, refer to the <<_variables_quick_reference,variables quick reference>>.
+
 === DataSpace API
 
 The traditional way to transfer files from the user or global space to a task is by using file transfer directives as described in chapter <<_data_spaces>>.
 
 Where file transfer directives are sufficient to cover usual cases, it is sometimes necessary to manipulate directly the dataspace API to have a finer control level.
 
-Below is an example use of this api :
+Below is an example use of this api inside a <<_glossary_task_executable_script,Script Task>>:
 
 [source,groovy]
 ----
@@ -2038,6 +1946,320 @@ println outFile.text
 
 The complete description of user and global space APIs can be found in the http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient JavaDoc].
 
+NOTE: The `userspaceapi` and `globalspaceapi` <<_glossary_script_bindings,script bindings>> can also be used in <<_glossary_additional_task_scripts,additional scripts>> defined inside a <<_glossary_task,ProActive Task>>.
+To know in which scripts these bindings are available, refer to the <<_variables_quick_reference,variables quick reference>>.
+
+[[_task_synchronization_api]]
+=== Synchronization API
+
+This Synchronization API allows for both communication and synchronization between Tasks and between Jobs dynamically at execution. It is based on a Key-Value Store offering atomic operations. It enables to easily put into action all classical synchronization patterns: Critical Sections and Mutual Exclusion, Rendez-vous, Barriers, Producer/Consumer...
+
+Task synchronization is traditionally handled by the ProActive Scheduler through <<Dependency, Task Dependencies>>, where dependent ProActive Tasks are started only after their parents Tasks completed.
+
+In some cases, *static task dependencies* are not enough to synchronize tasks execution.
+
+This is the case when a task depends on the state of another task executed in a different branch of a workflow, a sibling task or even another job/workflow.
+
+For example, let's suppose workflow _A_ contains a single task _A_1_ starting an apache server. Task _A_1_ starts the server and remains alive while the server is up.
+When workflow _A_ is killed, task _A_1_ stops the Apache server.
+
+A task _B_1_ of another workflow _B_ wants to interact with this server.
+
+*Problem:* task _B_1_ does not know if the apache server is up and how to contact it.
+
+Using *Task Synchonization API*, task _A_1_ can advertise the server URL to the Synchronization Service.
+
+Task _B_1_ can use Task Synchonization API to wait until the apache server is advertised, it can also perform the necessary operations and advertise task _A_1_ that the operation is complete and the apache server can be terminated.
+
+As we can see, Task Synchronization API can be used for two-ways synchronization.
+
+Synchronizations can be used in any part of a Task (Pre/Post/Clean Scripts, Task Implementation, Selection Script). Using Synchronization API within Selection Scripts is a way to avoid a Task to be started (consuming a Node) and to be actually doing nothing, just waiting for a specific condition to occur.
+
+==== Usage
+
+*Task Synchronization API* is a *Java API* defined by the following https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/Synchronization.html[API documentation].
+
+The Synchronization API is connected to a centralized *Synchronization Service*. This service ensures that each request is executed atomically, and that changes are persisted on disk.
+
+The Synchronization API is available inside ProActive Tasks through the `synchronizationapi` <<_glossary_script_bindings,script binding>>.
+
+
+===== Channels
+
+The *Synchronization Service* works as a _Key-Value Store_ organized in *channels*. Each *channel* acts as a private _Key-Value Store_.
+
+This means that each _put_ operation is identified by a 3-tuple: _<Channel_identifier, Key_binding, Value>_.
+
+Users of the Synchronization API are responsible to create *channels* as fit their needs. Channels have no notion of *ownership*, a channel created by workflow A started by user _Alice_ can be used by workflow B started by user _Bob_.
+
+This is because Synchronization API is often used to synchronize workflow tasks across multiple users.
+
+Therefore, *channel naming* is important and should be precise enough to avoid accidental overlap. Channels should be created when needed and deleted after use.
+
+For example, a channel which is used only inside a specific job instance (to synchronize tasks withing this job) should be created inside some *initialization task* at the beginning of this job, and deleted in some *cleaning task* at the end. The channel name should contain the <<_glossary_job_id, Job Id>>.
+
+When channels are created, the user can decide if the channel should be persisted on disk or kept in memory only.
+
+On startup, the Synchronization Service contains only the persistent channels which were previously created using the Synchronization API. In-memory channels created before the reboot of the scheduler are lost.
+
+===== API Description
+
+The Synchronization API is similar to the https://docs.oracle.com/javase/8/docs/api/java/util/Map.html[Java 8 Map interface], with the following differences:
+
+ * It contains methods to create/delete _channels_ and methods to interact with the _channel Map_ itself.
+
+ * Each channel Map operations must take a _channel identifier_ parameter.
+
+ * The Synchronization API supports https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html[Java 8 lambdas], but lambdas must be passed as string arguments defining http://groovy-lang.org/closures.html[Groovy Closures]. For example, `+compute("channel1", "key1", "{k, x -> x+1}")+` instead of `+compute("channel1", "key1", (k, x) -> x+1)+`.
+
+ * The Synchronization Service guaranties that multiple operations, coming from different ProActive Tasks, will all be executed *atomically*.
+
+ * In addition to the methods present in the https://docs.oracle.com/javase/8/docs/api/java/util/Map.html[Java 8 Map interface], Synchronization API provides *blocking methods* to wait for a specific _condition_ on a channel.
+ This is mainly why this API is called *Synchronization*, it allows for different ProActive Tasks to be blocked until specific conditions are met.
+
+ * When an error occurs during the Groovy Closure compilation or execution, dedicated exceptions (https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/CompilationException.html[CompilationException] or https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/ClosureEvaluationException.html[ClosureEvaluationException]) will be thrown.
+
+
+==== Examples
+
+===== Example 1 : Simple Key/Value With Selection Script
+
+In this first example, we will show how one task can delay the execution of another task using the Synchronization API and a <<_selection,selection script>>.
+
+image::KeyValue.png[Key/Value With Selection Script, , title="Key/Value With Selection Script"]
+
+This workflow contains the following Tasks:
+
+ * *Init*: Initialize the channel. This task creates a channel using the current _job id_. It also sets a `lock` binding in the key/value store with an initial _true_ value.
+```groovy
+jobid = variables.get("PA_JOB_ID")
+synchronizationapi.createChannel(jobid, false)
+synchronizationapi.put(jobid, "lock", true)
+println "Channel " + jobid + " created."
+```
+
+ * *TaskB_Wait*: Wait to be unlocked. This task will not be executed until the `lock` binding changed to _false_. A <<_selection, selection script>> allows to handle this verification:
+```groovy
+selected = !(synchronizationapi.get(variables.get("PA_JOB_ID"), "lock"))
+```
+
+ * *TaskA*: Unlock TaskB. This task will sleep for a few seconds and then unlock TaskB using the Synchronization API:
+```groovy
+println "Sleeping 5 seconds"
+Thread.sleep(5000)
+println "Unlocking Task B"
+synchronizationapi.put(variables.get("PA_JOB_ID"), "lock", false)
+```
+
+ * *Clean*: Delete the channel. This task simply deletes the channel used in this job. As there is no automatic mechanism to remove channels, it is necessary to delete them explicitely when they are not used any more.
+```groovy
+jobid = variables.get("PA_JOB_ID")
+synchronizationapi.deleteChannel(jobid )
+println "Channel " + jobid + " deleted."
+```
+
+Here is output of the Key/Value workflow:
+```
+[28t2@trydev.activeeon.com;14:24:22] Channel 28 created.
+[28t0@trydev.activeeon.com;14:24:28] Sleeping 5 seconds
+[28t0@trydev.activeeon.com;14:24:33] Unlocking Task B
+[28t1@trydev.activeeon.com;14:24:40] Task B has been unlocked by Task A
+[28t3@trydev.activeeon.com;14:24:46] Channel 28 deleted.
+```
+
+NOTE: It is also possible to debug the operations performed on the Synchronization Store. This is possible by using the *Server Logs* associated with the job. Server Logs are very verbose, the _[Synchronization]_ pattern helps to find logs associated with the Synchronization API:
+```
+[2018-04-24 14:24:22,685 de72716883 INFO            o.o.p.s.u.TaskLogger] task 28t2 (Init) [Synchronization]Created new memory channel '28'
+[2018-04-24 14:24:22,786 de72716883 INFO            o.o.p.s.u.TaskLogger] task 28t2 (Init) [Synchronization][Channel=28] Put true on key 'lock', previous value was null
+[2018-04-24 14:24:34,431 de72716883 INFO            o.o.p.s.u.TaskLogger] task 28t0 (TaskA) [Synchronization][Channel=28] Put false on key 'lock', previous value was true
+[2018-04-24 14:24:46,882 de72716883 INFO            o.o.p.s.u.TaskLogger] task 28t3 (Clean) [Synchronization]Deleted memory channel '28'
+```
+
+The Complete Workflow example can be downloaded link:examples/KeyValue.xml[here].
+
+===== Example 2 : Simple Key/Value with Explicit Wait
+
+In this second example, we will show how one task can delay the execution of another task using the Synchronization API and an explicit wait call.
+
+This example is very similar to the first example, but instead of delaying the execution of TaskB using a selection script, TaskB will start its execution and explicitly call the Synchronization API to wait.
+
+ * Tasks *Init*, *TaskA* and *Clean* do not change
+
+ * *TaskB_Wait* is modified. The selection script is removed and instead the following code is used in the main task definition:
+```groovy
+println "Waiting for Task A"
+synchronizationapi.waitUntil(variables.get("PA_JOB_ID"), "lock", "{k, x -> x == false}")
+println "Task B has been unlocked by Task A"
+```
+
+As you can see, the https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/Synchronization.html#waitUntil-java.lang.String-java.lang.String-java.lang.String-[waitUntil] method expects a https://docs.oracle.com/javase/8/docs/api/java/util/function/BiPredicate.html?is-external=true[BiPredicate] defined as a string http://groovy-lang.org/closures.html[Groovy Closure].
+The predicate receives two parameters: `k` contains the key, and `x` contains the binding associated with this key.
+This predicate is evaluated on the *lock* binding, and waits until this binding *== false*.
+
+Here is the output of the Example 2 workflow:
+```
+[29t2@trydev.activeeon.com;14:43:42] Channel 29 created.
+[29t0@trydev.activeeon.com;14:43:49] Sleeping 5 seconds
+[29t1@trydev.activeeon.com;14:43:48] Waiting for Task A
+[29t0@trydev.activeeon.com;14:43:54] Unlocking Task B
+[29t1@trydev.activeeon.com;14:43:55] Task B has been unlocked by Task A
+[29t3@trydev.activeeon.com;14:44:01] Channel 29 deleted.
+```
+
+The Complete Workflow example can be downloaded link:examples/KeyValueWait.xml[here].
+
+===== Example 3 : Critical Section
+
+In this last example, we will show how we can create a *critical section* inside a workflow, which means, a section of the workflow which can only be accessed by a configurable number of *slots*.
+
+The _Critical Section_ workflow is defined with a <<_replicate, Replicate Control Structure>>:
+
+image::CriticalSection.png[Critical Section, , title="Critical Section"]
+
+It contains the following Tasks:
+
+ * *Init*: Initialize the channel. This task creates a channel using the current _job id_. It also sets a `available_slots` binding in the key/value store with an initial value based on the workflow user-defined `NB_SLOTS` <<_job_variables, job variable>>.
+```groovy
+jobid = variables.get("PA_JOB_ID")
+synchronizationapi.createChannel(jobid, false)
+synchronizationapi.put(jobid, "available_slots", Integer.parseInt(variables.get("NB_SLOTS")))
+println "Channel " + jobid + " created."
+```
+This tasks also define a <<_control_flow_scripts, control flow script>> used to define the number of replicated tasks. The number of replicated tasks is parametrized with the user-defined `NB_TASKS` <<_job_variables, job variable>>:
+```groovy
+runs=Integer.parseInt(variables.get("NB_TASKS"))
+```
+
+ * *Section*: Wait for the critical section to be available. This task will block until the number of available slots is greater than 0. As soon as at least one slot is available, it decrements the `available_slots` counter and perform some computation.
+When the computation is terminated, it releases the slot by incrementing back the `available_slots` counter.
+```groovy
+println "Waiting for available slot"
+jobid = variables.get("PA_JOB_ID")
+synchronizationapi.waitUntilThen(jobid, "available_slots", "{k, x -> x > 0}", "{k, x -> x - 1}")
+println "Enter critical section"
+// simulate some computation
+Thread.sleep(10000)
+println "Release slot"
+synchronizationapi.compute(jobid,"available_slots", "{k, x -> x + 1}")
+```
+
+As you can see, the first method used in this section is https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/Synchronization.html#waitUntilThen-java.lang.String-java.lang.String-java.lang.String-java.lang.String-[waitUntilThen]. This method expects both a https://docs.oracle.com/javase/8/docs/api/java/util/function/BiPredicate.html?is-external=true[BiPredicate] and a https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html?is-external=true[BiFunction] defined as strings http://groovy-lang.org/closures.html[Groovy Closure].
+
+The semantic of this method is to wait until the predicate is met and, as soon as it is, immediately perform a remapping.
+
+In our scenario, the number of available slots is immediately decremented to reserve a slot and enter the critical section.
+
+Releasing of the slot is performed at the end of the task using the https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/Synchronization.html#compute-java.lang.String-java.lang.String-java.lang.String-[compute] method.
+
+ * *Clean*: Delete the channel. Same code as the previous examples.
+
+Here is the output of the Example 3 workflow:
+```
+[3t0@trydev.activeeon.com;16:14:14] Channel 3 created.
+[3t1@trydev.activeeon.com;16:14:22] Waiting for available slot
+[3t4@trydev.activeeon.com;16:14:22] Waiting for available slot
+[3t3@trydev.activeeon.com;16:14:22] Waiting for available slot
+[3t5@trydev.activeeon.com;16:14:22] Waiting for available slot
+[3t1@trydev.activeeon.com;16:14:23] Enter critical section
+[3t4@trydev.activeeon.com;16:14:23] Enter critical section
+[3t4@trydev.activeeon.com;16:14:33] Release slot
+[3t1@trydev.activeeon.com;16:14:33] Release slot
+[3t3@trydev.activeeon.com;16:14:33] Enter critical section
+[3t5@trydev.activeeon.com;16:14:34] Enter critical section
+[3t6@trydev.activeeon.com;16:14:38] Waiting for available slot
+[3t3@trydev.activeeon.com;16:14:43] Release slot
+[3t5@trydev.activeeon.com;16:14:44] Release slot
+[3t6@trydev.activeeon.com;16:14:44] Enter critical section
+[3t6@trydev.activeeon.com;16:14:54] Release slot
+[3t2@trydev.activeeon.com;16:14:59] Channel 3 deleted.
+```
+
+We can see that no more than two replicated tasks enter the critical section at the same time, and that releasing slots allows new tasks to enter the critical section.
+
+The Complete Workflow example can be downloaded link:examples/CriticalSection.xml[here].
+
+CAUTION: Implementing the Critical Section example using <<_selection,selection scripts>> rather than explicit wait methods is more *complex*.
+The reason behind is that selection scripts are meant to be *stateless*.
+The same selection script is executed on all ProActive Nodes by the Scheduler before deciding if a Node can be used to execute a single Task.
+In our use case, we must both decide *atomically* if a slot is available (_stateless_) and reserve a slot (_stateful_). This decision will be performed *simultaneously* on all available ProActive Nodes.
+An example implementation can be downloaded link:examples/CriticalSectionWithSelectionScripts.xml[here]. It makes use of a `reserved_slots` binding containing a set of `task ids`.
+
+==== Conclusion
+
+Task Synchronization API can be used for multiple dynamic synchronization patterns such as:
+
+ * *Cross-workflow* synchronization
+
+ * *Critical Sections*
+
+ * *Barriers* (Wait for several parallel tasks to reach a certain point)
+
+ * *Producer / Consumer*
+
+A complete example of Producer / Consumer, _ServiceDeployerConsumer_ can be downloaded link:examples/ServiceDeployerConsumer.xml[here].
+
+== Scheduling policies
+
+See link:../admin/ProActiveAdminGuide.html#_scheduling_policies[Admin Guide] to congifure scheduling policies.
+
+=== Earliest deadline first (EDF) policy
+
+Scheduler has `Earliest deadline first policy` (EDF policy) that prioritizes jobs with deadlines.
+Overall, the general principal is the following: a job that needs to be started as soon as possible to meet its deadline
+taking into account its execution time has higher priority.
+
+The EDF policy considers two Generic Information items: `JOB_DDL` and `JOB_EXEC_TIME`.
+
+`JOB_DDL` represents job deadline. Job deadline can be set in one of the following format:
+
+1. absolute format: `YYYY-MM-dd`T`HH:mm:ss+ZZ`, e.g. `2018-08-14T08:40:30+02:00`
+
+2. relative (to the submission time) format: `+HH:mm:ss` , e.g. `+5:30:00`, or `+mm:ss`, e.g. `+4:30`, or `+ss`, e.g. `+45` (45 seconds)
+
+If job deadline is absolute then its value equals to `JOB_DDL`.
+
+If job deadline is relative then its value equals to `submission time` + `JOB_DDL`.
+
+`JOB_EXEC_TIME` represents job expected execution time in the following format: `HH:mm:ss` , e.g. `12:30:00`, `5:30:00`,
+or `mm:ss`, e.g. `4:30`, or `ss`, e.g. `45` (45 seconds).
+
+EDF policy orders jobs by applying the rules below.
+The rule considers jobs at submission time when they are still pending, and orders them by priority.
+
+
+Thus EDF policy applies these rules (in the given order) until one rule actually applies.
+Here is the ordered list of rules for the EDF policy:
+
+1. compare job's intrinsic priority (HIGHEST, HIGH, NORMAL, LOW, LOWEST)
+
+2. job with deadline has priority over job without deadline
+
+3. job that is already started has priority over job that has not yet started
+
+4. job that started earlier has priority over job that was started later
+
+5. job with the earliest `JOB_DDL` minus `JOB_EXEC_TIME` has a priority
+
+6. job with earliest submission time.
+
+==== Email notifications
+
+EDF policy sends 3 types of email notifications:
+
+1. (Arriving soon) When job deadline is at risk (if the job is not started in the next X minutes, its deadline will be missed)
+
+2. When job will likely miss its deadline (i.e if the provided `JOB_EXEC_TIME` exceeds the left time until the deadline)
+
+3. (Arriving soon) When job has already missed its deadline.
+
+Policy sends emails to the address specified in `EMAIL` Generic Information of the job.
+
+To enable email notifications see link:../admin/ProActiveAdminGuide.html#_get_notifications[Admin Guide].
+
+
+== Data Connectors
+
+include::./references/DataConnectors.adoc[]
 
 == Fork environment
 A fork execution environment is a new Java Virtual Machine (JVM) which is started exclusively to execute a task. Starting a
@@ -2096,6 +2318,9 @@ include::./references/JobPlannerServiceReference.adoc[]
 
 include::./references/StatisticsOnProActiveJobsAndResourceUsageReference.adoc[]
 
+include::./references/LDAPQueryTasks.adoc[]
+
+
 == Reference
 
 === Job and task specification
@@ -2110,6 +2335,7 @@ you will benefit from live validation and completion!
 === Studio Tasks
 include::./references/Tasks.adoc[]
 
+[[_variables_quick_reference]]
 === Variables quick reference
 include::./references/VariablesReference.adoc[]
 

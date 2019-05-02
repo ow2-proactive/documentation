@@ -1,8 +1,25 @@
 :docinfo:
-= ProActive Workflows & Scheduling
+:toc: 
+:toc-title: PWS Admin Guide
+= ProActive Workflows & Scheduling -- Admin Guide
 include::../common-settings.adoc[]
-:toc-title: Administration Guide
+:sectnums!:
+== All documentation links
+=== link:../user/ProActiveUserGuide.html[User Guide]
+ProActive Workflow & Scheduler (PWS) User Guide (Workflows, Tasks, Jobs Submission, Resource Management)
 
+=== link:../MLOS/MLOSUserGuide.html[ML Open Studio] 
+Machine Learning Open Studio (ML-OS) User Guide (ready to use palettes with ML Tasks & Workflows)
+
+=== link:../PCA/PCAUserGuide.html[Cloud Automation]
+ProActive Cloud Automation (PCA) User Guide (automate deployment and management of Services)
+
+=== link:../admin/ProActiveAdminGuide.html[Admin Guide]
+Administration Guide (Installation, networks, nodes, clusters, users, permissions)
+
+*API documentation: &emsp; https://try.activeeon.com/rest/doc/[Scheduler REST] &emsp; link:../user/ProActiveUserGuide.html#_scheduler_command_line[Scheduler CLI] &emsp; https://doc.activeeon.com/javadoc/latest/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html[Scheduler Java] &emsp; https://doc.activeeon.com/javadoc/latest/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html[Workflow Creation Java] &emsp; https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client[Python Client]*
+
+:sectnums:
 == Overview
 
 include::../Overview.adoc[]
@@ -64,12 +81,45 @@ The URLs of the Scheduler, Resource Manager, REST API and Web Interfaces are dis
 
 Your ProActive Scheduler is ready to execute <<_glossary_job,*Jobs*>>!
 
+=== Minimum requirements
+
+The minimum requirements can be found in the Data Sheet. Please find an up to date Data Sheet in the in the link:https://www.activeeon.com/about/resources[resources].
+
+=== Scheduler Life-Cycle Management
+
+Under the Admin menu from the scheduler portal, the following administrator actions are proposed :
+
+* Start the scheduler: Jobs can be submitted. Getting the jobs results is possible. The scheduler can be stopped, frozen, paused or killed.
+* Stop the scheduler: Jobs cannot be submitted anymore. Already running jobs run to completion, but not pending jobs. Getting the jobs results is possible. The scheduler can be started or killed.
+* Freeze the scheduler: Every running tasks run to completion, but the running jobs wait for the scheduler to resume. The scheduler can be stopped, resumed or killed.
+* Resume the scheduler: If the scheduler is Paused or Frozen.
+* Pause the scheduler: Every running jobs run to completion. The scheduler can be stopped, resumed or killed.
+* Kill the scheduler: Similar to Ctrl-C. No interation can be done anymore.
+* Shutdown the scheduler: Every running tasks run to completion before terminating the scheduler.
 
 == ProActive Scheduler configuration
 
 All configuration files of ProActive Scheduler can be found under `PROACTIVE_HOME`.
 
+=== Java Virtual Machine configuration
+
+Various command-line tools shipped with ProActive (bin/proactive-server, bin/proactive-node) start a Java Virtual Machine.
+The parameters of the JVM can be modified by editing DEFAULT_JVM_OPTS= in the corresponding script both in Linux and Windows.
+
+For example, to set the maximum heap capacity on the JVM to 6GB in Linux:
+
+Change the line
+`DEFAULT_JVM_OPTS='"-server" "-Dfile.encoding=UTF-8" "-Xms4g"'`
+
+into
+
+`DEFAULT_JVM_OPTS='"-server" "-Dfile.encoding=UTF-8" "-Xms4g" "-Xmx6g"'`
+
+
+=== General configuration
+
 .ProActive Scheduler configuration files
+
 |===
 |Component | Description|File |Reference
 
@@ -91,8 +141,47 @@ All configuration files of ProActive Scheduler can be found under `PROACTIVE_HOM
 |User permissions|config/security.java.policy-server|<<_user_permissions>>
 |LDAP configuration|config/authentication/ldap.cfg|<<_ldap>>
 
+.5+^.^|Database
+|Scheduler configuration|config/scheduler/database.properties|<<Database configuration>>
+|Resource Manager configuration|config/rm/database.properties|<<Database configuration>>
+|Scheduling-api microservice|dist/war/scheduling-api/WEB-INF/classes/application.properties|<<Database configuration>>
+|Job-planner microservice|dist/war/job-planner/WEB-INF/classes/application.properties|<<Database configuration>>
+|Catalog microservice|dist/war/catalog/WEB-INF/classes/application.properties|<<Database configuration>>
+
 |===
 
+=== Database configuration
+
+Scheduler, Resource Mananger, and some microservices require to have direct access to the database.
+Thus, they must each have a correct database configuration.
+
+To configure Scheduler or Resource Mananger, one have to modify *PROACTIVE_HOME/config/scheduler/database.properties*
+and *PROACTIVE_HOME/config/rm/database.properties* respectively.
+
+The following five properties must be configured:
+
+* `hibernate.connection.driver_class`
+* `hibernate.connection.url`
+* `hibernate.dialect`
+* `hibernate.connection.username`
+* `hibernate.connection.password`
+
+TIP: There are usefull templates for different databases in *PROACTVE_HOME/config/scheduler/templates/* and *PROACTVE_HOME/config/rm/templates/*.
+
+The *job-planner*, *catalog*, *scheduling-api*, and *proactive-cloud-watch* microservices must contain a database configuration.
+For each microservice, a microservice configuration file can be found in: *PROACTIVE_HOME/dist/war/MICROSERVICE-NAME/WEB-INF/classes/application.properties*.
+In their *application.properties* file, you need to set the following five properties:
+
+* `spring.datasource.url`
+* `spring.datasource.username`
+* `spring.datasource.password`
+* `spring.datasource.driverClassName`
+* `spring.jpa.database-platform`
+
+Moreover, it is mandatory to put the proper database driver in *PROACTIVE_HOME/addons* folder, e.g. if you want to use MySQL 5.7 database,
+then you have to download the database driver and put it at: *PROACTIVE_HOME/addons/mysql-connector-java-8.0.11.jar*.
+
+Scheduler, and 3 microservices (*scheduling-api*, *job-planner*, and *proactive-cloud-watch*) have to point to the same database.
 
 == Installation on a Cluster
 
@@ -112,12 +201,13 @@ by launching commands remotely on Compute Hosts. For instance, it can be useful 
 [[run_node_manually]]
 === Deploy ProActive Nodes manually
 
-==== Using PROACTIVE_HOME
+[[proactive_node]]
+==== Using proactive-node command
 
 Let's take a closer look at the first method described above. To deploy a ProActive Node from the Compute Host you need
 to run the following command
 ----
-$ PROACTIVE_HOME/bin/proactive-node -r pnp://SCHEDULER_ADDRESS:41303
+$ PROACTIVE_HOME/bin/proactive-node -r pnp://SCHEDULER_ADDRESS:64738
 ----
 where `-r` option is used to specify the URL of the *Resource Manager*.
 You can find this URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler>> (the Resource Manager URL).
@@ -128,6 +218,7 @@ TIP: You can also use *discovery* to let the ProActive Node find the URL to conn
  Simply run `proactive-node` without any parameter to use discovery.
  It uses broadcast to retrieve the URL so this feature might not work depending on your network configuration.
 
+[[node_jar]]
 ==== Using node.jar
 
 It is also possible to launch a ProActive Node without even copying the ProActive Scheduler to a Compute Host:
@@ -148,6 +239,26 @@ have to set the URL to connect to with the `-r` parameter.
 
 TIP: If you would like to execute several Tasks at the same time on one host, you can either launch several ProActive
 Node process or use the _-w_ parameter to run multiple nodes in the same process. A node executes one Task at a time.
+
+[[proactive_node_autoupdate]]
+==== Using proactive-node-autoupdate command
+
+This method is a combination of the two above, it starts a node from the command line, and makes sure the node libary (node.jar) is synchronized with the latest server version.
+
+The `proactive-node-autoupdate` command acts as a bootstrap and spawns a new java virtual machine with the up-to-date library classpath.
+
+Launching the node is similar to the `proactive-node` command, additional options must be specified to allow the download of the node.jar from the server:
+
+----
+$ PROACTIVE_HOME/bin/proactive-node-autoupdate -r pnp://SCHEDULER_ADDRESS:64738 -nju http://SCHEDULER_ADDRESS:8080/rest/node.jar -njs /tmp/node.jar -nja
+----
+
+where `-nju` option is used to specify the http URL of the *node.jar*.
+You can find this URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler>>, the node.jar url is built by appending */rest/node.jar* to the base http url of the server.
+
+`-nju` option is used to specify where the node.jar will be stored locally on the machine.
+
+Finally, `-nja` option, when enabled, specifies that the `proactive-node-autoupdate` will be always up, it means that it will automatically restart when the node terminates (for example in case of server upgrades).
 
 [[_deploy_nodes_via_ssh]]
 === Deploy ProActive Nodes via SSH
@@ -219,15 +330,17 @@ especially if those are desktop machines where people perform their daily activi
 
 The ProActive Agent for Linux can be downloaded from ActiveEon's http://www.activeeon.com/community-downloads[website^].
 
-To install the ProActive Agent on Debian based distributions:
+To install the ProActive Agent on Debian based distributions (the archive name will vary depending on the version and architecture):
 
-    sudo dpkg -i proactive-agent-standalone.deb
+    sudo dpkg -i proactive-agent.deb
 
 TIP: Some extra dependencies might be required, to install them: `sudo apt-get -f install`
 
-To install the ProActive Agent on Redhat based distributions:
+To install the ProActive Agent on Redhat based distributions (the archive name will vary depending on the version and architecture):
 
-    sudo rpm -i proactive-agent-standalone.deb
+    sudo rpm -i proactive-agent.rpm
+
+TIP: Some extra dependencies might be required, to install them you need to install each dependency individually using `sudo yum install`
 
 By default the Linux Agent will launch locally as many nodes as the number of
 CPU cores available on the host minus one. The URL to use for connecting nodes
@@ -279,6 +392,7 @@ sudo usermod -ag proactive proactive
 * Start the Linux Agent
 
     sudo /etc/init.d/proactive-agent start
+
 
 ===== Uninstalling the Linux Agent
 
@@ -402,12 +516,470 @@ The main troubles you may have to face are the following ones:
 * You get an *authentication error*: this is probably due to your default credentials file which cannot be found. In the "Connection" tab of the Configuration Editor (Figure 5.4, “Configuration Editor window - Connection Tab (Resource Manager Registration)”), you can choose the credentials file you want. You can select, for instance, the credentials file located at PROACTIVE_HOME/config/authentication/scheduler.cred or your own credentials file.
 * The node seems to be well started but you cannot see it in the Resource Manager interface : in this case, make sure that the *port number* is the good one. Do not forget that the runtime port number is incremented from the initial ProActive Resource Manager port number. You can see exactly on which port your runtime has been started looking at the log file described above.
 
+==== Automate Windows Agent Installation
+
+The automated installation can be run through a command line (cmd.exe) with administrator priviledge.
+This can be useful to trigger installation. In order to launch the silent installation, the /S option must be passed in the command line to the ProActive Windows Agent installer.
+Several options are required, such as the user and password.
+
+Here is an example of automated installation command:
+
+```
+ProactiveAgent-8.3.0-standalone-x64-setup.exe /S /USER=proactive /PASSWORD=proactive
+```
+
+Optionally you can add a domain name.
+
+```
+ProactiveAgent-8.3.0-standalone-x64-setup.exe /S /USER=proactive /PASSWORD=proactive /DOMAIN=mydomain
+```
+
+You can also activate compatibility mode from the command line if you have any problems:
+
+```
+set __COMPAT_LAYER=WINXPSP3
+ProactiveAgent-8.3.0-standalone-x64-setup.exe /S /USER=proactive /PASSWORD=proactive
+```
+
+
+Here is the full list of command line options which can be passed to the installer:
+
+
+
+[cols=2*]
+|===
+
+|`/S` | Run silently without graphical interface, uninstall any previous installation.
+
+|`/UN` | Run the uninstall only.
+
+|`/ALLOW` | Allow all users to control the service.
+
+|`/USER=user` | Associate `user` account to manage proactive agent service, create user if it does not exist.
+
+|`/PASSWORD=pass` | Define password for the proactive agent `user`.
+
+|`/DOMAIN=dom` | Specify `dom` as the windows domain, by default domain will be set to the machine host name.
+
+|`/LOG_DIR=path` | Define `path` where the agent log files, default is `$PROGRAMFILES\ProActiveAgent\logs`.
+
+|`/CONFIG_DIR=path` | Define `path` where the configuration files are stored, default is `$PROGRAMFILES\ProActiveAgent\config`.
+
+|`/USE_ACC` | Use current user's account home as `/CONFIG_DIR` and `/LOG_DIR`.
+
+|===
+
+
+
+==== Configuring Linux Or Windows Agents For Auto-Update
+
+The *Linux* or *Windows Agents* can be configured to automatically synchronize the node libary (node.jar) with the ProActive server.
+
+The behavior is similar to the <<proactive_node_autoupdate,proactive-node-autoupdate>> command, the main JVM will act as a bootstrap and spawn a child JVM with the up-to-date library in its classpath.
+
+In order to enable auto-update, you need to edit the agent configuration file. This file location is:
+
+ * Linux Agent: `/opt/proactive-agent/config.xml`
+ * Windows Agent: `C:\Program Files (x86)\ProActiveAgent\config\PAAgent-config.xml`
+
+The following changes must be performed:
+
+ 1. Change the *<javaStarterClass>* to `org.ow2.proactive.resourcemanager.updater.RMNodeUpdater`
+ 2. Add the following *<jvmParameters>*
+   * `node.jar.url` : url of the node jar (similar to the `nju` option of the `proactive-node-autoupdate` command)
+   * `node.jar.saveas` : path used to store the node.jar file locally (similar to the `njs` option of the `proactive-node-autoupdate` command)
+ 3. Other *JVM properties* specified will be forwarded to the spawned JVM, but non-standard options such as *-Xmx* will not be forwarded. In order to do so, you must declare them using the following syntax:
+
+----
+   <param>-DXtraOption1=Xmx2048m</param>
+   <param>-DXtraOption2=Xms256m</param>
+   ...
+----
+
+=== Deploy ProActive Nodes dynamically via other schedulers (PBS, SLURM, ...)
+
+This functionality is also called _*Meta-Scheduling*_.
+
+If an existing cluster is available in your organization and this cluster is managed by a native scheduler such as *SLURM*, *LSF* or *PBS*, you may want to execute transparently on this cluster ProActive <<__glossary_workflow,*Workflows*>> and <<_glossary_task,*Tasks*>>.
+
+As ProActive Tasks can be executed only on <<_glossary_proactive_node,*ProActive Nodes*>>, it is necessary to deploy ProActive Nodes on the cluster.
+
+Dynamic deployment of ProActive Nodes on a cluster to execute ProActive Tasks is handled by defining a _Native Scheduler <<_glossary_node_source,Node Source>>_ containing three components:
+
+ * The `Native Scheduler Infrastructure`: a <<_glossary_node_source_infrastructure,*Node Source Infrastructure*>> which allows to interact with a native scheduler to deploy ProActive Nodes.
+
+ * The `Native Scheduler Policy`:  a <<_glossary_node_source_policy,*Node Source Policy*>> which interacts with the Native Scheduler Infrastructure to request ProActive Nodes deployment dynamically based on the <<_glossary_proactive_scheduler,*ProActive Scheduler*>> pending queue.
+
+ * The `Native Scheduler Scheduling Policy`: a <<_glossary_scheduling_policy,*Scheduling Policy*>> which allows the execution of ProActive Tasks on ProActive Nodes provisioned by the Native Scheduler Policy.
+
+The provisioning of ProActive Nodes is controlled by a specific <<../user/ProActiveUserGuide.adoc#_generic_information,*Generic Information*>> `"NS"` which can be defined at _Task_ or _Job_ level.
+
+When this generic information is configured for a _Task_, a ProActive Node will be dynamically deployed on the cluster to execute the Task. This ProActive Node will be associated with the Task and will only accept this Task execution. When the Task terminates, the ProActive Node will also be terminated.
+
+When this generic information is configured for a _Job_, all Tasks contained in the Job will execute on the cluster. Nodes will be created dynamically to execute Tasks of this Job, with a similar Task/Node association.
+
+The behavior of the Meta-Scheduling feature is summarized on the following diagram (example for PBS integration):
+
+image::NativeScheduler.png[PBS Integration, , title="PBS Integration"]
+
+The following paragraphs explain how to configure the Native Scheduler Infrastructure, Native Scheduler Policy, Native Scheduler Scheduling Policy and execute ProActive tasks using a Native Scheduler Node Source.
+
+==== Glossary
+
+[[_glossary_ns_cluster]]
+Cluster::
+  a group of tightly coupled <<_glossary_ns_node,nodes>> managed by a <<_glossary_ns_native_scheduler,native scheduler>>.
+
+[[_glossary_ns_node]]
+Cluster Node::
+  a computer, part of a <<_glossary_ns_cluster,cluster>> used to execute <<_glossary_ns_cluster_job,cluster jobs>>.
+
+[[_glossary_ns_native_scheduler]]
+Native Scheduler::
+  A software which dispatch <<_glossary_ns_cluster_job,cluster jobs>> on <<_glossary_ns_node,cluster nodes>>, also known as Cluster Manager.
+
+[[_glossary_ns_cluster_job]]
+Cluster Job::
+  A running command executed on a <<_glossary_ns_cluster,cluster>> by a <<_glossary_ns_native_scheduler,native scheduler>>. Also known as Batch Job.
+
+[[_glossary_ns_cluster_jobid]]
+Cluster Job Id::
+  Identifier representing a <<_glossary_ns_cluster_job,cluster job>> inside a <<_glossary_ns_native_scheduler,native scheduler>>.
+
+[[_glossary_head_node]]
+Head Node::
+  A specific <<_glossary_ns_node,cluster node>> where the <<_glossary_ns_native_scheduler,native scheduler>> server runs.
+
+[[_glossary_cluster_user]]
+Cluster User::
+  A linux operating system account registered on the cluster.
+
+[[_glossary_proactive_scheduler_user]]
+ProActive Scheduler User::
+  An account registered in the <<_glossary_proactive_scheduler,*ProActive Scheduler*>>, the account is only registered inside the ProActive Scheduler and does not necessarily match an operating system account.
+
+[[_glossary_proactive_scheduler_process_user]]
+ProActive Scheduler Process User::
+  The operating system account which started the ProActive Scheduler server process.
+
+
+==== Native Scheduler Node Source Configuration
+
+Using the <<_glossary_rm_web_interface,*Resource Manager Web Interface*>>, you can create a <<_glossary_node_source,*Node Source*>> used to acquire <<_glossary_proactive_node,*ProActive Nodes*>> from a <<_glossary_ns_native_scheduler,*Native Scheduler*>>.
+
+From The drop down menu, the `NativeSchedulerInfrastructure` and `NativeSchedulerPolicy` must be selected.
+
+Here is an explanation of the node source parameters:
+
+ * `Name` : you should name the node source accordingly to your infrastructure, it can be the <<_glossary_ns_cluster,cluster>> name, <<_glossary_ns_head_node,head node>> name, or <<_glossary_ns_native_scheduler,native scheduler>> name (PBS, SLURM), etc.
+
+===== NativeSchedulerInfrastructure
+
+ * `RMCredentialsPath` : path to a file which contains the credentials of an administrator user which will own the node source. The ProActive Scheduler Server release contains two admin users credentials files : `config/authentication/rm.cred` and `config/authentication/admin_user.cred`
+ * `NSFrontalHostAddress` : the host name or IP address of the cluster <<_glossary_ns_head_node,head node>>.
+ * `NSSchedulerHome` : the location of the shared ProActive installation on <<_glossary_ns_node,cluster nodes>> (cluster nodes must be able to access ProActive libraries in order to start ProActive Node). Example `/opt/proactive/activeeon_enterprise-node-linux-x64-8.1.0`.
+ * `javaHome` : similarly, cluster nodes must be able to access the java command in order to start ProActive Nodes. ProActive installation includes a Java Runtime Environment under the `jre` subfolder. Example: `/opt/proactive/activeeon_enterprise-node-linux-x64-8.1.0/jre`.
+ * `jvmParameters` : additional options which can be passed to the java command.
+ * `sshOptions` : additional options which can be passed to the ssh command used to connect to connect to the host name or IP address specified in the NSFrontalHostAddress parameter.
+ * `NSNodeTimeoutInSeconds` : timeout to wait for the deployment of ProActive Nodes on the cluster. As the time needed to deploy ProActive Nodes depends on the cluster load, this timeout should be a large value. If the timeout is reached, the ProActive Nodes will be in `"Lost"` <<_node_states,state>>.
+ * `ìmpersonationMethod`: when a job is submitted to the native scheduler, the submission is performed under the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>>. An impersonation is thus performed between the <<_glossary_proactive_scheduler_process_user,scheduler server process>> and the target <<_glossary_cluster_user,cluster user>>.
+ This impersonation can be performed using 3 different strategies:
+ ** `ssh`: in that case the <<_glossary_ns_head_node,head node>> is contacted using a ssh command with the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>> and password. User/password combination between the ProActive Scheduler and the head node operating system must match.
+ ** `none`: in that case the head node is contacted using a ssh command with the <<_glossary_proactive_scheduler_process_user,ProActive Scheduler process user>> (passwordless ssh). Submission to the native scheduler will be performed with the same account.
+ ** `sudo`: similar to `none` regarding the connection to the head node, but a `sudo` command will be initiated to impersonate as the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>>, before doing a job submission.
+ * `alternateRMUrl` : the url used by the ProActive Nodes to contact <<_glossary_resource_manager,ProActive Resource Manager>>. This url is displayed on ProActive server startup. Example: `pnp://myserver:64738`.
+ * `sshPort` : port used for ssh connections.
+ * `nsPreCommand` : a linux command which can be run before launching ProActive Nodes on the cluster. Can be used as a workaround when some system environment variables are not properly set when starting ProActive Nodes.
+ * `nsSubmitCommand` : this is the main command used to start ProActive Nodes on the cluster. Depending on the actual native scheduler implementation, `nsSubmitCommand` will vary, here are examples definitions: +
++
+[cols=2*]
+|===
+
+|PBS |`qsub -N %NS_JOBNAME% -o %LOG_FILE% -j oe`
+
+|SLURM |`sbatch -J %NS_JOBNAME% -o %LOG_FILE%`
+
+|LSF |`bsub -J %NS_JOBNAME% -o %LOG_FILE% -e %LOG_FILE%`
+
+|===
++
+The command can use patterns which will be replaced dynamically by the ProActive Resource Manager. +
++
+[cols=2*]
+|===
+
+|`%NS_JOBNAME%` |contains a configurable job name dynamically created by the resource manager.
+
+|`%LOG_FILE%` |contains a log file path dynamically created by the resource manager and located in side the NSSchedulerHome installation. This log file is useful to debug errors during <<_glossary_ns_cluster_job,cluster job>> submission.
+
+|`%PA_USERNAME%` |contains the current ProActive Scheduler user.
+|===
+
+ * `nsKillCommand` : this is the command used to kill ProActive Nodes started previously by the nsSubmitCommand. Similarly to nsSubmitCommand, `nsKillCommand` will vary for each native scheduler syntax: +
++
+[cols=2*]
+|===
+
+|PBS |`qdel %NS_JOBID%`
+
+|SLURM |`scancel -n %NS_JOBNAME%`
+
+|LSF |`bkill -J %NS_JOBNAME%`
+
+|===
++
+It can use the following patterns: +
++
+[cols=2*]
+|===
+
+|`%NS_JOBNAME%` |contains a configurable job name dynamically created by the resource manager.
+
+|`%NS_JOBID%` |contains the job id returned by the native scheduler when submitting the job. Currently, job id can only be used with PBS, when the setting `submitReturnsJobId` is set to `true`.
+
+|===
+
+ * `submitReturnsJobId`: is the <<_glossary_ns_cluster_jobid,cluster job id>> returned plainly when calling the nsSubmitCommand. This is the behavior of PBS, and this is why this setting should be set to `true` when using PBS.
+ * `nsJobName`: a way to configure the `%NS_JOBNAME%` pattern. The following patterns can be used: +
++
+[cols=2*]
+|===
+
+|`%PA_TASKID%` |contains the ProActive Task and Job ID associated with the node request.
+
+|`%PA_USERNAME%` |contains the current ProActive Scheduler user.
+
+|===
+
+ * `maxDeploymentFailure`: number of attempts when starting a ProActive Node on the cluster using the nsSubmitCommand, after all attempts failed, the ProActive Node will be declared as `Lost`.
+
+===== NativeSchedulerPolicy
+
+ * `userAccessType` : which users are allowed to use ProActive Nodes created by the NativeSchedulerInfrastructure. Refer to the <<_policies,Policies documentation>>.
+ * `providerAccessType` : defines who can add nodes to this node source. Refer to the <<_policies,Policies documentation>>.
+ * `schedulerUrl` : the url used by the ProActive Nodes to contact the <<_glossary_resource_manager,ProActive Resource Manager>>. This url is displayed on ProActive server startup. Example: `pnp://myserver:64738`.
+ * `schedulerCredentialsPath` : path to a file which contains the credentials of an administrator user which will connect to the scheduler. The ProActive Scheduler Server release contains two admin users credentials files : `config/authentication/rm.cred` and `config/authentication/admin_user.cred`
+ * `rearrangeTasks` : currently not implemented.
+ * `autoScaling` : if set to `true`, the NativeSchedulerPolicy will scan the Resource Manager activity and Scheduling queue. If the scheduling queue is not empty and all resource manager nodes are busy, `autoscaling` will automatically start ProActive Nodes from the NativeSchedulerInfrastructure. This setting cannot be used when multiple NativeScheduler node sources are deployed.
+ * `refreshTime` : the NativeSchedulerPolicy will refresh its status and observe the ProActive Scheduler queue every `refreshTime` milliseconds.
+
+===== Creating the Node Source
+
+When the node source is created, it will be activated as other node sources (LocalInfrastructure, SSHInfrastructure, etc), but no ProActive Node will appear.
+
+This is expected as the Native Scheduler node source is *dynamic*, it will only create ProActive Nodes when specific conditions are met.
+
+==== Configure NativeSchedulerSchedulingPolicy
+
+After creating the Native Scheduler Node Source, it is necessary as well to change the <<_extending_proactive_scheduling_policy,*ProActive Scheduling Policy*>> to use the `NativeSchedulerSchedulingPolicy`.
+
+This policy ensures that tasks are executed on appropriate ProActive Nodes when using a Native Scheduler Node Source.
+
+In order to do that, edit the file `PROACTIVE_HOME/config/scheduler/settings.ini` and change the following line:
+
+----
+pa.scheduler.policy=org.ow2.proactive.scheduler.policy.ExtendedSchedulerPolicy
+----
+
+to:
+
+----
+pa.scheduler.policy=org.ow2.proactive.scheduler.policy.NativeSchedulerSchedulingPolicy
+----
+
+==== Match User Accounts With the Cluster
+
+Submission of jobs to the native scheduler is done by default using a SSH connection.
+
+When a ProActive Task belonging to a given user _Alice_ needs to execute on a NativeScheduler node source, a SSH connection will be performed with the login and password of the _Alice_ user registered in the ProActive Scheduler.
+
+Accordingly, this login/password combination must correspond to a real user on the cluster <<_glossary_ns_head_node,head node>>.
+
+Please refer to the <<_user_authentication,*User Authentication*>> section in order to manage ProActive Users.
+
+==== Execute Tasks on a Native Scheduler Node Source
+
+The <<../user/ProActiveUserGuide.adoc#_generic_information,*Generic Information*>> `"NS"` allows a ProActive Task to be executed on a Native Scheduler node source.
+
+It must contain the name of the target node source. For example, to submit a Task on the "PBS" Node Source:
+
+```xml
+<task name="PBS_Task">
+    <description>
+        <![CDATA[ Execute this Task in the PBS node source. ]]>
+    </description>
+    <genericInformation>
+        <info name="NS" value="PBS"/>
+    </genericInformation>
+    <scriptExecutable>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+println "Hello World"
+]]>
+          </code>
+        </script>
+    </scriptExecutable>
+</task>
+```
+
+The NS value can also be defined at the job level, in that case, every task of this job will be executed on the Native Scheduler node source:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<job
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="urn:proactive:jobdescriptor:3.10"
+     xsi:schemaLocation="urn:proactive:jobdescriptor:3.10 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.10/schedulerjob.xsd"
+    name="PBS_Job"
+    priority="normal"
+    onTaskError="continueJobExecution"
+     maxNumberOfExecution="2"
+>
+  <genericInformation>
+    <info name="NS" value="PBS"/>
+  </genericInformation>
+  <taskFlow>
+    <task name="Groovy_Task">
+      <description>
+        <![CDATA[ The simplest task, ran by a groovy engine. ]]>
+      </description>
+      <scriptExecutable>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+println "Hello World"
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+  </taskFlow>
+</job>
+```
+
+It is also possible to define in a ProActive Task or Job the `NS_BATCH` generic information. This parameter allows to provide custom arguments to `nsSubmitCommand`.
+
+For example, to submit a task on the PBS Node source, using a specific PBS queue and reserve for this task 2 cluster nodes with 2 cpu each:
+
+```xml
+<task name="PBS_Task">
+  <description>
+    <![CDATA[ Runs on the PBS node source on queue1, using 2 nodes * 2 cpus ]]>
+  </description>
+  <genericInformation>
+    <info name="NS" value="PBS"/>
+    <info name="NS_BATCH" value="-q queue1 -lnodes=2:ppn=2"/>
+  </genericInformation>
+  <scriptExecutable>
+    <script>
+      <code language="groovy">
+         <![CDATA[
+println "Hello World"
+]]>
+      </code>
+    </script>
+  </scriptExecutable>
+</task>
+```
+
+==== Native Scheduler Node Life Cycle
+
+As soon as tasks containing the `NS` generic information are pending, the target Native Scheduler node source will try to deploy ProActive Nodes to execute them.
+
+The node will first appear in `Deploying` <<_node_states,*state*>>. If some error occurs prior to the `nsSubmitCommand` execution (SSH connection, command syntax), the node state will change to `Lost`, with some explanation about the failure displayed.
+
+If the node remains in `Deploying` state, it is possible to monitor the job execution on the native scheduler itself, by logging into the head node, and use the native scheduler command tools.
+
+Example using the PBS `qstat` command:
+
+----
+root@osboxes:/tmp/activeeon_enterprise-node-linux-x64-8.1.0-SNAPSHOT/logs# qstat
+
+Job ID                    Name             User            Time Use S Queue
+------------------------- ---------------- --------------- -------- - -----
+241.osboxes                STDIN            osboxes                0 R batch
+
+root@osboxes:/tmp/activeeon_enterprise-node-linux-x64-8.1.0-SNAPSHOT/logs# qstat -f 241
+
+Job Id: 241.osboxes
+    Job_Name = STDIN
+    Job_Owner = osboxes@osboxes
+    job_state = R
+    queue = batch
+    server = osboxes
+    Checkpoint = u
+    ctime = Fri May  4 10:13:06 2018
+    Error_Path = osboxes:/tmp/activeeon_enterprise-node-linux-x64-8.1.0-SNAPSH
+	OT/logs/Node-osboxes_852t0.out
+    exec_host = osboxes/0
+    Hold_Types = n
+    Join_Path = oe
+    Keep_Files = n
+    Mail_Points = a
+    mtime = Fri May  4 10:13:06 2018
+    Output_Path = osboxes:/tmp/activeeon_enterprise-node-linux-x64-8.1.0-SNAPS
+	HOT/logs/Node-osboxes_852t0.out
+    Priority = 0
+    qtime = Fri May  4 10:13:06 2018
+    Rerunable = True
+    Resource_List.walltime = 01:00:00
+    Resource_List.nodes = 1
+    Resource_List.nodect = 1
+    Resource_List.neednodes = 1
+    session_id = 6486
+    substate = 42
+    Variable_List = PBS_O_QUEUE=batch,PBS_O_HOME=/home/osboxes,
+	PBS_O_LOGNAME=osboxes,
+	PBS_O_PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/b
+	in:/usr/games:/usr/local/games,PBS_O_MAIL=/var/mail/osboxes,
+	PBS_O_SHELL=/bin/bash,PBS_O_LANG=fr_FR.UTF-8,
+	PBS_O_WORKDIR=/home/osboxes,PBS_O_HOST=osboxes,PBS_O_SERVER=osboxes
+    euser = osboxes
+    egroup = osboxes
+    hashname = 241.osboxes
+    queue_rank = 237
+    queue_type = E
+    comment = Job started on Fri May 04 at 10:13
+    etime = Fri May  4 10:13:06 2018
+    submit_args = -o /tmp/activeeon_enterprise-node-linux-x64-8.1.0-SNAPSHOT/l
+	ogs/Node-osboxes_852t0.out -e /tmp/activeeon_enterprise-node-linux-x64
+	-8.1.0-SNAPSHOT/logs/Node-osboxes_852t0.out -j oe
+    start_time = Fri May  4 10:13:06 2018
+    Walltime.Remaining = 3587
+    start_count = 1
+    fault_tolerant = False
+    job_radix = 0
+    submit_host = osboxes
+    init_work_dir = /home/osboxes
+    request_version = 1
+----
+
+When the deployment is successful, the ProActive Node state will change to `Free` and shortly after to `Busy` as soon as the associated task will be deployed on the node.
+After the task completes, the node will be removed and the <<_glossary_ns_cluster_job,cluster job>> will be cancelled using the `nsKillCommand`.
+
+==== Troubleshooting
+
+If the <<_glossary_ns_cluster_job,cluster job>> is in _running_ state, but the ProActive Node associated remains in `Deploying` state, it probably means there is a connection issue between the ProActive Node and the Resource Manager.
+If the default ProActive Network Protocol is used (`PNP`), it is necessary to have a two way connection between the cluster and ProActive server. You can refer to the <<_available_network_protocols,*network protocols*>> documentation for more info.
+
+To troubleshoot node deployment, you can:
+
+ * inspect the output of the <<_glossary_ns_cluster_job,cluster job>> if provided in the `nsSubmitCommand`
+ * add the following log4j loggers to the ProActive Scheduler Server `config/log/server.properties` +
+```properties
+log4j.logger.org.ow2.proactive.scheduler.policy=DEBUG
+log4j.logger.org.ow2.proactive.scheduler.util=DEBUG
+log4j.logger.org.ow2.proactive.nativescheduler=DEBUG
+```
+ * inspect the ProActive Scheduler server logs.
+
 == Available Network Protocols
 
 ProActive Workflows and Scheduling offers several protocols for
 the Scheduler and nodes to communicate. These protocols provide different
 features: _speed_, _security_, _fast error detection_, _firewall_ or
-_NAT friendliness_ but one of the protocols can offer all these features at
+_NAT friendliness_ but none of the protocols can offer all these features at
 the same time.
 Consequently, the selection should be made carefully. Below are introduced
 available network protocols.
@@ -488,17 +1060,19 @@ See <<_pamr_protocol_properties>> reference for a detailed explanation of each p
 === Policies
 
 You can limit the utilization of resources connected to the ProActive Scheduler in different ways. When you create node
-sources you can use a node source *policy*.
+sources you can use a node source *policy*. A node source policy is a set of rules and conditions which describes when and how many nodes have to be selected for computations.
 
-NOTE: *Node source policy* is a set of rules and conditions which describes when and how many nodes have to be selected for computations.
+NOTE: Node source policy are enforced for *non-admin* users *only*, and will have no effect for a user granted with the administrator privileges.
 
 Each node source policy regardless it specifics has a common part where you describe users' and groups' permissions.
 When you create a policy you must specify them:
 
 * *nodeUsers* - utilization permission that defines who can get nodes for computations from this node source. It has to take one of the following values:
 ** `ME` - only the node source creator
-** `users=user1,user2;groups=group1,group2;tokens=t1,t2` - only specific users, groups or tokens. I.e. users=user1 - node access is limited to user1; users=user1;groups=group1 - node access is limited to user1 and all users from group group1; users=user1;tokens=t1 - node access is limited to user1 or anyone who specified token t1. If node access is protected by a token, node will not be found by the ProActive Resource Manager (getNodes request) unless the corresponding token is specified.
+** `users=user1,user2;groups=group1,group2;tokens=t1,t2` - only specific users, groups or tokens. I.e. users=user1 - node access is limited to user1; users=user1;groups=group1 - node access is limited to user1 and all users from group group1; users=user1;tokens=t1 - node access is limited to user1 or anyone who specified token t1. If node access is protected by a token, node will not be found by the ProActive Resource Manager when trying to execute workflows, unless the corresponding token is specified inside the workflow(s).
 ** `ALL` - everybody can use nodes from this node source
+
+NOTE: To specify a token inside a chosen workflow, add the key/value pair *NODE_ACCESS_TOKEN:<token>* to its generic information.
 
 * *nodeProviders* - provider permission defines who can add nodes to this node source. It should take one of the following values:
 ** `ME` - pnly the node source creator
@@ -552,6 +1126,28 @@ When the nodes lock restoration feature is enabled, the Resource Manager will tr
 as many Nodes as there were on the previous run.
 The approach is best effort and Node hostname is not considered.
 As a consequence, Nodes are not necessarily locked on the same host after a Scheduler restart.
+
+=== Undeploying Node Sources
+
+The <<_glossary_resource_manager,Resource Manager>> allows for <<_glossary_node_source,Node Sources>> to be
+*undeployed*. In this case, the Node Source is shut down and its <<_glossary_proactive_node,Nodes>> are removed, but
+the Node Source definition is kept. An undeployed Node Source can be *redeployed* later, using its initial
+configuration.
+
+Node Source undeploying can be *preemptive* or not. If a Node Source undeploying is initiated with a non-preemptive
+requirement, then the Nodes of this Node Source which are currently running <<_glossary_task,Tasks>> will not be
+removed until their Task is finished. In this case, these Nodes are displayed in the
+_to-be-removed_ state. In other terms, if a Node Source is undeployed *non-preemptively*, it will be completely
+undeployed as soon as all of its Nodes have finished executing their Task. On the opposite, if a Node Source is
+undeployed *with preemption*, its Nodes are immediately removed regardless of whether they execute Tasks, and this may
+cause Tasks to fail.
+
+Deploying and undeploying Node Sources is possible from the
+<<_glossary_rm_web_interface,Resource Manager Web Interface>>, from the Resource Manager
+<<_glossary_rest_api,REST API>>, and from the <<_resource_manager_command_line,Command Line>> client.
+
+TIP: The deployment status of a Node Source is persistent. If the Resource Manager is restarted, then all Node Sources
+will be *restored* to their previous state.
 
 == User Authentication
 
@@ -1002,6 +1598,7 @@ The node has never been added to the ProActive Resource Manager and won't be usa
 * `Busy` - Node has been given to user to execute computations.
 * `To be removed` - Node is busy but requested to be removed. So it will be removed once the client will release it.
 * `Down` - Node is unreachable or down and cannot be used anymore.
+* `Needed` - Metric shows how many additional nodes the Scheduler needs to schedule all pending tasks.
 
 The state of a ProActive Node is managed by the Resource Manager. However, each Node has a
 <<_nodes_locking,user managed lock status>>.
@@ -1087,7 +1684,36 @@ More precisely, for a specific node provider, it is the sum of all time interval
 
 The accounting information can be accessed only through a *JMX client* or the ProActive Resource Manager *command line*.
 
+=== Metric to monitor Scheduler load
+
+*Needed Nodes* metric shows how many additional nodes the Scheduler needs to schedule all pending tasks,
+e.g. there are 4 nodes and all of them are busy, but *Needed Nodes* shows 10, which means if you would have
+14 nodes instead of 4, all of these nodes would be busy.
+Please notice, that *Needed Nodes* shows how many more nodes could be used right now.
+However, it does not give any indication about the kind of nodes needed,
+e.g. Selection Script of the task could require some specific nodes,
+thus *Needed Nodes* could be positive despite still having free nodes
+(they can be inappropriate for the current task).
+
+
+You can find this metric in multiple places. In RM portal you can see it in Nodes History:
+
+image::neededNodes-rm-nodeshistory.png[align="center"]
+
+In Nodes State:
+
+image::neededNodes-rm-nodesstate.png[align="center"]
+
+And you can find it in RM portal detailed statistics:
+
+image::neededNodes-rm-stats.png[align="center"]
+
+Also, you can find *Needed Nodes* in the Scheduler portal where the Scheduler status is displayed:
+
+image::neededNodes-scheduler.png[align="center"]
+
 [[_run_as_me]]
+
 == Run Computation with a user's system account
 
 Configure a ProActive Node to execute tasks under a user's system account by ticking the
@@ -1199,7 +1825,7 @@ When HTTPS is set up, you can automatically redirect any HTTP request from
 users to the secured version of the protocol to make sure exchanged information
 is protected. It requires to enable `web.redirect_http_to_https`.
 
-Unlike other web applications, the Scheduler, the Resource Manager and the studio web portals together with the 
+Unlike other web applications, the Scheduler, the Resource Manager and the studio web portals together with the
 Proactive cloud watch, Cloud automation service, Job planner and Notification service
 require manual configuration based on your HTTPS settings. The configuration
 files to edit are respectively in
@@ -1357,7 +1983,7 @@ docker.host=
 ---
 Defines the DOCKER_HOST environment variable. The DOCKER_HOST variable defines the Docker socket which the Docker client connects to.
 That property is useful when accessing a Docker daemon which runs inside a container or on a remote machine.
-Further information about the DOCKER_HOST property can be found http://docs.docker.com/v1.8/reference/commandline/cli/[in the official Docker documentation^].
+Further information about the DOCKER_HOST property can be found https://docs.docker.com/engine/reference/commandline/cli/[in the official Docker documentation^].
 
 === Perl scripts execution (Perl task)
 Perl should be installed on your machine. By default the perl engine is installed in Linux and Mac Os. Please install the perl engine on Windows. +
@@ -1381,13 +2007,88 @@ More over, the native Python Script Engine depends on the py4j library in order 
 
 Further information can be found https://www.py4j.org/install.html[in the official py4j documentation^].
 
+[[_scheduling_policies]]
+== Extending ProActive Scheduling Policy
+
+In order to decide which pending Tasks are executed, the ProActive Scheduler uses a <<_glossary_scheduling_policy,*Scheduling Policy*>>.
+
+This policy allows, for example, to execute task in a First-In-First-Out order or according to priorities.
+
+The default Scheduling Policy can be extended to perfectly fit with an organization scheduling constraints.
+
+Moreover, policy can be changed dynamically throught Java API `org.ow2.proactive.scheduler.common.Scheduler::changePolicy(String policyClassName)`.
+
+In the following example, we show how a different policy can be used to control Task Scheduling.
+
+
+=== Earliest deadline first (EDF) policy
+
+To use the earliest deadline first (EDF) policy,  edit the file `PROACTIVE_HOME/config/scheduler/settings.ini` and change the following line:
+
+----
+pa.scheduler.policy=org.ow2.proactive.scheduler.policy.ExtendedSchedulerPolicy
+----
+
+to:
+
+----
+pa.scheduler.policy=org.ow2.proactive.scheduler.policy.edf.EDFPolicyExtended
+----
+
+
+=== License Policy Example
+
+To use the LicenseSchedulingPolicy, edit the file `PROACTIVE_HOME/config/scheduler/settings.ini` and change the following line:
+
+----
+pa.scheduler.policy=org.ow2.proactive.scheduler.policy.ExtendedSchedulerPolicy
+----
+
+to:
+
+----
+pa.scheduler.policy=org.ow2.proactive.scheduler.policy.license.LicenseSchedulingPolicy
+----
+
+The LicenseSchedulingPolicy requires an extra configuration: the maximum number of licenses per software must be specified into
+`PROACTIVE_HOME/config/scheduler/license.properties` like this
+
+----
+software_A = 3
+software_B = 2
+----
+
+From now, at a job or a task level, user can specify which software licenses are required, by adding the REQUIRED_LICENSES generic information,
+which value can be
+
+----
+softwareA,softwareB
+----
+
+As expected, if 10 tasks requiring software_A,software_B licenses are submitted, they will be executed 2 by 2, according to the software with the fewest licenses.
+The same logic is applied at the job level, whatever the number of tasks composing each job, since all tasks of the same job share the same license.
+Moreover, user can combine both levels.
 
 == Addons
 
+[[_get_notifications]]
+=== Get Notification on Job Events Configuration
+
+In order to enable this functionality the following properties should be set in `config/scheduler/setting.ini`:
+
+[source, groovy]
+----
+pa.scheduler.notifications.email.enabled = true
+pa.scheduler.notifications.email.from = username@example.com
+----
+
+To configure the email sender on Scheduler, the configuration file `config/scheduler/emailnotification.properties` should be filled in, please refer to
+link:../admin/ProActiveAdminGuide.html#_smtp_configuration_examples[SMTP configuration examples] for examples.
+
 === Email notification
 
-The email notification addons includes an utility Java class but also a Groovy 
-task (accessible from the Studio Web app) that allow to send an email 
+The email notification addons includes an utility Java class but also a Groovy
+task (accessible from the Studio Web app) that allow to send an email
 from a ProActive Workflow.
 
 The task assumes that configuration for connecting to an SMTP server is done using
@@ -1449,10 +2150,10 @@ include::./references/StatisticsOnProActiveJobsAndResourceUsageReference.adoc[]
 == Scheduler start tuning
 
 Scheduler start can be customized by automatically triggering user's scripts.
-A list of scripts can be specified in 'PROACTIVE_HOME/config/scheduler/settings.ini`
+A list of scripts can be specified in `PROACTIVE_HOME/config/scheduler/settings.ini`
 following this
 
-pa.scheduler.startscripts.paths=/your/script1/path;/your/script2/path;/your/script3/path
+`pa.scheduler.startscripts.paths=/your/script1/path;/your/script2/path;/your/script3/path`
 
 For example, load-examples.groovy which is executed by default at scheduler start, has in charge
 the full deployment of proactive-examples by: populating the running Catalog, exposing as templates
@@ -1523,7 +2224,7 @@ expression `pa.scheduler.core.automaticremovejobcronexpression`.
 As the `pa.scheduler.job.removeFromDataBase` property is set to `true` by default,
 a query is executed in-base to remove all jobs that qualify for the bulk removal.
 
-==== Database impact on performance
+==== Database impact on job submission performance
 
 The choice of the database provider can influence the Scheduler and Resource Manager performance overall.
 In the following figure, we see the job submission time between different database providers:
@@ -1553,6 +2254,42 @@ hibernate.connection.url=jdbc:hsqldb:mem:rm;hsqldb.tx=mvcc;hsqldb.lob_file_scale
 
 To switch to a standalone database, see <<_perf_tuning_db>>.
 
+==== Database impact on task creation performance
+
+The choice of the database provider influences task creation time.
+In the following figure, we see the task creation time for different database providers:
+
+image::grouped-bar-direct-labels.png[align="center"]
+
+Each experiment, consists of submitting one replicated job with some number of replicated tasks, and measuring
+time to create all these replicated tasks.
+
+//MariaDB
+//10K - 95s
+//20K - 296s
+//Default
+//10K - 750s
+//20K - 1750s
+//In-memory
+//10K - 85s
+//20K - 238s
+
+=== Tuning Linux for 15K nodes
+
+It is necessary to tune underlying Linux system, in case there will be plenty of nodes in the Resource Manager.
+
+It is mandatory to allow having a large number of running processes and open files.
+
+For example, on 15.000 nodes, the recommended ulimit settings for running processes and open files are:
+
+```
+nproc soft/hard 100000
+nofile soft/hard 65536
+```
+
+In addition, we recommend to have at least 16GB RAM for 15.000 nodes.
+
+
 == Nodes and Task Recovery
 
 The Scheduler can be started in *recovery mode*. If so, the Scheduler will try to restore Resource Manager nodes and
@@ -1568,7 +2305,7 @@ recovery feature enabled, when the Scheduler restarts it will retrieve the *prev
 and the execution of the tasks will continue and finish as if there was no failure of the Scheduler.
 
 WARNING: The nodes and task recovery feature is *not* applicable when the Scheduler is cleanly stopped or exits normally.
-This is a mechanism that is *only* applicable upon failure of the Scheduler (machine crash, abrupt exit).
+This is a mechanism that is *only* applicable upon *failure* of the Scheduler (machine crash, abrupt exit).
 
 === How Does Nodes and Task Recovery Work?
 
@@ -1593,6 +2330,17 @@ To handle the particular situation in which the Scheduler is down when a running
 
 === Nodes and Task Recovery Configuration
 
+==== Restrictions
+
+The nodes recovery is not available for Scheduler settings that use the PAMR protocol. This is because this
+communication protocol relies on router endpoint identifiers that are regenerated when connections are reestablished.
+
+The nodes recovery is also not available on the Nodes that are launched at the Scheduler startup by default. However
+you get the choice to activate or deactivate the feature when you create your own Node Source. By default, the nodes
+recovery is activated for any new Node Source.
+
+==== How to make sure that nodes and task recovery is enabled
+
 WARNING: The nodes and task recovery feature requires a proper configuration to ensure that nodes and tasks are *kept
 alive* during the down time of the Scheduler.
 
@@ -1612,6 +2360,7 @@ The default for this property is 30 seconds.
 
 ** Use `-Dproactive.node.reconnection.attempts` to specify how many times the node will try to reconnect with the
 Resource Manager. The default for this property is to attempt 10 times.
+
 +
 These two properties define the total delay for the node to reconnect to the Resource Manager. By default, the total
 delay of reconnection is 5 minutes. When this total delay is consumed, _the node shuts itself down_, and the node recovery
@@ -1628,11 +2377,32 @@ Scheduler. The default for this property is to attempt only once.
 
 ** `pa.scheduler.core.nodepingfrequency` property to define a delay (in seconds) in between two attempts. The default
 for this property is 20 seconds.
+
 +
 If the Scheduler is still not up and running after the total delay defined by these properties (which is 20 seconds by
 default), then _the task’s result will be lost_ forever.
-
 Note that these two properties are also used by the scheduler to decide when to *re-schedule* tasks.
+
+==== How to disable nodes and task recovery
+
+You can completely disable the nodes and task recovery feature by setting the `pa.rm.nodes.recovery` property of the
+*Resource Manager* to `false`.
+
+In addition, the nodes and task recovery can be configured *per Node Source* at creation time. This configuration will
+be applied only if the global `pa.rm.nodes.recovery` property is set to `true`. The specification of nodes recovery per
+Node Source can be done through the <<_glossary_rm_web_interface,Resource Manager Web Interface>>, through the Resource
+Manager <<_glossary_rest_api,REST API>>, and through the <<_resource_manager_command_line,Command Line>> client (CLI).
+
+** Through the *Web Interface*, the form to create a new Node Source contains a checkbox that controls nodes
+recoverability.
+
+** Through the *REST API*, the `nodesRecoverable` parameter of the `rm/nodesource/create` and `rm/nodesource` *REST
+endpoints* specify whether the ProActive Nodes of a new Node Source will be recoverable. _Nodes recovery will be
+disabled_ if the given value does not match any case of the "true" string.
+
+** Through the *CLI*, the `createns` and `definens` *commands* take an optional parameter to specify whether the
+ProActive Nodes of a new Node Source will be recoverable. _Nodes recovery will be disabled_ if
+the optional parameter is provided and does not match any case of the "true" string.
 
 === Nodes and Task Recovery on Cloud Platforms
 

@@ -1,11 +1,34 @@
-*ProActive Scheduler* is a free and open-source *job scheduler*. The user specifies the computation in terms of a series of computation
+*ProActive Scheduler* is a comprehensive Open Source *job scheduler and Orchestrator*, also featuring *Workflows* and *Resource Management*. The user specifies the computation in terms of a series of computation
  steps along with their execution and data dependencies. The Scheduler executes this computation on a cluster
  of computation resources, each step on the best-fit resource and in parallel wherever its possible.
 
 image::architecture.png[align=center]
 
-On the top left is the Studio interface that allows you to build Workflows.
-In the middle is the Scheduler that enables an enterprise to orchestrate and automate Multi-users, Multi-application Jobs. 
-Finally, at the bottom right is the Resource manager interface that manage and automate resource provisioning
+On the top left there is the *Studio* interface which allows you to build Workflows.
+It can be interactively configured to address specific domains, for instance Finance, Big Data, IoT, Artificial Intelligence (AI). See for instance the Documentation of *Machine Learning Open Studio* https://www.activeeon.com/public_content/documentation/latest/MLOS/MLOSUserGuide.html[here^], and try it online https://try.activeeon.com/studio/#workflows/templates/machine-learning[here^]. In the middle there is the *Scheduler* which enables an enterprise to orchestrate and automate Multi-users, Multi-application Jobs.
+Finally, at the bottom right is the *Resource manager* interface which manages and automates resource provisioning
 on any Public Cloud, on any virtualization software, on any container system, and on any Physical Machine of any OS.
 All the components you see come with fully Open and modern REST APIs. 
+
+image::automation-dashboard-catalog.png[align=center]
+
+The screenshot above shows the *Catalog Portal*, where one can store Workflows, Calendars, Scripts, etc.
+Powerful versioning together with full access control (RBAC) is supported, and users can share easily Workflows and templates between teams, and various environments (Dev, Test, Staging and Prod).
+
+image::job-planner.png[align=center]
+
+The screenshot above shows the *Job Planner Portal*, allowing to automate and schedule recurring Jobs.
+From left to right, you can define and use *Calendar Definitions* , associate *Workflows* to calendars, visualize the *execution planning* for the future, as well as actual executions of the past.
+
+image::calendar_planning_gantt.png[align=center]
+
+The Gantt screenshot above shows the *Gantt View* of Job Planner, featuring past job history, current Job being executed, and future Jobs that will be submitted, all in a comprehensive interactive view.
+You easily see the potential differences between Planned Submission Time and Actual Start Time of the Jobs, get estimations of the Finished Time, visualize the Job that stayed PENDING for some time (in Yellow) and the Jobs that had issues and got KILLED, CANCELLED, or FAILED (in red).
+
+image::cloud-automation-on-demand-paas.png[align=center]
+
+The screenshot above shows the *Cloud Automation* portal which is actually a PaaS automation tool. It allows you to easily manage any On-Demand Services with full Life-Cycle Management (create, deploy, suspend, resume and terminate).
+
+image::scalable-elastic-resources.png[align=center]
+
+The screenshots above taken from the *Resource Manager* portal shows that you can configure ProActive Scheduler to *dynamically scale up and down* the infrastructure being used (e.g. the number of VMs you buy on Clouds) according to the actual workload to execute.

@@ -1,0 +1,500 @@
+
+Variables can come at hand while developing ProActive applications.
+Propagate data between tasks, customize jobs, and store useful debug information are a few examples of
+how variables can ease development. ProActive has basically two groups of variables :
+
+- <<_workflow_variables>>, declared on the XML job definition.
+- <<_dynamic_variables>>, system variables or variables created at task runtime.
+
+[[_workflow_variables]]
+==== Workflow variables
+
+Workflow variables are declared in the XML job definition. Within the definition we can have variables in several
+levels, at job level the variables are visible and shared by all tasks. At task level, variables are visible
+only within the task execution context.
+
+[[_job_variables]]
+===== Job variables
+
+In a workflow you can define *job variables* that are shared and visible by all tasks.
+
+A job variable is defined using the following attributes:
+
+* *name*: the name of the variable
+* *value*: the value of the variable
+* *model*: the type of the value (optional). See section <<_variable_model,Variable Model>>
+
+
+[[_templating]]
+Variables are very useful to use workflows as templates where only a few parameters change for each
+execution. Upon submission you can define variable values in several ways from <<_scheduler_command_line, CLI>>,
+using the ProActive Workflow Studio, directly editing the XML job definition, or even using REST
+API.
+
+The following example shows how to define a job variable in the XML:
+[source, xml]
+----
+<job ... >
+    <variables>
+        <variable name="variable" value="value" model=""/>
+    </variables>
+    ...
+</job>
+----
+
+*Job variables* can be referenced anywhere in the workflow, including other job variables.
+
+The syntax for referencing a variable is the pattern `${variable_name}` (case-sensitive), for example:
+
+[source, xml]
+----
+<nativeExecutable>
+    <staticCommand value="${variable}" />
+</nativeExecutable>
+----
+
+===== Task variables
+
+Similarly to job variables, *Task variables* can be defined within task scope in the job XML definition.
+Task variables scope is strictly limited to the task definition.
+
+A task variable is defined using the following attributes:
+
+* *name*: the name of the variable
+* *value*: the value of the variable
+* *inherited*: asserts when the content of this variable is propagated from a previous task.
+If _true_, the value defined in the task variable will only be used if no variable with the same name is propagated.
+* *model*: the type of the value (optional). See section <<_variable_model,Variable Model>>
+
+When the inherited parameters is true the variable value is propagated by a previous task (See
+<<_inherited_variables>> for more details). Value field can be left empty however it can
+also work as a default value in case a previous task fails to define the variable.
+
+For example:
+[source, xml]
+----
+<task ... >
+    <variables>
+        <variable name="variable" value="value" inherited="false" model=""/>
+    </variables>
+    ...
+</task>
+----
+Task variables can be used similarly to job variables using the pattern `${variable_name}` but only inside the task where the variable is defined.
+
+Task variables override job variables, this means that if a job variable and a task variable are defined with the same name, the task variable value will be used inside the task, and the job variable value will be used elsewhere in the job.
+
+
+===== Variable Model
+
+Job and Task variables can define a `model` attribute which let the workflow designer control the variable value syntax.
+A workflow designer can for example decide that the variable NUMBER_OF_ENTRIES is expected to be convertible to an Integer ranged between 0 and 20.
+
+The workflow designer will then provide a default value to the variable NUMBER_OF_ENTRIES, for example "10". This workflow is valid as "10" can be converted to an Integer and is between 0 and 20.
+
+When submitting the workflow, it will be possible to choose a new value for the variable NUMBER_OF_ENTRIES.
+If the user submitting the workflow chooses for example the value -5, the validation will fail and an error message will appear.
+
+====== Available Models
+
+The following list describes the various model syntaxes available:
+
+* *PA:BOOLEAN* : variable is either "true", "false", "0" or "1".
+* *PA:INTEGER* , *PA:INTEGER[min,max]* : variable can be converted to https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Integer.html[java.lang.Integer], and eventually is contained in the range [min, max]. +
+Examples : PA:INTEGER will accept "-5" but not "1.4", PA:INTEGER[0,20] will accept "12" but not "25".
+* *PA:LONG* , *PA:LONG[min,max]* : same as above with https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Long.html[java.lang.Long].
+* *PA:FLOAT* , *PA:FLOAT[min,max]* : same as above with https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Float.html[java.lang.Float]. +
+Examples: PA:FLOAT[-0.33,5.99] will accept "3.5" but not "6".
+* *PA:DOUBLE* , *PA:DOUBLE[min,max]* : same as above with https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Double.html[java.lang.Double].
+* *PA:SHORT* , *PA:SHORT[min,max]* : same as above with https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Short.html[java.lang.Short].
+* *PA:URL* : variable can be converted to https://docs.oracle.com/javase/7/docs/api/index.html?java/net/URL.html[java.net.URL]. +
+Examples: PA:URL will accept "http://mysite.com" but not "c:/Temp".
+* *PA:URI* : variable can be converted to https://docs.oracle.com/javase/7/docs/api/index.html?java/net/URI.html[java.net.URI]. +
+Examples: PA:URI will accept "/tmp/file" but not "c:\a^~to" due to invalid characters.
+* *PA:DATETIME(format)* , *PA:DATETIME(format)[min,max]* : variable can be converted to a https://docs.oracle.com/javase/7/docs/api/index.html?java/util/Date.html[java.util.Date] using the format specified (see the format definition syntax in the https://docs.oracle.com/javase/7/docs/api/index.html?java/text/SimpleDateFormat.html[SimpleDateFormat] class). +
+A range can also be used in the PA:DATETIME model. In that case, each bound of the range must match the date format used. +
++
+Examples: +
+PA:DATETIME(yyyy-MM-dd) will accept "2014-12-01" but not "2014". +
+PA:DATETIME(yyyy-MM-dd)[2014-01-01, 2015-01-01] will accept "2014-12-01" but not "2015-03-01". +
+PA:DATETIME(yyyy-MM-dd)[2014, 2015] will result in an error during the workflow definition as the range bounds [2014, 2015] are not using the format yyyy-MM-dd.
+* *PA:LIST(item1,item2,...)* : variable must be one of the values defined in the list. +
+Examples: PA:LIST(a,b,c) will accept "a", "b", "c" but no other value.
+* *PA:REGEXP(pattern)* : variable syntax must match the regular expression defined in the pattern. The regular expression syntax is described in class https://docs.oracle.com/javase/7/docs/api/index.html?java/util/regex/Pattern.html[Pattern]. +
+Examples: PA:REGEXP([a-z]+) will accept "abc", "foo", but not "Foo".
+* *PA:MODEL_FROM_URL(url)* : variable syntax must match the model fetched from the given url. This can be used for example when the model needs to represent a list of elements which may evolve over time and is updated inside a file. Such as a list of machines in an infrastructure, a list of users, etc. +
+Examples: PA:MODEL_FROM_URL(file:///srv/machines_list_model.txt), if the file machines_list_model.txt contains PA:LIST(host1,host2), will accept only "host1" and "host2", but may accept other values as the machines_list_model file changes.
+* *PA:CRON* : variable syntax must be a valid cron expression as defined in the  http://www.sauronsoftware.it/projects/cron4j/manual.php#p02[cron4j manual]. +
+Examples: PA:CRON will accept "5 * * * \*" but not "* * * *" (missing minutes sub-pattern).
+* *PA:SPEL(SpEL expression)* : variable syntax will be evaluated by a https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[SpEL] expression. Refer to next paragraph.
+* *PA:CATALOG_OBJECT* : variable syntax must be a valid expression that matches the following pattern: `bucketName/objectName[/revision]`.
+Note that the revision sub-pattern is a hash code number represented by 13 digit. +
+Examples: PA:CATALOG_OBJECT will accept "bucket-example/object-example/1539310165443" and "bucket-example/object-example" but not "bucket-example/object-example/153931016" (invalid revision number) and "bucket-example/" (missing object name).
+* *PA:JSON* : variable syntax must be a valid JSON expression as defined in http://www.json.org/[JSON doc]. +
+Examples: PA:JSON will accept {"name": "John", "city":"New York"} and empty values like {} or [{},{}], but not ["test" : 123] (Unexpected character ':') and {test : 123} (Unexpected character 't').
+
+====== Spring Expression Language Model
+
+The PA:SPEL(expr) model allows to define expressions able to validate a variable value or not. Additionally, this model can be used to validate multiple variable values or to dynamically update other variables.
+The syntax of the SpEL expression is defined by the https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[Spring Expression Language reference].
+
+In order to interact with variables, the expression has access to the following properties:
+
+* *#value* : this property will contain the value of the current variable defined by the user.
+* *variables['variable_name']* : this property array contains all the variables of the same context (for example of the same task for a task variable).
+
+The SpEL expression must return a *boolean value*, `true` if the value is correct, `false` otherwise, returning another type will raise an error.
+
+* *Example of SpEL simple validations:* +
++
+PA:SPEL(#value == 'abc') : will accept the value if it's the 'abc' string +
+PA:SPEL(T(Integer).parseInt(#value) > 10) : will accept the value if it's an integer greater than 10. +
++
+Note that #value always contains a string and must be converted to other types if needed. +
++
+* *Example of SpEL multiple validations:* +
++
+PA:SPEL(variables['var1'] + variables['var2'] == 'abcdef') : will be accepted if the string concatenation of variable var1 and var2 is 'abcdef'. +
+PA:SPEL(T(Integer).parseInt(variables['var1']) + T(Integer).parseInt(variables['var2']) < 100) : will be accepted if the sum of variables var1 and var2 are smaller than 100. +
++
+* *Example of SpEL variable inference:* +
++
+PA:SPEL( variables['var2'] == '' ? (variables['var2'] = variables['var1']) instanceof T(String) : true ) : if the variable var2 is empty, it will use the value of variable var1 instead. +
++
+Note that the SpEL expression must always return a boolean value, this is why in this last expression we use the instanceof keyword to avoid returning a string value.
+
+
+
+===== Generic Information
+
+In addition to variables, another key/value structure can be accessed inside a script: *_Generic Information_*.
+
+Generic information semantics differ from <<_job_variables>> semantics in the following way:
+
+ * Generic information can be accessed inside a script, but cannot be modified.
+ * Generic information can be defined at *job level* or at *task level*. If the same generic information is defined at job level and at task level, the latter value takes precedence inside the task scope.
+ * Generic information cannot be used directly inside the workflow with the syntax ${} (See  <<_job_variables>>).
+ * Generic information are used in general internally by the scheduler, for example to provide information to the scheduling loop on how to handle the task. An example of such generic information is the _START_AT_ info used inside <<_cron_tasks>>.
+ * Generic information can use in their definition job/task variables patterns, pattern replacements can be done at execution time when using task generic information.
+
+Example of generic information definition:
+
+For example:
+[source, xml]
+----
+<task ... >
+    <genericInformation>
+        <info name="ginfo" value="${test}"/>
+    </genericInformation>
+    ...
+</task>
+----
+
+=====  Icon management variables
+
+There are specific variables that are dedicated to icon management.
+The icon for Job level is specified inside Workflow Generic Information -`workflow.icon`. The task related icon is described inside Task Generic Information `task.icon`.
+
+Job and task icons should be related to their specific nature.
+These variables are used in the Proactive portals for correct visualization of workflows with icons.
+
+[[_dynamic_variables]]
+
+==== Dynamic Variables
+
+As opposed to <<_workflow_variables>>, *dynamic variables* are created or manipulated directly when executing scripts,
+through the use of the "variables" map (see <<_variables_quick_reference>>).
+We have mainly two types of *dynamic variables*:
+
+- <<_system_variables>>, declared by the ProActive scheduler.
+- <<_inherited_variables>>, created after adding values to the *variables* map.
+
+[[_system_variables]]
+===== ProActive system variables
+
+Some variables are implicitly defined by the Scheduler to retrieve runtime information about a job or a task.
+
+Here is the list of ProActive system variables:
+
+.ProActive variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `PA_JOB_ID`
+| The current job ID.
+| String
+
+| `PA_JOB_NAME`
+| The current job name.
+| String
+
+| `PA_TASK_ID`
+| The current task ID.
+| String
+
+| `PA_TASK_NAME`
+| The current task name.
+| String
+
+| `PA_TASK_ITERATION`
+| The current iteration index, when using <<_loop,looping>>, starts at 0.
+| Integer
+
+| `PA_TASK_REPLICATION`
+| The current iteration index, when using a <<_replicate,replication>>, starts at 0.
+| Integer
+
+| `PA_TASK_PROGRESS_FILE`
+| The path to the progress file, used to set the task's progress.
+
+  You can import and use the utility class `org.ow2.proactive.scripting.helper.progress.ProgressFile` to read/write values to the file identified by this variable.
+| String
+
+| `PA_SCHEDULER_HOME`
+| The path to Scheduler home, where the Scheduler or the Node is installed.
+| String
+
+| `PA_NODESFILE`
+| The path to the hostfile when using a <<_multi_node_task,multi nodes task>>.
+| String
+
+| `PA_NODESNUMBER`
+| The number of acquired nodes when using a <<_multi_node_task,multi nodes task>>.
+| Integer
+
+| `PA_USER`
+| The username of the ProActive user who has submitted the job.
+| String
+
+|===
+
+They can be used inside the workflow with the pattern syntax, for example:
+
+[source, xml]
+----
+<task ...>
+    ...
+     <forkEnvironment workingDir="/opt/${PA_JOB_ID}"></forkEnvironment>
+    ...
+</task>
+----
+
+[[_inherited_variables]]
+===== Script variables
+
+In addition to the ability to declare variables directly inside job XML definition, it is also possible to
+dynamically read and write new variables while executing a task script with the `variables` map. This map of `variables` is bound to
+hash type depending on the script engine you are using, for instance in native
+Java as http://docs.oracle.com/javase/8/docs/api/java/util/Map.html[Map^].
+In *Groovy*  as a global map, see below:
+
+[source, groovy]
+----
+String var = variables.get("one_variable")
+variables.put("other_variable", "foo")
+----
+
+In the *Groovy* example above the first line retrieve the value of variable
+`one_variable` from the `variables` map. The second line create a new entry  `other_variable` with value `foo`.
+The `variables` map is propagated down the execution chain. If a task modifies a variable in the variables map,
+or add a new variable, all dependent tasks will have access to this modification.
+For example:
+
+[source, groovy]
+----
+// task1
+String var = variables.get("one_variable")
+variables.put("one_variable", "foo")
+variables.put("other_variable", "bar")
+----
+
+[source, groovy]
+----
+// task2 depends on task1
+println variables.get("one_variable") // will display "foo"
+println variables.get("other_variable") // will display "bar"
+----
+
+If a task depends on several tasks and each task modifies the same variable, the final value of the variable
+which is propagated down the execution chain, depends on the *order of task execution*.
+Therefore, the users need to take appropriate measures to prevent any undesired effects such as race conditions.
+
+System variables can also be accessed from the `variables` map, for example:
+
+[source, groovy]
+----
+println variables.get("PA_JOB_ID") // will display the id of the current job
+----
+
+If using a *Bash shell script*, variables are accessible through environment variables.
+
+[source, bash]
+----
+#!/bin/bash
+echo $variables_PA_TASK_NAME
+----
+
+WARNING: In native tasks and Bash/CMD script engines, variables can be read but not written to.
+
+
+
+For Java native script you can set any link:http://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html[Java serializable object, window="_blank"]
+ as a variable value. They will be converted into strings using
+http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()[toString()^]
+ method when required, for instance, to make those values available as environment variables in native tasks.
+
+
+The field variable tag has an `inherited` field, if this field is set as true a task variable will read
+its value from the *variables* map instead of the `value` field in the XML definition.
+In this case, the *value* field becomes optional and work as a default value.
+Below a XML schema that shows two tasks: *first* and *second*. Task *first* insert a new
+variable using `variables.put("inherited_var", "somevalue")`.
+Task *second* declares *inherited_var*
+but with *defaultvalue*, this value will be overwritten by the  *first* task, `variables.put("inherited_var", "somevalue")`.
+Defining a default value  might be useful if for some reason the *first* task fails before inserting the *inhereted_var*
+on *variables* map. In this last case the `defaultvalue` remains unchanged.
+
+
+
+[source, xml]
+----
+<task name="first" >
+    <scriptExecutable>
+        <script>
+            <code language="groovy">
+                <![CDATA[
+                variables.put("inherited_var", "somevalue")
+                ]]>
+            </code>
+        </script>
+    </scriptExecutable>
+</task>
+...
+<task name="second">
+    <variables>
+        <variable name="inherited_var" value="defaultvalue" inherited="true"/>
+    </variables>
+    <depends>
+        <task ref="before"/>
+    </depends>
+...
+</task>
+----
+
+
+===== Dynamic replacements
+
+We've seen in <<_job_variables>> that we can use the `${varname}` syntax to create and access variables.
+Dynamic replacement is in charge to resolve variables just before the execution of task script, or
+in case of job variables, just before submitting the job.
+We can also combine recursive definitions of variables.
+
+For example, one could write:
+----
+<job ...>
+    ...
+    <variables>
+        <variable name="job_var" value="hello" model=""/>
+        <variable name="job_var2" value="${job_var}" model=""/>
+        <variable name="job_var3" value="${job_var2}" model=""/>
+    </variables>
+    ...
+</job>
+----
+
+The dynamic replacement will resolve `job_var3` to `hello` just before submitting the job to the scheduler.
+
+WARNING:  We can use job variable references in task variables but not otherwise.
+
+
+When dynamic replacing a task script variable the resolution happens just before running the task. So we can
+ use the `variables` map value. The example below will print "hello world" because `hello` is recursively
+ resolved at job level assigning `hello world` to `inherited_var`. When `task_2` starts its local
+    variable `task_var2` is dynamically replaced by `hello world`, i.e., the content of `inherited_var` that was
+    inserted in the `variables` map by the previous task.
+
+
+[source, xml]
+----
+<job ... >
+  <variables>
+    <variable name="job_var" value="hello" model=""/>
+    <variable name="job_var2" value="${job_var}" model=""/>
+  </variables>
+  <taskFlow>
+    <task name="task_1" >
+      <scriptExecutable>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+            variables.put("inherited_var", "\${job_var2} world")
+            ]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+    <task name="task_2">
+      <variables>
+        <variable name="task_var2" value="${inherited_var}" inherited="false"/>
+      </variables>
+      <depends>
+        <task ref="task_1"/>
+      </depends>
+      <scriptExecutable>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+            println ""+variables.get("task_var2")
+            ]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+  </taskFlow>
+</job>
+----
+
+
+
+Note that we can combine recursive definitions of variables.
+
+For example, one could write:
+
+[source, xml]
+----
+<task ...>
+    ...
+     <forkEnvironment workingDir="/opt/${DIRECTORY_${PA_TASK_REPLICATION}}"></forkEnvironment>
+    ...
+</task>
+----
+
+In that case, the variable `DIRECTORY_0` or `DIRECTORY_1`, etc (depending on the replication index) will be used in the working dir attribute.
+
+Pattern variable replacements may be performed at submission time or at execution time:
+
+- A replacement performed at *execution time* means that the replacement is executed only when the task enclosing the replacement is executed.
+- A replacement performed at *submission time* means that the replacement is directly executed when the job is submitted to the scheduler.
+
+Replacements directly using global job or task variables will always be performed at submission time.
+
+In the following example, the description replacement is performed at submission time:
+
+[source, xml]
+----
+<job ... >
+    <variables>
+        <variable name="description" value="My ProActive workflow"/>
+    </variables>
+    ...
+    <task ... >
+        <description>${description}</description>
+
+    </task>
+</job>
+----
+
+Replacements using system variables, such as the workingDir example above, will always be performed at execution time.
+
+
+

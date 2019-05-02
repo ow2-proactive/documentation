@@ -20,6 +20,8 @@ asciidoctor {
     outputDir = new File("$buildDir/asciidoc")
     sources {
         include 'user/ProActiveUserGuide.adoc'
+        include 'MLOS/MLOSUserGuide.adoc'
+        include 'PCA/PCAUserGuide.adoc'
         include 'admin/ProActiveAdminGuide.adoc'
         include 'admin/AdminTutorials.adoc'
         include 'admin/Catalog.adoc'
@@ -29,12 +31,13 @@ asciidoctor {
     resources {
         from("$projectDir/src/docs/") {
             include 'user/examples/**'
+            include 'images/**'
         }
     }
 }
 
 asciidoctorj {
-    version = '1.5.1'
+    version = '1.5.3'
 }
 
 project.ext.branch = new File("$projectDir/src/docs/version-conf.js").text.split("'")[1]
@@ -45,6 +48,11 @@ if (project.ext.branch.endsWith("-SNAPSHOT")) {
 def getDate() {
     def currentDate = new Date()
     def formattedDateString = currentDate.format('yyyy-MM-dd')
+    
+    if(project.ext.branch == 'master'){
+        formattedDateString = currentDate.format('yyyy-MM-dd HH:mm:ss')
+    }
+    
     return formattedDateString
 }
 

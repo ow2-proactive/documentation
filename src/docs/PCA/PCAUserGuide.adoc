@@ -1,0 +1,54 @@
+:docinfo:
+:toc: 
+:toc-title: PCA User Guide
+= ProActive Cloud Automation (PCA)
+include::../common-settings.adoc[]
+:sectnums!:
+== All documentation links
+=== link:../user/ProActiveUserGuide.html[User Guide]
+ProActive Workflow & Scheduler (PWS) User Guide (Workflows, Tasks, Jobs Submission, Resource Management)
+
+=== link:../MLOS/MLOSUserGuide.html[ML Open Studio] 
+Machine Learning Open Studio (ML-OS) User Guide (ready to use palettes with ML Tasks & Workflows)
+
+=== link:../PCA/PCAUserGuide.html[Cloud Automation]
+ProActive Cloud Automation (PCA) User Guide (automate deployment and management of Services)
+
+=== link:../admin/ProActiveAdminGuide.html[Admin Guide]
+Administration Guide (Installation, networks, nodes, clusters, users, permissions)
+
+*API documentation: &emsp; https://try.activeeon.com/rest/doc/[Scheduler REST] &emsp; link:../user/ProActiveUserGuide.html#_scheduler_command_line[Scheduler CLI] &emsp; https://doc.activeeon.com/javadoc/latest/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html[Scheduler Java] &emsp; https://doc.activeeon.com/javadoc/latest/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html[Workflow Creation Java] &emsp; https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client[Python Client]*
+
+:sectnums:
+== Main principles of PCA
+
+include::references/Overview.adoc[]
+
+=== Definitions and Concepts
+
+include::references/Definition.adoc[]
+
+=== Service Transitions
+
+include::references/Standard_Transitions.adoc[]
+
+== PCA Portal
+
+=== Overall View
+
+include::references/Overall_view.adoc[]
+
+=== Detailed View
+
+include::references/Detailed_view.adoc[]
+
+=== Usage examples
+
+include::references/UsageExample.adoc[]
+
+== Reference
+In this section, we provide a quick reference about how to configure and start some PCA services from our Catalog.
+
+include::references/reference.adoc[]
+
+

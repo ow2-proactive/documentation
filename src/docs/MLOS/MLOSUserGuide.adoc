@@ -1,0 +1,2821 @@
+:docinfo:
+:toc:
+:toc-title: ML-OS User Guide
+= Machine Learning Open Studio
+include::../common-settings.adoc[]
+:sectnums!:
+== All documentation links
+=== link:../user/ProActiveUserGuide.html[User Guide]
+ProActive Workflow & Scheduler (PWS) User Guide (Workflows, Tasks, Jobs Submission, Resource Management)
+
+=== link:../MLOS/MLOSUserGuide.html[ML Open Studio] 
+Machine Learning Open Studio (ML-OS) User Guide (ready to use palettes with ML Tasks & Workflows)
+
+=== link:../PCA/PCAUserGuide.html[Cloud Automation]
+ProActive Cloud Automation (PCA) User Guide (automate deployment and management of Services)
+
+=== link:../admin/ProActiveAdminGuide.html[Admin Guide]
+Administration Guide (Installation, networks, nodes, clusters, users, permissions)
+
+*API documentation: &emsp; https://try.activeeon.com/rest/doc/[Scheduler REST] &emsp; link:../user/ProActiveUserGuide.html#_scheduler_command_line[Scheduler CLI] &emsp; https://doc.activeeon.com/javadoc/latest/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html[Scheduler Java] &emsp; https://doc.activeeon.com/javadoc/latest/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html[Workflow Creation Java] &emsp; https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client[Python Client]*
+
+:sectnums:
+== Overview
+
+=== What is Machine Learning Open Studio (ML-OS)?
+
+include::references/Overview.adoc[]
+
+=== Glossary
+
+include::references/Glossary.adoc[]
+
+== Get Started
+
+To submit your first Machine Learning workflow to *ProActive Scheduler*, link:https://doc.activeeon.com/dev/admin/ProActiveAdminGuide.html#_run_the_proactive_scheduler[install] it in
+your environment (default credentials: admin/admin) or just use our demo platform http://try.activeeon.com[try.activeeon.com^].
+
+*ProActive Scheduler* provides comprehensive interfaces that allow to:
+
+- http://try.activeeon.com/studio[Create workflows^]
+- http://try.activeeon.com/scheduler[Submit workflows, monitor their execution and retrieve the tasks results^]
+- http://try.activeeon.com/rm[Add resources and monitor them^]
+- http://try.activeeon.com//cloud-automation[Add services^]
+
+We also provide REST and command line interfaces for advanced users.
+http://try.activeeon.com/rest[try.activeeon.com/rest^]
+
+== Create a First Predictive Solution
+
+Suppose you need to predict houses prices based on this information (features) provided by the estate agency:
+
+- *CRIM* per capita crime rate by town
+- *ZN* proportion of residential lawd zoned for lots over 25000
+- *INDUS* proportion of non-retail business acres per town
+- *CHAS* Charles River dummy variable
+- *NOX* nitric oxides concentration
+- *RM* average number of rooms per dwelling
+- *AGE* proportion of owner-occupied units built prior to 1940
+- *DIS* weighted distances to five Boston Employment centres
+- *RAD* index of accessibility to radial highways
+- *TAX* full-value property-tax rate per $10 000
+- *PTRATIO* pupil-teacher ratio by town
+- *B* 1000(Bk - 0.63)^2 where Bk is the proportion of blacks by town
+- *LSTAT* % lower status of the population
+- *MDEV* Median value of owner-occupied homes in $1000' s
+
+Predicting houses prices is a complex problem, but we can simplify it a bit for this step by step example. We'll show you how you can easily create a predictive analytics solution using Machine Learning Open Studio.
+
+=== Manage the Canvas
+
+To use Machine Learning Open Studio, you need to add the *Machine Learning Bucket* as main catalog in the ProActive Studio. This bucket contains a set of generic tasks that enables you to upload and prepare data, train a model and test it.
+
+A. Open http://try.activeeon.com/studio[ProActive Workflow Studio^] home page.
+
+B. Create a new workflow.
+
+C. Fill the Workflow `General Parameters`.
+
+D. Click on `Catalog` menu then `Set Bucket as Main Catalog Menu` and select `machine-learning` bucket.
+This can also be achieved by adding `/templates/machine-learning` at the end of the URL of the proActive workflow studio.
+
+E. Click on `Catalog` menu then `Add Bucket as Extra Catalog Menu` and select `data-visualization` bucket.
+
+F. Organize your canvas.
+
+NOTE: Set Bucket as Main Catalog Menu allows the user to change the bucket used to get workflows from the Catalog in the studio. By selecting a bucket, the user can change the content of the main Catalog menu (named as the current bucket) to get workflows from another bucket as templates.
+
+image::manage_canvas.gif[100000,2000]
+
+=== Upload Data
+
+To upload data into the Workflow, you need to use a dataset stored in a CSV file.
+
+A. Once your dataset has been converted to *CSV* format, upload it into a cloud storage service for example https://www.aws.amazon.com/s3‎[Amazon S3^]. For this tutorial, we will use Boston house prices dataset available on this link:
+https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/boston-houses-prices.csv
+
+B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the ProActive Workflow Studio.
+
+C. Click on the task and click `General Parameters` in the left to change the default parameters of this task.
+
+D. Put in *FILE_URL* variable the S3 link to upload your dataset.
+
+E. Set the other parameters according to your dataset format.
+
+This task uploads the data into the workflow that we can for model training and testing.
+
+If you want to skip these steps, you can directly use the <<Load_Boston_Dataset>> Task by a simple drag and drop.
+
+image::upload_data.gif[100000,2000]
+
+=== Prepare Data
+
+This step consists of preparing the data for the training and testing of the predictive model. So in this example, we will simply split our datset into two separate datasets: one for training and one for testing.
+
+To do this, we use the <<Split_Data>> Task in the machine_learning bucket.
+
+A. Drag and drop the <<Split_Data>> Task into the canvas, and connect it to the <<Import_Data>> or <<Load_Boston_Dataset>> Task.
+
+B. By default, the ratio is 0.7 this means that 70% of the dataset will be used for training the model and 0.3 for testing it.
+
+C. Click the <<Split_Data>> Task and set the *TRAIN_SIZE* variable to 0.6.
+
+image::prepare_data.gif[100000,2000]
+
+=== Train a Predictive Model
+
+Using Machine Learning Open Studio, you can easily create different machine learning models in a single experiment and compare their results. This type of experimentation helps you find the best solution for your problem.
+You can also enrich the `machine-learning` bucket by adding new machine learning algorithms and publish or customize an existing task according to your requirements as the tasks are open source.
+
+NOTE: To change the code of a task click on it and click the `Task Implementation`. You can also add new variables to a specific task.
+
+In this step, we will create two different types of models and then compare their scores to decide which algorithm is most suitable to our problem. As the Boston dataset used for this example consists of predicting price of houses (continuous label). As such, we need to deal with a regression predictive problem.
+
+To solve this problem, we have to choose a regression algorithm to train the predictive model. To see the available regression algorithms available on the Machine Learning Open Studio, see *ML Regression* Section in the *machine-learning* bucket.
+
+For this example, we will use <<Linear_Regression>> Task and <<Support_Vector_Regression>> Task.
+
+A. Find the <<Linear_Regression>> Task and <<Support_Vector_Regression>> Task and drag them into the canvas.
+
+B. Find the <<Train_Model>> Task and drag it twice into the canvas and set its LABEL_COLUMN variable to LABEL.
+
+C. Connect the <<Split_Data>> Task to  the two <<Train_Model>> Tasks in order to give it access to the training data. Connect then the <<Linear_Regression>> Task to the first <<Train_Model>> Task and <<Support_Vector_Regression>> to the second <<Train_Model>> Task.
+
+D. To be able to download the model learned by each algorithm, drag two <<Download_Model>> Tasks and connect them to each <<Train_Model>> Task.
+
+image::train_a_predictive_model.png[100000,2000]
+
+=== Test the Predictive Model
+
+To evaluate the two learned predictive models, we will use the testing data that was separated out by the <<Split_Data>> Task to score our trained models. We can then compare the results of the two models to see which generated better results.
+
+A. Find the <<Predict_Model>> Task and drag and drop it twice into the canvas and set its LABEL_COLUMN variable to LABEL.
+
+B. Connect the first <<Predict_Model>> Task to the <<Train_Model>> Task that is connected to <<Support_Vector_Regression>> Task.
+
+C. Connect the second <<Predict_Model>> Task to the <<Train_Model>> Task that is connected to <<Linear_Regression>> Task.
+
+D. Connect the second <<Predict_Model>> Task to the <<Split_Data>> Task
+
+E. Find the <<Preview_Results>> Task in the Machine Learning bucket and drag and drop it twice into the canvas.
+
+F. Connect each <<Preview_Results>> Task with <<Predict_Model>>.
+
+image::test_the_predictive_model.png[100000,2000]
+
+NOTE: if you have a pickled file (.pkl) containing a predictive model that you have learned using another platform and you need to test it in the Machine Learning Open Studio, you can load it using *Import_Model* Task.
+
+=== Run the Experiment and Preview the Results
+
+Now the workflow is completed, let's execute it by:
+
+A. Click the *Execute* button on the menu to run the workflow.
+
+B. Click the *Scheduling & Orchestration* button to track the workflow execution progress.
+
+C. Click the Visualization tab and track the progress of your workflow execution (a green check mark appears on each Task when its execution is finished).
+
+D. Visualize the output logs by clicking on the output tab and check the streaming check box.
+
+E. Click the *Tasks* tab, select an *Preview_Results* task and click on the *Preview* tab, then click either on *Open in browser* to preview the results on your browser or on *Save as file* to download the results locally.
+
+image::execute.gif[100000,2000]
+
+== Customize the Machine Learning Bucket
+
+=== Create or Update a ML Task
+
+*Machine Learning Bucket* contains various open source tasks that can be easily used by a simple drag and drop.
+
+It is possible to enrich the Machine Learning Bucket by adding your own tasks. (see section 4.3)
+
+It is also possible to customize the code of the generic Machine Learning tasks. In this case, you need to drag and drop the targeted task to modify its code in the *Task Implementation* section.
+
+NOTE: It is also possible to add or/and delete variables of each task, set your own fork environments etc. More details available on https://www.activeeon.com/public_content/documentation/latest/user/ProActiveUserGuide.html#_studio_tasks[Proactive User Guide^]
+
+=== Set the Fork Environment
+
+A fork execution environment is a new Java Virtual Machine (JVM) which is started exclusively to execute a task. Starting a new JVM means that the task inside it will run in a new environment. This environment can be set up by the creator of the task. A new JVMs is set up with a new classpath, new system properties and more customization.
+
+We used a `Docker fork environment` for all the Machine Learning tasks. *activeeon/dlm3* was used as a docker container for all tasks. If your task needs to install new Machine Learning libraries which are not available in this container, then, use your own docker container or an appropriate environment with the needed libraries.
+
+NOTE: The use of docker containers is recommended as that way other tasks will not be affected by change. Docker containers provide isolation so that the host machine’s software stays the same. More details available on https://www.activeeon.com/public_content/documentation/latest/user/ProActiveUserGuide.html#_fork_environment[Proactive User Guide^]
+
+=== Publish a ML Task
+
+The `Catalog` menu provides the possibility for a user to publish newly created or/and update tasks inside *Machine Learning Bucket*, you need just to click on `Catalog` Menu then `Publish current Workflow to the Catalog`.
+Choose `machine-leaning` Bucket to store your newly added workflow on it.
+If the Task with the same name already exists in the 'machine-leaning' bucket, then, it will be updated.
+We recommend to submit Tasks with a commit message for easier differentiation between the different submitted versions.
+
+NOTE: More details available on https://www.activeeon.com/public_content/documentation/latest/user/ProActiveUserGuide.html#_publish_current_workflow_to_the_catalog[ProActive User Guide^]
+
+=== Create a ML Workflow
+
+The link:http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial, window="_blank"] on link:http://try.activeeon.com[try.activeeon.com, window="_blank"]
+shows you how to build a simple workflow using ProActive Studio.
+
+We show below an example of a workflow created with the Studio:
+
+image::ML_Workflow_Example.png[align="center"]
+
+At the left part, are illustrated the **General Parameters** of the workflow with the following information:
+
+- `Name`: the name of the workflow.
+- `Project`: the project name to which belongs the workflow.
+- `Description`: the textual description of the workflow.
+- `Documentation`: if the workflow has a Generic Information named "Documentation", then its URL value is displayed as a link.
+- `Job Priority`: the priority assigned to the workflow. It is by default set to `NORMAL`, but can be increased or decreased once the job is submitted.
+
+NOTE: The workflow represented in the above is available on the 'machine-learning-workflows' bucket.
+
+== Machine Learning Workflows Examples
+
+The Machine Learning Open Studio provides a fast, easy and practical way to execute different workflows using the machine learning  bucket. We present useful machine learning workflows for different applications in the following sub-sections.
+
+To test these workflows, you need to add the *machine-Learning-workflows Bucket* as main catalog in the ProActive Studio.
+
+A. Open http://try.activeeon.com/studio[ProActive Workflow Studio^] home page.
+
+B. Create a new workflow.
+
+C. Click on `Catalog` menu then `Add Bucket as Extra Catalog Menu` and select `machine-learning-workflows` bucket.
+
+D. Open this added extra catalog menu and drag and drop the workflow example of your choice.
+
+E. Execute the chosen workflow, track its progress and preview its results.
+
+More details about these workflows are available in this in link:https://www.activeeon.com/resources/automated-machine-learning-activeeon.pdf[ActiveEon's Machine Learning Documentation]
+
+=== Basic Machine Learning
+
+The following workflows present some machine learning basic examples. These workflows are built using generic Machine learning and data visualization tasks available on the Machine Learning and Data Visualization buckets.
+
+*Diabetics_Detection_using_K_means:* trains and tests a clustering model using Mean_shift algorithm.
+
+*House_Price_Prediction_using_Linear_Regression:*  trains and tests a regression model using Mean_shift algorithm.
+
+*Iris_Flowers_Classification_using_Logistic_Regression:*  trains and tests a predictive model using logistic_regressive algorithm.
+
+*Movies_Recommendation:* create a movie recommendation engine using collaborative filtering algorithm.
+
+=== Basic AutoML
+
+The following workflows present some machine learning basic examples using AutoML generic tasks available in the machine-learning bucket.
+
+*Breast_Cancer_Detection_Using_AutoSklearn_Classifier:* tests several machine learning pipelines and selects the best model for Cancer Breast detection.
+
+*California_Housing_Prediction_Using_TPOT_Regressor:* tests several machine learning pipelines and selects the best model for California housing prediction.
+
+=== Log Analysis
+
+The following workflows are designed to detect anomalies in log files. They are constructed using generic tasks which are available on the `machine-learning` and `data-visualization` buckets.
+
+*Anomaly_Detection_in_Apache_Logs:* detects intrusions in apache logs using a predictive model trained using Support Vector Machines algorithm.
+
+*Anomaly_detection_in_HDFS_Blocks:* trains and test an anomaly detection model for detecting anomalies in HDFS Blocks.
+
+*Anomaly_detection_in_HDFS_Nodes:* trains and test an anomaly detection model for detecting anomalies in HDFS Nodes.
+
+*Unsupervised_Anomaly_Detection:* detects anomalies using an Unsupervised One-Class SVM.
+
+== Deep Learning Workflows Examples
+
+ML-OS provides a fast, easy and practical way to execute deep learning workflows. In the following sub-sections, we present useful deep learning workflows for text and image classification and generation.
+
+video::FwMPR87wzoo[youtube, width=700, height=400 start=0, position=center]
+
+You can test these workflows by following these steps :
+
+A. Open http://try.activeeon.com/studio[ProActive Workflow Studio^] home page.
+
+B. Create a new workflow.
+
+C. Click on `Catalog` menu then `Add Bucket as Extra Catalog Menu` and select `deep-learning-workflows` bucket.
+
+D. Open this added extra catalog menu and drag and drop the workflow example of your choice.
+
+E. Execute the chosen workflow, track its progress and preview its results.
+
+=== Azure Cognitive Services
+
+The following workflows present useful examples composed by pre-built Azure cognitive services available on `azure-cognitive-services` bucket.
+
+*Emotion_Detection_in_Bing_News:* is a mashup that searches for images of a person using Azure Bing Image Search then performs an emotion detection using Azure Emotion API.
+
+*Sentiment_Analysis_in_Bing_News:* is a mashup that searches for news related to a given search term using Azure Bing News API then performs a sentiment analysis using Azure Text Analytics API.
+
+=== Microsoft Cognitive Toolkit
+
+The following workflows present useful examples for predictive models training and test using Microsoft Cognitive Toolkit (CNTK).
+
+*CNTK_ConvNet:* trains a Convolutional Neural Network (CNN) on CIFAR-10 dataset.
+
+*CNTK_SimpleNet:* trains a 2-layer fully connected deep neural network with 50 hidden dimensions per layer.
+
+*GAN_Generate_Fake_MNIST_Images:* generates fake MNIST images using a Generative Adversarial Network (GAN).
+
+*DCGAN_Generate_Fake_MNIST_Images:* generates fake MNIST images using a Deep Convolutional Generative Adversarial Network (DCGAN).
+
+=== Mixed Workflows
+
+The following workflow presents an example of a workflow built using pre-built Azure cognitive services tasks available on the `azure-cognitive-services` bucket and custom AI tasks available on the `deep-learning` bucket.
+
+*Custom_Sentiment_Analysis:* is a mashup that searches for news related to a given search term using Azure Bing News API then performs a sentiment analysis using a custom deep learning based pretrained model.
+
+=== Custom AI Workflows - Pytorch library
+
+The following workflows present examples of workflows built using custom AI tasks available on the `deep-learning` bucket. Such tasks enable you to train and test your own AI models by a simple drag and drop of custom AI task.
+
+*IMDB_Sentiment_Analysis:* trains a model for opinions identification and categorization expressed in a piece of text, especially in order to determine the opinion of IMDB users regarding specific movies [positive or negative].
+NOTE: Instead of training a model from scratch, you can use a pre-trained sentiment analysis model which is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/basic_sentiment_analysis.zip[link^].
+
+*Image_Classification:* uses a pre-trained deep neural network to classify ants and bees images. The pre-trained model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_resnet18.zip[link^].
+
+*Language_Detection:* involves building an RNN model from a lot of text data of respective languages and then identifying the test data (text) among the trained models.
+
+*Fake_Celebrity_Faces_Generation:* generates a wild diversity of fake faces using a GAN model that was trained based on thousands of real celebrity photos. The pre-trained GAN model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/Epoch+018.pt[link^]
+
+*Image_Segmentation:* predicts a segmentation model using SegNet network on http://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]. The pre-trained image segmentation model which is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_segnet.zip[link^]
+
+*Image_Object_Detection:* detects objects using a pre-trained https://pjreddie.com/media/files/papers/YOLOv3.pdf[YOLO v3 model^] on http://cocodataset.org/#home[COCO dataset^] proposed by Microsoft Research. The pre-trained model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/yolo3_coco.zip[link^].
+
+WARNING: It is recommended to use an enabled-GPU node to run the deep learning tasks.
+
+//=== Custom AI Workflows - Other libraries
+
+//The following workflows present useful computer vision applications using Convolutional Neural Networks based on deep learning for image recognition, object detection, anomaly detection, and image segmentation. Open source libraries, such as TensorFlow, Keras, Caffe, OpenCV, PyTorch and scikit-learn are used as backend for AI workflows.
+
+//video::XEMm47GwCn8[youtube, width=700, height=400 start=0, position=center]
+
+//*Keras_Image_Classification:* classifies an input image using deep ConvNets (specifically, VGG16) pre-trained on the ImageNet dataset.
+
+//*Pytorch_Image_Object_Segmentation:* returns the horse segments of a given input image.
+
+//*Pytorch_Train_Image_Object_Segmentation:* trains an image segmentation algorithm using PyTorch* to segment horses. It segments horses in the input image using a deep neural network (DNN).
+
+//*Tensorflow_Parallel_Image_Prediction:* predicts three different images of flower species in parallel.
+
+//*Tensorflow_Image_Prediction:* returns the flower species of a given input image.
+
+//*Tensorflow_Train_Image_Classifier:* trains a deep ConvNets (specifically, Inception)* to recognize flower species.
+
+//WARNING: It is recommended to use an enabled-GPU node to run the deep learning tasks.
+
+
+== References
+
+=== AutoML Optimization Bucket
+
+The `auto-ml-optimization` bucket contains the Multi_Tuners_AutoML workflow that can be easily used to find the operating parameters for any system whose performance can be measured as a function of adjustable parameters.
+This bucket also comes with a set of workflows' examples that demonstrates how we can optimize mathematical functions, MLOS workflows and machine/deep learning algorithms from scripts using AutoML tuners.
+
+==== Tuning Algorithms
+
+===== Multi_Tuners_AutoML
+
+*Task Overview:*  is an estimator that minimizes the posterior expected value of a loss function.
+
+.Multi_Tuners_AutoML_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `TUNING_ALGORITHM`
+| Specifies the tuner algorithm that will be used for hyperparameters optimization.
+| List(Bayes, Grid, Random, QuasiRandom, CMAES, MOCMAES) default=Bayes
+| `WORKFLOW_TO_OPTIMIZE`
+| Specifies the path of the workflow that we need to optimize.
+| String [default=auto-ml-optimization/Himmelblau_Function]
+| `SEARCH_SPACE`
+|  Specifies the representation of the search space which has to be defined using dictionaries.
+| JSON format (see search space representation below)
+| `MAX_ITERATIONS`
+|  Specifies the number of maximum iterations.
+| Int (default=2)
+| `PARALLEL_SAMPLES_PER_LOOP`
+|  Specifies the number of samples per iteration.
+| Int (default=-1)
+| `VISDOM_ENABLED`
+|  If True, the results will be plotted in real time in the Visdom dashboard.
+| Int (default=-1)
+| `DOCKER_ENABLED`
+|   If True, the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+|===
+
+*How to define the search space:*
+
+This subsection describes common building blocks to define a search space:
+
+    - uniform : Uniform continuous distribution.
+    - quantized_uniform : Uniform discrete distribution.
+    - log : Logarithmic uniform continuous distribution.
+    - quantized_log : Logarithmic uniform discrete distribution.
+    - choice : Uniform choice distribution between non-numeric samples.
+
+*Which tuner algorithm to choose?*
+
+The choice of the tuner depends on the following aspects:
+
+    - Time required to evalute the model.
+    - Number of hyperparameters to optimize.
+    - Type of variable.
+    - The size of the search space.
+
+In the following, we briefly describe the different tuners proposed by the Multi_Tuners_Automl workflow:
+
+    - *Grid sampling* applies when all variables are discrete and the number of possibilities is low.
+      A grid search is a naive approach that will simply try all possibilities making the search extremely long even for medium sized problems.
+
+    - *Random sampling* is an alternative to grid search when the number of discrete parameters to optimize and the time required for each evaluation is high.
+      Random search picks the point randomly from the configuration space.
+
+    - *QuasiRandom sampling* ensures a much more uniform exploration of the search space than traditional pseudo random.
+      Thus, quasi random sampling is preferable when not all variables are discrete, the number of dimensions is high and the time required to evaluate a solution is high.
+
+    - *Bayes search* models the search space using gaussian process regression, which allows to have an estimate of the loss function and the uncertainty on that estimate at every point of the search space.
+      Modeling the search space suffers from the curse of dimensionality, which makes this method more suitable when the number of dimensions is low.
+
+    - *CMAES search* is one of the most powerful black-box optimization algorithm.
+      However, it requires a significant number of model evaluation (in the order of 10 to 50 times the number of dimensions) to converge to an optimal solution.
+      This search method is more suitable when the time required for a model evaluation is relatively low.
+
+    - *MOCMAES search* is a multi-objective algorithm optimizing multiple tradeoffs simultaneously.
+      To do that, MOCMAES employs a number of CMAES algorithms.
+
+
+==== Objective ML Examples
+
+The following workflows represent some machine learning and deep learning algorithms that can be optimized:
+
+*Diabetics Detection Using Logistic Regression:* train a logistic regression model using MLOS machine learning generic tasks in order to detect diabetics.
+
+*CIFAR10 CNN:* train a simple deep CNN on the CIFAR10 images dataset using the Keras library.
+
+*Image Object Detection:* train a YOLO model on the coco dataset using MLOS deep learning generic tasks.
+
+*Multiple SVM Models:* train multiple types of SVMs models that can be optimized using AutoML.
+
+==== Objective Function Examples
+
+The following workflows represent some mathematical functions that can be optimized by the AutoML tuners.
+
+*Himmelblau_Function:* is a multi-modal function, used to test the performance of optimization algorithms.
+
+//.Himmelblau_Function_Workflow variables
+//[cols="2,5,2"]
+//|===
+//| *Variable name* | *Description* | *Type*
+//| `DOCKER_ENABLED`
+//|If True,  the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+//| Boolean (default=True)
+//| `DOCKER_IMAGE`
+//| Specifies the docker image that will be used to execute the task.
+//| String (default="activeeon/dlm3")
+//| `INPUT_VARIABLES`
+//| Specifies the x and y values.
+//| JSON format (default={"x": 3.5976705887960527, "y": -1.8471754188451843})
+//| `TOKEN`
+//|  Specifies the id for the tested parameters.
+//| String (default=-1)
+//|===
+
+=== Machine Learning Bucket
+
+The `machine-learning` bucket contains diverse generic machine learning tasks that enable you to easily compose workflows for predictive models learning and testing. This bucket can be easily customized according to your needs.
+This bucket offers different options, you can customize it by adding new tasks or update the existing tasks.
+
+NOTE: All machine learning tasks were implemented using https://scikit-learn.org/stable/[Scikit-learn library^].
+
+==== Public Datasets
+
+===== Load_Boston_Dataset
+
+*Task Overview:*  Load and return the Boston House-Prices dataset.
+
+.Boston Dataset Description
+[cols="17%,17%,20%,20%", options="header"]
+|===
+| Features | Targets | Dimensionality | Samples Total
+| Real, positive | Real 5. -50 | 13 | 506
+|===
+
+
+*Task Variables:*
+
+.Load_Boston_Dataset_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `LIMIT_OUTPUT_VIEW`
+|  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
+| Int (default=-1) (-1 means preview all the rows)
+|===
+
+*How to use this task:*
+
+- The Boston House-Prices is a dataset for regression, you can only use it with a regression algorithm, such as Linear Regression and Support Vector Regression.
+
+- After this task, you can use the <<Split_Data>> task to divide the dataset into training and testing sets.
+
+NOTE: More information about this dataset can be found http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_boston.html[here^].
+
+===== Load_Iris_Dataset
+
+*Task Overview:*  Load and return the iris dataset.
+
+.Iris Dataset Description
+[cols="17%,17%,20%,20%,20%", options="header"]
+|===
+| Features | Classes | Dimensionality | Samples per class | Samples total
+| Real, positive | 3 | 4 | 50 | 150
+|===
+
+*Task Variables:*
+
+.Load_Iris_Dataset_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `LIMIT_OUTPUT_VIEW`
+|  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
+| Int (default=-1) (-1 means preview all the rows)
+|===
+
+
+*How to use this task:*
+
+- The Iris is a dataset for classification, you can only use it with a classification algorithm, such as Support Vector Machines and Logistic Regression.
+
+- After this task, you can use the <<Split_Data>> task to divide the dataset into training and testing sets.
+
+NOTE: More information about this dataset can be found http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html#sklearn.datasets.load_iris[here^].
+
+==== Input and Output Data
+
+===== Download_Model
+
+*Task Overview:* Download a trained model on your computer device.
+
+*Task Variables:*
+
+.Download_Model_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+|===
+
+*How to use this task:* It should be used after the <<Train_Model>> tasks.
+
+===== Export_Data
+
+*Task Overview:* Export the results of the predictions generated by a classification, clustering or regression algorithm.
+
+*Task Variables:*
+
+.Export_Data_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `OUTPUT_FILE`
+| Converts the prediction results to HTML or CSV file.
+| String [CSV, JSON or HTML]
+| `LIMIT_OUTPUT_VIEW`
+|  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
+| Int (default=-1) (-1 means preview all the rows)
+|===
+
+*How to use this task:* It should be used after <<Predict_Model>> tasks.
+
+===== Import_Data
+
+*Task Overview:* Load data from external sources.
+
+*Task Variables:*
+
+.Import_Data_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `LIMIT_OUTPUT_VIEW`
+|  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
+| Int (default=-1) (-1 means preview all the rows)
+| `FILE_URL`
+| Enter you URL of the CSV file.
+| String
+| `FILE_DELIMITER`
+| Delimiter to use.
+| String
+|===
+
+NOTE: Your CSV file should be in a table format. See the example below.
+
+image::csv_file_organisation.png[align="center"]
+
+===== Import_Model
+
+*Task Overview:* Load a trained model, and use it to make predictions for new coming data.
+
+*Task Variables:*
+
+.Import_Model_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `MODEL_URL`
+| Type the URL to load your trained model.
+default:  https://s3.eu-west-2.amazonaws.com/activeeon-public/models/pima-indians-diabetes.model
+| String
+|===
+
+*How to use this task:* It should be used before <<Predict_Model>> to make predictions.
+
+===== Preview_Results
+
+*Task Overview:* Preview the HTML results of the predictions generated by a classification, clustering or regression algorithm.
+
+*Task Variables:*
+
+.Preview_Results_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `LIMIT_OUTPUT_VIEW`
+|  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
+| Int (default=-1) (-1 means preview all the rows)
+| `OUTPUT_FILE`
+| Converts the prediction results to HTML or CSV file.
+| String [CSV, JSON or HTML]
+|===
+
+*How to use this task:* It should be used after <<Predict_Model>> tasks.
+
+===== Log_Parser
+
+*Task Overview:* Convert an *unstructured* raw log file into a structured one by matching a group of event patterns.
+
+*Task Variables:*
+
+.Log_Parser_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `LOG_FILE`
+| Put the URL of the raw log file that you need to parse.
+| String
+| `PATTERNS_FILE`
+| Put the URL of the CSV file that contains the different RegEx expressions of each possible pattern
+  and their corresponding variables.
+  The csv file must contain three columns (See the example below):
+
+    A. *id_pattern*: Integer
+        Specify the column containing the identifier of each pattern
+
+    B. *Pattern*: RegEx expression
+        Define the regex expression of each pattern
+
+    C. *Variables*: String
+        Specify the name of each variable included in the pattern.
+        N.B: Use the symbol ‘*’ for variables that you need to neglect. (e.g. in the example below the 5th
+        variable is neglected)
+        N.B: All variables specified in each Regex expressions have to be mentioned in the column
+        « Variables » in the right order (use ',' to separate the variable names).
+
+| String
+| `STRUCTURED_LOG`
+| Indicate the extension of the file where you will save the resulted structured logs.
+| String [CSV or HTML]
+|===
+
+image::pattern_file.png[align="center"]
+
+*How to use this task:* Could be connected with <<Query_Data>> task and <<Feature_Vector_Extractor>> tasks.
+
+==== Data Preprocessing
+
+===== Append_Data
+
+*Task Overview:* Append rows of other to the end of this frame, returning a new object. Columns not in this frame are added as new columns.
+
+*Task Variables:*
+
+.Append_Data_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+|===
+
+
+===== Drop_Columns
+
+*Task Overview:* Drop the columns specified in `COLUMNS_NAME` variable.
+
+*Task Variables:*
+
+.Drop_Columns_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `COLUMNS_NAME`
+| The list of columns that need to be dropped. Columns names should be separated by a comma.
+| String
+|===
+
+NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.drop.html[here^].
+
+===== Drop_NaNs
+
+*Task Overview:* Replace inf values to NaNs in a first place then drop objects on a given axis where alternately any or all of the data are missing.
+
+NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/version/0.21/generated/pandas.DataFrame.dropna.html[here^].
+
+===== Encode_Data
+
+*Task Overview:* Encode the values of the columns specified in `COLUMNS_NAME` variable with integer values between 0 and "the number of unique variables"-1.
+
+*Task Variables:*
+
+.Encode_Data_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+
+| `COLUMNS_NAME`
+| The list of columns that need to be encoded. Columns names should be separated by a comma.
+| String
+|===
+
+NOTE: More details about the source code of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html[here^].
+
+===== Fill_NaNs
+
+*Task Overview:* Fill NA/NaN values using the specified method.
+
+*Task Variables:*
+
+.Fill_NaNs_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `FILL_MAP`
+| Refers to the value to use to fill holes (e.g. 0).
+| Integer
+|===
+
+NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.fillna.html[here^].
+
+===== Filter_Columns
+
+*Task Overview:* Subset columns of a dataframe according to the specified list of coluumns in  the `COLUMNS_NAME` variable.
+
+*Task Variables:*
+
+.Filter_Columns_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `COLUMNS_NAME`
+| The list of columns to restrict to. Columns names should be separated by a comma.
+| String
+|===
+
+NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.filter.html[here^].
+
+===== Merge_Data
+
+*Task Overview:* Merge DataFrame objects by performing a database-style join operation based on a specific reference column specified in the `REF_COLUMN` variable.
+
+*Task Variables:*
+
+.Merge_Data_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `REF_COLUMN`
+| The list of columns to restrict to. Columns names should be separated by a comma.
+| String
+|===
+
+NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.merge.html[here^].
+
+===== Scale_Data
+
+*Task Overview:* Scale a dataset based on a robust scaler or standard scaler.
+
+*Task Variables:*
+
+.Scale_Data_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `SCALER_NAME`
+| The list of columns to restrict to. Columns names should be separated by a comma.
+| List [RobustScaler, StandardScaler] (default=RobustScaler)
+| `LIMIT_OUTPUT_VIEW`
+|  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
+| Int (default=-1) (-1 means preview all the rows)
+| `COLUMNS_NAME`
+| The list of columns that will be scaled. Column names should be separated by a comma.
+| String
+|===
+
+NOTE: More details about the source code of this task can be found http://scikit-learn.org/stable/modules/preprocessing.html[here^].
+
+===== Split_Data
+
+*Task Overview:* Separate data into train and test subsets.
+
+*Task Variables:*
+
+.Split_Data_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+
+| `TRAIN_SIZE`
+| This parameter must be float within the range (0.0, 1.0), not including the values 0.0 and 1.0. *default* = 0.7
+| Float
+|===
+
+*How to use this task:* It should be used before Train and Predict tasks.
+
+NOTE: More details about the source code of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html[here^].
+
+===== Rename_Columns
+
+*Task Overview:* Rename the columns of a data frame.
+
+*Task Variables:*
+
+.Rename_Columns_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `COLUMNS_NAME`
+| The list of columns that will be renamed. Column names should be separated by a comma.
+| String
+|===
+
+
+===== Query_Data
+
+*Task Overview:* Query the columns of your data with a boolean expression.
+
+*Task Variables:*
+
+.Query_Data_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `QUERY`
+| The query string to evaluate.
+| String
+| `FILTERED_FILE_OUPUT`
+|Refers to the extension of the file where the resulted filtered data will be saved..
+| String [CSV or HTML]
+
+|===
+
+NOTE: More details about the source code of this task can be found https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.query.html?highlight=query[here^].
+
+==== Feature Extraction
+
+===== Summarize_Data
+
+*Task Overview:* Calculate the histogram of a dataframe based on a reference column that need to be specified in the variable `REF_COLUMN`.
+
+*Task Variables:*
+
+.Summarize_Data_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `GLOBAL_MODEL_TYPE`
+| The model that will be used to summarize data.
+| List [KMeans, PolynomialFeatures] (default=KMeans)
+| `REF_COLUMN`
+| The column that will be used to group by the different histogram measures.
+| String
+|===
+
+NOTE: More details about the source code of this task can be found https://docs.scipy.org/doc/numpy/reference/generated/numpy.histogram.html[here^].
+
+===== Tsfresh_Features_Extraction
+
+*Task Overview:* Calculate a comprehensive number of time series features based on the library TSFRESH.
+
+*Task Variables:*
+
+.Tsfresh_Features_Extraction_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `TIME_COLULN`
+| The column that contains the values of the time series
+| String
+| `REF_COLUMN`
+| The column that will be used to group by the different features.
+| String
+| `ALL_FEATURES`
+| False if you do not need to extract all the possible features extractable by the library TSFRESH.
+| Boolean [default = False]
+| `LIMIT_OUTPUT_VIEW`
+|  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
+| Int (default=-1) (-1 means preview all the rows)
+|===
+
+NOTE: More details about the source code of this task can be found https://tsfresh.readthedocs.io/en/latest/text/list_of_features.html[here^].
+
+===== Feature_Vector_Extractor
+
+*Task Overview:* Encode structured data into numerical feature vectors whereby machine learning models can be applied.
+
+*Task Variables:*
+
+.Feature_Vector_Extractor_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `SESSION_COLUMN`
+| The ID of the entity that you need to represent (to group by).
+| String
+| `FILE_OUT_FEATURES`
+| The extension of the file where the resulted features will be saved.
+| String [CSV or HTML]
+| `PATTERN_COLUMN`
+| The index of column containing the log patterns.[specific to features extraction from logs].
+| String
+| `PATTERNS_COUNT_FEATURES`
+|  True if you need to extract count the number of occurrence of each pattern per session.
+| Boolean [True or False]
+| `STATE_VARIABLES`
+|  The different variables that need to be considered to extract features according to their content.
+
+  N.B: separate the different variables with a comma ','
+| String
+| `COUNT_VARIABLES`
+| Refers to the different variables that need to be considered to count their distinct content..
+| String
+
+N.B: separate the different variables with a comma ','
+| `STATE_COUNT_FEATURES_VARIABLES`
+| True if you nedd to extract state and count features per session.
+| Boolean [True or False]
+|===
+
+*How to use this task:* Could be connected with <<Train_Model>> if you need to train a model using unsupervised machine learning techniques.
+
+==== AutoML
+
+===== TPOT_Classifier
+
+*Task Overview:* TPOT_Classifier performs an intelligent search over machine learning pipelines that can contain supervised classification models, preprocessors, feature selection techniques, and any other estimator or transformer that follows the scikit-learn API.
+
+*Task Variables:*
+
+.TPOT_Classifier_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If True, This task code will be executed.
+| Boolean (default=True)
+| `GENERATIONS`
+| Number of iterations to the run pipeline optimization process.
+| Integer (default=3)
+| `SCORING`
+| Function used to evaluate the quality of a given pipeline for the classification problem.
+| List (default=accuracy)
+| `CV`
+| Cross-validation strategy used when evaluating pipelines.
+| Integer (default=5)
+| `VERBOSITY`
+| How much information TPOT communicates while it's running. Possible inputs : 0, 1, 2, 3.
+| Integer (default=1)
+|===
+
+*How to use this task:* It should be connected with <<Train_Model>> .
+
+NOTE: More information about this task can be found https://epistasislab.github.io/tpot/api/#classification[here^].
+
+===== AutoSklearn_Classifier
+
+*Task Overview:* AutoSklearn_Classifier leverages recent advantages in Bayesian optimization, meta-learning and ensemble construction to performs an intelligent search over machine learning classification algorithms.
+
+*Task Variables:*
+
+.AutoSklearn_Classifier_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If True, This task code will be executed.
+| Boolean (default=True)
+| `TASK_TIME`
+| Time limit in seconds for the search of appropriate models. .
+| Integer (default=30)
+| `RUN_TIME`
+| Time limit for a single call to the machine learning model. Model fitting will be stopped if the machine learning algorithm runs over the time limit.
+| Integer (default=27)
+| `SAMPLING`
+| If True, the defined resampling strategy will be applied.
+| Boolean (default=True)
+| `RESAMPLING_STRATEGY`
+| Strategy to handle overfitting.
+| String [default='cv']
+| `FOLDS`
+| Number of folds fro cross-validation.
+| Integer (default=5)
+|===
+
+*How to use this task:* It should be connected with <<Train_Model>>.
+
+[NOTE]
+====
+. The labels of the selected Dataset have to be numerical.
+. More information about this task can be found https://automl.github.io/auto-sklearn/stable/api.html?highlight=classification#classification[here^].
+====
+
+===== TPOT_Regressor
+
+*Task Overview:* TPOT_Regressor performs an intelligent search over machine learning pipelines that can contain supervised regression models, preprocessors, feature selection techniques, and any other estimator or transformer.
+
+*Task Variables:*
+
+.TPOT_Regressor_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If True, This task code will be executed.
+| Boolean (default=True)
+| `GENERATIONS`
+| Number of iterations to the run pipeline optimization process.
+| Integer (default=3)
+| `SCORING`
+| Function used to evaluate the quality of a given pipeline for the regression problem.
+| List (default=neg_mean_squared_error)
+| `CV`
+| Cross-validation strategy used when evaluating pipelines.
+| Integer (default=5)
+| `VERBOSITY`
+| How much information TPOT communicates while it's running. Possible inputs : 0, 1, 2, 3.
+| Integer (default=1)
+|===
+
+*How to use this task:* It should be connected with <<Train_Model>> .
+
+NOTE: More information about this task can be found https://epistasislab.github.io/tpot/api/#regression[here^].
+
+===== AutoSklearn_Regressor
+
+*Task Overview:* AutoSklearn_Regressor leverages recent advantages in Bayesian optimization, meta-learning and ensemble construction to performs an intelligent search over machine learning regression algorithms.
+
+*Task Variables:*
+
+.AutoSklearn_Regressor_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If True, This task code will be executed.
+| Boolean (default=True)
+| `TASK_TIME`
+| Time limit in seconds for the search of appropriate models. .
+| Integer (default=120)
+| `RUN_TIME`
+| Time limit for a single call to the machine learning model. Model fitting will be stopped if the machine learning algorithm runs over the time limit.
+| Integer (default=30)
+| `SAMPLING`
+| If True, the defined resampling strategy will be applied.
+| Boolean (default=False)
+| `RESAMPLING_STRATEGY`
+| Strategy to handle overfitting.
+| String [default='cv']
+| `FOLDS`
+| Number of folds fro cross-validation.
+| Integer (default=5)
+|===
+
+*How to use this task:* It should be connected with <<Train_Model>> .
+
+NOTE: More information about this task can be found https://automl.github.io/auto-sklearn/stable/api.html?highlight=classification#regression[here^].
+
+==== ML Classification
+
+===== Gaussian_Naive_Bayes
+*Task Overview:* Naive Bayes classifier is a family of simple probabilistic classifier based on applying Bayes' theorem with strong (naive) independence assumptions between the features.
+
+*Task Variables:*
+
+.Gaussian_Naive_Bayes_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the gaussian naive bayes algorithm. Check the list of parameters http://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html[here^].
+| JSON format
+|===
+
+*How to use this task:* It should be connected with <<Train_Model>> or <<Predict_Model>>.
+
+NOTE: More information about this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html[here^].
+
+===== Logistic_Regression
+*Task Overview:* Logistic Regression is a regression model where the Dependent Variable (DV) is categorical.
+
+*Task Variables:*
+
+.Logistic_Regression_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the logistic regression algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html[here^].
+| JSON format
+//| `PENALTY`
+//| Used to specify the norm used in the penalization. The ‘newton-cg’, ‘sag’ and ‘lbfgs’ solvers support only l2 penalties. *default*=‘l2’
+//| String
+//| `SOLDER`
+//| Algorithm to use in the optimization problem.
+//| ‘newton-cg’, ‘lbfgs’, ‘liblinear’, ‘sag’, ‘saga’, default: ‘liblinear’
+//| `MAX_ITERATIONS`
+//| Useful only for the newton-cg, sag and lbfgs solvers. Maximum number of iterations taken for the solvers to converge.
+//| Integer (default=100)
+//| `N_JOBS`
+//| Number of CPU cores used. If given a value of -1, all cores are used.
+//| Integer (default=1)
+|===
+
+*How to use this task:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
+
+NOTE: More information about the source code of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html[here^].
+
+===== Support_Vector_Machines
+
+*Task Overview:* Support vector machines are supervised learning models with associated learning algorithms that analyze data used for classification.
+
+*Task Variables:*
+
+.Support_Vector_Machines_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the support vector machines algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html[here^].
+| JSON format
+//| `C`
+//| Penalty parameter C of the error term.
+//| Float, optional (default=1.0)
+//| `KERNEL`
+//| Specifies the kernel type to be used in the algorithm. It must be one of ‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’,‘precomputed’ or a callable.
+//| string, optional (default=’rbf’)
+|===
+
+*How to use this task:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
+
+NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html[here^].
+
+==== ML Regression
+
+===== Bayesian_Ridge_Regression
+
+*Task Overview:* Bayesian linear regression is an approach to linear regression in which the statistical analysis is undertaken within the context of Bayesian inference.
+
+*Task Variables:*
+
+.Bayesian_Ridge_Regression_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the bayesian ridge regression algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html[here^].
+| JSON format
+//| `N_ITERATIONS`
+//| Penalty parameter C of the error term.
+//| Integer, optional (default=300)
+//| `ALPHA_1`
+//| Hyper-parameter : shape parameter for the Gamma distribution prior over the alpha parameter.
+//| Float (default=1.e-6)
+//| `ALPHA_2`
+//| Hyper-parameter : inverse scale parameter (rate parameter) for the Gamma distribution prior over the alpha parameter.
+//| Float (default=1.e-6)
+//| `LAMBDA_1`
+//| Hyper-parameter : shape parameter for the Gamma distribution prior over the lambda parameter.
+//| Float (default=1.e-6)
+//| `LAMBDA_2`
+//| Hyper-parameter : inverse scale parameter (rate parameter) for the Gamma distribution prior over the lambda parameter.
+//| Float (default=1.e-6)
+|===
+
+*How to use this task:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
+
+NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html[here^].
+
+===== Linear_Regression
+
+*Task Overview:* Linear regression is a linear approach for modeling the relationship between a scalar dependent variable y and one or more explanatory variables (or independent variables) denoted X.
+
+*Task Variables:*
+
+.Linear_Regression_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the linear regression algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html[here^].
+| JSON format
+//| `N_JOBS`
+//| Penalty parameter C of the error term.
+//| Integer (default=1)
+|===
+
+*How to use this task:* IT should be connected with <<Train_Model>> and <<Predict_Model>>.
+
+NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html[here^].
+
+===== Support_Vector_Regression
+
+*Task Overview:* Support vector regression are supervised learning models with associated learning algorithms that analyze data used for regression.
+
+*Task Variables:*
+
+.Support_Vector_Regression_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the support vector regression algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html[here^].
+| JSON format
+//| `C`
+//| Penalty parameter C of the error term.
+//| Float, optional (default=1.0)
+//| `KERNEL`
+//| Specifies the kernel type to be used in the algorithm. It must be one of ‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’, ‘precomputed’ or a callable.
+//| String, optional (default=’rbf’)
+//| `EPSILON`
+//| It specifies the epsilon-tube within which no penalty is associated in the training loss function with points predicted within a distance epsilon from the actual value.
+//| Float, optional (default=0.1)
+|===
+
+*How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
+
+NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html[here^].
+
+==== ML Anomaly Detection
+
+===== Isolation_Forest
+
+*Task Overview:* Isolation Forest is an outlier detection method which returns the anomaly score of each sample using the IsolationForest algorithm. The IsolationForest ‘isolates’ observations by randomly selecting a feature and then randomly selecting a split value between the maximum and minimum values of the selected feature.
+
+*Task Variables:*
+
+.Isolation_Forest_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the isolation forest algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html[here^].
+| JSON format
+//| `N_ESTIMATORS`
+//| Number of base estimators in the ensemble.
+//| Integer, Optional (default=100)
+//| `N_JOBS`
+//| The number of parallel jobs to run for neighbors search. If -1, then the number of jobs is set to the number of CPU cores.
+//| Integer, Optional (default=1)
+
+|===
+
+NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html[here^].
+
+===== One_Class_SVM
+
+*Task Overview:* One-class SVM is an algorithm that learns a decision function for novelty detection: classifying new data as similar or different to the training set.
+
+*Task Variables:*
+
+.One_Class_SVM_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the one class algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.svm.OneClassSVM.html[here^].
+| JSON format
+//| `NU`
+//| An upper bound on the fraction of training errors and a lower bound of the fraction of support vectors. It should be in the interval [0, 1].
+//| Float, Optional (default=0.5)
+//| `KERNEL`
+//|  Specifies the kernel type to be used in the algorithm. It must be one of ‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’, ‘precomputed’ or a callable. If none is given, ‘rbf’ will be used. If a callable is given it is used to precompute the kernel matrix.
+//| string, Optional (default='rbf')
+//| `GAMMA`
+//| Kernel coefficient for ‘rbf’, ‘poly’ and ‘sigmoid’. If gamma is ‘auto’ then 1/n_features will be used instead.
+//| Float, Optional (default='auto')
+|===
+
+NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.svm.OneClassSVM.html[here^].
+
+==== ML Clustering
+
+===== K_Means
+
+*Task Overview:* K-means clustering aims to partition n observations into k clusters in which each observation belongs to the cluster with the nearest mean, serving as a prototype of the cluster
+
+*Task Variables:*
+
+.K_Means_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the Kmeans algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
+| JSON format
+//| `N_CLUSTERS`
+//| The number of clusters to form as well as the number of centroids to generate
+//| Integer, optional (default=8)
+//| `MAX_ITERATIONS`
+//| Maximum number of iterations of the k-means algorithm for a single run.
+//| Integer, optional (default=300)
+//| `N_JOBS`
+//| The number of jobs to use for the computation. This works by computing each of the n_init runs in parallel. If -1 all CPUs are used. If 1 is given, no parallel computing code is used at all
+//| Integer, optional (default=1)
+|===
+
+*How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
+
+NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
+
+===== Mean_Shift
+
+*Task Overview:* Mean shift is a non-parametric feature-space analysis technique for locating the maxima of a density function.
+
+*Task Variables:*
+
+.Mean_Shift_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the Mean Shift algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.cluster.MeanShift.html[here^].
+| JSON format
+//| `CLUSTER_ALL`
+//| The number of clusters to form as well as the number of centroids to generate.
+//| Boolean [True or False]
+//| `N_JOBS`
+//| If true, then all points are clustered, even those orphans that are not within any kernel. Orphans are assigned to the nearest kernel. If false, then orphans are given cluster label -1.
+//| Integer (default=1)
+|===
+
+*How to use this task:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
+
+NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.cluster.MeanShift.html[here^].
+
+
+==== ML Ensemble Learning
+
+===== AdaBoost
+
+*Task Overview:* AdaBoost combines weak classifier algorithm into a single strong classifier.
+
+*Task Variables:*
+
+.AdaBoost_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the AdaBoost algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
+| JSON format
+| `TYPE`
+| Enter the type of algorithm. There are two possible: classification or regression.
+| List [Classification or Regression]
+//| `N_CLUSTERS`
+//| The number of clusters to form as well as the number of centroids to generate
+//| Integer, optional (default=8)
+//| `MAX_ITERATIONS`
+//| Maximum number of iterations of the k-means algorithm for a single run.
+//| Integer, optional (default=300)
+//| `N_JOBS`
+//| The number of jobs to use for the computation. This works by computing each of the n_init runs in parallel. If -1 all CPUs are used. If 1 is given, no parallel computing code is used at all
+//| Integer, optional (default=1)
+|===
+
+*How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
+
+NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html[here^].
+
+===== CatBoost
+
+*Task Overview:* CatBoost is a gradient boosting which helps to reduce overfitting. It can be used to solve both classification and regression challenge.
+
+*Task Variables:*
+
+.CatBoost_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the CatBoost algorithm. Check the list of parameters https://github.com/catboost[here^].
+| JSON format
+| `TYPE`
+| Enter the type of algorithm. There are two possible: classification or regression.
+| List [Classification or Regression]
+//| `N_CLUSTERS`
+//| The number of clusters to form as well as the number of centroids to generate
+//| Integer, optional (default=8)
+//| `MAX_ITERATIONS`
+//| Maximum number of iterations of the k-means algorithm for a single run.
+//| Integer, optional (default=300)
+//| `N_JOBS`
+//| The number of jobs to use for the computation. This works by computing each of the n_init runs in parallel. If -1 all CPUs are used. If 1 is given, no parallel computing code is used at all
+//| Integer, optional (default=1)
+|===
+
+*How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
+
+NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
+
+===== Gradient_Boosting
+
+*Task Overview:* Gradient Boosting is an algorithm for regression and classification problems. It produces a prediction model in the form of an ensemble of weak prediction models.
+*Task Variables:*
+
+.Gradient_Boosting_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the Gradient Boosting algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingClassifier.html[here^].
+| JSON format
+| `TYPE`
+| Enter the type of algorithm. There are two possible: classification or regression.
+| List [Classification or Regression]
+//| `N_CLUSTERS`
+//| The number of clusters to form as well as the number of centroids to generate
+//| Integer, optional (default=8)
+//| `MAX_ITERATIONS`
+//| Maximum number of iterations of the k-means algorithm for a single run.
+//| Integer, optional (default=300)
+//| `N_JOBS`
+//| The number of jobs to use for the computation. This works by computing each of the n_init runs in parallel. If -1 all CPUs are used. If 1 is given, no parallel computing code is used at all
+//| Integer, optional (default=1)
+|===
+
+*How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
+
+NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
+
+===== Random_Forest
+
+*Task Overview:* Random Forest is an algorithm for regression, classification and other tasks that operates by constructing a multitude of decision trees at training time.
+*Task Variables:*
+
+.Random_Forest_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the Random Forest algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html[here^].
+| JSON format
+| `TYPE`
+| Enter the type of algorithm. There are two possible: classification or regression.
+| List [Classification or Regression]
+//| `N_CLUSTERS`
+//| The number of clusters to form as well as the number of centroids to generate
+//| Integer, optional (default=8)
+//| `MAX_ITERATIONS`
+//| Maximum number of iterations of the k-means algorithm for a single run.
+//| Integer, optional (default=300)
+//| `N_JOBS`
+//| The number of jobs to use for the computation. This works by computing each of the n_init runs in parallel. If -1 all CPUs are used. If 1 is given, no parallel computing code is used at all
+//| Integer, optional (default=1)
+|===
+
+*How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
+
+NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
+
+===== XGBoost
+
+*Task Overview:* XGBoost is an implementation of gradient boosted decision trees designed for speed and performance.
+
+*Task Variables:*
+
+.XGBoost_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_ENABLED`
+|If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the docker image that will be used to execute the task.
+| String [default="activeeon/dlm3"]
+| `TASK_ENABLED`
+| If False, the will be ignored, it will not be executed.
+| Boolean (default=True)
+| `INPUT_VARIABLES`
+| Specifies the parameters' values of the XGBoost algorithm. Check the list of parameters https://xgboost.readthedocs.io/en/latest/python/python_api.html[here^].
+| JSON format
+| `TYPE`
+| Enter the type of algorithm. There are two possible: classification or regression.
+| List [Classification or Regression]
+//| `N_CLUSTERS`
+//| The number of clusters to form as well as the number of centroids to generate
+//| Integer, optional (default=8)
+//| `MAX_ITERATIONS`
+//| Maximum number of iterations of the k-means algorithm for a single run.
+//| Integer, optional (default=300)
+//| `N_JOBS`
+//| The number of jobs to use for the computation. This works by computing each of the n_init runs in parallel. If -1 all CPUs are used. If 1 is given, no parallel computing code is used at all
+//| Integer, optional (default=1)
+|===
+
+*How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
+
+NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html[here^].
+
+==== Train
+
+===== Train_Model
+
+*Task Overview:* Train a model using a classification, a regression or an anomaly algorithm.
+
+*How to use this task:* It should be used after a classification, a regression or an anomaly algorithm, such as <<Support_Vector_Machines>>, <<Gaussian_Naive_Bayes>>, <<Linear_Regression>>, <<Bayesian_Ridge_Regression>>, <<Linear_Regression>>, <<Support_Vector_Regression>>, <<Isolation_Forest>>, <<One_Class_SVM>>, <<AdaBoost>>, <<CatBoost>>, <<Gradient_Boosting>>, <<Random_Forest>>, and <<XGBoost>>.
+
+[NOTE]
+====
+. More information about the source of the ML Classification can be found http://scikit-learn.org/stable/supervised_learning.html#supervised-learning[here^].
+. More information about the source of the ML Regression can be found https://scikit-learn.org/stable/modules/clustering.htmll[here^].
+. More information about the source of the ML Anomaly Detection can be found https://scikit-learn.org/stable/modules/outlier_detection.html[here^].
+====
+
+
+==== Predict
+
+===== Predict_Model
+
+*Task Overview:* Generate predictions using a trained model.
+
+*How to use this task:* It should be used after the <<Train_Model>> Task.
+
+=== Deep Learning Bucket
+
+The `deep-learning` bucket contains diverse generic deep learning tasks that enable you to easily compose workflows for predictive models learning and testing. This bucket can be easily customized according to your needs.
+It offers different options, you can customize it by adding new tasks or update the existing tasks.
+
+[NOTE]
+====
+. All deep learning tasks were implemented using https://pytorch.org/[Pytorch library^].
+. It is recommended to use an enabled-GPU machine to run the deep learning tasks.
+====
+
+==== Input and Output
+
+===== Import_Image_Dataset
+
+*Task Overview:* Load and return an image dataset.
+There are some simple rules for organizing your files and folders.
+
+. _Image Classification Dataset:_ Each class must have its own folder which should contain its related images. The Figure below shows how your folders and files should be organized.
+
+image::image_classification.png[400,400]
+
+NOTE: You can find an example of the organization of the folders at: https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/ants_vs_bees.zip
+
+. _Image Segmentation Dataset:_ Two folders are required: the first folder should contain the RGB images in JPG format and another folder should contain its corresponding annotations in http://hostrobots.ox.ac.uk/pascal/VOC/voc2012/index.html[PASCAL VOC^] format. RGB images and annotations should be organized as follows:
+
+image::image_segmentation.png[550,500]
+
+NOTE: You can find an example of the organization of the folders at: https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/oxford.zip
+
+. _Object Detection Dataset:_ Two folders are demanded: the first folder should contain the RGB images in JPG format and another folder should contain its corresponding anotations in XML format using http://host.robots.ox.ac.uk/pascal/VOC/voc2012/index.html[PASCAL VOC^] format or TXT format using COCO format (http://cocodataset.org/#home). The RGB images and annotations should be organized as follows:
+
+image::object_detection.png[550,500]
+
+NOTE: In these links, you can find an example of the organization of the folders using https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/pascal_voc.zip[Pascal_VOC Dataset^] and https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/pascal_coco.zip[COCO Dataset^].
+
+*Task Variables:*
+
+.Import_Image_Dataset_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DATASET_URL`
+| URL pointing to the zip folder containing the needed data.
+| String
+| `TRAIN_SPLIT`
+| Must be a float within the range (0.0, 1.0), not including the values 0.0 and 1.0.
+| Float (default=1)
+| `VAL_SPLIT`
+| Must be a float within the range (0.0, 1.0), not including the values 0.0 and 1.0.
+| Float (default=0.1)
+| `TEST_SPLIT`
+| Must be a float within the range (0.0, 1.0), not including the values 0.0 and 1.0.
+| Float (default=0.3)
+| `DATASET_TYPE`
+| Enter the type of your dataset. There are two possible types: classification or segmentation
+| List [Classification, Detection or Segmentation]
+|===
+
+*How to use this task:* It should be connected with <<Train_Image_Segmentation_Model>>, <<Train_Image_Classification_Model>> or <<Predict_Image_Classification_Model>>, <<Predict_Image_Segmentation_Model>>.
+
+
+===== Download_Model
+
+*Task Overview:* Download a trained model by a deep learning algorithm.
+
+*Task Variables:*
+
+.Import_Model_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `MODEL_TYPE`
+| Choose the type of your model. There are two possible types: Pytorch or ONNX.
+|  List [Pytorch or ONNX]
+|===
+
+
+NOTE: Not all deep networks support the ONNX model yet. You can download ONNX model of the following networks: <<AlexNet>>, <<DenseNet-161>>, <<ResNet-18>>, <<VGG-16>> and <<YOLO>>.
+
+
+*How to use this task:* It should be connected with <<Train_Image_Classification_Model>>   or <<Train_Text_Classification_Model>> or <<Train_Image_Segmentation_Model>> or <<Train_Image_Object_Detection_Model>>.
+
+===== Import_Model
+
+*Task Overview:* Import a trained model by a deep learning algorithm.
+
+*Task Variables:*
+
+.Import_Model_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `MODEL_URL`
+| URL pointing to the zip folder containing the needed model.
+| String
+|===
+
+*How to use this task:* It should be connected with <<Predict_Text_Classification_Model>> or <<Predict_Image_Classification_Model>>,  <<Predict_Image_Segmentation_Model>>.
+
+===== Import_Text_Dataset
+
+*Task Overview:* Import data from external sources. Each unique label must have its own folder which should contain its related text file. If your data is unlabeled, use the name 'unlabeled' for the folder containing your text file.
+
+*Task Variables:*
+
+.Import_Text_Dataset_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `DATASET_URL`
+| URL pointing to the zip folder containing the needed data.
+| String
+| `TRAIN_SPLIT`
+| Must be a float within the range (0.0, 1.0), not including the values 0.0 and 1.0.
+| Float (default=1)
+| `TEST_SPLIT`
+| Must be a float within the range (0.0, 1.0), not including the values 0.0 and 1.0.
+| Float (default=0.3)
+| `VAL_SPLIT`
+| Must be a float within the range (0.0, 1.0), not including the values 0.0 and 1.0.
+| Float (default=0.1)
+| `TOY_MODE`
+| Use a subset of the data to train the model fastly.
+| Boolean (default=True)
+| `TOKENIZER`
+| Transform the text into tokens. Different options are available (str.split,moses,spacy,revtok,subword)
+| List (default=str.split)
+| `SENTENCE_SEPARATOR`
+| Split the text into separated paragraphs, separated lines, separated words. Choose your own separator.
+| String [default=\r]
+| `CHARSET`
+| Encode to be used to read the text.
+| String [default='utf-8']
+| `IS_LABELED_DATA`
+|  True if data is labeled.
+| Boolean (default=True)
+|===
+
+*How to use this task:* It should be connected with <<Train_Text_Classification_Model>> or <<Predict_Text_Classification_Model>>.
+
+NOTE: Torchtext were used to preprocess and load the text input. More information about this library can be found https://github.com/pytorch/text[here^].
+
+===== Preview_Results
+
+*Task Overview:* Preview the results of the predictions generated by the trained model.
+
+*Task Variables:*
+
+.Preview_Results_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `OUTPUT_FILE`
+| Converts the prediction results to HTML or CSV file.
+| List (default='HTML')
+|===
+
+*How to use this task:* It should be used after <<Predict_Text_Classification_Model>> or <<Predict_Image_Classification_Model>> or <<Predict_Image_Segmentation_Model>> task.
+
+===== Export_Images
+
+*Task Overview:* Download a zip file of your results.
+
+.Export_Images_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+|===
+
+
+*How to use this task:* It should be connected to <<Predict_Image_Classification_Model>> or <<Predict_Image_Segmentation_Model>> task.
+
+==== Image Classification
+
+===== AlexNet
+
+*Task Overview:* AlexNet is the name of a Convolutional Neural Network (CNN), originally written with CUDA to run with GPU support, which competed in the ImageNet Large Scale Visual Recognition Challenge in 2012.
+
+*How to use this task:* It should be connected to <<Train_Image_Classification_Model>> task.
+
+.AlexNet_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `USE_PRETRAINED_MODEL`
+| Parameter to use a pre-trained model for training.  If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
+| Boolean (default=True)
+|===
+
+NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/torchvision/models.html[AlexNet^].
+
+===== DenseNet-161
+
+*Task Overview:* Densely Connected Convolutional Network (DenseNet) is a network architecture where each layer is directly connected to every other layer in a feed-forward fashion (within each dense block).
+
+*How to use this task:* It should be connected to <<Train_Image_Classification_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/torchvision/models.html[DenseNet-161^].
+
+.DenseNet-161_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `USE_PRETRAINED_MODEL`
+| Parameter to use a pre-trained model for training.  If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
+| Boolean (default=True)
+|===
+
+===== ResNet-18
+
+*Task Overview:* Deep Residual Networks (ResNet-18) is a deep convolutional neural network, trained on 1.28 million ImageNet training images, coming from 1000 classes.
+
+*How to use this task:* It should be connected to <<Train_Image_Classification_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/torchvision/models.html[ResNet-18^].
+
+.ResNet-161_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `USE_PRETRAINED_MODEL`
+| Parameter to use a pre-trained model for training.  If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
+| Boolean (default=True)
+|===
+
+===== VGG-16
+
+*Task Overview:* The VGG-16 is an image classification convolutional neural network.
+
+*How to use this task:* It should be connected to <<Train_Image_Classification_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/torchvision/models.html[VGG-16^].
+
+.VGG-16_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `USE_PRETRAINED_MODEL`
+| Parameter to use a pre-trained model for training.  If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
+| Boolean (default=True)
+|===
+
+==== Image Segmentation
+===== FCN
+*Task Overview:* The FCN16 combines layers of the feature hierarchy and refines the spatial precision of the output.
+
+*How to use this task:* It should be connected to <<Train_Image_Segmentation_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on https://github.com/bodokaiser/piwise[FCN^].
+
+.FCN_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `IM_SIZE`
+| Insert  (width, height)  of the images as a tuple with 2 elements.
+| Integer (default=(64, 64))
+| `NUM_CLASSES`
+| Number of classes.
+| Integer (default=5)
+|===
+===== SegNet
+*Task Overview:*  is a deep convolutional encoder-decoder architecture for robust semantic pixel-wise labelling.
+
+*How to use this task:* It should be connected to <<Train_Image_Segmentation_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on https://github.com/bodokaiser/piwise[SegNet^].
+
+.SegNet_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `IM_SIZE`
+| Insert  (width, height)  of the images as a tuple with 2 elements.
+| Integer (default=(64, 64))
+| `NUM_CLASSES`
+| Number of classes.
+| Integer (default=3)
+|===
+===== UNet
+*Task Overview:*  consists of a contracting path to capture context and a symmetric expanding path that enables precise localization.
+
+*How to use this task:* It should be connected to <<Train_Image_Segmentation_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on https://github.com/bodokaiser/piwise[UNet^].
+
+.UNet_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `IM_SIZE`
+| Insert  (width, height)  of the images as a tuple with 2 elements.
+| Integer (default=(64, 64))
+| `NUM_CLASSES`
+| Number of classes.
+| Integer (default=3)
+|===
+
+==== Image Object Detection
+
+===== SSD
+
+*Task Overview:*  produces a fixed-size collection of bounding boxes and scores for the presence of object class instances in those boxes, followed by a non-maximum suppression step to produce the final detections. For more details click on this https://www.cs.unc.edu/~wliu/papers/ssd.pdf[link^]
+
+*How to use this task:* It should be connected to  <<Train_Image_Object_Detection_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on https://github.com/amdegroot/ssd.pytorch[SSD^].
+
+.SSD_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `START_ITERATION`
+| Initial iteration.
+| Integer (default=0)
+| `MAX_ITERATION`
+| Maximum iteration.
+| Integer (default=5)
+| `LR_STEPS`
+| Learning steps update for SGD (Stochastic Gradient Descent).
+| Integer (default=5)
+| `LR_FACTOR`
+| Learning rate update for SGD.
+| Float (default= 1e-3) Range in [0, 1].
+| `GAMMA`
+| Gamma update for SGD.
+| Float (default=0.1) Range in [0, 1].
+| `MIN_SIZES`
+| Minimum object size for detection by specifying numerical values or reference areas on screen. Objects smaller than that are ignored.
+| Integer (default= [30, 60, 111, 162, 213, 264])
+| `MAX_SIZES`
+| Maximum object size for detection by specifying numerical values or reference areas on screen. Objects larger than that are ignored.
+| Integer (default= [60, 111, 162, 213, 264, 315])
+| `LEARNING_RATE`
+| Initial learning rate.
+| Float (default= 1e-8) Range in [0, 1].
+| `MOMENTUM`
+| Momentum value for optimization.
+| Float (default=0.9) Range in [0, 1].
+| `WEIGHT_DECAY`
+| Weight decay for SGD
+| Float (default= 5e-4) Range in [0, 1].
+| `IMG_SIZE`
+| Insert (width, height) of the images as a tuple with 2 elements.
+| Integer (default=(300, 300))
+| `NUM_CLASSES`
+| Number of classes.
+| Integer (default=21)
+| `LABEL_PATH`
+| The URL of the file containing the class names of the dataset.
+| String [default=(https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/voc.names)]
+| `USE_PRETRAINED_MODEL`
+| Parameter to use pre-trained model for training. If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
+| Boolean (default=True)
+|===
+
+NOTE: The default parameters of the SSD network were set for the PASCAL VOC dataset (http://host.robots.ox.ac.uk/pascal/VOC/voc2012/). If you'd like to use another dataset, you probably need to change the default parameters.
+
+===== YOLO
+
+*Task Overview:* You only look once (YOLO) is a  single neural network to predict bounding boxes and class probabilities. For more details click on this https://pjreddie.com/media/files/papers/YOLOv3.pdf[link^]
+
+*How to use this task:* It should be connected to  <<Train_Image_Object_Detection_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on https://github.com/eriklindernoren/PyTorch-YOLOv3[YOLO^].
+
+.YOLO_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `LEARNING_RATE`
+| Initial learning rate
+| Float  (default= 0.0005) Range in [0, 1].
+| `MOMENTUM`
+| Momentum value for optimization.
+| Float (default=0.9) Range in [0, 1].
+| `WEIGHT_DECAY`
+| Weight decay for SGD
+| Float (default= 5e-4) Range in [0, 1].
+| `IMG_SIZE`
+| Insert (width, height) of the images as a tuple with 2 elements.
+| Integer (default=(414, 416))
+| `NUM_CLASSES`
+| Number of classes.
+| Integer (default=81)
+| `CONF_THRESHOLD`
+| This parameter shows how certain it is that the predicted bounding box actually encloses some object. This score doesn’t say anything about what kind of object is in the box, just if the shape of the box is any good.
+| Float (default=0.5) Range in [0, 1].
+| `NMS_THRESHOLD`
+| This parameter will select only the most accurate (highest probability) one of the boxes.
+| Float (default=0.45) Range in [0, 1].
+| `LABEL_PATH`
+| The URL of the file containing the class names of the dataset.
+| String [default=(https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/coco.names)]
+| `USE_PRETRAINED_MODEL`
+| Parameter to use pre-trained model for training. If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
+| Boolean (default=True)
+|===
+
+NOTE: The default parameters of the YOLO network were set for the COCO dataset (http://cocodataset.org/#home). If you'd like to use another dataset, you probably need to change the default parameters.
+
+==== Text Classification
+
+===== GRU
+*Task Overview:* Gated recurrent units (GRUs) are a gating mechanism in recurrent neural networks.
+
+*Task Variables:*
+
+.GRU_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `EMBEDDING_DIM`
+| The dimension of the vectors that will be used to map words in some languages.
+| Integer (default=50)
+| `HIDDEN_DIM`
+| Hidden dimension of the neural network.
+| Integer (default=40)
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=2)
+| `DROPOUT`
+| Percentage of the neurons that will be ignored during the training.
+| Float (default=0.5)
+|===
+
+*How to use this task:* It should be connected to <<Train_Text_Classification_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/nn.html#torch.nn.GRU[GRU^].
+
+===== LSTM
+
+*Task Overview:* Long short-term memory (LSTM) units (or blocks) are a building unit for layers of a recurrent neural network (RNN).
+
+*Task Variables:*
+
+.LSTM_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `EMBEDDING_DIM`
+| The dimension of the vectors that will be used to map words in some languages.
+| Integer (default=50)
+| `HIDDEN_DIM`
+| Hidden dimension of the neural network.
+| Integer (default=40)
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=2)
+| `DROPOUT`
+| Percentage of the neurons that will be ignored during the training.
+| Float (default=0.5)
+|===
+
+*How to use this task:* It should be connected to <<Train_Text_Classification_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/nn.html#torch.nn.LSTM[LSTM^].
+
+===== RNN
+
+*Task Overview:* A recurrent neural network (RNN) is a class of artificial neural network where connections between units form a directed graph along a sequence.
+
+*Task Variables:*
+
+.RNN_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `EMBEDDING_DIM`
+| The dimension of the vectors that will be used to map words in some languages.
+| Integer (default=50)
+| `HIDDEN_DIM`
+| Hidden dimension of the neural network.
+| Integer (default=40)
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=2)
+| `DROPOUT`
+| Percentage of the neurons that will be ignored during the training.
+| Float (default=0.5)
+|===
+
+*How to use this task:* It should be connected to <<Train_Text_Classification_Model>> task.
+
+NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/nn.html#torch.nn.RNN[RNN^].
+
+==== Train Model
+
+===== Train_Image_Classification_Model
+
+*Task Overview:* Train a model using a Convolutional Neural Network (CNN) algorithm.
+
+*Task Variables:*
+
+.Train_Image_Classification_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `NUM_EPOCHS`
+| Number of times all of the training vectors are used once to update the weights.
+| Integer (default=1)
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=4)
+| `NUM_WORKERS`
+| Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+| Integer (default=2)
+| `SHUFFLE`
+| Set to True to have the data reshuffled at every epoch.
+| Boolean (default=True)se for data loading. 0 means that the data will be loaded in the main process.
+|===
+
+*How to use this task:* Could be connected to <<Predict_Image_Classification_Model>> and <<Download_Model>> tasks.
+
+
+===== Train_Text_Classification_Model
+
+*Task Overview:* A recurrent neural network (RNN) is a class of artificial neural network where connections between units form a directed graph along a sequence.
+
+*Task Variables:*
+
+.Train_Text_Classification_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+
+| `LEARNING_RATE`
+| Determines how quickly or how slowly you want to update the parameters.
+| Float (default=0.001)
+| `OPTIMIZER`
+| Choose the optimization algorithm that would help you to minimize the Loss function. Different options are available (42B, 840B, twitter.27B,6B).
+| List (default=Adam)
+| `LOSS_FUNCTION`
+| Choose the function that will be used to compute the loss. Different options are available (Adam,RMS, SGD, Adagrad, Adadelta).
+| List (default=NLLLoss)
+| `EPOCHS`
+| Number of times all of the training vectors are used once to update the weights.
+| Integer (default=10)
+| `TRAINABLE`
+| True if you want to update the embedding vectors during the training process.
+| Boolean (default=False)
+| `GLOVE`
+| Choose the glove vectors that need to be used for words embedding. Different options are available (42B, 840B, twitter.27B,6B)
+| List (default=6B)
+| `USE_GPU`
+| True if you need to execute the training task in a GPU node.
+| Boolean (default=True)
+|===
+
+*How to use this task:* Could be connected to <<Predict_Text_Classification_Model>> and <<Download_Model>> tasks.
+
+===== Train_Image_Segmentation_Model
+
+*Task Overview:* Train a model using an image segmentation algorithm.
+
+*Task Variables:*
+
+.Train_Image_Segmentation_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `NUM_EPOCHS`
+| Number of times all of the training vectors are used once to update the weights.
+| Integer (default=1)
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=1)
+| `NUM_WORKERS`
+| Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+| Integer (default=1)
+| `SHUFFLE`
+| Set to True to have the data reshuffled at every epoch.
+| Boolean (default=True)se for data loading. 0 means that the data will be loaded in the main process.
+|===
+
+*How to use this task:* Could be connected to <<Predict_Image_Segmentation_Model>> and <<Download_Model>> tasks.
+
+===== Train_Image_Object_Detection_Model
+
+*Task Overview:* Train a model using an object detection algorithm.
+
+*Task Variables:*
+
+.Train_Image_Object_Detection_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `NUM_EPOCHS`
+| Number of times all of the training vectors are used once to update the weights.
+| Integer (default=1)
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=1)
+| `NUM_WORKERS`
+| Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+| Integer (default=1)
+|===
+
+==== Predict
+
+===== Predict_Image_Classification_Model
+
+*Task Overview:* Generate predictions using a trained model.
+
+.Predict_Image_Classification_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=4)
+| `NUM_WORKERS`
+| Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+| Integer (default=2)
+| `SHUFFLE`
+| Set to True to have the data reshuffled at every epoch.
+| Boolean (default=True)se for data loading. 0 means that the data will be loaded in the main process.
+|===
+
+*How to use this task:* It should be used after the <<Train_Image_Classification_Model>> or <<Download_Model>> Task.
+
+===== Predict_Text_Classification_Model
+
+*Task Overview:* Generate predictions using a trained model.
+
+.Predict_Text_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+
+| `LOSS_FUNCTION`
+| Choose the function that will be used to compute the loss. Different options are available (Adam,RMS, SGD, Adagrad, Adadelta).
+| List (default=NLLLoss)
+|===
+
+*How to use this task:* It should be used after the <<Train_Text_Classification_Model>> or <<Download_Model>> Task.
+
+===== Predict_Image_Segmentation_Model
+
+*Task Overview:* Generate predictions using a trained segmentation model.
+
+.Predict_Image_Segmentation_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=4)
+| `NUM_WORKERS`
+| Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+| Integer (default=2)
+| `SHUFFLE`
+| Set to True to have the data reshuffled at every epoch.
+| Boolean (default=True)se for data loading. 0 means that the data will be loaded in the main process.
+|===
+
+*How to use this task:* It should be used after the <<Train_Image_Classification_Model>> or <<Download_Model>> Task.
+
+
+===== Predict_Image_Object_Detection_Model
+
+*Task Overview:* Generate predictions using a trained object detection model.
+
+.Predict_Image_Object_Detection_Model Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `BATCH_SIZE`
+| Batch size to be used.
+| Integer (default=1)
+| `NUM_WORKERS`
+| Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+| Integer (default=1)
+| `SHUFFLE`
+| Set to True to have the data reshuffled at every epoch.
+| Boolean (default=True)se for data loading. 0 means that the data will be loaded in the main process.
+|===
+
+*How to use this task:* It should be used after the <<Predict_Image_Object_Detection_Model>> or <<Download_Model>> Task.
+
+
+=== Data Visualization Bucket
+*Visdom Bucket* integrates generic tasks that can be easily used to broadcast visualizations of the analytic results provided by ML tasks. These visualization are created, organized, and shared using https://github.com/facebookresearch/visdom[Visdom^], a flexible tool proposed by Facebook Research.
+
+It provides a large set of plots that can be organized programmatically or through the UI. These plots can be used to create dashboards for both live and real-time data, inspect results of experiments, or debug experimental code.
+
+Visdom bucket provides a fast, easy and practice way to execute different workflows generating these diverse visualizations that are automatically cached by the Visdom Server.
+
+==== Visdom
+
+===== Visdom_Service_Start
+
+*Task Overview:* Bind or/and Start Visdom server.
+
+*Task Variables:*
+
+.Visdom_Service_Start_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `SERVICE_ID`
+| The id of the Visdom service.
+| String [default="Visdom"]
+| `INSTANCE_NAME`
+| The instance name of the server to use to broadcast visualization
+| String [default="visdom-server"]
+|===
+
+WARNING: If two workflows use the same service instance names, then, their generated plots will be created on the same service instance.
+
+===== Visdom_Service_Actions
+
+*Task Overview:* Manage the life-cycle of Visdom PCA service. It allows to trigger three possible actions: Pause_Visdom, Resume_Visdom and Finish_Visdom.
+
+*Task Variables:*
+
+.Visdom_Service_Actions_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `INSTANCE_NAME`
+| The instance name of the server to use to broadcast visualization
+| String [default="visdom-server"]
+| `INSTANCE_ACTION`
+| Three possible actions: Pause_Visdom, Resume_Visdom and Finish_Visdom.
+| List (default="Finish_Visdom")
+|===
+
+===== Visdom_Visualize_Results
+
+*Task Overview:* plot the different results obtained by a predictive model using Visdom
+
+*Task Variables:*
+|===
+| *Variable name* | *Description* | *Type*
+| `TARGETED_CLASS`
+| The targeted class that you need to track
+| String
+|===
+
+*How to use this task:*  This task has to be connected to the <<Start_Visdom_Service>> Task. The Visdom server should be up in order to be able to broadcast visualizations.
+
+===== Visdom_Plots
+
+*Task Overview:* return numerous examples of plots covered by Visdom.
+
+*Task Variables:*
+|===
+| *Variable name* | *Description* | *Type*
+| `VISDOM_ENDPOINT`
+| The visdom endpoint to be used.
+| URL
+|===
+
+
+==== Visdom Workflows
+
+The following workflows present some examples using Visdom service to visualize the results obtained while training and testing some predictive models.
+
+video::bQpwS2nMAZY[youtube, width=700, height=400 start=0, position=center]
+
+*Visdom_Plot_Example:* returns numerous examples of plots covered by Visdom.
+
+*Visdom_Real_time_Digit_Classification:* shows an example of realtime plotting using the Visdom server for training a convolutional neural network (CNN) for MNIST digit classification.
+
+A demo video of these workflows is available in https://www.youtube.com/user/ActiveEonCompany[ActiveEon Youtube Channel^].
+
+

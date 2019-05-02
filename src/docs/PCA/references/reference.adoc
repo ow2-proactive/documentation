@@ -1,0 +1,294 @@
+=== Cassandra
+
+This service allows to deploy through ProActive Cloud Automation (PCA) Portal a Cassandra Database server. The service can be started using the following variables.
+
+*Variables:*
+
+.Cassandra PCA service variables
+[cols="2,5,2,2,2"]
+|===
+| *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
+| `INSTANCE_NAME`
+| Service instance name
+| Yes
+| String
+| `mongodb-server`
+|`ENV_VARS`
+| List of the environment variables. Each environment variable should be preceded by -e.
+| No
+| String
+| e.g. `-e CASSANDRA_CLUSTER_NAME="cluster1"`
+|===
+
+NOTE: More details about the variable description can be found https://hub.docker.com/_/cassandra/[here^].
+
+
+=== Docker
+
+This service allows to deploy through ProActive Cloud Automation (PCA) Portal any docker image.
+It serves as a generic template that can be used to create and start any docker image ON DEMAND simply by providing the following variables.
+
+*Variables:*
+
+.Docker PCA service variables
+[cols="2,5,2,2,2"]
+|===
+| *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
+| `DOCKER_IMAGE`
+| Docker image name. It can include a tag as well.
+| Yes
+| String
+| e.g. `postgres`
+| `DOCKER_PORT`
+| The main image port. Please note that it will be forwarded to a random port that will be returned by this service.
+| Yes
+| Integer
+| e.g. `5432`
+|`DOCKER_CONTAINER`
+| If you desire to stop this container and restart it later.
+| Yes
+| String
+| e.g. `postgres-container`
+|`DOCKER_OPTIONS`
+| options like environment variables, etc
+| No
+| String
+| e.g. `-e POSTGRES_USER=mlos -e POSTGRES_PASSWORD=proactive -e POSTGRES_DB=activeeon`
+|`DOCKER_COMMAND`
+| Password for the root user
+| No
+| String
+| e.g. `-c "listen_addresses=0.0.0.0"`
+|===
+
+=== Elasticsearch
+
+This service allows to deploy through ProActive Cloud Automation (PCA) Portal a Elasticsearch Database server.
+The service is started using the following variable.
+
+*Variables:*
+
+.Elasticsearch PCA service variables
+[cols="2,5,2,2,2"]
+|===
+| *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
+| `INSTANCE_NAME`
+| Service instance name
+| Yes
+| String
+| `elasticsearch-server`
+|===
+
+NOTE: More details about the variable description can be found https://hub.docker.com/_/elasticsearch/[here^].
+
+
+=== Kafka
+
+This service allows to deploy through ProActive Cloud Automation (PCA) Portal an instance of Apache Kafka publish/subscribe system (https://kafka.apache.org/).
+The deployed instance consists in a single publish/subscribe broker that is based on Apache Zookeeper coordination server.
+The service is started using the following variables.
+
+*Variables:*
+
+.PostgreSQL PCA service variables
+[cols="2,5,2,2,2"]
+|===
+| *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
+| `instance_name`
+| Service instance name
+| Yes
+| String
+| `kafka-server-1`
+|`zookeeper_instance_name`
+| Name of the Zookeeper instance that coordinates the storm deployment.
+| Yes
+| String
+| `zookeeper-server-1`
+|`zookeeper_service_id`
+| Zookeeper service identifier needed to start this service if it does not already exist.
+| Yes
+| String
+| `Zookeeper`
+|===
+
+NOTE: More details about the variable description can be found https://hub.docker.com/_/kafka/[here^].
+
+
+
+=== MySQL
+
+This service allows to deploy through ProActive Cloud Automation (PCA) Portal a MySQL Database server. The service can be started using the following variables.
+
+*Variables:*
+
+.MySQL PCA service variables
+[cols="2,5,2,2,2"]
+|===
+| *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
+| `INSTANCE_NAME`
+| Service instance name
+| Yes
+| String
+| `mysql-server`
+| `DATABASE`
+| Name of a database to be created on start
+| No
+| String
+| e.g. `my_database`
+|`USER`
+| Username for the root user
+| No
+| String
+| e.g. `my_user`
+|`PASSWORD`
+| Password for the root user
+| No
+| String
+| e.g. `my_password`
+|===
+
+NOTE: Note that the `USER` and `PASSWORD` variables are used in junction. They should be either both entered or both blank.
+In addition, if `DATABASE` is assigned a value, then the defined `USER` will be granted superuser access (corresponding to GRANT ALL) to this database.
+More details about the variable description can be found https://hub.docker.com/_/mysql/[here^].
+
+
+=== MongoDB
+
+This service allows to deploy through ProActive Cloud Automation (PCA) Portal a MongoDB Database server. The service can be started using the following variables.
+
+*Variables:*
+
+.MongoDB PCA service variables
+[cols="2,5,2,2,2"]
+|===
+| *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
+| `INSTANCE_NAME`
+| Service instance name
+| Yes
+| String
+| `mongodb-server`
+|`USER`
+| Username for the root user
+| No
+| String
+| e.g. `my_user`
+|`PASSWORD`
+| Password for the root user
+| No
+| String
+| e.g. `my_password`
+|===
+
+NOTE: Note that the `USER` and `PASSWORD` variables are used in junction. They should be either both entered or both blank.
+More details about the variable description can be found https://hub.docker.com/_/mongo/[here^].
+
+=== PostgreSQL
+
+This service allows to deploy through ProActive Cloud Automation (PCA) Portal a PostgreSQL Database server. The service can be started using the following variables.
+
+*Variables:*
+
+.PostgreSQL PCA service variables
+[cols="2,5,2,2,2"]
+|===
+| *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
+| `INSTANCE_NAME`
+| Service instance name
+| Yes
+| String
+| `mysql-server`
+| `DATABASE`
+| Name of a database to be created on start
+| No
+| String
+| e.g. `my_database`
+|`USER`
+| Username for the root user. change it if you want a different root username . Default "postgres" is used if left empty.
+| No
+| String
+| e.g. `my_user`
+|`PASSWORD`
+| Password for the root user
+| Yes
+| String
+| e.g. `my_password`
+|===
+
+NOTE: More details about the variable description can be found https://hub.docker.com/_/postgres/[here^].
+
+=== Storm
+
+This service allows to deploy through ProActive Cloud Automation (PCA) Portal a cluster of Apache Storm stream processing system (http://storm.apache.org).
+The service is started using the following variables.
+
+*Variables:*
+
+.PostgreSQL PCA service variables
+[cols="2,5,2,2,2"]
+|===
+| *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
+| `instance_name`
+| Service instance name
+| Yes
+| String
+| `storm-server-1`
+| `number_of_supervisors`
+| Number of worker nodes
+| Yes
+| Integer
+| `2`
+|`zookeeper_instance_name`
+| Name of the Zookeeper instance that coordinates the storm deployment.
+| Yes
+| String
+| `zookeeper-server-1`
+|`zookeeper_service_id`
+| Zookeeper service identifier needed to start this service if it does not already exist.
+| Yes
+| String
+| `Zookeeper`
+|===
+
+NOTE: More details about the variable description can be found https://hub.docker.com/_/storm/[here^].
+
+
+=== Visdom
+
+This service allows to deploy through ProActive Cloud Automation (PCA) Portal an instance of Visdom server (https://github.com/facebookresearch/visdom).
+The service is started using the following variable.
+
+*Variables:*
+
+.Elasticsearch PCA service variables
+[cols="2,5,2,2,2"]
+|===
+| *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
+| `instance_name`
+| Service instance name
+| Yes
+| String
+| `visdom-server-1`
+|===
+
+
+
+=== Zookeeper
+
+This service allows to deploy through ProActive Cloud Automation (PCA) Portal an instance of Apache Zookeeper coordination server (https://zookeeper.apache.org/). The deployed instance consists in a single Zookeeper broker.
+The service is started using the following variable.
+
+*Variables:*
+
+.Elasticsearch PCA service variables
+[cols="2,5,2,2,2"]
+|===
+| *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
+| `instance_name`
+| Service instance name
+| Yes
+| String
+| `zookeeper-server-1`
+|===
+
+NOTE: More details about the variable description can be found https://hub.docker.com/_/zookeeper/[here^].
+

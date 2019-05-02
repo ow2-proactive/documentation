@@ -1,0 +1,46 @@
+The following terms are used as ProActive Cloud Automation (PCA) definitions and main concepts:
+
+[[_definition_Service]]
+Service::
+A set of workflows representing Actions and having the same Service ID.
+
+image::PCA_introduction.png[align=center, width=512, height=256]
+
+[[_definition_Activated_Service]]
+Activated Service or Service Instance::
+An Activated Service is an Instance of a Service. It is characterized by a Service ID and an Instance ID.
+
+image::PCA_activated_services.png[align=center, width=512, height=256]
+
+[[_definition_Action]]
+Action::
+An Action will launch a workflow on a Service Instance modifying its State. An action is characterized by <a Service ID + a workflow ID + a state>. The Service ID and the State are respectively named « pca.service.id » and « pca.states » in the list of the workflow Generic Information.
+
+An Action goes from an initial State and conducts to a target State after the Transition is completed.
+As an Action must be deterministic, for an given initial State it can conduct to a unique target state.
+
+There are three specific kinds of Actions: 
+
+- *Activation:* to start a Service Instance (from the State VOID to a defined State)
+- *Finishing:* to stop a Service Instance (from a defined State to the State FINISHED)
+- *Killing:* PCA is trying to force a Service Instance to terminate (from a defined State to the State KILLED) 
+
+[[_definition_States]]
+States::
+The specific States that are pre-defined in ProActive Cloud Automation are VOID, FINISHED, ERROR, KILLED.
+
+- *VOID* Implicit State before a Service is activated
+- *FINISHED* Implicit State after a Service is terminated/no longer activated
+- *ERROR* Implicit State after something wrong happened
+- *KILLED* When PCA abnormally forces an Activated Service to terminate.
+
+NOTE: Please note that users are free to define their own custom States (e.g. RUNNING, SUSPENDED, ...)
+
+[[_definition_Endpoints]]
+Endpoints::
+Endpoints are a list of (Key,Value) defined in the Variables e.g. [(Swarm, <smarmendpoint>), (HDFS, <hdfs-endpoint>), (Spark, <spark-endpoint>)]. The endpoint url should contain the protocol, e.g. www.activeeon.com will not work, but https://www.activeeon.com will.
+
+[[_definition_Service_Name_Infrastructure_Name]]
+Service_Name, Infrastructure_Name::
+Service_Name, Infrastructure_Name are Service specific. If a Service wants/needs them, they can be stored in the data associated to the service to give a name to the service, to identify the infrastructure where the Service Instance will be deployed.
+

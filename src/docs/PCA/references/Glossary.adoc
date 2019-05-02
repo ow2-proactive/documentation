@@ -1,0 +1,102 @@
+The following terms are used throughout the documentation:
+
+[[_glossary_proactive_workflows_scheduling]]
+ProActive Workflows & Scheduling::
+The full distribution of ProActive for Workflows & Scheduling, it contains the <<_glossary_proactive_scheduler,*ProActive Scheduler*>>
+ server, the
+REST & Web interfaces, the command line tools. It is the commercial product name.
+
+[[_glossary_proactive_scheduler]]
+ProActive Scheduler::
+Can refer to any of the following:
+  * A complete set of ProActive components.
+  * An archive that contains a released version of ProActive components, for example `activeeon_enterprise-pca_server-OS-ARCH-VERSION.zip`.
+  * A set of server-side ProActive components installed and running on a <<_glossary_server_host,*Server Host*>>.
+
+[[_glossary_resource_manager]]
+Resource Manager:: ProActive component that manages <<_glossary_proactive_node,*ProActive Nodes*>> running on <<_glossary_compute_host,*Compute Hosts*>>.
+
+[[_glossary_scheduler]]
+Scheduler:: ProActive component that accepts <<_glossary_job,*Jobs*>> from users, orders the constituent <<_glossary_task,*Tasks*>> according to priority and resource availability, and eventually executes them on the resources (<<_glossary_proactive_node,*ProActive Nodes*>>) provided by the <<_glossary_resource_manager,*Resource Manager*>>.
+
+NOTE: Please note the difference between *Scheduler* and <<_glossary_proactive_scheduler,*ProActive Scheduler*>>.
+
+[[_glossary_rest_api]]
+REST API:: ProActive component that provides RESTful API for the <<_glossary_resource_manager,*Resource Manager*>>, the <<_glossary_scheduler,*Scheduler*>> and the <<_glossary_catalog, *Catalog*>>.
+
+[[_glossary_rm_web_interface]]
+Resource Manager Web Interface:: ProActive component that provides a web interface to the <<_glossary_resource_manager,*Resource Manager*>>.
+
+[[_glossary_scheduler_web_interface]]
+Scheduler Web Interface:: ProActive component that provides a web interface to the <<_glossary_scheduler,*Scheduler*>>.
+
+[[_glossary_workflow_studio]]
+Workflow Studio:: ProActive component that provides a web interface for designing <<_glossary_workflow,*Workflows*>>.
+
+[[_glossary_job_planner_portal]]
+Job Planner Portal:: ProActive component that provides a web interface for planning <<_glossary_workflow,*Workflows*>>, and creating <<_glossary_workflow,*Calendar Definitions*>>
+
+[[_glossary_catalog]]
+Catalog:: ProActive component that provides storage and versioning of <<_glossary_workflow,*Workflows*>> and other ProActive Objects through a REST API. It is also possible to query the Catalog for specific <<_glossary_workflow,*Workflows*>>.
+
+[[_glossary_job_planner]]
+Job Planner:: A ProActive component providing advanced scheduling options for <<_glossary_workflow,*Workflows*>>.
+
+[[_glossary_workflow_bucket]]
+Bucket:: ProActive notion used with the <<_glossary_catalog, *Catalog*>> to refer to a specific collection of ProActive Objects and in particular ProActive Workflows.
+
+[[_glossary_server_host]]
+Server Host::
+  The machine on which <<_glossary_proactive_scheduler,*ProActive Scheduler*>> is installed.
+
+`SCHEDULER_ADDRESS`::
+  The IP address of the <<_glossary_server_host,*Server Host*>>.
+
+[[_glossary_proactive_node]]
+ProActive Node::
+  One *ProActive Node* can execute one <<_glossary_task,*Task*>> at a time. This concept is often tied to the number of cores
+  available on a <<_glossary_compute_host,*Compute Host*>>. We assume a task consumes one core (more is possible, so on a 4 cores machines you might want to run 4 ProActive Nodes.
+  One (by default) or more ProActive Nodes can be executed in a Java process on the <<_glossary_compute_host,*Compute Hosts*>> and
+  will communicate with the <<_glossary_proactive_scheduler,*ProActive Scheduler*>> to execute tasks.
+
+[[_glossary_compute_host]]
+Compute Host::
+  Any machine which is meant to provide computational resources to be managed by the <<_glossary_proactive_scheduler,*ProActive Scheduler*>>. One or more <<_glossary_proactive_node,*ProActive Nodes*>> need to be running on the machine for it to be managed by the <<_glossary_proactive_scheduler,*ProActive Scheduler*>>.
+
+[NOTE]
+====
+Examples of *Compute Hosts*:
+
+* All machines of a cluster managed by <<_glossary_proactive_scheduler,*ProActive Scheduler*>>, except <<_glossary_server_host,*Server Host*>>.
+* All desktop machines in an organisation that have <<_glossary_proactive_agent,*ProActive Agents*>> installed.
+====
+
+`PROACTIVE_HOME`::
+  The path to the extracted archive of <<_glossary_proactive_scheduler,*ProActive Scheduler*>> release, either on the <<_glossary_server_host,*Server Host*>> or on a <<_glossary_compute_host,*Compute Host*>>.
+
+[[_glossary_workflow]]
+Workflow::
+  User-defined representation of a distributed computation. Consists of the definitions of one or more <<_glossary_task,*Tasks*>> and their dependencies.
+
+[[_glossary_generic_information]]
+Generic Information:: Are additional information which are attached to <<_glossary_workflow,*Workflows*>>.
+
+[[_glossary_job]]
+Job::
+  An instance of a <<_glossary_workflow,*Workflow*>> submitted to the <<_glossary_proactive_scheduler,*ProActive Scheduler*>>. Sometimes also used as a synonym for <<_glossary_workflow,*Workflow*>>.
+
+[[_glossary_job_icon]]
+Job Icon::
+  An icon representing the Job and displayed in portals. The Job Icon is defined by the Generic Information *workflow.icon*.
+
+[[_glossary_task]]
+Task::
+  A unit of computation handled by <<_glossary_proactive_scheduler,*ProActive Scheduler*>>. Both <<_glossary_workflow,*Workflows*>> and <<_glossary_job,*Jobs*>> are made of *Tasks*.
+
+[[_glossary_task_icon]]
+Task Icon::
+  An icon representing the Task and displayed in the Studio portal. The Task Icon is defined by the Task Generic Information *task.icon*.
+
+[[_glossary_proactive_agent]]
+ProActive Agent::
+  A daemon installed on a <<_glossary_compute_host,*Compute Host*>> that starts and stops <<_glossary_proactive_node,*ProActive Nodes*>> according to a schedule, restarts <<_glossary_proactive_node,*ProActive Nodes*>> in case of failure and enforces resource limits for the <<_glossary_task,*Tasks*>>.

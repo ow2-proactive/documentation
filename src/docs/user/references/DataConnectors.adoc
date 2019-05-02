@@ -1,0 +1,788 @@
+
+The `data-connectors` bucket contains diverse generic data connectors for the most frequently used data storage systems (File, SQL, NoSQL, Cloud, ERP). The aim of a data connector is to facilitate and simplify data access from your workflows to external data sources.
+
+=== File
+The File connectors allow to import and export data from HTTP, FTP and SFTP servers.
+We begin by presenting FTP and SFTP connectors then, URL connector.
+
+==== FTP and SFTP connectors
+
+
+The FTP and SFTP file connector workflows consists of two tasks:
+
+* Import_from_FTP/SFTP_Server: Downloads files or folders recursively from an FTP/SFTP server to the data space.
+* Export_to_FTP/SFTP_Serve: Uploads files or folders recursively from the data space (global or user space) to an FTP/SFTP server.
+
+*Variables:*
+
+The FTP and SFTP workflow tasks share the same list of variables. Consequently, we describe them in the following table using a unique notation.
+
+.FTP/SFTP Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
+| `HOST`
+| Server host.
+| Task
+| Yes
+| String
+| `localhost`
+| `USERNAME`
+| Username to use for the authentication.
+| Task
+| Yes
+|  String
+| e.g. toto
+| `PORT`
+| Listening port.
+| Task
+| No
+| Integer
+| e.g. 21, 22
+| `FILE_PATTERN`
+| Either a file name or a wildcard string pattern.
+| Task
+| Yes
+| String
+| e.g. file.txt, \*.txt, **
+| `LOCAL_BASE`
+| Either a `global` path or a local `relative` path from which we export (or to which we import) file(s). It can be either a directory terminated by `/` or an empty value for the root.
+| Task
+| No
+| String
+| e.g. localDirectory/, /global/path/localDirectory/
+| `REMOTE_BASE`
+| Remote `relative` path on the server to which we export (or from which we import) file(s). It can be either a path to a folder terminated by `/` or an empty value for the root.
+| Task
+| No
+| String
+| e.g. remoteDirectory/
+|===
+
+*How to use this task:*
+
+The task requires the following third-party credentials: `{key: <PROTOCOL>://<username>@<hostname>, value: PASSWORD}` where `<PROTOCOL>` can take one of the following values: {`FTP`, `SFTP`}. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+
+==== URL connector
+
+The URL connector allows, in addition, to import data using HTTP and HTTPS protocols.
+
+*Variables:*
+
+.URL Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
+| `FILE_URL`
+| Link to a file accessible using HTTP or HTTP protocols.
+| Task
+| Yes
+| String
+| e.g. http://www.pdf995.com/samples/pdf.pdf
+| `LOCAL_BASE`
+|  Local relative path to which we download file(s).
+  LOCAL_RELATIVE_PATH can contain either a path to a file, a directory terminated by `/` or an empty value for the root.
+| Task
+| No
+| String
+| e.g. localDirectory/, example.zip
+| `EXTRACT_ARCHIVE`
+| If set to `true`, the imported file will be extracted if it is an archive.
+| Task
+| Yes
+| Boolean [true or false]
+| false
+|===
+
+=== SQL
+In this part, we first present the data connector tasks that allow users to access and manipulate data of the most frequently used databases,
+then we show how to use pooled connection to SQL databases across multiple task executions.
+
+==== Data Connectors
+The data connectors allow to import and export data from and to Relational DataBase Management Systems (RDBMS).
+Currently, we have connectors for MySQL, Oracle, PostgreSQL, Greenplum and SQL Server.
+
+All SQL connector workflows are composed of two tasks: an import task and an export task.
+
+*Variables:*
+
+All SQL connectors share the same list of variables. Consequently, we describe them in the following table using a unique notation.
+`<RDBMS_NAME>` can take one of the following values: {`POSTGRES`, `GPDB`, `ORACLE`, `SQL_SERVER`, `MYSQL`}
+
+.SQL Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
+| `<RDBMS_NAME>_HOST`
+| Label or the IP address of the server hosting the database.
+| Workflow
+| Yes
+| String
+| `localhost`
+| `<RDBMS_NAME>_PORT`
+| Listening port.
+| Workflow
+| No
+| Integer
+| e.g. 5432, 1521
+| `<RDBMS_NAME>_USER`
+| Username to use for connecting to the database.
+| Workflow
+| Yes
+| String
+|
+| `<RDBMS_NAME>_DATABASE`
+| Database name.
+| Workflow
+| Yes
+| String
+| e.g. MY_DATABASE
+| `<RDBMS_NAME>_QUERY`
+| Requires an SQL query or a table name to fetch data from.
+| Import Task
+| Yes
+| String
+| e.g. ```SELECT * FROM ...```
+| `LABEL`
+| If the imported data is labeled for machine learning, a label attribute can be specified using this variable.
+| Import Task
+| No
+| String
+| e.g. class
+| `<RDBMS_NAME>_OUTPUT_FILE`
+| Relative path in the data space used to save the results in a CSV file.
+| Import Task
+| No
+| String
+| e.g. `path/to/my/output.csv`
+| `<RDBMS_NAME>_OUTPUT_TYPE`
+| Task result output type (`HTML` or `CSV`).
+If set to `HTML`, it allows to preview the results in Scheduler Portal in HTML format.
+| Import Task
+| No
+| String
+| Values: `{CSV, HTML}`.
+
+Default: `CSV`
+| `<RDBMS_NAME>_TABLE`
+| The table to insert data into.
+| Export Task
+| Yes
+| String
+| e.g. MY_TABLE
+| `INSERT_MODE`
+| Indicates the behavior to follow when the table exists in the database amongst:
+
+  - fail: If table exists, do nothing.
+  
+  - replace: If table exists, drop it, recreate it, and insert data.
+  
+  - append: (default) If table exists, insert data. Create if does not exist.
+
+| Export Task
+| Yes
+| String
+| Default: `append`
+| `INPUT_FILE`
+| - It can be a relative path in the dataspace of a csv file containing the data to import.
+
+- or a valid URL amongst `http`, `ftp`, `s3`, and `file`.
+
+| Export Task
+| Yes
+| String
+| e.g. `path/to/data.csv` or
+http://link/to/my/data/csv
+| `<RDBMS_NAME>_RMDB_DRIVER`
+| The driver to connect to the database.
+| Import Task
+Export Task
+| Yes
+| String
+| e.g. cx_oracle, psycopg2
+|===
+
+*How to use this task:*
+
+When you drag & drop an SQL connector, two tasks will be appended to your workflow: an import task and an export task. Each task can be used as a separate component in an ETL pipeline thus, you can keep one of them depending on your needs and remove the other or you can use them both.
+
+This task uses the driver given in `RMDB_DRIVER` to connect to the database. To use another driver, make sure you have it properly installed before (e.g. using `pip install <RMDBS_DRIVER>`).
+
+The task requires the following third-party credential: {key: `<mysql|postgres|sqlserver|oracle|gpdb>://<<RDBMS_NAME>_USER>@<<RDBMS_NAME>_HOST>:<<RDBMS_NAME>_PORT>`, value: `<RDBMS_NAME>_PASSWORD`}. ; this is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+
+In the import mode, the output containing the imported data takes one or many of the following forms:
+
+* in a _CSV_ format to saved to:
+ ** the `<RDBMS_NAME>_OUTPUT_FILE` in the data space if specified by the user
+ ** _and_ to the `result` variable to make is previewable in the scheduler portal and to make it accessible for the next tasks.
+* in a _JSON_ format using the variable `DATAFRAME_JSON`.
+
+==== Database Connections Pooling
+To allow the persistence of a single connection across multiple SQL tasks (basically when running several Tasks concurrently on the same machine),
+we have implemented the connection pooling feature to any external SQL database based on the https://github.com/brettwooldridge/HikariCP[HikariCP^] Framework.
+This feature is showcased through two workflow templates: SQL_Pooled_Connection_Query and SQL_Pooled_Connection_Update.
+The SQL_Pooled_Connection_Query workflow is based on the replicate control flow where the split task is Open_Pooled_Connection, the process task is Execute_Query_Statements and finally the merge task is Merge_Result_Set.
+The SQL_Pooled_Connection_Update workflow is composed of two tasks: Open_Pooled_Connection and Execute_Update_Statements.
+
+*Variables:*
+
+Both workflows share the same list of variables. Consequently, we describe them in the same following table.
+
+.Workflows' variables
+[cols="2,5,2,2,2,3"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
+| `RDBMS_NAME`
+| Name of the relational database management system.
+| Workflow, Open_Pooled_Connection Task
+| Yes
+| String
+| PostgreSQL, MySQL, Greenplum, HSQLDB, Oracle
+| `HOST`
+| Server host.
+| Open_Pooled_Connection Task
+| Yes
+| String
+| `localhost`
+| `PORT`
+| Listening port.
+| Open_Pooled_Connection Task
+| No
+| Integer
+| e.g. 5432, 1521
+| `USERNAME`
+| Username to use for connecting to the database.
+| Open_Pooled_Connection Task
+| Yes
+| String
+| e.g MY_USER
+| `DATABASE`
+| Database name.
+| Open_Pooled_Connection Task
+| Yes
+| String
+| e.g. MY_DATABASE
+| `POOL_PROPERTY`
+| HikariCP framework provides many data source properties that can be used to configure the DB pooled connection such as autoCommit, maximumPoolSize, maxLifetime, idleTimeout .... You can add as many properties as you want. For each one, please add a new task variable where the variable name is the property name having "POOL_"  as a prefix and the variable value is the property value. For more info, please refer to https://github.com/brettwooldridge/HikariCP.
+| Open_Pooled_Connection Task
+| No
+| String
+| e.g. POOL_autoCommit, POOL_maximumPoolSize
+| `SQL_STATEMENTS`
+| To change or update data, you have to use CREATE, INSERT , UPDATE , or DELETE statements. To query data, you have to perform SELECT statements.
+| Execute_Query_Statements Task, Execute_Update_Statements Task
+| Yes
+| String
+| e.g. ```SELECT * FROM ...```, ```DROP TABLE ...```
+|===
+
+
+*How to use these workflows:*
+
+The scheduler should be configured in non-fork mode to execute tasks in a single JVM rather than starting a dedicated JVM to run the task (In $PROACTIVE_HOME/config/scheduler/settings.ini, set pa.scheduler.task.fork=false).
+
+To be executed, each workflow requires the jdbc connector jar file of the used rdbms to connect to the database. Make sure you have it properly copied into the addons directory ($PROACTIVE_HOME/addons) of the scheduler.
+
+In case the password is required, you have to add the following third-party credential: {key: `<mysql|postgresql|sqlserver|oracle|hsqldb:hsql>://<USERNAME>@<HOST>:<PORT>`, value: `<RDBMS_NAME>_PASSWORD`}. This is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+
+=== NoSQL
+The NoSQL connectors allow to import data from NoSQL Databases.
+Currently, we have connectors for MongoDB and Cassandra.
+
+==== MongoDB
+
+*Variables:*
+
+.MongoDB Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
+| `MONGODB_HOST`
+| Label or the IP address of the server hosting the database.
+| Workflow, Import Task, Export Task
+| Yes
+| String
+| `localhost`
+| `MONGODB_PORT`
+| Listening port.
+| Workflow, Import Task, Export Task
+| No
+| Integer
+| 27018
+| `MONGODB_USER`
+| Username to use for connecting to MongoDB server if authentification is required.
+| Workflow
+| No
+| String
+|
+| `MONGODB_DATABASE`
+| Database to use. In export mode, it is created if it does not exist.
+| Workflow, Import Task, Export Task
+| Yes
+| String
+| e.g. my_database
+| `MONGODB_COLLECTION`
+| Collection to use. In export mode, it is created if it does not exist.
+| Workflow, Import Task, Export Task
+| Yes
+| String
+| e.g. my_collection
+| `MONGODB_QUERY`
+| Requires a NoSQL query to fetch data. If empty (`{}`), it will fetch all documents.
+| Import Task
+| No
+| String
+| {}
+| `MONGODB_OUTPUT`
+| Relative path in the data space used to save the results in a JSON file.
+| Import Task
+| No
+| String
+| e.g. path/to/my/output.json
+| `LABEL`
+| If the imported data is labeled for machine learning, a label attribute can be specified using this variable.
+| Import Task
+| No
+| String
+| e.g. class
+
+| `MONGODB_INPUT`
+| A JSON Object/Array to be inserted in MongoDB. This variable can:
+
+   - A String describing the JSON Object/Array
+   
+   - A relative path in the data space of a JSON file.
+   
+| Export Task
+| Yes
+| String
+| e.g.
+
+`{"document":{"key":"value"}}`
+
+or `path/to/input.json`
+|===
+
+*How to use this task:*
+
+The task might require (if the MongoDB server requires authentification) a `MONGODB_USER`  in addition to the following third-party credential: {key: `mongodb://<MONGODB_USER>@<MONGODB_HOST>:<MONGODB_PORT>`, value: `MONGODB_PASSWORD`}. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+
+In the import mode, the output containing the imported data takes one or many of the following forms:
+
+* in a JSON format to saved to:
+ ** the `MONGODB_OUTPUT` file in the data space if specified by the user
+ ** _and_ to the `result` variable to make is previewable in the scheduler portal and to make it accessible for the next tasks.
+
+==== Cassandra
+
+*Variables:*
+
+.Cassandra Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
+| `CASSANDRA_HOST`
+| Label or the IP address of the server hosting the database.
+| Workflow, Import Task, Export Task
+| Yes
+| String
+| `localhost`
+| `CASSANDRA_PORT`
+| Listening port.
+| Workflow, Import Task, Export Task
+| No
+| Integer
+| `27018`
+| `CASSANDRA_KEYSPACE`
+| Keyspace to use.
+| Workflow, Import Task, Export Task
+| Yes
+| String
+| e.g. `my_keyspace`
+| `CASSANDRA_QUERY`
+| Query to fetch data.
+| Import Task
+| Yes
+| String
+| `SELECT * FROM ...`
+| `CASSANDRA_OUTPUT`
+| Relative path in the data space used to save the results in a CSV file.
+| Import Task
+| No
+| String
+| e.g. `path/to/my/output.csv`
+| `LABEL`
+| If the imported data is labeled for machine learning, a label attribute can be specified using this variable.
+| Import Task
+| No
+| String
+| e.g. class
+| `CASSANDRA_TABLE`
+| Data is stored in tables containing rows of columns, similar to SQL definitions.. It is created if it does not exist.
+| Export Task
+| Yes
+| String
+| e.g. `my_table`
+| `CASSANDRA_PRIMARY_KEY`
+| A primary key identifies the location and order of stored data. The primary key is defined when the table is created and cannot be altered.
+| Export Task
+| Yes
+| String
+| e.g. `(my_primary_key)` or `(attr_1, attr_2)`
+| `CASSANDRA_INPUT`
+| Path of the CSV file that contains data to be imported. This variable can:
+
+   - A URL. Valid URL schemes include http, ftp, s3, and file.
+   
+   - A relative path in the data space of a CSV file.
+   
+| Export Task
+| Yes
+| String
+| e.g. `path/to/input.csv`
+|===
+
+*How to use this task:*
+
+The task might require (if applicable)  the following third-party credentials: `CASSANDRA_USERNAME` and `CASSANDRA_PASSWORD`. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+
+In the import mode, the output containing the imported data takes one or many of the following forms:
+
+* a CSV format to saved to:
+ ** the `CASSANDRA_OUTPUT` file in the data space if specified by the user
+ ** _and_ to the `result` variable to make is previewable in the scheduler portal and to make it accessible for the next tasks.
+
+==== ElasticSearch
+
+*Variables:*
+
+.ElasticSearch Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
+| `ELASTICSEARCH_HOST`
+| Label or the IP address of the ElasticSearch server.
+| Workflow
+| Yes
+| String
+| `localhost`
+| `ELASTICSEARCH_PORT`
+| Listening port.
+| Workflow
+| No
+| Integer
+| `9200`
+| `ELASTICSEARCH_USER`
+| Username to use for connecting to Elasticsearch server if authentification is required.
+| Workflow
+| No
+| String
+|
+| `ELASTICSEARCH_INDEX`
+| Index to use. In export mode, it is created if it does not exist.
+| Import Task, Export Task
+| Yes
+| String
+| e.g. my_index
+| `ELASTICSEARCH_QUERY`
+| A query to fetch data. If empty, it will fetch all documents from the index by default.
+| Import Task
+| No
+| String
+| `{ "query": { "match_all": {} } }`
+| `ELASTICSEARCH_SIZE`
+| Maximum number of results to return.
+| Import Task
+| No
+| Integer
+| `10`
+| `ELASTICSEARCH_DOC_TYPE`
+| The documents type.
+| Import Task
+| Yes
+| String
+| e.g. my_doc_type
+| `ELASTICSEARCH_INPUT`
+| A JSON Object/Array to be indexed in ElasticSearch. This variable can:
+
+   - A String describing the JSON Object/Array
+   
+   - A relative path in the data space of a JSON file.
+   
+| Export Task
+| Yes
+| String
+| e.g.
+
+`{"document":{"key":"value"}}`
+
+or `path/to/input.json`
+|===
+
+*How to use this task:*
+
+The task might require (if the Elasticsearch server requires authentification) an `ELASTICSEARCH_USER` in addition to the following third-party credential: {key: `elasticsearch://<ELASTICSEARCH_USER>@<ELASTICSEARCH_HOST>:<ELASTICSEARCH_PORT>`, value: `ELASTICSEARCH_PASSWORD`>. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+
+In the import mode, the output containing the imported data takes the form of a JSON format to saved to the `result` variable to make is previewable in the scheduler portal and to make it accessible for the next tasks.
+
+=== Cloud
+
+Cloud data connectors allow to interact with cloud storage services. Currently we provide support for Amazon S3, Azure Blob Storage and Azure Data Lake.
+
+==== Amazon S3
+
+The Amazon S3 connector allows to upload and download data from S3. The connector workflow consists of two tasks:
+
+* Import_from_S3: Downloads files or folders recursively from S3 to the global space.
+* Export_to_S3: Uploads files or folders recursively from the global space to S3.
+
+*Variables:*
+
+.Amazon S3 Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?* | *Type*  | *Default/Examples*
+| `S3_LOCAL_RELATIVE_PATH`
+| Relative path to a folder in the data space to which the downloaded file(s) will be saved in import mode. In export mode, it should point to an existing file/folder that needs to be uploaded.
+| Import Task, Export Task
+| Yes
+| String
+| e.g. `path/to/input/file`
+
+or `path/to/input/folder/`
+
+or `path/to/output/folder/`
+| `S3_URL`
+| A valid URL to an existing S3 object that can be a file or a folder.
+| Import Task
+| Yes
+| String
+| e.g. https://s3.eu-west-2.amazonaws.com/activeeon-public/images/
+
+or https://s3.eu-west-2.amazonaws.com/activeeon-public/images/logo.jpg
+| `S3_BUCKET`
+| S3 Bucket name. If it does not exist, a new bucket is created (if possible) and assigned the specified region `S3_REGION`.
+| Export Task
+| Yes
+| String
+| e.g. activeeon-public
+| `S3_REGION`
+| A _valid_ AWS region code that corresponds to the region of the indicated bucket.
+| Export Task
+| Yes
+| String
+| e.g. `eu-west-2`, `us-east-1`
+| `S3_REMOTE_RELATIVE_PATH`
+| Prefix (relative path) used to store the uploaded data in the given bucket under the given path.
+If empty, the data will be uploaded to the bucket root folder.
+| Export Task
+| No
+| String
+| e.g. `path/to/output/`
+
+or `path/to/input/file/or/folder`
+|===
+
+*How to use these tasks:*
+
+Amazon S3 connector tasks require your AWS credential keys to be set as a third-party credential (`key:value` pairs) where {key: ACCESS_KEY, value: SECRET_KEY}; this is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+
+==== Azure Data Lake
+
+The Azure Data Lake connector allows to upload U-SQL scripts and then execute them as Data Lake Analytics (DLA) jobs. It requires an existing Data Lake Analytics account with its corresponding Data Lake Store account. The connector workflow consists of three tasks:
+
+* _Submit_job_: Connects to Azure Data Lake and submits the provided script.
+* _Wait_for_job_: Periodically monitors the DLA job status until its finalization.
+* _Display_result_: Downloads the result file and displays it.
+
+*Variables:*
+
+.Azure Data Lake Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?* | *Type*  | *Default/Examples*
+| `AZ_DLA_ACCOUNT`
+| Data Lake Analytics account to be used. It should already exist.
+| Workflow
+| Yes
+| String
+| e.g. my_dla_account
+| `AZ_DLA_JOB`
+| Name to identify the job to be submitted.
+| Workflow
+| Yes
+| String
+| e.g. my_dla_job
+| `AZ_DLA_SCRIPT`
+| File name of the U-SQL script to submit. The file must be located in the *Global Space* directory. An example file `script.usql` is provided.
+| Workflow
+| Yes
+| String
+v|Sample file: script.usql
+e.g. my_usql_script.usql
+| `AZ_DLA_OUTPUT`
+| Name of the output file to store the result of the script.
+| Workflow
+| Yes
+| String
+| e.g. my_output_file.csv
+| `AZ_CRON_MONITOR`
+| Cron expression to determine how frequently to monitor the completion of the job.
+| Workflow
+| Yes
+| String
+v|Default: "* * * * \*"
+(every minute)
+e.g. "*/2 * * * *"
+(every 2 minutes)
+| `AZ_SUBSCRIPTION`
+| _Optional_ variable to set an Azure subscription when not using the default one. Value can be a subscription's _name_ or _id_.
+| Workflow
+| No
+| String
+| e.g. Pay-As-You-Go
+|===
+
+*How to use these tasks:*
+
+Azure Data Lake tasks require your Azure login credentials to be set as third-party credentials (`key:value` pairs); this is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+
+You have two options for providing your login credentials:
+
+* Standard Azure login: `AZ_U:your_user` (usually an email). `AZ_P:your_password`.
+* Using an link:https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?toc=%2Fazure%2Fazure-resource-manager%2Ftoc.json&view=azure-cli-latest[Azure service principal]: `AZ_U:appId`. `AZ_P:password`. `AZ_T:tenant`. By default, if `AZ_T` is set, the tasks will attempt to connect through a service principal.
+
+[NOTE]
+====
+.The Output File
+* Instead of hardcoding the name of your output file in your U-SQL script, you can use the placeholder `OUTPUT_FILE`, which is automatically replaced by the value of `AZ_DLA_OUTPUT`.
+* Once downloaded, the output file will be stored in your *User Space* (and _not_ in the Global Space).
+* You can visualize a table-like version of your output data in the _Preview_ tab of the Display_result task.
+====
+
+==== Azure Blob Storage
+
+
+The Azure Blob Storage connector allows to upload and download unstructured data (documents, videos, photos, audio files, presentations, web pages ...) from Azure Blob Storage. The connector workflow consists of two tasks:
+
+* Import_from_Azure_Blob: Downloads blob(s) from Azure Blob Storage to the data space. Note that a virtual folder structure is possible in Azure Blob Storage. In that case, blobs are locally downloaded respecting this structure.
+* Export_to_Azure_Blob: Uploads file(s) or directories recursively from the data space to Azure Blob Storage.
+
+*Variables:*
+
+.Azure Blob Storage Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?* | *Type*  | *Default/Examples*
+| `INPUT_PATH`
+| Relative path to a directory in the data space to which the downloaded blob(s) will be saved. INPUT_PATH can contain either a path to a file, a directory terminated by / or an empty value for the root.
+| Import Task
+| No
+| String
+| e.g. `path/to/input/file.file`
+
+or `path/to/input/folder/`
+
+| `BLOB_NAME`
+| In import mode, it should refer to an existing blob. If it's empty, the entire container is downloaded. In export mode, this value corresponds either to the name of the blob to be uploaded or to the folder structure in which blob(s) will be uploaded.
+| Import Task, Export Task
+| No
+| String
+| e.g. `doc.txt`
+
+or `images/logo.jpg`
+
+or `folder`
+| `CONTAINER_NAME`
+| Azure storage container name. For the export mode, if it does not exist, a new container will be created (if possible).
+| Import Task, Export Task
+| Yes
+| String
+| e.g. `azure-storage-container`
+|===
+
+*How to use these tasks:*
+
+Azure Blob Storage connector tasks require your azure storage account and account key to be set as a third-party credential (`key:value` pairs) where {key: STORAGE_ACCOUNT, value: ACCOUNT_KEY}; this is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+
+
+=== ERP
+
+Proactive's ERP connectors enable communication and data exchange with popular ERP software providers.
+
+==== SAP ECC
+
+This connector allows you to interact with an SAP ECC system (not S/4HANA) by means of Remote Function Calls (RFC).
+
+*Variables:*
+
+.SAP ECC Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?* | *Type*  | *Default/Examples*
+| `JCO_ FUNCTION`
+| The name of a remote-enabled function module on your SAP System. You can verify the available functions in your ECC transaction SE37.
+| Workflow
+| Yes
+| String
+| e.g. RFC_SYSTEM_INFO
+|===
+
+*How to use this connector:*
+
+In order to securely connect to your SAP ECC system, you first need to store your SAP logon information as ProActive's link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials]. The required credentials are:
+
+.SAP connection credentials
+[cols="1,3,1"]
+|===
+| *Credential* | *Description* | *Example*
+| `JCO_ASHOST`
+| Application server host IP.
+| 10.10.10.1
+| `JCO_SYSNR`
+| System number.
+| 00
+| `JCO_CLIENT`
+| Client number.
+| 100
+| `JCO_USER`
+| SAP logon user name.
+| myuser
+| `JCO_PASSWD`
+| SAP logon password (it will be hidden).
+| mypassword
+| `JCO_LANG`
+| Preferred language.
+| EN
+| `JCO_SAPROUTER`
+| _(Optional)_ An SAP Router string, in case you are connecting from an external
+               network. It is important that you keep the /H/ tags.
+| /H/192.168.0.1/H/
+|===
+
+Once the credentials are set, the workflow can be executed. If the connection is successful, the connection attributes will be listed as output. *NB.* Proactive's SAP connector provides libraries to connect to an SAP server from a 64-bit OS (Windows, Linux, MacOS); libraries for other OS can be obtained through SAP Marketplace.
+
+.Querying for a function
+The SAP connector will search for the function module provided as the `JCO_FUNCTION` variable. If the function module exists and is remote-enabled, the script will display the function's parameters (import, export, tables) right after the Connection attributes.
+
+.Executing a function
+The SAP connector includes an example of how to execute and handle the result of a function using the default `RFC_SYSTEM_INFO`, which returns a structure containing the System's information. After the function is executed, the result can be accessed through the method `getExportParameterList()`.
+
+[source,groovy]
+----
+// execute RFC_SYSTEM_INFO function
+sapFunction.execute(destination)
+// obtain structure RFCSI_EXPORT
+JCoStructure structure = sapFunction.getExportParameterList().getStructure("RFCSI_EXPORT")
+if (structure != null) {
+  println("System info:")
+  // loop on structure to get the info
+  for(JCoField field : structure) {
+    println(field.getName() + " : " + field.getString())
+  }
+}
+----
+
+For a more detailed guide of ProActive's SAP ECC connector, please refer to link:https://www.activeeon.com/resources/SAPConnector.pdf[this document].
+
+Further information and examples using the SAP JCO library are available in the link:https://help.hana.ondemand.com/javadoc/index.html[SAP Cloud Platform SDK Documentation] and the SAP Java Connector documentation, accessible through link:https://websmp201.sap-ag.de/[SAP Service Marketplace].
