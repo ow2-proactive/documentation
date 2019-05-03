@@ -836,6 +836,8 @@ Once the job is finished, you can download/visualize Job Results from the Schedu
 
 image::scheduler-result-map.png[align=center]
 
+In the figure above, the label in *Result List* corresponds to the task name that generated the value.
+
 ==== Result List
 
 Each task has its own result (see section <<_task_result>>).
