@@ -727,6 +727,8 @@ block.
 
 include::./references/Variables.adoc[]
 
+[[_task_result]]
+
 === Task result
 
 Another way to propagate data from a task to another relies on *result* variable.
@@ -777,7 +779,7 @@ Example for Python/Jython:
 print results[0].value()
 ----
 
-==== Assigning metadata to result variable
+==== Assigning metadata to task result
 
 Result metadata can contain additional information associated with the result. In order to store metadata information, use the following syntax, if task2 depends on task1:
 
@@ -824,6 +826,64 @@ resultMetadata.put("file.extension",".png")
 file = new File("balloon13.png")
 result = file.getBytes()
 resultMetadata.put("content.type","image/png")
+----
+
+=== Job Results
+
+Job Results are composed of two elements: *Result List* and *Result Map*.
+Each task can contribute as for *Result List* as for *Result Map*.
+Once the job is finished, you can download/visualize Job Results from the Scheduler portal:
+
+image::scheduler-result-map.png[align=center]
+
+In the figure above, the label in *Result List* corresponds to the task name that generated the value.
+
+==== Result List
+
+Each task has its own result (see section <<_task_result>>).
+However, some task results can be marked as *Task Result Added to Job Result*.
+In that case, this task result will be added to the *Result List*.
+You can mark your task in the Studio:
+
+image::precious-result.png[align=center]
+
+In the Job xml schema it is available as `preciousResult`:
+
+``` {.xml}
+<task name="Init_Task" preciousResult="true" >
+```
+
+==== Result Map
+
+In addition to the *Results List*,
+a Job can also store some results into a dedicated key-value map,
+which is called *Result Map*. Every task can contribute to this *Result Map*.
+It is a write-only map, in such a way that a task cannot see
+what other tasks already wrote to the result map.
+When several tasks write the same key to the result map,
+the last write always takes precedence. This map contains String as a key,
+and https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html[Serializable ^] as value.
+
+Consider the following groovy example.
+
+`Task 1` writes to *Result Map*:
+[source, groovy]
+----
+resultMap.put("filename", "results.txt")
+resultMap.put("latestError", "no error")
+----
+
+`Task 2` writes to *Result Map*:
+[source, groovy]
+----
+resultMap.put("latestError", "wrong user id")
+----
+
+Once the job is finished, *Result Map* would contain:
+[source, groovy]
+----
+"filename" -> "results.txt"
+"latestError" -> "wrong user id"
 ----
 
 
@@ -2184,7 +2244,7 @@ Here is the ordered list of rules for the EDF policy:
 
 6. job with earliest submission time.
 
-==== Email notificaions
+==== Email notifications
 
 EDF policy sends 3 types of email notifications:
 
@@ -2192,7 +2252,7 @@ EDF policy sends 3 types of email notifications:
 
 2. When job will likely miss its deadline (i.e if the provided `JOB_EXEC_TIME` exceeds the left time until the deadline)
 
-3. (Arriving soon) When job is already missed its deadline.
+3. (Arriving soon) When job has already missed its deadline.
 
 Policy sends emails to the address specified in `EMAIL` Generic Information of the job.
 

@@ -1,3 +1,19 @@
+= Install
+
+Execute a normal build with gradle:
+
+----
+./gradlew clean build
+----
+
+Upon success open `index.html` to check your changes.
+
+----
+firefox build/asciidoc/html5/index.html
+----
+
+Do not forget to follow the naming and capitalization guidelines at the end of this README.
+
 = Asciidoctor
 
 http://asciidoctor.org/docs/asciidoc-syntax-quick-reference/
