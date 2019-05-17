@@ -828,6 +828,8 @@ result = file.getBytes()
 resultMetadata.put("content.type","image/png")
 ----
 
+A Task result can be added to the list of results of a Job, see section <<_result_list>> below.
+
 === Job Results
 
 Job Results are composed of two elements: *Result List* and *Result Map*.
@@ -838,6 +840,7 @@ image::scheduler-result-map.png[align=center]
 
 In the figure above, the label in *Result List* corresponds to the task name that generated the value.
 
+[[_result_list]]
 ==== Result List
 
 Each task has its own result (see section <<_task_result>>).
