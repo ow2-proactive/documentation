@@ -1,0 +1,67 @@
+:docinfo:
+:toc: 
+:toc-title: PCW User Guide
+= ProActive Cloud Watch (PCW)
+include::../common-settings.adoc[]
+:sectnums!:
+== All documentation links
+=== link:../user/ProActiveUserGuide.html[User Guide]
+ProActive Workflow & Scheduler (PWS) User Guide (Workflows, Tasks, Jobs Submission, Resource Management)
+
+=== link:../MLOS/MLOSUserGuide.html[ML Open Studio] 
+Machine Learning Open Studio (ML-OS) User Guide (ready to use palettes with ML Tasks & Workflows)
+
+=== link:../PCA/PCAUserGuide.html[Cloud Automation]
+ProActive Cloud Automation (PCA) User Guide (automate deployment and management of Services)
+
+=== link:../admin/ProActiveAdminGuide.html[Admin Guide]
+Administration Guide (Installation, networks, nodes, clusters, users, permissions)
+
+*API documentation: &emsp; https://try.activeeon.com/rest/doc/[Scheduler REST] &emsp; link:../user/ProActiveUserGuide.html#_scheduler_command_line[Scheduler CLI] &emsp; https://doc.activeeon.com/javadoc/latest/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html[Scheduler Java] &emsp; https://doc.activeeon.com/javadoc/latest/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html[Workflow Creation Java] &emsp; https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client[Python Client]*
+
+:sectnums:
+== Main concepts of PCW
+
+*ProActive Cloud Watch (PCW)* monitors a system, and according to some rules, detects complex events, and trigger actions when configured events are fired. +
+PCW defines *rules*, which describe the metrics to monitor, triggering conditions and action when the conditions are met. +
+
+ProActive Cloud Watch is organized as a catalog of rules (which can be activated or deactivated) that will automatically trigger user-specified actions if defined conditions are fulfilled. +
+For example PCW is able to monitor some computing resources (ProActive Nodes) and deploy new resources (scale up) when the monitored resources are overloaded. Another use-case is to notify users with alerts about degradation of some resources. +
+In general PCW allows to trigger any action via submitting a workflow to the ProActive Scheduler.
+
+*Definitions:*
+
+Rule:: - defines a monitoring part, triggering conditions and action. Rules generally use a template for certain monitoring use-cases and parameterize this template using variables.
+Rule Instance:: - instantiated rule with concrete set of variables. One Rule can have several Rule Instances with different values of variables. The rule instance can be activated/deactivated. When the rule instance is activated, it will start a monitoring defined inside the rule.
+image::PCW-General-overview.jpg[align=center]
+The diagram above illustrates the general overview of PCW functionality.
+
+=== Monitoring
+
+There are several types of metrics that can be monitored by PCW. Proactive Cloud Watch implements a polling mechanism to collect the monitoring metrics. A delay can also be added to resume monitoring after an action has been triggered only after a certain time. This feature is very useful in case of scale up/down use-cases and helps to avoid triggering extra actions until the new resource is deploying/undeploying. +
+The design of PCW allows to add new types of monitoring metrics.
+
+==== Monitoring physical metrics
+ProActive provides a way to monitor system metrics of virtual and physical machines (Nodes) deployed by ProActive Resource Manager. +
+Thanks to the JMX protocol, Proactive Nodes can expose many system metrics from the underlying operating system (disk, ram, cpu usage, network activity, etc...).
+Proactive Nodes use the  https://github.com/hyperic/sigar[Sigar^] library to collect physical metrics. +
+
+ProActive Cloud watch can monitor any ProActive Node JMX url to access the following metrics:
+
+* System memory, swap, cpu, load average, uptime, logins.
+* Per-process memory, cpu, credential info, state, arguments, environment, open files.
+* File system threshold detection and metrics.
+* Network interface detection, configuration information and metrics.
+* Network route and connection tables.
+
+==== Monitoring host accessibility
+Another type of monitoring available in PCW is to check host accessibility. The implementation of this metric follows the `ping` host approach. With help of this metric a user can easily check if a host is down (or up) and in this case automatically trigger an action.
+
+=== Processing mechanism
+The core of rule processing is managed by the https://www.drools.org/[Drools Engine^] for performance processing of collected metrics. It features powerful mechanisms for complex event processing. The advanced Drools algorithm helps fast detection of fulfilling the conditions and triggering actions.
+
+=== Rule’s Action
+According to the concepts of PCW, the action will be triggered when specified condition is met. +
+In order to make an action flexible to any user needs, the rule’s action is firing a job inside scheduler. A user just need to specify which workflow from Catalog will be fired as Rule’s action. +
+For example, a user can design an action workflow that will send notification (alert) if some metric has reached a critical value. +
+For scalability use-case a Rule’s action can be staring of the Cloud Automation service that will deploy new resources.
