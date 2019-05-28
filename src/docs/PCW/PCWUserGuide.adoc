@@ -50,3 +50,60 @@ According to the concepts of PCW, the action will be triggered when specified co
 In order to make an action flexible to any user needs, the rule’s action is firing a job inside scheduler. A user just need to specify which workflow from Catalog will be fired as Rule’s action. +
 For example, a user can design an action workflow that will send notification (alert) if some metric has reached a critical value. +
 For scalability use-case a Rule’s action can be staring of the Cloud Automation service that will deploy new resources.
+
+== PCW portal -  Using existing rules
+
+In Automation Dashboard portal, the Cloud Watch view allows users to activate and parametrize a predefined set of rules and also to create new ones.
+
+The next screenshot illustrates PCW portal.
+
+image::automation-dashboard-cloud-watch.PNG[align=center]
+
+The portal is divided in several sections:
+
+1. In the `Rules` panel a user can find the set of predefined PCW rules ready to be activated.
+2. `Activated Rule Instances` panel shows all rules instances after activation with certain variables.
+3. `Rule - Fired Jobs` table provides information about triggered jobs inside Scheduling as action of activated rules.
+4. `Removed Rule Instances` panel gives the list of all rule instances that were removed from the list of activated rules.
+
+In order to better understand the usage of PCW portal, let’s take an example of using existing PCW rules provided by the ProActive distribution.
+
+=== Activating a Rule
+
+Here is an example to illustrate simple use-case of PCW with portal.
+
+The next screenshot shows how to activate a rule, when a user selects the certain rule from list of `Rules`.
+
+image::PCW-rule activation.PNG[align=center]
+
+A user can change the default values. +
+A user should *Obtain a JMX node url* and paste the value in the _nodeUrlVar_ variable. +
+After modifying the variables a user can *Check* (validate) the rule or directly *Activate* it.
+
+=== Using Rule variables
+The rule variables depend on the definition and purpose of the rule. There are different variables for different rules. The designer of a new rule can choose the set of variables needed.
+
+Let’s give explanation of rules for our example:
+
+- nodeUrlVar - url of the JMX endpoint what will be monitored
+- pollingPeriodInSecondsVar - time frequence when collecting metrics from monitored resource
+- calmPeriodInSecondsVar - time period during which the metrics are not collected after the rule action was triggered
+- workflowNameAsActionVar - name of the workflow inside ProActive Catalog that will be fired as action
+- bucketNameAsActionVar - name of the catalog bucket identifying the workflow that will be fired as action
+- usageCombinedCPUMetric - specific Sigar metric for this rule, identifying combined CPU usage kpi
+- percentageUsedLimit - threshold of percentage used CPU metric which will trigger the action. This variable is directly connected with the rule condition.
+
+=== Activated Rule Instances
+After activation of a *rule*, the instance will appear in section `Activated Rule Instances`.
+
+All the activated rule instances are monitoring the specified resources. If the triggering condition is met, then the rule will fire the job. This fired job description will appear in `Rule - Fired Jobs` table. The monitoring and triggering actions can be stopped by removing an Activated rule instance. After removing rule instance from active list, it will appear in `Removed Rule Instances table`. It’s possible to see the history of all fired jobs for removed rule instance.
+
+This behaviour is demonstrated on the next screenshot.
+
+image::PCW-activated-with-removed.PNG[align=center]
+
+=== Obtaining JMX node urls
+ProActive Resource Manager portal provides access to monitoring abilities. During the activation of a rule, a user should enter as rule parameter a JMX endpoint corresponding to the monitored resource (for example a ProActive Node). +
+In order to get this information for a Node, a user can go to *RM portal*, click with the right button on the Node which should be monitored and click `Copy JMX Endpoint`. Then a user can come back to *Cloud Watch* portal and paste the JMX url in corresponding field.
+
+image::RM-copy-jmx-ur.PNG[align=center]
