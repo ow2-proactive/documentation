@@ -1918,6 +1918,7 @@ The complete API description can be found in the link:/doc/javadoc/org/ow2/proac
 NOTE: The `schedulerapi` <<_glossary_script_bindings,script binding>> can also be used in <<_glossary_additional_task_scripts,additional scripts>> defined inside a <<_glossary_task,ProActive Task>>.
 To know in which scripts `schedulerapi` is available, refer to the <<_variables_quick_reference,variables quick reference>>.
 
+[[_dataspace_apis]]
 === DataSpace API
 
 The traditional way to transfer files from the user or global space to a task is by using file transfer directives as described in chapter <<_data_spaces>>.
