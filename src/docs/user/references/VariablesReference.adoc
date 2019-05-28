@@ -271,28 +271,28 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | <<_selection, selection>>
 | bash, cmd, perl
 
-| *Fork Environment*. Fork Environment variable is a http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/common/task/ForkEnvironment.html[ForkEnvironment java object] allowing a script to set various initialization parameters of the forked JVM. See <<_fork_environment, Fork Environment>>
+| *Fork Environment*. Fork Environment variable is a link:/doc/javadoc/org/ow2/proactive/scheduler/common/task/ForkEnvironment.html[ForkEnvironment java object] allowing a script to set various initialization parameters of the forked JVM. See <<_fork_environment, Fork Environment>>
 | forkEnvironment.setJavaHome( "/usr/java/default" )
 | -
 | -
 | <<_fork_environment, environment>>
 | bash, cmd, perl, R, PowerShell
 
-| *Scheduler API*. Scheduler API variable is a http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/SchedulerNodeClient.html[SchedulerNodeClient java object] which can connect to the ProActive Scheduler frontend and interact directly with its <<_scheduler_and_dataspace_apis,API>>.
+| *Scheduler API*. Scheduler API variable is a link:/doc/javadoc/org/ow2/proactive/scheduler/task/client/SchedulerNodeClient.html[SchedulerNodeClient java object] which can connect to the ProActive Scheduler frontend and interact directly with its <<_scheduler_and_dataspace_apis,API>>.
 | schedulerapi.connect()
 | -
 | -
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
 | bash, cmd, perl, R, PowerShell
 
-| *UserSpace API*. UserSpace API variable is a http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient java object] which can connect to the <<_global_and_user_spaces,User Space>> and interact directly with its <<_scheduler_and_dataspace_apis,API>>.
+| *UserSpace API*. UserSpace API variable is a link:/doc/javadoc/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient java object] which can connect to the <<_global_and_user_spaces,User Space>> and interact directly with its <<_scheduler_and_dataspace_apis,API>>.
 | userspaceapi.connect()
 | -
 | -
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
 | bash, cmd, perl, R, PowerShell
 
-| *GlobalSpace API*. GlobalSpace API variable is a http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient java object] which can connect to the <<_global_and_user_spaces,Global Space>> and interact directly with its <<_scheduler_and_dataspace_apis,API>>.
+| *GlobalSpace API*. GlobalSpace API variable is a link:/doc/javadoc/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient java object] which can connect to the <<_global_and_user_spaces,Global Space>> and interact directly with its <<_scheduler_and_dataspace_apis,API>>.
 | globalspaceapi.connect()
 | -
 | -
@@ -370,7 +370,7 @@ If the task displays an error due to the result conversion, several approaches c
 
 Results of parent tasks are stored in the *results* variable. Like the variables map, accessing this *results* variable is language-dependant.
 
-For ruby, python, jython or groovy script languages, the parent tasks results (*results* variable) contains a list of http://doc.activeeon.com/javadoc/latest/org/ow2/proactive/scheduler/common/task/TaskResult.html[TaskResult java object].
+For ruby, python, jython or groovy script languages, the parent tasks results (*results* variable) contains a list of link:/doc/javadoc/org/ow2/proactive/scheduler/common/task/TaskResult.html[TaskResult java object].
 In order to access the result real value, the value() method of this object must be called:
 
 Example for Python/Jython:
@@ -427,7 +427,7 @@ Java objects such as fork environment variable, scheduler, userspace or globalsp
 
 ==== Perl language
 For the perl script: the specification of special variables accesible inside scheduler is corresponding to native task. So for example the result of perl task should be the exit code.
-Please see the proper names of the variables in http://doc.activeeon.com/dev/user/ProActiveUserGuide.html#_variables_quick_reference[Variables quick reference]. +
+Please see the proper names of the variables in link:/doc/user/ProActiveUserGuide.html#_variables_quick_reference[Variables quick reference]. +
 Inside Perl, you can access the environment variables using the *%ENV* hash.
 
 The aim of next examples is to clarify the usage of variables in Perl:
