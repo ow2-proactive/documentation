@@ -12,11 +12,11 @@
 * link:PCA/PCAUserGuide.html[ProActive Cloud Automation User Guide] (Workflows, Actions to automate Services deployment and management)
 * link:admin/ProActiveAdminGuide.html[Administration Guide] (Installation, Infrastructure & Nodes setup, Agents,...)
 
-*API documentation:* &emsp; https://try.activeeon.com/rest/doc/[Scheduler REST] &emsp; link:user/ProActiveUserGuide.html#_scheduler_command_line[Scheduler CLI] &emsp; https://doc.activeeon.com/javadoc/latest/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html[Scheduler Java] &emsp; https://doc.activeeon.com/javadoc/latest/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html[Workflow Creation Java] &emsp; https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client[Python Client]
+*API documentation:* &emsp; link:/rest/doc/[Scheduler REST] &emsp; link:user/ProActiveUserGuide.html#_scheduler_command_line[Scheduler CLI] &emsp; link:/doc/javadoc/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html[Scheduler Java] &emsp; link:/doc/javadoc/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html[Workflow Creation Java] &emsp; https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client[Python Client]
 
 == Links
 
-* http://www.activeeon.com[Activeeon^]
+* http://www.activeeon.com[Activeeon Website^]
 * http://www.activeeon.com/community-downloads[Download ProActive^]
 * http://try.activeeon.com/[Try ProActive online^]
 

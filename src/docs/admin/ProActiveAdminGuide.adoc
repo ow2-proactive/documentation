@@ -3,8 +3,23 @@
 :toc-title: PWS Admin Guide
 = ProActive Workflows & Scheduling -- Admin Guide
 include::../common-settings.adoc[]
-include::../all-doc-links.adoc[]
+:sectnums!:
+== All documentation links
+=== link:../user/ProActiveUserGuide.html[User Guide]
+ProActive Workflow & Scheduler (PWS) User Guide (Workflows, Tasks, Jobs Submission, Resource Management)
 
+=== link:../MLOS/MLOSUserGuide.html[ML Open Studio] 
+Machine Learning Open Studio (ML-OS) User Guide (ready to use palettes with ML Tasks & Workflows)
+
+=== link:../PCA/PCAUserGuide.html[Cloud Automation]
+ProActive Cloud Automation (PCA) User Guide (automate deployment and management of Services)
+
+=== link:../admin/ProActiveAdminGuide.html[Admin Guide]
+Administration Guide (Installation, networks, nodes, clusters, users, permissions)
+
+*API documentation: &emsp; link:/rest/doc/[Scheduler REST] &emsp; link:../user/ProActiveUserGuide.html#_scheduler_command_line[Scheduler CLI] &emsp; link:/doc/javadoc/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html[Scheduler Java] &emsp; link:/doc/javadoc/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html[Workflow Creation Java] &emsp; https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client[Python Client]*
+
+:sectnums:
 == Overview
 
 include::../Overview.adoc[]
@@ -68,7 +83,11 @@ Your ProActive Scheduler is ready to execute <<_glossary_job,*Jobs*>>!
 
 === Minimum requirements
 
-The minimum requirements can be found in the Data Sheet. Please find an up to date Data Sheet in the in the link:https://www.activeeon.com/about/resources[resources].
+ProActive server sizing is based on the number of jobs and tasks executed and submitted per day. It is also based on the number of nodes connected to the server.
+
+The minimal requirements for the server is 4 Cores, 8 GB. An average ProActive Scheduler installation uses 12 cores, 24 GB RAM. Large setups use 24 cores and 100 GB RAM.
+
+Additionally, using local ProActive Nodes (deployed directly inside the ProActive server) will impact the sizing. As these nodes will execute tasks which can consume CPU and RAM, machine resources will be shared between the ProActive Server and the Local Nodes.
 
 === Scheduler Life-Cycle Management
 
@@ -1054,7 +1073,7 @@ When you create a policy you must specify them:
 
 * *nodeUsers* - utilization permission that defines who can get nodes for computations from this node source. It has to take one of the following values:
 ** `ME` - only the node source creator
-** `users=user1,user2;groups=group1,group2;tokens=t1,t2` - only specific users, groups or tokens. I.e. users=user1 - node access is limited to user1; users=user1;groups=group1 - node access is limited to user1 and all users from group group1; users=user1;tokens=t1 - node access is limited to user1 or anyone who specified token t1. If node access is protected by a token, node will not be found by the ProActive Resource Manager when trying to execute workflows, unless the corresponding token is specified inside the workflow(s).
+** `users=user1,user2;groups=group1,group2;tokens=t1,t2` - only specific users, groups or tokens. I.e. users=user1 - node access is limited to user1; users=user1;groups=group1 - node access is limited to user1 and all users from group group1; users=user1;tokens=t1 - node access is limited to user1 or anyone who specified token t1. If node access is protected by a token, node will not be found by the ProActive Resource Manager when trying to execute workflows, unless the corresponding token is specified inside the workflow(s). To exclude specific users or groups use users=!user1,!user2;groups=!group1,!group2. Tokens can not be excluded, and mixing inclusion with exclusion is not permitted (i.e. users=user1,!user2;groups=!group1,group2).
 ** `ALL` - everybody can use nodes from this node source
 
 NOTE: To specify a token inside a chosen workflow, add the key/value pair *NODE_ACCESS_TOKEN:<token>* to its generic information.
