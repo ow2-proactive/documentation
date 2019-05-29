@@ -78,7 +78,7 @@ Here is an example to illustrate simple use-case of PCW with portal.
 
 The next screenshot shows how to activate a rule, when a user selects the certain rule from list of `Rules`.
 
-image::PCW-rule activation.PNG[align=center]
+image::PCW-rule-activation.PNG[align=center]
 
 A user can change the default values. +
 A user should <<_pcw_obtaining_url, *Obtain a JMX node url*>> and paste the value in the _nodeUrlVar_ variable. +
@@ -120,10 +120,6 @@ The provided rules catalog is a good starting point when one wants to design mor
 
 === Rule’s structure explanation
 The rule definition consists of the following main parts:
-
-Variables definition. A user can add variables according to its needs. All variables will be replaced with their values inside the rule implementation using the following pattern: #variableName
-Definition of polling metrics. Polling metrics are specific parameters which depends on the polling class implementation. Polling parameters can reuse the rule variables. The collecting metrics are usually the kpis provided by JMX endpoint, like CPU, Memory, etc.
-Definition of Drool’s rule. In this part we use Drools standardized language for description of a triggering condition and an action (when, then blocks).
 
 1. *Variables definition*. A user can add variables according to its needs. All variables will be replaced with their values inside the rule implementation using the following pattern: #variableName
 2. *Definition of polling metrics*. Polling metrics are specific parameters which depends on the polling class implementation. Polling parameters can reuse the rule variables. The collecting metrics are usually the kpis provided by JMX endpoint, like CPU, Memory, etc.
@@ -228,7 +224,7 @@ Each monitoring type has an implementation of a Polling class. The polling param
     </kpis>
 -----------------
 The part above describes a polling configuration for Monitoring physical metrics. This  particular example is for monitoring CPU. +
-The polling and calm periods correspond to the frequency of collecting the monitoring metrics. In our example, the class is *Jmx_Metrics*. This implementation takes two parameters: the jmx node url and the jmx credentials. The actual metric to monitor is represented by the *_<kpi>_* tag. Several metrics can be monitored at the same time. For our example after variables replacement the monitoring metric will be _"sigar:Type=CpuUsage Combined"_
+The polling and calm periods correspond to the frequency of collecting the monitoring metrics. In our example, the class is *Jmx_Metrics*. This implementation takes two parameters: the jmx node url and the jmx credentials. The actual metric to monitor is represented by the *_<kpi>_* tag. Several metrics can be monitored at the same time. For our example after variables replacement the monitoring metric will be _"sigar:Type=CpuUsage Combined"._
 
 ==== Polling parameters for Monitoring host accessibility
 
@@ -339,4 +335,5 @@ We provide support in the designing rules for a user-specific use-case.
 
 === Display a created rule in Cloud Watch portal
 
-After finishing the design in order to see your rule in PCW portal, the rule should be saved in Catalog with the specific kind *Rule*. Please check out the <<_catalog_portal, *Catalog documentation section*>> for more information about saving objects in Catalog.
+After finishing the design in order to see your rule in PCW portal, the rule should be saved in Catalog with the specific kind *Rule*. Please check out the link:../user/ProActiveUserGuide.html#_catalog_portal[*Catalog documentation section*] for more information about saving objects in Catalog.
+
