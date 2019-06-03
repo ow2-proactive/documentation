@@ -83,9 +83,9 @@ Your ProActive Scheduler is ready to execute <<_glossary_job,*Jobs*>>!
 
 === Minimum requirements
 
-ProActive server sizing is based on the number of jobs and tasks executed and submitted per day. It is also based on the number of nodes connected to the server.
+The size of a ProActive server is based on the number of jobs and tasks executed and submitted per day. It is also based on the number of nodes connected to the server.
 
-The minimal requirements for the server is 4 Cores, 8 GB. An average ProActive Scheduler installation uses 12 cores, 24 GB RAM. Large setups use 24 cores and 100 GB RAM.
+The minimal requirements for the server is 4 Cores and 8 GB. An average ProActive Scheduler installation uses 12 cores, 24 GB RAM. Large setups use 24 cores and 100 GB RAM.
 
 Additionally, using local ProActive Nodes (deployed directly inside the ProActive server) will impact the sizing. As these nodes will execute tasks which can consume CPU and RAM, machine resources will be shared between the ProActive Server and the Local Nodes.
 
