@@ -109,7 +109,7 @@ image::PCW-activated-with-removed.PNG[align=center]
 [[_pcw_obtaining_url]]
 === Obtaining JMX node urls
 ProActive Resource Manager portal provides access to monitoring capabilities. During the activation of a rule, a user should enter as rule parameter a JMX endpoint corresponding to the monitored resource (for example a ProActive Node). +
-In order to get this information from a Node, a user can go to the *RM portal*, clickon the right button of a Node which should be monitored and click `Copy JMX Endpoint`. Then, he can come back to *Cloud Watch* portal and paste the JMX url in the corresponding field.
+In order to get this information from a Node, a user can go to the *RM portal*, click on the right button of a Node which should be monitored and click `Copy JMX Endpoint`. Then, he can come back to *Cloud Watch* portal and paste the JMX url in the corresponding field.
 
 image::RM-copy-jmx-ur.PNG[align=center]
 
@@ -224,7 +224,7 @@ Each monitoring type has an implementation of a Polling class. The polling param
     </kpis>
 -----------------
 The code above describes a polling configuration for Monitoring physical metrics. This  particular example is for monitoring CPUs. +
-The polling and calm periods correspond to the frequency of collecting the monitoring metrics. The concrete set of the parameters rely on the implementation of a Polling class. In our example, the class is *Jmx_Metrics*. This implementation takes two parameters: the jmx node url and the jmx credentials.
+The polling and calm periods correspond to the frequency of collecting the monitoring metrics. The concrete set of parameters rely on the implementation of a Polling class. In our example, the class is *Jmx_Metrics*. This implementation takes two parameters: the jmx node url and the jmx credentials.
 The actual metric to monitor is represented by the *_<kpi>_* tag. Several metrics can be monitored at the same time. For our example after variables replacement the monitoring metric will be _"sigar:Type=CpuUsage Combined"._
 
 ==== Polling parameters for Monitoring host accessibility
