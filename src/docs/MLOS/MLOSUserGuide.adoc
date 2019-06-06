@@ -224,7 +224,7 @@ When opened, click on the Proactive icon to open a notebook based on the proacti
 
 ==== Using connect()
 
-If you are trying proactive for the first time, please sign up on [try platform](https://try.activeeon.com/signup.html).
+If you are trying proactive for the first time, please sign up on https://try.activeeon.com/signup.html[try platform].
 Once you receive your login and password, connect using the `#%connect()` pragma:
 
 ```python
@@ -261,7 +261,7 @@ You can also force the current Kernel to connect using any .ini config file thro
 ```
 
 (for more information about this format please check
-[configParser](https://docs.python.org/3/library/configparser.html))
+https://docs.python.org/3/library/configparser.html[configParser])
 
 === Usage
 
@@ -469,8 +469,7 @@ To create a job, please use the `#%job()` pragma:
 If the job was already been created, the call of this pragma would just rename the job already created by the new provided name.
 
 **Notice that it is not necessary to create and name explicitly the job. If not done by the user, this step is implicitly
-performed when the job is submitted (check section <<test.adoc#Submit\ your\ job\ to\ the\ scheduler,Submit your job to the
-scheduler>> for more information).**
+performed when the job is submitted (check section <<Submit your job to the scheduler>> for more information).**
 
 ===== Plot job
 
