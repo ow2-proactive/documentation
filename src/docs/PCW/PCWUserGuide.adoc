@@ -335,5 +335,5 @@ Even if the design of the xml rule looks complex, choosing Drools syntax gives a
 
 === Display a created rule in Cloud Watch portal
 
-Once the rule is defined, it should be saved in Catalog with the specific kind *Rule*. Please check out the link:../user/ProActiveUserGuide.html#_Catalog_portal[*Catalog documentation section*] for more information about saving objects in Catalog.
+Once the rule is defined, it should be saved in Catalog with the specific kind *Rule*. Please check out the link:../user/ProActiveUserGuide.html#_catalog_portal[*Catalog documentation section*] for more information about saving objects in Catalog.
 
