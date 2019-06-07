@@ -151,7 +151,7 @@ To get started, a simple Docker_File task can be tested by using this Dockerfile
 
 ----
 FROM ubuntu:18.04
-RUN echo "Hello ProActive" 
+RUN echo "Hello ProActive"В 
 RUN sleep 30
 ----
 
@@ -217,7 +217,7 @@ This can be achieved using <<_selection,selection script>>.
 
 === PHP Task
 
-The PHP task executes a PHP script on a ProActive Node’s local PHP installation. The PHP script will be downloaded from the dataspace. So, the PHP script must be present in the dataspace beforehand. The task can also be modified to download the PHP script from other sources. Log forwarding and log streaming during PHP execution is conveniently available through the Scheduler portal.
+The PHP task executes a PHP script on a ProActive NodeвЂ™s local PHP installation. The PHP script will be downloaded from the dataspace. So, the PHP script must be present in the dataspace beforehand. The task can also be modified to download the PHP script from other sources. Log forwarding and log streaming during PHP execution is conveniently available through the Scheduler portal.
 
 ==== Node configuration
 For a ProActive Node to execute a PHP script, PHP must be installed on the machine of the ProActive Node. The PHP task has a selection script which validates a correct PHP installation by searching the PATH and validating if the PHP can be executed successfully. The static selection script validates the PHP execution once and stores the result in the cache, so removing or installing PHP requires a restart of the node or a switch to the dynamic selection script.
@@ -1253,7 +1253,7 @@ Here is the list of topologies we support:
 
 === Handling failures
 
-It’s possible to have errors when your Job is executed. *ProActive Scheduler* provides several mechanisms to deal with exceptional situations in your Jobs.
+ItвЂ™s possible to have errors when your Job is executed. *ProActive Scheduler* provides several mechanisms to deal with exceptional situations in your Jobs.
 If a Task contains errors during Job execution, the *Proactive Scheduler* automatically restarts this Task. The number of automatic restarts is defined by the Workflow owner by assigning an integer value to the counter *Number of Automatic Restarts*.
 The user also defines *Where he wants that the scheduler restarts In-Error tasks*, i.e., on the same Proactive node or on another Proactive node.
 
@@ -1284,7 +1284,7 @@ the task is terminated. Note that the tasks are terminated without any prior not
 
 === Cron Workflows
 The *ProActive Scheduler* allows to schedule <<_glossary_workflow,*Workflows*>> with the <<_glossary_job_planner,*Job Planner*>>.
-Find more information in the <<_user_job_planner_service,*Job Planner Service*>> section.
+Find more information in the link:../JobPlanner/JobPlannerUserGuide.html[*Job Planner User Guide*].
 
 
 === Cron Tasks
@@ -1307,11 +1307,11 @@ Setting up a cron task requires two steps:
 Example that prints _Hello_ every 10 minutes:
 [source, xml]
 ----
-<job name=”cron_job”>
+<job name=вЂќcron_jobвЂќ>
      <genericInformation>
         <info name="START_AT" value="2014-01-01T00:00:00+01:00"/>
     </genericInformation>
-    <task name=”cron_task”>
+    <task name=вЂќcron_taskвЂќ>
         <scriptExecutable>
             <script>
                 <code language="javascript">
@@ -1320,9 +1320,9 @@ Example that prints _Hello_ every 10 minutes:
             </script>
         </scriptExecutable>
         <controlFlow>
-            <loop target=”cron_task”>
+            <loop target=вЂќcron_taskвЂќ>
                 <script>
-                    loop = “10 * * * *”
+                    loop = вЂњ10 * * * *вЂќ
                 </script>
             <loop>
         </controlFlow>
@@ -1659,7 +1659,7 @@ When the Workflow is selected from Catalog you have two options:
 ==== Add Bucket Menu to the Palette
 The Palette makes it easier to use workflows stored in a specific Bucket of the Catalog as templates when designing a Workflow.
 
-To add a bucket from the Catalog as a dropdown menu in the Palette:  Click on `View` → `Add Bucket Menu to the Palette` or you press the image:studio-palette-add.png[+, 32, 32] button in the palette.
+To add a bucket from the Catalog as a dropdown menu in the Palette:  Click on `View` в†’ `Add Bucket Menu to the Palette` or you press the image:studio-palette-add.png[+, 32, 32] button in the palette.
 A window will show up to ask you which bucket you want to add to the Palette as in the image below.
 
 image::studio-catalog-main-menu3.png[align=center]
@@ -1675,7 +1675,7 @@ image::studio-catalog-main-menu5.png[align=center]
 ==== Change Palette Preset
 The Studio offers the possibility to set a Preset for the Palette. This makes it easier to load the Palette with a predefined set of default buckets.
 Presets are generally arranged by theme (Basic Examples, Machine Learning, Deep Learning, Big Data, etc.)
-The Palette's preset can be changed by clicking `View` → `Change Palette Preset`. This will show a window with the current list of presets as in the image below.
+The Palette's preset can be changed by clicking `View` в†’ `Change Palette Preset`. This will show a window with the current list of presets as in the image below.
 
 image::studio-catalog-main-menu1.png[align=center]
 
@@ -2268,7 +2268,7 @@ That way other tasks will not be affected by changes, because Docker containers 
 the host machine's software stays the same.
 
 ==== How to use a fork execution Environment
-Select Docker in the ‘Fork Execution Environment’ Dropdown:
+Select Docker in the вЂ�Fork Execution EnvironmentвЂ™ Dropdown:
 sample Docker environment settings will appear.
 
 That settings ensure, that the current task is executed inside a Docker container, or fail if Docker is
@@ -2296,14 +2296,10 @@ Then both will be combined to:
 The combined command will execute a JVM inside a docker container.
 Internally the command is split into docker, run, java, /usr/bin/java, -cp, [Classpath], [ExecutedClass].
  That is important to know because the fork execution command is split by spaces.
-  That means, that paths can’t contain spaces. The Docker container mounts the ProActive home and a
+  That means, that paths canвЂ™t contain spaces. The Docker container mounts the ProActive home and a
    folder in the temp directory of the operating system. Those cannot contain spaces, because if they
     do then the fork execution command will be split wrong and fail.
 
-[[_user_job_planner_service]]
-== Job Planner Service
-
-include::./references/JobPlannerServiceReference.adoc[]
 
 == Addons
 

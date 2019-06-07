@@ -321,7 +321,7 @@ end
 </droolContent>
 -----------------
 
-The provided host accessibility example will trigger an action when the specified host is down. This triggering behaviour is declared in `when` part with 2 conditions:
+The provided host accessibility example will trigger an action when the specified host is down. This triggering behavior is declared in `when` part with 2 conditions:
 
 * the monitoring url should be equal to specified host address
 * _upAndRunning_ metric should be false (the host is not accessible in this case)
