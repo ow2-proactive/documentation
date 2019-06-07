@@ -15,6 +15,6 @@ ProActive Cloud Automation (PCA) User Guide (automate deployment and management 
 === link:../admin/ProActiveAdminGuide.html[Admin Guide]
 Administration Guide (Installation, networks, nodes, clusters, users, permissions)
 
-*API documentation: &emsp; link:/rest/doc/[Scheduler REST] &emsp; link:../user/ProActiveUserGuide.html#_scheduler_command_line[Scheduler CLI] &emsp; link:/doc/javadoc/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html[Scheduler Java] &emsp; link:/doc/javadoc/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html[Workflow Creation Java] &emsp; https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client[Python Client]*
+*API documentation: &emsp; link:../rest/[Scheduler REST] &emsp; link:../user/ProActiveUserGuide.html#_scheduler_command_line[Scheduler CLI] &emsp; link:/doc/javadoc/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html[Scheduler Java] &emsp; link:/doc/javadoc/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html[Workflow Creation Java] &emsp; https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client[Python Client]*
 
 :sectnums:
