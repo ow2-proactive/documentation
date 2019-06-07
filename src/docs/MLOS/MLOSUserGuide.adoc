@@ -166,6 +166,439 @@ E. Click the *Tasks* tab, select an *Preview_Results* task and click on the *Pre
 
 image::execute.gif[100000,2000]
 
+== ProActive Jupyter Kernel
+
+The ActiveEon Jupyter Kernel adds a kernel backend to Jupyter. This kernel interfaces directly with the ProActive
+scheduler and constructs tasks and workflows to execute them on the fly.
+
+=== Installation
+
+==== Requirements
+
+Python 2 or 3
+
+==== Using https://pypi.org/[PyPi]
+
+* open a terminal
+
+* install the proactive jupyter kernel with the following commands:
+
+```bash
+$ pip install proactive proactive-jupyter-kernel --upgrade
+$ python -m proactive-jupyter-kernel.install
+```
+
+==== Using source code
+
+* open a terminal
+
+* clone the repository on your local machine:
+
+```bash
+$ git clone git@github.com:ow2-proactive/proactive-jupyter-kernel.git
+```
+
+* install the proactive jupyter kernel with the following commands:
+
+```bash
+$ pip install proactive-jupyter-kernel/
+$ python -m proactive-jupyter-kernel.install
+```
+
+=== Platform
+
+You can use any jupyter platform.
+We recommend to use of jupyter lab. To launch it from your terminal after having installed it:
+
+```bash
+$ jupyter lab
+```
+or in daemon mode:
+```bash
+$ nohup jupyter lab &>/dev/null &
+```
+
+When opened, click on the ProActive icon to open a notebook based on the proactive kernel.
+
+=== Connection
+
+==== Using connect()
+
+If you are trying proactive for the first time, sign up on the https://try.activeeon.com/signup.html[try platform].
+Once you receive your login and password, connect to the trial platform using the `#%connect()` pragma:
+
+```python
+#%connect(login=YOUR_LOGIN, password=YOUR_PASSWORD)
+```
+
+To connect to another ProActive Server host, use the later pragma this way:
+
+```python
+#%connect(host=YOUR_HOST, port=YOUR_PORT, login=YOUR_LOGIN, password=YOUR_PASSWORD)
+```
+
+==== Using a configuration file
+
+For automatic sign in, create a file named *proactive_config.ini* in your notebook working directory.
+
+Fill your configuration file according to the following format:
+
+```ini
+[proactive_server]
+host=YOUR_HOST
+port=YOUR_PORT
+[user]
+login=YOUR_LOGIN
+password=YOUR_PASSWORD
+```
+
+Save your changes and restart the ProActive kernel.
+
+You can also force the current Kernel to connect using any `.ini` config file through the `#%connect()` pragma:
+
+```python
+#%connect(path=PATH_TO/YOUR_CONFIG_FILE.ini)
+```
+
+(For more information about this format please check
+https://docs.python.org/3/library/configparser.html[configParser])
+
+=== Usage
+
+==== Creating a Python task
+
+To create a task, use the pragma `#%task()` followed by the task implementation script written to a notebook block code.
+To use this pragma, a task name has to be provided at least. Example:
+
+```python
+#%task(name=myTask)
+print('Hello world')
+```
+
+General usage:
+
+```python
+#%task(name=TASK_NAME, [language=SCRIPT_LANGUAGE], [dep=[TASK_NAME1,TASK_NAME2,...]], [generic_info=[(KEY1,VAL1), (KEY2,VALUE2),...]], [export=[VAR_NAME1,VAR_NAME2,...]], [import=[VAR_NAME1,VAR_NAME2,...]], [path=IMPLEMENTATION_FILE_PATH])\n'
+```
+
+Users can also provide more information about the task using the pragma's options. In the following, we give more
+details about possible options:
+
+===== Language
+
+The `language` parameter is needed when the task script is not written in native Python. If not provided, Python will be
+ selected as the default language.
+The supported programming languages are:
+
+* Linux_Bash
+* Windows_Cmd
+* DockerCompose
+* Scalaw
+* Groovy
+* Javascript
+* Jython
+* Python
+* Ruby
+* Perl
+* PowerShell
+* R
+
+Here is an example that shows a task implementation written in `Linux_Bash`:
+
+```bash
+#%task(name=myTask, language=Linux_Bash)
+echo 'Hello, World!'
+```
+
+===== Dependencies
+
+One of the most important notions in workflows is the dependencies between tasks. To specify this information, use the
+`dep` parameter. Its value should be a list of all tasks on which the new task depends. Example:
+
+```python
+#%task(name=myTask,dep=[parentTask1,parentTask2])
+print('Hello world')
+```
+
+===== Generic information
+
+To specify the values of some advanced ProActive variables called
+https://doc.activeeon.com/latest/user/ProActiveUserGuide.html#_generic_information[Generic Information], you should
+provide the `generic_info` parameter. Its value should be a list of tuples `(key,value)` that corresponds to the names
+and adequate values of the Generic Information. Example:
+
+```python
+#%task(name=myTask, generic_info=[(var1,value1),(var2,value2)])
+print('Hello world')
+```
+
+===== Export/import variables
+
+The `export` and `import` parameters ensure variables propagation between the different tasks of a workflow.
+If `myTask1` variables `var1` and `var2` are needed in `myTask2`, both pragmas have to specify this information as follow:
+
+* `myTask1` should include an `export` parameter with a list of these variable names,
+* `myTask2` should include an `import` parameter with a list including the same names.
+
+Example:
+
+`myTask1` implementation block would be:
+```python
+#%task(name=myTask1, export=[var1,var2])
+var1 = "Hello"
+var2 = "ActiveEon!"
+```
+
+and `myTask2` implementation block would be:
+```python
+#%task(name=myTask2, dep=[myTask1], import[var1,var2])
+print(var1 + " from " + var2)
+```
+
+===== Implementation file
+
+It is also possible to use an external implementation file to define the task implementation. To do so, the option `path`
+ should be used.
+
+Example:
+
+```python
+#%task(name=myTask,path=PATH_TO/IMPLEMENTATION_FILE.py)
+```
+
+==== Importing libraries
+
+The main difference between the ProActive and 'native language' kernels resides in the way the memory is accessed
+during blocks execution. In a common native language kernel the whole script code (all the notebook blocks) is
+locally executed in the same shared memory space; whereas the ProActive kernel will execute each created task in an
+independent process. In order to facilitate the transition from native language to ProActive kernels, we included the
+pragma `#%import()`. This pragma gives the user the ability to add libraries that are common to all created tasks, and
+thus relative distributed processes, that are implemented in the same native script language.
+
+The import pragma is used as follows:
+
+`#%import([language=SCRIPT_LANGUAGE])`.
+
+Example:
+
+```python
+#%import(language=Python)
+import os
+import pandas
+```
+
+Notice that if the language is not specified, Python is considered as default language.
+
+==== Adding a fork environment
+
+To configure a fork environment for a task, use the `#%fork_env()` pragma. To do so, you have to provide the name of the
+corresponding task and the fork environment implementation.
+
+Example:
+
+```text
+#%fork_env(name=TASK_NAME)
+containerName = 'activeeon/dlm3'
+dockerRunCommand =  'docker run '
+dockerParameters = '--rm '
+paHomeHost = variables.get("PA_SCHEDULER_HOME")
+paHomeContainer = variables.get("PA_SCHEDULER_HOME")
+proActiveHomeVolume = '-v '+paHomeHost +':'+paHomeContainer+' '
+workspaceHost = localspace
+workspaceContainer = localspace
+workspaceVolume = '-v '+localspace +':'+localspace+' '
+containerWorkingDirectory = '-w '+workspaceContainer+' '
+preJavaHomeCmd = dockerRunCommand + dockerParameters + proActiveHomeVolume + workspaceVolume + containerWorkingDirectory + containerName
+```
+
+Or, you can provide the task name and the path of a _.py_ file containing the fork environment code:
+
+```python
+#%fork_env(name=TASK_NAME, path=PATH_TO/FORK_ENV_FILE.py)
+```
+
+==== Adding a selection script
+
+To add a selection script to a task, use the `#%selection_script()` pragma. To do so, you have to provide the name of
+the corresponding task and the selection code implementation after that
+
+Example:
+
+```python
+#%selection_script(name=TASK_NAME)
+selected = True
+```
+
+Or, you can provide the task name and the path of a _.py_ file containing the selection code:
+
+```python
+#%selection_script(name=TASK_NAME, path=PATH_TO/SELECTION_CODE_FILE.py)
+```
+
+==== Adding job fork environment and/or selection script
+
+If the selection scripts and/or the fork environments are the same for all job tasks, we can add them just once using
+the `job_selection_script` and/or the `job_fork_env` pragmas.
+
+Usage:
+
+For a job selection script, please use:
+
+```python
+#%job_selection_script([language=SCRIPT_LANGUAGE], [path=./SELECTION_CODE_FILE.py], [force=on/off])
+```
+
+For a job fork environment, use:
+
+```python
+#%job_fork_env([language=SCRIPT_LANGUAGE], [path=./FORK_ENV_FILE.py], [force=on/off])
+```
+
+The `force` parameter defines whether the pragma has to overwrite the task selection scripts or fork environment
+already set.
+
+==== Adding pre and/or post scripts
+
+Sometimes, specific scripts has to be executed before and/or after a particular task. To do that, the solution provides
+ `pre_script` and `post_script` pragmas.
+
+To add a pre-script to a task, please use:
+
+```python
+#%pre_script(name=TASK_NAME, language=SCRIPT_LANGUAGE, [path=./PRE_SCRIPT_FILE.py])
+```
+
+To add a post-script to a task, use:
+
+```python
+#%post_script(name=TASK_NAME, language=SCRIPT_LANGUAGE, [path=./POST_SCRIPT_FILE.py])
+```
+
+==== Create a job
+
+To create a job, use the `#%job()` pragma:
+
+```python
+#%job(name=JOB_NAME)
+```
+
+If the job has already been created, the call of this pragma would just rename the already created job to the new
+provided name.
+
+**Notice that it is not necessary to create and assign a name explicitly the job. If not done by the user, this step is
+implicitly performed when the job is submitted (check section <<Submit your job to the scheduler>> for more
+information).**
+
+==== Visualize job
+
+To visualize the created workflow, use the `#%draw_job()` pragma to plot the workflow graph that represents the job
+into a separate window:
+
+```python
+#%draw_job()
+```
+
+Two optional parameters can be used to configure the way the kernel plots the workflow graph.
+
+**inline plotting:**
+
+If this parameter is set to `off`, plotting the workflow graph is done is made through a
+https://matplotlib.org/[Matplotlib] external window. The default value is `on`.
+
+```python
+#%draw_job(inline=off)
+```
+
+**save the workflow graph locally:**
+
+To be sure the workflow is saved into a _.png_ file, this option needs to be set to `on`. The default value is `off`.
+
+```python
+#%draw_job(save=on)
+```
+
+Note that the job's name can take one of the following possible values:
+
+1. The parameter `name`'s value, if provided
+2. The job's name, if created
+3. The notebook's name, if the kernel can retrieve it
+4. `Unnamed_job`, otherwise.
+
+General usage:
+
+```python
+#%draw_job([name=JOB_NAME], [inline=off], [save=on])
+```
+
+==== Save the workflow graph in dot format
+
+To save the created workflow into a https://www.graphviz.org/[GraphViz] _.dot_ format, use the `#%write_dot()` pragma:
+
+```python
+#%write_dot(name=FILE_NAME)
+```
+
+
+==== Submit your job to the scheduler
+
+To submit the job to the ProActive Scheduler, the user has to use the `#%submit_job()` pragma:
+
+```python
+#%submit_job()
+```
+
+If the job is not created, or is not up-to-date, the `#%submit_job()` creates a new job named as the old one.
+To provide a new name, use the same pragma and provide a name as parameter:
+
+```python
+#%submit_job([name=JOB_NAME])
+```
+
+If the job's name is not set, the ProActive kernel uses the current notebook name, if possible, or gives a random one.
+
+==== List all submitted jobs
+
+To get all submitted job ids and names, use `list_submitted_jobs` pragma this way:
+
+```python
+#%list_submitted_jobs()
+```
+
+==== Print results
+
+To get the job result(s), the user has to use the `#%get_result()` pragma by providing the job name:
+
+```python
+#%get_result(name=JOB_NAME)
+```
+
+or by the job id:
+
+```python
+#%get_result(id=JOB_ID)
+```
+
+The returned values of your final tasks will be automatically printed.
+
+==== Show ActiveEon Studio portals
+
+Finally, to have the hand on more parameters and features, the user should use ActiveEon Studio portals.
+The two main ones are the _Resource Manager_ and the _Scheduling Portal_.
+
+To show the resource manager portal related to the host you are connected to, just run:
+
+```python
+#%show_resource_manager([height=HEIGHT_VALUE, width=WIDTH_VALUE])
+```
+
+and for the related scheduling portal:
+
+```python
+#%show_scheduling_portal([height=HEIGHT_VALUE, width=WIDTH_VALUE])
+```
+
+Notice that the parameters `height` and `width` allow the user to adjust the size of the window inside the notebook.
+
 == Customize the Machine Learning Bucket
 
 === Create or Update a ML Task
