@@ -168,8 +168,8 @@ image::execute.gif[100000,2000]
 
 == ProActive Jupyter Kernel
 
-The ActiveEon Jupyter Kernel adds a kernel backend to Jupyter to interface directly with the ProActive scheduler and
-constructs tasks and workflows to execute them on the fly.
+The ActiveEon Jupyter Kernel adds a kernel backend to Jupyter. This kernel interfaces directly with the ProActive
+scheduler and constructs tasks and workflows to execute them on the fly.
 
 === Installation
 
@@ -181,7 +181,7 @@ Python 2 or 3
 
 * open a terminal
 
-* install the proactive jupyter kernel with thee following commands:
+* install the proactive jupyter kernel with the following commands:
 
 ```bash
 $ pip install proactive proactive-jupyter-kernel --upgrade
@@ -252,7 +252,7 @@ login=YOUR_LOGIN
 password=YOUR_PASSWORD
 ```
 
-Save your changes and restart the proactive kernel.
+Save your changes and restart the ProActive kernel.
 
 You can also force the current Kernel to connect using any `.ini` config file through the `#%connect()` pragma:
 
@@ -323,9 +323,9 @@ print('Hello world')
 ===== Generic information
 
 To specify the values of some advanced ProActive variables called
-https://doc.activeeon.com/latest/user/ProActiveUserGuide.html#_generic_information[Generic Information], you should the
-provide the `generic_info` parameter. Its value should be a list of tuples `(key,value)` that corresponds the names and
-adequate values of the Generic Information. Example:
+https://doc.activeeon.com/latest/user/ProActiveUserGuide.html#_generic_information[Generic Information], you should
+provide the `generic_info` parameter. Its value should be a list of tuples `(key,value)` that corresponds to the names
+and adequate values of the Generic Information. Example:
 
 ```python
 #%task(name=myTask, generic_info=[(var1,value1),(var2,value2)])
@@ -334,7 +334,7 @@ print('Hello world')
 
 ===== Export/import variables
 
-The `export` and `import` parameters make variables propagation possible between the different tasks of a workflow.
+The `export` and `import` parameters ensure variables propagation between the different tasks of a workflow.
 If `myTask1` variables `var1` and `var2` are needed in `myTask2`, both pragmas have to specify this information as follow:
 
 * `myTask1` should include an `export` parameter with a list of these variable names,
@@ -342,14 +342,14 @@ If `myTask1` variables `var1` and `var2` are needed in `myTask2`, both pragmas h
 
 Example:
 
-`myTask1` implementation bloc would be:
+`myTask1` implementation block would be:
 ```python
 #%task(name=myTask1, export=[var1,var2])
 var1 = "Hello"
 var2 = "ActiveEon!"
 ```
 
-and `myTask2` implementation bloc would be:
+and `myTask2` implementation block would be:
 ```python
 #%task(name=myTask2, dep=[myTask1], import[var1,var2])
 print(var1 + " from " + var2)
@@ -357,7 +357,9 @@ print(var1 + " from " + var2)
 
 ===== Implementation file
 
-It is possible to use an external implementation file as a task implementation. To do so, the option `path` should be used.
+It is also possible to use an external implementation file to define the task implementation. To do so, the option `path`
+ should be used.
+
 Example:
 
 ```python
@@ -366,15 +368,18 @@ Example:
 
 ==== Importing libraries
 
-The main difference between ProActive kernel and a native language one resides in the memory access during the
-execution of the different blocs.  While in a common native language kernel the whole script code (all the notebook
-blocs) is executed locally in the same shared memory zone, the ProActive kernel each created task will be executed as
-an independent process.
-To facilitate the transition from native language kernels to the ProActive one we included the pragma `#%import()`.
-This pragma gives the ability to the user to add, just once in the notebook, libraries that are common to all created
-tasks implemented in a same native script language.
+The main difference between the ProActive and 'native language' kernels resides in the way the memory is accessed
+during blocks execution. In a common native language kernel the whole script code (all the notebook blocks) is
+locally executed in the same shared memory space; whereas the ProActive kernel will execute each created task in an
+independent process. In order to facilitate the transition from native language to ProActive kernels, we included the
+pragma `#%import()`. This pragma gives the user the ability to add libraries that are common to all created tasks, and
+thus relative distributed processes, that are implemented in the same native script language.
 
-The pragma is used in this general manner: `#%import([language=SCRIPT_LANGUAGE])`. Example:
+The import pragma is used as follows:
+
+`#%import([language=SCRIPT_LANGUAGE])`.
+
+Example:
 
 ```python
 #%import(language=Python)
@@ -382,12 +387,14 @@ import os
 import pandas
 ```
 
-Notice that if the language is not specified, Python is considered by default.
+Notice that if the language is not specified, Python is considered as default language.
 
 ==== Adding a fork environment
 
-To configure a fork environment for a task, use the `#%fork_env()` pragma. A first way to do this
-is by providing the name of the corresponding task, and the fork environment implementation after that:
+To configure a fork environment for a task, use the `#%fork_env()` pragma. To do so, you have to provide the name of the
+corresponding task and the fork environment implementation.
+
+Example:
 
 ```text
 #%fork_env(name=TASK_NAME)
@@ -404,7 +411,7 @@ containerWorkingDirectory = '-w '+workspaceContainer+' '
 preJavaHomeCmd = dockerRunCommand + dockerParameters + proActiveHomeVolume + workspaceVolume + containerWorkingDirectory + containerName
 ```
 
-A second way is by providing the name of the task, and the path of a _.py_ file containing the fork environment code:
+Or, you can provide the task name and the path of a _.py_ file containing the fork environment code:
 
 ```python
 #%fork_env(name=TASK_NAME, path=PATH_TO/FORK_ENV_FILE.py)
@@ -412,15 +419,17 @@ A second way is by providing the name of the task, and the path of a _.py_ file 
 
 ==== Adding a selection script
 
-To add a selection script to a task, use the `#%selection_script()` pragma. A first way to do it is by
-providing the name of the corresponding task, and the selection code implementation after that:
+To add a selection script to a task, use the `#%selection_script()` pragma. To do so, you have to provide the name of
+the corresponding task and the selection code implementation after that
+
+Example:
 
 ```python
 #%selection_script(name=TASK_NAME)
 selected = True
 ```
 
-A second way is by providing the name of the task, and the path of a .py file containing the selection code:
+Or, you can provide the task name and the path of a _.py_ file containing the selection code:
 
 ```python
 #%selection_script(name=TASK_NAME, path=PATH_TO/SELECTION_CODE_FILE.py)
@@ -445,11 +454,12 @@ For a job fork environment, use:
 #%job_fork_env([language=SCRIPT_LANGUAGE], [path=./FORK_ENV_FILE.py], [force=on/off])
 ```
 
-The `force` parameter says if the pragma has to overwrite the task selection scripts or fork environment already set or not.
+The `force` parameter defines whether the pragma has to overwrite the task selection scripts or fork environment
+already set.
 
 ==== Adding pre and/or post scripts
 
-Sometimes, specified scripts has to be executed before and/or after a particular task. To do that, the solution provides
+Sometimes, specific scripts has to be executed before and/or after a particular task. To do that, the solution provides
  `pre_script` and `post_script` pragmas.
 
 To add a pre-script to a task, please use:
@@ -472,14 +482,17 @@ To create a job, use the `#%job()` pragma:
 #%job(name=JOB_NAME)
 ```
 
-If the job has already been created, the call of this pragma would just rename the job already created by the new provided name.
+If the job has already been created, the call of this pragma would just rename the already created job to the new
+provided name.
 
-**Notice that it is not necessary to create and name explicitly the job. If not done by the user, this step is implicitly
-performed when the job is submitted (check section <<Submit your job to the scheduler>> for more information).**
+**Notice that it is not necessary to create and assign a name explicitly the job. If not done by the user, this step is
+implicitly performed when the job is submitted (check section <<Submit your job to the scheduler>> for more
+information).**
 
 ==== Visualize job
 
-To visualize the created workflow, use the `#%draw_job()` pragma to plot the graph that represents the job into a separate window:
+To visualize the created workflow, use the `#%draw_job()` pragma to plot the workflow graph that represents the job
+into a separate window:
 
 ```python
 #%draw_job()
@@ -489,16 +502,16 @@ Two optional parameters can be used to configure the way the kernel plots the wo
 
 **inline plotting:**
 
-If this parameter is set to 'off', the workflow plotting is made through the https://matplotlib.org/[Matplotlib]
-external window. The default value is 'on'.
+If this parameter is set to `off`, plotting the workflow graph is done is made through a
+https://matplotlib.org/[Matplotlib] external window. The default value is `on`.
 
 ```python
 #%draw_job(inline=off)
 ```
 
-**saving into hard disk:**
+**save the workflow graph locally:**
 
-To be sure the workflow is saved into a _.png_ file, this option needs to be set to *on*. The default value is *off*.
+To be sure the workflow is saved into a _.png_ file, this option needs to be set to `on`. The default value is `off`.
 
 ```python
 #%draw_job(save=on)
@@ -509,7 +522,7 @@ Note that the job's name can take one of the following possible values:
 1. The parameter `name`'s value, if provided
 2. The job's name, if created
 3. The notebook's name, if the kernel can retrieve it
-4. `Unnamed_job`
+4. `Unnamed_job`, otherwise.
 
 General usage:
 
@@ -517,7 +530,7 @@ General usage:
 #%draw_job([name=JOB_NAME], [inline=off], [save=on])
 ```
 
-==== Save workflow in dot format
+==== Save the workflow graph in dot format
 
 To save the created workflow into a https://www.graphviz.org/[GraphViz] _.dot_ format, use the `#%write_dot()` pragma:
 
@@ -534,24 +547,24 @@ To submit the job to the ProActive Scheduler, the user has to use the `#%submit_
 #%submit_job()
 ```
 
-If the job is not created, or is not up-to-date, the `#%submit_job()` starts by creating a new job named as the old one.
+If the job is not created, or is not up-to-date, the `#%submit_job()` creates a new job named as the old one.
 To provide a new name, use the same pragma and provide a name as parameter:
 
 ```python
-#%submit_job(name=JOB_NAME)
+#%submit_job([name=JOB_NAME])
 ```
 
-Isf the job's name is not set, the ProActive kernel uses the current notebook name, if possible, or gives a random one.
+If the job's name is not set, the ProActive kernel uses the current notebook name, if possible, or gives a random one.
 
 ==== List all submitted jobs
 
-To get all the submitted job ids and names, use `list_submitted_jobs` pragma this way:
+To get all submitted job ids and names, use `list_submitted_jobs` pragma this way:
 
 ```python
 #%list_submitted_jobs()
 ```
 
-==== Printing results
+==== Print results
 
 To get the job result(s), the user has to use the `#%get_result()` pragma by providing the job name:
 
@@ -567,18 +580,18 @@ or by the job id:
 
 The returned values of your final tasks will be automatically printed.
 
-==== Showing ActiveEon portals
+==== Show ActiveEon Studio portals
 
-Finally, to have the hand on more parameters and features, the user should use ActiveEon portals.
+Finally, to have the hand on more parameters and features, the user should use ActiveEon Studio portals.
 The two main ones are the _Resource Manager_ and the _Scheduling Portal_.
 
-To show the resource manager portal related to the host you are connected to, just tape:
+To show the resource manager portal related to the host you are connected to, just run:
 
 ```python
 #%show_resource_manager([height=HEIGHT_VALUE, width=WIDTH_VALUE])
 ```
 
-And for the related scheduling portal:
+and for the related scheduling portal:
 
 ```python
 #%show_scheduling_portal([height=HEIGHT_VALUE, width=WIDTH_VALUE])
