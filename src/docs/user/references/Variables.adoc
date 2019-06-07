@@ -137,7 +137,7 @@ Examples: PA:JSON will accept {"name": "John", "city":"New York"} and empty valu
 
 The PA:SPEL(expr) model allows to define expressions able to validate a variable value or not. Additionally, this model can be used to validate multiple variable values or to dynamically update other variables.
 The syntax of the SpEL expression is defined by the https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[Spring Expression Language reference]. +
-For security concerns, we apply a restriction on the authorized class types. Besides the commonly used data types (Boolean, String, Long, Double...), we authorize the use of ImmutableSet, ImmutableMap, ImmutableList, Math, Date types, JSONParser and ObjectMapper for JSON type and DocumentBuilderFactory for XML type.
+For security concerns, we apply a restriction on the authorized class types. Besides the commonly used data types (Boolean, String, Long, Double, etc.), we authorize the use of *ImmutableSet*, *ImmutableMap*, *ImmutableList*, *Math*, *Date* types, *JSONParser* and *ObjectMapper* for `JSON` type and *DocumentBuilderFactory* for `XML` type.
 
 In order to interact with variables, the expression has access to the following properties:
 
@@ -173,7 +173,7 @@ PA:SPEL( (variables['var1'] = new org.codehaus.jackson.map.ObjectMapper().readTr
 PA:SPEL( (variables['var'] = T(javax.xml.parsers.DocumentBuilderFactory).newInstance().newDocumentBuilder().parse(new org.xml.sax.InputSource(new java.io.StringReader('<employee id="101"><name>toto</name><title>tata</title></employee>'))).getElementsByTagName('name').item(0).getTextContent()) instanceof T(String) ): will assign the value 'toto' to the variable var1. +
 +
 
-Note that the SpEL expression must always return a boolean value, this is why in this last expression we use the instanceof keyword to avoid returning a string value.
+Note that the SpEL expression must always return a boolean value, this is why in this last expression we use the `instanceof` keyword to not return a string value.
 
 
 
