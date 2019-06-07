@@ -5,7 +5,7 @@
 image::architecture.png[align=center]
 
 On the top left there is the *Studio* interface which allows you to build Workflows.
-It can be interactively configured to address specific domains, for instance Finance, Big Data, IoT, Artificial Intelligence (AI). See for instance the Documentation of *Machine Learning Open Studio* https://www.activeeon.com/public_content/documentation/latest/MLOS/MLOSUserGuide.html[here^], and try it online https://try.activeeon.com/studio/#workflows/templates/machine-learning[here^]. In the middle there is the *Scheduler* which enables an enterprise to orchestrate and automate Multi-users, Multi-application Jobs.
+It can be interactively configured to address specific domains, for instance Finance, Big Data, IoT, Artificial Intelligence (AI). See for instance the Documentation of *Machine Learning Open Studio* link:/doc/MLOS/MLOSUserGuide.html[here^], and try it online https://try.activeeon.com/studio/#workflows/templates/machine-learning[here^]. In the middle there is the *Scheduler* which enables an enterprise to orchestrate and automate Multi-users, Multi-application Jobs.
 Finally, at the bottom right is the *Resource manager* interface which manages and automates resource provisioning
 on any Public Cloud, on any virtualization software, on any container system, and on any Physical Machine of any OS.
 All the components you see come with fully Open and modern REST APIs. 
@@ -25,6 +25,10 @@ image::calendar_planning_gantt.png[align=center]
 The Gantt screenshot above shows the *Gantt View* of Job Planner, featuring past job history, current Job being executed, and future Jobs that will be submitted, all in a comprehensive interactive view.
 You easily see the potential differences between Planned Submission Time and Actual Start Time of the Jobs, get estimations of the Finished Time, visualize the Job that stayed PENDING for some time (in Yellow) and the Jobs that had issues and got KILLED, CANCELLED, or FAILED (in red).
 
+image::automation-dashboard-cloud-watch.PNG[align=center]
+
+The screenshot above shows the *Cloud Watch* portal, where a user can manage and benefit from *Cloud Watch* - smart monitoring system. This ProActive component detects complex events and then triggers user-specified actions according to predefined set of rules.
+
 image::cloud-automation-on-demand-paas.png[align=center]
 
 The screenshot above shows the *Cloud Automation* portal which is actually a PaaS automation tool. It allows you to easily manage any On-Demand Services with full Life-Cycle Management (create, deploy, suspend, resume and terminate).
@@ -32,6 +36,3 @@ The screenshot above shows the *Cloud Automation* portal which is actually a Paa
 image::scalable-elastic-resources.png[align=center]
 
 The screenshots above taken from the *Resource Manager* portal shows that you can configure ProActive Scheduler to *dynamically scale up and down* the infrastructure being used (e.g. the number of VMs you buy on Clouds) according to the actual workload to execute.
-
-image::job-planner-gantt-overview.png[align=center]
-

@@ -3,23 +3,8 @@
 :toc-title: ML-OS User Guide
 = Machine Learning Open Studio
 include::../common-settings.adoc[]
-:sectnums!:
-== All documentation links
-=== link:../user/ProActiveUserGuide.html[User Guide]
-ProActive Workflow & Scheduler (PWS) User Guide (Workflows, Tasks, Jobs Submission, Resource Management)
+include::../all-doc-links.adoc[]
 
-=== link:../MLOS/MLOSUserGuide.html[ML Open Studio] 
-Machine Learning Open Studio (ML-OS) User Guide (ready to use palettes with ML Tasks & Workflows)
-
-=== link:../PCA/PCAUserGuide.html[Cloud Automation]
-ProActive Cloud Automation (PCA) User Guide (automate deployment and management of Services)
-
-=== link:../admin/ProActiveAdminGuide.html[Admin Guide]
-Administration Guide (Installation, networks, nodes, clusters, users, permissions)
-
-*API documentation: &emsp; https://try.activeeon.com/rest/doc/[Scheduler REST] &emsp; link:../user/ProActiveUserGuide.html#_scheduler_command_line[Scheduler CLI] &emsp; https://doc.activeeon.com/javadoc/latest/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html[Scheduler Java] &emsp; https://doc.activeeon.com/javadoc/latest/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html[Workflow Creation Java] &emsp; https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client[Python Client]*
-
-:sectnums:
 == Overview
 
 === What is Machine Learning Open Studio (ML-OS)?
@@ -32,18 +17,18 @@ include::references/Glossary.adoc[]
 
 == Get Started
 
-To submit your first Machine Learning workflow to *ProActive Scheduler*, link:https://doc.activeeon.com/dev/admin/ProActiveAdminGuide.html#_run_the_proactive_scheduler[install] it in
+To submit your first Machine Learning workflow to *ProActive Scheduler*, link:/doc/admin/ProActiveAdminGuide.html#_run_the_proactive_scheduler[install] it in
 your environment (default credentials: admin/admin) or just use our demo platform http://try.activeeon.com[try.activeeon.com^].
 
 *ProActive Scheduler* provides comprehensive interfaces that allow to:
 
-- http://try.activeeon.com/studio[Create workflows^]
-- http://try.activeeon.com/scheduler[Submit workflows, monitor their execution and retrieve the tasks results^]
-- http://try.activeeon.com/rm[Add resources and monitor them^]
-- http://try.activeeon.com//cloud-automation[Add services^]
+- link:/studio[Create workflows^]
+- link:/scheduler[Submit workflows, monitor their execution and retrieve the tasks results^]
+- link:/rm[Add resources and monitor them^]
+- link:/automation-dashboard/#/portal/cloud-automation[Add services^]
 
-We also provide REST and command line interfaces for advanced users.
-http://try.activeeon.com/rest[try.activeeon.com/rest^]
+We also provide link:/rest[REST API^] and command line interfaces for advanced users.
+
 
 == Create a First Predictive Solution
 
@@ -70,7 +55,7 @@ Predicting houses prices is a complex problem, but we can simplify it a bit for 
 
 To use Machine Learning Open Studio, you need to add the *Machine Learning Bucket* as main catalog in the ProActive Studio. This bucket contains a set of generic tasks that enables you to upload and prepare data, train a model and test it.
 
-A. Open http://try.activeeon.com/studio[ProActive Workflow Studio^] home page.
+A. Open link:/studio[ProActive Workflow Studio^] home page.
 
 B. Create a new workflow.
 
@@ -191,7 +176,7 @@ It is possible to enrich the Machine Learning Bucket by adding your own tasks. (
 
 It is also possible to customize the code of the generic Machine Learning tasks. In this case, you need to drag and drop the targeted task to modify its code in the *Task Implementation* section.
 
-NOTE: It is also possible to add or/and delete variables of each task, set your own fork environments etc. More details available on https://www.activeeon.com/public_content/documentation/latest/user/ProActiveUserGuide.html#_studio_tasks[Proactive User Guide^]
+NOTE: It is also possible to add or/and delete variables of each task, set your own fork environments etc. More details available on link:/doc/user/ProActiveUserGuide.html#_studio_tasks[Proactive User Guide^]
 
 === Set the Fork Environment
 
@@ -199,7 +184,7 @@ A fork execution environment is a new Java Virtual Machine (JVM) which is starte
 
 We used a `Docker fork environment` for all the Machine Learning tasks. *activeeon/dlm3* was used as a docker container for all tasks. If your task needs to install new Machine Learning libraries which are not available in this container, then, use your own docker container or an appropriate environment with the needed libraries.
 
-NOTE: The use of docker containers is recommended as that way other tasks will not be affected by change. Docker containers provide isolation so that the host machine’s software stays the same. More details available on https://www.activeeon.com/public_content/documentation/latest/user/ProActiveUserGuide.html#_fork_environment[Proactive User Guide^]
+NOTE: The use of docker containers is recommended as that way other tasks will not be affected by change. Docker containers provide isolation so that the host machine’s software stays the same. More details available on link:/doc/user/ProActiveUserGuide.html#_fork_environment[Proactive User Guide^]
 
 === Publish a ML Task
 
@@ -208,7 +193,7 @@ Choose `machine-leaning` Bucket to store your newly added workflow on it.
 If the Task with the same name already exists in the 'machine-leaning' bucket, then, it will be updated.
 We recommend to submit Tasks with a commit message for easier differentiation between the different submitted versions.
 
-NOTE: More details available on https://www.activeeon.com/public_content/documentation/latest/user/ProActiveUserGuide.html#_publish_current_workflow_to_the_catalog[ProActive User Guide^]
+NOTE: More details available on link:/doc/user/ProActiveUserGuide.html#_publish_current_workflow_to_the_catalog[ProActive User Guide^]
 
 === Create a ML Workflow
 
@@ -235,7 +220,7 @@ The Machine Learning Open Studio provides a fast, easy and practical way to exec
 
 To test these workflows, you need to add the *machine-Learning-workflows Bucket* as main catalog in the ProActive Studio.
 
-A. Open http://try.activeeon.com/studio[ProActive Workflow Studio^] home page.
+A. Open link:/studio[ProActive Workflow Studio^] home page.
 
 B. Create a new workflow.
 
@@ -287,7 +272,7 @@ video::FwMPR87wzoo[youtube, width=700, height=400 start=0, position=center]
 
 You can test these workflows by following these steps :
 
-A. Open http://try.activeeon.com/studio[ProActive Workflow Studio^] home page.
+A. Open link:/studio[ProActive Workflow Studio^] home page.
 
 B. Create a new workflow.
 
