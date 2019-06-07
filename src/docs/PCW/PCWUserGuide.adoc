@@ -8,9 +8,9 @@ include::../all-doc-links.adoc[]
 == Main concepts of PCW
 
 *ProActive Cloud Watch (PCW)* monitors a system, and according to some rules, detects complex events, and triggers actions when configured events are fired. +
-PCW defines *rules*, which describe the metrics to monitor, triggering conditions and actions when the conditions are met. +
+PCW defines *rules*, which describe the metrics to monitor, triggering actions when conditions are met. +
 
-ProActive Cloud Watch is organized as a catalog of rules (which can be activated or deactivated) that will automatically trigger user-specified actions if defined conditions are fulfilled. +
+ProActive Cloud Watch is organized as a Catalog of rules (which can be activated or deactivated) that will automatically trigger user-specified actions if defined conditions are fulfilled. +
 For example, PCW is able to monitor some computing resources (ProActive Nodes) and deploy new resources (scale up) when the monitored resources are overloaded. Another use case is to notify users with alerts about some deteriorated resources. +
 In general PCW allows to trigger any action by submitting a workflow to the ProActive Scheduler.
 
@@ -24,19 +24,19 @@ The diagram above illustrates the general overview of PCW functionality.
 [[_pcw_monitoring]]
 === Monitoring
 
-There are several types of metrics that can be monitored by PCW. Proactive Cloud Watch implements a polling mechanism to collect the monitoring metrics. A delay can also be added to resume monitoring after an action has been triggered only after a certain time. This feature is very useful in case of scale up/down use cases and helps to avoid triggering extra actions until the new resource is deployed/undeployed. +
+There are several types of metrics that can be monitored by PCW. ProActive Cloud Watch implements a polling mechanism to collect the monitoring metrics. A delay can also be added to resume monitoring after an action has been triggered only after a certain time. This feature is very useful in case of scale up/down use cases and helps to avoid triggering extra actions until the new resource is deployed/undeployed. +
 The design of PCW allows to add new types of monitoring metrics.
 
 [[_pcw_monitoring_physical_metrics]]
 ==== Monitoring physical metrics
 ProActive provides a way to monitor system metrics of virtual and physical machines (Nodes) deployed by ProActive Resource Manager. +
-Thanks to the JMX protocol, Proactive Nodes can expose many system metrics from the underlying operating system (disk, ram, cpu usage, network activity, etc...).
-Proactive Nodes use the  https://github.com/hyperic/sigar[Sigar^] library to collect physical metrics. +
+Thanks to the JMX protocol, ProActive Nodes can expose many system metrics from the underlying operating system (disk, ram, CPU usage, network activity, etc...).
+ProActive Nodes use the  https://github.com/hyperic/sigar[Sigar^] library to collect physical metrics. +
 
-ProActive Cloud watch can monitor any ProActive Node JMX url to access the following metrics:
+ProActive Cloud watch can monitor any ProActive Node with JMX url to access the following metrics:
 
-* System memory, swap, cpu, load average, uptime, logins.
-* Per-process memory, cpu, credential info, state, arguments, environment, open files.
+* System memory, swap, CPU, load average, uptime, logins.
+* Per-process memory, CPU, credential info, state, arguments, environment, open files.
 * File system threshold detection and metrics.
 * Network interface detection, configuration information and metrics.
 * Network route and connection tables.
@@ -49,7 +49,7 @@ Another type of monitoring available in PCW is to check host accessibility. The 
 The core of rule processing is managed by the https://www.drools.org/[Drools Engine^] for performance processing of collected metrics. It features powerful mechanisms for complex event processing. The advanced Drools algorithm helps fast detection of fulfilling the conditions and triggering actions.
 
 [[_pcw_rule_action]]
-=== Rule’s Action
+=== Rule’s action
 According to the concepts of PCW, the action will be triggered when specified condition is met. +
 In order to make an action flexible to any user needs, the rule’s action is firing a job inside scheduler. A user just need to specify which workflow from Catalog will be fired as Rule’s action. +
 For example, one can design an action workflow that sends a notification (alert) whenever a metric reaches a critical value. +
@@ -72,7 +72,7 @@ The portal is divided into several sections:
 
 In order to better understand the usage of PCW portal, let’s take an example of using existing PCW rules provided by the ProActive distribution.
 
-=== Activating a Rule
+=== Activating a rule
 
 Here is an example that illustrates a simple use case of PCW portal.
 
@@ -84,7 +84,7 @@ A user can change the default values. +
 A user should <<_pcw_obtaining_url, *Obtain a JMX node url*>> and paste it in the _nodeUrlVar_ variable. +
 After modifying the variables a user can *Check* (validate) the rule or directly *Activate* it.
 
-=== Using Rule variables
+=== Using rule variables
 The rule variables depend on the definition and purpose of the rule. There are different variables for different rules. The designer of a new rule can choose the set of needed variables.
 
 Let’s give explanation of rules for our example:
@@ -93,11 +93,11 @@ Let’s give explanation of rules for our example:
 - pollingPeriodInSecondsVar - time frequency when collecting metrics from monitored resource
 - calmPeriodInSecondsVar - time period during which the metrics are not collected after the rule action was triggered
 - workflowNameAsActionVar - name of the workflow inside ProActive Catalog that will be fired as action
-- bucketNameAsActionVar - name of the catalog bucket identifying the workflow that will be fired as action
+- bucketNameAsActionVar - name of the Catalog bucket identifying the workflow that will be fired as action
 - usageCombinedCPUMetric - specific Sigar metric for this rule, identifying combined CPU usage kpi
 - percentageUsedLimit - threshold of CPU consumption (in percentage) which will trigger the action. This variable is directly connected to the rule condition.
 
-=== Activated Rule Instances
+=== Activated rule instances
 After activation of a *rule*, the instance will appear in section `Activated Rule Instances`.
 
 All the activated rule instances are monitoring the specified resources. If the triggering condition is met, then the rule will fire the job. This fired job description will appear in `Rule - Fired Jobs` table. The monitoring and triggering actions can be stopped by removing an Activated rule instance. After removing a rule instance from active list, it will appear in the `Removed Rule Instances table`. It is possible to see the history of all fired jobs for this table.
@@ -113,9 +113,9 @@ In order to get this information from a Node, a user can go to the *RM portal*, 
 
 image::RM-copy-jmx-ur.PNG[align=center]
 
-== Create new Cloud Watch Rules
+== Create new Cloud Watch rules
 
-ProActive Cloud Watch portal allows to customize the predefined catalog of rules and also to create new rules from scratch. +
+ProActive Cloud Watch portal allows to customize the predefined Catalog of rules and also to create new rules from scratch. +
 The provided rules in ProActive Catalog are a good starting point to design more complex scenarios.
 
 === Rule’s structure explanation
@@ -245,7 +245,7 @@ The other type of monitoring is checking the host accessibility. The example of 
 -----------------
 The polling class name for monitoring host accessibility is *Ping*. The _nodeUrl_ parameter’s value defines the hostname or IP that should be monitored. The polling and calm periods specify the frequency of checking the provided hostname.
 
-=== Rule’s Condition and Action
+=== Rule’s condition and action
 As said in <<_pcw_rule_action, Rule’s Action>> section, we will specify Rule’s Condition and Action in Drools language. +
 The possible actions are:
 
@@ -254,7 +254,7 @@ The possible actions are:
 
 Both examples are provided below.
 
-==== Submit to ProActive Scheduler as Rule’s Action
+==== Submit to ProActive Scheduler as rule’s action
 The described condition and action follows an example of CPU monitoring. The  job will be submitted to ProActive Scheduler as a Rule’s action.
 
 [source,xml]
@@ -291,7 +291,7 @@ The next part uses pure Drools syntax for specifying a rule condition and an act
 
 The `then` part is an actual action triggered when a condition is met. In the example, a workflow stored in ProActive Catalog will be submitted to ProActive Scheduler.
 
-==== Start ProActive Cloud Automation service as Rule’s Action
+==== Start ProActive Cloud Automation service as rule’s action
 
 This section will show the described condition and action of a host accessibility monitoring example. The ProActive Cloud Automation service will be started as a Rule’s action.
 
@@ -335,5 +335,5 @@ Even if the design of the xml rule looks complex, choosing Drools syntax gives a
 
 === Display a created rule in Cloud Watch portal
 
-Once the rule is defined, it should be saved in Catalog with the specific kind *Rule*. Please check out the link:../user/ProActiveUserGuide.html#_catalog_portal[*Catalog documentation section*] for more information about saving objects in Catalog.
+Once the rule is defined, it should be saved in Catalog with the specific kind *Rule*. Please check out the link:../user/ProActiveUserGuide.html#_Catalog_portal[*Catalog documentation section*] for more information about saving objects in Catalog.
 
