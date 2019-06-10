@@ -388,29 +388,31 @@ Other properties needed for the node deployment in the _Create GCE Node Source_ 
 +
 TIP: If all the nodes of an GoogleComputeEngine instance are removed, the instance will be terminated.
 +
--   *vmUsername:* Defines the user name that will be used to connect to GoogleComputeEngine instances.
+-   *vmUsername*: Defines the user name that will be used to connect to GoogleComputeEngine instances.
         If not provided, then the GoogleComputeEngine instances will be accessed as the default user.
         If specified, the corresponding `vmPublicKey` and `vmPrivateKey` must be specified as well.
--   *vmPublicKey:* Defines the public key to grant a user specified access for the created GoogleComputeEngine instances.
+-   *vmPublicKey*: Defines the public key to grant a user specified access for the created GoogleComputeEngine instances.
         If specified, the corresponding `vmUsername` and `vmPrivateKey` must be specified as well.
--   *vmPrivateKey:* Defines the private key that will be used to connect to the GoogleComputeEngine instances.
+-   *vmPrivateKey*: Defines the private key that will be used to connect to the GoogleComputeEngine instances.
         If specified, the corresponding `vmUsername` and `vmPublicKey` must be specified as well.
--   *image:* Defines which image will be used to create the GoogleComputeEngine instance.
+-   *image*: Defines which image will be used to create the GoogleComputeEngine instance.
         The value to provide is the unique name of the image.
-        If not provided, then the default value "debian-9-stretch-v20190326" will be used.
-        For more information see https://cloud.google.com/compute/docs/images[Google Compute Engine Images]
--   *region:* The geographic zone for Google Cloud Platform resources to use.
-        If not provided, then the default value "us-central1-a" will be used.
+        If not provided, the default value "debian-9-stretch-v20190326" will be used.
+        For more information see https://cloud.google.com/compute/docs/images/[Google Compute Engine Images List].
+-   *region*: The geographic zone for Google Cloud Platform resources to use.
+        If not provided, the default value "us-central1-a" will be used.
         For more information see https://cloud.google.com/compute/docs/regions-zones/[Google Compute Engine Regions and Zones].
--   *ram:* The minimum required amount of RAM (expressed in Mega Bytes) for each GoogleComputeEngine instance to be created.
--   *cores:* The minimum required amount of virtual cores for each GoogleComputeEngine instance to be created.
--   *rmHostname:* The hostname or the public IP address of the Resource Manager. This address needs to be accessible from the GoogleComputeEngine server.
--   *connectorIaasURL:* Connector-iaas is a ProActive service used to interact with IaaS like GoogleComputeEngine.
+-   *ram*: The minimum required amount of RAM (expressed in Mega Bytes) for each GoogleComputeEngine instance to be created.
+        If not provided, the default value 1740 will be used.
+-   *cores*: The minimum required amount of virtual cores for each GoogleComputeEngine instance to be created.
+        If not provided, the default value 1 will be used.
+-   *rmHostname*: The hostname or the public IP address of the Resource Manager. This address needs to be accessible from the GoogleComputeEngine server.
+-   *connectorIaasURL*: Connector-iaas is a ProActive service used to interact with IaaS like GoogleComputeEngine.
         By default it runs on the following URL _rmHostname/connector-iaas_.
--   *nodeJarURL:* The full URL path of the _node.jar_ to download the Proactive node.jar on each new created GoogleComputeEngine instance.
+-   *nodeJarURL*: The full URL path of the _node.jar_ to download the Proactive node.jar on each new created GoogleComputeEngine instance.
         The URL needs to be accessible from the GoogleComputeEngine server.
--   *additionalProperties:* Additional Java command properties to be added when starting each ProActive node JVM in the GoogleComputeEngine instances (e.g. `-Dpropertyname=propertyvalue`).
--   *nodeTimeout:* The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node is considered as lost.
+-   *additionalProperties*: Additional Java command properties to be added when starting each ProActive node JVM in the GoogleComputeEngine instances (e.g. "-Dpropertyname=propertyvalue").
+-   *nodeTimeout*: The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node is considered as lost.
 
 Using this configuration, you can start a Resource Manager and a Scheduler using the */bin/proactive-server* script.
 An GoogleComputeEngine NodeSource can now be added using the *Create Node Source* panel in the Resource Manager or the command line interface:
