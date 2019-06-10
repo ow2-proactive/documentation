@@ -2,15 +2,21 @@
 = ProActive Documentation
 :stylesheet: ../../styles/stylesheets/activeeon.css
 
-== ProActive Workflows & Scheduling
 ++++
-<h4>Version <span id="versionId"/></h4>
+<h5>Version <span id="versionId"/></h5>
 ++++
-* link:user/ProActiveUserGuide.html[User Guide] (Workflows, Tasks, Jobs Submission,...)
-* link:MLOS/MLOSUserGuide.html[Machine Learning Open Studio User Guide] (ML Buckets, ML Tasks, ML Workflows,...)
-* link:PCW/PCWUserGuide.html[ProActive Cloud Watch User Guide] (smart monitoring system with defined actions)
-* link:PCA/PCAUserGuide.html[ProActive Cloud Automation User Guide] (Workflows, Actions to automate Services deployment and management)
-* link:admin/ProActiveAdminGuide.html[Administration Guide] (Installation, Infrastructure & Nodes setup, Agents,...)
+
+=== ProActive Workflows & Scheduling (PWS)
+
+* link:user/ProActiveUserGuide.html[PWS User Guide] (Workflows, Workload automation, Jobs, Tasks, Catalog, Resource Management, Big Data/ETL, …​)
+* link:JobPlanner/JobPlannerUserGuide.html[MODULE: Job Planner] (Time Base Scheduling)
+* link:PCW/PCWUserGuide.html[MODULE: Cloud Watch] (Event Base Scheduling)
+* link:PCA/PCAUserGuide.html[MODULE: Cloud Automation] (PaaS On-Demand, Service deployment and management)
+* link:admin/ProActiveAdminGuide.html[Administration Guide] (Installation, Infrastructure & Nodes setup, Agents,…​)
+
+=== Machine Learning Open Studio (MLOS)
+
+* link:MLOS/MLOSUserGuide.html[Machine Learning Open Studio User Guide - MLOS] (​a complete Data Science and Machine Learning Platform)
 
 *API documentation:* &emsp; link:rest/[Scheduler REST] &emsp; link:user/ProActiveUserGuide.html#_scheduler_command_line[Scheduler CLI] &emsp; link:javadoc/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html[Scheduler Java] &emsp; link:javadoc/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html[Workflow Creation Java] &emsp; https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client[Python Client]
 

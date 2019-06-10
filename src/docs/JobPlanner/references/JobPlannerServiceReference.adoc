@@ -1,14 +1,18 @@
 
-=== Introduction
+== Introduction
 The <<_glossary_job_planner,*Job Planner*>> schedules <<_glossary_workflow,*Workflows*>> at specific points in time which are defined by <<_glossary_calendars_definition,*Calendars*>>.
 
 A <<_glossary_workflow,*Workflow*>> is scheduled by the <<_glossary_job_planner,*Job Planner*>> if
 it is associated to a <<_glossary_calendars_definition,*Calendar Definition*>>. A <<_glossary_calendars_definition,*Calendar Definition*>> can have several <<_glossary_workflow,*Workflows*>> associated to it. Each of them can easily be activated and deactivated.
 The <<_glossary_workflow,*Workflows*>> variables can be set with specific values when associating them to a calendar.
 
-=== Creation of a Planning
+=== Glossary
 
-==== Creating Calendar Definitions
+include::../../Glossary.adoc[]
+
+== Creation of a Planning
+
+=== Creating Calendar Definitions
 
 To create new calendar definition, use the <<_glossary_job_planner_portal, *Job Planner Portal*>>, Calendar Definition page. When clicking the "+" button, a calendar definition is created with default parameters.
 
@@ -19,7 +23,7 @@ Click on a Calendar Definition to modify it. Its fields will be visible on the m
 
 Changes made in the Calendar Definition panel will be automatically saved. When a calendar definition is selected, it can be removed by clicking on the trash button.
 
-==== Associating workflows to Calendar Definitions
+=== Associating workflows to Calendar Definitions
 
 Once a workflow has been published to the <<_glossary_catalog, *Catalog*>>, it can be planned with the <<_glossary_job_planner_portal, *Job Planner Portal*>>, Calendar Association page. To plan a workflow, you need to associate it to a Calendar Definition.
 
@@ -35,7 +39,7 @@ On the left panel, you can easily see the number of associated workflows to each
 
 This page can also be opened when clicking on the "plan" button on the <<_glossary_workflow_studio, *Studio*>> or the <<_glossary_scheduler_web_interface, *Scheduler Portal*>>.
 
-=== Execution Planning visualisation and GANTT
+== Execution Planning visualisation and GANTT
 
 On the <<_glossary_job_planner_portal, *Job Planner Portal*>>, Execution Planning page, you can see the recurrence of <<_glossary_calendars_definition,*Calendar Definitions*>> .
 You can select one or several Calendar Definitions on the left panel and associated workflows will appear on the right panel.
@@ -46,7 +50,7 @@ There are 4 ways to visualize planning of the selected Calendar Definitions:
     - On a standard Calendar
     - with a GANTT chart
 
-==== Visualization by workflow, Chronologically or on a standard Calendar
+=== Visualization by workflow, Chronologically or on a standard Calendar
 
 There are 3 different tabs for the planning visualization:
 
@@ -62,7 +66,7 @@ image::calendar_planning.png[align="center"]
 If a calendar has no association, you can still select it and see its recurrence on the Execution Planning panel.
 If nothing is displayed, it means the selected Calendar Definitions have no recurrence on the selected period.
 
-==== GANTT Visualization of the Job Planning
+=== GANTT Visualization of the Job Planning
 
 You can also use the Gantt chart ("Open Gantt" button at the top) to visualize the executions:
 
@@ -106,7 +110,7 @@ TIP: If you select a calendar that will occur frequently (such as "every_10_min"
 
 The "Save Gantt" button will take a screenshot of the visible part of the Gantt chart. Like for Gantt chart loading, it might take a while if there are too many events. You can also chose a smaller scale and select only the calendars you need.
 
-=== Calendar Definition Syntax
+== Calendar Definition Syntax
 
 Job Planner uses a  Calendar Definition to know how the job will be planned over the time. As shown on the example below, this definition is composed of 4 fields:
 
@@ -155,11 +159,11 @@ Based on the above configuration, the following JSON object will be stored in th
 }
 ----
 
-==== Description
+=== Description
 
 The description allows users who are not familiar with cron expressions to know when it will occur. It might also be used for other purpose, for example saying when to use a Calendar Definition.
 
-==== Cron
+=== Cron
 
 The aim of the cron expression is to launch the planned workflow according to the cron syntax.
 One can see the cron expression "0 0 9 ? * MON-FRI *", which follows the quartz cron expression syntax explained in the
@@ -167,7 +171,7 @@ One can see the cron expression "0 0 9 ? * MON-FRI *", which follows the quartz 
  executes at 9:00 AM on working days (Monday to Friday).
 
 
-==== Inclusion Calendar
+=== Inclusion Calendar
 
 The purpose of the inclusion calendar section is to use an ICS file to specify a workflow launching policies during calendar events. For instance automatically
 submit a worklfow at event start. Given an event, a predefined action will be applied on the workflow execution.
@@ -183,7 +187,7 @@ submit a worklfow at event start. Given an event, a predefined action will be ap
 
 |===
 
-==== Exclusion Calendar
+=== Exclusion Calendar
 
 The purpose of the exclusion calendar is to use an ICS file to prevent workflows to be executed during a calendar event. 
 Given an event, a predefined action will be applied on the workflow execution.
@@ -199,7 +203,7 @@ Given an event, a predefined action will be applied on the workflow execution.
 
 |===
 
-==== External calendar retrieved from URL
+=== External calendar retrieved from URL
 
 If an inclusion or exclusion calendar is not retrievable, it is blocking the <<_glossary_workflow,*Workflow*>> submission.
 An inclusion or exclusion calendar can become not retrievable if it cannot be downloaded from its URL and the
