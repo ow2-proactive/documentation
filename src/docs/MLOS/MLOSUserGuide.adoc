@@ -210,7 +210,8 @@ $ python -m proactive-jupyter-kernel.install
 === Platform
 
 You can use any jupyter platform.
-We recommend to use jupyter lab. To launch it from your terminal after having installed it:
+We recommend to use https://jupyterlab.readthedocs.io/en/stable/[jupyter lab]. To launch it from your terminal after
+having installed it:
 
 ```bash
 $ jupyter lab
@@ -524,7 +525,7 @@ To be sure that the workflow is saved into a _.png_ file, this option needs to b
 
 Note that the job's name can take one of the following possible values:
 
-1. The parameter `name`'s value, if provided
+1. The parameter `name` 's value, if provided
 2. The job's name, if created
 3. The notebook's name, if the kernel can retrieve it
 4. `Unnamed_job`, otherwise.
@@ -535,9 +536,9 @@ General usage:
 #%draw_job([name=JOB_NAME], [inline=off], [save=on])
 ```
 
-==== Save the workflow graph in dot format
+==== Export the workflow graph in dot format
 
-To save the created workflow into a https://www.graphviz.org/[GraphViz] _.dot_ format, use the `#%write_dot()` pragma:
+To export the created workflow into a https://www.graphviz.org/[GraphViz] _.dot_ format, use the `#%write_dot()` pragma:
 
 ```python
 #%write_dot(name=FILE_NAME)
@@ -562,7 +563,7 @@ To provide a new name, use the same pragma and provide a name as parameter:
 If the job's name is not set, the ProActive kernel uses the current notebook name, if possible, or gives a random one.
 
 ==== List all submitted jobs
-s
+
 To get all submitted job IDs and names, use `list_submitted_jobs` pragma this way:
 
 ```python
@@ -577,7 +578,7 @@ To get the job result(s), the user has to use the `#%get_result()` pragma by pro
 #%get_result(name=JOB_NAME)
 ```
 
-Or by the job ID:
+Or, by the job ID:
 
 ```python
 #%get_result(id=JOB_ID)
@@ -585,7 +586,7 @@ Or by the job ID:
 
 The returned values of your final tasks will be automatically printed.
 
-=== See and Use ActiveEon Portals directly in Jupyter
+=== Display and use ActiveEon Portals directly in Jupyter
 
 Finally, to have the hand on more parameters and features, the user should use ActiveEon Studio portals.
 The main ones are the _Resource Manager_, the _Scheduling Portal_ and the _Workflow Automation_.
@@ -598,13 +599,13 @@ To show the resource manager portal related to the host you are connected to, ju
 #%show_resource_manager([height=HEIGHT_VALUE, width=WIDTH_VALUE])
 ```
 
-for the related scheduling portal:
+For the related scheduling portal:
 
 ```python
 #%show_scheduling_portal([height=HEIGHT_VALUE, width=WIDTH_VALUE])
 ```
 
-and for the related workflow automation:
+And, for the related workflow automation:
 
 ```python
 #%show_workflow_automation([height=HEIGHT_VALUE, width=WIDTH_VALUE])
