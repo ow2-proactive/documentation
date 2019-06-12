@@ -577,3 +577,86 @@ where:
 -   **implementationPath** - The absolute path of the implementation of
     org.ow2.proactive.resourcemanager.nodesource.infrastructure.BatchJobInfrastructure.
 
+====== Native Scheduler Infrastructure
+
+The Native Scheduler Infrastructure allows to interact with a <<_glossary_ns_native_scheduler,native scheduler>> to deploy ProActive Nodes.
+The infrastructure parameters are described hereafter:
+
+ * `RMCredentialsPath` : path to a file which contains the credentials of an administrator user which will own the node source. The ProActive Scheduler Server release contains two admin users credentials files : `config/authentication/rm.cred` and `config/authentication/admin_user.cred`
+ * `NSFrontalHostAddress` : the host name or IP address of the cluster <<_glossary_ns_head_node,head node>>.
+ * `NSSchedulerHome` : the location of the shared ProActive installation on <<_glossary_ns_node,cluster nodes>> (cluster nodes must be able to access ProActive libraries in order to start ProActive Node). Example `/opt/proactive/activeeon_enterprise-node-linux-x64-8.1.0`.
+ * `javaHome` : similarly, cluster nodes must be able to access the java command in order to start ProActive Nodes. ProActive installation includes a Java Runtime Environment under the `jre` subfolder. Example: `/opt/proactive/activeeon_enterprise-node-linux-x64-8.1.0/jre`.
+ * `jvmParameters` : additional options which can be passed to the java command.
+ * `sshOptions` : additional options which can be passed to the ssh command used to connect to connect to the host name or IP address specified in the NSFrontalHostAddress parameter.
+ * `NSNodeTimeoutInSeconds` : timeout to wait for the deployment of ProActive Nodes on the cluster. As the time needed to deploy ProActive Nodes depends on the cluster load, this timeout should be a large value. If the timeout is reached, the ProActive Nodes will be in `"Lost"` <<_node_states,state>>.
+ * `ìmpersonationMethod`: when a job is submitted to the native scheduler, the submission is performed under the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>>. An impersonation is thus performed between the <<_glossary_proactive_scheduler_process_user,scheduler server process>> and the target <<_glossary_cluster_user,cluster user>>.
+ This impersonation can be performed using 3 different strategies:
+ ** `ssh`: in that case the <<_glossary_ns_head_node,head node>> is contacted using a ssh command with the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>> and password. User/password combination between the ProActive Scheduler and the head node operating system must match.
+ ** `none`: in that case the head node is contacted using a ssh command with the <<_glossary_proactive_scheduler_process_user,ProActive Scheduler process user>> (passwordless ssh). Submission to the native scheduler will be performed with the same account.
+ ** `sudo`: similar to `none` regarding the connection to the head node, but a `sudo` command will be initiated to impersonate as the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>>, before doing a job submission.
+ * `alternateRMUrl` : the url used by the ProActive Nodes to contact <<_glossary_resource_manager,ProActive Resource Manager>>. This url is displayed on ProActive server startup. Example: `pnp://myserver:64738`.
+ * `sshPort` : port used for ssh connections.
+ * `nsPreCommand` : a linux command which can be run before launching ProActive Nodes on the cluster. Can be used as a workaround when some system environment variables are not properly set when starting ProActive Nodes.
+ * `nsSubmitCommand` : this is the main command used to start ProActive Nodes on the cluster. Depending on the actual native scheduler implementation, `nsSubmitCommand` will vary, here are examples definitions: +
++
+[cols=2*]
+|===
+
+|PBS |`qsub -N %NS_JOBNAME% -o %LOG_FILE% -j oe`
+
+|SLURM |`sbatch -J %NS_JOBNAME% -o %LOG_FILE%`
+
+|LSF |`bsub -J %NS_JOBNAME% -o %LOG_FILE% -e %LOG_FILE%`
+
+|===
++
+The command can use patterns which will be replaced dynamically by the ProActive Resource Manager. +
++
+[cols=2*]
+|===
+
+|`%NS_JOBNAME%` |contains a configurable job name dynamically created by the resource manager.
+
+|`%LOG_FILE%` |contains a log file path dynamically created by the resource manager and located in side the NSSchedulerHome installation. This log file is useful to debug errors during <<_glossary_ns_cluster_job,cluster job>> submission.
+
+|`%PA_USERNAME%` |contains the current ProActive Scheduler user.
+|===
+
+ * `nsKillCommand` : this is the command used to kill ProActive Nodes started previously by the nsSubmitCommand. Similarly to nsSubmitCommand, `nsKillCommand` will vary for each native scheduler syntax: +
++
+[cols=2*]
+|===
+
+|PBS |`qdel %NS_JOBID%`
+
+|SLURM |`scancel -n %NS_JOBNAME%`
+
+|LSF |`bkill -J %NS_JOBNAME%`
+
+|===
++
+It can use the following patterns: +
++
+[cols=2*]
+|===
+
+|`%NS_JOBNAME%` |contains a configurable job name dynamically created by the resource manager.
+
+|`%NS_JOBID%` |contains the job id returned by the native scheduler when submitting the job. Currently, job id can only be used with PBS, when the setting `submitReturnsJobId` is set to `true`.
+
+|===
+
+ * `submitReturnsJobId`: is the <<_glossary_ns_cluster_jobid,cluster job id>> returned plainly when calling the nsSubmitCommand. This is the behavior of PBS, and this is why this setting should be set to `true` when using PBS.
+ * `nsJobName`: a way to configure the `%NS_JOBNAME%` pattern. The following patterns can be used: +
++
+[cols=2*]
+|===
+
+|`%PA_TASKID%` |contains the ProActive Task and Job ID associated with the node request.
+
+|`%PA_USERNAME%` |contains the current ProActive Scheduler user.
+
+|===
+
+ * `maxDeploymentFailure`: number of attempts when starting a ProActive Node on the cluster using the nsSubmitCommand, after all attempts failed, the ProActive Node will be declared as `Lost`.
+
