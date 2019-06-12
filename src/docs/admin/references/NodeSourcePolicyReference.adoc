@@ -453,7 +453,7 @@ time to wait before effectively removing a node.
 
 ====== Native Scheduler Policy
 
-The Native Scheduler Policy interacts with the <<_glossary_ns_native_scheduler,native scheduler>> to request ProActive Nodes deployment dynamically based on the <<_glossary_proactive_scheduler,*ProActive Scheduler*>> pending queue.
+The Native Scheduler Policy interacts with the <<_glossary_ns_native_scheduler,native scheduler>> to request ProActive nodes deployment dynamically based on the <<_glossary_proactive_scheduler,*ProActive Scheduler*>> pending queue.
 To use this policy, you need to precise the following parameters:
 
  * `userAccessType` : which users are allowed to use ProActive Nodes created by the NativeSchedulerInfrastructure. Refer to the <<_policies,Policies documentation>>.
