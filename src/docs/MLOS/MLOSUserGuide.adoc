@@ -1663,7 +1663,7 @@ NOTE: More information about this task can be found https://epistasislab.github.
 [NOTE]
 ====
 . The labels of the selected Dataset have to be numerical.
-. More information about this task can be found https://automl.github.io/auto-sklearn/stable/api.html?highlight=classification#classification[here^].
+. More information about this task can be found https://automl.github.io/auto-sklearn/master/api.html#api[here^].
 ====
 
 ===== TPOT_Regressor
@@ -2350,7 +2350,7 @@ image::image_classification.png[400,400]
 
 NOTE: You can find an example of the organization of the folders at: https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/ants_vs_bees.zip
 
-. _Image Segmentation Dataset:_ Two folders are required: the first folder should contain the RGB images in JPG format and another folder should contain its corresponding annotations in http://hostrobots.ox.ac.uk/pascal/VOC/voc2012/index.html[PASCAL VOC^] format. RGB images and annotations should be organized as follows:
+. _Image Segmentation Dataset:_ Two folders are required: the first folder should contain the RGB images in JPG format and another folder should contain its corresponding annotations in http://host.robots.ox.ac.uk/pascal/VOC/voc2012/index.html[PASCAL VOC^] format. RGB images and annotations should be organized as follows:
 
 image::image_segmentation.png[550,500]
 
