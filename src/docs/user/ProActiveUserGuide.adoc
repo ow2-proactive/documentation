@@ -20,9 +20,9 @@ your environment (default credentials: admin/admin) or just use our demo platfor
 
 *ProActive Scheduler* provides comprehensive interfaces that allow to:
 
-- link:/studio[Create workflows^]
-- link:/scheduler[Submit workflows, monitor their execution and retrieve the tasks results^]
-- link:/rm[Add resources and monitor them^]
+- +++<a class="studioUrl" href="/studio" target="_blank">Create workflows</a>+++
+- +++<a class="schedulerUrl" href="/scheduler" target="_blank">Submit workflows, monitor their execution and retrieve the tasks results</a>+++
+- +++<a class="rmUrl" href="/scheduler" target="_blank">Add resources and monitor them</a>+++
 
 We also provide REST and command line interfaces for advanced users.
 
@@ -90,7 +90,7 @@ At the left part, are illustrated the **General Parameters** of the workflow wit
 - `Name`: the name of the workflow.
 - `Project`: the project name to which belongs the workflow.
 - `Description`: the textual description of the workflow.
-- `Documentation`: if the workflow has a Generic Information named "Documentation", then its URL value is displayed as a link. 
+- `Documentation`: if the workflow has a Generic Information named "Documentation", then its URL value is displayed as a link.
 - `Job Priority`: the priority assigned to the workflow. It is by default set to `NORMAL`, but can be increased or decreased once the job is submitted. 
 
 
@@ -756,7 +756,7 @@ NOTE: results will be aggregated according to the order declared in the dependen
 </depends>
 ----
 
-For nearly all script languages, the *results* variable contains a list of link:/doc/javadoc/org/ow2/proactive/scheduler/common/task/TaskResult.html[TaskResult java object].
+For nearly all script languages, the *results* variable contains a list of link:../javadoc/org/ow2/proactive/scheduler/common/task/TaskResult.html[TaskResult java object].
 In order to access the result value, the value() method of this object must be called.
 Example for Python/Jython:
 [source, python]
@@ -1284,7 +1284,7 @@ the task is terminated. Note that the tasks are terminated without any prior not
 
 === Cron Workflows
 The *ProActive Scheduler* allows to schedule <<_glossary_workflow,*Workflows*>> with the <<_glossary_job_planner,*Job Planner*>>.
-Find more information in the <<_user_job_planner_service,*Job Planner Service*>> section.
+Find more information in the link:../JobPlanner/JobPlannerUserGuide.html[*Job Planner User Guide*].
 
 
 === Cron Tasks
@@ -1898,7 +1898,7 @@ println taskResult.getOutput().getAllLogs(false)
 
 ----
 
-The complete API description can be found in the link:/doc/javadoc/org/ow2/proactive/scheduler/task/client/SchedulerNodeClient.html[SchedulerNodeClient JavaDoc].
+The complete API description can be found in the link:../javadoc/org/ow2/proactive/scheduler/task/client/SchedulerNodeClient.html[SchedulerNodeClient JavaDoc].
 
 NOTE: The `schedulerapi` <<_glossary_script_bindings,script binding>> can also be used in <<_glossary_additional_task_scripts,additional scripts>> defined inside a <<_glossary_task,ProActive Task>>.
 To know in which scripts `schedulerapi` is available, refer to the <<_variables_quick_reference,variables quick reference>>.
@@ -1935,7 +1935,7 @@ println outFile.text
 
 ----
 
-The complete description of user and global space APIs can be found in the link:/doc/javadoc/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient JavaDoc].
+The complete description of user and global space APIs can be found in the link:../javadoc/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient JavaDoc].
 
 NOTE: The `userspaceapi` and `globalspaceapi` <<_glossary_script_bindings,script bindings>> can also be used in <<_glossary_additional_task_scripts,additional scripts>> defined inside a <<_glossary_task,ProActive Task>>.
 To know in which scripts these bindings are available, refer to the <<_variables_quick_reference,variables quick reference>>.
@@ -1968,7 +1968,7 @@ Synchronizations can be used in any part of a Task (Pre/Post/Clean Scripts, Task
 
 ==== Usage
 
-*Task Synchronization API* is a *Java API* defined by the following link:/doc/javadoc/org/ow2/proactive/scheduler/synchronization/Synchronization.html[API documentation].
+*Task Synchronization API* is a *Java API* defined by the following link:../javadoc/org/ow2/proactive/scheduler/synchronization/Synchronization.html[API documentation].
 
 The Synchronization API is connected to a centralized *Synchronization Service*. This service ensures that each request is executed atomically, and that changes are persisted on disk.
 
@@ -2008,7 +2008,7 @@ The Synchronization API is similar to the https://docs.oracle.com/javase/8/docs/
  * In addition to the methods present in the https://docs.oracle.com/javase/8/docs/api/java/util/Map.html[Java 8 Map interface], Synchronization API provides *blocking methods* to wait for a specific _condition_ on a channel.
  This is mainly why this API is called *Synchronization*, it allows for different ProActive Tasks to be blocked until specific conditions are met.
 
- * When an error occurs during the Groovy Closure compilation or execution, dedicated exceptions (link:/doc/javadoc/org/ow2/proactive/scheduler/synchronization/CompilationException.html[CompilationException] or link:/doc/javadoc/org/ow2/proactive/scheduler/synchronization/ClosureEvaluationException.html[ClosureEvaluationException]) will be thrown.
+ * When an error occurs during the Groovy Closure compilation or execution, dedicated exceptions (link:../javadoc/org/ow2/proactive/scheduler/synchronization/CompilationException.html[CompilationException] or link:../javadoc/org/ow2/proactive/scheduler/synchronization/ClosureEvaluationException.html[ClosureEvaluationException]) will be thrown.
 
 
 ==== Examples
@@ -2083,7 +2083,7 @@ synchronizationapi.waitUntil(variables.get("PA_JOB_ID"), "lock", "{k, x -> x == 
 println "Task B has been unlocked by Task A"
 ```
 
-As you can see, the link:/doc/javadoc/org/ow2/proactive/scheduler/synchronization/Synchronization.html#waitUntil-java.lang.String-java.lang.String-java.lang.String-[waitUntil] method expects a https://docs.oracle.com/javase/8/docs/api/java/util/function/BiPredicate.html?is-external=true[BiPredicate] defined as a string http://groovy-lang.org/closures.html[Groovy Closure].
+As you can see, the link:../javadoc/org/ow2/proactive/scheduler/synchronization/Synchronization.html#waitUntil-java.lang.String-java.lang.String-java.lang.String-[waitUntil] method expects a https://docs.oracle.com/javase/8/docs/api/java/util/function/BiPredicate.html?is-external=true[BiPredicate] defined as a string http://groovy-lang.org/closures.html[Groovy Closure].
 The predicate receives two parameters: `k` contains the key, and `x` contains the binding associated with this key.
 This predicate is evaluated on the *lock* binding, and waits until this binding *== false*.
 
@@ -2134,13 +2134,13 @@ println "Release slot"
 synchronizationapi.compute(jobid,"available_slots", "{k, x -> x + 1}")
 ```
 
-As you can see, the first method used in this section is link:/doc/javadoc/org/ow2/proactive/scheduler/synchronization/Synchronization.html#waitUntilThen-java.lang.String-java.lang.String-java.lang.String-java.lang.String-[waitUntilThen]. This method expects both a https://docs.oracle.com/javase/8/docs/api/java/util/function/BiPredicate.html?is-external=true[BiPredicate] and a https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html?is-external=true[BiFunction] defined as strings http://groovy-lang.org/closures.html[Groovy Closure].
+As you can see, the first method used in this section is link:../javadoc/org/ow2/proactive/scheduler/synchronization/Synchronization.html#waitUntilThen-java.lang.String-java.lang.String-java.lang.String-java.lang.String-[waitUntilThen]. This method expects both a https://docs.oracle.com/javase/8/docs/api/java/util/function/BiPredicate.html?is-external=true[BiPredicate] and a https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html?is-external=true[BiFunction] defined as strings http://groovy-lang.org/closures.html[Groovy Closure].
 
 The semantic of this method is to wait until the predicate is met and, as soon as it is, immediately perform a remapping.
 
 In our scenario, the number of available slots is immediately decremented to reserve a slot and enter the critical section.
 
-Releasing of the slot is performed at the end of the task using the link:/doc/javadoc/org/ow2/proactive/scheduler/synchronization/Synchronization.html#compute-java.lang.String-java.lang.String-java.lang.String-[compute] method.
+Releasing of the slot is performed at the end of the task using the link:../javadoc/org/ow2/proactive/scheduler/synchronization/Synchronization.html#compute-java.lang.String-java.lang.String-java.lang.String-[compute] method.
 
  * *Clean*: Delete the channel. Same code as the previous examples.
 
@@ -2300,10 +2300,6 @@ Internally the command is split into docker, run, java, /usr/bin/java, -cp, [Cla
    folder in the temp directory of the operating system. Those cannot contain spaces, because if they
     do then the fork execution command will be split wrong and fail.
 
-[[_user_job_planner_service]]
-== Job Planner Service
-
-include::./references/JobPlannerServiceReference.adoc[]
 
 == Addons
 
@@ -2338,3 +2334,22 @@ include::./references/TopologyTypes.adoc[]
 include::../CLI.adoc[]
 
 include::../Dedication.adoc[]
+
+++++
+<script>
+if(window.location.hostname.includes("doc.activeeon.com")){
+    document.querySelectorAll('.studioUrl').forEach(function(element){
+        element.href="https://try.activeeon.com/studio";
+    });
+    document.querySelectorAll('.schedulerUrl').forEach(function(element){
+        element.href="https://try.activeeon.com/scheduler";
+    });
+    document.querySelectorAll('.rmUrl').forEach(function(element){
+        element.href="https://try.activeeon.com/rm";
+    });
+    document.querySelectorAll('.automationDashboardUrl').forEach(function(element){
+        element.href="https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation";
+    });
+}
+</script>
+++++

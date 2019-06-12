@@ -39,6 +39,9 @@ Catalog:: ProActive component that provides storage and versioning of <<_glossar
 [[_glossary_job_planner]]
 Job Planner:: A ProActive component providing advanced scheduling options for <<_glossary_workflow,*Workflows*>>.
 
+[[_glossary_job_planner_portal]] 
+Job Planner Portal:: A ProActive portal to manage the <<_glossary_job_planner,*Job Planner*>> service.
+
 [[_glossary_workflow_bucket]]
 Bucket:: ProActive notion used with the <<_glossary_catalog, *Catalog*>> to refer to a specific collection of ProActive Objects and in particular ProActive Workflows.
 

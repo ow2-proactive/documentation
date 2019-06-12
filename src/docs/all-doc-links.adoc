@@ -1,20 +1,23 @@
 :sectnums!:
 == All documentation links
-=== link:../user/ProActiveUserGuide.html[User Guide]
-ProActive Workflow & Scheduler (PWS) User Guide (Workflows, Tasks, Jobs Submission, Resource Management)
 
-=== link:../MLOS/MLOSUserGuide.html[ML Open Studio]
-Machine Learning Open Studio (ML-OS) User Guide (ready to use palettes with ML Tasks & Workflows)
+=== ProActive Workflows & Scheduling (PWS)
 
-=== link:../PCW/PCWUserGuide.html[Cloud Watch]
-ProActive Cloud Watch (PCW) User Guide (smart monitoring system with defined actions)
+* link:../user/ProActiveUserGuide.html[PWS User Guide] (Workflows, Workload automation, Jobs, Tasks, Catalog, Resource Management, Big Data/ETL, …​)
+* MODULE: link:../JobPlanner/JobPlannerUserGuide.html[Job Planner] (Time Base Scheduling)
+* MODULE: link:../PCW/PCWUserGuide.html[Cloud Watch] (Event Base Scheduling)
+* MODULE: link:../PCA/PCAUserGuide.html[Cloud Automation] (PaaS On-Demand, Service deployment and management)
+* link:../admin/ProActiveAdminGuide.html[Administration Guide] (Installation, Infrastructure & Nodes setup, Agents,…​)
 
-=== link:../PCA/PCAUserGuide.html[Cloud Automation]
-ProActive Cloud Automation (PCA) User Guide (automate deployment and management of Services)
+=== Machine Learning Open Studio (MLOS)
 
-=== link:../admin/ProActiveAdminGuide.html[Admin Guide]
-Administration Guide (Installation, networks, nodes, clusters, users, permissions)
+* link:../MLOS/MLOSUserGuide.html[Machine Learning Open Studio User Guide - MLOS] (​a complete Data Science and Machine Learning Platform)
 
-*API documentation: &emsp; link:/rest/doc/[Scheduler REST] &emsp; link:../user/ProActiveUserGuide.html#_scheduler_command_line[Scheduler CLI] &emsp; link:/doc/javadoc/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html[Scheduler Java] &emsp; link:/doc/javadoc/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html[Workflow Creation Java] &emsp; https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client[Python Client]*
+*API documentation: &emsp;
+link:../rest/[Scheduler REST] &emsp;
+link:../user/ProActiveUserGuide.html#_scheduler_command_line[Scheduler CLI] &emsp;
+link:javadoc/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html[Scheduler Java] &emsp;
+link:javadoc/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html[Workflow Creation Java] &emsp;
+https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client[Python Client]*
 
 :sectnums:
