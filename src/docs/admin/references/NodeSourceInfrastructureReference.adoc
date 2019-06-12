@@ -212,7 +212,7 @@ now be added using the *Create Node Source* panel in the Resource Manager or the
 
 As AWS is a paying service, when the Scheduler is stopped normally (without removing the created infrastructure), all the created AWS instances will be terminated. And when the Scheduler is restarted, these instances will be re-configured as per previous settings.
 
-WARNING: If the Scheduler is forced killed, the created AWS instances will not be terminated. And, when the Scheduler is restarted, the infrastructure will be re-configured as per previous settings. If the instances were delete at the AWS side, they will be re-created and re-configured.
+WARNING: If the ProActive server is forced killed, the created AWS instances will not be terminated. And, when the ProActive server is restarted, the infrastructure will be re-configured as per previous settings. If the instances were delete at the AWS side, they will be re-created and re-configured.
 
 
 
@@ -292,7 +292,7 @@ now be added using the *Create Node Source* panel in the Resource Manager or the
     $ PROACTIVE_HOME/bin/proactive-client --createns openstack -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.OpenstackInfrastructure username password endpoint rmHostname connectorIaasURL image flavor publicKeyName numberOfInstances numberOfNodesPerInstance downloadCommand additionalProperties
 
 
-WARNING: When the Scheduler is stopped (without removing the created infrastructure), the Openstack instances will not be terminated. And when the Scheduler is restarted, the infrastrucutre will be re-configured as per previous settings. If the instances were delete at the Openstack server side, they will be re-created and re-configured.
+WARNING: When the ProActive server is stopped (without removing the created infrastructure), the Openstack instances will not be terminated. And when the ProActive server is restarted, the infrastrucutre will be re-configured as per previous settings. If the instances were delete at the Openstack server side, they will be re-created and re-configured.
 
 
 
@@ -357,7 +357,7 @@ now be added using the *Create Node Source* panel in the Resource Manager or the
     $ PROACTIVE_HOME/bin/proactive-client --createns vmware -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.VmwareInfrastructure username password endpoint rmHostname connectorIaasURL image ram cores vmusername vmpassword numberOfInstances numberOfNodesPerInstance downloadCommand additionalProperties
 
 
-WARNING: When the Scheduler is stopped (without removing the created infrastructure), the VmWare instances will not be terminated. And when the Scheduler is restarted, the infrastrucutre will be re-configured as per previous settings. If the instances were delete at the VmWare server side, they will be re-created and re-configured.
+WARNING: When the ProActive server is stopped (without removing the created infrastructure), the VmWare instances will not be terminated. And when the ProActive server is restarted, the infrastrucutre will be re-configured as per previous settings. If the instances were delete at the VmWare server side, they will be re-created and re-configured.
 
 ===== GCE Infrastructure
 
@@ -420,7 +420,7 @@ An GoogleComputeEngine NodeSource can now be added using the *Create Node Source
     $ PROACTIVE_HOME/bin/proactive-client --createns googlecomputeengine -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.GCEInfrastructure gceCredential totalNumberOfInstances numberOfNodesPerInstance vmUsername vmPublicKey vmPrivateKey image region ram cores rmHostname connectorIaasURL nodeJarURL additionalProperties nodeTimeout
 
 
-WARNING: When the Scheduler is stopped, the GoogleComputeEngine instances will be automatically deleted. And when the Scheduler is restarted, the infrastructure will be recovered as previous settings. The required GoogleComputeEngine instances will be re-created and re-configured.
+WARNING: When the ProActive server is stopped is stopped, the GoogleComputeEngine instances will be automatically deleted. And when the ProActive server is restarted, the infrastructure will be recovered as previous settings. The required GoogleComputeEngine instances will be re-created and re-configured.
 
 
 ===== Load Sharing Facility (LSF) infrastructure
