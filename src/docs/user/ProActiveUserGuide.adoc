@@ -359,7 +359,7 @@ This status is used when an exception is thrown by the user code of a task and w
 | `FAILED` | Failed | The job has failed. One or more tasks have failed (due to resources failure).
 There is no more executionOnFailure left for a task.
 | `FINISHED` | Finished | The job is finished. Tasks are finished or faulty.
-| `IN_ERROR` | In-Error | The job has at least one In-Error task and all In-Error tasks are the last, among others, which have changed their state.
+| `IN_ERROR` | In-Error | The job has one or more In-Error tasks that are suspended along with their dependencies. User intervention is required to fix the causing issues and restart the In-Error tasks to resume the job.
 | `KILLED` | Killed | The job has been killed by the user.
 | `PAUSED` | Paused | The job is paused waiting for user to resume it.
 | `PENDING` | Pending | The job is waiting to be scheduled.
