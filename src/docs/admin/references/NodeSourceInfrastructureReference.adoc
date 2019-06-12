@@ -259,7 +259,7 @@ Properties needed for the deployment of instance are :
     -   *publicKeyName:* Defines the name of the public key to use for a remote connection when the instance is created.
     
 +
-WARNING: In order to use publicKeyName, the key pair needs to be created and imported first on the Openstack server. For more information see https://community.hpcloud.com/article/managing-your-key-pairs-0[Openstack key pair management].
+WARNING: In order to use publicKeyName, the key pair needs to be created and imported first on the Openstack server. For more information see https://docs.openstack.org/python-openstackclient/pike/cli/command-objects/keypair.html[Openstack key pair management].
 +
  
         
