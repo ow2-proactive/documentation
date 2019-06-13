@@ -167,7 +167,7 @@ The description allows users who are not familiar with cron expressions to know 
 
 The aim of the cron expression is to launch the planned workflow according to the cron syntax.
 One can see the cron expression "0 0 9 ? * MON-FRI *", which follows the quartz cron expression syntax explained in the
-<<_job_planner_cron_expression_syntax, Quartz Cron Expression Syntax>> section. The cron expression in this example
+<<../user/ProActiveUserGuide.adoc#_cron_expression_syntax, Quartz Cron Expression Syntax>> section. The cron expression in this example
  executes at 9:00 AM on working days (Monday to Friday).
 
 

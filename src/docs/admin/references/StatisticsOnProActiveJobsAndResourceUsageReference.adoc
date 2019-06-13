@@ -35,8 +35,8 @@ source <anaconda root>/bin/activate
 Miniconda is a stripped down version of Anaconda, much smaller in size.
 The downside is that it normally requires internet access on the machine where it is installed.
 
-    1. Download and install http://conda.pydata.org/miniconda.html[Miniconda]  
-    2. If behind a proxy, compile http://conda.pydata.org/docs/config.html[condarc]
+    1. Download and install https://conda.io/miniconda.html[Miniconda]
+    2. If behind a proxy, compile https://conda.io/docs/config.html[condarc]
     3. Linux/MacOSX::
 +
 [source]

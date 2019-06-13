@@ -21,7 +21,7 @@ include::../Glossary.adoc[]
 [[_run_the_proactive_scheduler]]
 == Get Started
 
-http://www.activeeon.com/community-downloads[Download^] ProActive Scheduler and *unzip* the archive.
+https://www.activeeon.com/community-downloads[Download^] ProActive Scheduler and *unzip* the archive.
 
 The extracted folder will be referenced as `PROACTIVE_HOME` in the rest of the documentation.
 The archive contains all required dependencies.
@@ -331,7 +331,7 @@ especially if those are desktop machines where people perform their daily activi
 [[_proactive_linux_agent]]
 ==== ProActive Linux Agent
 
-The ProActive Agent for Linux can be downloaded from ActiveEon's http://www.activeeon.com/community-downloads[website^].
+The ProActive Agent for Linux can be downloaded from ActiveEon's https://www.activeeon.com/community-downloads[website^].
 
 To install the ProActive Agent on Debian based distributions (the archive name will vary depending on the version and architecture):
 
@@ -431,7 +431,7 @@ to note that a ProActive Node running tasks can potentially spawn child processe
 
 ==== Install Agents on Windows
 
-The ProActive Windows Agent installation pack is available on the official http://proactive.inria.fr/[ProActive website^].
+The ProActive Windows Agent installation pack is available on the https://www.activeeon.com/community-downloads[ProActive website^].
 Run the `setup.exe` file and follow instructions. When the following dialog appears:
 
 image::install_config.png[align="center"]
@@ -610,7 +610,7 @@ ProActive Resource Manager provides three ways to create a Node Source:
 * Use the https://try.activeeon.com/rest/doc/[REST API]
 * Use the <<_resource_manager_command_line>>
 
-Whichever the way you use to create a node source, ultimately you just need to choose a *Node Source Infrastructure* from the list of <<_node_source_infrastructure,supported Node Source Infrastructures>>
+Whichever the way you use to create a node source, ultimately you just need to choose a *Node Source Infrastructure* from the list of <<_node_source_infrastructures,supported Node Source Infrastructures>>
 and a <<_node_source_policies,*Node Source Policy*>> that defines rules and limitations of nodes' utilization.
 Then according to the chosen node source infrastructure and policy, you need to fill out the required parameters.
 
@@ -713,7 +713,7 @@ See <<_node_source_infrastructures, *Node Source Infrastructure*>> reference for
 
 This functionality is also called *_Meta-Scheduling_*.
 
-If an existing cluster is available in your organization and this cluster is managed by a native scheduler such as *SLURM*, *LSF* or *PBS*, you may want to execute transparently on this cluster ProActive <<__glossary_workflow,*Workflows*>> and <<_glossary_task,*Tasks*>>.
+If an existing cluster is available in your organization and this cluster is managed by a native scheduler such as *SLURM*, *LSF* or *PBS*, you may want to execute transparently on this cluster ProActive <<_glossary_workflow,*Workflows*>> and <<_glossary_task,*Tasks*>>.
 
 As ProActive Tasks can be executed only on <<_glossary_proactive_node,*ProActive Nodes*>>, it is necessary to deploy ProActive Nodes on the cluster.
 
@@ -725,7 +725,7 @@ Dynamic deployment of ProActive Nodes on a cluster to execute ProActive Tasks is
 
  * The `Native Scheduler Scheduling Policy`: a <<_glossary_scheduling_policy,*Scheduling Policy*>> which allows the execution of ProActive Tasks on ProActive Nodes provisioned by the Native Scheduler Policy.
 
-The provisioning of ProActive Nodes is controlled by a specific <<_glossary_generic_infromation>> `"NS"` which can be defined at _Task_ or _Job_ level.
+The provisioning of ProActive Nodes is controlled by a specific <<_glossary_generic_information>> `"NS"` which can be defined at _Task_ or _Job_ level.
 
 When this generic information is configured for a _Task_, a ProActive Node will be dynamically deployed on the cluster to execute the Task. This ProActive Node will be associated with the Task and will only accept this Task execution. When the Task terminates, the ProActive Node will also be terminated.
 
@@ -790,7 +790,7 @@ This is expected as the Native Scheduler node source is *dynamic*, it will only 
 
 ===== Configure NativeSchedulerSchedulingPolicy
 
-After creating the Native Scheduler Node Source, it is necessary as well to change the <<_extending_proactive_scheduling_policy,*ProActive Scheduling Policy*>> to use the `NativeSchedulerSchedulingPolicy`.
+After creating the Native Scheduler Node Source, it is necessary as well to change the <<_scheduling_policies,*ProActive Scheduling Policy*>> to use the `NativeSchedulerSchedulingPolicy`.
 
 This policy ensures that tasks are executed on appropriate ProActive Nodes when using a Native Scheduler Node Source.
 
@@ -812,7 +812,7 @@ Submission of jobs to the native scheduler is done by default using a SSH connec
 
 When a ProActive Task belonging to a given user _Alice_ needs to execute on a NativeScheduler node source, a SSH connection will be performed with the login and password of the _Alice_ user registered in the ProActive Scheduler.
 
-Accordingly, this login/password combination must correspond to a real user on the cluster <<_glossary_ns_head_node,head node>>.
+Accordingly, this login/password combination must correspond to a real user on the cluster <<_glossary_head_node,head node>>.
 
 Please refer to the <<_user_authentication,*User Authentication*>> section in order to manage ProActive Users.
 
@@ -1576,7 +1576,7 @@ the forceful removal of the running process.
 
 All users authenticated in the Resource Manager have their own role according to granted permissions.
 In ProActive Scheduler, we use the standard
-http://www.oracle.com/technetwork/java/javase/jaas/index.html[Java Authentication and Authorization Service (JAAS)^]
+https://www.oracle.com/technetwork/java/javase/jaas/index.html[Java Authentication and Authorization Service (JAAS)^]
 to address these needs.
 
 The file `PROACTIVE_HOME/config/security.java.policy-server` allows to configure fine-grained access for all users, e.g. who has the right to:
@@ -1590,7 +1590,7 @@ The file `PROACTIVE_HOME/config/security.java.policy-server` allows to configure
 
 Cluster monitoring typically means checking that all ProActive Nodes that were added to *ProActive Scheduler*
 are up and running. We don't track for example the free disk space or software upgrade which can be
-better achieved with tools like http://www.nagios.org[Nagios^].
+better achieved with tools like https://www.nagios.org[Nagios^].
 
 In the *Resource Manager Web Interface* you can see how many ProActive Nodes were added to the
 Resource Manager and their usage.
@@ -1626,7 +1626,7 @@ The state of a ProActive Node is managed by the Resource Manager. However, each 
 
 The JMX interface for remote management and monitoring provides information about the running ProActive Resource Manager and allows the user to modify its configuration.
 For more details about JMX concepts, please refer to official documentation about
-the http://www.oracle.com/technetwork/java/javase/tech/javamanagement-140525.html[JMX architecture^].
+the https://www.oracle.com/technetwork/java/javase/tech/javamanagement-140525.html[JMX architecture^].
 
 image::jmx_archi.png[align="center"]
 
@@ -1866,7 +1866,7 @@ it possible to have ProActive web applications and additional ones to coexist.
 ==== Creating a valid keystore
 
 Java is bundled with some utility binaries such as
-link:http://docs.oracle.com/javase/8/docs/technotes/tools/unix/keytool.html[keytool].
+link:https://docs.oracle.com/javase/8/docs/technotes/tools/unix/keytool.html[keytool].
 This last allows to create and manage a keystore but also to generate keys and
 certificates.
 
@@ -2150,7 +2150,7 @@ See https://www.google.com/settings/security/lesssecureapps.
 
 Password authentication to Microsoft servers requires extra configuration.
 
-See http://pchelp.ricmedia.com/how-to-fix-550-5-3-4-requested-action-not-taken-error/
+See https://pchelp.ricmedia.com/how-to-fix-550-5-3-4-requested-action-not-taken-error/
 
 [width="60%",frame="topbot",options="header,footer"]
 |======================
@@ -2188,8 +2188,8 @@ embedded database. This last is lightweight and does not require complex
 configuration. However, it cannot compete with more conventional database
 management systems, especially when the load increases. Consequently, it is
 recommended to setup an RDBMS such as https://mariadb.com[MariaDB],
-http://www.postgresql.org[Postgres] or
-http://www.microsoft.com/en-us/server-cloud/products/sql-server/[SQL Server] if
+https://www.postgresql.org/[Postgres] or
+https://www.microsoft.com/en-us/sql-server/[SQL Server] if
 you care about performance or notice a slowdown.
 
 ProActive Workflows and Scheduling distribution is provided with several
