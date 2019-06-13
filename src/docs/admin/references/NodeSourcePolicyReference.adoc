@@ -35,7 +35,7 @@ or +PROVIDER_GROUPS+ (unless it's granted AllPermissions).
 to the node source and never removes them. Nevertheless, nodes can be
 removed by user request. To use this policy, you have to precise the following parameters:
 
--   *nodeUsers* - utilization permission defined who can get nodes for
+-   *nodeUsers* - Utilization permission defined who can get nodes for
     computations from this node source. It has to take one of the
     following values:
 
@@ -64,7 +64,7 @@ removed by user request. To use this policy, you have to precise the following p
 *Time slot policy* is aimed to acquire nodes for particular time with an
 ability to do it periodically. To use this policy, you have to precise the following parameters:
 
--   *nodeUsers* - utilization permission defined who can get nodes for
+-   *nodeUsers* - Utilization permission defined who can get nodes for
     computations from this node source. It has to take one of the
     following values:
 
@@ -93,7 +93,7 @@ ability to do it periodically. To use this policy, you have to precise the follo
 -   *releaseTime* - Absolute releasing date (e.g. "6/3/10 2:18:45 PM
     CEST").
 
--   *period* - period time in millisecond (default is 86400000).
+-   *period* - Period time in millisecond (default is 86400000).
 
 -   *preemptive* - Preemptive parameter indicates the way of releasing
     nodes. If it is true, nodes will be released without waiting the end
@@ -104,7 +104,7 @@ ability to do it periodically. To use this policy, you have to precise the follo
 *Cron policy* is aimed to acquire and remove nodes at specific time
 defined in the cron syntax.To use this policy, you have to precise the following parameters:
 
--   *nodeUsers* - utilization permission defined who can get nodes for
+-   *nodeUsers* - Utilization permission defined who can get nodes for
     computations from this node source. It has to take one of the
     following values:
 
@@ -153,7 +153,7 @@ keep nodes alive permanently. Nodes will be released after a specified
 why its URL, its user name and its password have to be specified.
 To use this policy, you have to precise the following parameters:
 
--   *nodeUsers* - utilization permission defined who can get nodes for
+-   *nodeUsers* - Utilization permission defined who can get nodes for
     computations from this node source. It has to take one of the
     following values:
 
@@ -181,7 +181,7 @@ To use this policy, you have to precise the following parameters:
 -   *schedulerCredentialsPath* - Path to the credentials used for
     scheduler authentication.
 
--   *idleTime* - idle time in millisecond to wait before removing all
+-   *idleTime* - Idle time in millisecond to wait before removing all
     nodes (default is 60000).
 
 
@@ -205,7 +205,7 @@ nodes.
 
 To use this policy, you have to precise the following parameters:
 
--   *nodeUsers* - utilization permission defined who can get nodes for
+-   *nodeUsers* - Utilization permission defined who can get nodes for
     computations from this node source. It has to take one of the
     following values:
 
@@ -233,14 +233,14 @@ To use this policy, you have to precise the following parameters:
 - *schedulerCredentialsPath* - Path to the credentials used for
     scheduler authentication.
 
-- *refreshTime* - time between each calculation of the number of needed
+- *refreshTime* - Time between each calculation of the number of needed
 nodes.
 
 - *minNodes* - Minimum number of nodes to deploy
 
 - *maxNodes* - Maximum number of nodes to deploy
 
-- *loadFactor* - number of tasks per node. Actually, if this number is
+- *loadFactor* - Number of tasks per node. Actually, if this number is
 *N*, it does not means that there will be exactly *N* tasks executed on
 each node. This factor is just used to compute the total number of
 nodes. For instance, let us assume that this factor is 3 and that we
@@ -261,7 +261,7 @@ only within a time slot defined using crontab syntax. All other time the
 nodes are removed from the resource manager.
 To use this policy, you have to precise the following parameters:
 
--   *nodeUsers* - utilization permission defined who can get nodes for
+-   *nodeUsers* - Utilization permission defined who can get nodes for
     computations from this node source. It has to take one of the
     following values:
 
@@ -289,14 +289,14 @@ To use this policy, you have to precise the following parameters:
 -   *schedulerCredentialsPath* - Path to the credentials used for
     scheduler authentication.
 
--   *refreshTime* - time between each calculation of the number of
+-   *refreshTime* - Time between each calculation of the number of
     needed nodes.
 
 -   *minNodes* - Minimum number of nodes to deploy
 
 -   *maxNodes* - Maximum number of nodes to deploy
 
--   *loadFactor* - number of tasks per node. Actually, if this number is
+-   *loadFactor* - Number of tasks per node. Actually, if this number is
 *N*, it does not means that there will be exactly *N* tasks executed on
 each node. This factor is just used to compute the total number of
 nodes. For instance, let us assume that this factor is 3 and that we
@@ -329,7 +329,7 @@ only within a time slot defined using crontab syntax. The other time it
 holds all the available nodes.
 To use this policy, you have to precise the following parameters:
 
--   *nodeUsers* - utilization permission defined who can get nodes for
+-   *nodeUsers* - Utilization permission defined who can get nodes for
     computations from this node source. It has to take one of the
     following values:
 
@@ -357,7 +357,7 @@ To use this policy, you have to precise the following parameters:
 - *schedulerCredentialsPath* - Path to the credentials used for
 scheduler authentication.
 
-- *refreshTime* - time between each calculation of the number of needed
+- *refreshTime* - Time between each calculation of the number of needed
 nodes.
 
 - *minNodes* - Minimum number of nodes to deploy
@@ -395,7 +395,7 @@ Allocates resources according to the Scheduler loading factor, releases
 resources considering that EC2 instances are paid by the hour.
 To use this policy, you have to precise the following parameters:
 
--   *nodeUsers* - utilization permission defined who can get nodes for
+-   *nodeUsers* - Utilization permission defined who can get nodes for
     computations from this node source. It has to take one of the
     following values:
 
@@ -427,10 +427,10 @@ scheduler authentication.
 nodes. If it is true, nodes will be released without waiting the end of
 jobs running on (default is false).
 
-- *refreshTime* - time between each calculation of the number of needed
+- *refreshTime* - Time between each calculation of the number of needed
 nodes.
 
-- *loadFactor* - number of tasks per node. Actually, if this number is
+- *loadFactor* - Number of tasks per node. Actually, if this number is
 *N*, it does not means that there will be exactly *N* tasks executed on
 each node. This factor is just used to compute the total number of
 nodes. For instance, let us assume that this factor is 3 and that we
@@ -457,10 +457,10 @@ The Native Scheduler Policy interacts with the <<_glossary_ns_native_scheduler,n
 This mechanism is described in <<_deploy_via_other_schedulers>>. This policy must be associated with a <<_native_scheduler_infrastructure>> and cannot be associated with any other infrastructure.
 To use this policy, you need to precise the following parameters:
 
- * *userAccessType* : which users are allowed to use ProActive Nodes created by the NativeSchedulerInfrastructure. Refer to the <<_policies,Policies documentation>>.
- * *providerAccessType* : defines who can add nodes to this node source. Refer to the <<_policies,Policies documentation>>.
- * *schedulerUrl* : the url used by the ProActive Nodes to contact the <<_glossary_resource_manager,ProActive Resource Manager>>. This url is displayed on ProActive server startup. Example: `pnp://myserver:64738`.
- * *schedulerCredentialsPath* : path to a file which contains the credentials of an administrator user which will connect to the scheduler. The ProActive Scheduler Server release contains two admin users credentials files : `config/authentication/rm.cred` and `config/authentication/admin_user.cred`
- * *rearrangeTasks* : currently not implemented.
- * *autoScaling* : if set to `true`, the NativeSchedulerPolicy will scan the Resource Manager activity and Scheduling queue. If the scheduling queue is not empty and all resource manager nodes are busy, `autoscaling` will automatically start ProActive Nodes from the NativeSchedulerInfrastructure. This setting cannot be used when multiple NativeScheduler node sources are deployed.
- * *refreshTime* : the NativeSchedulerPolicy will refresh its status and observe the ProActive Scheduler queue every `refreshTime` milliseconds.
+ * *userAccessType* : Which users are allowed to use ProActive Nodes created by the NativeSchedulerInfrastructure. Refer to the <<_policies,Policies documentation>>.
+ * *providerAccessType* : Defines who can add nodes to this node source. Refer to the <<_policies,Policies documentation>>.
+ * *schedulerUrl* : The url used by the ProActive Nodes to contact the <<_glossary_resource_manager,ProActive Resource Manager>>. This url is displayed on ProActive server startup. Example: `pnp://myserver:64738`.
+ * *schedulerCredentialsPath* : Path to a file which contains the credentials of an administrator user which will connect to the scheduler. The ProActive Scheduler Server release contains two admin users credentials files : `config/authentication/rm.cred` and `config/authentication/admin_user.cred`
+ * *rearrangeTasks* : Currently not implemented.
+ * *autoScaling* : If set to `true`, the NativeSchedulerPolicy will scan the Resource Manager activity and Scheduling queue. If the scheduling queue is not empty and all resource manager nodes are busy, `autoscaling` will automatically start ProActive Nodes from the NativeSchedulerInfrastructure. This setting cannot be used when multiple NativeScheduler node sources are deployed.
+ * *refreshTime* : The NativeSchedulerPolicy will refresh its status and observe the ProActive Scheduler queue every `refreshTime` milliseconds.
