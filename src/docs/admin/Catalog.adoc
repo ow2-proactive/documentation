@@ -6,13 +6,13 @@ By default, ProActive objects are persisted on disk using the embedded HSQL data
 The data is located in `PROACTIVE_HOME/data/db/catalog`.
 
 The Catalog is a WAR file which contains a configuration file.
-More information regarding the Catalog configuration can be found in <<_catalog_properties>>.
+More information regarding the Catalog configuration can be found in <<../admin/ProActiveAdminGuide.adoc#_catalog_properties>>.
 
 
 A complete documentation of the Catalog REST API is available by default on:
 
   http://localhost:8080/catalog/swagger-ui.html
 
-This documentation is automatically generated using http://swagger.io[Swagger^].
+This documentation is automatically generated using https://swagger.io[Swagger^].
 
 
