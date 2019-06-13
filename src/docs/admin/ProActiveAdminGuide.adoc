@@ -175,6 +175,14 @@ Scheduler, and 3 microservices (*scheduling-api*, *job-planner*, and *proactive-
 == Deploy ProActive Nodes
 
 In the ProActive Scheduler, Computational Resources are managed by the ProActive Resource Manager component.
+
+The ProActive Resource Manager supports ProActive Nodes aggregation from heterogeneous environments.
+As a node is just a process running somewhere, the process of communication to such nodes is unified.
+The only part which has to be defined is the procedure of nodes deployment which could be quite
+different depending on infrastructures and their limitations. After installation of the server and node parts, it is
+possible to configure an automatic nodes deployment. Basically, you can tell the Resource Manager how to
+launch nodes and when.
+
 In the ProActive Resource Manager, all the computational resources (<<_glossary_compute_host,Compute Hosts>>) are managed as a set of <<_glossary_node_source,*Node Sources*>>.
 Each node source contains a set of <<_glossary_proactive_node,*ProActive Nodes*>> which shares the same deployment mechanism and access policy.
 [NOTE]
@@ -212,13 +220,16 @@ The ProActive Nodes can be deployed on various kinds of computational resources,
 
 A node source is defined by two parts of configurations: <<_glossary_node_source_infrastructure,*Node Source Infrastructure*>> and <<_glossary_node_source_policy,*Node Source Policy*>>.
 Each *Node Source Infrastructure* defines the deployment mechanism for a specific kind of computational resources.
-To support the deployment of these various computational resources, the ProActive Scheduler provides a set of supported <<_node_source_infrastructure, Node Source Infrastructures>>.
+To support the deployment of these various computational resources, the ProActive Scheduler provides a set of supported <<_node_source_infrastructures, Node Source Infrastructures>>.
 The *Node Source Policy* controls the resource usage. See the section <<_control_the_resource_usage>> for more details.
 This section concentrates on the deployment mechanism of ProActive Nodes which is defined by the Node Source Infrastructure.
 
-When you connect the Compute Hosts to the ProActive Resource Manager through the *first method*, a node source of <<_default_infrastructure_manager,*Default Infrastructure*>> is automatically created.
+In the ProActive Resource Manager, there is always a *default node source* consisting of a <<_default_infrastructure>>
+and <<_static_policy>>. It is not able to deploy nodes anywhere but makes it possible to add existing nodes to the RM.
+
+When you connect the Compute Hosts to the ProActive Resource Manager through the *first method*, a node source of <<_default_infrastructure,*Default Infrastructure*>> is automatically created.
 Through the *second method*, you just need to choose the proper node source infrastructure and fill out its required parameters.
-//The *second method* supports all the various kinds of computational resources by using different <<_node_source_infrastructure,*node source infrastructures*>> to create Node Sources.
+//The *second method* supports all the various kinds of computational resources by using different <<_node_source_infrastructures,*node source infrastructures*>> to create Node Sources.
 
 [[run_node_manually]]
 === Deploy ProActive Nodes manually
@@ -600,7 +611,7 @@ ProActive Resource Manager provides three ways to create a Node Source:
 * Use the <<_resource_manager_command_line>>
 
 Whichever the way you use to create a node source, ultimately you just need to choose a *Node Source Infrastructure* from the list of <<_node_source_infrastructure,supported Node Source Infrastructures>>
-and a <<_node_source_policy,*Node Source Policy*>> that defines rules and limitations of nodes' utilization.
+and a <<_node_source_policies,*Node Source Policy*>> that defines rules and limitations of nodes' utilization.
 Then according to the chosen node source infrastructure and policy, you need to fill out the required parameters.
 
 The choice of *Infrastructure Manager* depends on the type of your Compute Hosts.
@@ -631,7 +642,7 @@ For example, the complete command to create a local node source with 7 nodes:
 $ $PROACTIVE_HOME/bin/proactive-client -createns local_node_source -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.LocalInfrastructure $PROACTIVE_HOME/config/authentication/rm.cred 7 30000 "" -policy org.ow2.proactive.resourcemanager.nodesource.policy.StaticPolicy 'ALL' 'ALL'
 ----
 
-See <<_local_infrastructure_manager, *Local Infrastructure*>> reference for details of each parameter.
+See <<_local_infrastructure, *Local Infrastructure*>> reference for details of each parameter.
 
 [[_deploy_nodes_via_ssh]]
 ==== Deploy ProActive nodes via SSH
@@ -695,7 +706,7 @@ The general process of deploying ProActive Nodes on a Cloud Platform is:
 - then, on each virtual machine, download the ProActive `node.jar` and install the required middleware (e.g., java)
 - finally, on each virtual machine, launch the specified number of ProActive Nodes (i.e., `numberOfNodesPerInstance`) using node.jar
 
-See <<_node_source_infrastructure, *Node Source Infrastructure*>> reference for details of each Cloud Node Source Infrastructure parameters.
+See <<_node_source_infrastructures, *Node Source Infrastructure*>> reference for details of each Cloud Node Source Infrastructure parameters.
 
 [[_deploy_via_other_schedulers]]
 ==== Deploy ProActive Nodes dynamically via other schedulers (PBS, SLURM, ...)
@@ -714,7 +725,7 @@ Dynamic deployment of ProActive Nodes on a cluster to execute ProActive Tasks is
 
  * The `Native Scheduler Scheduling Policy`: a <<_glossary_scheduling_policy,*Scheduling Policy*>> which allows the execution of ProActive Tasks on ProActive Nodes provisioned by the Native Scheduler Policy.
 
-The provisioning of ProActive Nodes is controlled by a specific <<../user/ProActiveUserGuide.adoc#_generic_information,*Generic Information*>> `"NS"` which can be defined at _Task_ or _Job_ level.
+The provisioning of ProActive Nodes is controlled by a specific <<_glossary_generic_infromation>> `"NS"` which can be defined at _Task_ or _Job_ level.
 
 When this generic information is configured for a _Task_, a ProActive Node will be dynamically deployed on the cluster to execute the Task. This ProActive Node will be associated with the Task and will only accept this Task execution. When the Task terminates, the ProActive Node will also be terminated.
 
@@ -807,7 +818,7 @@ Please refer to the <<_user_authentication,*User Authentication*>> section in or
 
 ===== Execute Tasks on a Native Scheduler Node Source
 
-The <<../user/ProActiveUserGuide.adoc#_generic_information,*Generic Information*>> `"NS"` allows a ProActive Task to be executed on a Native Scheduler node source.
+The link:../user/ProActiveUserGuide.html#_generic_information[Generic Information] `"NS"` allows a ProActive Task to be executed on a Native Scheduler node source.
 
 It must contain the name of the target node source. For example, to submit a Task on the "PBS" Node Source:
 
@@ -1094,7 +1105,7 @@ In the ProActive Resource Manager, there is always a default node source configu
 It is not able to deploy nodes anywhere but makes it possible to add existing nodes to the Scheduler (see <<run_node_manually>>)
 
 Out of the box the Scheduler supports time slot policies, cron policies, load based policies and many others.
-Please see detailed information about policies in <<_node_source_policy>>.
+Please see detailed information about policies in <<_node_source_policies>>.
 
 === Agents schedule
 
@@ -2499,24 +2510,13 @@ include::./references/CatalogReference.adoc[]
 === Scheduler Portal Properties
 include::./references/SchedulerPortalReference.adoc[]
 
-=== Node Sources
-
-The ProActive Resource Manager supports ProActive Nodes aggregation from heterogeneous environments.
-As a node is just a process running somewhere, the process of communication to such nodes is unified.
-The only part which has to be defined is the procedure of nodes deployment which could be quite
-different depending on infrastructures and their limitations. After installation of the server and node parts it is
-possible to configure an automatic nodes deployment. Basically, you can say to the Resource Manager how to
-launch nodes and when.
-
-In the ProActive Resource Manager, there is always a default node source consisted of DefaultInfrastructureManager
-and Static policy. It is not able to deploy nodes anywhere but makes it possible to add existing nodes to the RM.
-
-
-==== Node Source Infrastructure
+[[_node_source_infrastructures]]
+=== Node Source Infrastructures
 
 include::./references/NodeSourceInfrastructureReference.adoc[]
 
-==== Node Source Policy
+[[_node_source_policies]]
+=== Node Source Policies
 
 include::./references/NodeSourcePolicyReference.adoc[]
 
