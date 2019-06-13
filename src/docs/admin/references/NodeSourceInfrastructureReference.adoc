@@ -365,24 +365,26 @@ Google Compute Engine, aka GCE, delivers virtual machines running on Google's in
 To use GCE virtual machines as computing nodes, a specific GCE Infrastructure needs to be created using the Resource Manager.
 This section describes briefly how to make it.
 
-First, To use the GCE Infrastructure in the Resource Manager, proper Google Cloud credentials are needed for an authentification to the Google Cloud Platform.
+===== Pre-Requisites
+
+First, to use the GCE Infrastructure in the Resource Manager, proper Google Cloud credentials are needed for an authentication to the Google Cloud Platform APIs.
 To obtain them, you can take the following steps:
 
 1. Go to the https://console.developers.google.com[Developer Console].
-2. Choose your project.
-3. Choose _APIs & Services_ > _Credentials_.
-4. Under the tab _Credentials_, Click _Create credentials_ > _Service account key_.
-5. Select the option _New service account_, then fill in your service account name, choose _Compute Engine_ > _Compute Admin_ as "role", choose _JSON_ as "Key type".
-6. Click the button _Create_, a JSON file for the created service account will be downloaded.
+2. Log in with an account which has the permissions to create service accounts and service account keys (i.e., granted the _Service Account Admin_ and _Service Account Key Admin_ role).
+3. Following the document https://cloud.google.com/iam/docs/creating-managing-service-accounts#creating_a_service_account[Creating a service account] to create a service account *granted the _Compute Admin_ role*
+4. Following the document https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys[Creating service account keys] to create a service key of the type *_JSON_*, a JSON file for the created service account key should be downloaded to your machine.
 
 For more information regarding Google Cloud service accounts see
 https://cloud.google.com/compute/docs/access/service-accounts[Google Cloud Service Accounts].
 
+===== Infrastructure Configuration
 
 Now, you are ready to create a new node source of the type _GCE Infrastructure_.
-The downloaded JSON file of Google Cloud credentials is used to fill in the properties *gceCredential* to perform the basic Google Cloud Platform authentification.
-Other properties needed for the node deployment in the _Create GCE Node Source_ are :
+The properties needed for the node deployment in the _Create GCE Node Source_ are :
 
+-   *gceCredential:* The credentials to perform the basic Google Cloud Platform authentication.
+        Upload the JSON file of a Google Cloud service account key (downloaded in the section Pre-Requisites) to fill in this property.
 -   *totalNumberOfInstances:* Total number of GoogleComputeEngine instances to create for this infrastructure.
 -   *numberOfNodesPerInstance:* Total number of Proactive Nodes to deploy in each created GoogleComputeEngine instance.
 +
@@ -418,7 +420,6 @@ Using this configuration, you can start a Resource Manager and a Scheduler using
 An GoogleComputeEngine NodeSource can now be added using the *Create Node Source* panel in the Resource Manager or the command line interface:
 
     $ PROACTIVE_HOME/bin/proactive-client --createns googlecomputeengine -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.GCEInfrastructure gceCredential totalNumberOfInstances numberOfNodesPerInstance vmUsername vmPublicKey vmPrivateKey image region ram cores rmHostname connectorIaasURL nodeJarURL additionalProperties nodeTimeout
-
 
 WARNING: When ProActive server is stopped, GoogleComputeEngine instances will be automatically deleted. And when ProActive server is restarted, the infrastructure will be recovered as per the previous settings. The required GoogleComputeEngine instances will be re-created and re-configured.
 
