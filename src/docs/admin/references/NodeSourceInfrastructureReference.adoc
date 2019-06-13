@@ -166,13 +166,13 @@ them, and how to use them to configure your environment.
         value to provide is the AWS region together with the unique AMI Id, for example: `eu-west-1/ami-bff32ccc`.
 
     -   *vmUsername:* Defines the user name that is used to connect to AWS instances.
-        If not provided, then the AWS instances will be accessed as admin user.
+        If not provided, then AWS instances will be accessed as admin user.
 
     -   *vmKeyPairName:* Defines the name of the AWS key pair to use.
         If specified, the key pair must exits in AWS in the region of deployment, and the `vmPrivateKey` must be specified as well.
         If not specified, then a default key pair will be created or reused in the given region of the deployment.
 
-    -   *vmPrivateKey:* Defines the .pem file that will be used to connect tot the AWS instances.
+    -   *vmPrivateKey:* Defines the .pem file that will be used to connect to AWS instances.
         If specified, the name of the key pair (`vmKeyPairName`) to which this private key belongs to must be specified as well.
         
     -   *numberOfInstances:* Total number of AWS instances to create for this infrastructure.
@@ -188,7 +188,7 @@ TIP: If all the nodes of an AWS instance are removed, the instance will be termi
         
         	powershell -command "& { (New-Object Net.WebClient).DownloadFile('try.activeeon.com/rest/node.jar', 'node.jar') }"
     	    	
-    -   *additionalProperties:* Additional Java command properties to be added when starting each ProActive node JVM in the AWS instances (e.g. \"-Dpropertyname=propertyvalue\").
+    -   *additionalProperties:* Additional Java command properties to be added when starting each ProActive node JVM in AWS instances (e.g. \"-Dpropertyname=propertyvalue\").
      
     -   *minRam:* The minimum required amount of RAM expressed in Mega Bytes for each AWS instance that needs to be created.
     
@@ -210,44 +210,60 @@ now be added using the *Create Node Source* panel in the Resource Manager or the
 
     $ PROACTIVE_HOME/bin/proactive-client --createns ec2 -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.AWSEC2Infrastructure aws_key aws_secret_key rmDomain connectorIaasURL image numberOfInstances numberOfNodesPerInstance downloadCommand additionalProperties minRam minCores
 
-As AWS is a paying service, when the Scheduler is stopped normally (without removing the created infrastructure), all the created AWS instances will be terminated. And when the Scheduler is restarted, these instances will be re-configured as per previous settings.
+As AWS is a paying service, when the Scheduler is stopped normally (without removing the created infrastructure), all the created AWS instances will be terminated. And when the Scheduler is restarted, these instances will be re-configured as per the previous settings.
 
-WARNING: If the Scheduler is forced killed, the created AWS instances will not be terminated. And, when the Scheduler is restarted, the infrastructure will be re-configured as per previous settings. If the instances were delete at the AWS side, they will be re-created and re-configured.
+WARNING: If ProActive server is forcibly killed, the created AWS instances will not be terminated. And, when ProActive server is restarted, the infrastructure will be re-configured as per the previous settings. If the instances were deleted at the AWS side, they will be re-created and re-configured.
 
 
 
-===== OpenStack Infrastructure
+===== Openstack Infrastructure
 
-To use the OpenStack instances as computing nodes, a specific OpenStack Infrastructure
+To use Openstack instances as computing nodes, a specific Openstack Infrastructure
 can be created using the Resource Manager. This section describes briefly how to make it.
 
-1.  First, you need to have an admin account on your OpenStack server. For more information see
+1.  First, you need to have an admin account on your Openstack server. For more information see
 http://docs.openstack.org/icehouse/install-guide/install/yum/content/keystone-users.html[OpenStack users and tenants].
 
-2.  Use the login, tenant and password information to fill in the properties *openstack_username* (`tenant:login`),
-    *openstack_password* in the *Create Node Source* panel located in the Resource Manager.
-    Those two parameters should never change, except if you need for some reason to handle multiple OpenStack accounts.
-    Other properties in the *Create Node Source* are:
-    
-    -   *endpoint:* The hostname or the IP address of the OpenStack server. This address needs to be accessible from the Resource Manager.
-    
-    -   *rmHostname:* The hostname or the public IP address of the Resource Manager. This address needs to be accessible from the OpenStack server.
-    
-    -   *connectorIaasURL:* Connector-iaas is a service embedded in the Scheduler used to interact with IaaS like OpenStack. By default it runs on the following URL *rmHostname/connector-iaas*.
+2. The creation of Openstack Infrastructure asks for an authentification to the Openstack server and a deployment of instances that will host proactive nodes.
 
-    -   *image:* Defines which image will be used to create the Openstack instance. The
-        value to provide is the Openstack region together with the unique image Id, for example: `RegionOne/74oi56bff32ccc`.
-        
-    -   *flavor:* Defines the size of the instance. For more information see http://docs.openstack.org/openstack-ops/content/flavors.html[OpenStack flavors].
+Use the proper admin username and password to fill in the properties *username* and *password* and perform the basic Openstack authentification. Those two parameters should never change, except if you need for some reason to handle multiple Openstack accounts.
+
+For more information regarding Openstack authentication mode see https://docs.openstack.org/security-guide/identity/authentication.html[Openstack authentification mode]. 
+    
+
+Other properties needed for the authentification are :
+
+   -   *domain:* The name of the domain to use that refers to the collection of projects and users defining administrative boundaries for managing Identity entities. For more information see https://docs.openstack.org/security-guide/identity/domains.html[Openstack domain].
+
+
+  -   *endpoint:* The hostname or the IP address of the Openstack server. This address needs to be accessible from the Resource Manager.
+    
+
+   -   *scopePrefix:* The scope prefix to use. It can be project, projectId, domain or domainId.
+
+
+   -   *scopeValue:* The value of the scope prefix. 
+
+
+   -   *region:* The Region for networks and compute resources to use.
+
+
+   -   *identityVersion:* The REST API version of Openstack installation. For more information see https://docs.openstack.org/keystone/pike/contributor/http-api.html[Openstack API Version]. 
+
+Properties needed for the deployment of instance are :  
+
+   -   *image:* Defines which image will be used to create the Openstack instance. The value to provide is the unique image Id.
+   
+   -   *flavor:* Defines the size of the instance. The value to provide is the flavor name or the flavor Id. For more information see http://docs.openstack.org/openstack-ops/content/flavors.html[Openstack flavors].
     
     -   *publicKeyName:* Defines the name of the public key to use for a remote connection when the instance is created.
     
 +
-WARNING: In order to use publicKeyName, the key pair needs to be created and imported first on the openstack server. For more information see https://community.hpcloud.com/article/managing-your-key-pairs-0[OpenStack key pair management].
+WARNING: In order to use publicKeyName, the key pair needs to be created and imported first on the Openstack server. For more information see https://docs.openstack.org/python-openstackclient/pike/cli/command-objects/keypair.html[Openstack key pair management].
 +
  
         
-    -   *numberOfInstances:* Total number of OpenStack instances to create for this infrastructure.
+    -   *numberOfInstances:* Total number of Openstack instances to create for this infrastructure.
     
     -   *numberOfNodesPerInstance:* Total number of Proactive Nodes to deploy in each Openstack created instance.
     
@@ -255,28 +271,34 @@ WARNING: In order to use publicKeyName, the key pair needs to be created and imp
 TIP: If all the nodes of an Openstack instance are removed, the instance will be terminated.
 +
 
-       
-    -   *downloadCommand:* The command to download the Proactive *node.jar*. This command is executed in all the newly created OpenStack instances.
-    	The full URL path of the *node.jar* to download needs to be accessible from the OpenStack cloud.
+
+Other properties for the node deployment in the *Create Openstack Node Source* are:
+
+    -   *connectorIaasURL:* Connector-iaas is a ProActive service used to interact with IaaS like Openstack. By default it runs on the following URL *rmHostname/connector-iaas*.
+
+    -   *rmHostname:* The hostname or the public IP address of the Resource Manager. This address needs to be accessible from the Openstack server.
+
+    -   *downloadCommand:* The command to download the Proactive *node.jar*. This command is executed in all the newly created Openstack instances.
+    	The full URL path of the *node.jar* to download needs to be accessible from the Openstack cloud.
 
     	    	
-    -   *additionalProperties:* Additional Java command properties to be added when starting each ProActive node JVM in the OpenStack instances (e.g. \"-Dpropertyname=propertyvalue\").
+    -   *additionalProperties:* Additional Java command properties to be added when starting each ProActive node JVM in Openstack instances (e.g. \"-Dpropertyname=propertyvalue\").
     
 
 Using this configuration, you can start a Resource Manager and a
-Scheduler using the */bin/proactive-server* script. An OpenStack NodeSource can
+Scheduler using the */bin/proactive-server* script. An Openstack NodeSource can
 now be added using the *Create Node Source* panel in the Resource Manager or the command line interface:
 
     $ PROACTIVE_HOME/bin/proactive-client --createns openstack -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.OpenstackInfrastructure username password endpoint rmHostname connectorIaasURL image flavor publicKeyName numberOfInstances numberOfNodesPerInstance downloadCommand additionalProperties
 
 
-WARNING: When the Scheduler is stopped (without removing the created infrastructure), the OpenStack instances will not be terminated. And when the Scheduler is restarted, the infrastrucutre will be re-configured as per previous settings. If the instances were delete at the Openstack server side, they will be re-created and re-configured.
+WARNING: When ProActive server is stopped (without removing the created infrastructure), Openstack instances will not be terminated. And when ProActive server is restarted, the infrastrucutre will be re-configured as per the previous settings. If the instances were deleted at the Openstack Cloud side, they will be re-created and re-configured.
 
 
 
 ===== VmWare Infrastructure
 
-To use the VmWare instances as computing nodes, a specific VmWare Infrastructure
+To use VmWare instances as computing nodes, a specific VmWare Infrastructure
 can be created using the Resource Manager. This section describes briefly how to make it.
 
 1.  First, you need to have an admin account on your VmWare server.For more information see
@@ -325,7 +347,7 @@ TIP: If all the nodes of an VmWare instance are removed, the instance will be te
     -   *downloadCommand:* The command to download the Proactive *node.jar*. This command is executed in all the newly created VmWare instances.
     	The full URL path of the *node.jar* to download, needs to be accessible from the VmWare cloud.
     	    	
-    -   *additionalProperties:* Additional Java command properties to be added when starting each ProActive node JVM in the VmWare instances (e.g. \"-Dpropertyname=propertyvalue\").
+    -   *additionalProperties:* Additional Java command properties to be added when starting each ProActive node JVM in VmWare instances (e.g. \"-Dpropertyname=propertyvalue\").
     
 
 Using this configuration, you can start a Resource Manager and a
@@ -335,8 +357,70 @@ now be added using the *Create Node Source* panel in the Resource Manager or the
     $ PROACTIVE_HOME/bin/proactive-client --createns vmware -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.VmwareInfrastructure username password endpoint rmHostname connectorIaasURL image ram cores vmusername vmpassword numberOfInstances numberOfNodesPerInstance downloadCommand additionalProperties
 
 
-WARNING: When the Scheduler is stopped (without removing the created infrastructure), the VmWare instances will not be terminated. And when the Scheduler is restarted, the infrastrucutre will be re-configured as per previous settings. If the instances were delete at the VmWare server side, they will be re-created and re-configured.
+WARNING: When ProActive server is stopped (without removing the created infrastructure), VmWare instances will not be terminated. And when ProActive server is restarted, the infrastrucutre will be re-configured as per the previous settings. If the instances were deleted at the VmWare server side, they will be re-created and re-configured.
 
+===== GCE Infrastructure
+
+Google Compute Engine, aka GCE, delivers virtual machines running on Google's infrastructure.
+To use GCE virtual machines as computing nodes, a specific GCE Infrastructure needs to be created using the Resource Manager.
+This section describes briefly how to make it.
+
+First, To use the GCE Infrastructure in the Resource Manager, proper Google Cloud credentials are needed for an authentification to the Google Cloud Platform.
+To obtain them, you can take the following steps:
+
+1. Go to the https://console.developers.google.com[Developer Console].
+2. Choose your project.
+3. Choose _APIs & Services_ > _Credentials_.
+4. Under the tab _Credentials_, Click _Create credentials_ > _Service account key_.
+5. Select the option _New service account_, then fill in your service account name, choose _Compute Engine_ > _Compute Admin_ as "role", choose _JSON_ as "Key type".
+6. Click the button _Create_, a JSON file for the created service account will be downloaded.
+
+For more information regarding Google Cloud service accounts see
+https://cloud.google.com/compute/docs/access/service-accounts[Google Cloud Service Accounts].
+
+
+Now, you are ready to create a new node source of the type _GCE Infrastructure_.
+The downloaded JSON file of Google Cloud credentials is used to fill in the properties *gceCredential* to perform the basic Google Cloud Platform authentification.
+Other properties needed for the node deployment in the _Create GCE Node Source_ are :
+
+-   *totalNumberOfInstances:* Total number of GoogleComputeEngine instances to create for this infrastructure.
+-   *numberOfNodesPerInstance:* Total number of Proactive Nodes to deploy in each created GoogleComputeEngine instance.
++
+TIP: If all the nodes of an GoogleComputeEngine instance are removed, the instance will be terminated.
++
+-   *vmUsername*: Defines the user name that will be used to connect to GoogleComputeEngine instances.
+        If not provided, then GoogleComputeEngine instances will be accessed as the default user.
+        If specified, the corresponding `vmPublicKey` and `vmPrivateKey` must be specified as well.
+-   *vmPublicKey*: Defines the public key to grant a user specified access for the created GoogleComputeEngine instances.
+        If specified, the corresponding `vmUsername` and `vmPrivateKey` must be specified as well.
+-   *vmPrivateKey*: Defines the private key that will be used to connect to GoogleComputeEngine instances.
+        If specified, the corresponding `vmUsername` and `vmPublicKey` must be specified as well.
+-   *image*: Defines which image will be used to create the GoogleComputeEngine instance.
+        The value to provide is the unique name of the image.
+        If not provided, the default value "debian-9-stretch-v20190326" will be used.
+        For more information see https://cloud.google.com/compute/docs/images/[Google Compute Engine Images List].
+-   *region*: The geographic zone for Google Cloud Platform resources to use.
+        If not provided, the default value "us-central1-a" will be used.
+        For more information see https://cloud.google.com/compute/docs/regions-zones/[Google Compute Engine Regions and Zones].
+-   *ram*: The minimum required amount of RAM (expressed in Mega Bytes) for each GoogleComputeEngine instance to be created.
+        If not provided, the default value 1740 will be used.
+-   *cores*: The minimum required amount of virtual cores for each GoogleComputeEngine instance to be created.
+        If not provided, the default value 1 will be used.
+-   *rmHostname*: The hostname or the public IP address of the Resource Manager. This address needs to be accessible from the GoogleComputeEngine server.
+-   *connectorIaasURL*: Connector-iaas is a ProActive service used to interact with IaaS like GoogleComputeEngine.
+        By default it runs on the following URL _rmHostname/connector-iaas_.
+-   *nodeJarURL*: The full URL path of the _node.jar_ to download the Proactive node.jar on each new created GoogleComputeEngine instance.
+        The URL needs to be accessible from the GoogleComputeEngine server.
+-   *additionalProperties*: Additional Java command properties to be added when starting each ProActive node JVM in GoogleComputeEngine instances (e.g. "-Dpropertyname=propertyvalue").
+-   *nodeTimeout*: The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node is considered as lost.
+
+Using this configuration, you can start a Resource Manager and a Scheduler using the */bin/proactive-server* script.
+An GoogleComputeEngine NodeSource can now be added using the *Create Node Source* panel in the Resource Manager or the command line interface:
+
+    $ PROACTIVE_HOME/bin/proactive-client --createns googlecomputeengine -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.GCEInfrastructure gceCredential totalNumberOfInstances numberOfNodesPerInstance vmUsername vmPublicKey vmPrivateKey image region ram cores rmHostname connectorIaasURL nodeJarURL additionalProperties nodeTimeout
+
+
+WARNING: When ProActive server is stopped, GoogleComputeEngine instances will be automatically deleted. And when ProActive server is restarted, the infrastructure will be recovered as per the previous settings. The required GoogleComputeEngine instances will be re-created and re-configured.
 
 
 ===== Load Sharing Facility (LSF) infrastructure
@@ -492,4 +576,87 @@ where:
 
 -   **implementationPath** - The absolute path of the implementation of
     org.ow2.proactive.resourcemanager.nodesource.infrastructure.BatchJobInfrastructure.
+
+====== Native Scheduler Infrastructure
+
+The Native Scheduler Infrastructure allows to interact with a <<_glossary_ns_native_scheduler,native scheduler>> to deploy ProActive Nodes.
+The infrastructure parameters are described hereafter:
+
+ * `RMCredentialsPath` : path to a file which contains the credentials of an administrator user which will own the node source. The ProActive Scheduler Server release contains two admin users credentials files : `config/authentication/rm.cred` and `config/authentication/admin_user.cred`
+ * `NSFrontalHostAddress` : the host name or IP address of the cluster <<_glossary_ns_head_node,head node>>.
+ * `NSSchedulerHome` : the location of the shared ProActive installation on <<_glossary_ns_node,cluster nodes>> (cluster nodes must be able to access ProActive libraries in order to start ProActive Node). Example `/opt/proactive/activeeon_enterprise-node-linux-x64-8.1.0`.
+ * `javaHome` : similarly, cluster nodes must be able to access the java command in order to start ProActive Nodes. ProActive installation includes a Java Runtime Environment under the `jre` subfolder. Example: `/opt/proactive/activeeon_enterprise-node-linux-x64-8.1.0/jre`.
+ * `jvmParameters` : additional options which can be passed to the java command.
+ * `sshOptions` : additional options which can be passed to the ssh command used to connect to connect to the host name or IP address specified in the NSFrontalHostAddress parameter.
+ * `NSNodeTimeoutInSeconds` : timeout to wait for the deployment of ProActive Nodes on the cluster. As the time needed to deploy ProActive Nodes depends on the cluster load, this timeout should be a large value. If the timeout is reached, the ProActive Nodes will be in `"Lost"` <<_node_states,state>>.
+ * `ìmpersonationMethod`: when a job is submitted to the native scheduler, the submission is performed under the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>>. An impersonation is thus performed between the <<_glossary_proactive_scheduler_process_user,scheduler server process>> and the target <<_glossary_cluster_user,cluster user>>.
+ This impersonation can be performed using 3 different strategies:
+ ** `ssh`: in that case the <<_glossary_ns_head_node,head node>> is contacted using a ssh command with the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>> and password. User/password combination between the ProActive Scheduler and the head node operating system must match.
+ ** `none`: in that case the head node is contacted using a ssh command with the <<_glossary_proactive_scheduler_process_user,ProActive Scheduler process user>> (passwordless ssh). Submission to the native scheduler will be performed with the same account.
+ ** `sudo`: similar to `none` regarding the connection to the head node, but a `sudo` command will be initiated to impersonate as the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>>, before doing a job submission.
+ * `alternateRMUrl` : the url used by the ProActive Nodes to contact <<_glossary_resource_manager,ProActive Resource Manager>>. This url is displayed on ProActive server startup. Example: `pnp://myserver:64738`.
+ * `sshPort` : port used for ssh connections.
+ * `nsPreCommand` : a linux command which can be run before launching ProActive Nodes on the cluster. Can be used as a workaround when some system environment variables are not properly set when starting ProActive Nodes.
+ * `nsSubmitCommand` : this is the main command used to start ProActive Nodes on the cluster. Depending on the actual native scheduler implementation, `nsSubmitCommand` will vary, here are examples definitions: +
++
+[cols=2*]
+|===
+
+|PBS |`qsub -N %NS_JOBNAME% -o %LOG_FILE% -j oe`
+
+|SLURM |`sbatch -J %NS_JOBNAME% -o %LOG_FILE%`
+
+|LSF |`bsub -J %NS_JOBNAME% -o %LOG_FILE% -e %LOG_FILE%`
+
+|===
++
+The command can use patterns which will be replaced dynamically by the ProActive Resource Manager. +
++
+[cols=2*]
+|===
+
+|`%NS_JOBNAME%` |contains a configurable job name dynamically created by the resource manager.
+
+|`%LOG_FILE%` |contains a log file path dynamically created by the resource manager and located in side the NSSchedulerHome installation. This log file is useful to debug errors during <<_glossary_ns_cluster_job,cluster job>> submission.
+
+|`%PA_USERNAME%` |contains the current ProActive Scheduler user.
+|===
+
+ * `nsKillCommand` : this is the command used to kill ProActive Nodes started previously by the nsSubmitCommand. Similarly to nsSubmitCommand, `nsKillCommand` will vary for each native scheduler syntax: +
++
+[cols=2*]
+|===
+
+|PBS |`qdel %NS_JOBID%`
+
+|SLURM |`scancel -n %NS_JOBNAME%`
+
+|LSF |`bkill -J %NS_JOBNAME%`
+
+|===
++
+It can use the following patterns: +
++
+[cols=2*]
+|===
+
+|`%NS_JOBNAME%` |contains a configurable job name dynamically created by the resource manager.
+
+|`%NS_JOBID%` |contains the job id returned by the native scheduler when submitting the job. Currently, job id can only be used with PBS, when the setting `submitReturnsJobId` is set to `true`.
+
+|===
+
+ * `submitReturnsJobId`: is the <<_glossary_ns_cluster_jobid,cluster job id>> returned plainly when calling the nsSubmitCommand. This is the behavior of PBS, and this is why this setting should be set to `true` when using PBS.
+ * `nsJobName`: a way to configure the `%NS_JOBNAME%` pattern. The following patterns can be used: +
++
+[cols=2*]
+|===
+
+|`%PA_TASKID%` |contains the ProActive Task and Job ID associated with the node request.
+
+|`%PA_USERNAME%` |contains the current ProActive Scheduler user.
+
+|===
+
+ * `maxDeploymentFailure`: number of attempts when starting a ProActive Node on the cluster using the nsSubmitCommand, after all attempts failed, the ProActive Node will be declared as `Lost`.
 

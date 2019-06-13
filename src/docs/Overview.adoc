@@ -5,7 +5,7 @@
 image::architecture.png[align=center]
 
 On the top left there is the *Studio* interface which allows you to build Workflows.
-It can be interactively configured to address specific domains, for instance Finance, Big Data, IoT, Artificial Intelligence (AI). See for instance the Documentation of *Machine Learning Open Studio* https://www.activeeon.com/public_content/documentation/latest/MLOS/MLOSUserGuide.html[here^], and try it online https://try.activeeon.com/studio/#workflows/templates/machine-learning[here^]. In the middle there is the *Scheduler* which enables an enterprise to orchestrate and automate Multi-users, Multi-application Jobs.
+It can be interactively configured to address specific domains, for instance Finance, Big Data, IoT, Artificial Intelligence (AI). See for instance the Documentation of *Machine Learning Open Studio* link:../MLOS/MLOSUserGuide.html[here^], and try it online https://try.activeeon.com/studio/#workflows/templates/machine-learning[here^]. In the middle there is the *Scheduler* which enables an enterprise to orchestrate and automate Multi-users, Multi-application Jobs.
 Finally, at the bottom right is the *Resource manager* interface which manages and automates resource provisioning
 on any Public Cloud, on any virtualization software, on any container system, and on any Physical Machine of any OS.
 All the components you see come with fully Open and modern REST APIs. 
@@ -17,8 +17,17 @@ Powerful versioning together with full access control (RBAC) is supported, and u
 
 image::job-planner.png[align=center]
 
-The screenshot above shows the *Job Planer portal*, allowing to automate and schedule recurring Jobs. 
-From left to right, you can define and use *calendars*, associate Workflows to calendars, visualize the *execution planning* for the future, as well as actual executions of the past. 
+The screenshot above shows the *Job Planner Portal*, allowing to automate and schedule recurring Jobs.
+From left to right, you can define and use *Calendar Definitions* , associate *Workflows* to calendars, visualize the *execution planning* for the future, as well as actual executions of the past.
+
+image::calendar_planning_gantt.png[align=center]
+
+The Gantt screenshot above shows the *Gantt View* of Job Planner, featuring past job history, current Job being executed, and future Jobs that will be submitted, all in a comprehensive interactive view.
+You easily see the potential differences between Planned Submission Time and Actual Start Time of the Jobs, get estimations of the Finished Time, visualize the Job that stayed PENDING for some time (in Yellow) and the Jobs that had issues and got KILLED, CANCELLED, or FAILED (in red).
+
+image::automation-dashboard-cloud-watch.PNG[align=center]
+
+The screenshot above shows the *Cloud Watch* portal, where a user can manage and benefit from *Cloud Watch* - smart monitoring system. This ProActive component detects complex events and then triggers user-specified actions according to predefined set of rules.
 
 image::cloud-automation-on-demand-paas.png[align=center]
 

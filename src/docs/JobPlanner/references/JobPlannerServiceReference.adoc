@@ -1,0 +1,210 @@
+
+== Introduction
+The <<_glossary_job_planner,*Job Planner*>> schedules <<_glossary_workflow,*Workflows*>> at specific points in time which are defined by <<_glossary_calendars_definition,*Calendars*>>.
+
+A <<_glossary_workflow,*Workflow*>> is scheduled by the <<_glossary_job_planner,*Job Planner*>> if
+it is associated to a <<_glossary_calendars_definition,*Calendar Definition*>>. A <<_glossary_calendars_definition,*Calendar Definition*>> can have several <<_glossary_workflow,*Workflows*>> associated to it. Each of them can easily be activated and deactivated.
+The <<_glossary_workflow,*Workflows*>> variables can be set with specific values when associating them to a calendar.
+
+=== Glossary
+
+include::../../Glossary.adoc[]
+
+== Creation of a Planning
+
+=== Creating Calendar Definitions
+
+To create new calendar definition, use the <<_glossary_job_planner_portal, *Job Planner Portal*>>, Calendar Definition page. When clicking the "+" button, a calendar definition is created with default parameters.
+
+image::calendar_definition.png[align="center"]
+
+
+Click on a Calendar Definition to modify it. Its fields will be visible on the main panel ("Calendar Definition"). The name of the Calendar Definition must be unique in a bucket. The cron expression can be set using the widget, or manually with the "Advanced" tab. The resulting cron expression is shown under the widget.
+
+Changes made in the Calendar Definition panel will be automatically saved. When a calendar definition is selected, it can be removed by clicking on the trash button.
+
+=== Associating workflows to Calendar Definitions
+
+Once a workflow has been published to the <<_glossary_catalog, *Catalog*>>, it can be planned with the <<_glossary_job_planner_portal, *Job Planner Portal*>>, Calendar Association page. To plan a workflow, you need to associate it to a Calendar Definition.
+
+image::calendar_wf_association.png[align="center"]
+
+On this page, select an already existing Calendar Definition and add/remove workflows associated to it.
+When creating an association, it is possible to set the workflows variables with specific values, that can be different from the default values stored in the Catalog for that workflow.
+
+image::calendar_wf_association_2.png[align="center"]
+
+The created association can be deactivated by clicking on the _unlink_ button. This means that the workflows won't be submitted for the next calendar occurrences, but it will still be visible on the Execution Planning and the Gantt chart. You can reactivate it with the _link_ button.
+On the left panel, you can easily see the number of associated workflows to each calendar, and how many of them are activated.
+
+This page can also be opened when clicking on the "plan" button on the <<_glossary_workflow_studio, *Studio*>> or the <<_glossary_scheduler_web_interface, *Scheduler Portal*>>.
+
+== Execution Planning visualisation and GANTT
+
+On the <<_glossary_job_planner_portal, *Job Planner Portal*>>, Execution Planning page, you can see the recurrence of <<_glossary_calendars_definition,*Calendar Definitions*>> .
+You can select one or several Calendar Definitions on the left panel and associated workflows will appear on the right panel.
+There are 4 ways to visualize planning of the selected Calendar Definitions:
+
+    - by workflow
+    - Chronologically
+    - On a standard Calendar
+    - with a GANTT chart
+
+=== Visualization by workflow, Chronologically or on a standard Calendar
+
+There are 3 different tabs for the planning visualization:
+
+    - "Sort by workflow" tab: For each workflow, a list of execution time is displayed. The combo box allows you to choose the period of the execution planning. If several workflows are associated to one Calendar Definition, they will be grouped.
+    If a workflow is associated to several Calendar Definitions, it will appear several times.  The name of the Calendar Definition is always displayed next to the workflow name, in order to know which Calendar Definition is related to the given executions.
+    - "Sort chronologically" tab : All executions are displayed chronologically in a list, with for each execution, the workflow that will be executed and the corresponding Calendar Definition.
+    The combo box allows you to choose the period of the execution planning.
+    - "Calendar" tab : You can see the execution planning of the selected Calendar Definitions, by year/month/week or day. In the year and month views, you can see the number of executions in one month/day.
+    If you click on it, you can see more details on which workflows are executed and when. In the week view, if several workflows are executed at the same time, you will only be able to see one at a time.
+
+image::calendar_planning.png[align="center"]
+
+If a calendar has no association, you can still select it and see its recurrence on the Execution Planning panel.
+If nothing is displayed, it means the selected Calendar Definitions have no recurrence on the selected period.
+
+=== GANTT Visualization of the Job Planning
+
+You can also use the Gantt chart ("Open Gantt" button at the top) to visualize the executions:
+
+image::calendar_planning_gantt.png[align="center"]
+
+In addition to the Execution Planning panel, the Gantt chart allows you to see the past job history, the current one being executed, as well as the future ones, all in a comprehensive interactive view. In this view, you will easily see the potential difference between the `Planned Submission time` and the `Actual Start Time` of the Jobs. You will also get estimations of the `Finished Time`, taking into account the `Actual Start Time`.
+Moreover, you can visualize the Job that stayed PENDING for some time (in Yellow), as well as the Jobs that had issues and got KILLED, CANCELLED, or FAILED (in red).
+
+The planned jobs (in orange) are on the row just above the actual jobs so that you can easily compare what was planned and what actually executed. You can use the legend button for a better understanding of the colors.
+
+image::calendar_planning_gantt_legend.png[align="center"]
+
+The length of the displayed planned jobs can be:
+
+    - the expected execution time given by users in the workflow with the Generic Information: `JOB_EXEC_TIME`
+    - if the workflow doesn't have any `JOB_EXEC_TIME` Generic Information, it will be the average execution time computed from the past association executions
+    - if the workflow doesn't have any `JOB_EXEC_TIME` Generic Information and has never been executed with the association, it will be a default 15 minutes duration
+
+image::calendar_planning_gantt_tooltip.png[align="center"]
+
+If a job has been PENDING before starting, depending on the scale you have selected, you can see a yellow part on the displayed job. This corresponds to the time the job was PENDING and helps to highlight a resource problem.
+
+You can see more information jobs in the tooltips, when passing your mouse over a specific job:
+
+    - `Workflow` and `bucket name`
+    - `Job ID`: the ID given by the scheduler when a job has been submitted
+    - `Status`: the status of the job when the Gantt has been generated
+    - `User estimated execution duration`: Generic Information `JOB_EXEC_TIME` given by users in the workflow. This information doesn't appear if the Generic Information is not defined in the workflow.
+    - `Submission time`: the time when the job had been submitted by the job planner
+    - `Actual start time`: the time when the job has started. If it has been PENDING before starting, `Submission time` and `Actual start time` will be different.
+    - `Actual finish time`: the time when the job has finished (event if it was killed, cancelled or that it failed)
+    - `Full duration (wall time)`: the duration of the job, from the time it was submitted (`Submission time`) to the time it finished (`Actual finish time`)
+    - `Average execution time`: the average duration of the workflow submitted with this specific calendar by the job planner
+    - `Minimal execution time`: the minimal duration of the workflow submitted with this specific calendar by the job planner
+    - `Maximal execution time`: the maximal duration of the workflow submitted with this specific calendar by the job planner
+    - `Displayed with [...]`: which one of the values above was used to display the bar representing the job
+
+Depending on the status of the job, the information won't be the same. For example, if the job is RUNNING or STALLED, `Actual finish time` will be replaced by `Planned finish time`: the time when the job should finish, depending on when it started or how long it has been delayed.
+
+TIP: If you select a calendar that will occur frequently (such as "every_10_min"), you might encounter troubles with big scales (such as "year"). The Gantt chart will take a long time to load and events will be too condensed to be readable. This is why for these kind of calendars, it is easier to select a smaller scale (such as "1 hour"). You can also select only the calendars you need to see before opening the Gantt chart modal, to make it load faster.
+
+The "Save Gantt" button will take a screenshot of the visible part of the Gantt chart. Like for Gantt chart loading, it might take a while if there are too many events. You can also chose a smaller scale and select only the calendars you need.
+
+== Calendar Definition Syntax
+
+Job Planner uses a  Calendar Definition to know how the job will be planned over the time. As shown on the example below, this definition is composed of 4 fields:
+
+ - a description (saying what the cron expression means, when to use the Calendar Definition, etc.)
+ - a cron expression to define the recurrence (every morning at 6am, etc.)
+ - a set of inclusions calendars to add specific job executions which cannot be defined by a cron expression (holidays, etc.)
+ - a set of exclusions calendars to exclude specific occurrences of the job executions defined in cron and inclusion definitions (maintenances operations, holidays, etc.)
+		
+
+image::calendar_definition_inclusions_exclusions.png[align="center"]
+
+Based on the above configuration, the following JSON object will be stored in the <<_glossary_catalog, *Catalog*>>.
+
+----
+{
+   "description":"Every Week Day at 9:00 AM including holidays (except Christmas and Easter holidays)",
+   "cron":"0 0 9 ? * MON-FRI *",
+   "inclusion_calendars":[
+      {
+         "calendar":{
+            "url":"http://localhost:8080/all_holidays_calendar.ics"
+         },
+         "rule":{
+            "action":"EXECUTE_AT_START"
+         }
+      }
+   ],
+   "exclusion_calendars":[
+      {
+         "calendar":{
+            "url":"http://localhost:8080/christmas_holidays_calendar.ics"
+         },
+         "rule":{
+            "action":"CANCEL_NEXT_EXECUTION"
+         }
+      },
+      {
+         "calendar":{
+            "url":"http://localhost:8080/easter_holidays_calendar.ics"
+         },
+         "rule":{
+            "action":"CANCEL_NEXT_EXECUTION"
+         }
+      }
+   ]
+}
+----
+
+=== Description
+
+The description allows users who are not familiar with cron expressions to know when it will occur. It might also be used for other purpose, for example saying when to use a Calendar Definition.
+
+=== Cron
+
+The aim of the cron expression is to launch the planned workflow according to the cron syntax.
+One can see the cron expression "0 0 9 ? * MON-FRI *", which follows the quartz cron expression syntax explained in the
+<<_job_planner_cron_expression_syntax, Quartz Cron Expression Syntax>> section. The cron expression in this example
+ executes at 9:00 AM on working days (Monday to Friday).
+
+
+=== Inclusion Calendar
+
+The purpose of the inclusion calendar section is to use an ICS file to specify a workflow launching policies during calendar events. For instance automatically
+submit a worklfow at event start. Given an event, a predefined action will be applied on the workflow execution.
+
+[cols="1,1", options="header"]
+|===
+
+|Inclusion action
+|Description
+
+|EXECUTE_AT_START
+|The workflow will be submitted at each event start.
+
+|===
+
+=== Exclusion Calendar
+
+The purpose of the exclusion calendar is to use an ICS file to prevent workflows to be executed during a calendar event. 
+Given an event, a predefined action will be applied on the workflow execution.
+
+[cols="1,1", options="header"]
+|===
+
+|Exclusion action
+|Description
+
+|CANCEL_NEXT_EXECUTION
+|All workflow submissions are canceled during the calendar events.
+
+|===
+
+=== External calendar retrieved from URL
+
+If an inclusion or exclusion calendar is not retrievable, it is blocking the <<_glossary_workflow,*Workflow*>> submission.
+An inclusion or exclusion calendar can become not retrievable if it cannot be downloaded from its URL and the
+<<_glossary_job_planner,*Job Planner*>> cache doesn't hold a copy.

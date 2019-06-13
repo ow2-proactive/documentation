@@ -20,7 +20,9 @@ asciidoctor {
     outputDir = new File("$buildDir/asciidoc")
     sources {
         include 'user/ProActiveUserGuide.adoc'
+        include 'JobPlanner/JobPlannerUserGuide.adoc'
         include 'MLOS/MLOSUserGuide.adoc'
+        include 'PCW/PCWUserGuide.adoc'
         include 'PCA/PCAUserGuide.adoc'
         include 'admin/ProActiveAdminGuide.adoc'
         include 'admin/AdminTutorials.adoc'
