@@ -1,12 +1,12 @@
 
-*Node source policy* is a set of rules and conditions which describes when and how many nodes have to be acquired or released. Policies use node source API to manage the node acquisition.
+A *Node Source Policy* is a set of rules and conditions which describes, inside a <<_deploy_nodes_from_proactive_rm,*Node Source*>>, when and how many nodes have to be acquired or released. A Node Source Policy interacts internally with the <<_node_source_infrastructures,*Node Source Infrastructure*>> to request new nodes deployments or nodes removal.
 
 Node sources were designed in a way that:
 
 * All logic related to node acquisition is encapsulated in the infrastructure manager.
 * Conditions and rules of node acquisition is described in the node source policy.
 * Permissions to the node source. Each policy has two parameters:
-** nodeUsers - utilization permission defined who can get nodes for computations from this node source.
+** *nodeUsers* - utilization permission defined who can get nodes for computations from this node source.
  It has to take one of the following values:
 *** +ME+ - Only the node source creator
 *** +users=user1,user2;groups=group1,group2;tokens=t1,t2+ - Only specific users, groups or tokens.
@@ -17,7 +17,7 @@ Node sources were designed in a way that:
  use users=!user1,!user2;groups=!group1,!group2. Tokens can not be excluded, and mixing inclusion with exclusion
  is not permitted (i.e. users=user1,!user2;groups=!group1,group2).
 *** +ALL+ - Everybody
-** nodeProviders - Provider permission defines who can add nodes to this node source. It should take one of the following values:
+** *nodeProviders* - Provider permission defines who can add nodes to this node source. It should take one of the following values:
 *** +ME+ - Only the node source creator
 *** +users=user1,user2;groups=group1,group2+ - Only specific users or groups (for our example user1,
 user2, group1 and group2). It is possible to specify only groups or only users.
@@ -29,13 +29,13 @@ or +PROVIDER_GROUPS+ (unless it's granted AllPermissions).
  In order to do that, it is just required to add new implemented classes in the class path and update
  corresponding list in the configuration file (+PROACTIVE_HOME/config/rm/nodesource+).
 
-===== Static Policy
+==== Static Policy
 
 *Static node source policy* starts node acquisition when nodes are added
 to the node source and never removes them. Nevertheless, nodes can be
 removed by user request. To use this policy, you have to precise the following parameters:
 
--   +nodeUsers+ - utilization permission defined who can get nodes for
+-   *nodeUsers* - utilization permission defined who can get nodes for
     computations from this node source. It has to take one of the
     following values:
 
@@ -47,7 +47,7 @@ removed by user request. To use this policy, you have to precise the following p
 
 **   +ALL+ - Everybody
 
--   +nodeProviders+ - Provider permission defines who can add nodes to
+-   *nodeProviders* - Provider permission defines who can add nodes to
     this node source. It should take one of the following values:
 
 **   +ME+ - Only the node source creator
@@ -59,12 +59,12 @@ removed by user request. To use this policy, you have to precise the following p
 **   +ALL+ - Everybody
 
 
-===== Time Slot Policy
+==== Time Slot Policy
 
 *Time slot policy* is aimed to acquire nodes for particular time with an
 ability to do it periodically. To use this policy, you have to precise the following parameters:
 
--   +nodeUsers+ - utilization permission defined who can get nodes for
+-   *nodeUsers* - utilization permission defined who can get nodes for
     computations from this node source. It has to take one of the
     following values:
 
@@ -76,7 +76,7 @@ ability to do it periodically. To use this policy, you have to precise the follo
 
 **   +ALL+ - Everybody
 
--   +nodeProviders+ - Provider permission defines who can add nodes to
+-   *nodeProviders* - Provider permission defines who can add nodes to
     this node source. It should take one of the following values:
 
 **   +ME+ - Only the node source creator
@@ -87,24 +87,24 @@ ability to do it periodically. To use this policy, you have to precise the follo
 
 **   +ALL+ - Everybody
 
--   +acquireTime+ - Absolute acquire date (e.g. "6/3/10 1:18:45 PM
+-   *acquireTime* - Absolute acquire date (e.g. "6/3/10 1:18:45 PM
     CEST").
 
--   +releaseTime+ - Absolute releasing date (e.g. "6/3/10 2:18:45 PM
+-   *releaseTime* - Absolute releasing date (e.g. "6/3/10 2:18:45 PM
     CEST").
 
--   +period+ - period time in millisecond (default is 86400000).
+-   *period* - period time in millisecond (default is 86400000).
 
--   +preemptive+ - Preemptive parameter indicates the way of releasing
+-   *preemptive* - Preemptive parameter indicates the way of releasing
     nodes. If it is true, nodes will be released without waiting the end
     of jobs running on (default is false).
 
-===== Cron Policy
+==== Cron Policy
 
 *Cron policy* is aimed to acquire and remove nodes at specific time
 defined in the cron syntax.To use this policy, you have to precise the following parameters:
 
--   +nodeUsers+ - utilization permission defined who can get nodes for
+-   *nodeUsers* - utilization permission defined who can get nodes for
     computations from this node source. It has to take one of the
     following values:
 
@@ -116,7 +116,7 @@ defined in the cron syntax.To use this policy, you have to precise the following
 
 **   +ALL+ - Everybody
 
--   +nodeProviders+ - Provider permission defines who can add nodes to
+-   *nodeProviders* - Provider permission defines who can add nodes to
     this node source. It should take one of the following values:
 
 **   +ME+ - Only the node source creator
@@ -127,23 +127,23 @@ defined in the cron syntax.To use this policy, you have to precise the following
 
 **   +ALL+ - Everybody
 
--   +nodeAcquision+ - The time policy will trigger the deployment of
+-   *nodeAcquision* - The time policy will trigger the deployment of
     all nodes (e.g. "0 12 \* \* \*" every day at 12.00).
 
--   +nodeRemoval+ - The time policy will trigger the removal of all
+-   *nodeRemoval* - The time policy will trigger the removal of all
     nodes (e.g. "0 13 \* \* \*" every day at 13.00).
 
--   +preemptive+ - Preemptive parameter indicates the way of releasing
+-   *preemptive* - Preemptive parameter indicates the way of releasing
     nodes. If it is true, nodes will be released without waiting the end
     of jobs running on (default is false).
 
--   +forceDeployment+ - If for the example above (the deployment
+-   *forceDeployment* - If for the example above (the deployment
     starts every day at 12.00 and the removal starts at 13.00) you are
     creating the node source at 12.30 the next deployment will take
     place the next day. If you'd like to force the immediate deployment
     set this parameter to true.
 
-===== Remove Nodes When Scheduler Is Idle
+==== Remove Nodes When Scheduler Is Idle
 
 *"Remove nodes when scheduler is idle" policy* removes all nodes from
 the infrastructure when the scheduler is idle and acquires them when a
@@ -153,7 +153,7 @@ keep nodes alive permanently. Nodes will be released after a specified
 why its URL, its user name and its password have to be specified.
 To use this policy, you have to precise the following parameters:
 
--   +nodeUsers+ - utilization permission defined who can get nodes for
+-   *nodeUsers* - utilization permission defined who can get nodes for
     computations from this node source. It has to take one of the
     following values:
 
@@ -165,7 +165,7 @@ To use this policy, you have to precise the following parameters:
 
 **   +ALL+ - Everybody
 
--   +nodeProviders+ - Provider permission defines who can add nodes to
+-   *nodeProviders* - Provider permission defines who can add nodes to
     this node source. It should take one of the following values:
 
 **   +ME+ - Only the node source creator
@@ -176,16 +176,16 @@ To use this policy, you have to precise the following parameters:
 
 **   +ALL+ - Everybody
 
--   +schedulerURL+ - URL of the Scheduler
+-   *schedulerURL* - URL of the Scheduler, e.g. pnp://mymachine:64738, pamr://0, etc
 
--   +schedulerCredentialsPath+ - Path to the credentials used for
+-   *schedulerCredentialsPath* - Path to the credentials used for
     scheduler authentication.
 
--   +idleTime+ - idle time in millisecond to wait before removing all
+-   *idleTime* - idle time in millisecond to wait before removing all
     nodes (default is 60000).
 
 
-===== Scheduler Loading Policy
+==== Scheduler Loading Policy
 
 *Scheduler loading policy* acquires/releases nodes according to the
 scheduler loading factor. This policy allows to configure the number of
@@ -205,7 +205,7 @@ nodes.
 
 To use this policy, you have to precise the following parameters:
 
--   +nodeUsers+ - utilization permission defined who can get nodes for
+-   *nodeUsers* - utilization permission defined who can get nodes for
     computations from this node source. It has to take one of the
     following values:
 
@@ -217,7 +217,7 @@ To use this policy, you have to precise the following parameters:
 
 **   +ALL+ - Everybody
 
--   +nodeProviders+ - Provider permission defines who can add nodes to
+-   *nodeProviders* - Provider permission defines who can add nodes to
     this node source. It should take one of the following values:
 
 **   +ME+ - Only the node source creator
@@ -228,19 +228,19 @@ To use this policy, you have to precise the following parameters:
 
 **   +ALL+ - Everybody
 
-- +schedulerURL+ - URL of the Scheduler
+- *schedulerURL* - URL of the Scheduler, e.g. pnp://mymachine:64738, pamr://0, etc
 
-- +schedulerCredentialsPath+ - Path to the credentials used for
+- *schedulerCredentialsPath* - Path to the credentials used for
     scheduler authentication.
 
-- +refreshTime+ - time between each calculation of the number of needed
+- *refreshTime* - time between each calculation of the number of needed
 nodes.
 
-- +minNodes+ - Minimum number of nodes to deploy
+- *minNodes* - Minimum number of nodes to deploy
 
-- +maxNodes+ - Maximum number of nodes to deploy
+- *maxNodes* - Maximum number of nodes to deploy
 
-- +loadFactor+ - number of tasks per node. Actually, if this number is
+- *loadFactor* - number of tasks per node. Actually, if this number is
 *N*, it does not means that there will be exactly *N* tasks executed on
 each node. This factor is just used to compute the total number of
 nodes. For instance, let us assume that this factor is 3 and that we
@@ -251,9 +251,9 @@ will remain 96 tasks (assuming that no other tasks are scheduled
 meanwhile), an other node will be removed at the next calculation time,
 and so on and so forth...
 
-- +nodeDeploymentTimeout+ - The node deployment timeout.
+- *nodeDeploymentTimeout* - The node deployment timeout.
 
-===== Cron Load Based Policy
+==== Cron Load Based Policy
 
 The *Cron load based policy* triggers new nodes acquisition when
 scheduler is overloaded (exactly like with *"Scheduler loading" policy*)
@@ -261,7 +261,7 @@ only within a time slot defined using crontab syntax. All other time the
 nodes are removed from the resource manager.
 To use this policy, you have to precise the following parameters:
 
--   +nodeUsers+ - utilization permission defined who can get nodes for
+-   *nodeUsers* - utilization permission defined who can get nodes for
     computations from this node source. It has to take one of the
     following values:
 
@@ -273,7 +273,7 @@ To use this policy, you have to precise the following parameters:
 
 **   +ALL+ - Everybody
 
--   +nodeProviders+ - Provider permission defines who can add nodes to
+-   *nodeProviders* - Provider permission defines who can add nodes to
     this node source. It should take one of the following values:
 
 **   +ME+ - Only the node source creator
@@ -284,19 +284,19 @@ To use this policy, you have to precise the following parameters:
 
 **   +ALL+ - Everybody
 
--   +schedulerURL+ - URL of the Scheduler
+-   *schedulerURL* - URL of the Scheduler, e.g. pnp://mymachine:64738, pamr://0, etc
 
--   +schedulerCredentialsPath+ - Path to the credentials used for
+-   *schedulerCredentialsPath* - Path to the credentials used for
     scheduler authentication.
 
--   +refreshTime+ - time between each calculation of the number of
+-   *refreshTime* - time between each calculation of the number of
     needed nodes.
 
--   +minNodes+ - Minimum number of nodes to deploy
+-   *minNodes* - Minimum number of nodes to deploy
 
--   +maxNodes+ - Maximum number of nodes to deploy
+-   *maxNodes* - Maximum number of nodes to deploy
 
-- +loadFactor+ - number of tasks per node. Actually, if this number is
+-   *loadFactor* - number of tasks per node. Actually, if this number is
 *N*, it does not means that there will be exactly *N* tasks executed on
 each node. This factor is just used to compute the total number of
 nodes. For instance, let us assume that this factor is 3 and that we
@@ -307,21 +307,21 @@ will remain 96 tasks (assuming that no other tasks are scheduled
 meanwhile), an other node will be removed at the next calculation time,
 and so on and so forth...
 
-- +nodeDeploymentTimeout+ - The node deployment timeout.
+- *nodeDeploymentTimeout* - The node deployment timeout.
 
-- +acquisionAllowed+ - The time when the policy starts to work as the
+- *acquisionAllowed* - The time when the policy starts to work as the
 *"scheduler loading" policy* (e.g. "0 12 \* \* \*" every day at 12.00).
 
-- +acquisionForbidden+ - The time policy removes all the nodes from the
+- *acquisionForbidden* - The time policy removes all the nodes from the
 resource manager (e.g. "0 13 \* \* \*" every day at 13.00).
 
-- +preemptive+ - Preemptive parameter indicates the way of releasing
+- *preemptive* - Preemptive parameter indicates the way of releasing
 nodes. If it is true, nodes will be released without waiting the end of
 jobs running on (default is false).
 
-- +allowed+ - If true acquisition will be immediately allowed.
+- *allowed* - If true acquisition will be immediately allowed.
 
-===== Cron Slot Load Based Policy
+==== Cron Slot Load Based Policy
 
 The *"Cron slot load based" policy* triggers new nodes acquisition when
 scheduler is overloaded (exactly like with *"Scheduler loading" policy*)
@@ -329,7 +329,7 @@ only within a time slot defined using crontab syntax. The other time it
 holds all the available nodes.
 To use this policy, you have to precise the following parameters:
 
--   +nodeUsers+ - utilization permission defined who can get nodes for
+-   *nodeUsers* - utilization permission defined who can get nodes for
     computations from this node source. It has to take one of the
     following values:
 
@@ -341,7 +341,7 @@ To use this policy, you have to precise the following parameters:
 
 **   +ALL+ - Everybody
 
--   +nodeProviders+ - Provider permission defines who can add nodes to
+-   *nodeProviders* - Provider permission defines who can add nodes to
     this node source. It should take one of the following values:
 
 **   +ME+ - Only the node source creator
@@ -352,19 +352,19 @@ To use this policy, you have to precise the following parameters:
 
 **   +ALL+ - Everybody
 
-- +schedulerURL+ - URL of the Scheduler
+- *schedulerURL* - URL of the Scheduler
 
-- +schedulerCredentialsPath+ - Path to the credentials used for
+- *schedulerCredentialsPath* - Path to the credentials used for
 scheduler authentication.
 
-- +refreshTime+ - time between each calculation of the number of needed
+- *refreshTime* - time between each calculation of the number of needed
 nodes.
 
-- +minNodes+ - Minimum number of nodes to deploy
+- *minNodes* - Minimum number of nodes to deploy
 
-- +maxNodes+ - Maximum number of nodes to deploy
+- *maxNodes* - Maximum number of nodes to deploy
 
-- +loadFactor+ - number of tasks per node. Actually, if this number is
+- *loadFactor* - number of tasks per node. Actually, if this number is
 *N*, it does not means that there will be exactly *N* tasks executed on
 each node. This factor is just used to compute the total number of
 nodes. For instance, let us assume that this factor is 3 and that we
@@ -375,27 +375,27 @@ will remain 96 tasks (assuming that no other tasks are scheduled
 meanwhile), an other node will be removed at the next calculation time,
 and so on and so forth...
 
-- +nodeDeploymentTimeout+ - The node deployment timeout.
+- *nodeDeploymentTimeout* - The node deployment timeout.
 
-- +acquisionAllowed+ - The time when the policy starts to work as the
+- *acquisionAllowed* - The time when the policy starts to work as the
 *"scheduler loading" policy* (e.g. "0 12 \* \* \*" every day at 12.00).
 
-- +acquisionForbidden+ - The time policy removes all the nodes from the
+- *acquisionForbidden* - The time policy removes all the nodes from the
 resource manager (e.g. "0 13 \* \* \*" every day at 13.00).
 
-- +preemptive+ - Preemptive parameter indicates the way of releasing
+- *preemptive* - Preemptive parameter indicates the way of releasing
 nodes. If it is true, nodes will be released without waiting the end of
 jobs running on (default is false).
 
-- +allowed+ - If true acquisition will be immediately allowed.
+- *allowed* - If true acquisition will be immediately allowed.
 
-===== EC2 Policy
+==== EC2 Policy
 
 Allocates resources according to the Scheduler loading factor, releases
 resources considering that EC2 instances are paid by the hour.
 To use this policy, you have to precise the following parameters:
 
--   +nodeUsers+ - utilization permission defined who can get nodes for
+-   *nodeUsers* - utilization permission defined who can get nodes for
     computations from this node source. It has to take one of the
     following values:
 
@@ -407,7 +407,7 @@ To use this policy, you have to precise the following parameters:
 
 **   +ALL+ - Everybody
 
--   +nodeProviders+ - Provider permission defines who can add nodes to
+-   *nodeProviders* - Provider permission defines who can add nodes to
     this node source. It should take one of the following values:
 
 **   +ME+ - Only the node source creator
@@ -418,19 +418,19 @@ To use this policy, you have to precise the following parameters:
 
 **   +ALL+ - Everybody
 
-- +schedulerURL+ - URL of the Scheduler
+- *schedulerURL* - URL of the Scheduler, e.g. pnp://mymachine:64738, pamr://0, etc
 
-- +schedulerCredentialsPath+ - Path to the credentials used for
+- *schedulerCredentialsPath* - Path to the credentials used for
 scheduler authentication.
 
-- +preemptive+ - Preemptive parameter indicates the way of releasing
+- *preemptive* - Preemptive parameter indicates the way of releasing
 nodes. If it is true, nodes will be released without waiting the end of
 jobs running on (default is false).
 
-- +refreshTime+ - time between each calculation of the number of needed
+- *refreshTime* - time between each calculation of the number of needed
 nodes.
 
-- +loadFactor+ - number of tasks per node. Actually, if this number is
+- *loadFactor* - number of tasks per node. Actually, if this number is
 *N*, it does not means that there will be exactly *N* tasks executed on
 each node. This factor is just used to compute the total number of
 nodes. For instance, let us assume that this factor is 3 and that we
@@ -441,7 +441,7 @@ will remain 96 tasks (assuming that no other tasks are scheduled
 meanwhile), an other node will be removed at the next calculation time,
 and so on and so forth...
 
-- +releaseDelay+ - Delay between each node release. This time is useful
+- *releaseDelay* - Delay between each node release. This time is useful
 since the deploying time is important. Let us assume that a node has to
 be removed. If this releaseDelay did not exist (or if it was set to 0),
 this node would be removed instantaneously. Let us assume assume that
@@ -451,15 +451,16 @@ node and deploying another one whereas the task could have been
 scheduled on the same node. This releaseDelay therefore represents the
 time to wait before effectively removing a node.
 
-====== Native Scheduler Policy
+===== Native Scheduler Policy
 
 The Native Scheduler Policy interacts with the <<_glossary_ns_native_scheduler,native scheduler>> to request ProActive nodes deployment dynamically based on the <<_glossary_proactive_scheduler,*ProActive Scheduler*>> pending queue.
+This mechanism is described in <<_deploy_via_other_schedulers>>. This policy must be associated with a <<_native_scheduler_infrastructure>> and cannot be associated with any other infrastructure.
 To use this policy, you need to precise the following parameters:
 
- * `userAccessType` : which users are allowed to use ProActive Nodes created by the NativeSchedulerInfrastructure. Refer to the <<_policies,Policies documentation>>.
- * `providerAccessType` : defines who can add nodes to this node source. Refer to the <<_policies,Policies documentation>>.
- * `schedulerUrl` : the url used by the ProActive Nodes to contact the <<_glossary_resource_manager,ProActive Resource Manager>>. This url is displayed on ProActive server startup. Example: `pnp://myserver:64738`.
- * `schedulerCredentialsPath` : path to a file which contains the credentials of an administrator user which will connect to the scheduler. The ProActive Scheduler Server release contains two admin users credentials files : `config/authentication/rm.cred` and `config/authentication/admin_user.cred`
- * `rearrangeTasks` : currently not implemented.
- * `autoScaling` : if set to `true`, the NativeSchedulerPolicy will scan the Resource Manager activity and Scheduling queue. If the scheduling queue is not empty and all resource manager nodes are busy, `autoscaling` will automatically start ProActive Nodes from the NativeSchedulerInfrastructure. This setting cannot be used when multiple NativeScheduler node sources are deployed.
- * `refreshTime` : the NativeSchedulerPolicy will refresh its status and observe the ProActive Scheduler queue every `refreshTime` milliseconds.
+ * *userAccessType* : which users are allowed to use ProActive Nodes created by the NativeSchedulerInfrastructure. Refer to the <<_policies,Policies documentation>>.
+ * *providerAccessType* : defines who can add nodes to this node source. Refer to the <<_policies,Policies documentation>>.
+ * *schedulerUrl* : the url used by the ProActive Nodes to contact the <<_glossary_resource_manager,ProActive Resource Manager>>. This url is displayed on ProActive server startup. Example: `pnp://myserver:64738`.
+ * *schedulerCredentialsPath* : path to a file which contains the credentials of an administrator user which will connect to the scheduler. The ProActive Scheduler Server release contains two admin users credentials files : `config/authentication/rm.cred` and `config/authentication/admin_user.cred`
+ * *rearrangeTasks* : currently not implemented.
+ * *autoScaling* : if set to `true`, the NativeSchedulerPolicy will scan the Resource Manager activity and Scheduling queue. If the scheduling queue is not empty and all resource manager nodes are busy, `autoscaling` will automatically start ProActive Nodes from the NativeSchedulerInfrastructure. This setting cannot be used when multiple NativeScheduler node sources are deployed.
+ * *refreshTime* : the NativeSchedulerPolicy will refresh its status and observe the ProActive Scheduler queue every `refreshTime` milliseconds.

@@ -1,8 +1,8 @@
-An *Infrastructure Manager* is responsible for deploying nodes. In most of the cases it knows how to launch a node
+A *Node Source Infrastructure* also called *Infrastructure Manager* is responsible for deploying ProActive Nodes inside a defined <<_deploy_nodes_from_proactive_rm,*Node Source*>>. In most of the cases, it knows how to launch a set of ProActive Nodes
 on a remote machine. For instance the SSH infrastructure manager connects via SSH to a remote machine and launches
 nodes.
 
-===== Default Infrastructure Manager
+==== Default Infrastructure Manager
 
 *Default infrastructure manager* is designed to be used with ProActive
 agent. It cannot perform an automatic deployment but any users
@@ -16,7 +16,7 @@ The only parameter to provide is the following one:
 
 -   **rmURL** - the URL of the Resource Manager.
 
-===== Local Infrastructure Manager
+==== Local Infrastructure Manager
 
 *Local Infrastructure Manager* can be used to start nodes locally, i.e,
 on the host running the Resource Manager. In order to create a node
@@ -39,7 +39,7 @@ source with this infrastructure, run the following command:
 -   *javaProperties* - The java properties to setup the ProActive
     environment for the nodes
 
-===== SSH Infrastructure
+==== SSH Infrastructure
 
 This infrastructure allows to deploy nodes over SSH.
 This infrastructure needs 10 arguments, described hereafter:
@@ -85,7 +85,7 @@ This infrastructure needs 10 arguments, described hereafter:
         test.example.net 5
         192.168.9.10 2
 
-===== CLI Infrastructure
+==== CLI Infrastructure
 
 This generic infrastructure allows to deploy nodes using deployment
 script written in arbitrary language. The infrastructure just launches
@@ -126,7 +126,7 @@ This infrastructure needs 7 arguments, described hereafter:
 -   **Max Deployment Failure** - the number of times the resource
     manager tries to relaunch the deployment script in case of failure.
 
-===== EC2 Infrastructure
+==== EC2 Infrastructure
 
 The Elastic Compute Cloud, aka *EC2*, is an Amazon Web Service, that
 allows its users to use machines (instances) on demand on the cloud. An
@@ -216,7 +216,7 @@ WARNING: If ProActive server is forcibly killed, the created AWS instances will 
 
 
 
-===== Openstack Infrastructure
+==== Openstack Infrastructure
 
 To use Openstack instances as computing nodes, a specific Openstack Infrastructure
 can be created using the Resource Manager. This section describes briefly how to make it.
@@ -296,7 +296,7 @@ WARNING: When ProActive server is stopped (without removing the created infrastr
 
 
 
-===== VmWare Infrastructure
+==== VmWare Infrastructure
 
 To use VmWare instances as computing nodes, a specific VmWare Infrastructure
 can be created using the Resource Manager. This section describes briefly how to make it.
@@ -359,7 +359,7 @@ now be added using the *Create Node Source* panel in the Resource Manager or the
 
 WARNING: When ProActive server is stopped (without removing the created infrastructure), VmWare instances will not be terminated. And when ProActive server is restarted, the infrastrucutre will be re-configured as per the previous settings. If the instances were deleted at the VmWare server side, they will be re-created and re-configured.
 
-===== GCE Infrastructure
+==== GCE Infrastructure
 
 Google Compute Engine, aka GCE, delivers virtual machines running on Google's infrastructure.
 To use GCE virtual machines as computing nodes, a specific GCE Infrastructure needs to be created using the Resource Manager.
@@ -423,11 +423,11 @@ An GoogleComputeEngine NodeSource can now be added using the *Create Node Source
 WARNING: When ProActive server is stopped, GoogleComputeEngine instances will be automatically deleted. And when ProActive server is restarted, the infrastructure will be recovered as per the previous settings. The required GoogleComputeEngine instances will be re-created and re-configured.
 
 
-===== Load Sharing Facility (LSF) infrastructure
+==== Load Sharing Facility (LSF) infrastructure
 
 This infrastructure knows how to acquire nodes from LSF by submitting a
 corresponding job. It will be submitted through SSH from the RM to the
-LSF server.
+LSF server. This is the static version of the LSF infrastructure, for a more dynamic mechanism, as described in <<_deploy_via_other_schedulers>>, use the <<_native_scheduler_infrastructure>> instead.
 
     $ PROACTIVE_HOME/bin/proactive-client --createns lsf -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.LSFInfrastructure rmURL javaPath SSHOptions schedulingPath javaOptions maxNodes nodeTimeout LSFServer RMCredentialsPath bsubOptions
 
@@ -472,11 +472,11 @@ where:
   acquiring nodes on the LSF master. Default value should be enough in
   most cases, if not, refer to the documentation of the LSF cluster.
 
-===== Portable Batch System (PBS) infrastructure
+==== Portable Batch System (PBS) infrastructure
 
 This infrastructure knows how to acquire nodes from PBS (i.e. Torque) by
 submitting a corresponding job. It will be submitted through SSH from
-the RM to the PBS server.
+the RM to the PBS server. This is the static version of the PBS infrastructure, for a more dynamic mechanism, as described in <<_deploy_via_other_schedulers>>, use the <<_native_scheduler_infrastructure>> instead.
 
     $ PROACTIVE_HOME/bin/proactive-client --createns pbs -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.PBSInfrastructure rmURL javaPath SSHOptions schedulingPath javaOptions maxNodes nodeTimeout PBSServer RMCredentialsPath qsubOptions
 
@@ -522,7 +522,7 @@ where:
     most cases, if not, refer to the documentation of the PBS cluster.
 
 
-===== Generic Batch Job infrastructure
+==== Generic Batch Job infrastructure
 
 *Generic Batch Job infrastructure* provides users with the capability to
 add the support of new batch job scheduler by providing a class
@@ -577,27 +577,28 @@ where:
 -   **implementationPath** - The absolute path of the implementation of
     org.ow2.proactive.resourcemanager.nodesource.infrastructure.BatchJobInfrastructure.
 
-====== Native Scheduler Infrastructure
+==== Native Scheduler Infrastructure
 
 The Native Scheduler Infrastructure allows to interact with a <<_glossary_ns_native_scheduler,native scheduler>> to deploy ProActive Nodes.
+This mechanism is described in <<_deploy_via_other_schedulers>>. This infrastructure must be associated with a <<_native_scheduler_policy>> and cannot be associated with any other policy.
 The infrastructure parameters are described hereafter:
 
- * `RMCredentialsPath` : path to a file which contains the credentials of an administrator user which will own the node source. The ProActive Scheduler Server release contains two admin users credentials files : `config/authentication/rm.cred` and `config/authentication/admin_user.cred`
- * `NSFrontalHostAddress` : the host name or IP address of the cluster <<_glossary_ns_head_node,head node>>.
- * `NSSchedulerHome` : the location of the shared ProActive installation on <<_glossary_ns_node,cluster nodes>> (cluster nodes must be able to access ProActive libraries in order to start ProActive Node). Example `/opt/proactive/activeeon_enterprise-node-linux-x64-8.1.0`.
- * `javaHome` : similarly, cluster nodes must be able to access the java command in order to start ProActive Nodes. ProActive installation includes a Java Runtime Environment under the `jre` subfolder. Example: `/opt/proactive/activeeon_enterprise-node-linux-x64-8.1.0/jre`.
- * `jvmParameters` : additional options which can be passed to the java command.
- * `sshOptions` : additional options which can be passed to the ssh command used to connect to connect to the host name or IP address specified in the NSFrontalHostAddress parameter.
- * `NSNodeTimeoutInSeconds` : timeout to wait for the deployment of ProActive Nodes on the cluster. As the time needed to deploy ProActive Nodes depends on the cluster load, this timeout should be a large value. If the timeout is reached, the ProActive Nodes will be in `"Lost"` <<_node_states,state>>.
- * `ìmpersonationMethod`: when a job is submitted to the native scheduler, the submission is performed under the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>>. An impersonation is thus performed between the <<_glossary_proactive_scheduler_process_user,scheduler server process>> and the target <<_glossary_cluster_user,cluster user>>.
+ * *RMCredentialsPath* : path to a file which contains the credentials of an administrator user which will own the node source. The ProActive Scheduler Server release contains two admin users credentials files : `config/authentication/rm.cred` and `config/authentication/admin_user.cred`
+ * *NSFrontalHostAddress* : the host name or IP address of the cluster <<_glossary_ns_head_node,head node>>.
+ * *NSSchedulerHome* : the location of the shared ProActive installation on <<_glossary_ns_node,cluster nodes>> (cluster nodes must be able to access ProActive libraries in order to start ProActive Node). Example `/opt/proactive/activeeon_enterprise-node-linux-x64-8.1.0`.
+ * *javaHome* : similarly, cluster nodes must be able to access the java command in order to start ProActive Nodes. ProActive installation includes a Java Runtime Environment under the `jre` subfolder. Example: `/opt/proactive/activeeon_enterprise-node-linux-x64-8.1.0/jre`.
+ * *jvmParameters* : additional options which can be passed to the java command.
+ * *sshOptions* : additional options which can be passed to the ssh command used to connect to connect to the host name or IP address specified in the NSFrontalHostAddress parameter.
+ * *NSNodeTimeoutInSeconds* : timeout to wait for the deployment of ProActive Nodes on the cluster. As the time needed to deploy ProActive Nodes depends on the cluster load, this timeout should be a large value. If the timeout is reached, the ProActive Nodes will be in `"Lost"` <<_node_states,state>>.
+ * *ìmpersonationMethod*: when a job is submitted to the native scheduler, the submission is performed under the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>>. An impersonation is thus performed between the <<_glossary_proactive_scheduler_process_user,scheduler server process>> and the target <<_glossary_cluster_user,cluster user>>.
  This impersonation can be performed using 3 different strategies:
  ** `ssh`: in that case the <<_glossary_ns_head_node,head node>> is contacted using a ssh command with the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>> and password. User/password combination between the ProActive Scheduler and the head node operating system must match.
  ** `none`: in that case the head node is contacted using a ssh command with the <<_glossary_proactive_scheduler_process_user,ProActive Scheduler process user>> (passwordless ssh). Submission to the native scheduler will be performed with the same account.
  ** `sudo`: similar to `none` regarding the connection to the head node, but a `sudo` command will be initiated to impersonate as the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>>, before doing a job submission.
- * `alternateRMUrl` : the url used by the ProActive Nodes to contact <<_glossary_resource_manager,ProActive Resource Manager>>. This url is displayed on ProActive server startup. Example: `pnp://myserver:64738`.
- * `sshPort` : port used for ssh connections.
- * `nsPreCommand` : a linux command which can be run before launching ProActive Nodes on the cluster. Can be used as a workaround when some system environment variables are not properly set when starting ProActive Nodes.
- * `nsSubmitCommand` : this is the main command used to start ProActive Nodes on the cluster. Depending on the actual native scheduler implementation, `nsSubmitCommand` will vary, here are examples definitions: +
+ * *alternateRMUrl* : the url used by the ProActive Nodes to contact <<_glossary_resource_manager,ProActive Resource Manager>>. This url is displayed on ProActive server startup. Example: `pnp://myserver:64738`.
+ * *sshPort* : port used for ssh connections.
+ * *nsPreCommand* : a linux command which can be run before launching ProActive Nodes on the cluster. Can be used as a workaround when some system environment variables are not properly set when starting ProActive Nodes.
+ * *nsSubmitCommand* : this is the main command used to start ProActive Nodes on the cluster. Depending on the actual native scheduler implementation, *nsSubmitCommand* will vary, here are examples definitions: +
 +
 [cols=2*]
 |===
@@ -622,7 +623,7 @@ The command can use patterns which will be replaced dynamically by the ProActive
 |`%PA_USERNAME%` |contains the current ProActive Scheduler user.
 |===
 
- * `nsKillCommand` : this is the command used to kill ProActive Nodes started previously by the nsSubmitCommand. Similarly to nsSubmitCommand, `nsKillCommand` will vary for each native scheduler syntax: +
+ * *nsKillCommand* : this is the command used to kill ProActive Nodes started previously by the nsSubmitCommand. Similarly to nsSubmitCommand, *nsKillCommand* will vary for each native scheduler syntax: +
 +
 [cols=2*]
 |===
@@ -646,8 +647,8 @@ It can use the following patterns: +
 
 |===
 
- * `submitReturnsJobId`: is the <<_glossary_ns_cluster_jobid,cluster job id>> returned plainly when calling the nsSubmitCommand. This is the behavior of PBS, and this is why this setting should be set to `true` when using PBS.
- * `nsJobName`: a way to configure the `%NS_JOBNAME%` pattern. The following patterns can be used: +
+ * *submitReturnsJobId*: is the <<_glossary_ns_cluster_jobid,cluster job id>> returned plainly when calling the nsSubmitCommand. This is the behavior of PBS, and this is why this setting should be set to `true` when using PBS.
+ * *nsJobName*: a way to configure the `%NS_JOBNAME%` pattern. The following patterns can be used: +
 +
 [cols=2*]
 |===
@@ -658,5 +659,5 @@ It can use the following patterns: +
 
 |===
 
- * `maxDeploymentFailure`: number of attempts when starting a ProActive Node on the cluster using the nsSubmitCommand, after all attempts failed, the ProActive Node will be declared as `Lost`.
+ * *maxDeploymentFailure*: number of attempts when starting a ProActive Node on the cluster using the nsSubmitCommand, after all attempts failed, the ProActive Node will be declared as `Lost`.
 

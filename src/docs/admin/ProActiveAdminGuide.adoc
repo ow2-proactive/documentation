@@ -2499,24 +2499,13 @@ include::./references/CatalogReference.adoc[]
 === Scheduler Portal Properties
 include::./references/SchedulerPortalReference.adoc[]
 
-=== Node Sources
-
-The ProActive Resource Manager supports ProActive Nodes aggregation from heterogeneous environments.
-As a node is just a process running somewhere, the process of communication to such nodes is unified.
-The only part which has to be defined is the procedure of nodes deployment which could be quite
-different depending on infrastructures and their limitations. After installation of the server and node parts it is
-possible to configure an automatic nodes deployment. Basically, you can say to the Resource Manager how to
-launch nodes and when.
-
-In the ProActive Resource Manager, there is always a default node source consisted of DefaultInfrastructureManager
-and Static policy. It is not able to deploy nodes anywhere but makes it possible to add existing nodes to the RM.
-
-
-==== Node Source Infrastructure
+[[_node_source_infrastructures]]
+=== Node Source Infrastructures
 
 include::./references/NodeSourceInfrastructureReference.adoc[]
 
-==== Node Source Policy
+[[_node_source_policies]]
+=== Node Source Policies
 
 include::./references/NodeSourcePolicyReference.adoc[]
 
