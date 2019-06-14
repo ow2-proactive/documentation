@@ -216,8 +216,8 @@ WARNING: If ProActive server is forcibly killed, the created AWS instances will 
 
 ==== AWS Autoscaling Infrastructure
 
-Similarly to the EC2 Infrastructure, the *AWS Autoscaling Infrastructure* operates AWS EC2 service to provide computing node to the Resource Manager.
-However, it implements a different instance management from it to lower the delay of node acquisition and node removal process and ease inter-node collaboration in the same cluster.
+Similarly to the EC2 Infrastructure, the *AWS Autoscaling Infrastructure* operates AWS EC2 service to provide computing nodes to the Resource Manager.
+However, it implements a different instance management from it to lower the delay of node acquisition and node removal process and ease inter-node collaboration in the same cluster, thanks to the following changes:
 
 	1. The instances operating the nodes are allocated from a common instance template.
 
@@ -229,7 +229,7 @@ However, it implements a different instance management from it to lower the dela
 The configuration of the AWS Autoscaling infrastructure is subjected to several requirements.
 
 	1. The administrator needs both an *AWS access key* and an *AWS secret access key* to enable proactive to authenticate against AWS.
- Please refer to https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html?icmpid=docs_iam_console#Using_CreateAccessKey[the AWS documentation] to learn dof to get them.
+ Please refer to https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html?icmpid=docs_iam_console#Using_CreateAccessKey[the AWS documentation] to learn how to get them.
 
 	2. The *AWS region* that will support the node cluster must not have reach its resources quota.
  It has to be able to allocate one instance template in every case situation.
@@ -244,7 +244,8 @@ The configuration of the AWS Autoscaling infrastructure is subjected to several 
  The administrator must be in possession of the IDs of the VPC, of the Subnet and of the Security Group.
 
 	5. The Resource Manager has to be accessible from the AWS cloud.
- Please consider replacing PNP by PAMR as communication protocol if the Resource Manager is located behind a NAT gateway. 
+ Please consider replacing PNP by PAMR as communication protocol if the Resource Manager is located behind a NAT gateway.
+ You can get additional information about the PAMR protocol in the secion <<_installation_on_a_cluster_with_firewall>>.
 
 ===== Infrastructure Configuration
 
