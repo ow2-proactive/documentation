@@ -18,7 +18,7 @@ include::references/Glossary.adoc[]
 == Get Started
 
 To submit your first Machine Learning workflow to *ProActive Scheduler*, link:../admin/ProActiveAdminGuide.html#_run_the_proactive_scheduler[install] it in
-your environment (default credentials: admin/admin) or just use our demo platform http://try.activeeon.com[try.activeeon.com^].
+your environment (default credentials: admin/admin) or just use our demo platform https://try.activeeon.com[try.activeeon.com^].
 
 *ProActive Scheduler* provides comprehensive interfaces that allow to:
 
@@ -76,7 +76,7 @@ image::manage_canvas.gif[100000,2000]
 
 To upload data into the Workflow, you need to use a dataset stored in a CSV file.
 
-A. Once your dataset has been converted to *CSV* format, upload it into a cloud storage service for example https://www.aws.amazon.com/s3‎[Amazon S3^]. For this tutorial, we will use Boston house prices dataset available on this link:
+A. Once your dataset has been converted to *CSV* format, upload it into a cloud storage service for example https://aws.amazon.com/s3‎[Amazon S3^]. For this tutorial, we will use Boston house prices dataset available on this link:
 https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/boston-houses-prices.csv
 
 B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the ProActive Workflow Studio.
@@ -649,7 +649,7 @@ NOTE: More details available on link:../user/ProActiveUserGuide.html#_publish_cu
 
 === Create a ML Workflow
 
-The link:http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial, window="_blank"] on link:http://try.activeeon.com[try.activeeon.com, window="_blank"]
+The link:https://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial, window="_blank"] on link:https://try.activeeon.com[try.activeeon.com, window="_blank"]
 shows you how to build a simple workflow using ProActive Studio.
 
 We show below an example of a workflow created with the Studio:
@@ -964,7 +964,7 @@ NOTE: All machine learning tasks were implemented using https://scikit-learn.org
 
 - After this task, you can use the <<Split_Data>> task to divide the dataset into training and testing sets.
 
-NOTE: More information about this dataset can be found http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_boston.html[here^].
+NOTE: More information about this dataset can be found https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_boston.html[here^].
 
 ===== Load_Iris_Dataset
 
@@ -1004,7 +1004,7 @@ NOTE: More information about this dataset can be found http://scikit-learn.org/s
 
 - After this task, you can use the <<Split_Data>> task to divide the dataset into training and testing sets.
 
-NOTE: More information about this dataset can be found http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html#sklearn.datasets.load_iris[here^].
+NOTE: More information about this dataset can be found https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html#sklearn.datasets.load_iris[here^].
 
 ==== Input and Output Data
 
@@ -1278,7 +1278,7 @@ NOTE: More details about the source code of this task can be found https://panda
 | String
 |===
 
-NOTE: More details about the source code of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html[here^].
+NOTE: More details about the source code of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html[here^].
 
 ===== Fill_NaNs
 
@@ -1388,7 +1388,7 @@ NOTE: More details about the source code of this task can be found https://panda
 | String
 |===
 
-NOTE: More details about the source code of this task can be found http://scikit-learn.org/stable/modules/preprocessing.html[here^].
+NOTE: More details about the source code of this task can be found https://scikit-learn.org/stable/modules/preprocessing.html[here^].
 
 ===== Split_Data
 
@@ -1417,7 +1417,7 @@ NOTE: More details about the source code of this task can be found http://scikit
 
 *How to use this task:* It should be used before Train and Predict tasks.
 
-NOTE: More details about the source code of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html[here^].
+NOTE: More details about the source code of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html[here^].
 
 ===== Rename_Columns
 
@@ -1746,7 +1746,7 @@ NOTE: More information about this task can be found https://epistasislab.github.
 
 *How to use this task:* It should be connected with <<Train_Model>> .
 
-NOTE: More information about this task can be found https://automl.github.io/auto-sklearn/stable/api.html?highlight=classification#regression[here^].
+NOTE: More information about this task can be found https://automl.github.io/auto-sklearn/master/api.html#regression[here^].
 
 ==== ML Classification
 
@@ -1769,13 +1769,13 @@ NOTE: More information about this task can be found https://automl.github.io/aut
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
-| Specifies the parameters' values of the gaussian naive bayes algorithm. Check the list of parameters http://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html[here^].
+| Specifies the parameters' values of the gaussian naive bayes algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html[here^].
 | JSON format
 |===
 
 *How to use this task:* It should be connected with <<Train_Model>> or <<Predict_Model>>.
 
-NOTE: More information about this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html[here^].
+NOTE: More information about this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html[here^].
 
 ===== Logistic_Regression
 *Task Overview:* Logistic Regression is a regression model where the Dependent Variable (DV) is categorical.
@@ -1814,7 +1814,7 @@ NOTE: More information about this task can be found http://scikit-learn.org/stab
 
 *How to use this task:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
 
-NOTE: More information about the source code of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html[here^].
+NOTE: More information about the source code of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html[here^].
 
 ===== Support_Vector_Machines
 
@@ -1848,7 +1848,7 @@ NOTE: More information about the source code of this task can be found http://sc
 
 *How to use this task:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
 
-NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html[here^].
+NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html[here^].
 
 ==== ML Regression
 
@@ -1893,7 +1893,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 
 *How to use this task:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
 
-NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html[here^].
+NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html[here^].
 
 ===== Linear_Regression
 
@@ -1924,7 +1924,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 
 *How to use this task:* IT should be connected with <<Train_Model>> and <<Predict_Model>>.
 
-NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html[here^].
+NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html[here^].
 
 ===== Support_Vector_Regression
 
@@ -1961,7 +1961,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 
 *How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
 
-NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html[here^].
+NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html[here^].
 
 ==== ML Anomaly Detection
 
@@ -2031,7 +2031,7 @@ NOTE: More information about the source of this task can be found https://scikit
 //| Float, Optional (default='auto')
 |===
 
-NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.svm.OneClassSVM.html[here^].
+NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.svm.OneClassSVM.html[here^].
 
 ==== ML Clustering
 
@@ -2070,7 +2070,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 
 *How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
 
-NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
+NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
 
 ===== Mean_Shift
 
@@ -2104,7 +2104,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 
 *How to use this task:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
 
-NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.cluster.MeanShift.html[here^].
+NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.cluster.MeanShift.html[here^].
 
 
 ==== ML Ensemble Learning
@@ -2187,7 +2187,7 @@ NOTE: More information about the source of this task can be found https://scikit
 
 *How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
 
-NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
+NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
 
 ===== Gradient_Boosting
 
@@ -2226,7 +2226,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 
 *How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
 
-NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
+NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
 
 ===== Random_Forest
 
@@ -2265,7 +2265,7 @@ NOTE: More information about the source of this task can be found http://scikit-
 
 *How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
 
-NOTE: More information about the source of this task can be found http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
+NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
 
 ===== XGBoost
 
@@ -2317,8 +2317,8 @@ NOTE: More information about the source of this task can be found https://scikit
 
 [NOTE]
 ====
-. More information about the source of the ML Classification can be found http://scikit-learn.org/stable/supervised_learning.html#supervised-learning[here^].
-. More information about the source of the ML Regression can be found https://scikit-learn.org/stable/modules/clustering.htmll[here^].
+. More information about the source of the ML Classification can be found https://scikit-learn.org/stable/supervised_learning.html#supervised-learning[here^].
+. More information about the source of the ML Regression can be found https://scikit-learn.org/stable/modules/clustering.html[here^].
 . More information about the source of the ML Anomaly Detection can be found https://scikit-learn.org/stable/modules/outlier_detection.html[here^].
 ====
 
@@ -2563,7 +2563,7 @@ NOTE: Torchtext were used to preprocess and load the text input. More informatio
 | Boolean (default=True)
 |===
 
-NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/torchvision/models.html[AlexNet^].
+NOTE: Pytorch were used to build the model architecture based on https://pytorch.org/docs/master/torchvision/models.html[AlexNet^].
 
 ===== DenseNet-161
 
@@ -2571,7 +2571,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 
 *How to use this task:* It should be connected to <<Train_Image_Classification_Model>> task.
 
-NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/torchvision/models.html[DenseNet-161^].
+NOTE: Pytorch were used to build the model architecture based on https://pytorch.org/docs/master/torchvision/models.html[DenseNet-161^].
 
 .DenseNet-161_Task variables
 [cols="2,5,2"]
@@ -2594,7 +2594,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 
 *How to use this task:* It should be connected to <<Train_Image_Classification_Model>> task.
 
-NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/torchvision/models.html[ResNet-18^].
+NOTE: Pytorch were used to build the model architecture based on https://pytorch.org/docs/master/torchvision/models.html[ResNet-18^].
 
 .ResNet-161_Task variables
 [cols="2,5,2"]
@@ -2617,7 +2617,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 
 *How to use this task:* It should be connected to <<Train_Image_Classification_Model>> task.
 
-NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/torchvision/models.html[VGG-16^].
+NOTE: Pytorch were used to build the model architecture based on https://pytorch.org/docs/master/torchvision/models.html[VGG-16^].
 
 .VGG-16_Task variables
 [cols="2,5,2"]
@@ -2856,7 +2856,7 @@ NOTE: The default parameters of the YOLO network were set for the COCO dataset (
 
 *How to use this task:* It should be connected to <<Train_Text_Classification_Model>> task.
 
-NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/nn.html#torch.nn.GRU[GRU^].
+NOTE: Pytorch were used to build the model architecture based on https://pytorch.org/docs/master/nn.html#torch.nn.GRU[GRU^].
 
 ===== LSTM
 
@@ -2890,7 +2890,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 
 *How to use this task:* It should be connected to <<Train_Text_Classification_Model>> task.
 
-NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/nn.html#torch.nn.LSTM[LSTM^].
+NOTE: Pytorch were used to build the model architecture based on https://pytorch.org/docs/master/nn.html#torch.nn.LSTM[LSTM^].
 
 ===== RNN
 
@@ -2924,7 +2924,7 @@ NOTE: Pytorch were used to build the model architecture based on http://pytorch.
 
 *How to use this task:* It should be connected to <<Train_Text_Classification_Model>> task.
 
-NOTE: Pytorch were used to build the model architecture based on http://pytorch.org/docs/master/nn.html#torch.nn.RNN[RNN^].
+NOTE: Pytorch were used to build the model architecture based on https://pytorch.org/docs/master/nn.html#torch.nn.RNN[RNN^].
 
 ==== Train Model
 
@@ -3228,7 +3228,7 @@ WARNING: If two workflows use the same service instance names, then, their gener
 | String
 |===
 
-*How to use this task:*  This task has to be connected to the <<Start_Visdom_Service>> Task. The Visdom server should be up in order to be able to broadcast visualizations.
+*How to use this task:*  This task has to be connected to the <<Visdom_Service_Start>> Task. The Visdom server should be up in order to be able to broadcast visualizations.
 
 ===== Visdom_Plots
 

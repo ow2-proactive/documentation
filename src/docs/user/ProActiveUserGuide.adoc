@@ -16,7 +16,7 @@ include::../Glossary.adoc[]
 == Get started
 
 To submit your first computation to *ProActive Scheduler*, link:../admin/ProActiveAdminGuide.html#_getting_started[install] it in
-your environment (default credentials: admin/admin) or just use our demo platform http://try.activeeon.com[try.activeeon.com^].
+your environment (default credentials: admin/admin) or just use our demo platform https://try.activeeon.com[try.activeeon.com^].
 
 *ProActive Scheduler* provides comprehensive interfaces that allow to:
 
@@ -63,7 +63,7 @@ means the Scheduler waits the end of task 1 execution before launching task
 4. In a more concrete way, task 1 could be the calculation of a part of
 the problem to solve, and task 4 takes the result provided by task 1 and
 compute another step of the calculation. We introduce here the concept
-of <<_passing_data_between_tasks,result passing>> between tasks. This relation is
+of passing data between tasks. This relation is
 called a <<_dependency>>, and we say that task 4 **depends** on task 1.
 
 We see that task 1, 2 and 3 are not linked, so these three tasks can be
@@ -77,7 +77,7 @@ a task can be restarted automatically or cancelled.
 
 === A simple example
 
-The link:http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial, window="_blank"] on link:http://try.activeeon.com[try.activeeon.com, window="_blank"]
+The link:https://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial, window="_blank"] on link:https://try.activeeon.com[try.activeeon.com, window="_blank"]
 shows you how to build a simple workflow using script tasks.
 
 
@@ -97,7 +97,7 @@ At the left part, are illustrated the **General Parameters** of the workflow wit
 === Docker_Compose task
 
 In order for Docker_Compose tasks to work, the _Node_ must have Docker and Docker Compose installed. Please refer to the official
- Docker documentation to see how to install http://docs.docker.com/engine/installation/[Docker^] and https://docs.docker.com/compose/install/[Docker Compose^].
+ Docker documentation to see how to install https://docs.docker.com/engine/installation/[Docker^] and https://docs.docker.com/compose/install/[Docker Compose^].
 
 A Docker_Compose task expects the content of a Docker Compose file inside the _Script_ section. You can find out how to write Docker Compose files
 in the official https://docs.docker.com/compose/[Docker Compose documentation^].
@@ -141,7 +141,7 @@ The main behavior of a Docker_File task is to first build an image and then run 
 Advanced options will allow to parametrize these actions.
 
 In order for Docker_File tasks to work, the _Node_ must have Docker installed. Please refer to the official
- Docker documentation to see how to install http://docs.docker.com/engine/installation/[Docker^].
+ Docker documentation to see how to install https://docs.docker.com/engine/installation/[Docker^].
 
 To use a Docker_File task, put the content of a Dockerfile inside the _Task Implementation_ section. You can find out how to write Dockerfile
 in the official https://docs.docker.com/engine/reference/builder/[Dockerfile documentation^]. 
@@ -227,11 +227,11 @@ The selection script in the PHP task does not validate the PHP version, therefor
 === Scripting language support
 
 Proactive Scheduler supports tasks  written in languages other than Java. The currently supported dynamic languages are
-link:http://groovy.codehaus.org[Groovy, window="_blank"],
-link:http://www.jython.org[Jython, window="_blank"],
+link:http://groovy-lang.org/[Groovy, window="_blank"],
+link:https://www.jython.org[Jython, window="_blank"],
 link:https://www.python.org/[Python, window="_blank"],
-link:http://jruby.org[Ruby, window="_blank"] and
-link:http://docs.oracle.com/javase/6/docs/technotes/guides/scripting/programmer_guide/#jsengine[Javascript, window="_blank"].
+link:https://jruby.org[Ruby, window="_blank"] and
+link:https://docs.oracle.com/javase/8/docs/technotes/guides/scripting/index.html#jsengine[Javascript, window="_blank"].
 
 Native scripts can also be executed using a script task. Currently Bash and CMD scripts are supported,
 simply set the language attribute to `bash` or `cmd` and type your script in the workflow.
@@ -247,7 +247,7 @@ some limitations.
 
 You can find an example of a script task in this
 link:examples/script_task.xml[XML workflow^] or you can also build one yourself using the
-*Workflow Studio*. The link:http://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial, window="_blank"]
+*Workflow Studio*. The link:https://try.activeeon.com/tutorials/quickstart/quickstart.html[quickstart tutorial, window="_blank"]
 relies on script task and is a nice introduction to workflows.
 
 Scripts can also be used to decorate tasks with specific actions, we support
@@ -299,11 +299,11 @@ print("Hello World")
 
 === MPI application
 
-http://en.wikipedia.org/wiki/Message_Passing_Interface[MPI^] is often used in the area of parallel computing.
+https://en.wikipedia.org/wiki/Message_Passing_Interface[MPI^] is often used in the area of parallel computing.
 The Scheduler integrates with MPI with the concept of <<_multi_node_task,multi node tasks>>.
  This particular task will acquire several nodes and will expose these nodes to the MPI environment.
 
-Applications built with MPI are often executed using the http://linux.die.net/man/1/mpirun[mpirun^] command.
+Applications built with MPI are often executed using the https://linux.die.net/man/1/mpirun[mpirun^] command.
 It accepts several parameters to
 choose how many CPUs and how many machines will be used. One particular parameter is the machine file that is
 built by the Scheduler when using *multi node tasks*.
@@ -359,7 +359,7 @@ This status is used when an exception is thrown by the user code of a task and w
 | `FAILED` | Failed | The job has failed. One or more tasks have failed (due to resources failure).
 There is no more executionOnFailure left for a task.
 | `FINISHED` | Finished | The job is finished. Tasks are finished or faulty.
-| `IN_ERROR` | In-Error | The job has at least one In-Error task and all In-Error tasks are the last, among others, which have changed their state.
+| `IN_ERROR` | In-Error | The job has one or more In-Error tasks that are suspended along with their dependencies. User intervention is required to fix the causing issues and restart the In-Error tasks to resume the job.
 | `KILLED` | Killed | The job has been killed by the user.
 | `PAUSED` | Paused | The job is paused waiting for user to resume it.
 | `PENDING` | Pending | The job is waiting to be scheduled.
@@ -489,11 +489,11 @@ In the scheduler portal, select a job, then select a task from the job's task li
 In this tab, you will see two buttons:
 
 - `Open in browser`: when clicking on this button, the result will be displayed in a new browser tab. By default, the result will be displayed in text format.
-If your result contains binary data, it is possible to specify a different display mode using <<_result_metadata>>. +
+If your result contains binary data, it is possible to specify a different display mode using <<_assigning_metadata_to_task_result,Result Metadata>. +
 If the task failed, when clicking on the _Open in browser_ button, the task error will be displayed.
 
 - `Save as file`: when clicking on this button, the result will be saved on disk in binary format. By default, the file name will be generated automatically using the job and task ids, without an extension.
-It is possible to customize this behavior and specify in the task a file name, or a file extension using <<_result_metadata>>.
+It is possible to customize this behavior and specify in the task a file name, or a file extension using <<_assigning_metadata_to_task_result,Result Metadata>>.
 
 The following example gets one png image and add the metadata to help the browser display it and add a name when downloading.
 ----
@@ -527,7 +527,7 @@ Split : {0=abc, 1=def}
 == Workflow concepts
 
 Workflows comes with constructs that help you distribute your computation. The tutorial
-http://try.activeeon.com/tutorials/adv.html[Advanced workflows^] is a nice introduction to workflows with
+https://try.activeeon.com/tutorials/adv.html[Advanced workflows^] is a nice introduction to workflows with
 ProActive.
 
 The following constructs are available:
@@ -1055,14 +1055,14 @@ myApp.sh /path/to/file/${variables_PAS_TASK_ITERATION}.dat
 
 === Example: Embarrassingly Parallel problem
 
-An http://en.wikipedia.org/wiki/Embarrassingly_parallel[Embarrassingly Parallel problem^] is a problem that is easy
+An https://en.wikipedia.org/wiki/Embarrassingly_parallel[Embarrassingly Parallel problem^] is a problem that is easy
 to split into smaller independent tasks. With ProActive Scheduler you can tackle this type of problem with the
 <<_replicate>> construct.
 
-TIP: Familiar with http://en.wikipedia.org/wiki/MapReduce[MapReduce^]? Well, a workflow using replication
+TIP: Familiar with https://en.wikipedia.org/wiki/MapReduce[MapReduce^]? Well, a workflow using replication
 uses similar concepts.
 
-The http://try.activeeon.com/tutorials/adv.html[Advanced workflows^] is an example of an embarrassingly parallel
+The https://try.activeeon.com/tutorials/adv.html[Advanced workflows^] is an example of an embarrassingly parallel
 problem where the computation is easily distributed across ProActive Nodes.
 
 == Workflow Execution Control
@@ -1116,7 +1116,7 @@ variable *operating_system* (task scope) resolves to variable *operating_system_
 <job
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="urn:proactive:jobdescriptor:3.10"
-     xsi:schemaLocation="urn:proactive:jobdescriptor:3.10 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.10/schedulerjob.xsd"
+     xsi:schemaLocation="urn:proactive:jobdescriptor:3.10 https://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.10/schedulerjob.xsd"
     name="variable solving"
     priority="normal"
     onTaskError="continueJobExecution"
@@ -1336,7 +1336,7 @@ You can find a complete example running a simple task every minutes in this link
 
 * The execution of the first iteration occurs immediately and does not depend on the cron expression specified.
  However the user can specify a start time for the first iteration using `START_AT` <<_generic_information,generic information>>.
- Its value should be http://en.wikipedia.org/wiki/ISO_8601[ISO 8601^] compliant.
+ Its value should be https://en.wikipedia.org/wiki/ISO_8601[ISO 8601^] compliant.
 
 * Each iteration yields one or more task results and the user can query the job state and task states to
 retrieve information of each iteration.
@@ -1485,7 +1485,7 @@ Files can be also transferred from/to User Space by specifying `transferFromUser
 
 Before running your jobs you should first *upload* your files into either Global or User Space. To do it you can export folders linked to
 these spaces by one of the standard protocols like *FTP*, *NFS*, or use available web interfaces like
-http://pyd.io[Pydio^].
+https://pydio.com/[Pydio^].
 
 It is possible to use wildcards in transfer directives, such as:
 
@@ -1549,7 +1549,7 @@ The property *node.dataspace.cachedir* can also be used to control the cache loc
 
 == Workflow Storage and Versioning
 
-The Catalog provides the storage and versioning of Workflows inside Buckets. It also features a searching functionality using a http://graphql.org/[GraphQL] query language to fetch Workflows based on particular parameters. The Catalog is a RESTful service. A http://swagger.io/[Swagger] interface is provided to understand and interact with the service.
+The Catalog provides the storage and versioning of Workflows inside Buckets. It also features a searching functionality using a https://graphql.org/[GraphQL] query language to fetch Workflows based on particular parameters. The Catalog is a RESTful service. A https://swagger.io/[Swagger] interface is provided to understand and interact with the service.
 First the concepts of the Catalog will be explained. Then it will be provided information how to interact with Catalog from GUI.
 
 === Bucket concept
@@ -1624,7 +1624,7 @@ NOTE: A complete documentation of the Catalog REST API is available by default o
 
 ==== GraphQL usage
 
-http://graphql.org/[GraphQL] is the standardized query language, which  provides opportunity to search and retrieve the Workflow by specified criterion from the Catalog.
+https://graphql.org/[GraphQL] is the standardized query language, which  provides opportunity to search and retrieve the Workflow by specified criterion from the Catalog.
 NOTE: Please follow the graphiql endpoint: `http://localhost:8080/catalog/graphiql` in order to query for the specific Workflow.
 
 == Usage of Catalog from GUI
@@ -1740,7 +1740,7 @@ image::revisions-catalog.png[align=center]
 
 === Overview
 
-Tasks executed by <<_glossary_practive_scheduler,*ProActive
+Tasks executed by <<_glossary_proactive_scheduler,*ProActive
 Scheduler*>> might need to use a password or another kind of
 credentials to acces third-party services or applications. For example
 a user might wish to pass his MySQL password to Native Task which runs
@@ -2313,10 +2313,10 @@ include::./references/LDAPQueryTasks.adoc[]
 === Job and task specification
 
 Workflows are written in XML and we provide a XSD grammar to help you write and validate them.
-The Workflows XSD is available link:http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.3/schedulerjob.xsd[here, window="_blank"]
+The Workflows XSD is available link:https://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.3/schedulerjob.xsd[here, window="_blank"]
 and you can also find the documentation link:schedulerjob.html[here, window="_blank"].
 
-TIP: Setup your IDE to use the http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.3/schedulerjob.xsd[Workflow XSD^],
+TIP: Setup your IDE to use the https://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.3/schedulerjob.xsd[Workflow XSD^],
 you will benefit from live validation and completion!
 
 === Studio Tasks

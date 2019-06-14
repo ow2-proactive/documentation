@@ -297,7 +297,7 @@ They can be used inside the workflow with the pattern syntax, for example:
 In addition to the ability to declare variables directly inside job XML definition, it is also possible to
 dynamically read and write new variables while executing a task script with the `variables` map. This map of `variables` is bound to
 hash type depending on the script engine you are using, for instance in native
-Java as http://docs.oracle.com/javase/8/docs/api/java/util/Map.html[Map^].
+Java as https://docs.oracle.com/javase/8/docs/api/java/util/Map.html[Map^].
 In *Groovy*  as a global map, see below:
 
 [source, groovy]
@@ -350,9 +350,9 @@ WARNING: In native tasks and Bash/CMD script engines, variables can be read but 
 
 
 
-For Java native script you can set any link:http://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html[Java serializable object, window="_blank"]
+For Java native script you can set any link:https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html[Java serializable object, window="_blank"]
  as a variable value. They will be converted into strings using
-http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()[toString()^]
+https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()[toString()^]
  method when required, for instance, to make those values available as environment variables in native tasks.
 
 
