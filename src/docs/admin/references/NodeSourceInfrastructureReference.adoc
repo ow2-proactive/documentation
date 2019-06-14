@@ -143,12 +143,12 @@ credentials are needed. This section describes briefly how to obtain
 them, and how to use them to configure your environment.
 
 1.  First, you need to create an AWS account at
-    <http://aws.amazon.com/>.
+    <https://aws.amazon.com/>.
 
 2.  With your new AWS account, sign up for EC2 at
-    <http://aws.amazon.com/ec2/>.
+    <https://aws.amazon.com/ec2/>.
 
-3.  Now, you need to obtain the credentials. http://aws.amazon.com[On the AWS website],
+3.  Now, you need to obtain the credentials. https://aws.amazon.com[On the AWS website],
     point your browser to the _Your Web Services Account_ button, a drop
     down list displays. Click _View Access Key Identifiers_.
 
@@ -180,7 +180,7 @@ them, and how to use them to configure your environment.
     -   *numberOfNodesPerInstance:* Total number of Proactive Nodes to deploy in each created AWS instance.
     
 +
-TIP: If all the nodes of an AWS instance are removed, the instance will be terminated. For more information on the terminated state in AWS please see http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/terminating-instances.html[AWS Terminating Instances].
+TIP: If all the nodes of an AWS instance are removed, the instance will be terminated. For more information on the terminated state in AWS please see https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/terminating-instances.html[AWS Terminating Instances].
 +       
     -   *downloadCommand:* The command to download the Proactive *node.jar*. This command is executed in all the newly created AWS instances.
     	The full URL path of the *node.jar* to download, needs to be accessible from the AWS cloud.
@@ -199,9 +199,9 @@ WARNING: If the combination between RAM and CORES does not match any existing AW
 
     -   *spotPrice:* The maximum price that you are willing to pay per hour per instance (your bid price). Amazon EC2 Spot instances allow you to bid on spare Amazon EC2 computing capacity. Since Spot instances are often available at a discount compared to On-Demand pricing. If your bid price is greater than the current Spot price for the specified instance, and the specified instance is available, your request is fulfilled immediately. Otherwise, the request is fulfilled whenever the Spot price falls below your bid price or the specified instance becomes available. Spot instances run until you terminate them or until Amazon EC2 must terminate them (also known as a Spot instance interruption). More information available on https://aws.amazon.com/ec2/spot/[AWS EC2 Spot]
 
-    -   *securityGroupNames:* The securityGroupNames option allows you to specify the name(s) of the Security group(s) configured as a virtual firewall(s) to control inbound and outbound traffic for the EC2 instances hosting the proactive nodes. More information regarding Amazon EC2 Security Group available on http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html[AWS EC2 Security Groups]
+    -   *securityGroupNames:* The securityGroupNames option allows you to specify the name(s) of the Security group(s) configured as a virtual firewall(s) to control inbound and outbound traffic for the EC2 instances hosting the proactive nodes. More information regarding Amazon EC2 Security Group available on https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html[AWS EC2 Security Groups]
 
-    -   *subnetId:* The subnetId option allows you to launch the proactive nodes on EC2 instances, which will run into an existing subnet added to a specific Virtual Private Cloud. More information regarding Amazon EC2 Virtual Private Cloud (Amazon VPC) available on https://aws.amazon.com/vpc/[AWS EC2 Virtual Private Cloud] and Amazon EC2 Virtual Private Cloud and Subnet available on http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html[AWS EC2 Virtual Private Cloud and Subnet]
+    -   *subnetId:* The subnetId option allows you to launch the proactive nodes on EC2 instances, which will run into an existing subnet added to a specific Virtual Private Cloud. More information regarding Amazon EC2 Virtual Private Cloud (Amazon VPC) available on https://aws.amazon.com/vpc/[AWS EC2 Virtual Private Cloud] and Amazon EC2 Virtual Private Cloud and Subnet available on https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html[AWS EC2 Virtual Private Cloud and Subnet]
 
 +
 Using this configuration, you can start a Resource Manager and a
@@ -334,7 +334,7 @@ To use OpenStack instances as computing nodes, a specific OpenStack Infrastructu
 can be created using the Resource Manager. This section describes briefly how to make it.
 
 1.  First, you need to have an admin account on your OpenStack server. For more information see
-http://docs.openstack.org/icehouse/install-guide/install/yum/content/keystone-users.html[OpenStack users and tenants].
+https://docs.openstack.org/icehouse/install-guide/install/yum/content/keystone-users.html[OpenStack users and tenants].
 
 2. The creation of OpenStack Infrastructure asks for an authentification to the OpenStack server and a deployment of instances that will host proactive nodes.
 
@@ -366,7 +366,7 @@ Properties needed for the deployment of instance are :
 
    -   *image:* Defines which image will be used to create the OpenStack instance. The value to provide is the unique image Id.
    
-   -   *flavor:* Defines the size of the instance. The value to provide is the flavor name or the flavor Id. For more information see http://docs.openstack.org/openstack-ops/content/flavors.html[OpenStack flavors].
+   -   *flavor:* Defines the size of the instance. The value to provide is the flavor name or the flavor Id. For more information see https://docs.openstack.org/openstack-ops/content/flavors.html[OpenStack flavors].
     
     -   *publicKeyName:* Defines the name of the public key to use for a remote connection when the instance is created.
     
@@ -477,24 +477,26 @@ Google Compute Engine, aka GCE, delivers virtual machines running on Google's in
 To use GCE virtual machines as computing nodes, a specific GCE Infrastructure needs to be created using the Resource Manager.
 This section describes briefly how to make it.
 
-First, To use the GCE Infrastructure in the Resource Manager, proper Google Cloud credentials are needed for an authentification to the Google Cloud Platform.
+===== Pre-Requisites
+
+First, to use the GCE Infrastructure in the Resource Manager, proper Google Cloud credentials are needed for an authentication to the Google Cloud Platform APIs.
 To obtain them, you can take the following steps:
 
 1. Go to the https://console.developers.google.com[Developer Console].
-2. Choose your project.
-3. Choose _APIs & Services_ > _Credentials_.
-4. Under the tab _Credentials_, Click _Create credentials_ > _Service account key_.
-5. Select the option _New service account_, then fill in your service account name, choose _Compute Engine_ > _Compute Admin_ as "role", choose _JSON_ as "Key type".
-6. Click the button _Create_, a JSON file for the created service account will be downloaded.
+2. Log in with an account which has the permissions to create service accounts and service account keys (i.e., granted the _Service Account Admin_ and _Service Account Key Admin_ role).
+3. Following the document https://cloud.google.com/iam/docs/creating-managing-service-accounts#creating_a_service_account[Creating a service account] to create a service account *granted the _Compute Admin_ role*
+4. Following the document https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys[Creating service account keys] to create a service key of the type *_JSON_*, a JSON file for the created service account key should be downloaded to your machine.
 
 For more information regarding Google Cloud service accounts see
 https://cloud.google.com/compute/docs/access/service-accounts[Google Cloud Service Accounts].
 
+===== Infrastructure Configuration
 
 Now, you are ready to create a new node source of the type _GCE Infrastructure_.
-The downloaded JSON file of Google Cloud credentials is used to fill in the properties *gceCredential* to perform the basic Google Cloud Platform authentification.
-Other properties needed for the node deployment in the _Create GCE Node Source_ are :
+The properties needed for the node deployment in the _Create GCE Node Source_ are :
 
+-   *gceCredential:* The credentials to perform the basic Google Cloud Platform authentication.
+        Upload the JSON file of a Google Cloud service account key (downloaded in the section Pre-Requisites) to fill in this property.
 -   *totalNumberOfInstances:* Total number of GoogleComputeEngine instances to create for this infrastructure.
 -   *numberOfNodesPerInstance:* Total number of Proactive Nodes to deploy in each created GoogleComputeEngine instance.
 +
@@ -530,7 +532,6 @@ Using this configuration, you can start a Resource Manager and a Scheduler using
 An GoogleComputeEngine NodeSource can now be added using the *Create Node Source* panel in the Resource Manager or the command line interface:
 
     $ PROACTIVE_HOME/bin/proactive-client --createns googlecomputeengine -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.GCEInfrastructure gceCredential totalNumberOfInstances numberOfNodesPerInstance vmUsername vmPublicKey vmPrivateKey image region ram cores rmHostname connectorIaasURL nodeJarURL additionalProperties nodeTimeout
-
 
 WARNING: When ProActive server is stopped, GoogleComputeEngine instances will be automatically deleted. And when ProActive server is restarted, the infrastructure will be recovered as per the previous settings. The required GoogleComputeEngine instances will be re-created and re-configured.
 
@@ -696,7 +697,7 @@ This mechanism is described in <<_deploy_via_other_schedulers>>. This infrastruc
 The infrastructure parameters are described hereafter:
 
  * *RMCredentialsPath* : path to a file which contains the credentials of an administrator user which will own the node source. The ProActive Scheduler Server release contains two admin users credentials files : `config/authentication/rm.cred` and `config/authentication/admin_user.cred`
- * *NSFrontalHostAddress* : the host name or IP address of the cluster <<_glossary_ns_head_node,head node>>.
+ * *NSFrontalHostAddress* : the host name or IP address of the cluster <<_glossary_head_node,head node>>.
  * *NSSchedulerHome* : the location of the shared ProActive installation on <<_glossary_ns_node,cluster nodes>> (cluster nodes must be able to access ProActive libraries in order to start ProActive Node). Example `/opt/proactive/activeeon_enterprise-node-linux-x64-8.1.0`.
  * *javaHome* : similarly, cluster nodes must be able to access the java command in order to start ProActive Nodes. ProActive installation includes a Java Runtime Environment under the `jre` subfolder. Example: `/opt/proactive/activeeon_enterprise-node-linux-x64-8.1.0/jre`.
  * *jvmParameters* : additional options which can be passed to the java command.
@@ -704,7 +705,7 @@ The infrastructure parameters are described hereafter:
  * *NSNodeTimeoutInSeconds* : timeout to wait for the deployment of ProActive Nodes on the cluster. As the time needed to deploy ProActive Nodes depends on the cluster load, this timeout should be a large value. If the timeout is reached, the ProActive Nodes will be in `"Lost"` <<_node_states,state>>.
  * *ìmpersonationMethod*: when a job is submitted to the native scheduler, the submission is performed under the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>>. An impersonation is thus performed between the <<_glossary_proactive_scheduler_process_user,scheduler server process>> and the target <<_glossary_cluster_user,cluster user>>.
  This impersonation can be performed using 3 different strategies:
- ** `ssh`: in that case the <<_glossary_ns_head_node,head node>> is contacted using a ssh command with the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>> and password. User/password combination between the ProActive Scheduler and the head node operating system must match.
+ ** `ssh`: in that case the <<_glossary_head_node,head node>> is contacted using a ssh command with the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>> and password. User/password combination between the ProActive Scheduler and the head node operating system must match.
  ** `none`: in that case the head node is contacted using a ssh command with the <<_glossary_proactive_scheduler_process_user,ProActive Scheduler process user>> (passwordless ssh). Submission to the native scheduler will be performed with the same account.
  ** `sudo`: similar to `none` regarding the connection to the head node, but a `sudo` command will be initiated to impersonate as the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>>, before doing a job submission.
  * *alternateRMUrl* : the url used by the ProActive Nodes to contact <<_glossary_resource_manager,ProActive Resource Manager>>. This url is displayed on ProActive server startup. Example: `pnp://myserver:64738`.
