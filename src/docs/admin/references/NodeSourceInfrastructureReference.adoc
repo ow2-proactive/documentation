@@ -293,7 +293,7 @@ The configuration form exposes the following fields:
  This parameter is mandatory and has to be configured after the name of an AWS region.
  Please see https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions[the related documentation] to see the available region names.
 
-	- *rmUrl:* This field receives the URL to access the resource manager from the nodes.
+	- *rmUrl:* This field receives the URL to access the Resource Manager from the nodes.
  The URL must comply with the specification of the communication protocols used by ProActive, and can therefore be prefixed with *pnp://*, *pnps://* or *pamr://*.
  This parameter is mandatory.
 
