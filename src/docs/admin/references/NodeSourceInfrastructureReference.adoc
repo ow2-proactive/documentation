@@ -214,8 +214,116 @@ As AWS is a paying service, when the Scheduler is stopped normally (without remo
 
 WARNING: If ProActive server is forcibly killed, the created AWS instances will not be terminated. And, when ProActive server is restarted, the infrastructure will be re-configured as per the previous settings. If the instances were deleted at the AWS side, they will be re-created and re-configured.
 
+==== AWS Autoscaling Infrastructure
 
+Similarly to the EC2 Infrastructure, the *AWS Autoscaling Infrastructure* operates AWS EC2 service to provide computing node to the Resource Manager.
+However, it implements a different instance management from it to lower the delay of node acquisition and node removal process and ease inter-node collaboration in the same cluster.
 
+	1. The instances operating the nodes are allocated from a common instance template.
+
+	2. The nodes share the same networking infrastructure through a common VPC.
+ The infrastructure support networking autoconfiguration if no parameter is supplied.
+
+===== Pre-Requisites
+
+The configuration of the AWS Autoscaling infrastructure is subjected to several requirements.
+
+	1. The administrator needs both an *AWS access key* and an *AWS secret access key* to enable proactive to authenticate against AWS.
+ Please refer to https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html?icmpid=docs_iam_console#Using_CreateAccessKey[the AWS documentation] to learn dof to get them.
+
+	2. The *AWS region* that will support the node cluster must not have reach its resources quota.
+ It has to be able to allocate one instance template in every case situation.
+ If the network autoconfiguration has to be be triggered, the region has to be able to provide one VPC, one subnet, one internet gateway and one security group.
+ The number of maximum allocated instances is to be configured by the administrator, but has also to comply with the limitation of the regions.
+ Detailed informations are available in AWS documentation for https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html#limits_vpc[VPC] and https://aws.amazon.com/fr/ec2/faqs/#How_many_instances_can_I_run_in_Amazon_EC2[Instances]. 
+
+	3. The administrator must be in possession of a valid *AWS keypair* and the ID of the *Amazon Machine Image (AMI)* to provision instances operating ProActive node.
+ If the AMI to use does not propose the Linux operating system, the administrator must supply a *provision script* to (i) download a Java Runtime Environment (JRE), download Proactive Node agent (node.jar), and start up the ProActive agent. 
+
+	4. Optionally, if networking autoconfiguration is not triggered, the administrator has to configure (i) a public *VPC*, (ii) a *Subnet* complying with with VPC CIDR configuration, (iii) an Internet gateway for that VPC and a (iv) Security Group authorizing HTTPS connection to Internet and PNP or PAMR connection to the Resource Manager.
+ The administrator must be in possession of the IDs of the VPC, of the Subnet and of the Security Group.
+
+	5. The Resource Manager has to be accessible from the AWS cloud.
+ Please consider replacing PNP by PAMR as communication protocol if the Resource Manager is located behind a NAT gateway. 
+
+===== Infrastructure Configuration
+
+To use a cluster of AWS instances as a computing resource for the ProActive scheduler, the administrator has to create a nodesource in the Resource Manager with the *AwsAutoScalingInfrastructure* profile. The configuration form expose the following fields:
+
+	- *vmGroupTagPrefix:* Each instance prepared by the connector is flagged with the tag named *vmGroupName*.
+ This tag is valued with this configuration option and the Node Source name. Concurrent ProActive scheduler can therefore operate concurrent clusters in the same AWS regions, with the same node source name, provided that they diverge on the affectied to this parameter.
+ This option is mandatory.
+
+	- *awsKey:* This field must be filled with the content of the AWS key from the administrator.
+ This option is mandatory.
+
+	- *awsSecretKey:* The administrator must complete this field with the content of its secret access key.
+ This option is mandatory.
+
+	- *maxVms:* This parameter defines the number of maximum tolerated instances on the infrastructure: the instance allocations will be systematically blocked if the Resource Manager tries to overpass this threshold. 
+ This option is mandatory and cannot exceed 100.
+
+	- *defaultInstanceType:* This parameter defines the instance type to use for AWS instance operating ProActive. This parameter should choosen accordingly to the expected processing to be performed on the node source. 
+ This option is mandatory and has to be filled after one AWS InstanceType name (e.g. t3.large).
+
+	- *amiId:* The administrator defines in this field the ID of the AMI to use to bootstrap instance operating ProActive nodes. 
+ This option is mandatory, has to refer to an existing AMI in the region, and has to comply with AMI ID format.
+
+	- *publicSshKey:* The administrator has to provide the name of the AWS keypair to be use to operate the instance supporting nodes.
+ This option is mandatory, and must refer to an existing AWS keypair in the region.
+
+	- *defaultVpcId:* This parameter can be filed with the the ID of the VPC to use to operate instance operating nodes.
+ If specified, this parameter has to refer to an existing VPC in the region and comply with the VPC ID format. 
+ If left blank, the connector the extension will trigger networking autoconfiguration.
+
+	- *defaultSubNetId:* The administrator can define which subnet has to be attached to the the instance supporting nodes.
+ If specified, this parameter has to refer to an existing subnet in the region affected to the specified VPC, and has to comply with the subnet ID format.
+ This parameter has to be filed only if the *defaultVpcId* is also completed.
+ Otherwise, this parameter has to be left blank to trigger networking autoconfiguration.
+
+	- *defaultSecurityGroup:* This parameter receives the ID of the security group to spawn instances into.
+ If this parameter does not meet the requirement regarding the providing the provided VPC and subnet, a new security group will be generated.
+ This parameter is mandatory, and has to comply with the format of the ID of the AWS security groups.
+
+	- *region:* The administrator specifies here the AWS region to allocate the cluster into.
+ This parameter is mandatory and has to be valued after the name of an AWS region.
+ Please see https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions[the related documentation] to see the available region names.
+
+	- *rmUrl:* This field receives the URL to access the resource manager from the nodes.
+ The URL must comply with the specification of the communication protocols used by ProActives, and can therefore be prefixed with *pnp://*, *pnps://* or *pamr://*.
+ This parameter is mandatory.
+
+	- *rmCredential:* The administrator has to provide this field with the content of the credentials file created from the resource manager.
+ This parameter is mandatory.
+
+	- *rmHostname:* This field is to be filled with the domain name or the IP of the host operating the resource manager.
+ This option is mandatory.
+
+	- *externalStartupScript:* The administrator has to provide a script to configure AWS instances to work with ProActive.
+ Usually, if not provided by the AMI, this script is expected to download the Java Runtime Environment and ProActive node.jar agent file.
+ This field is expected to contain the content of the script, and start with a Shebang, as an AWS imposes it.
+ If left blank, the script is automatically generated for the Linux OS.
+
+	- *maxNodePerVM:* The administrator specifies the amount of nodes to be deployed on each AWS instance.
+ This parameter is mandatory, and has to be an integer equal or greater than one.
+
++
+WARNING: Please ensure this parameter is aligned with with the capacity of the specified instance type mentionned in the *defaultInstanceType* field.
+
+	- *deploymentTimeOut:* This field contains the delay in seconds for a node to be deployed and to contact back the Resource Manager before being declared as lost.
+ This parameter is mandatory.
+
+	- *cleanDelay:*	The administrator can define the periodicity in seconds for unused instance removal.
+ This parameter is mandatory.
+
+Using this configuration, you can start a Resource Manager and a Scheduler using the */bin/proactive-server* script.
+An AWS Autoscaling NodeSource can now be added using the *Create Node Source* panel in the Resource Manager or the command line interface:
+
+    $ PROACTIVE_HOME/bin/proactive-client --createns openstack -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.AwsAutoscalingInfrastructure vmGroupTagPrefix awsKey awsSecretKey maxVms defaultInstanceType amiId publicSshKey defaultVpcId defaultSubNetId defaultSecurityGroup region rmUrl rmCredential rmHostname externalStartupScript maxNodePerVM deploymentTimeOut cleanDelay
+
+WARNING: When ProActive server is stopped (without removing the created infrastructure), AWS instances will not be terminated. And when ProActive server is restarted, the infrastructure will be re-configured as per the previous settings. If the instances were deleted at the cloud side, they will be re-created and re-configured.
+
+ 
 ==== OpenStack Infrastructure
 
 To use OpenStack instances as computing nodes, a specific OpenStack Infrastructure
