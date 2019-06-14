@@ -171,8 +171,8 @@ image::execute.gif[100000,2000]
 The ActiveEon Jupyter Kernel adds a kernel backend to Jupyter. This kernel interfaces directly with the ProActive
 scheduler and constructs tasks and workflows to execute them on the fly.
 
-With this interface, a user can run his code locally and test it using a native python kernel, and by a simple switch to
-ProActive kernel, run it on remote public/private infrastructures without having to modify his code. See the example below:
+With this interface, users can run their code locally and test it using a native python kernel, and by a simple switch to
+ProActive kernel, run it on remote public or private infrastructures without having to modify the code. See the example below:
 
 image::direct_execution_from_jupyter.png[Direct execution from Jupyter with ActiveEon Kernel]
 
