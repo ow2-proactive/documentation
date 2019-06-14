@@ -238,14 +238,14 @@ The configuration of the AWS Autoscaling infrastructure is subjected to several 
  Detailed information is available in AWS documentation for https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html#limits_vpc[VPC] and https://aws.amazon.com/fr/ec2/faqs/#How_many_instances_can_I_run_in_Amazon_EC2[Instances]. 
 
 	3. The administrator must be in possession of a valid *AWS keypair* and the ID of the *Amazon Machine Image (AMI)* to provision instances operating ProActive node.
- If the AMI to use does not propose the Linux operating system, the administrator must supply a *provision script* to (i) download a Java Runtime Environment (JRE), download Proactive Node agent (node.jar), and start up the ProActive agent. 
+ If the AMI to use does not propose the Linux operating system, the administrator must supply a *provision script* to (i) download a Java Runtime Environment (JRE), (ii) download Proactive Node agent (node.jar), (iii) and start up the ProActive agent. 
 
 	4. Optionally, if networking autoconfiguration is not triggered, the administrator has to configure (i) a public *VPC*, (ii) a *Subnet* complying with with VPC CIDR configuration, (iii) an Internet gateway for that VPC and a (iv) Security Group authorizing HTTPS connection to Internet and PNP or PAMR connection to the Resource Manager.
  The administrator must be in possession of the IDs of the VPC, of the Subnet and of the Security Group.
 
 	5. The Resource Manager has to be accessible from the AWS cloud.
  Please consider replacing PNP by PAMR as communication protocol if the Resource Manager is located behind a NAT gateway.
- You can get additional information about the PAMR protocol in the secion <<_installation_on_a_cluster_with_firewall>>.
+ You can get additional information about the PAMR protocol in the section <<_installation_on_a_cluster_with_firewall>>.
 
 ===== Infrastructure Configuration
 
