@@ -260,7 +260,7 @@ The configuration form exposes the following fields:
 	- *awsKey:* This field must be filled with the content of the AWS key from the administrator.
  This option is mandatory.
 
-	- *awsSecretKey:* The administrator must complete this field with the content of its secret access key.
+	- *awsSecretKey:* The administrator must complete this field with the content of their secret access key.
  This option is mandatory.
 
 	- *maxVms:* This parameter defines the number of maximum tolerated instances on the infrastructure: the instance allocations will be systematically blocked if the Resource Manager tries to overpass this threshold. 
