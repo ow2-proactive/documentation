@@ -22,10 +22,16 @@ your environment (default credentials: admin/admin) or just use our demo platfor
 
 *ProActive Scheduler* provides comprehensive interfaces that allow to:
 
-- +++<a class="studioUrl" href="/studio" target="_blank">Create workflows</a>+++
-- +++<a class="schedulerUrl" href="/scheduler" target="_blank">Submit workflows, monitor their execution and retrieve the tasks results</a>+++
-- +++<a class="rmUrl" href="/scheduler" target="_blank">Add resources and monitor them</a>+++
-- +++<a class="automationDashboardUrl" href="/automation-dashboard/#/portal/cloud-automation" target="_blank">Add services</a>+++
+- +++Create workflows using <a class="studioUrl" href="/studio" target="_blank">ProActive Workflow Studio</a>+++
+- +++Submit workflows, monitor their execution and retrieve the tasks results using <a class="schedulerUrl" href="/scheduler" target="_blank">ProActive Scheduler Portal</a>+++
+- +++Add resources and monitor them using <a class="rmUrl" href="/rm" target="_blank">ProActive Resource Manager Portal</a>+++
+- +++Version and share various objects using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/catalog-portal" target="_blank">ProActive Catalog Portal</a>+++
+- +++Provide an end-user workflow submission interface using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/workflow-automation" target="_blank">Workflow Automation Portal</a>+++
+- +++Generate metrics of multiple job executions using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/job-analytics" target="_blank">Job Analytics Portal</a>+++
+- +++Plan workflow executions over time using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/job-planner-execution-planning" target="_blank">Job Planner Portal</a>+++
+- +++Add services using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/cloud-automation" target="_blank">Cloud Automation Portal</a>+++
+- +++Perform event based scheduling using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/cloud-watch" target="_blank">Cloud Watch Portal</a>+++
+- +++Control manual workflows validation steps using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/notification-portal" target="_blank">Notification Portal</a>+++
 
 We also provide link:../rest[REST API^] and command line interfaces for advanced users.
 
@@ -3249,23 +3255,3 @@ video::bQpwS2nMAZY[youtube, width=700, height=400 start=0, position=center]
 *Visdom_Real_time_Digit_Classification:* shows an example of realtime plotting using the Visdom server for training a convolutional neural network (CNN) for MNIST digit classification.
 
 A demo video of these workflows is available in https://www.youtube.com/user/ActiveEonCompany[ActiveEon Youtube Channel^].
-
-
-++++
-<script>
-if(window.location.hostname.includes("doc.activeeon.com")){
-    document.querySelectorAll('.studioUrl').forEach(function(element){
-        element.href="https://try.activeeon.com/studio";
-    });
-    document.querySelectorAll('.schedulerUrl').forEach(function(element){
-        element.href="https://try.activeeon.com/scheduler";
-    });
-    document.querySelectorAll('.rmUrl').forEach(function(element){
-        element.href="https://try.activeeon.com/rm";
-    });
-    document.querySelectorAll('.automationDashboardUrl').forEach(function(element){
-        element.href="https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation";
-    });
-}
-</script>
-++++

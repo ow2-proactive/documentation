@@ -26,3 +26,31 @@ var newHeader = header.replace("</h1>", "</h1><h4>Version " + conf.version + ' -
 document.getElementById('header').innerHTML = newHeader
 </script>
 ++++
+
+++++
+<script>
+if(window.location.hostname.includes("doc.activeeon.com")){
+    document.querySelectorAll('.studioUrl').forEach(function(element){
+        element.href="https://try.activeeon.com/studio";
+    });
+    document.querySelectorAll('.schedulerUrl').forEach(function(element){
+        element.href="https://try.activeeon.com/scheduler";
+    });
+    document.querySelectorAll('.rmUrl').forEach(function(element){
+        element.href="https://try.activeeon.com/rm";
+    });
+    document.querySelectorAll('.automationDashboardUrl').forEach(function(element){
+        element.href="https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation";
+    });
+    document.querySelectorAll('.restUrl').forEach(function(element){
+        element.href="https://try.activeeon.com/rest";
+    });
+    document.querySelectorAll('.catalogRestUrl').forEach(function(element){
+        element.href="https://try.activeeon.com/catalog";
+    });
+    document.querySelectorAll('.catalogGraphQLUrl').forEach(function(element){
+        element.href="https://try.activeeon.com/catalog/graphiql";
+    });
+}
+</script>
+++++

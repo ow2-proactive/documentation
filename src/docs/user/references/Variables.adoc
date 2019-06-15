@@ -215,11 +215,11 @@ These variables are used in the Proactive portals for correct visualization of w
 ==== Dynamic Variables
 
 As opposed to <<_workflow_variables>>, *dynamic variables* are created or manipulated directly when executing scripts,
-through the use of the "variables" map (see <<_variables_quick_reference>>).
+through the use of the `variables` script binding map (see the <<_script_bindings,Script Bindings chapter>> or <<_variables_quick_reference,Script Bindings Reference>> for more information about script bindings).
 We have mainly two types of *dynamic variables*:
 
 - <<_system_variables>>, declared by the ProActive scheduler.
-- <<_inherited_variables>>, created after adding values to the *variables* map.
+- <<_inherited_variables>>, created after adding values to the `variables` map.
 
 [[_system_variables]]
 ===== ProActive system variables
