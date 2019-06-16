@@ -177,6 +177,9 @@ image::execute.gif[100000,2000]
 The ActiveEon Jupyter Kernel adds a kernel backend to Jupyter. This kernel interfaces directly with the ProActive
 scheduler and constructs tasks and workflows to execute them on the fly.
 
+With this interface, users can run their code locally and test it using a native python kernel, and by a simple switch to
+ProActive kernel, run it on remote public or private infrastructures without having to modify the code. See the example below:
+
 image::direct_execution_from_jupyter.png[Direct execution from Jupyter with ActiveEon Kernel]
 
 === Installation
@@ -465,7 +468,7 @@ For a job fork environment, use:
 #%job_fork_env([language=SCRIPT_LANGUAGE], [path=./FORK_ENV_FILE.py], [force=on/off])
 ```
 
-The `force` parameter defines whether the pragma has to overwrite the task selection scripts or fork environment
+The `force` parameter defines whether the pragma has to overwrite the task selection scripts or the fork environment
 already set.
 
 ==== Adding pre and/or post scripts
@@ -596,6 +599,8 @@ The returned values of your final tasks will be automatically printed.
 
 Finally, to have the hand on more parameters and features, the user should use ActiveEon Studio portals.
 The main ones are the _Resource Manager_, the _Scheduling Portal_ and the _Workflow Automation_.
+
+The example below shows how the user can directly monitor his submitted job's execution in the scheduling portal:
 
 image::direct_submit_and_see_from_jupyter.png[Directly in Jupyter: Submit, See your Job executing, Get Results]
 
