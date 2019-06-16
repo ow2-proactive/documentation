@@ -24,7 +24,7 @@ This documentation is automatically generated using https://swagger.io[Swagger^]
 ==== Catalog security and groups management
 
 The Catalog authenticates REST request using a *sessionID* header.
-This sessionID is used to share session information between various ProActive Workflows & Scheduling microservices and is returned when authenticating to link:../rest[ProActive Scheduler REST API].
+This sessionID is used to share session information between various ProActive Workflows & Scheduling microservices and is returned when authenticating to +++a <a class="restUrl" href="/rest" target="_blank">ProActive Scheduler REST API</a>.+++.
 
 Every request to the Catalog must have a valid sessionID inside the request header to authenticate the user.
 A role-based access control mechanism can also be defined on catalog buckets.

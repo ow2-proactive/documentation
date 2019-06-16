@@ -33,7 +33,7 @@ your environment (default credentials: admin/admin) or just use our demo platfor
 - +++Perform event based scheduling using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/cloud-watch" target="_blank">Cloud Watch Portal</a>+++
 - +++Control manual workflows validation steps using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/notification-portal" target="_blank">Notification Portal</a>+++
 
-We also provide link:../rest[REST API^] and command line interfaces for advanced users.
+We also provide a +++<a class="restUrl" href="/rest" target="_blank">REST API</a>+++ and <<../user/ProActiveUserGuide.adoc#_scheduler_command_line,command line interfaces>> for advanced users.
 
 
 == Create a First Predictive Solution
@@ -3260,3 +3260,4 @@ video::bQpwS2nMAZY[youtube, width=700, height=400 start=0, position=center]
 *Visdom_Real_time_Digit_Classification:* shows an example of realtime plotting using the Visdom server for training a convolutional neural network (CNN) for MNIST digit classification.
 
 A demo video of these workflows is available in https://www.youtube.com/user/ActiveEonCompany[ActiveEon Youtube Channel^].
+include::../common-footer.adoc[]

@@ -90,3 +90,5 @@ tools/proactive-users -C -l Gord -p Gord -g admin
 . Log in the Studio's web interface with the Gord username.
 . Create a task and tick _Run as me_
 . Execute the job.
+
+include::../common-footer.adoc[]
