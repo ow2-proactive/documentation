@@ -199,9 +199,9 @@ WARNING: If the combination between RAM and CORES does not match any existing AW
 
     -   *spotPrice:* The maximum price that you are willing to pay per hour per instance (your bid price). Amazon EC2 Spot instances allow you to bid on spare Amazon EC2 computing capacity. Since Spot instances are often available at a discount compared to On-Demand pricing. If your bid price is greater than the current Spot price for the specified instance, and the specified instance is available, your request is fulfilled immediately. Otherwise, the request is fulfilled whenever the Spot price falls below your bid price or the specified instance becomes available. Spot instances run until you terminate them or until Amazon EC2 must terminate them (also known as a Spot instance interruption). More information available on https://aws.amazon.com/ec2/spot/[AWS EC2 Spot]
 
-    -   *securityGroupNames:* The securityGroupNames option allows you to specify the name(s) of the Security group(s) configured as a virtual firewall(s) to control inbound and outbound traffic for the EC2 instances hosting the proactive nodes. More information regarding Amazon EC2 Security Group available on https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html[AWS EC2 Security Groups]
+    -   *securityGroupNames:* The securityGroupNames option allows you to specify the name(s) of the Security group(s) configured as a virtual firewall(s) to control inbound and outbound traffic for the EC2 instances hosting the ProActive nodes. More information regarding Amazon EC2 Security Group available on https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html[AWS EC2 Security Groups]
 
-    -   *subnetId:* The subnetId option allows you to launch the proactive nodes on EC2 instances, which will run into an existing subnet added to a specific Virtual Private Cloud. More information regarding Amazon EC2 Virtual Private Cloud (Amazon VPC) available on https://aws.amazon.com/vpc/[AWS EC2 Virtual Private Cloud] and Amazon EC2 Virtual Private Cloud and Subnet available on https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html[AWS EC2 Virtual Private Cloud and Subnet]
+    -   *subnetId:* The subnetId option allows you to launch the ProActive nodes on EC2 instances, which will run into an existing subnet added to a specific Virtual Private Cloud. More information regarding Amazon EC2 Virtual Private Cloud (Amazon VPC) available on https://aws.amazon.com/vpc/[AWS EC2 Virtual Private Cloud] and Amazon EC2 Virtual Private Cloud and Subnet available on https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html[AWS EC2 Virtual Private Cloud and Subnet]
 
 +
 Using this configuration, you can start a Resource Manager and a
@@ -336,14 +336,14 @@ can be created using the Resource Manager. This section describes briefly how to
 1.  First, you need to have an admin account on your OpenStack server. For more information see
 https://docs.openstack.org/icehouse/install-guide/install/yum/content/keystone-users.html[OpenStack users and tenants].
 
-2. The creation of OpenStack Infrastructure asks for an authentification to the OpenStack server and a deployment of instances that will host proactive nodes.
+2. The creation of OpenStack Infrastructure asks for an authentication to the OpenStack server and a deployment of instances that will host ProActive nodes.
 
-Use the proper admin username and password to fill in the properties *username* and *password* and perform the basic OpenStack authentification. Those two parameters should never change, except if you need for some reason to handle multiple OpenStack accounts.
+Use the proper admin username and password to fill in the properties *username* and *password* and perform the basic OpenStack authentication. Those two parameters should never change, except if you need for some reason to handle multiple OpenStack accounts.
 
-For more information regarding OpenStack authentication mode see https://docs.openstack.org/security-guide/identity/authentication.html[OpenStack authentification mode]. 
+For more information regarding OpenStack authentication mode see https://docs.openstack.org/security-guide/identity/authentication.html[OpenStack authentication mode].
     
 
-Other properties needed for the authentification are :
+Other properties needed for the authentication are :
 
    -   *domain:* The name of the domain to use that refers to the collection of projects and users defining administrative boundaries for managing Identity entities. For more information see https://docs.openstack.org/security-guide/identity/domains.html[OpenStack domain].
 
@@ -535,6 +535,60 @@ An GoogleComputeEngine NodeSource can now be added using the *Create Node Source
 
 WARNING: When ProActive server is stopped, GoogleComputeEngine instances will be automatically deleted. And when ProActive server is restarted, the infrastructure will be recovered as per the previous settings. The required GoogleComputeEngine instances will be re-created and re-configured.
 
+==== Azure Infrastructure
+
+The Resource Manager allows to deploy ProActive nodes on the Microsoft Azure cloud. This infrastructure will create and manage virtual machines (VMs) with your custom Azure image and host ProActive nodes on them. Currently, the Azure infrastructure supports the creation of Linux VMs; support for Windows VMs is under development. In this section we will guide you through the requirements and configuration needed to setup an Azure infrastructure.
+
+===== Pre-Requisites
+
+To create an Azure infrastructure, ProActive relies on an existing Azure user account with a valid subscription. In particular, you will require:
+
+- *Azure account:* You should have a valid Azure account, linked to an Azure subscription with enough budget and core quota to deploy the VMs (and their underlying resources) that you request.
+- *Azure privileges:* If your account does not have full Admin privileges on your subscription, please make sure you have rights to:
+* Access a https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview#resource-groups[resource group] of your choice.
+* Create VMs in that resource group.
+* Delete VMs in that resource group.
+- *Service Principal credentials:* ProActive uses Azure's API to manage the VMs in the infrastructure. This API requires a set of Active Directory _service principal credentials_ for non interactive login (client, secret, tenant). If you do not have them, you can create them via the https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal[Azure Portal] or https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?view=azure-cli-latest[Azure CLI]. Please ask your administrator in case you do not have the privileges to create them. The credentials should be strings of hexadecimal values like _1a2b3c4d-5e6f-1a2b-3c4d-5e6f-1a2b3c4d5e6f_.
+- *Custom Azure +image+:* ProActive will create the infrastructure's VMs from an Azure image. You will need to have a custom linux image available on the resource group of your choice. If you do not have one, you can create it by following https://docs.microsoft.com/en-us/azure/virtual-machines/linux/tutorial-custom-images[this tutorial].
+
+===== Infrastructure Configuration
+
+Once all the pre-requisites are met, you are ready to create an Azure infrastructure. On the ProActive's Resource Manager portal, select _AzureInfrastructure_ from the Infrastructure drop-down list.
+
+The following fields are available to configure your Azure infrastructure.
+
+- *clientId:* Corresponds to the Service Principal _application ID_.
+- *secret:* Corresponds to the _secret_ value (password) of the Service Principal.
+- *domain:* Corresponds to the Azure _domain_, _tenant ID_, or _directory ID_ of your Active Directory.
+- *subscriptionId:* The _ID_ of your Azure subscription.
+
+The next four parameters are optional, and apply to advanced Azure endpoint configurations only.
+
+- *authenticationEndpoint:* Azure Authentication endpoint.
+- *managementEndpoint:* Azure Management endpoint.
+- *resourceManagerEndpoint:* Azure Resource Manager endpoint.
+- *graphEndpoint:* Azure AD Graph endpoint.
+
++* * * * *+
+
+- *rmHttpUrl:* Here you should provide your server's URL or public IP (e.g. try.activeeon.com). A default value will be generated from the system properties but you might need to modify it according to your network configuration so that it is accessible from your Azure nodes.
+- *connectorIaasUrl:* The URL of your _Connector IaaS_ service. A default value will be generated as well (e.g. +http://try.activeeon.com:8080/connector-iaas+).
+- *image:* The name or id of your custom linux image. The image should be located within the provided subscription and accessible to the service principal.
+- *imageOSType:* A choice between _linux_ and _windows_. The default value is _linux_. Support for _windows_ machines is currently under development.
+- *vmSizeType:* The size of the VMs to be deployed. The default value is _Standard_D1_v2_. Azure provides an extensive list of https://docs.microsoft.com/en-us/azure/virtual-machines/linux/sizes[Linux VM sizes]. If you want to know the available sizes for a specific region or subscription you can use https://docs.microsoft.com/en-us/cli/azure/vm?view=azure-cli-latest#az-vm-list-sizes[Azure CLI command] `az vm list-sizes -l {your location}`.
+- *vmUsername:* Provide a user name for the VM.
+- *vmPassword:* Provide a password for your VM. Here is a guideline for https://docs.microsoft.com/en-us/azure/virtual-machines/linux/faq#what-are-the-password-requirements-when-creating-a-vm[linux passwords on Azure].
+- *vmPublicKey:* An optional public RSA key to connect to your VMs via SSH protocol.
+- *resourceGroup:* The name of the resource group of your choice. If left blank, the resource group of the image will be used by default.
+- *region:* The Azure region where the VMs will be deployed. For a list of the regions supported by your subscription, you can use the https://docs.microsoft.com/en-us/cli/azure/account?view=azure-cli-latest#az-account-list-locations[CLI command] `az account list-locations -o table`, the right name to use is the one in the column _name_.
+- *numberOfInstances:* Total instances (VMs) to be created. The default value is _1_.
+- *numberOfNodesPerInstances:* The number of ProActive nodes to be launched in each VM. The default value is _1_.
+- *downloadCommand:* Command used to download ProActive's node.jar worker. If left blank a default command will be generated.
+- *privateNetworkCIDR:* An optional network Classless Inter-Domain Routing to allocate the new VMs within the private network. The default value is _10.0.0.0/24_.
+- *staticPublicIP:* A boolean flag to determine whether the public IPs of the infrastructure's VMs should be static. The default value is _true_.
+- *additionalProperties:* Additional JVM properties to configure your ProActive node. The default values allow to handle both PNP and PAMR protocols. You can add your own properties but be aware that removing the current values might cause the deployment to fail.
+
+The Azure infrastructure offers a simple interface to easily create ProActive nodes on Azure. If your project requires a dynamic and highly customizable set of Azure VMs, you can opt for an Azure Scale Set Infrastructure.
 
 ==== Load Sharing Facility (LSF) Infrastructure
 
