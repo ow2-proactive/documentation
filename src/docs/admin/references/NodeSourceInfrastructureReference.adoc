@@ -573,7 +573,7 @@ The next four parameters are optional, and apply to advanced Azure endpoint conf
 
 - *rmHttpUrl:* Here you should provide your server's URL or public IP (e.g. try.activeeon.com). A default value will be generated from the system properties but you might need to modify it according to your network configuration so that it is accessible from your Azure nodes.
 - *connectorIaasUrl:* The URL of your _Connector IaaS_ service. A default value will be generated as well (e.g. +http://try.activeeon.com:8080/connector-iaas+).
-- *image:* The name or id of your custom linux image. The image should be located within the provided subscription and accessible to the service principal.
+- *image:* The name or id of your custom linux image. The image should be located within the provided subscription and accessible to the service principal. It should also be located in the Azure region that you define in your configuration (see *region* parameter below).
 - *imageOSType:* The default value is _linux_. Currently, only Linux is supported as OS.
 - *vmSizeType:* The size of the VMs to be deployed. The default value is _Standard_D1_v2_. Azure provides an extensive list of https://docs.microsoft.com/en-us/azure/virtual-machines/linux/sizes[Linux VM sizes]. If you want to know the available sizes for a specific region or subscription you can use https://docs.microsoft.com/en-us/cli/azure/vm?view=azure-cli-latest#az-vm-list-sizes[Azure CLI command] `az vm list-sizes -l {your location}`.
 - *vmUsername:* Provide a user name for the VM.
