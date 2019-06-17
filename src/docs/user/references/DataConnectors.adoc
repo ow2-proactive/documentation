@@ -310,7 +310,7 @@ Currently, we have connectors for MongoDB and Cassandra.
 | Integer
 | 27018
 | `MONGODB_USER`
-| Username to use for connecting to MongoDB server if authentification is required.
+| Username to use for connecting to MongoDB server if authentication is required.
 | Workflow
 | No
 | String
@@ -365,7 +365,7 @@ or `path/to/input.json`
 
 *How to use this task:*
 
-The task might require (if the MongoDB server requires authentification) a `MONGODB_USER`  in addition to the following third-party credential: {key: `mongodb://<MONGODB_USER>@<MONGODB_HOST>:<MONGODB_PORT>`, value: `MONGODB_PASSWORD`}. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+The task might require (if the MongoDB server requires authentication) a `MONGODB_USER`  in addition to the following third-party credential: {key: `mongodb://<MONGODB_USER>@<MONGODB_HOST>:<MONGODB_PORT>`, value: `MONGODB_PASSWORD`}. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 In the import mode, the output containing the imported data takes one or many of the following forms:
 
@@ -473,7 +473,7 @@ In the import mode, the output containing the imported data takes one or many of
 | Integer
 | `9200`
 | `ELASTICSEARCH_USER`
-| Username to use for connecting to Elasticsearch server if authentification is required.
+| Username to use for connecting to Elasticsearch server if authentication is required.
 | Workflow
 | No
 | String
@@ -521,7 +521,7 @@ or `path/to/input.json`
 
 *How to use this task:*
 
-The task might require (if the Elasticsearch server requires authentification) an `ELASTICSEARCH_USER` in addition to the following third-party credential: {key: `elasticsearch://<ELASTICSEARCH_USER>@<ELASTICSEARCH_HOST>:<ELASTICSEARCH_PORT>`, value: `ELASTICSEARCH_PASSWORD`>. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+The task might require (if the Elasticsearch server requires authentication) an `ELASTICSEARCH_USER` in addition to the following third-party credential: {key: `elasticsearch://<ELASTICSEARCH_USER>@<ELASTICSEARCH_HOST>:<ELASTICSEARCH_PORT>`, value: `ELASTICSEARCH_PASSWORD`>. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 In the import mode, the output containing the imported data takes the form of a JSON format to saved to the `result` variable to make is previewable in the scheduler portal and to make it accessible for the next tasks.
 
