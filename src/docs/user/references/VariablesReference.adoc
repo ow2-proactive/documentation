@@ -215,7 +215,7 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 | -
 
-| *Url of nodes*. List of url of nodes. See <<_mpi_application>>.
+| *Url of nodes*. List of URL of nodes. See <<_mpi_application>>.
 | nodesurl.get(0)
 | $variables_PA_NODESFILE
 | -

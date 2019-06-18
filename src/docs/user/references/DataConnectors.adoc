@@ -708,7 +708,7 @@ Azure Blob Storage connector tasks require your azure storage account and accoun
 
 === ERP
 
-Proactive's ERP connectors enable communication and data exchange with popular ERP software providers.
+ProActive's ERP connectors enable communication and data exchange with popular ERP software providers.
 
 ==== SAP ECC
 
@@ -760,7 +760,7 @@ In order to securely connect to your SAP ECC system, you first need to store you
 | /H/192.168.0.1/H/
 |===
 
-Once the credentials are set, the workflow can be executed. If the connection is successful, the connection attributes will be listed as output. *NB.* Proactive's SAP connector provides libraries to connect to an SAP server from a 64-bit OS (Windows, Linux, MacOS); libraries for other OS can be obtained through SAP Marketplace.
+Once the credentials are set, the workflow can be executed. If the connection is successful, the connection attributes will be listed as output. *NB.* ProActive's SAP connector provides libraries to connect to an SAP server from a 64-bit OS (Windows, Linux, MacOS); libraries for other OS can be obtained through SAP Marketplace.
 
 .Querying for a function
 The SAP connector will search for the function module provided as the `JCO_FUNCTION` variable. If the function module exists and is remote-enabled, the script will display the function's parameters (import, export, tables) right after the Connection attributes.

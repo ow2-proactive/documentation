@@ -149,7 +149,7 @@ NOTE:  Native Tasks are not the only possibility available to run executables or
 
 A *Script Task* is a ProActive Workflow task which main execution is defined as a *script*.
 
-Proactive Workflows supports tasks in many scripting languages. The currently supported dynamic languages or backends are
+ProActive Workflows supports tasks in many scripting languages. The currently supported dynamic languages or backends are
 link:http://groovy-lang.org/[Groovy, window="_blank"],
 link:https://www.jython.org[Jython, window="_blank"],
 link:https://www.python.org/[Python, window="_blank"],
@@ -195,7 +195,7 @@ Finally, a *Script Task* may or may not return a result materialized by the <<_t
 ==== Script Bindings
 
 A *Script Task* or <<_additional_scripts,additional scripts>> can use automatically-defined <<_glossary_script_bindings,script bindings>>.
-These bindings allow to associate the script inside its *workflow context*, for example, the ability to know the current *workflow variables* as submitted by a user, the workflow *job id* as run inside the Proactive Scheduler, etc.
+These bindings allow to associate the script inside its *workflow context*, for example, the ability to know the current *workflow variables* as submitted by a user, the workflow *job id* as run inside the ProActive Scheduler, etc.
 
 Bindings allow as well to pass information between various scripts *inside the same task* or *across different tasks*.
 
@@ -209,7 +209,7 @@ Below is an example of Script Task definition which uses both types of bindings:
 [source,groovy]
 ----
 jobId = variables.get("PA_JOB_ID")
-result = "The Id of the current job is : " + jobId
+result = "The Id of the current job is: " + jobId
 ----
 
 As we can see, the `variables` binding in provided automatically by the ProActive Scheduler before the script execution and it is used to compute a `result` binding as task output.
@@ -997,7 +997,7 @@ println(results[0].getMetadata());
 
 It is up to the user code to decide the metadata semantics, but some specific metadata can have a meaning when downloading or previewing results from the *Scheduler portal*:
 
-- *file.name* : the name of the file, including the extension, which will be used when storing the result in binary format.
+- *file.name:* the name of the file, including the extension, which will be used when storing the result in binary format.
 +
 [source, groovy]
 ----
@@ -1007,7 +1007,7 @@ result = file.getBytes()
 resultMetadata.put("file.name","balloon13.png")
 ----
 
-- *file.extension* : the extension, which will be appended to the automatically generated name, when storing the result in binary format
+- *file.extension:* the extension, which will be appended to the automatically generated name, when storing the result in binary format
 +
 [source, groovy]
 ----
@@ -1017,7 +1017,7 @@ result = file.getBytes()
 resultMetadata.put("file.extension",".png")
 ----
 
-- *content.type* : the display format, which will be used when previewing the file in the browser. Open the following https://www.iana.org/assignments/media-types/media-types.xhtml[link] for the complete list of mime-types.
+- *content.type:* the display format, which will be used when previewing the file in the browser. Open the following https://www.iana.org/assignments/media-types/media-types.xhtml[link] for the complete list of mime-types.
 +
 [source, groovy]
 ----
@@ -1495,12 +1495,12 @@ It is possible to start a task under the job owner if the system is configured f
 There are 2 possible ways to run a task under user account
 (in any case, the administrator should have
 link:../admin/ProActiveAdminGuide.html#_run_as_me[set computing hosts] to authorize
-one of the 2 methods) :
+one of the 2 methods):
 
-* Using your *scheduling login and password* : if computing hosts are configured and user is authorized to run a process under his login and password.
-* Using an *SSH key* provided by the administrator : if computing hosts are configured, the administrator should have given user an SSH key.
+* Using your *scheduling login and password*: if computing hosts are configured and user is authorized to run a process under his login and password.
+* Using an *SSH key* provided by the administrator: if computing hosts are configured, the administrator should have given user an SSH key.
 
-User must first create a credential containing this key :
+User must first create a credential containing this key:
 
 ----
 $ PROACTIVE_HOME/tools/proactive-create-cred -F config/authentication/keys/pub.key -l username -p userpwd -k path/to/private/sshkey -o myCredentials.cred
@@ -1551,8 +1551,8 @@ Here is the list of topologies we support:
 === Handling failures
 
 It’s possible to have errors when your Job is executed. *ProActive Scheduler* provides several mechanisms to deal with exceptional situations in your Jobs.
-If a Task contains errors during Job execution, the *Proactive Scheduler* automatically restarts this Task. The number of automatic restarts is defined by the Workflow owner by assigning an integer value to the counter *Number of Automatic Restarts*.
-The user also defines *Where he wants that the scheduler restarts In-Error tasks*, i.e., on the same Proactive node or on another Proactive node.
+If a Task contains errors during Job execution, the *ProActive Scheduler* automatically restarts this Task. The number of automatic restarts is defined by the Workflow owner by assigning an integer value to the counter *Number of Automatic Restarts*.
+The user also defines *Where he wants that the scheduler restarts In-Error tasks*, i.e., on the same ProActive node or on another ProActive node.
 
 If automatic restarts does not fix errors, the Scheduler applies one of the following Task error management policies, i.e., the one defined by the user during Workflow creation:
 
@@ -1721,7 +1721,7 @@ In *ProActive Studio*, the `SubmitJobNoWait` and `SubmitJobAndWait` templates un
 
 These templates accept the single parameter:
 
- * `called_workflow` : a <<_workflow_storage_and_versioning,ProActive Catalog>> path referencing the workflow to submit (e.g. _basic-examples/Native_Task_)
+ * `called_workflow`: a <<_workflow_storage_and_versioning,ProActive Catalog>> path referencing the workflow to submit (e.g. _basic-examples/Native_Task_)
 
 By default, these templates do not pass any parameter to the submitted workflow (using only default values provided by the workflow).
 
@@ -1786,7 +1786,7 @@ You need to define which files have to be transferred from a data space to compu
 </task>
 ----
 
-Upon the execution of the previous example, Proactive Scheduler automatically transfers all files to a ProActive Node where the task will be executed. The files are put in a special place called *Local Space* on the ProActive Node. It corresponds to the working directory of a task when the task is in fork mode (default).
+Upon the execution of the previous example, ProActive Scheduler automatically transfers all files to a ProActive Node where the task will be executed. The files are put in a special place called *Local Space* on the ProActive Node. It corresponds to the working directory of a task when the task is in fork mode (default).
 From a task point of view, files can be accessed normally like shown below:
 
 [source, java]
@@ -2036,7 +2036,7 @@ To export the selected objects as a ZIP archive, press the download button from 
 
 image::download-catalog-objects.png[align=left]
 
-To import, either a downloaded catalog archive zip file or a single object, click on the upload button and follow the instructions :
+To import, either a downloaded catalog archive zip file or a single object, click on the upload button and follow the instructions:
 
 image::upload-catalog-objects.png[align=left]
 
@@ -2182,9 +2182,9 @@ key is not present, no replacement occurs):
 
 From a <<_glossary_task_executable_script,Script Task>>, several APIs are accessible via Java objects bound to dedicated <<_glossary_script_bindings,script bindings>>:
 
-- Scheduler API : using the `schedulerapi` binding, it is possible to interact directly with the scheduler server and do several operations (submit jobs, wait for tasks termination, list running jobs, etc.).
-- DataSpace API : the `userspaceuri` or `globalspaceuri` bindings allow to manipulate files present in User or Global spaces. Operations include listing, uploading, downloading, or deleting files.
-- Synchronization API : using the `synchronizationapi` binding, it is possible to handle advanced task synchronization dynamically.
+- Scheduler API: using the `schedulerapi` binding, it is possible to interact directly with the scheduler server and do several operations (submit jobs, wait for tasks termination, list running jobs, etc.).
+- DataSpace API: the `userspaceuri` or `globalspaceuri` bindings allow to manipulate files present in User or Global spaces. Operations include listing, uploading, downloading, or deleting files.
+- Synchronization API: using the `synchronizationapi` binding, it is possible to handle advanced task synchronization dynamically.
 
 === Scheduler API
 
@@ -2335,7 +2335,7 @@ The Synchronization API is similar to the https://docs.oracle.com/javase/8/docs/
 
 ==== Examples
 
-===== Example 1 : Simple Key/Value With Selection Script
+===== Example 1: Simple Key/Value With Selection Script
 
 In this first example, we will show how one task can delay the execution of another task using the Synchronization API and a <<_selection,selection script>>.
 
@@ -2390,7 +2390,7 @@ NOTE: It is also possible to debug the operations performed on the Synchronizati
 
 The Complete Workflow example can be downloaded link:examples/KeyValue.xml[here].
 
-===== Example 2 : Simple Key/Value with Explicit Wait
+===== Example 2: Simple Key/Value with Explicit Wait
 
 In this second example, we will show how one task can delay the execution of another task using the Synchronization API and an explicit wait call.
 
@@ -2421,7 +2421,7 @@ Here is the output of the Example 2 workflow:
 
 The Complete Workflow example can be downloaded link:examples/KeyValueWait.xml[here].
 
-===== Example 3 : Critical Section
+===== Example 3: Critical Section
 
 In this last example, we will show how we can create a *critical section* inside a workflow, which means, a section of the workflow which can only be accessed by a configurable number of *slots*.
 

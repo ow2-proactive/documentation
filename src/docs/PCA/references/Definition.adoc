@@ -38,7 +38,7 @@ NOTE: Please note that users are free to define their own custom States (e.g. RU
 
 [[_definition_Endpoints]]
 Endpoints::
-Endpoints are a list of (Key,Value) defined in the Variables e.g. [(Swarm, <smarmendpoint>), (HDFS, <hdfs-endpoint>), (Spark, <spark-endpoint>)]. The endpoint url should contain the protocol, e.g. www.activeeon.com will not work, but https://www.activeeon.com will.
+Endpoints are a list of (Key,Value) defined in the Variables e.g. [(Swarm, <smarmendpoint>), (HDFS, <hdfs-endpoint>), (Spark, <spark-endpoint>)]. The endpoint URL should contain the protocol, e.g. www.activeeon.com will not work, but https://www.activeeon.com will.
 
 [[_definition_Service_Name_Infrastructure_Name]]
 Service_Name, Infrastructure_Name::
