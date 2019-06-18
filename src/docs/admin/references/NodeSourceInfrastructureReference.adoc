@@ -228,7 +228,7 @@ However, it implements a different instance management strategy that reduces the
 
 The configuration of the AWS Autoscaling infrastructure is subjected to several requirements.
 
-	1. The administrator needs both an *AWS access key* and an *AWS secret access key* to enableProActive to authenticate against AWS.
+	1. The administrator needs both an *AWS access key* and an *AWS secret access key* to enable ProActive to authenticate against AWS.
  Please refer to https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html?icmpid=docs_iam_console#Using_CreateAccessKey[the AWS documentation] to learn how to get them.
 
 	2. The *AWS region* that will support the node cluster must not have reached its resources quota.

@@ -1757,7 +1757,7 @@ NOTE: On Mac OS X, the default temporary folder is not shared between all users.
 To use a shared temporary folder, you need to set the _$TMPDIR_ environment variable and the Java property _java.io.tmpdir_
 to /tmp before starting the ProActive Node.
 
-NOTE: the same applies on Windows. To use a shared temporary folder, create a folder shared by allProActive users e.g. C:\TEMP and define
+NOTE: the same applies on Windows. To use a shared temporary folder, create a folder shared by all ProActive users e.g. C:\TEMP and define
 the Java property _java.io.tmpdir_ to C:\TEMP before starting the ProActive Node.
 
 Example:
@@ -1789,7 +1789,7 @@ proactive-node -Dpas.launcher.forkas.method=key
 
 This configuration, only availabe on linux nodes, allows the impersonation to be performed using passwordless sudo.
 
-To enable it at the system level, edit the /etc/sudoers file to allow passwordless sudo from the account running theProActive node
+To enable it at the system level, edit the /etc/sudoers file to allow passwordless sudo from the account running the ProActive node
 to any users which require impersonation. Passwordless sudo should be enabled for any command.
 
 For example, the following line will allow the proactive account to impersonate to any user:
@@ -1797,7 +1797,7 @@ For example, the following line will allow the proactive account to impersonate 
 proactive ALL=(ALL) NOPASSWD: ALL
 ----
 
-To enable this configuration on theProActive node, start it with the system property `pas.launcher.forkas.method` to _none_
+To enable this configuration on the ProActive node, start it with the system property `pas.launcher.forkas.method` to _none_
 
 Example:
 ----

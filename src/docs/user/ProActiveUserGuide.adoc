@@ -1552,7 +1552,7 @@ Here is the list of topologies we support:
 
 It’s possible to have errors when your Job is executed. *ProActive Scheduler* provides several mechanisms to deal with exceptional situations in your Jobs.
 If a Task contains errors during Job execution, the *ProActive Scheduler* automatically restarts this Task. The number of automatic restarts is defined by the Workflow owner by assigning an integer value to the counter *Number of Automatic Restarts*.
-The user also defines *Where he wants that the scheduler restarts In-Error tasks*, i.e., on the same ProActive node or on another ProActive node.
+The user also defines *Where he wants that the scheduler restarts In-Error tasks*, i.e., on the same ProActive Node or on another ProActive Node.
 
 If automatic restarts does not fix errors, the Scheduler applies one of the following Task error management policies, i.e., the one defined by the user during Workflow creation:
 
