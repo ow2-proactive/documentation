@@ -562,26 +562,42 @@ them to parameterize workflow execution and use workflows as <<_templating,templ
 
 ==== Job & Task states
 
-During their execution, jobs and tasks go through different states:
+During their execution, jobs go through different states.
+The screenshot below shows Pending and Current Jobs states summary as seen in Workflow Automation portal.
 
-.Job States
+image::current_job_states.png[align="center", width=350]
+
+.Job States for Pending and Current Jobs
 [cols="17%,17%,66%", options="header"]
 |===
 | State | Name | Description
+| `PENDING` | Pending | The job is waiting to be scheduled. None of its tasks have been Running so far.
+| `RUNNING` | Running | The job is running. At least one of its task has been scheduled.
+| `STALLED` | Stalled | The job has been launched but no task is currently running.
+| `PAUSED` | Paused | The job is paused waiting for user to resume it.
+| `IN_ERROR` | In-Error | The job has one or more In-Error tasks that are suspended along with their dependencies. User intervention is required to fix the causing issues and restart the In-Error tasks to resume the job.
+
+|===
+
+The screenshot below shows Past Jobs states summary as seen in Workflow Automation portal.
+
+image::past_job_states.png[align="center", width=350, title-align="center"]
+
+.Job States for Past Jobs
+[cols="17%,17%,66%", options="header"]
+|===
+| State | Name | Description
+| `FINISHED` | Finished | The job is finished. Tasks are finished or faulty.
 | `CANCELED` | Cancelled | The job has been canceled because of an exception.
 This status is used when an exception is thrown by the user code of a task and when the user has asked to cancel the job on exception.
 | `FAILED` | Failed | The job has failed. One or more tasks have failed (due to resources failure).
 There is no more executionOnFailure left for a task.
-| `FINISHED` | Finished | The job is finished. Tasks are finished or faulty.
-| `IN_ERROR` | In-Error | The job has one or more In-Error tasks that are suspended along with their dependencies. User intervention is required to fix the causing issues and restart the In-Error tasks to resume the job.
 | `KILLED` | Killed | The job has been killed by the user.
-| `PAUSED` | Paused | The job is paused waiting for user to resume it.
-| `PENDING` | Pending | The job is waiting to be scheduled.
-| `RUNNING` | Running | The job is running. At least one of its task has been scheduled.
-| `STALLED` | Stalled | The job has been launched but no task is currently running.
 
 |===
 
+
+Similarly to jobs, during their execution, tasks go through different states.
 
 .Task States
 [cols="17%,17%,66%", options="header"]
