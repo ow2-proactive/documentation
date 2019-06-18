@@ -571,7 +571,7 @@ image::current_job_states.png[align="center", width=350]
 [cols="17%,17%,66%", options="header"]
 |===
 | State | Name | Description
-| `PENDING` | Pending | The job is waiting to be scheduled. None of its Tasks have been Running so far.
+| `PENDING` | Pending | The job is waiting to be scheduled. None of its tasks have been Running so far.
 | `RUNNING` | Running | The job is running. At least one of its task has been scheduled.
 | `STALLED` | Stalled | The job has been launched but no task is currently running.
 | `PAUSED` | Paused | The job is paused waiting for user to resume it.
