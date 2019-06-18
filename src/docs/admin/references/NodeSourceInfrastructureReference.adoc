@@ -177,12 +177,12 @@ them, and how to use them to configure your environment.
         
     -   *numberOfInstances:* Total number of AWS instances to create for this infrastructure.
     
-    -   *numberOfNodesPerInstance:* Total number of Proactive Nodes to deploy in each created AWS instance.
+    -   *numberOfNodesPerInstance:* Total number of ProActive Nodes to deploy in each created AWS instance.
     
 +
 TIP: If all the nodes of an AWS instance are removed, the instance will be terminated. For more information on the terminated state in AWS please see https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/terminating-instances.html[AWS Terminating Instances].
 +       
-    -   *downloadCommand:* The command to download the Proactive *node.jar*. This command is executed in all the newly created AWS instances.
+    -   *downloadCommand:* The command to download the ProActive *node.jar*. This command is executed in all the newly created AWS instances.
     	The full URL path of the *node.jar* to download, needs to be accessible from the AWS cloud.
         Example based on AWS image with windows operating system:
         
@@ -228,7 +228,7 @@ However, it implements a different instance management strategy that reduces the
 
 The configuration of the AWS Autoscaling infrastructure is subjected to several requirements.
 
-	1. The administrator needs both an *AWS access key* and an *AWS secret access key* to enable proactive to authenticate against AWS.
+	1. The administrator needs both an *AWS access key* and an *AWS secret access key* to enable ProActive to authenticate against AWS.
  Please refer to https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html?icmpid=docs_iam_console#Using_CreateAccessKey[the AWS documentation] to learn how to get them.
 
 	2. The *AWS region* that will support the node cluster must not have reached its resources quota.
@@ -238,7 +238,7 @@ The configuration of the AWS Autoscaling infrastructure is subjected to several 
  Detailed information is available in AWS documentation for https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html#limits_vpc[VPC] and https://aws.amazon.com/fr/ec2/faqs/#How_many_instances_can_I_run_in_Amazon_EC2[Instances]. 
 
 	3. The administrator must be in possession of a valid *AWS keypair* and the ID of the *Amazon Machine Image (AMI)* to provision instances operating ProActive node.
- If the AMI to use does not propose the Linux operating system, the administrator must supply a *provision script* to (i) download a Java Runtime Environment (JRE), (ii) download Proactive Node agent (node.jar), (iii) and start up the ProActive agent. 
+ If the AMI to use does not propose the Linux operating system, the administrator must supply a *provision script* to (i) download a Java Runtime Environment (JRE), (ii) download ProActive Node agent (node.jar), (iii) and start up the ProActive agent.
 
 	4. Optionally, if networking autoconfiguration is not triggered, the administrator has to configure (i) a public *VPC*, (ii) a *Subnet* complying with with VPC CIDR configuration, (iii) an Internet gateway for that VPC and a (iv) Security Group authorizing HTTPS connection to Internet and PNP or PAMR connection to the Resource Manager.
  The administrator must be in possession of the IDs of the VPC, of the Subnet and of the Security Group.
@@ -377,7 +377,7 @@ WARNING: In order to use publicKeyName, the key pair needs to be created and imp
         
     -   *numberOfInstances:* Total number of OpenStack instances to create for this infrastructure.
     
-    -   *numberOfNodesPerInstance:* Total number of Proactive Nodes to deploy in each OpenStack created instance.
+    -   *numberOfNodesPerInstance:* Total number of ProActive Nodes to deploy in each OpenStack created instance.
     
 +
 TIP: If all the nodes of an OpenStack instance are removed, the instance will be terminated.
@@ -390,7 +390,7 @@ Other properties for the node deployment in the *Create OpenStack Node Source* a
 
     -   *rmHostname:* The hostname or the public IP address of the Resource Manager. This address needs to be accessible from the OpenStack server.
 
-    -   *downloadCommand:* The command to download the Proactive *node.jar*. This command is executed in all the newly created OpenStack instances.
+    -   *downloadCommand:* The command to download the ProActive *node.jar*. This command is executed in all the newly created OpenStack instances.
     	The full URL path of the *node.jar* to download needs to be accessible from the OpenStack cloud.
 
     	    	
@@ -449,14 +449,14 @@ WARNING: The username and password are related to the image.
         
     -   *numberOfInstances:* Total number of VMware instances to create for this infrastructure.
     
-    -   *numberOfNodesPerInstance:* Total number of Proactive Nodes to deploy in each VMware created instance.
+    -   *numberOfNodesPerInstance:* Total number of ProActive Nodes to deploy in each VMware created instance.
     
 +
 TIP: If all the nodes of an VMware instance are removed, the instance will be terminated.
 +
 
        
-    -   *downloadCommand:* The command to download the Proactive *node.jar*. This command is executed in all the newly created VMware instances.
+    -   *downloadCommand:* The command to download the ProActive *node.jar*. This command is executed in all the newly created VMware instances.
     	The full URL path of the *node.jar* to download, needs to be accessible from the VMware cloud.
     	    	
     -   *additionalProperties:* Additional Java command properties to be added when starting each ProActive node JVM in VMware instances (e.g. \"-Dpropertyname=propertyvalue\").
@@ -498,7 +498,7 @@ The properties needed for the node deployment in the _Create GCE Node Source_ ar
 -   *gceCredential:* The credentials to perform the basic Google Cloud Platform authentication.
         Upload the JSON file of a Google Cloud service account key (downloaded in the section Pre-Requisites) to fill in this property.
 -   *totalNumberOfInstances:* Total number of GoogleComputeEngine instances to create for this infrastructure.
--   *numberOfNodesPerInstance:* Total number of Proactive Nodes to deploy in each created GoogleComputeEngine instance.
+-   *numberOfNodesPerInstance:* Total number of ProActive Nodes to deploy in each created GoogleComputeEngine instance.
 +
 TIP: If all the nodes of a GoogleComputeEngine instance are removed, the instance will be terminated.
 +
@@ -523,7 +523,7 @@ TIP: If all the nodes of a GoogleComputeEngine instance are removed, the instanc
 -   *rmHostname:* The hostname or the public IP address of the Resource Manager. This address needs to be accessible from the GoogleComputeEngine server.
 -   *connectorIaasURL:* Connector-iaas is a ProActive service used to interact with IaaS like GoogleComputeEngine.
         By default it runs on the following URL _rmHostname/connector-iaas_.
--   *nodeJarURL:* The full URL path of the _node.jar_ to download the Proactive node.jar on each new created GoogleComputeEngine instance.
+-   *nodeJarURL:* The full URL path of the _node.jar_ to download the ProActive node.jar on each new created GoogleComputeEngine instance.
         The URL needs to be accessible from the GoogleComputeEngine server.
 -   *additionalProperties:* Additional Java command properties to be added when starting each ProActive node JVM in GoogleComputeEngine instances (e.g. "-Dpropertyname=propertyvalue").
 -   *nodeTimeout:* The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node is considered as lost.

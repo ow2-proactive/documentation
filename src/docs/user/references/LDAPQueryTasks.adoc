@@ -37,12 +37,12 @@ The <<_retrieve_results, task result >>  is a String in JSON format.
 
 ===== Output example
 
-Successful task :
+Successful task:
 ```{.json}
 {"status":"Ok","attributes":[{"loginShell":"/bin/csh","uid":"yaro","userPassword":"[B@2d6a9952","homeDirectory":"/home/users/yaro","uidNumber":"1000","givenName":"yaro","objectClass":"inetOrgPerson","sn":"yaya","gidNumber":"500","cn":"yaro"}]}
 ```
 
-Failed task :
+Failed task:
 ```{.json}
 {"status":"Error","errorMessage":"javax.naming.NameNotFoundException: [LDAP: error code 32 - No Such Object]; remaining name 'cn=yaro,dc=activeeon,dc=com1'"}
 ```
