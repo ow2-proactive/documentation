@@ -634,7 +634,7 @@ It is possible to enrich the Machine Learning Bucket by adding your own tasks. (
 
 It is also possible to customize the code of the generic Machine Learning tasks. In this case, you need to drag and drop the targeted task to modify its code in the *Task Implementation* section.
 
-NOTE: It is also possible to add or/and delete variables of each task, set your own fork environments etc. More details available on link:../user/ProActiveUserGuide.html#_studio_tasks[ProActive User Guide^]
+NOTE: It is also possible to add or/and delete variables of each task, set your own fork environments, etc. More details available on link:../user/ProActiveUserGuide.html#_studio_tasks[ProActive User Guide^]
 
 === Set the Fork Environment
 

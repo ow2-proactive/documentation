@@ -517,7 +517,7 @@ The main troubles you may have to face are the following ones:
 -Djava.security.policy=PROACTIVE_HOME/config/security.java.policy-client
 ----
 * You get an *authentication error*: this is probably due to your default credentials file which cannot be found. In the "Connection" tab of the Configuration Editor (Figure 5.4, “Configuration Editor window - Connection Tab (Resource Manager Registration)”), you can choose the credentials file you want. You can select, for instance, the credentials file located at PROACTIVE_HOME/config/authentication/scheduler.cred or your own credentials file.
-* The node seems to be well started but you cannot see it in the Resource Manager interface: in this case, make sure that the *port number* is the good one. Do not forget that the runtime port number is incremented from the initial ProActive Resource Manager port number. You can see exactly on which port your runtime has been started looking at the log file described above.
+* The node seems to be well started, but you cannot see it in the Resource Manager interface: in this case, make sure that the *port number* is the good one. Do not forget that the runtime port number is incremented from the initial ProActive Resource Manager port number. You can see exactly on which port your runtime has been started looking at the log file described above.
 
 ==== Automate Windows Agent Installation
 

@@ -25,7 +25,7 @@ The following steps configure the Node with a sample user called Gord.
 . Log into the _activeeon_ account
 . Start the ProActive Node with the property `-Dpas.launcher.forkas.method=key`
 
-NOTE: The proactive user got a password set with _passwd proactive_ to execute the sudo command. Whereas the run as me user (Gord) got an SSH key set. If you wish you can assign a password to Gord _passwd Gord_.
+NOTE: The proactive user got a password set with _passwd proactive_ to execute the sudo command. Whereas the run as me user (Gord) got an SSH key set. If you wish, you can assign a password to Gord _passwd Gord_.
 
 
 ==== Windows

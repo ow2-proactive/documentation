@@ -224,7 +224,7 @@ Each monitoring type has an implementation of a Polling class. The polling param
     </kpis>
 -----------------
 The code above describes a polling configuration for Monitoring physical metrics. This  particular example is for monitoring CPUs. +
-The polling and calm periods correspond to the frequency of collecting the monitoring metrics. The concrete set of parameters rely on the implementation of a Polling class. In our example, the class is *Jmx_Metrics*. This implementation takes two parameters: the JMX node URL and the JMX credentials.
+The polling and calm periods correspond to the frequency of collecting the monitoring metrics. The concrete set of parameters relies on the implementation of a Polling class. In our example, the class is *Jmx_Metrics*. This implementation takes two parameters: the JMX node URL and the JMX credentials.
 The actual metric to monitor is represented by the *_<kpi>_* tag. Several metrics can be monitored at the same time. For our example after variables replacement the monitoring metric will be _"sigar:Type=CpuUsage Combined"._
 
 ==== Polling parameters for Monitoring host accessibility
