@@ -786,3 +786,67 @@ if (structure != null) {
 For a more detailed guide of ProActive's SAP ECC connector, please refer to link:https://www.activeeon.com/resources/SAPConnector.pdf[this document].
 
 Further information and examples using the SAP JCO library are available in the link:https://help.hana.ondemand.com/javadoc/index.html[SAP Cloud Platform SDK Documentation] and the SAP Java Connector documentation, accessible through link:https://websmp201.sap-ag.de/[SAP Service Marketplace].
+
+=== Business Intelligence
+
+Proactive's BI connectors enable the exportation of data to robust analytics and business intelligence servers.
+
+==== Export_Data_to_Tableau_Server
+
+This connector allows you to publish data to a Tableau Server.
+
+*Variables:*
+
+.SAP ECC Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?* | *Type*  | *Default/Examples*
+| `DOCKER_ENABLED`
+| True if you want to enable docker fork environment.
+| Workflow
+| Yes
+| Boolean
+| e.g. True
+| `DOCKER_IMAGE`
+| The name of the docker image that you want to use.
+| Task
+| Yes if DOCKER_ENABLED is set as True
+| String
+| e.g. activeeon/dlm3
+| `TASK_ENABLED`
+| True if you want to enable the execution of the task.
+| Task
+| Yes
+| Boolean
+| e.g. True
+| `SERVER_ENDPOINT`
+| The endpoint of the tableau server.
+| Workflow
+| Yes
+| String
+|e.g https://eu-west-1a.online.tableau.com
+| `SITE_ID`
+| The site id defined in the server.
+| Workflow
+| Yes
+| String
+| e.g test_connector
+| `PROJECT_NAME`
+| The name of the project where you will save your data in the server.
+| Task
+| Yes
+| String
+| e.g. test
+| `OUTPUT_FILE_NAME`
+| The name of the file that will be created and saved in the server.
+| Task
+| Yes
+| String
+| e.g. test.hyper
+|===
+
+*How to use this connector:*
+
+In order to securely connect to your Tableau Server, you first need to store your Tableau login information as ProActive's link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials]. The required credentials are:
+`TABLEAU_SERVER_USERNAME` and `TABLEAU_SERVER_PASSWORD`.
+
