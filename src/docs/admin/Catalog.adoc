@@ -1,18 +1,44 @@
-The Catalog stores ProActive Objects and in particular ProActive Workflows through a REST API.
-It is subdivided into buckets.
+The *ProActive Catalog* is a component responsible for storing various objects of *ProActive Workflows and Scheduling* and in particular *ProActive Workflows*.
+
+The ProActive Catalog features:
+
+ * +++a <a class="catalogRestUrl" href="/catalog" target="_blank">REST API</a>.+++
+ * +++a comprehensive <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/catalog-portal" target="_blank">Catalog Portal</a>.+++
+
+ProActive Catalog is organized into *buckets*.
 Each bucket has a unique name and stores zero, one or more versioned ProActive Objects.
 
 By default, ProActive objects are persisted on disk using the embedded HSQL database.
 The data is located in `PROACTIVE_HOME/data/db/catalog`.
 
-The Catalog is a WAR file which contains a configuration file.
-More information regarding the Catalog configuration can be found in <<../admin/ProActiveAdminGuide.adoc#_catalog_properties>>.
+The Catalog web service binaries are stored in `PROACTIVE_HOME/dist/war/catalog`.
+This directory contains a configuration file located in `PROACTIVE_HOME/dist/war/catalog/WEB-INF/classes/application.properties`.
+
+More information regarding the Catalog configuration can be found in the <<../admin/ProActiveAdminGuide.adoc#_catalog_properties,catalog properties>> section.
 
 
-A complete documentation of the Catalog REST API is available by default on:
-
-  http://localhost:8080/catalog/swagger-ui.html
+A complete documentation of the Catalog REST API is available on the following +++<a class="catalogRestUrl" href="/catalog" target="_blank">link</a>+++.
 
 This documentation is automatically generated using https://swagger.io[Swagger^].
+
+==== Catalog security and groups management
+
+The Catalog authenticates REST request using a *sessionID* header.
+This sessionID is used to share session information between various ProActive Workflows & Scheduling microservices and is returned when authenticating to +++a <a class="restUrl" href="/rest" target="_blank">ProActive Scheduler REST API</a>.+++.
+
+Every request to the Catalog must have a valid sessionID inside the request header to authenticate the user.
+A role-based access control mechanism can also be defined on catalog buckets.
+When creating a bucket, it can either be made *public* or restrained to a specific *group*.
+
+Creating users and groups at the ProActive Scheduler level is explained in the <<../ProActiveAdminGuide.adoc#_user_authentication,User Authentication>> section.
+
+A _public_ bucket is automatically assigned to the *public-objects* group.
+
+For example, a user which is part of the _interns_ group (GROUP:interns) can see and change buckets and their contents which belong to GROUP:interns.
+This user can only access to the following buckets list:
+
+  * All buckets that the user created.
+  * All buckets belonging to the _interns_ group (GROUP:interns).
+  * All _public_ buckets (GROUP:public-objects).
 
 

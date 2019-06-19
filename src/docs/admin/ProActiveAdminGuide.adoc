@@ -76,7 +76,7 @@ Additionally, using local ProActive Nodes (deployed directly inside the ProActiv
 
 === Scheduler Life-Cycle Management
 
-Under the Admin menu from the scheduler portal, the following administrator actions are proposed :
+Under the Admin menu from the scheduler portal, the following administrator actions are proposed:
 
 * Start the scheduler: Jobs can be submitted. Getting the jobs results is possible. The scheduler can be stopped, frozen, paused or killed.
 * Stop the scheduler: Jobs cannot be submitted anymore. Already running jobs run to completion, but not pending jobs. Getting the jobs results is possible. The scheduler can be started or killed.
@@ -309,7 +309,7 @@ $ PROACTIVE_HOME/bin/proactive-node-autoupdate -r pnp://SCHEDULER_ADDRESS:64738 
 ----
 
 where `-nju` option is used to specify the http URL of the *node.jar*.
-You can find this URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler>>, the node.jar url is built by appending */rest/node.jar* to the base http url of the server.
+You can find this URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler>>, the node.jar URL is built by appending */rest/node.jar* to the base HTTP URL of the server.
 
 `-nju` option is used to specify where the node.jar will be stored locally on the machine.
 
@@ -491,7 +491,7 @@ image::config_editor_connection.png[]
 In the 'Connection' tab, the user can select between three types of connections:
 
 * *Local Registration* - creates a local ProActive node and registers (advertises) it in a local RMI registry. The node name is optional.
-* *Resource Manager Registration* - creates a local ProActive node and registers it in the specified Resource Manager. The mandatory Resource Manager's url must be like *protocol://host:port/*. The node name and the node source name are optional. Since the Resource Manager requires authentication, the user specifies the file that contains the credential. If no file is specified the default one located in `%USERPROFILE%\.proactive\security` folder is used.
+* *Resource Manager Registration* - creates a local ProActive node and registers it in the specified Resource Manager. The mandatory Resource Manager's URL must be like *protocol://host:port/*. The node name and the node source name are optional. Since the Resource Manager requires authentication, the user specifies the file that contains the credential. If no file is specified the default one located in `%USERPROFILE%\.proactive\security` folder is used.
 * *Custom* - the user specifies his own java starter class and the arguments to be given to the main method. The java starter class must be in the classpath when the ProActive Node is started.
 
 Finally, clicking on the "Planning" tab, the window will look like this:
@@ -517,7 +517,7 @@ The main troubles you may have to face are the following ones:
 -Djava.security.policy=PROACTIVE_HOME/config/security.java.policy-client
 ----
 * You get an *authentication error*: this is probably due to your default credentials file which cannot be found. In the "Connection" tab of the Configuration Editor (Figure 5.4, “Configuration Editor window - Connection Tab (Resource Manager Registration)”), you can choose the credentials file you want. You can select, for instance, the credentials file located at PROACTIVE_HOME/config/authentication/scheduler.cred or your own credentials file.
-* The node seems to be well started but you cannot see it in the Resource Manager interface : in this case, make sure that the *port number* is the good one. Do not forget that the runtime port number is incremented from the initial ProActive Resource Manager port number. You can see exactly on which port your runtime has been started looking at the log file described above.
+* The node seems to be well started, but you cannot see it in the Resource Manager interface: in this case, make sure that the *port number* is the good one. Do not forget that the runtime port number is incremented from the initial ProActive Resource Manager port number. You can see exactly on which port your runtime has been started looking at the log file described above.
 
 ==== Automate Windows Agent Installation
 
@@ -589,8 +589,8 @@ The following changes must be performed:
 
  1. Change the *<javaStarterClass>* to `org.ow2.proactive.resourcemanager.updater.RMNodeUpdater`
  2. Add the following *<jvmParameters>*
-   * `node.jar.url` : url of the node jar (similar to the `nju` option of the `proactive-node-autoupdate` command)
-   * `node.jar.saveas` : path used to store the node.jar file locally (similar to the `njs` option of the `proactive-node-autoupdate` command)
+   * `node.jar.url`: URL of the node jar (similar to the `nju` option of the `proactive-node-autoupdate` command)
+   * `node.jar.saveas`: path used to store the node.jar file locally (similar to the `njs` option of the `proactive-node-autoupdate` command)
  3. Other *JVM properties* specified will be forwarded to the spawned JVM, but non-standard options such as *-Xmx* will not be forwarded. In order to do so, you must declare them using the following syntax:
 
 ----
@@ -697,7 +697,7 @@ Each virtual machine corresponds an instance in a cloud Node Source.
 So the definition of most cloud Node Source Infrastructures have the following three parameters:
 
 - `numberOfInstances`: specifies the total number of virtual machines to be created on this node source.
-- `numberOfNodesPerInstance`: specifies the total number of Proactive Nodes to be deployed in each created virtual machine.
+- `numberOfNodesPerInstance`: specifies the total number of ProActive Nodes to be deployed in each created virtual machine.
 - `image`: specifies which image is used to deploy the virtual machine (e.g., Linux or Windows).
 
 The general process of deploying ProActive Nodes on a Cloud Platform is:
@@ -1200,7 +1200,7 @@ pa.rm.authentication.loginMethod=RMLDAPLoginMethod
 [source]
 ----
 #Property that define the method that have to be used for logging users to the Scheduler
-#It can be one of the following values :
+#It can be one of the following values:
 #	- "SchedulerFileLoginMethod" to use file login and group management
 #	- "SchedulerLDAPLoginMethod" to use LDAP login management
 #   - "SchedulerPAMLoginMethod" to use PAM login management
@@ -1647,11 +1647,11 @@ The following aspects (or services) of the *ProActive Scheduler* are instrumente
 
 MBean server can be accessed by remote applications using one of the two available connectors
 
-* The standard solution based on Remote Method Invocation (RMI) protocol is the RMI Connector accessible at the following url:
+* The standard solution based on Remote Method Invocation (RMI) protocol is the RMI Connector accessible at the following URL:
 `service:jmx:rmi:///jndi/rmi://HOSTNAME:PORT/JMXRMAgent` where
 ** *HOSTNAME* is the hostname on which the Resource Manager is started
 ** *PORT* (5822 by default) is the port number on which the JMX RMI connector server has been started. It is defined by the property pa.rm.jmx.port .
-* The ProActive Remote Objects Connector provides ProActive protocol aware connector accessible at the following url:
+* The ProActive Remote Objects Connector provides ProActive protocol aware connector accessible at the following URL:
 `service:jmx:ro:///jndi/PA_PROTOCOL://HOSTNAME:PORT/JMXRMAgent` where
 ** *PA_PROTOCOL* is the protocol defined by the proactive.communication.protocol property
 ** *HOSTNAME* is the hostname on which the Resource Manager is started
@@ -1659,7 +1659,7 @@ MBean server can be accessed by remote applications using one of the two availab
 
 The name of the connector (JMXRMAgent by default) is defined by the property `rm.jmx.connectorname`.
 
-The JMX url to connect to can be obtained from the Authentication API of the Resource Manager or by reading the log file located in `PROACTIVE_HOME/logs/RM.log`.
+The JMX URL to connect to can be obtained from the Authentication API of the Resource Manager or by reading the log file located in `PROACTIVE_HOME/logs/RM.log`.
 In that log file, the address you have to retrieve is the one where the JMX RMI connector server has been started
 
 [source]
@@ -1669,7 +1669,7 @@ In that log file, the address you have to retrieve is the one where the JMX RMI 
 
 Once connected, you'll get an access to Resource Manager statistics and accounting.
 
-For example, to connect to the ProActive Scheduler JMX Agent with JConsole tool, just enter the url of the standard RMI
+For example, to connect to the ProActive Scheduler JMX Agent with JConsole tool, just enter the URL of the standard RMI
 Connector, as well as the username and the password.
 
 image::jmx_jconsole_connect.png[align="center"]
@@ -1757,7 +1757,7 @@ NOTE: On Mac OS X, the default temporary folder is not shared between all users.
 To use a shared temporary folder, you need to set the _$TMPDIR_ environment variable and the Java property _java.io.tmpdir_
 to /tmp before starting the ProActive Node.
 
-NOTE: the same applies on Windows. To use a shared temporary folder, create a folder shared by all proactive users e.g. C:\TEMP and define
+NOTE: the same applies on Windows. To use a shared temporary folder, create a folder shared by all ProActive users e.g. C:\TEMP and define
 the Java property _java.io.tmpdir_ to C:\TEMP before starting the ProActive Node.
 
 Example:
@@ -1776,7 +1776,7 @@ A SSH key can be tied to the user's account and used to impersonate the user whe
 The .ssh/authorized_keys files of all machines must be configured to accept this SSH key.
 The SSH key must require *no passphrase*.
 
-When login into the scheduler portal, the private key of the user must be provided, this can be done by selecting on the login dialog : `More options > Use SSH private key`.
+When login into the scheduler portal, the private key of the user must be provided, this can be done by selecting on the login dialog: `More options > Use SSH private key`.
 
 To enable this method, set the system property `pas.launcher.forkas.method` to _key_ when starting a ProActive Node.
 
@@ -1789,7 +1789,7 @@ proactive-node -Dpas.launcher.forkas.method=key
 
 This configuration, only availabe on linux nodes, allows the impersonation to be performed using passwordless sudo.
 
-To enable it at the system level, edit the /etc/sudoers file to allow passwordless sudo from the account running the proactive node
+To enable it at the system level, edit the /etc/sudoers file to allow passwordless sudo from the account running the ProActive node
 to any users which require impersonation. Passwordless sudo should be enabled for any command.
 
 For example, the following line will allow the proactive account to impersonate to any user:
@@ -1797,7 +1797,7 @@ For example, the following line will allow the proactive account to impersonate 
 proactive ALL=(ALL) NOPASSWD: ALL
 ----
 
-To enable this configuration on the proactive node, start it with the system property `pas.launcher.forkas.method` to _none_
+To enable this configuration on the ProActive node, start it with the system property `pas.launcher.forkas.method` to _none_
 
 Example:
 ----
@@ -1844,8 +1844,8 @@ When HTTPS is set up, you can automatically redirect any HTTP request from
 users to the secured version of the protocol to make sure exchanged information
 is protected. It requires to enable `web.redirect_http_to_https`.
 
-Unlike other web applications, the Scheduler, the Resource Manager and the studio web portals together with the
-Proactive cloud watch, Cloud automation service, Job planner and Notification service
+Unlike other web applications, the Scheduler, the Resource Manager and the Studio web portals together with the
+ProActive Cloud Watch, Cloud Automation service, Job Planner and Notification service
 require manual configuration based on your HTTPS settings. The configuration
 files to edit are respectively in
 
@@ -2525,3 +2525,4 @@ include::./references/NodeSourcePolicyReference.adoc[]
 include::../CLI.adoc[]
 
 include::../Dedication.adoc[]
+include::../common-footer.adoc[]

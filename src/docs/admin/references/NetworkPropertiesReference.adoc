@@ -155,11 +155,11 @@ proactive.communication.additional_protocols. If one of the specified protocol i
 it is ignored. If there are protocols that are not declared in this property but which are exposed,
 they are used in the order choose by the benchmark mechanism.
 
-    Example :
-    Exposed protocols : http,pnp,rmi
-    Benchmark Order : rmi > pnp > http
-    Order : pnp
-    This will give the order of use : pnp > rmi > http
+    Example:
+    Exposed protocols: http,pnp,rmi
+    Benchmark Order: rmi > pnp > http
+    Order: pnp
+    This will give the order of use: pnp > rmi > http
 
 - `proactive.communication.protocols.order`: A fixed order could be specified if protocol's performance
 is known in advance and won't change.

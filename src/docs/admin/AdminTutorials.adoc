@@ -20,22 +20,22 @@ The following steps configure the Node with a sample user called Gord.
 . Download and unzip ProActive inside the _/opt/_ directory (_/opt/_ gives execution right to everyone)
 . Change ownership of the ProActive folder with _sudo chown -R proactive:activeeon ProActive_
 . Add a *Run As Me* user, which needs to be part of the activeeon group _useradd -g activeeon -m Gord_
-. Create an ssh key for the *Run As Me* user (Gord) _ssh-keygen -t rsa_
+. Create an SSH key for the *Run As Me* user (Gord) _ssh-keygen -t rsa_
 . Go into the _/home/Gord/.ssh_ directory and copy Gord’s public key to the authorized keys _cat id_rsa.pub >> authorized_keys_
-. Log into the activeeon account
+. Log into the _activeeon_ account
 . Start the ProActive Node with the property `-Dpas.launcher.forkas.method=key`
 
-NOTE: The proactive user got a password set with _passwd proactive_ to execute the sudo command. Whereas the run as me user (Gord) got a SSH key set. If you wish you can assign a password to Gord _passwd Gord_.
+NOTE: The proactive user got a password set with _passwd proactive_ to execute the sudo command. Whereas the run as me user (Gord) got an SSH key set. If you wish, you can assign a password to Gord _passwd Gord_.
 
 
 ==== Windows
 
-. Create an account called proactive:
+. Create an account called _proactive_:
 +
 In *Control Panel->Administrative Tools->Computer Management->Local Users and Groups*
 +
 image::add_user.png[align=center]
-NOTE: The proactive account might already exist if the Proactive Agent has been installed previously.
+NOTE: The _proactive_ account might already exist if the ProActive Agent has been installed previously.
 . Create an account Gord that will be used as the *Run As Me* account
 . Create a group _activeeon_, and add all the previous accounts to this group.
 +
@@ -80,7 +80,7 @@ being part of the proactive group and the proactive group ownership of the ProAc
 
 ==== Windows
 
-. Install proactive server by download and unzip it to a convenient folder
+. Install ProActive server by downloading and unzipping it to a convenient folder.
 . Use the following command to create the Gord account in the scheduler:
 +
 ----
@@ -88,5 +88,7 @@ tools/proactive-users -C -l Gord -p Gord -g admin
 ----
 . Start the scheduler server: _PROACTIVE_HOME/bin/proactive-server.bat_
 . Log in the Studio's web interface with the Gord username.
-. Create a task and tick _Run as me_
+. Create a task and tick _Run as me_.
 . Execute the job.
+
+include::../common-footer.adoc[]

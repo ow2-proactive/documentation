@@ -1,4 +1,4 @@
-This section describes useful variables, their scope, and their usage.
+This section describes useful bindings and variables, their scope, and their usage.
 
 The following script names refer to:
 
@@ -6,7 +6,7 @@ The following script names refer to:
 * <<_fork_environment, environment>>: the default mode to execute a task is to fork a dedicated JVM from the selected ProActive Node. The environment script, if defined in the workflow, is executed on the node to
  let the user define which environment parameters will be given to the forked JVM.
 * <<_pre_post_clean, pre>>: a script which is executed _before_ the task execution, in the same context (for example in the forked JVM).
-* <<_scripting_language_support,task>>: the main script of a task when the task is a *script task*.
+* <<_script_tasks,task>>: the main script of a task when the task is a *script task*.
 * <<_pre_post_clean, post>>: a script which is executed _after_ the task execution, in the same context. The post script is executed only if there was no error inside the task.
 * <<_control_flow_scripts,flow>>: a script which is executed _after_ the task execution, in the same context, and when the task is part of a control flow.
 * <<_pre_post_clean, clean>>: a script which is executed _after_ the task execution, directly on the node selected to execute the task (so not inside the forked JVM), whether there was a *task error* or not. The _clean script_ is mainly used to clean the task host. If there was a *node failure* (the node is lost during the task execution), then the _clean script_ is not executed and the task will be executed on another node.
@@ -29,7 +29,7 @@ The order in this list corresponds to the task life-cycle order.
 | result = "value";
 | The result will be the exit code.
 | -
-| <<_scripting_language_support,task>>
+| <<_script_tasks,task>>
 | -
 
 | *Task arguments*. Arguments of a script defined in the workflow. Available via all kind of scripts, when referencing an external file or directly as XML elements.
@@ -43,7 +43,7 @@ The order in this list corresponds to the task life-cycle order.
 | ... = results[0];
 | $results_0
 | -
-| <<_scripting_language_support,task>>
+| <<_script_tasks,task>>
 | -
 
 | *Branch*. Either "if" or "else". See <<_branch, branch>>.
@@ -72,7 +72,7 @@ The order in this list corresponds to the task life-cycle order.
 ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | echo "50" > $variables_PA_TASK_PROGRESS_FILE
 | -
-| <<_scripting_language_support,task>>
+| <<_script_tasks,task>>
 | -
 
 | *Workflow variables*. Job variables defined in the workflow. See <<_workflow_variables>>.
@@ -128,7 +128,7 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | variables.get( "PA_SCHEDULER_HOME" )
 | $variables_PA_SCHEDULER_HOME
 | -
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>, <<_pre_post_clean, clean>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>, <<_pre_post_clean, clean>>
 | -
 
 | *Task iteration index*. Index of iteration for this task inside a loop control. See <<_task_executable>>.
@@ -156,7 +156,7 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | variables.get( "PA_NODE_URL" )
 | $variables_PA_NODE_URL
 | ${PA_NODE_URL}
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>, <<_pre_post_clean, clean>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>, <<_pre_post_clean, clean>>
 | -
 
 | *Node URL (Selection Script)*. The URL of the node which executes the selection script. See <<_selection>>.
@@ -170,7 +170,7 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | variables.get( "PA_NODE_NAME" )
 | $variables_PA_NODE_NAME
 | ${PA_NODE_NAME}
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>, <<_pre_post_clean, clean>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>, <<_pre_post_clean, clean>>
 | -
 
 | *Node Name (Selection Script)*. The name of the node which executes the selection script. See <<_selection>>.
@@ -184,7 +184,7 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | variables.get( "PA_NODE_HOST" )
 | $variables_PA_NODE_HOST
 | ${PA_NODE_HOST}
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>, <<_pre_post_clean, clean>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>, <<_pre_post_clean, clean>>
 | -
 
 | *Node Host (Selection Script)*. The hostname of the node which executes the selection script. See <<_selection>>.
@@ -198,70 +198,70 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | credentials.get( "pw" )
 | -
 | $credentials_pw (only in the task arguments)
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
 | -
 
 | *SSH private key*. Private SSH Key used at login. See <<_run_computation_with_your_system_account>>.
 | credentials.get( "SSH_PRIVATE_KEY" )
 | -
 | -
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 | -
 
 | *Number of nodes*. Number of nodes used by this task. See <<_mpi_application>>.
 | nodesurl.size()
 | $variables_PA_NODESNUMBER
 | -
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 | -
 
-| *Url of nodes*. List of url of nodes. See <<_mpi_application>>.
+| *Url of nodes*. List of URL of nodes. See <<_mpi_application>>.
 | nodesurl.get(0)
 | $variables_PA_NODESFILE
 | -
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 | -
 
 | *User space*. Location of the user space. See <<_data_spaces>>.
 | println userspace
 | $USERSPACE
 | -
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 | -
 
 | *Global space*. Location of the global space. See <<_data_spaces>>.
 | println globalspace
 | $GLOBALSPACE
 | -
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 | -
 
 | *Input space*. Location of the input space. See <<_data_spaces>>.
 | println inputspace
 | $INPUTSPACE
 | -
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 | -
 
 | *Local space*. Location of the local space. See <<_data_spaces>>.
 | println localspace
 | $LOCALSPACE
 | -
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 | -
 
 | *Cache space*. Location of the cache space. See <<_data_spaces>>.
 | println cachespace
 | $CACHESPACE
 | -
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 | -
 
 | *Output space*. Location of the output space. See <<_data_spaces>>.
 | println outputspace
 | $OUTPUTSPACE
 | -
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 | -
 
 | *Selection*. Variable which must be set to select the node. See <<_selection>>.
@@ -282,21 +282,21 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | schedulerapi.connect()
 | -
 | -
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
 | bash, cmd, perl, R, PowerShell
 
 | *UserSpace API*. UserSpace API variable is a link:../javadoc/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient java object] which can connect to the <<_global_and_user_spaces,User Space>> and interact directly with its <<_dataspace_apis,API>>.
 | userspaceapi.connect()
 | -
 | -
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
 | bash, cmd, perl, R, PowerShell
 
 | *GlobalSpace API*. GlobalSpace API variable is a link:../javadoc/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient java object] which can connect to the <<_global_and_user_spaces,Global Space>> and interact directly with its <<_dataspace_apis,API>>.
 | globalspaceapi.connect()
 | -
 | -
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_scripting_language_support, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
 | bash, cmd, perl, R, PowerShell
 
 | *Synchronization API*. Synchronization API variable is a https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/Synchronization.html[Synchronization java object] which can connect to the Synchronization Service and interact directly with its <<_task_synchronization_api,API>>.
@@ -427,7 +427,7 @@ Java objects such as fork environment variable, scheduler, userspace or globalsp
 
 ==== Perl language
 For the perl script: the specification of special variables accesible inside scheduler is corresponding to native task. So for example the result of perl task should be the exit code.
-Please see the proper names of the variables in link:../user/ProActiveUserGuide.html#_variables_quick_reference[Variables quick reference]. +
+Please see the proper names of the variables in link:../user/ProActiveUserGuide.html#_variables_quick_reference[Script Bindings Reference]. +
 Inside Perl, you can access the environment variables using the *%ENV* hash.
 
 The aim of next examples is to clarify the usage of variables in Perl:

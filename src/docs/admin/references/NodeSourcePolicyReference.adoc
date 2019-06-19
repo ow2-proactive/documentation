@@ -457,10 +457,10 @@ The Native Scheduler Policy interacts with the <<_glossary_ns_native_scheduler,n
 This mechanism is described in <<_deploy_via_other_schedulers>>. This policy must be associated with a <<_native_scheduler_infrastructure>> and cannot be associated with any other infrastructure.
 To use this policy, you need to precise the following parameters:
 
- * *userAccessType* : Which users are allowed to use ProActive Nodes created by the NativeSchedulerInfrastructure. Refer to the <<_policies,Policies documentation>>.
- * *providerAccessType* : Defines who can add nodes to this node source. Refer to the <<_policies,Policies documentation>>.
- * *schedulerUrl* : The url used by the ProActive Nodes to contact the <<_glossary_resource_manager,ProActive Resource Manager>>. This url is displayed on ProActive server startup. Example: `pnp://myserver:64738`.
- * *schedulerCredentialsPath* : Path to a file which contains the credentials of an administrator user which will connect to the scheduler. The ProActive Scheduler Server release contains two admin users credentials files : `config/authentication/rm.cred` and `config/authentication/admin_user.cred`
- * *rearrangeTasks* : Currently not implemented.
- * *autoScaling* : If set to `true`, the NativeSchedulerPolicy will scan the Resource Manager activity and Scheduling queue. If the scheduling queue is not empty and all resource manager nodes are busy, `autoscaling` will automatically start ProActive Nodes from the NativeSchedulerInfrastructure. This setting cannot be used when multiple NativeScheduler node sources are deployed.
- * *refreshTime* : The NativeSchedulerPolicy will refresh its status and observe the ProActive Scheduler queue every `refreshTime` milliseconds.
+ * *userAccessType:* Which users are allowed to use ProActive Nodes created by the NativeSchedulerInfrastructure. Refer to the <<_policies,Policies documentation>>.
+ * *providerAccessType:* Defines who can add nodes to this node source. Refer to the <<_policies,Policies documentation>>.
+ * *schedulerUrl:* The URL used by the ProActive Nodes to contact the <<_glossary_resource_manager,ProActive Resource Manager>>. This URL is displayed on ProActive server startup. Example: `pnp://myserver:64738`.
+ * *schedulerCredentialsPath:* Path to a file which contains the credentials of an administrator user which will connect to the scheduler. The ProActive Scheduler Server release contains two admin users credentials files : `config/authentication/rm.cred` and `config/authentication/admin_user.cred`
+ * *rearrangeTasks:* Currently not implemented.
+ * *autoScaling:* If set to `true`, the NativeSchedulerPolicy will scan the Resource Manager activity and Scheduling queue. If the scheduling queue is not empty and all resource manager nodes are busy, `autoscaling` will automatically start ProActive Nodes from the NativeSchedulerInfrastructure. This setting cannot be used when multiple NativeScheduler node sources are deployed.
+ * *refreshTime:* The NativeSchedulerPolicy will refresh its status and observe the ProActive Scheduler queue every `refreshTime` milliseconds.

@@ -56,9 +56,9 @@ There are 3 different tabs for the planning visualization:
 
     - "Sort by workflow" tab: For each workflow, a list of execution time is displayed. The combo box allows you to choose the period of the execution planning. If several workflows are associated to one Calendar Definition, they will be grouped.
     If a workflow is associated to several Calendar Definitions, it will appear several times.  The name of the Calendar Definition is always displayed next to the workflow name, in order to know which Calendar Definition is related to the given executions.
-    - "Sort chronologically" tab : All executions are displayed chronologically in a list, with for each execution, the workflow that will be executed and the corresponding Calendar Definition.
+    - "Sort chronologically" tab: All executions are displayed chronologically in a list, with for each execution, the workflow that will be executed and the corresponding Calendar Definition.
     The combo box allows you to choose the period of the execution planning.
-    - "Calendar" tab : You can see the execution planning of the selected Calendar Definitions, by year/month/week or day. In the year and month views, you can see the number of executions in one month/day.
+    - "Calendar" tab: You can see the execution planning of the selected Calendar Definitions, by year/month/week or day. In the year and month views, you can see the number of executions in one month/day.
     If you click on it, you can see more details on which workflows are executed and when. In the week view, if several workflows are executed at the same time, you will only be able to see one at a time.
 
 image::calendar_planning.png[align="center"]
