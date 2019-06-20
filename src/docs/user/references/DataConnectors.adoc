@@ -848,5 +848,5 @@ This connector allows you to publish data to a Tableau Server.
 *How to use this connector:*
 
 In order to securely connect to your Tableau Server, you first need to store your Tableau login information as ProActive's link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials]. The required credentials are:
-TABLEAU_SERVER_USERNAME` and `TABLEAU_SERVER_PASSWORD`.
+`TABLEAU_SERVER_USERNAME` and `TABLEAU_SERVER_PASSWORD`.
 
