@@ -797,7 +797,7 @@ This connector allows you to publish data to a Tableau Server.
 
 *Variables:*
 
-.SAP ECC Connector variables
+.Tableau_Server Connector variables
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Scope* | *Required?* | *Type*  | *Default/Examples*
@@ -820,25 +820,25 @@ This connector allows you to publish data to a Tableau Server.
 | Boolean
 | e.g. True
 | `SERVER_ENDPOINT`
-| The endpoint of the tableau server.
+| The endpoint of the Tableau server.
 | Workflow
 | Yes
 | String
 |e.g https://eu-west-1a.online.tableau.com
 | `SITE_ID`
-| The site id defined in the server.
+| The site id defined in the Tableau server.
 | Workflow
 | Yes
 | String
 | e.g test_connector
 | `PROJECT_NAME`
-| The name of the project where you will save your data in the server.
+| The name of the project where you will save your data in the Tableau server.
 | Task
 | Yes
 | String
 | e.g. test
 | `OUTPUT_FILE_NAME`
-| The name of the file that will be created and saved in the server.
+| The name of the file that will be created and saved in the Tableau server.
 | Task
 | Yes
 | String
