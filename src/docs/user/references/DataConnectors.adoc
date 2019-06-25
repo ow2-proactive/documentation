@@ -204,11 +204,27 @@ Export Task
 
 *How to use this task:*
 
-When you drag & drop an SQL connector, two tasks will be appended to your workflow: an import task and an export task. Each task can be used as a separate component in an ETL pipeline thus, you can keep one of them depending on your needs and remove the other or you can use them both.
+When you drag & drop an SQL connector, two tasks will be appended to your workflow: an import task and an export task. Each task can be used as a separate component in an ETL pipeline; thus, you can keep one of them depending on your needs and remove the other or you can use them both.
 
 This task uses the driver given in `RMDB_DRIVER` to connect to the database. To use another driver, make sure you have it properly installed before (e.g. using `pip install <RMDBS_DRIVER>`).
 
-The task requires the following third-party credential: {key: `<mysql|postgres|sqlserver|oracle|gpdb>://<<RDBMS_NAME>_USER>@<<RDBMS_NAME>_HOST>:<<RDBMS_NAME>_PORT>`, value: `<RDBMS_NAME>_PASSWORD`}. ; this is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+The task requires the following third-party credential:
+
+{key: `<mysql|postgres|sqlserver|oracle|gpdb>://<<RDBMS_NAME>_USER>@<<RDBMS_NAME>_HOST>:<<RDBMS_NAME>_PORT>`, value: `<RDBMS_NAME>_PASSWORD`}.
+
+_e.g._ +
+|===
+| key | value
+
+a| `mysql://myuser@localhost:1234`
+a| your `MYSQL_PASSWORD`
+a| `sqlserver://mysqluser@10.0.0.1:5432`
+a| your `SQLSERVER_PASSWORD`
+
+|===
+
+
+This is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 In the import mode, the output containing the imported data takes one or many of the following forms:
 
