@@ -1,5 +1,5 @@
 :docinfo:
-:toc: 
+:toc:
 :toc-title: PWS User Guide
 = ProActive Workflows & Scheduling -- User Guide
 include::../common-settings.adoc[]
@@ -93,7 +93,7 @@ The task graph is defined by the user at the time of workflow creation, but can 
 A *finished job* contains the results and logs of each task. Upon failure,
 a task can be restarted automatically or cancelled.
 
-==== Using ProActive Studio
+== ProActive Studio
 **ProActive Workflow Studio** is used to create and submit workflows graphically.
 The Studio allows to simply drag-and-drop various task constructs and draw their dependencies to form complex workflows.
 It also provides various flow control widgets such as conditional branch, loop, replicate etc to construct workflows with dynamic structures.
@@ -122,7 +122,64 @@ In the right part, we see the *graph of dependent tasks* composing the workflow.
 
 Finally, above the workflow graph, we see the various *palettes* which can be used to _drag & drop_ *sample task definitions* or *complex constructs*.
 
-The following chapters describe the three main type of tasks which can be defined inside ProActive Workflows.
+The link:../user/ProActiveUserGuide.html#_types_of_tasks[following chapters] describe the three main type of tasks which can be defined inside ProActive Workflows.
+
+=== Use the ProActive Catalog from the Studio
+
+The GUI interaction with the Catalog can be done in two places: the +++<a class="studioUrl" href="/studio" target="_blank">Studio</a>+++ and +++<a class="automationDashboardUrl" href="/automation-dashboard/#/portal/catalog-portal" target="_blank">Catalog Portal</a>+++.
+The portals follow the concepts of the Catalog: Workflows are stored inside buckets, a workflow has some metadata and can have several revisions.
+
+The Catalog view in the Studio or in the Catalog Portal allows to browse all the workflows in the Catalog grouped by buckets and to list all the revisions of a workflow along with their commit message.
+
+Inside the Studio, there is a `Catalog` menu from which a user can directly interact with the Catalog to import or publish Workflows.
+
+image::studio_catalog_menu.png[align=center]
+
+Additionally, the Palette of the Studio lists the user's favourite buckets to allow easy import of workflows from the Catalog with a simple Drag & Drop.
+
+image::studio-palette.png[align=center]
+
+==== Publish current Workflow to the Catalog
+Workflows created in the studio can be saved inside a bucket in the Catalog by using the `Publish current Workflow to the Catalog` action.
+When saving a Workflow in the Catalog, users can add a specific `commit message`.
+If a Workflow with the same name already exists in the specified bucket, a new revision of the Workflow is created.
+We recommend to always specify commit messages at any commit for an easier differentiation between stored versions.
+
+==== Get a Workflow from the Catalog
+When the Workflow is selected from Catalog you have two options:
+
+1. `Open as a new Workflow`: Open the Workflow from Catalog as a new Workflow in Studio.
+
+2. `Append to current Workflow`: Append the selected Workflow from the Catalog to the Workflow already opened inside the Studio.
+
+==== Add Bucket Menu to the Palette
+The Palette makes it easier to use workflows stored in a specific Bucket of the Catalog as templates when designing a Workflow.
+
+To add a bucket from the Catalog as a dropdown menu in the Palette:  Click on `View` → `Add Bucket Menu to the Palette` or you press the image:studio-palette-add.png[+, 32, 32] button in the palette.
+A window will show up to ask you which bucket you want to add to the Palette as in the image below.
+
+image::studio-catalog-main-menu3.png[align=center]
+
+The selected `Data Connectors` Bucket now appears as a menu in the Studio. See the image below.
+
+image::studio-catalog-main-menu4.png[align=center]
+
+You can repeat the operation as many times as you wish in order to add other specific Menus you might need for your workflow design. See the image below.
+
+image::studio-catalog-main-menu5.png[align=center]
+
+==== Change Palette Preset
+The Studio offers the possibility to set a Preset for the Palette. This makes it easier to load the Palette with a predefined set of default buckets.
+Presets are generally arranged by theme (Basic Examples, Machine Learning, Deep Learning, Big Data, etc.)
+The Palette's preset can be changed by clicking `View` → `Change Palette Preset`. This will show a window with the current list of presets as in the image below.
+
+image::studio-catalog-main-menu1.png[align=center]
+
+After changing the preset, its name appears at the top of the Studio and all its buckets are added to the Palette.
+
+image::studio-catalog-main-menu2.png[align=center]
+
+== Types of Tasks
 
 === Native Tasks
 
@@ -358,7 +415,7 @@ key *docker-compose-options-split-regex*. If you supply e.g. "!SPLIT!" as value,
 
 ==== Docker_File script engine
 
-The main behavior of a Docker_File task is to first build an image and then run a container instance from it. Once the execution is done, the container is stopped and the built image is deleted. 
+The main behavior of a Docker_File task is to first build an image and then run a container instance from it. Once the execution is done, the container is stopped and the built image is deleted.
 
 Advanced options will allow to parametrize these actions.
 
@@ -366,7 +423,7 @@ In order for Docker_File tasks to work, the _Node_ must have Docker installed. P
  Docker documentation to see how to install https://docs.docker.com/engine/installation/[Docker^].
 
 To use a Docker_File task, put the content of a Dockerfile inside the _Task Implementation_ section. You can find out how to write Dockerfile
-in the official https://docs.docker.com/engine/reference/builder/[Dockerfile documentation^]. 
+in the official https://docs.docker.com/engine/reference/builder/[Dockerfile documentation^].
 A Docker_File task allows executing a succession of docker commands according to the lifecycle of Docker containers. In order, docker build, docker run, docker stop, and docker rmi are ran when a Docker_File task is executed.
 
 To get started, a simple Docker_File task can be tested by using this Dockerfile as the content of the _Script_ section (task implementation)
@@ -386,7 +443,7 @@ The build, start, stop and remove commands can be parametrized through optional 
 docker build [OPTIONS] PATH | URL | -
 ----
 
-To define a _docker-build option_, use the generic information *docker-build-options* 
+To define a _docker-build option_, use the generic information *docker-build-options*
 
 For instance by using the docker-build-options generic information with the value --add-host, a custom host-to-IP mapping will be added to the image.
 
@@ -395,7 +452,7 @@ For instance by using the docker-build-options generic information with the valu
 docker run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
 ----
 
-To define a _docker-run option_, use the generic information *docker-run-options* 
+To define a _docker-run option_, use the generic information *docker-run-options*
 
 For instance by using the docker-run-options generic information with the value -d=true, the container will be started in detached mode.
 
@@ -404,7 +461,7 @@ For instance by using the docker-run-options generic information with the value 
 docker stop [OPTIONS] CONTAINER [CONTAINER...]
 ----
 
-To define a _docker-run option_, use the generic information *docker-stop-options* 
+To define a _docker-run option_, use the generic information *docker-stop-options*
 
 For instance by using the docker-stop-options generic information with the value --time 30, the container will be stopped after 30s.
 
@@ -415,7 +472,7 @@ TIP:  a parameter *docker.file.keepcontainer* is defined in the dockerfile scrip
 docker rmi [OPTIONS] IMAGE [IMAGE...]
 ----
 
-To define a _docker-rmi option_, use the generic information *docker-rmi-options* 
+To define a _docker-rmi option_, use the generic information *docker-rmi-options*
 
 TIP:  a parameter *docker.file.keepimage* is defined in the dockerfile script engine properties file (in config/scriptengines/ folder). Put the value to *yes* if you do not want to delete the built image.
 
@@ -1693,9 +1750,9 @@ The task will then terminate normally.
 
 === Troubleshoot a Workflow Execution
 
-When a task has *IN_ERROR* status, a right click on it allows the user to select _Mark as finished and resume_. 
+When a task has *IN_ERROR* status, a right click on it allows the user to select _Mark as finished and resume_.
 This will set the task status as *FINISHED* and then resume job execution: this task won't be executed again, subsequent tasks will execute as if the task executed correctly.
-This allows the user to manually perform actions to the *IN_ERROR* task, without cancelling the whole job execution. 
+This allows the user to manually perform actions to the *IN_ERROR* task, without cancelling the whole job execution.
 
 
 If the task has not *IN_ERROR* status, the _Mark as finished and resume_ option will be in grey, meaning that the action is disabled.
@@ -1878,7 +1935,7 @@ In order to change this period, the ProActive Node must be started with the prop
 
 The property *node.dataspace.cachedir* can also be used to control the cache location on the node.
 
-== Workflow Storage and Versioning
+== Proactive Catalog: Object Storage and Versioning
 
 The *ProActive Catalog* provides the storage and versioning of Workflows and several other objects inside *Buckets*. It also features a searching functionality using a https://graphql.org/[GraphQL] query language to fetch Workflows based on particular parameters.
 The Catalog is a RESTful service. A https://swagger.io/[Swagger] +++<a class="catalogRestUrl" href="/catalog" target="_blank">interface</a>+++ is provided to understand and interact with the service.
@@ -1962,62 +2019,6 @@ NOTE: A complete documentation of the Catalog REST API is available on the follo
 https://graphql.org/[GraphQL] is the standardized query language, which  provides opportunity to search and retrieve the Workflow by specified criterion from the Catalog.
 NOTE: Please follow the +++<a class="catalogGraphQLUrl" href="/catalog/graphiql" target="_blank">graphiql endpoint</a>+++ in order to query for the specific Workflow.
 
-== Use the ProActive Catalog from the GUI
-
-The GUI interaction with the Catalog can be done in two places: the +++<a class="studioUrl" href="/studio" target="_blank">Studio</a>+++ and +++<a class="automationDashboardUrl" href="/automation-dashboard/#/portal/catalog-portal" target="_blank">Catalog Portal</a>+++.
-The portals follow the concepts of the Catalog: Workflows are stored inside buckets, a workflow has some metadata and can have several revisions.
-
-The Catalog view in the Studio or in the Catalog Portal allows to browse all the workflows in the Catalog grouped by buckets and to list all the revisions of a workflow along with their commit message.
-
-=== Studio
-Inside the Studio, there is a `Catalog` menu from which a user can directly interact with the Catalog to import or publish Workflows.
-
-image::studio_catalog_menu.png[align=center]
-
-Additionally, the Palette of the Studio lists the user's favourite buckets to allow easy import of workflows from the Catalog with a simple Drag & Drop.
-
-image::studio-palette.png[align=center]
-
-==== Publish current Workflow to the Catalog
-Workflows created in the studio can be saved inside a bucket in the Catalog by using the `Publish current Workflow to the Catalog` action.
-When saving a Workflow in the Catalog, users can add a specific `commit message`.
-If a Workflow with the same name already exists in the specified bucket, a new revision of the Workflow is created.
-We recommend to always specify commit messages at any commit for an easier differentiation between stored versions.
-
-==== Get a Workflow from the Catalog
-When the Workflow is selected from Catalog you have two options:
-
-1. `Open as a new Workflow`: Open the Workflow from Catalog as a new Workflow in Studio.
-
-2. `Append to current Workflow`: Append the selected Workflow from the Catalog to the Workflow already opened inside the Studio.
-
-==== Add Bucket Menu to the Palette
-The Palette makes it easier to use workflows stored in a specific Bucket of the Catalog as templates when designing a Workflow.
-
-To add a bucket from the Catalog as a dropdown menu in the Palette:  Click on `View` → `Add Bucket Menu to the Palette` or you press the image:studio-palette-add.png[+, 32, 32] button in the palette.
-A window will show up to ask you which bucket you want to add to the Palette as in the image below.
-
-image::studio-catalog-main-menu3.png[align=center]
-
-The selected `Data Connectors` Bucket now appears as a menu in the Studio. See the image below.
-
-image::studio-catalog-main-menu4.png[align=center]
-
-You can repeat the operation as many times as you wish in order to add other specific Menus you might need for your workflow design. See the image below.
-
-image::studio-catalog-main-menu5.png[align=center]
-
-==== Change Palette Preset
-The Studio offers the possibility to set a Preset for the Palette. This makes it easier to load the Palette with a predefined set of default buckets.
-Presets are generally arranged by theme (Basic Examples, Machine Learning, Deep Learning, Big Data, etc.)
-The Palette's preset can be changed by clicking `View` → `Change Palette Preset`. This will show a window with the current list of presets as in the image below.
-
-image::studio-catalog-main-menu1.png[align=center]
-
-After changing the preset, its name appears at the top of the Studio and all its buckets are added to the Palette.
-
-image::studio-catalog-main-menu2.png[align=center]
-
 === Catalog Portal
 The Catalog Portal provides the capability to store objects like Workflows, Calendars, Scripts, etc.
 Powerful versioning together with full access control (RBAC) is supported, and users can easily share Workflows, templates, and other objects between teams, and various environments (Dev, Test, Staging, Prod).
@@ -2025,11 +2026,11 @@ Powerful versioning together with full access control (RBAC) is supported, and u
 image::catalog-portal-context-menu.png[align=center]
 
 ==== Creating new buckets
-Create a new bucket easily by clicking on the `plus` button. 
+Create a new bucket easily by clicking on the `plus` button.
 
 image::create-new-bucket.png[align=left]
 
-In the `Create the new bucket` window, it is possible to associate a bucket to a specific users group. 
+In the `Create the new bucket` window, it is possible to associate a bucket to a specific users group.
 
 By doing so, only users from the same group will be able to access the content of the bucket.
 
@@ -2039,7 +2040,7 @@ A bucket with no associated group is also known as a _public bucket_.
 More information regarding bucket access control is available in the link:../admin/ProActiveAdminGuide.html#_catalog[Catalog administration guide].
 
 ==== Removing Objects Inside a Bucket
-Select the objects to remove (CTRL + left click to select multiple objects) and click on the `trash` button. 
+Select the objects to remove (CTRL + left click to select multiple objects) and click on the `trash` button.
 
 WARNING: All the object's content will be removed from the database and it cannot be restored.
 
@@ -2048,7 +2049,7 @@ Catalog Objects can be exported to a local archive, and share them easily by ema
 
 TIP: Use this feature to easily share Catalog objects across different environments.
 
-To export the selected objects as a ZIP archive, press the download button from portal view. 
+To export the selected objects as a ZIP archive, press the download button from portal view.
 
 image::download-catalog-objects.png[align=left]
 
@@ -2058,19 +2059,19 @@ image::upload-catalog-objects.png[align=left]
 
 * *Object Kind*: The kind of object to add. New Kinds can be added by clicking the `plus` button.
 
-* *Content Type*: The Content Type is used to indicate the media type of the resource. New content Types can be added by clicking the `plus` button. 
+* *Content Type*: The Content Type is used to indicate the media type of the resource. New content Types can be added by clicking the `plus` button.
 
 WARNING: In case of uploading an archive, all the objects in the zip must have the same Kind and Content Type.
 
 
-==== Catalog Object Versioning
-The HEAD of a Catalog object corresponds to the last commit and it is displayed on the portal. 
+==== Object Versioning in Catalog Portal
+The HEAD of a Catalog object corresponds to the last commit and it is displayed on the portal.
 
 In order to see all the commits of the selected Object, please click on the `clock` button inside the description area.
 
-The commits are shown in chronological order by commit time. 
+The commits are shown in chronological order by commit time.
 
-It is possible to restore any previous commit to the HEAD position by clicking the `restore` button. 
+It is possible to restore any previous commit to the HEAD position by clicking the `restore` button.
 
 image::revisions-catalog.png[align=center]
 
