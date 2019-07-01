@@ -236,11 +236,11 @@ In the import mode, the output containing the imported data takes one or many of
 ==== Database Connections Pooling
 To allow the persistence of a single connection across multiple SQL tasks (basically when running several tasks concurrently on the same machine),
 we have implemented the connection pooling feature to any external SQL database based on the https://github.com/brettwooldridge/HikariCP[HikariCP^] Framework.
-This feature is showcased through two workflow templates: SQL_Pooled_Connection_Query and SQL_Pooled_Connection_Update. Both are a single task workflow.
+This feature is demonstrated through two workflow templates: SQL_Pooled_Connection_Query and SQL_Pooled_Connection_Update. Both are single-task workflows.
 
 *Variables:*
 
-The variables listed in the following table exist for both the SQL_Pooled_Connection_Update and the SQL_Pooled_Connection_Query workflows.
+The variables listed in the following table exist for both SQL_Pooled_Connection_Update and SQL_Pooled_Connection_Query workflows.
 
 .Workflows' variables
 [cols="2,5,2,2,2,3"]
@@ -305,7 +305,7 @@ In addition to the aforementioned variables, SQL_Pooled_Connection_Query workflo
 
 Default: `HTML`
 | `STORE_RESULT_VARIABLE`
-| if not empty, the value will be the name of a variable that contains the resultSet (converted into a List of Maps) of the query. This variable can be used in other tasks.
+| if not empty, the value will be the name of a variable that contains the resultSet of the query (converted into a List of Maps). This variable can be used in other tasks.
 | Workflow, Task
 | No
 | String
