@@ -240,7 +240,7 @@ This feature is showcased through two workflow templates: SQL_Pooled_Connection_
 
 *Variables:*
 
-The SQL_Pooled_Connection_Update workflow shares with the SQL_Pooled_Connection_Query workflow the same list of variables. Consequently, we describe them in the same following table.
+The variables listed in the following table exist for both the SQL_Pooled_Connection_Update and the SQL_Pooled_Connection_Query workflows.
 
 .Workflows' variables
 [cols="2,5,2,2,2,3"]
