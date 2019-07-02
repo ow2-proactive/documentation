@@ -830,6 +830,8 @@ WARNING: It is recommended to use an enabled-GPU node to run the deep learning t
 
 == References
 
+[[_AutoML]]
+
 === AutoML Optimization Bucket
 
 The `auto-ml-optimization` bucket contains the Multi_Tuners_AutoML workflow that can be easily used to find the operating parameters for any system whose performance can be measured as a function of adjustable parameters.
