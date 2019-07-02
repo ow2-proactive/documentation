@@ -1,0 +1,96 @@
+:docinfo:
+:toc:
+:toc-title: Job Analytics User Guide
+= Job Analytics
+include::../common-settings.adoc[]
+include::../all-doc-links.adoc[]
+
+== Job Analytics Portal
+
+The *ProActive Job Analytics* is a dashboard that provides an overview of executed workflows
+along with their input variables and results.
+
+It offers several functionalities including:
+
+- Advanced search by names, users, dates, states, etc.
+- Execution summary metrics about durations, encountered issues, etc.
+- Charts to track variables and results evolution and correlation
+- Export data in multiple formats for further use in analytics tools
+
+
+The screenshot below shows an overview of the Job Analytics Portal.
+
+[[_JA-overview]]
+image::JA-overview.png[align=center]
+Job analytics is very useful to compare metrics and charts of workflows that have common variables and results. For example, a Machine Learning algorithm might take different variable values (training data) and produce multiple results (models). It would be nice to see the correlation and evolution of algorithm results regarding the input variation (See also a similar example of link:../MLOS/MLOSUserGuide.html#_AutoML[AutoML]).
+Hence, we present in the following a detailed list of the dashboard features that could be exploited in such use cases.
+
+[[_job_search]]
+=== Job Search
+
+Job Analytics Portal comes with a search window that allows users to search for scheduled jobs according to their specific criteria (see screenshot below).
+The job search panel allows to select multi-value filters for the following job parameters:
+
+- _Workflow Name(s)_: It is possible to filter jobs by workflow names. One or more workflow names could be selected with an auto-complete feature. This filter field proposes a list of workflow names which are extracted from the list of existing workflows in the link:../user/ProActiveUserGuide.html#_catalog_portal[ProActive Catalog.]
+- _Project Name(s)_: You can also filter by one or more project names. You have just to specify the project names for the jobs you would like to analyze.
+- _Job State(s)_: You can specify the state of jobs you are looking for. For instance, you can filter `Pending`, `Running`, `Stalled`, `Paused`, `In_Error`, `Finished`, `Canceled`, `Failed`, and `Killed` jobs. For more information about job states, check the documentation link:../user/ProActiveUserGuide.html#_states[here.] Multi value is accepted as well.
+- _User(s)_: This filter allows to either select only the user jobs or to specify the list of users that have executed the workflows. By default, the toggle filter is activated to select only the user jobs.
+- _Submission Time_: From the dropdown list, users can select jobs submitted today, yesterday, this week, last week, this month, last month, last month, or choose custom dates by specifying the begin and end dates.
+- _Variables and results_: It is possible to choose to display or not the workflow variables and results. When deactivated, the charts related to variables and results evolution/correlation will not be displayed in the dashboard.
+
+More advanced search options (_highlighted in advanced search hints_) could be applied to select the filter values. For instance, regular expressions could be applied to select more general values. For example, names that start with a specific string value are selected using `value*`. Other supported expressions are: `_\*value_` for _ends with_, `*value*` for _contains_, `!value` for _not equals_, and `!\*value*` for _not contains_.
+The clear button allows to clear all filter values and the search button will request jobs from the scheduler database according to the provided filter values.
+
+In the top side of the search window, a reminder of the selected filter values is displayed to show the filters that were considered during the latest search query.
+
+[[_JA-search-png]]
+image::JA-search.png[align=center]
+
+=== Execution Metrics
+As shown in the screenshot below, Job Analytics provides a summary of the most important job execution metrics. For instance, the dashboard shows:
+
+- A first panel to display the number of total jobs that correspond to the user query and filters. It also shows the ratio of successful jobs over the total number, and the number of jobs that are in progress and not yet finished.
+- A second summary panel to display the number of jobs with issues. We distinguish two types of issues: jobs that are finished but have encountered issues during their execution, and interrupted jobs that did not finish their execution and were stopped due to several kinds of issues such as insufficient resources, manual interruption, etc. So, we distinguish 4 types of interrupted states: `In-Error`, `Failed`, `Canceled`, and `Killed`.
+- The last metric gives an overview of the average duration of selected jobs.
+
+Users can also define their own job metrics but this feature is not fully implemented and will be integrated in the next release.
+
+image::JA-metrics.png[align=center]
+
+=== Job Charts
+
+Job Analytics includes three types of charts:
+
+- *Job duration chart:* This chart shows job duration per workflow instance. The x-axis shows the job ID and the y-axis shows the job duration. Hovering over the lines will also display the same information as a tooltip (see screenshot below). Using the duration chart will eventually help the users to identify any abnormal performance behavior among several workflow executions.
+[[_JA-duration]]
+
+image::JA-duration.png[align=center]
+- *Job variables chart:* This chart is intended to show all variable values of selected workflows. It helps to verify the workflow input values across all jobs. The chart provides the ability to hide or show specific input variables in the legend as shown in the figure below.
+
+- *Job results chart:* This chart is intended to show all result values of selected workflows. It helps to verify the workflow results across all jobs. The chart provides also the ability to hide or show specific results as shown in the figure above.
+
+image::JA-chart.png[align=center]
+
+All charts provides some advanced features such as "maximize" and "enlarge" to better view the results, and "move" to customize the dashboard layout (see top left side of charts). All of them provides the hovering feature as previously described and two types of charts to display: line and bar charts. Switching from one to another can be activated through a toggle button located in the top right of the chart. Same for show/hide variables and results.
+
+
+=== Job Execution table
+
+
+The last element of the Job Analytics dashboard shows a summary table that contains all job executions returned by the search query. It includes the job ID, status, duration, submission time, variables, results, etc.
+The summary table includes many features:
+
+- _Filtering_: users can specify filter values for every column. For instance, the picture below applies a filter on the duration where we filter only jobs that last more than 30s. For string values, we can apply string-related filters such as _contains_. For dates, a calendar is displayed to help users select the right date.
+- _Sort, hide, pin left and right columns_ to make users able to easily handle and display data according to their needs.
+- _Export the job data to another format_ to make users able to exploit and process them using other analytics tools such as R, Matlab, BI tools, Machine Learning APIs, etc.
+- _Clear and apply filters_: When filters are applied, the data might change so we provide an option to activate (see _apply filters to charts_ on the top left of the of the table screenshot) that allows to synchronize the charts with the filtered data in the table. Finally, it is possible to clear all filters. This will make the synchronization automatically deactivated.
+- _Link to scheduler jobs_: data in the job ID column is linked to the job executions in the scheduler. For example, if one wants to access to the logs of a failing job, he can click on the corresponding job ID to be redirected to the job location in the scheduling portal.
+
+
+
+NOTE: It is important to notice that the dashboard layout and search preferences are saved in the browser cache so that users can have access to their last dashboard and search settings.
+
+image::JA-table.png[align=center]
+
+include::../common-footer.adoc[]
+
