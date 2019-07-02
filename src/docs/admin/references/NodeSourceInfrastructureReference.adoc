@@ -249,7 +249,7 @@ The configuration of the AWS Autoscaling infrastructure is subjected to several 
 
 ===== Infrastructure Configuration
 
-To use a cluster of AWS instances as a computing resource for the ProActive scheduler, the administrator has to create a nodesource in the Resource Manager with the *AwsAutoScalingInfrastructure* profile.
+To use a cluster of AWS instances as a computing resource for the ProActive scheduler, the administrator has to create a NodeSource in the Resource Manager with the *AwsAutoScalingInfrastructure* profile.
 The configuration form exposes the following fields:
 
 	- *vmGroupTagPrefix:* Each instance prepared by the connector is flagged with the tag named *vmGroupName*.
@@ -284,6 +284,10 @@ The configuration form exposes the following fields:
  If specified, this parameter has to refer to an existing subnet in the region affected to the specified VPC, and has to comply with the subnet ID format.
  This parameter has to be filled only if the *defaultVpcId* is also completed.
  Otherwise, this parameter has to be left blank to trigger networking autoconfiguration.
+
++
+WARNING: Please do not trigger networking autoconfiguration if you operate ProActive on AWS with PNP protocol.
+Otherwise, a new and distinct VPC will be used to operate the nodes created by the NodeSource, preventing their communication with the Resource Manager.
 
 	- *defaultSecurityGroup:* This parameter receives the ID of the security group to spawn instances into.
  If this parameter does not meet the requirement regarding the providing the provided VPC and subnet, a new security group will be generated.
