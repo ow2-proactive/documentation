@@ -154,7 +154,7 @@ The configuration of the AWS EC2 infrastructure is subjected to several requirem
     Detailed information is available in AWS documentation for https://aws.amazon.com/ec2/faqs/#How_many_instances_can_I_run_in_Amazon_EC2[Instances limit].
 
 4. The administrator must be in possession of a valid *AMI ID* to provision instances operating ProActive node.
-    Currently we only support the Linux operating system for the AWS.
+    Currently we only support the Linux operating system for AWS.
 
 5. The Resource Manager should be accessible from the AWS cloud.
     Please consider replacing PNP by PAMR as communication protocol if the Resource Manager is located behind a NAT gateway.
@@ -178,7 +178,7 @@ TIP: If all the nodes of an AWS instance are removed, the instance will be termi
 +
 
 -   *image*: Defines which VM image (AMI) will be used to create an AWS instances.
-        The value to provide is the AWS region together with the unique AMI Id, for example: `eu-west-1/ami-bff32ccc`.
+        The value to provide is the AWS region together with the unique AMI ID, for example: `eu-west-1/ami-bff32ccc`.
         This is an optional property. When no image is specified from the user, the default value `eu-west-3/ami-03bca18cb3dc173c9` is used.
         Make sure the image is from a supported region (listed in the section <<_pre_requisites,Pre-Requisites>>) and using Linux operating system.
         More information about finding a Linux AMI ID is available on https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html[AWS EC2 guide for finding an AMI].
@@ -206,7 +206,6 @@ TIP: If all the nodes of an AWS instance are removed, the instance will be termi
 WARNING: If the combination between RAM and CORES does not match any existing AWS instance type, then the closest to the specified parameters will be selected.
 +
 
-// TODO the property spotPrice disabled for this release
 // -   *spotPrice:* The maximum price that you are willing to pay per hour per instance (your bid price). Amazon EC2 Spot instances allow you to bid on spare Amazon EC2 computing capacity. Since Spot instances are often available at a discount compared to On-Demand pricing. If your bid price is greater than the current Spot price for the specified instance, and the specified instance is available, your request is fulfilled immediately. Otherwise, the request is fulfilled whenever the Spot price falls below your bid price or the specified instance becomes available. Spot instances run until you terminate them or until Amazon EC2 must terminate them (also known as a Spot instance interruption). More information available on https://aws.amazon.com/ec2/spot/[AWS EC2 Spot]
 
 -   *securityGroupIds*: This option allows you to specify the id(s) of the security group(s) configured as a virtual firewall(s) to control inbound and outbound traffic for the EC2 instances hosting the ProActive nodes.
@@ -239,7 +238,7 @@ An AWS EC2 NodeSource can now be added using the *Create Node Source* panel in t
 
     $ PROACTIVE_HOME/bin/proactive-client --createns ec2 -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.AWSEC2Infrastructure awsKey awsSecretKey numberOfInstances numberOfNodesPerInstance image vmUsername vmKeyPairName vmPrivateKey ram cores securityGroupIds subnetId rmHostname connectorIaasURL nodeJarURL additionalProperties nodeTimeout
 
-As AWS is a paying service, when the ProActive server is stopped normally (without removing the created infrastructure), all the created AWS instances will be terminated. And when the ProActive server is restarted, these instances will be re-configured as per the previous settings.
+As AWS is a paying service, when the ProActive server is stopped normally (without removing the created infrastructure), all the created AWS instances will be terminated. When the ProActive server is restarted, these instances will be re-configured as per the previous settings.
 
 WARNING: If ProActive server is forcibly killed, the created AWS instances will not be terminated. And, when ProActive server is restarted, the infrastructure will be re-configured as per the previous settings. If the instances were deleted at the AWS side, they will be re-created and re-configured.
 
