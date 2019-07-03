@@ -177,12 +177,12 @@ them, and how to use them to configure your environment.
         
     -   *numberOfInstances:* Total number of AWS instances to create for this infrastructure.
     
-    -   *numberOfNodesPerInstance:* Total number of Proactive Nodes to deploy in each created AWS instance.
+    -   *numberOfNodesPerInstance:* Total number of ProActive Nodes to deploy in each created AWS instance.
     
 +
 TIP: If all the nodes of an AWS instance are removed, the instance will be terminated. For more information on the terminated state in AWS please see https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/terminating-instances.html[AWS Terminating Instances].
 +       
-    -   *downloadCommand:* The command to download the Proactive *node.jar*. This command is executed in all the newly created AWS instances.
+    -   *downloadCommand:* The command to download the ProActive *node.jar*. This command is executed in all the newly created AWS instances.
     	The full URL path of the *node.jar* to download, needs to be accessible from the AWS cloud.
         Example based on AWS image with windows operating system:
         
@@ -199,9 +199,9 @@ WARNING: If the combination between RAM and CORES does not match any existing AW
 
     -   *spotPrice:* The maximum price that you are willing to pay per hour per instance (your bid price). Amazon EC2 Spot instances allow you to bid on spare Amazon EC2 computing capacity. Since Spot instances are often available at a discount compared to On-Demand pricing. If your bid price is greater than the current Spot price for the specified instance, and the specified instance is available, your request is fulfilled immediately. Otherwise, the request is fulfilled whenever the Spot price falls below your bid price or the specified instance becomes available. Spot instances run until you terminate them or until Amazon EC2 must terminate them (also known as a Spot instance interruption). More information available on https://aws.amazon.com/ec2/spot/[AWS EC2 Spot]
 
-    -   *securityGroupNames:* The securityGroupNames option allows you to specify the name(s) of the Security group(s) configured as a virtual firewall(s) to control inbound and outbound traffic for the EC2 instances hosting the proactive nodes. More information regarding Amazon EC2 Security Group available on https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html[AWS EC2 Security Groups]
+    -   *securityGroupNames:* The securityGroupNames option allows you to specify the name(s) of the Security group(s) configured as a virtual firewall(s) to control inbound and outbound traffic for the EC2 instances hosting the ProActive nodes. More information regarding Amazon EC2 Security Group available on https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html[AWS EC2 Security Groups]
 
-    -   *subnetId:* The subnetId option allows you to launch the proactive nodes on EC2 instances, which will run into an existing subnet added to a specific Virtual Private Cloud. More information regarding Amazon EC2 Virtual Private Cloud (Amazon VPC) available on https://aws.amazon.com/vpc/[AWS EC2 Virtual Private Cloud] and Amazon EC2 Virtual Private Cloud and Subnet available on https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html[AWS EC2 Virtual Private Cloud and Subnet]
+    -   *subnetId:* The subnetId option allows you to launch the ProActive nodes on EC2 instances, which will run into an existing subnet added to a specific Virtual Private Cloud. More information regarding Amazon EC2 Virtual Private Cloud (Amazon VPC) available on https://aws.amazon.com/vpc/[AWS EC2 Virtual Private Cloud] and Amazon EC2 Virtual Private Cloud and Subnet available on https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html[AWS EC2 Virtual Private Cloud and Subnet]
 
 +
 Using this configuration, you can start a Resource Manager and a
@@ -228,7 +228,7 @@ However, it implements a different instance management strategy that reduces the
 
 The configuration of the AWS Autoscaling infrastructure is subjected to several requirements.
 
-	1. The administrator needs both an *AWS access key* and an *AWS secret access key* to enable proactive to authenticate against AWS.
+	1. The administrator needs both an *AWS access key* and an *AWS secret access key* to enable ProActive to authenticate against AWS.
  Please refer to https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html?icmpid=docs_iam_console#Using_CreateAccessKey[the AWS documentation] to learn how to get them.
 
 	2. The *AWS region* that will support the node cluster must not have reached its resources quota.
@@ -238,7 +238,7 @@ The configuration of the AWS Autoscaling infrastructure is subjected to several 
  Detailed information is available in AWS documentation for https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html#limits_vpc[VPC] and https://aws.amazon.com/fr/ec2/faqs/#How_many_instances_can_I_run_in_Amazon_EC2[Instances]. 
 
 	3. The administrator must be in possession of a valid *AWS keypair* and the ID of the *Amazon Machine Image (AMI)* to provision instances operating ProActive node.
- If the AMI to use does not propose the Linux operating system, the administrator must supply a *provision script* to (i) download a Java Runtime Environment (JRE), (ii) download Proactive Node agent (node.jar), (iii) and start up the ProActive agent. 
+ If the AMI to use does not propose the Linux operating system, the administrator must supply a *provision script* to (i) download a Java Runtime Environment (JRE), (ii) download ProActive Node agent (node.jar), (iii) and start up the ProActive agent.
 
 	4. Optionally, if networking autoconfiguration is not triggered, the administrator has to configure (i) a public *VPC*, (ii) a *Subnet* complying with with VPC CIDR configuration, (iii) an Internet gateway for that VPC and a (iv) Security Group authorizing HTTPS connection to Internet and PNP or PAMR connection to the Resource Manager.
  The administrator must be in possession of the IDs of the VPC, of the Subnet and of the Security Group.
@@ -336,14 +336,14 @@ can be created using the Resource Manager. This section describes briefly how to
 1.  First, you need to have an admin account on your OpenStack server. For more information see
 https://docs.openstack.org/icehouse/install-guide/install/yum/content/keystone-users.html[OpenStack users and tenants].
 
-2. The creation of OpenStack Infrastructure asks for an authentification to the OpenStack server and a deployment of instances that will host proactive nodes.
+2. The creation of OpenStack Infrastructure asks for an authentication to the OpenStack server and a deployment of instances that will host ProActive nodes.
 
-Use the proper admin username and password to fill in the properties *username* and *password* and perform the basic OpenStack authentification. Those two parameters should never change, except if you need for some reason to handle multiple OpenStack accounts.
+Use the proper admin username and password to fill in the properties *username* and *password* and perform the basic OpenStack authentication. Those two parameters should never change, except if you need for some reason to handle multiple OpenStack accounts.
 
-For more information regarding OpenStack authentication mode see https://docs.openstack.org/security-guide/identity/authentication.html[OpenStack authentification mode]. 
+For more information regarding OpenStack authentication mode see https://docs.openstack.org/security-guide/identity/authentication.html[OpenStack authentication mode].
     
 
-Other properties needed for the authentification are :
+Other properties needed for the authentication are:
 
    -   *domain:* The name of the domain to use that refers to the collection of projects and users defining administrative boundaries for managing Identity entities. For more information see https://docs.openstack.org/security-guide/identity/domains.html[OpenStack domain].
 
@@ -362,7 +362,7 @@ Other properties needed for the authentification are :
 
    -   *identityVersion:* The REST API version of OpenStack installation. For more information see https://docs.openstack.org/keystone/pike/contributor/http-api.html[OpenStack API Version]. 
 
-Properties needed for the deployment of instance are :  
+Properties needed for the deployment of instance are:
 
    -   *image:* Defines which image will be used to create the OpenStack instance. The value to provide is the unique image Id.
    
@@ -377,7 +377,7 @@ WARNING: In order to use publicKeyName, the key pair needs to be created and imp
         
     -   *numberOfInstances:* Total number of OpenStack instances to create for this infrastructure.
     
-    -   *numberOfNodesPerInstance:* Total number of Proactive Nodes to deploy in each OpenStack created instance.
+    -   *numberOfNodesPerInstance:* Total number of ProActive Nodes to deploy in each OpenStack created instance.
     
 +
 TIP: If all the nodes of an OpenStack instance are removed, the instance will be terminated.
@@ -390,7 +390,7 @@ Other properties for the node deployment in the *Create OpenStack Node Source* a
 
     -   *rmHostname:* The hostname or the public IP address of the Resource Manager. This address needs to be accessible from the OpenStack server.
 
-    -   *downloadCommand:* The command to download the Proactive *node.jar*. This command is executed in all the newly created OpenStack instances.
+    -   *downloadCommand:* The command to download the ProActive *node.jar*. This command is executed in all the newly created OpenStack instances.
     	The full URL path of the *node.jar* to download needs to be accessible from the OpenStack cloud.
 
     	    	
@@ -449,14 +449,14 @@ WARNING: The username and password are related to the image.
         
     -   *numberOfInstances:* Total number of VMware instances to create for this infrastructure.
     
-    -   *numberOfNodesPerInstance:* Total number of Proactive Nodes to deploy in each VMware created instance.
+    -   *numberOfNodesPerInstance:* Total number of ProActive Nodes to deploy in each VMware created instance.
     
 +
 TIP: If all the nodes of an VMware instance are removed, the instance will be terminated.
 +
 
        
-    -   *downloadCommand:* The command to download the Proactive *node.jar*. This command is executed in all the newly created VMware instances.
+    -   *downloadCommand:* The command to download the ProActive *node.jar*. This command is executed in all the newly created VMware instances.
     	The full URL path of the *node.jar* to download, needs to be accessible from the VMware cloud.
     	    	
     -   *additionalProperties:* Additional Java command properties to be added when starting each ProActive node JVM in VMware instances (e.g. \"-Dpropertyname=propertyvalue\").
@@ -493,48 +493,191 @@ https://cloud.google.com/compute/docs/access/service-accounts[Google Cloud Servi
 ===== Infrastructure Configuration
 
 Now, you are ready to create a new node source of the type _GCE Infrastructure_.
-The properties needed for the node deployment in the _Create GCE Node Source_ are :
+The properties needed for the node deployment in the _Create GCE Node Source_ are:
 
 -   *gceCredential:* The credentials to perform the basic Google Cloud Platform authentication.
         Upload the JSON file of a Google Cloud service account key (downloaded in the section Pre-Requisites) to fill in this property.
 -   *totalNumberOfInstances:* Total number of GoogleComputeEngine instances to create for this infrastructure.
--   *numberOfNodesPerInstance:* Total number of Proactive Nodes to deploy in each created GoogleComputeEngine instance.
+-   *numberOfNodesPerInstance:* Total number of ProActive Nodes to deploy in each created GoogleComputeEngine instance.
 +
-TIP: If all the nodes of an GoogleComputeEngine instance are removed, the instance will be terminated.
+TIP: If all the nodes of a GoogleComputeEngine instance are removed, the instance will be terminated.
 +
--   *vmUsername*: Defines the user name that will be used to connect to GoogleComputeEngine instances.
+-   *vmUsername:* Defines the user name that will be used to connect to GoogleComputeEngine instances.
         If not provided, then GoogleComputeEngine instances will be accessed as the default user.
         If specified, the corresponding `vmPublicKey` and `vmPrivateKey` must be specified as well.
--   *vmPublicKey*: Defines the public key to grant a user specified access for the created GoogleComputeEngine instances.
+-   *vmPublicKey:* Defines the public key to grant a user specified access for the created GoogleComputeEngine instances.
         If specified, the corresponding `vmUsername` and `vmPrivateKey` must be specified as well.
--   *vmPrivateKey*: Defines the private key that will be used to connect to GoogleComputeEngine instances.
+-   *vmPrivateKey:* Defines the private key that will be used to connect to GoogleComputeEngine instances.
         If specified, the corresponding `vmUsername` and `vmPublicKey` must be specified as well.
--   *image*: Defines which image will be used to create the GoogleComputeEngine instance.
+-   *image:* Defines which image will be used to create the GoogleComputeEngine instance.
         The value to provide is the unique name of the image.
         If not provided, the default value "debian-9-stretch-v20190326" will be used.
         For more information see https://cloud.google.com/compute/docs/images/[Google Compute Engine Images List].
--   *region*: The geographic zone for Google Cloud Platform resources to use.
+-   *region:* The geographic zone for Google Cloud Platform resources to use.
         If not provided, the default value "us-central1-a" will be used.
         For more information see https://cloud.google.com/compute/docs/regions-zones/[Google Compute Engine Regions and Zones].
--   *ram*: The minimum required amount of RAM (expressed in Mega Bytes) for each GoogleComputeEngine instance to be created.
+-   *ram:* The minimum required amount of RAM (expressed in Mega Bytes) for each GoogleComputeEngine instance to be created.
         If not provided, the default value 1740 will be used.
--   *cores*: The minimum required amount of virtual cores for each GoogleComputeEngine instance to be created.
+-   *cores:* The minimum required amount of virtual cores for each GoogleComputeEngine instance to be created.
         If not provided, the default value 1 will be used.
--   *rmHostname*: The hostname or the public IP address of the Resource Manager. This address needs to be accessible from the GoogleComputeEngine server.
--   *connectorIaasURL*: Connector-iaas is a ProActive service used to interact with IaaS like GoogleComputeEngine.
+-   *rmHostname:* The hostname or the public IP address of the Resource Manager. This address needs to be accessible from the GoogleComputeEngine server.
+-   *connectorIaasURL:* Connector-iaas is a ProActive service used to interact with IaaS like GoogleComputeEngine.
         By default it runs on the following URL _rmHostname/connector-iaas_.
--   *nodeJarURL*: The full URL path of the _node.jar_ to download the Proactive node.jar on each new created GoogleComputeEngine instance.
+-   *nodeJarURL:* The full URL path of the _node.jar_ to download the ProActive node.jar on each new created GoogleComputeEngine instance.
         The URL needs to be accessible from the GoogleComputeEngine server.
--   *additionalProperties*: Additional Java command properties to be added when starting each ProActive node JVM in GoogleComputeEngine instances (e.g. "-Dpropertyname=propertyvalue").
--   *nodeTimeout*: The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node is considered as lost.
+-   *additionalProperties:* Additional Java command properties to be added when starting each ProActive node JVM in GoogleComputeEngine instances (e.g. "-Dpropertyname=propertyvalue").
+-   *nodeTimeout:* The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node is considered as lost.
 
 Using this configuration, you can start a Resource Manager and a Scheduler using the */bin/proactive-server* script.
-An GoogleComputeEngine NodeSource can now be added using the *Create Node Source* panel in the Resource Manager or the command line interface:
+A GoogleComputeEngine NodeSource can now be added using the *Create Node Source* panel in the Resource Manager or the command line interface:
 
     $ PROACTIVE_HOME/bin/proactive-client --createns googlecomputeengine -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.GCEInfrastructure gceCredential totalNumberOfInstances numberOfNodesPerInstance vmUsername vmPublicKey vmPrivateKey image region ram cores rmHostname connectorIaasURL nodeJarURL additionalProperties nodeTimeout
 
 WARNING: When ProActive server is stopped, GoogleComputeEngine instances will be automatically deleted. And when ProActive server is restarted, the infrastructure will be recovered as per the previous settings. The required GoogleComputeEngine instances will be re-created and re-configured.
 
+==== Azure Infrastructure
+
+The Resource Manager allows to deploy ProActive nodes on the Microsoft Azure cloud. This infrastructure will create and manage virtual machines (VMs) with your custom Azure image and host ProActive nodes on them. In this section we will guide you through the requirements and configuration needed to setup an Azure infrastructure.
+
+===== Pre-Requisites
+
+To create an Azure infrastructure, ProActive relies on an existing Azure user account with a valid subscription. In particular, you will require:
+
+- *Azure account:* You should have a valid Azure account, linked to an Azure subscription with enough budget and core quota to deploy the VMs (and their underlying resources) that you request.
+- *Azure privileges:* If your account does not have full Admin privileges on your subscription, please make sure you have rights to:
+* Access a https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview#resource-groups[resource group] of your choice.
+* Create VMs in that resource group.
+* Delete VMs in that resource group.
+- *Service Principal credentials:* ProActive uses Azure's API to manage the VMs in the infrastructure. This API requires a set of Active Directory _service principal credentials_ for non interactive login (client, secret, tenant). If you do not have them, you can create them via the https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal[Azure Portal] or https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?view=azure-cli-latest[Azure CLI]. Please ask your administrator in case you do not have the privileges to create them. The credentials should be strings of hexadecimal values like _1a2b3c4d-5e6f-1a2b-3c4d-5e6f-1a2b3c4d5e6f_.
+- *Custom Azure +image+:* ProActive will create the infrastructure's VMs from an Azure image. You will need to have a custom Linux image available on the resource group of your choice. If you do not have one, you can create it by following https://docs.microsoft.com/en-us/azure/virtual-machines/linux/tutorial-custom-images[this tutorial].
+
+===== Infrastructure Configuration
+
+Once all the pre-requisites are met, you are ready to create an Azure infrastructure. On the ProActive's Resource Manager portal, select _AzureInfrastructure_ from the Infrastructure drop-down list.
+
+The following fields are available to configure your Azure infrastructure.
+
+- *clientId:* Corresponds to the Service Principal _application ID_.
+- *secret:* Corresponds to the _secret_ value (password) of the Service Principal.
+- *domain:* Corresponds to the Azure _domain_, _tenant ID_, or _directory ID_ of your Active Directory.
+- *subscriptionId:* The _ID_ of your Azure subscription.
+
+The next four parameters are optional, and apply to advanced Azure endpoint configurations only.
+
+- *authenticationEndpoint:* Azure Authentication endpoint.
+- *managementEndpoint:* Azure Management endpoint.
+- *resourceManagerEndpoint:* Azure Resource Manager endpoint.
+- *graphEndpoint:* Azure AD Graph endpoint.
+
++* * * * *+
+
+- *rmHttpUrl:* Here you should provide your server's URL or public IP (e.g. try.activeeon.com). A default value will be generated from the system properties but you might need to modify it according to your network configuration so that it is accessible from your Azure nodes.
+- *connectorIaasUrl:* The URL of your _Connector IaaS_ service. A default value will be generated as well (e.g. +http://try.activeeon.com:8080/connector-iaas+).
+- *image:* The name or id of your custom Linux image. The image should be located within the provided subscription and accessible to the service principal. It should also be located in the Azure region that you define in your configuration (see *region* parameter below).
+- *imageOSType:* The default value is _linux_. Currently, only Linux is supported as OS.
+- *vmSizeType:* The size of the VMs to be deployed. The default value is _Standard_D1_v2_. Azure provides an extensive list of https://docs.microsoft.com/en-us/azure/virtual-machines/linux/sizes[Linux VM sizes]. If you want to know the available sizes for a specific region or subscription you can use https://docs.microsoft.com/en-us/cli/azure/vm?view=azure-cli-latest#az-vm-list-sizes[Azure CLI command] `az vm list-sizes -l {your location}`.
+- *vmUsername:* Provide a user name for the VM.
+- *vmPassword:* Provide a password for your VM. Here is a guideline for https://docs.microsoft.com/en-us/azure/virtual-machines/linux/faq#what-are-the-password-requirements-when-creating-a-vm[Linux passwords on Azure].
+- *vmPublicKey:* An optional public RSA key to connect to your VMs via SSH protocol.
+- *resourceGroup:* The name of the resource group of your choice. If left blank, the resource group of the image will be used by default.
+- *region:* The Azure region where the VMs will be deployed. For a list of the regions supported by your subscription, you can use the https://docs.microsoft.com/en-us/cli/azure/account?view=azure-cli-latest#az-account-list-locations[CLI command] `az account list-locations -o table`, the right name to use is the one in the column _name_.
+- *numberOfInstances:* Total instances (VMs) to be created. The default value is _1_.
+- *numberOfNodesPerInstances:* The number of ProActive nodes to be launched in each VM. The default value is _1_.
+- *downloadCommand:* Command used to download ProActive's node.jar worker. If left blank a default command will be generated.
+- *privateNetworkCIDR:* An optional network Classless Inter-Domain Routing to allocate the new VMs within the private network. The default value is _10.0.0.0/24_.
+- *staticPublicIP:* A boolean flag to determine whether the public IPs of the infrastructure's VMs should be static. The default value is _true_.
+- *additionalProperties:* Additional JVM properties to configure your ProActive node. The default values allow to handle both PNP and PAMR protocols. You can add your own properties but be aware that removing the current values might cause the deployment to fail.
+
+The Azure infrastructure offers a simple interface to easily create ProActive nodes on Azure. If your project requires a dynamic and customizable set of Azure VMs, you can opt for an <<_azure_scale_set_infrastructure>>.
+
+==== Azure Scale Set Infrastructure
+
+We provide a highly customizable infrastructure to deploy ProActive nodes using an https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview[Azure Scale Set]. This infrastructure will allow you to automatically adjust the number of deployed virtual machines (VM) in response to the current workload, and according to your configured parameters, e.g. min/max number of nodes, number of nodes per VM, or minimal up-time. Auto-scaling will help you increase your processing capacity during peak computation periods, while keeping your expenses low during less intensive or idle periods.
+
+Whether you require to run your workflows on Linux or Windows, use standard or custom VM images, do some pre-configuration steps, or mount a shared file system, the Azure Scale Set infrastructure can handle it. This guide describes the requirements and the various configuration parameters available to deploy an Azure Scale Set infrastructure.
+
+===== Pre-Requisites
+
+As in our standard <<_azure_infrastructure>>, ProActive relies on an existing Azure user account with a valid subscription in order to deploy a Scale Set. These are the specific requirements:
+
+- *Azure account:* You should have a valid Azure account, linked to an Azure subscription with enough budget and https://docs.microsoft.com/en-us/azure/azure-subscription-service-limits[service quotas] to deploy the Scale Set that you request.
+- *Azure privileges:* If your account does not have full Admin privileges on your subscription, please make sure you have rights to:
+* Create a https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview#resource-groups[resource group] in a region of your choice.
+* Create a Scale Set in that resource group, and create its underlying resources: Public IP Address, Load Balancer, Network Security Group and Virtual Network.
+* Create a Storage account in that resource group, and use its various services (in particular Blobs, Tables and Queues).
+* Delete a resource group.
+- *Service Principal credentials:* ProActive uses Azure's API to manage the Scale Set and Storage resources. This API requires a set of Active Directory _service principal credentials_ for non interactive login (client, secret, tenant). If you do not have them, you can create them via the https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal[Azure Portal] or https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?view=azure-cli-latest[Azure CLI]. Please ask your administrator in case you do not have the privileges to create them. The credentials should be strings of hexadecimal values like _1a2b3c4d-5e6f-1a2b-3c4d-5e6f-1a2b3c4d5e6f_.
+
+
+===== Infrastructure Configuration
+
+The Azure Scale Set Infrastructure offers a wide range of possibilities to configure your Scale Set so that:
+[lowerroman]
+. You have in your VMs everything you need to execute your jobs.
+. You can control your expenses by defining size and limits of your VMs.
+
+The available configuration parameters are:
+
+- *azureCredentialFile:* Use the provided file selection tool to supply a file with your Azure Credentials. These credentials correspond to those generated with the Service Principal as mentioned in the Pre-Requisites sub-section. The file should be a four-line text document in a `.ini` like format, and must include the following elements:
++
+....
+client=xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+key=xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+tenant=xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+subscription=xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+....
+Where:
++
+* *_client_:* Corresponds to the Service Principal _application ID_.
+* *_key_:* Corresponds to the _secret_ value (password) of the Service Principal.
+* *_tenant_:* Corresponds to the Azure _domain_, _tenant ID_, or _directory ID_ of your Active Directory.
+* *_subscription_:* Is the _ID_ of your Azure subscription.
+
++
+You can opt to place this file in `$PROACTIVE_HOME/config/authentication/azure.creds` so that it will available and automatically loaded in case you want to have multiple Azure node sources.
+
+- *maxVms:* Define the maximum number of VMs to be deployed by the scale set at any time. The number cannot exceed 100. The default value is _100_, so you might want to adjust this value according to your budget and expected processing peaks.
+- *maxNodesPerVm:* Define the number of ProActive worker nodes to be deployed per VM. As a guideline, you might want to allocate one node per VM core, but you can set the number to better match your processing requirements. Default value is _2_.
+- *machineType:* Define the type of Azure VM that you want to use for your Scale Set. You can use any size from Azure's Standard Tier, provided you have enough quota and budget to launch them. The default value is _Standard_D1_v2_, you should provide a valid type using a similar syntax (case insensitive). Azure provides an extensive list of VM sizes for https://docs.microsoft.com/en-us/azure/virtual-machines/linux/sizes[Linux] and https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes[Windows] VMs. If you want to know the available sizes for a specific region or subscription you can use https://docs.microsoft.com/en-us/cli/azure/vm?view=azure-cli-latest#az-vm-list-sizes[Azure CLI command] `az vm list-sizes -l {your location}`.
+- *osType:* A choice between _linux_ and _windows_. Default value is _linux_.
+- *Image:* You can either provide a custom Azure image, or select one of the available standard ones. To provide a custom image use the format _{resourceGroupName}:{imageName}_. If you prefer to use a generic image, you can choose from the following lists (provided by Azure API):
++
+|===
+|https://github.com/Azure/azure-libraries-for-java/blob/master/azure-mgmt-compute/src/main/java/com/microsoft/azure/management/compute/KnownLinuxVirtualMachineImage.java[Linux] |https://github.com/Azure/azure-libraries-for-java/blob/master/azure-mgmt-compute/src/main/java/com/microsoft/azure/management/compute/KnownWindowsVirtualMachineImage.java[Windows]
+
+a|- UBUNTU_SERVER_14_04_LTS
+  - UBUNTU_SERVER_16_04_LTS
+  - DEBIAN_8 +*+ _default value_ +*+
+  - CENTOS_7_2
+
+a|- WINDOWS_SERVER_2008_R2_SP1
+  - WINDOWS_SERVER_2012_DATACENTER
+  - WINDOWS_SERVER_2012_R2_DATACENTER
+|===
+
+- *sshPublicKey:* Optional parameter. In case of Linux, use it to provide a public RSA key to connect to your VMs via SSH. In case of Windows, use it to define a password to connect to your VMs via Remote Desktop. In both cases, the default user is _activeeon_. If the field is left blank a password will be automatically generated and written in the Scheduler log.
+- *targetNetwork:* Optional parameter. Use it to define a specific Azure Virtual Network subnet for your Scale Set. If defined, the format should be _{resourceGroupName}:{network}:{subnet}_, e.g. _myGroup:myVNet:default_. If left unset, a new Virtual Network and subnet will be created inside the Resource Group.
+- *region:* Define the Azure region where the Resource Group and the Scale Set will be created. For a list of the regions supported by your subscription, you can use the https://docs.microsoft.com/en-us/cli/azure/account?view=azure-cli-latest#az-account-list-locations[CLI command] `az account list-locations -o table`, the right name to use is the one in the column _name_. The region name should be in lowercase without spaces, e.g. for the region _West US 2_ use _westus2_. Default value is _westeurope_.
+- *rmUrl:* Optional parameter. Provide your server's URL or public IP (e.g. try.activeeon.com). If left unset, the default Resource Manager URL will be fetched from the system properties.
+- *rmCredentials:* Optional parameter. Provide credentials to connect to the Resource Manager. If left blank, the credentials of the logged user will be used.
+- *deploymentTimeout:* Delay before the Resource Manager can declare a deploying node as lost. To be set in _minutes_. You can set it to a reasonable time after which you expect the node to be running or marked as lost otherwise (e.g. _10_ minutes). Default value is _120_.
+- *cleaningDelay:* Periodical cleaning delay, expressed in _seconds_. Every _X_ seconds the Resource Manager will remove from the Scale Set any VM that has been identified as idle. Default value is _60_. Note that setting a very short interval implies more frequent communication between the Resource Manager and Azure, which might impact on performance or responsiveness.
+- *externalStorageAccount:* Optional parameter. Use it if you want to define a specific location of your ProActive node.jar worker; leave blank otherwise. If provided, the format should be: _{storageAccount}:{sas_key_token}[:has_node.jar]_.
+- *linuxInternalCustomStartupScriptUrl:* If you are using Linux, provide a URL of a valid Linux bash script to configure your nodes. We strongly recommend to use the default provided script. You are free to copy the script and add custom steps, but be aware that any modification to the default script might cause the deployment to fail. We recommend to use _userCustomStartupScriptUrl_ field to add your custom configurations.
+- *windowsInternalCustomStartupScriptUrl:* If you are using Windows, provide a URL of a valid Windows PowerShell script to configure your nodes. We strongly recommend to use the default provided script. You are free to copy the script and add custom steps, but be aware that any modification to the default script might cause the deployment to fail. We recommend to use _userCustomStartupScriptUrl_ field to add your custom configurations.
+- *userCustomStartupScriptUrl:* Optional parameter. Use it to provide a URL of a valid custom script (_.sh_ for Linux, _.ps1_ for Windows) that will be called at the VMs' startup. The script is called after the default ProActive configuration and before the node application is actually executed. You can use this script, for instance, to create directories, assign permissions, or download utilities.
++
+[NOTE]
+====
+Note that this user custom script will be run as root/admin user.
+====
+- *nodePreCommand:* Optional parameter. This multi-line field can be used to provide specific commands to execute right before launching the ProActive's node.jar application. The main difference with the previous user custom script is that _nodePreCommand_ will be run as _the same_ user as node.jar. This field is thus useful for operations that require matching users, e.g. mounting a shared volume in Windows or creating non-root paths/files in Linux. Please note the OS-specific conditions for these commands:
+* *_Linux:_* The commands will be appended as `ExecStartPre` lines to a _.service_ file. Therefore, commands should include their full path, e.g. `mkdir` should be written as `/bin/mkdir` or `chown` as `/bin/chown`.
+* *_Windows:_* The commands will be included in a _.bat_ batch file and must therefore be DOS-compatible. As a guideline, here is an unofficial https://www.robvanderwoude.com/batchcommands.php[list of DOS commands] and a http://steve-jansen.github.io/guides/windows-batch-scripting/part-1-getting-started.html[scripting tutorial].
+- *jvmParameters:* Add JVM parameters to configure your ProActive node, use the format _-Dproperty=value_. The default values allow for a correct deployment of the node. You can add your own parameters but be aware that removing the current values might cause the deployment to fail. A non-exhaustive list of node-related JVM parameters can be found in your configuration file `$PROACTIVE_HOME/config/network/node.ini`
+- *armTemplateUrl:* Optional parameter, for advanced configuration only. This parameter is intended for users familiar with https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-authoring-templates[Azure Resource Management templates] willing to provide a custom resource configuration file. You should input a URL with a valid _.json_ ARM template. If set, this file will override https://gist.github.com/activeeon-bot/0ae94e182edfa6099314ad023d2d7bc4[ProActive's default ARM file].
+
+As you can see, these parameters provide a lot of flexibility to configure your infrastructure. When creating your Azure Scale Set node source, the infrastructure should be coupled with a Dynamic Policy. This Policy will additionally define scalability parameters such as limits on the number of deployed nodes or the minimum idle time before a node can be deleted (to optimize node utilization).
 
 ==== Load Sharing Facility (LSF) Infrastructure
 
@@ -696,22 +839,22 @@ The Native Scheduler Infrastructure allows to interact with a <<_glossary_ns_nat
 This mechanism is described in <<_deploy_via_other_schedulers>>. This infrastructure must be associated with a <<_native_scheduler_policy>> and cannot be associated with any other policy.
 The infrastructure parameters are described hereafter:
 
- * *RMCredentialsPath* : path to a file which contains the credentials of an administrator user which will own the node source. The ProActive Scheduler Server release contains two admin users credentials files : `config/authentication/rm.cred` and `config/authentication/admin_user.cred`
- * *NSFrontalHostAddress* : the host name or IP address of the cluster <<_glossary_head_node,head node>>.
- * *NSSchedulerHome* : the location of the shared ProActive installation on <<_glossary_ns_node,cluster nodes>> (cluster nodes must be able to access ProActive libraries in order to start ProActive Node). Example `/opt/proactive/activeeon_enterprise-node-linux-x64-8.1.0`.
- * *javaHome* : similarly, cluster nodes must be able to access the java command in order to start ProActive Nodes. ProActive installation includes a Java Runtime Environment under the `jre` subfolder. Example: `/opt/proactive/activeeon_enterprise-node-linux-x64-8.1.0/jre`.
- * *jvmParameters* : additional options which can be passed to the java command.
- * *sshOptions* : additional options which can be passed to the ssh command used to connect to connect to the host name or IP address specified in the NSFrontalHostAddress parameter.
- * *NSNodeTimeoutInSeconds* : timeout to wait for the deployment of ProActive Nodes on the cluster. As the time needed to deploy ProActive Nodes depends on the cluster load, this timeout should be a large value. If the timeout is reached, the ProActive Nodes will be in `"Lost"` <<_node_states,state>>.
- * *ìmpersonationMethod*: when a job is submitted to the native scheduler, the submission is performed under the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>>. An impersonation is thus performed between the <<_glossary_proactive_scheduler_process_user,scheduler server process>> and the target <<_glossary_cluster_user,cluster user>>.
+ * *RMCredentialsPath:* path to a file which contains the credentials of an administrator user which will own the node source. The ProActive Scheduler Server release contains two admin users credentials files: `config/authentication/rm.cred` and `config/authentication/admin_user.cred`
+ * *NSFrontalHostAddress:* the host name or IP address of the cluster <<_glossary_head_node,head node>>.
+ * *NSSchedulerHome:* the location of the shared ProActive installation on <<_glossary_ns_node,cluster nodes>> (cluster nodes must be able to access ProActive libraries in order to start ProActive Node). Example `/opt/proactive/activeeon_enterprise-node-linux-x64-8.1.0`.
+ * *javaHome:* similarly, cluster nodes must be able to access the java command in order to start ProActive Nodes. ProActive installation includes a Java Runtime Environment under the `jre` subfolder. Example: `/opt/proactive/activeeon_enterprise-node-linux-x64-8.1.0/jre`.
+ * *jvmParameters:* additional options which can be passed to the java command.
+ * *sshOptions:* additional options which can be passed to the SSH command used to connect to connect to the host name or IP address specified in the NSFrontalHostAddress parameter.
+ * *NSNodeTimeoutInSeconds:* timeout to wait for the deployment of ProActive Nodes on the cluster. As the time needed to deploy ProActive Nodes depends on the cluster load, this timeout should be a large value. If the timeout is reached, the ProActive Nodes will be in `"Lost"` <<_node_states,state>>.
+ * *ìmpersonationMethod:* when a job is submitted to the native scheduler, the submission is performed under the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>>. An impersonation is thus performed between the <<_glossary_proactive_scheduler_process_user,scheduler server process>> and the target <<_glossary_cluster_user,cluster user>>.
  This impersonation can be performed using 3 different strategies:
- ** `ssh`: in that case the <<_glossary_head_node,head node>> is contacted using a ssh command with the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>> and password. User/password combination between the ProActive Scheduler and the head node operating system must match.
- ** `none`: in that case the head node is contacted using a ssh command with the <<_glossary_proactive_scheduler_process_user,ProActive Scheduler process user>> (passwordless ssh). Submission to the native scheduler will be performed with the same account.
+ ** `ssh`: in that case the <<_glossary_head_node,head node>> is contacted using a SSH command with the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>> and password. User/password combination between the ProActive Scheduler and the head node operating system must match.
+ ** `none`: in that case the head node is contacted using a SSH command with the <<_glossary_proactive_scheduler_process_user,ProActive Scheduler process user>> (passwordless SSH). Submission to the native scheduler will be performed with the same account.
  ** `sudo`: similar to `none` regarding the connection to the head node, but a `sudo` command will be initiated to impersonate as the current <<_glossary_proactive_scheduler_user,ProActive Scheduler user>>, before doing a job submission.
- * *alternateRMUrl* : the url used by the ProActive Nodes to contact <<_glossary_resource_manager,ProActive Resource Manager>>. This url is displayed on ProActive server startup. Example: `pnp://myserver:64738`.
- * *sshPort* : port used for ssh connections.
- * *nsPreCommand* : a linux command which can be run before launching ProActive Nodes on the cluster. Can be used as a workaround when some system environment variables are not properly set when starting ProActive Nodes.
- * *nsSubmitCommand* : this is the main command used to start ProActive Nodes on the cluster. Depending on the actual native scheduler implementation, *nsSubmitCommand* will vary, here are examples definitions: +
+ * *alternateRMUrl:* the URL used by the ProActive Nodes to contact <<_glossary_resource_manager,ProActive Resource Manager>>. This URL is displayed on ProActive server startup. Example: `pnp://myserver:64738`.
+ * *sshPort:* port used for SSH connections.
+ * *nsPreCommand:* a Linux command which can be run before launching ProActive Nodes on the cluster. Can be used as a workaround when some system environment variables are not properly set when starting ProActive Nodes.
+ * *nsSubmitCommand:* this is the main command used to start ProActive Nodes on the cluster. Depending on the actual native scheduler implementation, *nsSubmitCommand* will vary, here are examples definitions: +
 +
 [cols=2*]
 |===
@@ -736,7 +879,7 @@ The command can use patterns which will be replaced dynamically by the ProActive
 |`%PA_USERNAME%` |contains the current ProActive Scheduler user.
 |===
 
- * *nsKillCommand* : this is the command used to kill ProActive Nodes started previously by the nsSubmitCommand. Similarly to nsSubmitCommand, *nsKillCommand* will vary for each native scheduler syntax: +
+ * *nsKillCommand:* this is the command used to kill ProActive Nodes started previously by the nsSubmitCommand. Similarly to nsSubmitCommand, *nsKillCommand* will vary for each native scheduler syntax: +
 +
 [cols=2*]
 |===
@@ -760,8 +903,8 @@ It can use the following patterns: +
 
 |===
 
- * *submitReturnsJobId*: is the <<_glossary_ns_cluster_jobid,cluster job id>> returned plainly when calling the nsSubmitCommand. This is the behavior of PBS, and this is why this setting should be set to `true` when using PBS.
- * *nsJobName*: a way to configure the `%NS_JOBNAME%` pattern. The following patterns can be used: +
+ * *submitReturnsJobId:* is the <<_glossary_ns_cluster_jobid,cluster job id>> returned plainly when calling the nsSubmitCommand. This is the behavior of PBS, and this is why this setting should be set to `true` when using PBS.
+ * *nsJobName:* a way to configure the `%NS_JOBNAME%` pattern. The following patterns can be used: +
 +
 [cols=2*]
 |===
@@ -772,5 +915,5 @@ It can use the following patterns: +
 
 |===
 
- * *maxDeploymentFailure*: number of attempts when starting a ProActive Node on the cluster using the nsSubmitCommand, after all attempts failed, the ProActive Node will be declared as `Lost`.
+ * *maxDeploymentFailure:* number of attempts when starting a ProActive Node on the cluster using the nsSubmitCommand, after all attempts failed, the ProActive Node will be declared as `Lost`.
 

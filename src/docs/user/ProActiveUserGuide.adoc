@@ -1,5 +1,5 @@
 :docinfo:
-:toc: 
+:toc:
 :toc-title: PWS User Guide
 = ProActive Workflows & Scheduling -- User Guide
 include::../common-settings.adoc[]
@@ -93,7 +93,7 @@ The task graph is defined by the user at the time of workflow creation, but can 
 A *finished job* contains the results and logs of each task. Upon failure,
 a task can be restarted automatically or cancelled.
 
-==== Using ProActive Studio
+== ProActive Studio
 **ProActive Workflow Studio** is used to create and submit workflows graphically.
 The Studio allows to simply drag-and-drop various task constructs and draw their dependencies to form complex workflows.
 It also provides various flow control widgets such as conditional branch, loop, replicate etc to construct workflows with dynamic structures.
@@ -122,7 +122,64 @@ In the right part, we see the *graph of dependent tasks* composing the workflow.
 
 Finally, above the workflow graph, we see the various *palettes* which can be used to _drag & drop_ *sample task definitions* or *complex constructs*.
 
-The following chapters describe the three main type of tasks which can be defined inside ProActive Workflows.
+The link:../user/ProActiveUserGuide.html#_types_of_tasks[following chapters] describe the three main type of tasks which can be defined inside ProActive Workflows.
+
+=== Use the ProActive Catalog from the Studio
+
+The GUI interaction with the Catalog can be done in two places: the +++<a class="studioUrl" href="/studio" target="_blank">Studio</a>+++ and +++<a class="automationDashboardUrl" href="/automation-dashboard/#/portal/catalog-portal" target="_blank">Catalog Portal</a>+++.
+The portals follow the concepts of the Catalog: Workflows are stored inside buckets, a workflow has some metadata and can have several revisions.
+
+The Catalog view in the Studio or in the Catalog Portal allows to browse all the workflows in the Catalog grouped by buckets and to list all the revisions of a workflow along with their commit message.
+
+Inside the Studio, there is a `Catalog` menu from which a user can directly interact with the Catalog to import or publish Workflows.
+
+image::studio_catalog_menu.png[align=center]
+
+Additionally, the Palette of the Studio lists the user's favourite buckets to allow easy import of workflows from the Catalog with a simple Drag & Drop.
+
+image::studio-palette.png[align=center]
+
+==== Publish current Workflow to the Catalog
+Workflows created in the studio can be saved inside a bucket in the Catalog by using the `Publish current Workflow to the Catalog` action.
+When saving a Workflow in the Catalog, users can add a specific `commit message`.
+If a Workflow with the same name already exists in the specified bucket, a new revision of the Workflow is created.
+We recommend to always specify commit messages at any commit for an easier differentiation between stored versions.
+
+==== Get a Workflow from the Catalog
+When the Workflow is selected from Catalog you have two options:
+
+1. `Open as a new Workflow`: Open the Workflow from Catalog as a new Workflow in Studio.
+
+2. `Append to current Workflow`: Append the selected Workflow from the Catalog to the Workflow already opened inside the Studio.
+
+==== Add Bucket Menu to the Palette
+The Palette makes it easier to use workflows stored in a specific Bucket of the Catalog as templates when designing a Workflow.
+
+To add a bucket from the Catalog as a dropdown menu in the Palette:  Click on `View` → `Add Bucket Menu to the Palette` or you press the image:studio-palette-add.png[+, 32, 32] button in the palette.
+A window will show up to ask you which bucket you want to add to the Palette as in the image below.
+
+image::studio-catalog-main-menu3.png[align=center]
+
+The selected `Data Connectors` Bucket now appears as a menu in the Studio. See the image below.
+
+image::studio-catalog-main-menu4.png[align=center]
+
+You can repeat the operation as many times as you wish in order to add other specific Menus you might need for your workflow design. See the image below.
+
+image::studio-catalog-main-menu5.png[align=center]
+
+==== Change Palette Preset
+The Studio offers the possibility to set a Preset for the Palette. This makes it easier to load the Palette with a predefined set of default buckets.
+Presets are generally arranged by theme (Basic Examples, Machine Learning, Deep Learning, Big Data, etc.)
+The Palette's preset can be changed by clicking `View` → `Change Palette Preset`. This will show a window with the current list of presets as in the image below.
+
+image::studio-catalog-main-menu1.png[align=center]
+
+After changing the preset, its name appears at the top of the Studio and all its buckets are added to the Palette.
+
+image::studio-catalog-main-menu2.png[align=center]
+
+== Types of Tasks
 
 === Native Tasks
 
@@ -149,7 +206,7 @@ NOTE:  Native Tasks are not the only possibility available to run executables or
 
 A *Script Task* is a ProActive Workflow task which main execution is defined as a *script*.
 
-Proactive Workflows supports tasks in many scripting languages. The currently supported dynamic languages or backends are
+ProActive Workflows supports tasks in many scripting languages. The currently supported dynamic languages or backends are
 link:http://groovy-lang.org/[Groovy, window="_blank"],
 link:https://www.jython.org[Jython, window="_blank"],
 link:https://www.python.org/[Python, window="_blank"],
@@ -195,7 +252,7 @@ Finally, a *Script Task* may or may not return a result materialized by the <<_t
 ==== Script Bindings
 
 A *Script Task* or <<_additional_scripts,additional scripts>> can use automatically-defined <<_glossary_script_bindings,script bindings>>.
-These bindings allow to associate the script inside its *workflow context*, for example, the ability to know the current *workflow variables* as submitted by a user, the workflow *job id* as run inside the Proactive Scheduler, etc.
+These bindings allow to associate the script inside its *workflow context*, for example, the ability to know the current *workflow variables* as submitted by a user, the workflow *job id* as run inside the ProActive Scheduler, etc.
 
 Bindings allow as well to pass information between various scripts *inside the same task* or *across different tasks*.
 
@@ -209,7 +266,7 @@ Below is an example of Script Task definition which uses both types of bindings:
 [source,groovy]
 ----
 jobId = variables.get("PA_JOB_ID")
-result = "The Id of the current job is : " + jobId
+result = "The Id of the current job is: " + jobId
 ----
 
 As we can see, the `variables` binding in provided automatically by the ProActive Scheduler before the script execution and it is used to compute a `result` binding as task output.
@@ -358,7 +415,7 @@ key *docker-compose-options-split-regex*. If you supply e.g. "!SPLIT!" as value,
 
 ==== Docker_File script engine
 
-The main behavior of a Docker_File task is to first build an image and then run a container instance from it. Once the execution is done, the container is stopped and the built image is deleted. 
+The main behavior of a Docker_File task is to first build an image and then run a container instance from it. Once the execution is done, the container is stopped and the built image is deleted.
 
 Advanced options will allow to parametrize these actions.
 
@@ -366,7 +423,7 @@ In order for Docker_File tasks to work, the _Node_ must have Docker installed. P
  Docker documentation to see how to install https://docs.docker.com/engine/installation/[Docker^].
 
 To use a Docker_File task, put the content of a Dockerfile inside the _Task Implementation_ section. You can find out how to write Dockerfile
-in the official https://docs.docker.com/engine/reference/builder/[Dockerfile documentation^]. 
+in the official https://docs.docker.com/engine/reference/builder/[Dockerfile documentation^].
 A Docker_File task allows executing a succession of docker commands according to the lifecycle of Docker containers. In order, docker build, docker run, docker stop, and docker rmi are ran when a Docker_File task is executed.
 
 To get started, a simple Docker_File task can be tested by using this Dockerfile as the content of the _Script_ section (task implementation)
@@ -386,7 +443,7 @@ The build, start, stop and remove commands can be parametrized through optional 
 docker build [OPTIONS] PATH | URL | -
 ----
 
-To define a _docker-build option_, use the generic information *docker-build-options* 
+To define a _docker-build option_, use the generic information *docker-build-options*
 
 For instance by using the docker-build-options generic information with the value --add-host, a custom host-to-IP mapping will be added to the image.
 
@@ -395,7 +452,7 @@ For instance by using the docker-build-options generic information with the valu
 docker run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
 ----
 
-To define a _docker-run option_, use the generic information *docker-run-options* 
+To define a _docker-run option_, use the generic information *docker-run-options*
 
 For instance by using the docker-run-options generic information with the value -d=true, the container will be started in detached mode.
 
@@ -404,7 +461,7 @@ For instance by using the docker-run-options generic information with the value 
 docker stop [OPTIONS] CONTAINER [CONTAINER...]
 ----
 
-To define a _docker-run option_, use the generic information *docker-stop-options* 
+To define a _docker-run option_, use the generic information *docker-stop-options*
 
 For instance by using the docker-stop-options generic information with the value --time 30, the container will be stopped after 30s.
 
@@ -415,7 +472,7 @@ TIP:  a parameter *docker.file.keepcontainer* is defined in the dockerfile scrip
 docker rmi [OPTIONS] IMAGE [IMAGE...]
 ----
 
-To define a _docker-rmi option_, use the generic information *docker-rmi-options* 
+To define a _docker-rmi option_, use the generic information *docker-rmi-options*
 
 TIP:  a parameter *docker.file.keepimage* is defined in the dockerfile script engine properties file (in config/scriptengines/ folder). Put the value to *yes* if you do not want to delete the built image.
 
@@ -560,28 +617,45 @@ line tools>>. For advanced users we also expose REST and JAVA APIs.
 TIP: During the submission, you will be able to edit <<_workflow_variables>>, so you can effectively use
 them to parameterize workflow execution and use workflows as <<_templating,templates>>.
 
+[[_states]]
 ==== Job & Task states
 
-During their execution, jobs and tasks go through different states:
+During their execution, jobs go through different states.
+The screenshot below shows Pending and Current Jobs states summary as seen in Workflow Automation portal.
 
-.Job States
+image::current_job_states.png[align="center", width=350]
+
+.Job States for Pending and Current Jobs
 [cols="17%,17%,66%", options="header"]
 |===
 | State | Name | Description
+| `PENDING` | Pending | The job is waiting to be scheduled. None of its tasks have been Running so far.
+| `RUNNING` | Running | The job is running. At least one of its task has been scheduled.
+| `STALLED` | Stalled | The job has been launched but no task is currently running.
+| `PAUSED` | Paused | The job is paused waiting for user to resume it.
+| `IN_ERROR` | In-Error | The job has one or more In-Error tasks that are suspended along with their dependencies. User intervention is required to fix the causing issues and restart the In-Error tasks to resume the job.
+
+|===
+
+The screenshot below shows Past Jobs states summary as seen in Workflow Automation portal.
+
+image::past_job_states.png[align="center", width=350, title-align="center"]
+
+.Job States for Past Jobs
+[cols="17%,17%,66%", options="header"]
+|===
+| State | Name | Description
+| `FINISHED` | Finished | The job is finished. Tasks are finished or faulty.
 | `CANCELED` | Cancelled | The job has been canceled because of an exception.
 This status is used when an exception is thrown by the user code of a task and when the user has asked to cancel the job on exception.
 | `FAILED` | Failed | The job has failed. One or more tasks have failed (due to resources failure).
 There is no more executionOnFailure left for a task.
-| `FINISHED` | Finished | The job is finished. Tasks are finished or faulty.
-| `IN_ERROR` | In-Error | The job has one or more In-Error tasks that are suspended along with their dependencies. User intervention is required to fix the causing issues and restart the In-Error tasks to resume the job.
 | `KILLED` | Killed | The job has been killed by the user.
-| `PAUSED` | Paused | The job is paused waiting for user to resume it.
-| `PENDING` | Pending | The job is waiting to be scheduled.
-| `RUNNING` | Running | The job is running. At least one of its task has been scheduled.
-| `STALLED` | Stalled | The job has been launched but no task is currently running.
 
 |===
 
+
+Similarly to jobs, during their execution, tasks go through different states.
 
 .Task States
 [cols="17%,17%,66%", options="header"]
@@ -997,7 +1071,7 @@ println(results[0].getMetadata());
 
 It is up to the user code to decide the metadata semantics, but some specific metadata can have a meaning when downloading or previewing results from the *Scheduler portal*:
 
-- *file.name* : the name of the file, including the extension, which will be used when storing the result in binary format.
+- *file.name:* the name of the file, including the extension, which will be used when storing the result in binary format.
 +
 [source, groovy]
 ----
@@ -1007,7 +1081,7 @@ result = file.getBytes()
 resultMetadata.put("file.name","balloon13.png")
 ----
 
-- *file.extension* : the extension, which will be appended to the automatically generated name, when storing the result in binary format
+- *file.extension:* the extension, which will be appended to the automatically generated name, when storing the result in binary format
 +
 [source, groovy]
 ----
@@ -1017,7 +1091,7 @@ result = file.getBytes()
 resultMetadata.put("file.extension",".png")
 ----
 
-- *content.type* : the display format, which will be used when previewing the file in the browser. Open the following https://www.iana.org/assignments/media-types/media-types.xhtml[link] for the complete list of mime-types.
+- *content.type:* the display format, which will be used when previewing the file in the browser. Open the following https://www.iana.org/assignments/media-types/media-types.xhtml[link] for the complete list of mime-types.
 +
 [source, groovy]
 ----
@@ -1495,12 +1569,12 @@ It is possible to start a task under the job owner if the system is configured f
 There are 2 possible ways to run a task under user account
 (in any case, the administrator should have
 link:../admin/ProActiveAdminGuide.html#_run_as_me[set computing hosts] to authorize
-one of the 2 methods) :
+one of the 2 methods):
 
-* Using your *scheduling login and password* : if computing hosts are configured and user is authorized to run a process under his login and password.
-* Using an *SSH key* provided by the administrator : if computing hosts are configured, the administrator should have given user an SSH key.
+* Using your *scheduling login and password*: if computing hosts are configured and user is authorized to run a process under his login and password.
+* Using an *SSH key* provided by the administrator: if computing hosts are configured, the administrator should have given user an SSH key.
 
-User must first create a credential containing this key :
+User must first create a credential containing this key:
 
 ----
 $ PROACTIVE_HOME/tools/proactive-create-cred -F config/authentication/keys/pub.key -l username -p userpwd -k path/to/private/sshkey -o myCredentials.cred
@@ -1551,8 +1625,8 @@ Here is the list of topologies we support:
 === Handling failures
 
 It’s possible to have errors when your Job is executed. *ProActive Scheduler* provides several mechanisms to deal with exceptional situations in your Jobs.
-If a Task contains errors during Job execution, the *Proactive Scheduler* automatically restarts this Task. The number of automatic restarts is defined by the Workflow owner by assigning an integer value to the counter *Number of Automatic Restarts*.
-The user also defines *Where he wants that the scheduler restarts In-Error tasks*, i.e., on the same Proactive node or on another Proactive node.
+If a Task contains errors during Job execution, the *ProActive Scheduler* automatically restarts this Task. The number of automatic restarts is defined by the Workflow owner by assigning an integer value to the counter *Number of Automatic Restarts*.
+The user also defines *Where he wants that the scheduler restarts In-Error tasks*, i.e., on the same ProActive Node or on another ProActive Node.
 
 If automatic restarts does not fix errors, the Scheduler applies one of the following Task error management policies, i.e., the one defined by the user during Workflow creation:
 
@@ -1677,9 +1751,9 @@ The task will then terminate normally.
 
 === Troubleshoot a Workflow Execution
 
-When a task has *IN_ERROR* status, a right click on it allows the user to select _Mark as finished and resume_. 
+When a task has *IN_ERROR* status, a right click on it allows the user to select _Mark as finished and resume_.
 This will set the task status as *FINISHED* and then resume job execution: this task won't be executed again, subsequent tasks will execute as if the task executed correctly.
-This allows the user to manually perform actions to the *IN_ERROR* task, without cancelling the whole job execution. 
+This allows the user to manually perform actions to the *IN_ERROR* task, without cancelling the whole job execution.
 
 
 If the task has not *IN_ERROR* status, the _Mark as finished and resume_ option will be in grey, meaning that the action is disabled.
@@ -1721,7 +1795,7 @@ In *ProActive Studio*, the `SubmitJobNoWait` and `SubmitJobAndWait` templates un
 
 These templates accept the single parameter:
 
- * `called_workflow` : a <<_workflow_storage_and_versioning,ProActive Catalog>> path referencing the workflow to submit (e.g. _basic-examples/Native_Task_)
+ * `called_workflow`: a <<_workflow_storage_and_versioning,ProActive Catalog>> path referencing the workflow to submit (e.g. _basic-examples/Native_Task_)
 
 By default, these templates do not pass any parameter to the submitted workflow (using only default values provided by the workflow).
 
@@ -1786,7 +1860,7 @@ You need to define which files have to be transferred from a data space to compu
 </task>
 ----
 
-Upon the execution of the previous example, Proactive Scheduler automatically transfers all files to a ProActive Node where the task will be executed. The files are put in a special place called *Local Space* on the ProActive Node. It corresponds to the working directory of a task when the task is in fork mode (default).
+Upon the execution of the previous example, ProActive Scheduler automatically transfers all files to a ProActive Node where the task will be executed. The files are put in a special place called *Local Space* on the ProActive Node. It corresponds to the working directory of a task when the task is in fork mode (default).
 From a task point of view, files can be accessed normally like shown below:
 
 [source, java]
@@ -1862,7 +1936,7 @@ In order to change this period, the ProActive Node must be started with the prop
 
 The property *node.dataspace.cachedir* can also be used to control the cache location on the node.
 
-== Workflow Storage and Versioning
+== Proactive Catalog: Object Storage and Versioning
 
 The *ProActive Catalog* provides the storage and versioning of Workflows and several other objects inside *Buckets*. It also features a searching functionality using a https://graphql.org/[GraphQL] query language to fetch Workflows based on particular parameters.
 The Catalog is a RESTful service. A https://swagger.io/[Swagger] +++<a class="catalogRestUrl" href="/catalog" target="_blank">interface</a>+++ is provided to understand and interact with the service.
@@ -1946,62 +2020,6 @@ NOTE: A complete documentation of the Catalog REST API is available on the follo
 https://graphql.org/[GraphQL] is the standardized query language, which  provides opportunity to search and retrieve the Workflow by specified criterion from the Catalog.
 NOTE: Please follow the +++<a class="catalogGraphQLUrl" href="/catalog/graphiql" target="_blank">graphiql endpoint</a>+++ in order to query for the specific Workflow.
 
-== Use the ProActive Catalog from the GUI
-
-The GUI interaction with the Catalog can be done in two places: the +++<a class="studioUrl" href="/studio" target="_blank">Studio</a>+++ and +++<a class="automationDashboardUrl" href="/automation-dashboard/#/portal/catalog-portal" target="_blank">Catalog Portal</a>+++.
-The portals follow the concepts of the Catalog: Workflows are stored inside buckets, a workflow has some metadata and can have several revisions.
-
-The Catalog view in the Studio or in the Catalog Portal allows to browse all the workflows in the Catalog grouped by buckets and to list all the revisions of a workflow along with their commit message.
-
-=== Studio
-Inside the Studio, there is a `Catalog` menu from which a user can directly interact with the Catalog to import or publish Workflows.
-
-image::studio_catalog_menu.png[align=center]
-
-Additionally, the Palette of the Studio lists the user's favourite buckets to allow easy import of workflows from the Catalog with a simple Drag & Drop.
-
-image::studio-palette.png[align=center]
-
-==== Publish current Workflow to the Catalog
-Workflows created in the studio can be saved inside a bucket in the Catalog by using the `Publish current Workflow to the Catalog` action.
-When saving a Workflow in the Catalog, users can add a specific `commit message`.
-If a Workflow with the same name already exists in the specified bucket, a new revision of the Workflow is created.
-We recommend to always specify commit messages at any commit for an easier differentiation between stored versions.
-
-==== Get a Workflow from the Catalog
-When the Workflow is selected from Catalog you have two options:
-
-1. `Open as a new Workflow`: Open the Workflow from Catalog as a new Workflow in Studio.
-
-2. `Append to current Workflow`: Append the selected Workflow from the Catalog to the Workflow already opened inside the Studio.
-
-==== Add Bucket Menu to the Palette
-The Palette makes it easier to use workflows stored in a specific Bucket of the Catalog as templates when designing a Workflow.
-
-To add a bucket from the Catalog as a dropdown menu in the Palette:  Click on `View` → `Add Bucket Menu to the Palette` or you press the image:studio-palette-add.png[+, 32, 32] button in the palette.
-A window will show up to ask you which bucket you want to add to the Palette as in the image below.
-
-image::studio-catalog-main-menu3.png[align=center]
-
-The selected `Data Connectors` Bucket now appears as a menu in the Studio. See the image below.
-
-image::studio-catalog-main-menu4.png[align=center]
-
-You can repeat the operation as many times as you wish in order to add other specific Menus you might need for your workflow design. See the image below.
-
-image::studio-catalog-main-menu5.png[align=center]
-
-==== Change Palette Preset
-The Studio offers the possibility to set a Preset for the Palette. This makes it easier to load the Palette with a predefined set of default buckets.
-Presets are generally arranged by theme (Basic Examples, Machine Learning, Deep Learning, Big Data, etc.)
-The Palette's preset can be changed by clicking `View` → `Change Palette Preset`. This will show a window with the current list of presets as in the image below.
-
-image::studio-catalog-main-menu1.png[align=center]
-
-After changing the preset, its name appears at the top of the Studio and all its buckets are added to the Palette.
-
-image::studio-catalog-main-menu2.png[align=center]
-
 === Catalog Portal
 The Catalog Portal provides the capability to store objects like Workflows, Calendars, Scripts, etc.
 Powerful versioning together with full access control (RBAC) is supported, and users can easily share Workflows, templates, and other objects between teams, and various environments (Dev, Test, Staging, Prod).
@@ -2009,11 +2027,11 @@ Powerful versioning together with full access control (RBAC) is supported, and u
 image::catalog-portal-context-menu.png[align=center]
 
 ==== Creating new buckets
-Create a new bucket easily by clicking on the `plus` button. 
+Create a new bucket easily by clicking on the `plus` button.
 
 image::create-new-bucket.png[align=left]
 
-In the `Create the new bucket` window, it is possible to associate a bucket to a specific users group. 
+In the `Create the new bucket` window, it is possible to associate a bucket to a specific users group.
 
 By doing so, only users from the same group will be able to access the content of the bucket.
 
@@ -2023,7 +2041,7 @@ A bucket with no associated group is also known as a _public bucket_.
 More information regarding bucket access control is available in the link:../admin/ProActiveAdminGuide.html#_catalog[Catalog administration guide].
 
 ==== Removing Objects Inside a Bucket
-Select the objects to remove (CTRL + left click to select multiple objects) and click on the `trash` button. 
+Select the objects to remove (CTRL + left click to select multiple objects) and click on the `trash` button.
 
 WARNING: All the object's content will be removed from the database and it cannot be restored.
 
@@ -2032,29 +2050,29 @@ Catalog Objects can be exported to a local archive, and share them easily by ema
 
 TIP: Use this feature to easily share Catalog objects across different environments.
 
-To export the selected objects as a ZIP archive, press the download button from portal view. 
+To export the selected objects as a ZIP archive, press the download button from portal view.
 
 image::download-catalog-objects.png[align=left]
 
-To import, either a downloaded catalog archive zip file or a single object, click on the upload button and follow the instructions :
+To import, either a downloaded catalog archive zip file or a single object, click on the upload button and follow the instructions:
 
 image::upload-catalog-objects.png[align=left]
 
 * *Object Kind*: The kind of object to add. New Kinds can be added by clicking the `plus` button.
 
-* *Content Type*: The Content Type is used to indicate the media type of the resource. New content Types can be added by clicking the `plus` button. 
+* *Content Type*: The Content Type is used to indicate the media type of the resource. New content Types can be added by clicking the `plus` button.
 
 WARNING: In case of uploading an archive, all the objects in the zip must have the same Kind and Content Type.
 
 
-==== Catalog Object Versioning
-The HEAD of a Catalog object corresponds to the last commit and it is displayed on the portal. 
+==== Object Versioning in Catalog Portal
+The HEAD of a Catalog object corresponds to the last commit and it is displayed on the portal.
 
 In order to see all the commits of the selected Object, please click on the `clock` button inside the description area.
 
-The commits are shown in chronological order by commit time. 
+The commits are shown in chronological order by commit time.
 
-It is possible to restore any previous commit to the HEAD position by clicking the `restore` button. 
+It is possible to restore any previous commit to the HEAD position by clicking the `restore` button.
 
 image::revisions-catalog.png[align=center]
 
@@ -2182,9 +2200,9 @@ key is not present, no replacement occurs):
 
 From a <<_glossary_task_executable_script,Script Task>>, several APIs are accessible via Java objects bound to dedicated <<_glossary_script_bindings,script bindings>>:
 
-- Scheduler API : using the `schedulerapi` binding, it is possible to interact directly with the scheduler server and do several operations (submit jobs, wait for tasks termination, list running jobs, etc.).
-- DataSpace API : the `userspaceuri` or `globalspaceuri` bindings allow to manipulate files present in User or Global spaces. Operations include listing, uploading, downloading, or deleting files.
-- Synchronization API : using the `synchronizationapi` binding, it is possible to handle advanced task synchronization dynamically.
+- Scheduler API: using the `schedulerapi` binding, it is possible to interact directly with the scheduler server and do several operations (submit jobs, wait for tasks termination, list running jobs, etc.).
+- DataSpace API: the `userspaceuri` or `globalspaceuri` bindings allow to manipulate files present in User or Global spaces. Operations include listing, uploading, downloading, or deleting files.
+- Synchronization API: using the `synchronizationapi` binding, it is possible to handle advanced task synchronization dynamically.
 
 === Scheduler API
 
@@ -2335,7 +2353,7 @@ The Synchronization API is similar to the https://docs.oracle.com/javase/8/docs/
 
 ==== Examples
 
-===== Example 1 : Simple Key/Value With Selection Script
+===== Example 1: Simple Key/Value With Selection Script
 
 In this first example, we will show how one task can delay the execution of another task using the Synchronization API and a <<_selection,selection script>>.
 
@@ -2390,7 +2408,7 @@ NOTE: It is also possible to debug the operations performed on the Synchronizati
 
 The Complete Workflow example can be downloaded link:examples/KeyValue.xml[here].
 
-===== Example 2 : Simple Key/Value with Explicit Wait
+===== Example 2: Simple Key/Value with Explicit Wait
 
 In this second example, we will show how one task can delay the execution of another task using the Synchronization API and an explicit wait call.
 
@@ -2421,7 +2439,7 @@ Here is the output of the Example 2 workflow:
 
 The Complete Workflow example can be downloaded link:examples/KeyValueWait.xml[here].
 
-===== Example 3 : Critical Section
+===== Example 3: Critical Section
 
 In this last example, we will show how we can create a *critical section* inside a workflow, which means, a section of the workflow which can only be accessed by a configurable number of *slots*.
 

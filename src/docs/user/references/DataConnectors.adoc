@@ -204,11 +204,27 @@ Export Task
 
 *How to use this task:*
 
-When you drag & drop an SQL connector, two tasks will be appended to your workflow: an import task and an export task. Each task can be used as a separate component in an ETL pipeline thus, you can keep one of them depending on your needs and remove the other or you can use them both.
+When you drag & drop an SQL connector, two tasks will be appended to your workflow: an import task and an export task. Each task can be used as a separate component in an ETL pipeline; thus, you can keep one of them depending on your needs and remove the other or you can use them both.
 
 This task uses the driver given in `RMDB_DRIVER` to connect to the database. To use another driver, make sure you have it properly installed before (e.g. using `pip install <RMDBS_DRIVER>`).
 
-The task requires the following third-party credential: {key: `<mysql|postgres|sqlserver|oracle|gpdb>://<<RDBMS_NAME>_USER>@<<RDBMS_NAME>_HOST>:<<RDBMS_NAME>_PORT>`, value: `<RDBMS_NAME>_PASSWORD`}. ; this is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+The task requires the following third-party credential:
+
+{key: `<mysql|postgres|sqlserver|oracle|gpdb>://<<RDBMS_NAME>_USER>@<<RDBMS_NAME>_HOST>:<<RDBMS_NAME>_PORT>`, value: `<RDBMS_NAME>_PASSWORD`}.
+
+_e.g._ +
+|===
+| key | value
+
+a| `mysql://myuser@localhost:1234`
+a| your `MYSQL_PASSWORD`
+a| `sqlserver://anotheruser@10.0.0.1:5432`
+a| your `SQLSERVER_PASSWORD`
+
+|===
+
+
+This is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 In the import mode, the output containing the imported data takes one or many of the following forms:
 
@@ -218,15 +234,13 @@ In the import mode, the output containing the imported data takes one or many of
 * in a _JSON_ format using the variable `DATAFRAME_JSON`.
 
 ==== Database Connections Pooling
-To allow the persistence of a single connection across multiple SQL tasks (basically when running several Tasks concurrently on the same machine),
+To allow the persistence of a single connection across multiple SQL tasks (basically when running several tasks concurrently on the same machine),
 we have implemented the connection pooling feature to any external SQL database based on the https://github.com/brettwooldridge/HikariCP[HikariCP^] Framework.
-This feature is showcased through two workflow templates: SQL_Pooled_Connection_Query and SQL_Pooled_Connection_Update.
-The SQL_Pooled_Connection_Query workflow is based on the replicate control flow where the split task is Open_Pooled_Connection, the process task is Execute_Query_Statements and finally the merge task is Merge_Result_Set.
-The SQL_Pooled_Connection_Update workflow is composed of two tasks: Open_Pooled_Connection and Execute_Update_Statements.
+This feature is demonstrated through two workflow templates: SQL_Pooled_Connection_Query and SQL_Pooled_Connection_Update. Both are single-task workflows.
 
 *Variables:*
 
-Both workflows share the same list of variables. Consequently, we describe them in the same following table.
+The variables listed in the following table exist for both SQL_Pooled_Connection_Update and SQL_Pooled_Connection_Query workflows.
 
 .Workflows' variables
 [cols="2,5,2,2,2,3"]
@@ -234,48 +248,71 @@ Both workflows share the same list of variables. Consequently, we describe them 
 | *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
 | `RDBMS_NAME`
 | Name of the relational database management system.
-| Workflow, Open_Pooled_Connection Task
+| Workflow, Task
 | Yes
 | String
-| PostgreSQL, MySQL, Greenplum, HSQLDB, Oracle
+| Values: `{PostgreSQL, MySQL, Greenplum, HSQLDB, Oracle}`
 | `HOST`
 | Server host.
-| Open_Pooled_Connection Task
+| Workflow, Task
 | Yes
 | String
 | `localhost`
 | `PORT`
 | Listening port.
-| Open_Pooled_Connection Task
+| Workflow, Task
 | No
 | Integer
 | e.g. 5432, 1521
 | `USERNAME`
 | Username to use for connecting to the database.
-| Open_Pooled_Connection Task
+| Workflow, Task
 | Yes
 | String
 | e.g MY_USER
 | `DATABASE`
 | Database name.
-| Open_Pooled_Connection Task
+| Workflow, Task
 | Yes
 | String
 | e.g. MY_DATABASE
 | `POOL_PROPERTY`
 | HikariCP framework provides many data source properties that can be used to configure the DB pooled connection such as autoCommit, maximumPoolSize, maxLifetime, idleTimeout .... You can add as many properties as you want. For each one, please add a new task variable where the variable name is the property name having "POOL_"  as a prefix and the variable value is the property value. For more info, please refer to https://github.com/brettwooldridge/HikariCP.
-| Open_Pooled_Connection Task
+| Workflow, Task
 | No
 | String
 | e.g. POOL_autoCommit, POOL_maximumPoolSize
 | `SQL_STATEMENTS`
 | To change or update data, you have to use CREATE, INSERT , UPDATE , or DELETE statements. To query data, you have to perform SELECT statements.
-| Execute_Query_Statements Task, Execute_Update_Statements Task
+| Workflow, Task
 | Yes
 | String
 | e.g. ```SELECT * FROM ...```, ```DROP TABLE ...```
 |===
 
+In addition to the aforementioned variables, SQL_Pooled_Connection_Query workflow has two more variables.
+
+.SQL_Pooled_Connection_Query additional variables
+[cols="2,5,2,2,2,3"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
+| `OUTPUT_TYPE`
+| If set to `HTML`, it allows to preview the results in the Scheduler Portal in a HTML format. If set to `CSV`, it allows to download the results from the Scheduler Portal in a CSV format.
+| Workflow, Task
+| Yes
+| String
+| Values: `{CSV, HTML}`.
+
+Default: `HTML`
+| `STORE_RESULT_VARIABLE`
+| if not empty, the value will be the name of a variable that contains the resultSet of the query (converted into a List of Maps). This variable can be used in other tasks.
+| Workflow, Task
+| No
+| String
+| Values: `{CSV, HTML}`.
+
+Default: `HTML`
+|===
 
 *How to use these workflows:*
 
@@ -310,7 +347,7 @@ Currently, we have connectors for MongoDB and Cassandra.
 | Integer
 | 27018
 | `MONGODB_USER`
-| Username to use for connecting to MongoDB server if authentification is required.
+| Username to use for connecting to MongoDB server if authentication is required.
 | Workflow
 | No
 | String
@@ -365,7 +402,7 @@ or `path/to/input.json`
 
 *How to use this task:*
 
-The task might require (if the MongoDB server requires authentification) a `MONGODB_USER`  in addition to the following third-party credential: {key: `mongodb://<MONGODB_USER>@<MONGODB_HOST>:<MONGODB_PORT>`, value: `MONGODB_PASSWORD`}. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+The task might require (if the MongoDB server requires authentication) a `MONGODB_USER`  in addition to the following third-party credential: {key: `mongodb://<MONGODB_USER>@<MONGODB_HOST>:<MONGODB_PORT>`, value: `MONGODB_PASSWORD`}. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 In the import mode, the output containing the imported data takes one or many of the following forms:
 
@@ -473,7 +510,7 @@ In the import mode, the output containing the imported data takes one or many of
 | Integer
 | `9200`
 | `ELASTICSEARCH_USER`
-| Username to use for connecting to Elasticsearch server if authentification is required.
+| Username to use for connecting to Elasticsearch server if authentication is required.
 | Workflow
 | No
 | String
@@ -521,7 +558,7 @@ or `path/to/input.json`
 
 *How to use this task:*
 
-The task might require (if the Elasticsearch server requires authentification) an `ELASTICSEARCH_USER` in addition to the following third-party credential: {key: `elasticsearch://<ELASTICSEARCH_USER>@<ELASTICSEARCH_HOST>:<ELASTICSEARCH_PORT>`, value: `ELASTICSEARCH_PASSWORD`>. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+The task might require (if the Elasticsearch server requires authentication) an `ELASTICSEARCH_USER` in addition to the following third-party credential: {key: `elasticsearch://<ELASTICSEARCH_USER>@<ELASTICSEARCH_HOST>:<ELASTICSEARCH_PORT>`, value: `ELASTICSEARCH_PASSWORD`>. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 In the import mode, the output containing the imported data takes the form of a JSON format to saved to the `result` variable to make is previewable in the scheduler portal and to make it accessible for the next tasks.
 
@@ -708,7 +745,7 @@ Azure Blob Storage connector tasks require your azure storage account and accoun
 
 === ERP
 
-Proactive's ERP connectors enable communication and data exchange with popular ERP software providers.
+ProActive's ERP connectors enable communication and data exchange with popular ERP software providers.
 
 ==== SAP ECC
 
@@ -760,7 +797,7 @@ In order to securely connect to your SAP ECC system, you first need to store you
 | /H/192.168.0.1/H/
 |===
 
-Once the credentials are set, the workflow can be executed. If the connection is successful, the connection attributes will be listed as output. *NB.* Proactive's SAP connector provides libraries to connect to an SAP server from a 64-bit OS (Windows, Linux, MacOS); libraries for other OS can be obtained through SAP Marketplace.
+Once the credentials are set, the workflow can be executed. If the connection is successful, the connection attributes will be listed as output. *NB.* ProActive's SAP connector provides libraries to connect to an SAP server from a 64-bit OS (Windows, Linux, MacOS); libraries for other OS can be obtained through SAP Marketplace.
 
 .Querying for a function
 The SAP connector will search for the function module provided as the `JCO_FUNCTION` variable. If the function module exists and is remote-enabled, the script will display the function's parameters (import, export, tables) right after the Connection attributes.
@@ -786,3 +823,67 @@ if (structure != null) {
 For a more detailed guide of ProActive's SAP ECC connector, please refer to link:https://www.activeeon.com/resources/SAPConnector.pdf[this document].
 
 Further information and examples using the SAP JCO library are available in the link:https://help.hana.ondemand.com/javadoc/index.html[SAP Cloud Platform SDK Documentation] and the SAP Java Connector documentation, accessible through link:https://websmp201.sap-ag.de/[SAP Service Marketplace].
+
+=== Business Intelligence
+
+Proactive's BI connectors enable the exportation of data to robust analytics and business intelligence servers.
+
+==== Export_Data_to_Tableau_Server
+
+This connector allows you to publish data to a Tableau Server.
+
+*Variables:*
+
+.Tableau_Server Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?* | *Type*  | *Default/Examples*
+| `DOCKER_ENABLED`
+| True if you want to enable docker fork environment.
+| Workflow
+| Yes
+| Boolean
+| e.g. True
+| `DOCKER_IMAGE`
+| The name of the docker image that you want to use.
+| Task
+| Yes if DOCKER_ENABLED is set as True
+| String
+| e.g. activeeon/dlm3
+| `TASK_ENABLED`
+| True if you want to enable the execution of the task.
+| Task
+| Yes
+| Boolean
+| e.g. True
+| `SERVER_ENDPOINT`
+| The endpoint of the Tableau server.
+| Workflow
+| Yes
+| String
+|e.g https://eu-west-1a.online.tableau.com
+| `SITE_ID`
+| The site id defined in the Tableau server.
+| Workflow
+| Yes
+| String
+| e.g test_connector
+| `PROJECT_NAME`
+| The name of the project where you will save your data in the Tableau server.
+| Task
+| Yes
+| String
+| e.g. test
+| `OUTPUT_FILE_NAME`
+| The name of the file that will be created and saved in the Tableau server.
+| Task
+| Yes
+| String
+| e.g. test.hyper
+|===
+
+*How to use this connector:*
+
+In order to securely connect to your Tableau Server, you first need to store your Tableau login information as ProActive's link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials]. The required credentials are:
+`TABLEAU_SERVER_USERNAME` and `TABLEAU_SERVER_PASSWORD`.
+
