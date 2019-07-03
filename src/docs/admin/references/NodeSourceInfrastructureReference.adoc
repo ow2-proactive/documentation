@@ -148,10 +148,10 @@ The configuration of the AWS EC2 infrastructure is subjected to several requirem
 2. The permissions for using a supported *AWS region*.
     Currently we only support the following AWS regions: ap-south-1, eu-west-3, eu-west-2, eu-west-1, ap-northeast-2, ap-northeast-1, sa-east-1, ca-central-1, ap-southeast-1, ap-southeast-2, eu-central-1, us-east-1, us-east-2, us-west-1, us-west-2.
 
-3. Enough resources quota (including) for creating your node source underlying instances.
+3. Enough resources quota (including the number of instances, subnets, key pairs, etc) for creating your node source underlying instances.
     The number of maximum allocated instances is to be configured by the administrator,
     but has also to comply with the limitation of the regions.
-    Detailed information is available in AWS documentation for https://aws.amazon.com/ec2/faqs/#How_many_instances_can_I_run_in_Amazon_EC2[Instances limit].
+    Detailed information is available on https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html#limits_ec2[Amazon EC2 Limits Documentation].
 
 4. The administrator must be in possession of a valid *AMI ID* to provision instances operating ProActive node.
     Currently we only support the Linux operating system for AWS.
@@ -177,20 +177,20 @@ The configuration form exposes the following fields:
 TIP: If all the nodes of an AWS instance are removed, the instance will be terminated. For more information on the terminated state in AWS please see https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/terminating-instances.html[AWS Terminating Instances].
 +
 
--   *image*: Defines which VM image (AMI) will be used to create an AWS instances.
+-   *image*: Defines which VM image (AMI) will be used to create the AWS instances.
         The value to provide is the AWS region together with the unique AMI ID, for example: `eu-west-1/ami-bff32ccc`.
-        This is an optional property. When no image is specified from the user, the default value `eu-west-3/ami-03bca18cb3dc173c9` is used.
+        This is an optional property. When no image is specified by the user, the default value `eu-west-3/ami-03bca18cb3dc173c9` is used.
         Make sure the image is from a supported region (listed in the section <<_pre_requisites,Pre-Requisites>>) and using Linux operating system.
         More information about finding a Linux AMI ID is available on https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html[AWS EC2 guide for finding an AMI].
 
 -   *vmUsername*: Specifies the default username of the VM image. This username is used to connect to AWS instances.
-        Note that you should specify an username already provided in your VM image.
+        Note that you should specify a username already provided in your VM image.
         If you are using a public AMI provided by Amazon Web Service, you can find the default username of your image https://alestic.com/2014/01/ec2-ssh-username/[here].
         This is an optional property. When it is not specified, the default value `ubuntu` is used.
 
 -   *vmKeyPairName*: Defines the name of the AWS key pair for accessing AWS instances.
         This is an optional property. When it's not specified, a default key pair will be created or reused in the given region of the deployment.
-        If specified, the key pair must exits in AWS in the region of deployment, and the `vmPrivateKey` must be specified as well.
+        If specified, the key pair must exit in AWS in the region of deployment, and the `vmPrivateKey` must be specified as well.
 
 -   *vmPrivateKey*: Defines the AWS private key file (a `.pem` file) corresponding to 'vmKeyPairName' for accessing AWS instances.
         This is an optional property. When it's not specified, a default key pair will be created or reused in the given region of the deployment.
