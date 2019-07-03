@@ -215,7 +215,7 @@ These variables are used in the ProActive portals for correct visualization of w
 ==== Dynamic Variables
 
 As opposed to <<_workflow_variables>>, *dynamic variables* are created or manipulated directly when executing scripts,
-through the use of the `variables` script binding map (see the <<_script_bindings,Script Bindings chapter>> or <<_variables_quick_reference,Script Bindings Reference>> for more information about script bindings).
+through the use of the `variables` script binding map (see the <<../user/ProActiveUserGuide.adoc#_script_bindings,Script Bindings chapter>> or <<_variables_quick_reference,Script Bindings Reference>> for more information about script bindings).
 We have mainly two types of *dynamic variables*:
 
 - <<_system_variables>>, declared by the ProActive scheduler.

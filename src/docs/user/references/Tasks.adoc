@@ -1,61 +1,106 @@
-This section gathers the available scripts engines and the operating system where they run.
+This section describes the available predefined tasks in the *Tasks* menu of *ProActive Studio* and the operating systems where they run.
 
-[cols="1,1", options="header"]
-|===
-
-|Script Engine Name
-|Operating System
-
-|Shell
-|Linux, Mac
-
-|Linux bash
-|Linux, Mac
-
-|Windows cmd
-|Windows
-
-|Docker
-|Linux
-
-|Java
-|Linux, Mac, Windows
-
-|JavaScript
-|Linux, Mac, Windows
-
-|Groovy
-|Linux, Mac, Windows
-
-|Ruby
-|Linux, Mac, Windows
-
-|Python
-|Linux, Mac, Windows
-
-|Language R
-|Linux, Mac, Windows
-
-|Perl
-|Linux, Mac, Windows
-
-|===
-
-This section describes the available predefined tasks and the operating system where they run.
-
-[cols="1,1,1", options="header"]
-|===
+[cols="1,1,1,1", options="header"]
+|====
 
 |Predefined Task Name
 |Description
 |Operating System
+|Additional Requirements
+
+|Shell
+|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the generic posix `shell` script engine.
+|Linux,Mac
+|
+
+|Bash
+|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the posix `bash` script engine.
+|Linux,Mac
+|
+
+|Windows Cmd
+|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the windows `cmd` script engine.
+|Windows
+|
+
+|Docker Compose
+|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `docker-compose` script engine.
+|Linux,Windows,Mac
+|Docker Compose and Docker must be installed
+
+|Docker File
+|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `dockerfile` script engine.
+|Linux,Windows,Mac
+|Docker must be installed
+
+|Kubernetes
+|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `kubernetes` script engine.
+|Linux
+|Kubernetes CLI must be installed
+
+|Java
+|Sample <<../user/ProActiveUserGuide.adoc#java_tasks,Java Task>>.
+|Linux,Windows,Mac
+|
+
+|Scalaw
+|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `scalaw` script engine.
+|Linux,Windows,Mac
+|
+
+|Javascript
+|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `javascript` script engine (Nashhorn).
+|Linux,Windows,Mac
+|
+
+|Groovy
+|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `groovy` script engine.
+|Linux,Windows,Mac
+|
+
+|Ruby
+|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `ruby` (JRuby) script engine.
+|Linux,Windows,Mac
+|
+
+|Jython
+|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `python` script engine. This script engine is based on the Jython implementation of Python.
+|Linux,Windows,Mac
+|
+
+|Python
+|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `cpython` script engine. This script engine is based on native cpython commands.
+|Linux,Windows,Mac
+|CPython and py4j module must be installed
+
+|Perl
+|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `perl` script engine.
+|Linux,Windows,Mac
+|Perl must be installed
+
+|PHP
+|A custom <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> able to call the `php` command to run PHP scripts
+|Linux, Mac, Windows
+|PHP interpreter must be installed
+
+|PowerShell
+|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `powershell` script engine.
+|Windows
+|.NET Framework 3.5 and Poweshell 2.0 Engine must be installed
+
+|R
+|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `R` script engine.
+|Linux,Windows,Mac
+|R must be installed and the rJava library
 
 |Cron
 |Task executed periodically using a cron syntax
 |Linux, Mac, Windows
+|
 
 |LDAP Query
 |Provides an LDAP client for querying an LDAP server
 |Linux, Mac, Windows
+|
 
-|===
+|====
