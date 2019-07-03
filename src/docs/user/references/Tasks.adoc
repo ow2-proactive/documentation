@@ -80,7 +80,7 @@ This section describes the available predefined tasks in the *Tasks* menu of *Pr
 
 |PHP
 |A custom <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> able to call the `php` command to run PHP scripts
-|Linux, Mac, Windows
+|Linux,Mac,Windows
 |PHP interpreter must be installed
 
 |PowerShell
@@ -95,12 +95,12 @@ This section describes the available predefined tasks in the *Tasks* menu of *Pr
 
 |Cron
 |Task executed periodically using a cron syntax
-|Linux, Mac, Windows
+|Linux,Mac,Windows
 |
 
 |LDAP Query
 |Provides an LDAP client for querying an LDAP server
-|Linux, Mac, Windows
+|Linux,Mac,Windows
 |
 
 |====
