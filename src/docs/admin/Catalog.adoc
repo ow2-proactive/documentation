@@ -30,7 +30,7 @@ Every request to the Catalog must have a valid sessionID inside the request head
 A role-based access control mechanism can also be defined on catalog buckets.
 When creating a bucket, it can either be made *public* or restrained to a specific *group*.
 
-Creating users and groups at the ProActive Scheduler level is explained in the <<../ProActiveAdminGuide.adoc#_user_authentication,User Authentication>> section.
+Creating users and groups at the ProActive Scheduler level is explained in the <<../admin/ProActiveAdminGuide.adoc#_user_authentication,User Authentication>> section.
 
 A _public_ bucket is automatically assigned to the *public-objects* group.
 
