@@ -617,6 +617,7 @@ line tools>>. For advanced users we also expose REST and JAVA APIs.
 TIP: During the submission, you will be able to edit <<_workflow_variables>>, so you can effectively use
 them to parameterize workflow execution and use workflows as <<_templating,templates>>.
 
+[[_states]]
 ==== Job & Task states
 
 During their execution, jobs go through different states.
