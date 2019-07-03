@@ -682,12 +682,12 @@ The ProActive Resource Manager can automate the deployment of ProActive Nodes on
 Currently the following Cloud Platforms are supported:
 
 - <<_ec2_infrastructure,Amazon Web Service EC2>>
-- Amazon Web Service Auto Scaling
+- <<_aws_autoscaling_infrastructure, Amazon Web Service Auto Scaling>>
 - <<_openstack_infrastructure,OpenStack>>
 - <<_vmware_infrastructure,VMWare>>
 - <<_gce_infrastructure,Google Compute Engine>>
-- Microsoft Azure
-- Microsoft Azure Scale Set
+- <<_azure_infrastructure,Microsoft Azure>>
+- <<_azure_scale_set_infrastructure,Microsoft Azure Scale Set>>
 - Kubernetes
 
 Unlike directly deploying on the compute servers, on the Cloud Platforms

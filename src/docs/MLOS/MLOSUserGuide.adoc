@@ -440,6 +440,22 @@ $ nohup jupyter lab &>/dev/null &
 
 When opened, click on the ProActive icon to open a notebook based on the ProActive kernel.
 
+=== Help
+
+As a quick start, we recommend the user to run the `#%help()` pragma using the following script:
+
+```python
+#%help()
+```
+
+This script gives a brief description of all the different pragmas that the ProActive Kernel provides.
+
+To get a more detailed description of a needed pragma, the user can run the following script:
+
+```python
+#%help(pragma=PRAGMA_NAME)
+```
+
 === Connection
 
 ==== Using connect()

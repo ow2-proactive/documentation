@@ -138,81 +138,110 @@ Image). For the Resource Manager to use EC2 instances as computing
 nodes, a specific EC2 Infrastructure as well as AMI creation utilities
 are provided.
 
-To use the EC2 Infrastructure in the Resource Manager, proper Amazon
-credentials are needed. This section describes briefly how to obtain
-them, and how to use them to configure your environment.
+===== Pre-Requisites
 
-1.  First, you need to create an AWS account at
-    <https://aws.amazon.com/>.
+The configuration of the AWS EC2 infrastructure is subjected to several requirements.
 
-2.  With your new AWS account, sign up for EC2 at
-    <https://aws.amazon.com/ec2/>.
+1. The administrator needs both an *AWS access key* and an *AWS secret access key* to enable ProActive to authenticate against AWS.
+    Please refer to https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html?icmpid=docs_iam_console#Using_CreateAccessKey[the AWS documentation] to learn how to get them.
 
-3.  Now, you need to obtain the credentials. https://aws.amazon.com[On the AWS website],
-    point your browser to the _Your Web Services Account_ button, a drop
-    down list displays. Click _View Access Key Identifiers_.
+2. The permissions for using a supported *AWS region*.
+    Currently we only support the following AWS regions: ap-south-1, eu-west-3, eu-west-2, eu-west-1, ap-northeast-2, ap-northeast-1, sa-east-1, ca-central-1, ap-southeast-1, ap-southeast-2, eu-central-1, us-east-1, us-east-2, us-west-1, us-west-2.
 
-4.  Use this information to fill in the properties *aws_key* (Access
-    Key), *aws_secret_key* (Secret Key) in the *Create Node Source* panel located in the Resource Manager.
-    Those two parameters should never change, except if you need for
-    some reason to handle multiple EC2 accounts. Other properties in the
-    *Create Node Source* are:
-    
-    -   *rmHostname:* The hostname or the public IP address of the Resource Manager. This address needs to be accessible from the AWS cloud.
-    
-    -   *connectorIaasURL:* Connector-iaas is a service embedded in the Scheduler used to interact with IaaS like AWS. By default it runs on the following URL *rmHostname/connector-iaas*.
+3. Enough resources quota (including the number of instances, subnets, key pairs, etc) for creating your node source underlying instances.
+    The number of maximum allocated instances is to be configured by the administrator,
+    but has also to comply with the limitation of the regions.
+    Detailed information is available on https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html#limits_ec2[Amazon EC2 Limits Documentation].
 
-    -   *image:* Defines which AMI will be used to create an AWS instances. The
-        value to provide is the AWS region together with the unique AMI Id, for example: `eu-west-1/ami-bff32ccc`.
+4. The administrator must be in possession of a valid *AMI ID* to provision instances operating ProActive node.
+    Currently we only support the Linux operating system for AWS.
 
-    -   *vmUsername:* Defines the user name that is used to connect to AWS instances.
-        If not provided, then AWS instances will be accessed as admin user.
+5. The Resource Manager should be accessible from the AWS cloud.
+    Please consider replacing PNP by PAMR as communication protocol if the Resource Manager is located behind a NAT gateway.
+    You can get additional information about the PAMR protocol in the section <<_installation_on_a_cluster_with_firewall>>.
 
-    -   *vmKeyPairName:* Defines the name of the AWS key pair to use.
-        If specified, the key pair must exits in AWS in the region of deployment, and the `vmPrivateKey` must be specified as well.
-        If not specified, then a default key pair will be created or reused in the given region of the deployment.
+===== Infrastructure Configuration
 
-    -   *vmPrivateKey:* Defines the .pem file that will be used to connect to AWS instances.
-        If specified, the name of the key pair (`vmKeyPairName`) to which this private key belongs to must be specified as well.
-        
-    -   *numberOfInstances:* Total number of AWS instances to create for this infrastructure.
-    
-    -   *numberOfNodesPerInstance:* Total number of ProActive Nodes to deploy in each created AWS instance.
-    
+To use a cluster of AWS instances as a computing resource for the ProActive scheduler, the administrator has to create a node source in the Resource Manager with the *AWSEC2Infrastructure* profile.
+The configuration form exposes the following fields:
+
+-   *awsKey*: Your AWS access key ID (e.g., AKIAIOSFODNN7EXAMPLE) which is retrieved in the section <<_pre_requisites, Pre-Requisites>>.
+
+-   *awsSecretKey*: Your AWS secret access key (e.g., wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY) retrieved in the section <<_pre_requisites, Pre-Requisites>>.
+
+-   *numberOfInstances*: Total number of AWS instances (i.e., Virtual Machines) to create for this infrastructure.
+
+-   *numberOfNodesPerInstance*: Total number of ProActive Nodes to deploy in each created AWS instance.
+
 +
 TIP: If all the nodes of an AWS instance are removed, the instance will be terminated. For more information on the terminated state in AWS please see https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/terminating-instances.html[AWS Terminating Instances].
-+       
-    -   *downloadCommand:* The command to download the ProActive *node.jar*. This command is executed in all the newly created AWS instances.
-    	The full URL path of the *node.jar* to download, needs to be accessible from the AWS cloud.
-        Example based on AWS image with windows operating system:
-        
-        	powershell -command "& { (New-Object Net.WebClient).DownloadFile('try.activeeon.com/rest/node.jar', 'node.jar') }"
-    	    	
-    -   *additionalProperties:* Additional Java command properties to be added when starting each ProActive node JVM in AWS instances (e.g. \"-Dpropertyname=propertyvalue\").
-     
-    -   *minRam:* The minimum required amount of RAM expressed in Mega Bytes for each AWS instance that needs to be created.
-    
-    -   *minCores:* The minimum required amount of virtual cores for each AWS instance that needs to be created.
++
+
+-   *image*: Defines which VM image (AMI) will be used to create the AWS instances.
+        The value to provide is the AWS region together with the unique AMI ID, for example: `eu-west-1/ami-bff32ccc`.
+        This is an optional property. When no image is specified by the user, the default value `eu-west-3/ami-03bca18cb3dc173c9` is used.
+        Make sure the image is from a supported region (listed in the section <<_pre_requisites,Pre-Requisites>>) and using Linux operating system.
+        More information about finding a Linux AMI ID is available on https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html[AWS EC2 guide for finding an AMI].
+
+-   *vmUsername*: Specifies the default username of the VM image. This username is used to connect to AWS instances.
+        Note that you should specify a username already provided in your VM image.
+        If you are using a public AMI provided by Amazon Web Service, you can find the default username of your image https://alestic.com/2014/01/ec2-ssh-username/[here].
+        This is an optional property. When it is not specified, the default value `ubuntu` is used.
+
+-   *vmKeyPairName*: Defines the name of the AWS key pair for accessing AWS instances.
+        This is an optional property. When it's not specified, a default key pair will be created or reused in the given region of the deployment.
+        If specified, the key pair must exit in AWS in the region of deployment, and the `vmPrivateKey` must be specified as well.
+
+-   *vmPrivateKey*: Defines the AWS private key file (a `.pem` file) corresponding to 'vmKeyPairName' for accessing AWS instances.
+        This is an optional property. When it's not specified, a default key pair will be created or reused in the given region of the deployment.
+        If specified, the name of the key pair (`vmKeyPairName`) to which this private key belongs to must be specified as well.
+
+-   *ram*: The minimum required amount of RAM (expressed in Mega Bytes) for each AWS instance that needs to be created.
+        This is an optional property. If not provided, the default value `2048` will be used.
+
+-   *cores*: The minimum required amount of virtual cores for each AWS instance that needs to be created.
+        This is an optional property. If not provided, the default value `2` will be used.
 
 +
 WARNING: If the combination between RAM and CORES does not match any existing AWS instance type, then the closest to the specified parameters will be selected.
-
-    -   *spotPrice:* The maximum price that you are willing to pay per hour per instance (your bid price). Amazon EC2 Spot instances allow you to bid on spare Amazon EC2 computing capacity. Since Spot instances are often available at a discount compared to On-Demand pricing. If your bid price is greater than the current Spot price for the specified instance, and the specified instance is available, your request is fulfilled immediately. Otherwise, the request is fulfilled whenever the Spot price falls below your bid price or the specified instance becomes available. Spot instances run until you terminate them or until Amazon EC2 must terminate them (also known as a Spot instance interruption). More information available on https://aws.amazon.com/ec2/spot/[AWS EC2 Spot]
-
-    -   *securityGroupNames:* The securityGroupNames option allows you to specify the name(s) of the Security group(s) configured as a virtual firewall(s) to control inbound and outbound traffic for the EC2 instances hosting the ProActive nodes. More information regarding Amazon EC2 Security Group available on https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html[AWS EC2 Security Groups]
-
-    -   *subnetId:* The subnetId option allows you to launch the ProActive nodes on EC2 instances, which will run into an existing subnet added to a specific Virtual Private Cloud. More information regarding Amazon EC2 Virtual Private Cloud (Amazon VPC) available on https://aws.amazon.com/vpc/[AWS EC2 Virtual Private Cloud] and Amazon EC2 Virtual Private Cloud and Subnet available on https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html[AWS EC2 Virtual Private Cloud and Subnet]
-
 +
-Using this configuration, you can start a Resource Manager and a
-Scheduler using the */bin/proactive-server* script. An EC2 NodeSource can
-now be added using the *Create Node Source* panel in the Resource Manager or the command line interface:
 
-    $ PROACTIVE_HOME/bin/proactive-client --createns ec2 -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.AWSEC2Infrastructure aws_key aws_secret_key rmDomain connectorIaasURL image numberOfInstances numberOfNodesPerInstance downloadCommand additionalProperties minRam minCores
+// -   *spotPrice:* The maximum price that you are willing to pay per hour per instance (your bid price). Amazon EC2 Spot instances allow you to bid on spare Amazon EC2 computing capacity. Since Spot instances are often available at a discount compared to On-Demand pricing. If your bid price is greater than the current Spot price for the specified instance, and the specified instance is available, your request is fulfilled immediately. Otherwise, the request is fulfilled whenever the Spot price falls below your bid price or the specified instance becomes available. Spot instances run until you terminate them or until Amazon EC2 must terminate them (also known as a Spot instance interruption). More information available on https://aws.amazon.com/ec2/spot/[AWS EC2 Spot]
 
-As AWS is a paying service, when the Scheduler is stopped normally (without removing the created infrastructure), all the created AWS instances will be terminated. And when the Scheduler is restarted, these instances will be re-configured as per the previous settings.
+-   *securityGroupIds*: This option allows you to specify the id(s) of the security group(s) configured as a virtual firewall(s) to control inbound and outbound traffic for the EC2 instances hosting the ProActive nodes.
+        This is an optional property. If not provided, a security group will be automatically created and used.
+        More information regarding Amazon EC2 Security Group available on https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html[AWS EC2 Security Groups].
+
+-   *subnetId*: The subnetId option allows you to launch the ProActive nodes on EC2 instances, which will run into an existing subnet added to a specific Virtual Private Cloud.
+        This is an optional property.
+        More information regarding Amazon EC2 Virtual Private Cloud (Amazon VPC) available on https://aws.amazon.com/vpc/[AWS EC2 Virtual Private Cloud] and Amazon EC2 Subnet available on https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html[AWS EC2 Virtual Private Cloud and Subnet]
+
+-   *rmHostname*: The hostname or the public IP address of the Resource Manager.
+        This address needs to be accessible from the AWS cloud.
+        For example, `try.activeeon.com`.
+
+-   *connectorIaasURL*: Connector-iaas is a ProActive service used to interact with IaaS like AWS.
+        By default it runs on the following URL _rmHostname/connector-iaas_.
+        For example, `\http://try.activeeon.com:8080/connector-iaas`.
+
+-   *nodeJarURL*: The full URL path of the _node.jar_ to download the ProActive node.jar on each new created AWS instance.
+        The URL needs to be accessible from the AWS cloud.
+        For example, `try.activeeon.com/rest/node.jar`.
+
+-   *additionalProperties*: Additional Java command properties to be added when starting each ProActive node JVM in AWS instances (e.g. `-Dpropertyna
+me=propertyvalue`). This is an optional property.
+
+-   *nodeTimeout*: The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node is considered as lost.
+
+Using this configuration, you can start a ProActive Resource Manager and Scheduler using the */bin/proactive-server* script.
+An AWS EC2 NodeSource can now be added using the *Create Node Source* panel in the Resource Manager Portal or the command line interface:
+
+    $ PROACTIVE_HOME/bin/proactive-client --createns ec2 -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.AWSEC2Infrastructure awsKey awsSecretKey numberOfInstances numberOfNodesPerInstance image vmUsername vmKeyPairName vmPrivateKey ram cores securityGroupIds subnetId rmHostname connectorIaasURL nodeJarURL additionalProperties nodeTimeout
+
+As AWS is a paying service, when the ProActive server is stopped normally (without removing the created infrastructure), all the created AWS instances will be terminated. When the ProActive server is restarted, these instances will be re-configured as per the previous settings.
 
 WARNING: If ProActive server is forcibly killed, the created AWS instances will not be terminated. And, when ProActive server is restarted, the infrastructure will be re-configured as per the previous settings. If the instances were deleted at the AWS side, they will be re-created and re-configured.
+
 
 ==== AWS Autoscaling Infrastructure
 
@@ -249,7 +278,7 @@ The configuration of the AWS Autoscaling infrastructure is subjected to several 
 
 ===== Infrastructure Configuration
 
-To use a cluster of AWS instances as a computing resource for the ProActive scheduler, the administrator has to create a nodesource in the Resource Manager with the *AwsAutoScalingInfrastructure* profile.
+To use a cluster of AWS instances as a computing resource for the ProActive scheduler, the administrator has to create a NodeSource in the Resource Manager with the *AwsAutoScalingInfrastructure* profile.
 The configuration form exposes the following fields:
 
 	- *vmGroupTagPrefix:* Each instance prepared by the connector is flagged with the tag named *vmGroupName*.
@@ -284,6 +313,10 @@ The configuration form exposes the following fields:
  If specified, this parameter has to refer to an existing subnet in the region affected to the specified VPC, and has to comply with the subnet ID format.
  This parameter has to be filled only if the *defaultVpcId* is also completed.
  Otherwise, this parameter has to be left blank to trigger networking autoconfiguration.
+
++
+WARNING: Please do not trigger networking autoconfiguration if you operate ProActive on AWS with PNP protocol.
+Otherwise, a new and distinct VPC will be used to operate the nodes created by the NodeSource, preventing their communication with the Resource Manager.
 
 	- *defaultSecurityGroup:* This parameter receives the ID of the security group to spawn instances into.
  If this parameter does not meet the requirement regarding the providing the provided VPC and subnet, a new security group will be generated.
@@ -495,38 +528,38 @@ https://cloud.google.com/compute/docs/access/service-accounts[Google Cloud Servi
 Now, you are ready to create a new node source of the type _GCE Infrastructure_.
 The properties needed for the node deployment in the _Create GCE Node Source_ are:
 
--   *gceCredential:* The credentials to perform the basic Google Cloud Platform authentication.
+-   *gceCredential*: The credentials to perform the basic Google Cloud Platform authentication.
         Upload the JSON file of a Google Cloud service account key (downloaded in the section Pre-Requisites) to fill in this property.
--   *totalNumberOfInstances:* Total number of GoogleComputeEngine instances to create for this infrastructure.
--   *numberOfNodesPerInstance:* Total number of ProActive Nodes to deploy in each created GoogleComputeEngine instance.
+-   *totalNumberOfInstances*: Total number of GoogleComputeEngine instances to create for this infrastructure.
+-   *numberOfNodesPerInstance*: Total number of ProActive Nodes to deploy in each created GoogleComputeEngine instance.
 +
 TIP: If all the nodes of a GoogleComputeEngine instance are removed, the instance will be terminated.
 +
--   *vmUsername:* Defines the user name that will be used to connect to GoogleComputeEngine instances.
+-   *vmUsername*: Defines the user name that will be used to connect to GoogleComputeEngine instances.
         If not provided, then GoogleComputeEngine instances will be accessed as the default user.
         If specified, the corresponding `vmPublicKey` and `vmPrivateKey` must be specified as well.
--   *vmPublicKey:* Defines the public key to grant a user specified access for the created GoogleComputeEngine instances.
+-   *vmPublicKey*: Defines the public key to grant a user specified access for the created GoogleComputeEngine instances.
         If specified, the corresponding `vmUsername` and `vmPrivateKey` must be specified as well.
--   *vmPrivateKey:* Defines the private key that will be used to connect to GoogleComputeEngine instances.
+-   *vmPrivateKey*: Defines the private key that will be used to connect to GoogleComputeEngine instances.
         If specified, the corresponding `vmUsername` and `vmPublicKey` must be specified as well.
--   *image:* Defines which image will be used to create the GoogleComputeEngine instance.
+-   *image*: Defines which image will be used to create the GoogleComputeEngine instance.
         The value to provide is the unique name of the image.
         If not provided, the default value "debian-9-stretch-v20190326" will be used.
         For more information see https://cloud.google.com/compute/docs/images/[Google Compute Engine Images List].
--   *region:* The geographic zone for Google Cloud Platform resources to use.
+-   *region*: The geographic zone for Google Cloud Platform resources to use.
         If not provided, the default value "us-central1-a" will be used.
         For more information see https://cloud.google.com/compute/docs/regions-zones/[Google Compute Engine Regions and Zones].
--   *ram:* The minimum required amount of RAM (expressed in Mega Bytes) for each GoogleComputeEngine instance to be created.
+-   *ram*: The minimum required amount of RAM (expressed in Mega Bytes) for each GoogleComputeEngine instance to be created.
         If not provided, the default value 1740 will be used.
--   *cores:* The minimum required amount of virtual cores for each GoogleComputeEngine instance to be created.
+-   *cores*: The minimum required amount of virtual cores for each GoogleComputeEngine instance to be created.
         If not provided, the default value 1 will be used.
--   *rmHostname:* The hostname or the public IP address of the Resource Manager. This address needs to be accessible from the GoogleComputeEngine server.
--   *connectorIaasURL:* Connector-iaas is a ProActive service used to interact with IaaS like GoogleComputeEngine.
+-   *rmHostname*: The hostname or the public IP address of the Resource Manager. This address needs to be accessible from the GoogleComputeEngine server.
+-   *connectorIaasURL*: Connector-iaas is a ProActive service used to interact with IaaS like GoogleComputeEngine.
         By default it runs on the following URL _rmHostname/connector-iaas_.
--   *nodeJarURL:* The full URL path of the _node.jar_ to download the ProActive node.jar on each new created GoogleComputeEngine instance.
+-   *nodeJarURL*: The full URL path of the _node.jar_ to download the ProActive node.jar on each new created GoogleComputeEngine instance.
         The URL needs to be accessible from the GoogleComputeEngine server.
--   *additionalProperties:* Additional Java command properties to be added when starting each ProActive node JVM in GoogleComputeEngine instances (e.g. "-Dpropertyname=propertyvalue").
--   *nodeTimeout:* The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node is considered as lost.
+-   *additionalProperties*: Additional Java command properties to be added when starting each ProActive node JVM in GoogleComputeEngine instances (e.g. "-Dpropertyname=propertyvalue").
+-   *nodeTimeout*: The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node is considered as lost.
 
 Using this configuration, you can start a Resource Manager and a Scheduler using the */bin/proactive-server* script.
 A GoogleComputeEngine NodeSource can now be added using the *Create Node Source* panel in the Resource Manager or the command line interface:
