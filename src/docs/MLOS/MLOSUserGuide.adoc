@@ -17,7 +17,7 @@ include::references/Glossary.adoc[]
 
 == Get Started
 
-To submit your first ML workflow to *ProActive Scheduler*, link:../admin/ProActiveAdminGuide.html#_run_the_proactive_scheduler[install] it in
+To submit your first Machine Learning (ML) workflow to *ProActive Scheduler*, link:../admin/ProActiveAdminGuide.html#_run_the_proactive_scheduler[install] it in
 your environment (default credentials: admin/admin) or just use our demo platform https://try.activeeon.com[try.activeeon.com^].
 
 *ProActive Scheduler* provides comprehensive interfaces that allow to:
@@ -917,7 +917,7 @@ The following workflows present some ML basic examples. These workflows are buil
 *Parallel_Regression_Model_Training:* trains three different regression models.
 
 === Basic AutoML
-The following workflows present some ML basic examples using AutoML generic tasks available in the machine-learning bucket.
+The following workflows present some ML basic examples using AutoML generic tasks available in the `machine-learning` bucket.
 
 *Breast_Cancer_Detection_Using_AutoSklearn_Classifier:* tests several ML pipelines and selects the best model for Cancer Breast detection.
 
