@@ -173,25 +173,21 @@ E. Click the *Tasks* tab, select an *Preview_Results* task and click on the *Pre
 image::execute.gif[100000,2000]
 
 [[_AutoML]]
+
 == AutoML
 
 The `auto-ml-optimization` bucket contains the Multi_Tuners_AutoML workflow that can be easily used to find the operating parameters for any system whose performance can be measured as a function of adjustable parameters.
+It is an estimator that minimizes the posterior expected value of a loss function.
 This bucket also comes with a set of workflows' examples that demonstrates how we can optimize mathematical functions, MLOS workflows and machine/deep learning algorithms from scripts using AutoML tuners.
 
-=== AutoML variants
-===== Multi_Tuners_AutoML_V1
-image::MLOS-AutoML-V1.png[align=center]
-===== Multi_Tuners_AutoML_V2
-image::MLOS-AutoML-V2.png[align=center]
-===== Multi_Tuners_AutoML_V3
-image::MLOS-AutoML-V3.png[align=center]
-=== Tuning Algorithms
+=== AutoML Variants
 
-===== Multi_Tuners_AutoML
+All Multi_Tuners_AutoML variants propose six algorithms for hyperparameters' optimization.  The choice of the sampling/search strategy depends strongly on the problem tackled.
+Three variants of AutoML are proposed. Each variant comes with specific pipelines and visualization tools as described in the subsections below.
 
-*Task Overview:*  is an estimator that minimizes the posterior expected value of a loss function.
+*Common variables:*
 
-.Multi_Tuners_AutoML_Task variables
+.Multi_Tuners_AutoML_Variants_Common Variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -209,10 +205,7 @@ image::MLOS-AutoML-V3.png[align=center]
 | Int (default=2)
 | `PARALLEL_SAMPLES_PER_LOOP`
 |  Specifies the number of samples per iteration.
-| Int (default=-1)
-| `VISDOM_ENABLED`
-|  If True, the results will be plotted in real time in the Visdom dashboard.
-| Int (default=-1)
+| Int (default=2)
 | `DOCKER_ENABLED`
 |   If True, the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
@@ -237,7 +230,7 @@ The choice of the tuner depends on the following aspects:
     - Type of variable.
     - The size of the search space.
 
-In the following, we briefly describe the different tuners proposed by the Multi_Tuners_Automl workflow:
+In the following, we briefly describe the different tuners proposed by the Multi_Tuners_AutoML workflow:
 
     - *Grid sampling* applies when all variables are discrete and the number of possibilities is low.
       A grid search is a naive approach that will simply try all possibilities making the search extremely long even for medium sized problems.
@@ -258,6 +251,65 @@ In the following, we briefly describe the different tuners proposed by the Multi
     - *MOCMAES search* is a multi-objective algorithm optimizing multiple tradeoffs simultaneously.
       To do that, MOCMAES employs a number of CMAES algorithms.
 
+===== Multi_Tuners_AutoML_V1
+
+*Workflow Overview:* generates at first the chosen values of hyperparameters for each trial. Then, it executes the different trials in parallel. Finally, it plots the different results using Visdom.
+
+*Specific variables:*
+
+.Multi_Tuners_AutoML_V1 specific variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `VISDOM_ENABLED`
+|  If True, the results will be plotted in real time in the Visdom dashboard.
+| Boolean (default=True)
+|===
+
+image::MLOS-AutoML-V1.png[align=center]
+===== Multi_Tuners_AutoML_V2
+
+*Workflow Overview:* considers two execution pipelines (parallel and sequential).
+For all the tuning algorithms except the Bayesian one, the parallel pipeline is executed similar as `Multi_Tuners_AutoML_V1`. For the the bayesian one, the sequential one is executed. This pipeline both generates the hyperparameters' values and executes the associated trials sequentially.
+The results can be visualized using Visdom.
+
+*Specific variables:*
+
+.Multi_Tuners_AutoML_V2 specific variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `VISDOM_ENABLED`
+|  If True, the results will be plotted in real time in the Visdom dashboard.
+| Boolean (default=True)
+|===
+
+image::MLOS-AutoML-V2.png[align=center]
+
+===== Multi_Tuners_AutoML_V3
+*Workflow Overview:* is similar to `Multi_Tuners_AutoML_V2`. However, this version uses `Tensorboard` to visualize the different results.
+
+*Specific variables:*
+
+.Multi_Tuners_AutoML_V3 specific variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `MOUNT_LOG_PATH`
+|  The path of the shared folder where the Tensorboard logs will be saved.
+| String (default=/shared/$INSTANCE_NAME)
+| `DOCKER_LOG_PATH`
+|  The path of the folder where the Tensorboard logs will be saved in the docker container.
+| String (default=/graphs/$INSTANCE_NAME)
+| `INSTANCE_NAME`
+|  The instance name of the Tensorboard server that is/will be launched.
+| String (default=tensorboard-server)
+| `TENSORBOARD_ENABLED`
+|  If True, the results will be plotted in real time in the Tensorboard dashboard.
+| Boolean (default=True)
+|===
+
+image::MLOS-AutoML-V3.png[align=center]
 
 === Objective ML Examples
 
@@ -266,6 +318,8 @@ The following workflows represent some machine learning and deep learning algori
 *Diabetics Detection Using Logistic Regression:* train a logistic regression model using MLOS machine learning generic tasks in order to detect diabetics.
 
 *CIFAR10 CNN:* train a simple deep CNN on the CIFAR10 images dataset using the Keras library.
+
+*CIFAR100 CNN:* train a simple deep CNN on the CIFAR100 images dataset using the Keras library.
 
 *Image Object Detection:* train a YOLO model on the coco dataset using MLOS deep learning generic tasks.
 
