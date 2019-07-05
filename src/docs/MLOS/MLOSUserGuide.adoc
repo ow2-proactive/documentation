@@ -182,8 +182,8 @@ This bucket also comes with a set of workflows' examples that demonstrates how w
 
 === AutoML Variants
 
-All Multi_Tuners_AutoML variants propose six algorithms for hyperparameters' optimization.  The choice of the sampling/search strategy depends strongly on the problem tackled.
-Three variants of AutoML are proposed. Each variant comes with specific pipelines and visualization tools as described in the subsections below.
+All Multi_Tuners_AutoML variants propose six algorithms for hyperparameters' optimization.  The choice of the sampling/search strategy depends strongly on the tackled problem.
+Three variants of AutoML are proposed. Each variant comes with specific pipelines (parallel or sequential) and visualization tools (Visdom or Tensorboard) as described in the subsections below (<<Multi_Tuners_AutoML_V1>>, <<Multi_Tuners_AutoML_V2>>, <<Multi_Tuners_AutoML_V3>>).
 
 *Common variables:*
 
@@ -270,7 +270,7 @@ image::MLOS-AutoML-V1.png[align=center]
 ===== Multi_Tuners_AutoML_V2
 
 *Workflow Overview:* considers two execution pipelines (parallel and sequential).
-For all the tuning algorithms except the Bayesian one, the parallel pipeline is executed similar as `Multi_Tuners_AutoML_V1`. For the the bayesian one, the sequential one is executed. This pipeline both generates the hyperparameters' values and executes the associated trials sequentially.
+For all the tuning algorithms except the Bayesian one, the parallel pipeline is executed similar as `Multi_Tuners_AutoML_V1`. For the Bayesian algorithm, the sequential one is executed. This pipeline both generates the hyperparameters' values, and executes the associated trials sequentially.
 The results can be visualized using Visdom.
 
 *Specific variables:*
@@ -296,10 +296,10 @@ image::MLOS-AutoML-V2.png[align=center]
 |===
 | *Variable name* | *Description* | *Type*
 | `MOUNT_LOG_PATH`
-|  The path of the shared folder where the Tensorboard logs will be saved.
+|  The path of the shared folder in which the Tensorboard logs will be saved.
 | String (default=/shared/$INSTANCE_NAME)
 | `DOCKER_LOG_PATH`
-|  The path of the folder where the Tensorboard logs will be saved in the docker container.
+|  The path of the folder in which the Tensorboard logs will be saved in the docker container.
 | String (default=/graphs/$INSTANCE_NAME)
 | `INSTANCE_NAME`
 |  The instance name of the Tensorboard server that is/will be launched.
