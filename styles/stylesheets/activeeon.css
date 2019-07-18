@@ -312,7 +312,8 @@ b.button:after { content: "]"; padding: 0 2px 0 3px; }
 #content > h1:first-child:not([class]) { color: #1c3067; border-bottom: 1px solid #dddddd; padding-bottom: 8px; margin-top: 0; padding-top: 1rem; margin-bottom: 1.25rem; }
 
 #toc { border-bottom: 1px solid #dddddd; padding-bottom: 0.5em; }
-#toc > ul { margin-left: 0.125em; }
+/* we hide the toc content as it will be overwritten by tocbot javascript library */
+#toc > ul { margin-left: 0.125em; visibility: hidden; }
 #toc ul.sectlevel0 > li > a { font-style: italic; }
 #toc ul.sectlevel0 ul.sectlevel1 { margin: 0.5em 0; }
 #toc ul { font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif; list-style-type: none; }

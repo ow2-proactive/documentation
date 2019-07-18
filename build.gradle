@@ -39,6 +39,7 @@ asciidoctor {
         from("$projectDir/src/docs/") {
             include 'user/examples/**'
             include 'images/**'
+            include 'tocbot/**'
         }
     }
 }
