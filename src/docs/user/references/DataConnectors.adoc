@@ -318,7 +318,10 @@ Default: `HTML`
 
 The scheduler should be configured in non-fork mode to execute tasks in a single JVM rather than starting a dedicated JVM to run the task (In $PROACTIVE_HOME/config/scheduler/settings.ini, set pa.scheduler.task.fork=false).
 
-To be executed, each workflow requires the jdbc connector jar file of the used rdbms to connect to the database. Make sure you have it properly copied into the addons directory ($PROACTIVE_HOME/addons) of the scheduler.
+To be executed, each workflow requires the jdbc connector jar of the used rdbms to enable connection to the database.
+In case the Scheduler is running with only local Nodes, make sure that you have properly added the jdbc jar into the addons directory ($PROACTIVE_HOME/addons) of the Scheduler before starting the server.
+Otherwise, adding the jdbc connector jar depends on how you will deploy the ProActive Node. If you use the enterprise Node release, make sure you have it properly added into the addons directory ($PROACTIVE_NODE/addons) of the node.
+If you use the node.jar, go under $PROACTIVE_HOME/dist/war of the Scheduler and inject the jdbc jar into the node.jar.
 
 In case the password is required, you have to add the following third-party credential: {key: `<mysql|postgresql|sqlserver|oracle|hsqldb:hsql>://<USERNAME>@<HOST>:<PORT>`, value: `<RDBMS_NAME>_PASSWORD`}. This is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
