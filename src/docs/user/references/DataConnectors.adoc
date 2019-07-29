@@ -318,10 +318,11 @@ Default: `HTML`
 
 The scheduler should be configured in non-fork mode to execute tasks in a single JVM rather than starting a dedicated JVM to run the task (In $PROACTIVE_HOME/config/scheduler/settings.ini, set pa.scheduler.task.fork=false).
 
-To be executed, each workflow requires the jdbc connector jar of the used rdbms to enable connection to the database.
-In case the Scheduler is running with only local Nodes, make sure that you have properly added the jdbc jar into the addons directory ($PROACTIVE_HOME/addons) of the Scheduler before starting the server.
-Otherwise, adding the jdbc connector jar depends on how you will deploy the ProActive Node. If you use the enterprise Node release, make sure you have it properly added into the addons directory ($PROACTIVE_NODE/addons) of the node.
-If you use the node.jar, go under $PROACTIVE_HOME/dist/war of the Scheduler and inject the jdbc jar into the node.jar.
+Data connectors workflows may need to add some third-party dependencies to their classpath (notably, JDBC jar libraries), so they can execute properly. The user determines the required dependencies depending on the workflow implementation and the used DataBase system. Third-party dependencies can be added to the workflow classpath in three ways (depending on the nodes that will run the workflow):
+
+- If the workflow will be executed locally (i.e., on local nodes running in the same system as the server), the dependencies can be placed under the addons directory of the server (i.e., $PROACTIVE_HOME/addons);
+- If the workflow will be executed using remote nodes that will be started using the proactive-node command (i.e., based on activeeon_enterprise-node-xxxxx.jar) , third party dependencies can be placed under the addons directory of the node (i.e., $PROACTIVE_NODE/addons);
+- If the workflow will be executed using remote nodes that will be started using the executable jar 'node.jar' (usually used for cloud infrastructure), third party dependencies has to be added inside the lib folder of the node.jar archive itself, which is located under $PROACTIVE_HOME/dist/war/rest.
 
 In case the password is required, you have to add the following third-party credential: {key: `<mysql|postgresql|sqlserver|oracle|hsqldb:hsql>://<USERNAME>@<HOST>:<PORT>`, value: `<RDBMS_NAME>_PASSWORD`}. This is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
