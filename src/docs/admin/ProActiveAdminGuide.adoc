@@ -2178,6 +2178,19 @@ For example, load-examples.groovy which is executed by default at scheduler star
 the full deployment of proactive-examples by: populating the running Catalog, exposing as templates
 specific workflows and copying workflows dependencies into dataspaces.
 
+== Add custom third-party dependencies to a workflow classpath
+
+Some workflows may need to add some third-party dependencies to their classpath, so they can be executed properly. The admin determines the required dependencies depending on the workflow implementation and the used libraries. Third-party dependencies can be added to the workflow classpath in three ways (depending on the nodes that will run the workflow):
+
+- If the workflow is to be executed on Nodes running in the same host as the ProActive server, the dependencies can be placed under the addons directory of the server (i.e., $PROACTIVE_HOME/addons);
+- If the workflow is to be executed on remote Nodes that are not on the ProActive Server Host, and such Nodes are started using the proactive-node command (i.e., based on activeeon_enterprise-node-xxxxx.jar) , third party dependencies can be placed under the addons directory of the Node (i.e., $PROACTIVE_NODE/addons);
+- If the workflow is to be executed on remote Nodes that are not on the ProActive Server Host, and such Nodes are started using the executable jar 'node.jar' (usually used for cloud infrastructure), third party dependencies can be placed inside the lib folder of the node.jar archive itself, which is located under $PROACTIVE_HOME/dist/war/rest.
+
+Note that the added dependencies in the addons folder (for the server as well as the node) can be accessed from:
+
+- Centralized file system;
+- Distributed file system such as NFS.
+
 == Performance tuning
 
 [[_perf_tuning_db]]
