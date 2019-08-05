@@ -2178,6 +2178,18 @@ For example, load-examples.groovy which is executed by default at scheduler star
 the full deployment of proactive-examples by: populating the running Catalog, exposing as templates
 specific workflows and copying workflows dependencies into dataspaces.
 
+== Add custom third-party libraries to ProActive server and Nodes classpath
+
+Some workflows may need to use third-party libraries, so they can be executed properly. In order to do that, the first option is to add those libraries to the global classpath of ProActive server or Nodes.
+Depending on how Nodes are started, libraries can be added in the ProActive server or the Nodes classpath in three ways:
+
+- If Nodes are running on the same host as ProActive server or on a different host with a shared Proactive installation, the libraries can be placed under the addons directory of the server (i.e., $PROACTIVE_HOME/addons);
+- If Nodes are running on different hosts than ProActive Server and do not share a common proactive installation (such as NFS), the libraries can be placed under the addons directory of the Node (i.e., $PROACTIVE_NODE/addons);
+- If Nodes are running on different hosts than ProActive Server, and such Nodes are started using the executable jar 'node.jar' (usually used for cloud infrastructure), the libraries can be placed inside the lib folder of the node.jar archive itself, which is located on the server installation under $PROACTIVE_HOME/dist/war/rest (the node.jar is downloaded dynamically by the node).
+
+The second option is to add those libraries dynamically for a given task execution. Please refer to the User guide documentation to learn how to add link:../user/ProActiveUserGuide.html#_fork_environment[additional classpath].
+
+
 == Performance tuning
 
 [[_perf_tuning_db]]
