@@ -1821,14 +1821,13 @@ For instance, the Scheduler web portal is available at http://localhost:8080/sch
 
 ProActive Workflows and Scheduling provides support for HTTPS. Similarly to
 other web settings, HTTPS related properties are defined in
-`PROACTIVE_HOME/config/web/settings.ini` and any update necessitates a restart
+`PROACTIVE_HOME/config/web/settings.ini` and any update would require a restart
 of the Scheduler instance.
 
-Enabling HTTPS requires to set `web.https` to `true` but also to define a path
+Enabling HTTPS requires to set `web.https` property to `true` but also to define a path
 to a valid link:https://en.wikipedia.org/wiki/Keystore[keystore] through
 `web.https.keystore` along with its associated password
-by using `web.https.keystore.password`. A default keystore is provided for
-testing purposes, however it must not be used in production.
+by using `web.https.keystore.password`. A default keystore is provided for testing purposes, however it must not be used in production.
 
 When you are using the default keystore or a custom keystore with a self-signed
 certificate you need to enable `web.https.allow_any_certificate` and optionally
@@ -1844,20 +1843,68 @@ When HTTPS is set up, you can automatically redirect any HTTP request from
 users to the secured version of the protocol to make sure exchanged information
 is protected. It requires to enable `web.redirect_http_to_https`.
 
-Unlike other web applications, the Scheduler, the Resource Manager and the Studio web portals together with the
-ProActive Cloud Watch, Cloud Automation service, Job Planner and Notification service
-require manual configuration based on your HTTPS settings. The configuration
-files to edit are respectively in
+Additionally, you will need to update the port number used in the property `jp.url`.
+
+Likewise, it is necessary to manually update the port number and enable HTTPS in the configuration and properties files of the web applications, as follows (example using default port 8443):
+
+* `PROACTIVE_HOME/dist/war/job-planner/WEB-INF/classes/application.properties`
+....
+pa.scheduler.rest.url=https://localhost:8443/rest
+pa.catalog.url=https://localhost:8443/catalog
+pa.pca.service.base.url=https://localhost:8443/cloud-automation-service
+pa.scheduling.api.url=https://localhost:8443/scheduling-api/v1/graphql
+....
+
+* `PROACTIVE_HOME/dist/war/catalog/WEB-INF/classes/application.properties`
+....
+pa.scheduler.url=https://localhost:8443
+....
+
+* `PROACTIVE_HOME/dist/war/cloud-automation-service/WEB-INF/classes/application.properties`
+....
+pa.catalog.url=https://localhost:8443/catalog
+pa.scheduler.rest.url=https://localhost:8443/rest/scheduler
+pa.resource_manager.rest.url=https://localhost:8443/rest/rm
+pa.cloud_automation_service.url=https://localhost:8443/cloud-automation-service
+server.port=8443
+pa.web.https.allow_any_certificate=true
+pa.web.https.allow_any_hostname=true
+....
+
+* `PROACTIVE_HOME/dist/war/notification-service/WEB-INF/classes/application.properties`
+....
+scheduling.url=https://localhost:8443
+....
+
+* `PROACTIVE_HOME/dist/war/proactive-cloud-watch/WEB-INF/classes/application.properties`
+....
+pca.rm.url=https://localhost:8443/rest/rm
+pca.service.url=https://localhost:8443/cloud-automation-service
+pa.catalog.url=https://localhost:8443/catalog
+pa.scheduler.rest.url=https://localhost:8443/rest
+....
+
+* `PROACTIVE_HOME/dist/war/scheduling-api/WEB-INF/classes/application.properties`
+....
+pa.scheduler.rest.url=https://localhost:8443/rest
+....
+
+* `PROACTIVE_HOME/dist/war/rm/rm.conf`
+....
+rm.rest.url=https://localhost:8443/rest
+web.https.allow_any_hostname=true
+web.https.allow_any_certificate=true
+....
 
 * `PROACTIVE_HOME/dist/war/scheduler/scheduler.conf`
-* `PROACTIVE_HOME/dist/war/rm/rm.conf`
-* `PROACTIVE_HOME/config/web/settings.ini`
-* `PROACTIVE_HOME/dist/war/proactive-cloud-watch/WEB-INF/classes/application.properties`
-* `PROACTIVE_HOME/dist/war/cloud-automation-service/WEB-INF/classes/application.properties`
-* `PROACTIVE_HOME/dist/war/job-planner/WEB-INF/classes/application.properties`
-* `PROACTIVE_HOME/dist/war/notification-service/WEB-INF/classes/application.properties`
-
-
+....
+jobplanner.rest.url=https://localhost:8443/job-planner/planned_jobs
+pa.scheduling.api=https://localhost:8443/scheduling-api
+sched.catalog.url=https://localhost:8443/catalog
+sched.rest.url=https://localhost:8443/rest
+web.https.allow_any_hostname=true
+web.https.allow_any_certificate=true
+....
 
 NOTE: If you are familiar with Nginx or a similar web server, you can also use
 it to enable HTTPS connection to Web applications. It has the advantage to make
