@@ -318,9 +318,9 @@ Default: `HTML`
 
 The scheduler should be configured in non-fork mode to execute tasks in a single JVM rather than starting a dedicated JVM to run the task (In $PROACTIVE_HOME/config/scheduler/settings.ini, set pa.scheduler.task.fork=false).
 
-To be executed, each workflow requires the jdbc connector jar file of the used rdbms to connect to the database. Make sure you have it properly copied into the addons directory ($PROACTIVE_HOME/addons) of the scheduler.
+Data connectors workflows may need to add some third-party dependencies to their classpath (notably, JDBC jar libraries), so they can be executed properly. Please refer to the Admin guide documentation to learn how to add link:../admin/ProActiveAdminGuide.html#__add_custom_third_party_libraries_to_proactive_server_and_nodes_classpath].
 
-In case the password is required, you have to add the following third-party credential: {key: `<mysql|postgresql|sqlserver|oracle|hsqldb:hsql>://<USERNAME>@<HOST>:<PORT>`, value: `<RDBMS_NAME>_PASSWORD`}. This is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+In case the password is required, you have to add the following third-party credential: {key: `<mysql|postgresql|sqlserver|oracle|hsqldb:hsql>://<USERNAME>@<HOST>:<PORT>`, value: `<RDBMS_NAME>_PASSWORD`}. This is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User guide documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 === NoSQL
 The NoSQL connectors allow to import data from NoSQL Databases.
@@ -858,13 +858,13 @@ This connector allows you to publish data to a Tableau Server.
 | e.g. True
 | `SERVER_ENDPOINT`
 | The endpoint of the Tableau server.
-| Workflow
+| Task
 | Yes
 | String
 |e.g https://eu-west-1a.online.tableau.com
 | `SITE_ID`
 | The site id defined in the Tableau server.
-| Workflow
+| Task
 | Yes
 | String
 | e.g test_connector
