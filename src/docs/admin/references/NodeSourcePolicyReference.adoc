@@ -158,7 +158,11 @@ will remain 96 tasks (assuming that no other tasks are scheduled
 meanwhile), an other node will be removed at the next calculation time,
 and so on and so forth...
 
-- *nodeDeploymentTimeout* - The node deployment timeout.
+-   *refreshCycleWindow* - Number of refresh cycles used to memorize scheduler load. Actual load will be computed as an average.
+
+-   *releaseDelay* - Delay in milliseconds used before removing a free node. This parameter can be used for paid cloud instances such as Amazon, Azure, etc. when their policy define a minimum granularity on instance costs. Example for Amazon : 3600000 ms (1 hour). Default is 0 (not a paid instance, no delay).
+
+-   *threshold* - Nodes can be released if the current time is in interval [releaseDelay - threshold, releaseDelay]. Default is 0 (not a paid instance, no delay). Related to releaseDelay. Example for amazon : 600000 ms (10 minutes).
 
 ==== Cron Load Based Policy
 
@@ -201,7 +205,11 @@ will remain 96 tasks (assuming that no other tasks are scheduled
 meanwhile), an other node will be removed at the next calculation time,
 and so on and so forth...
 
--   *nodeDeploymentTimeout* - The node deployment timeout.
+-   *refreshCycleWindow* - Number of refresh cycles used to memorize scheduler load. Actual load will be computed as an average.
+
+-   *releaseDelay* - Delay in milliseconds used before removing a free node. This parameter can be used for paid cloud instances such as Amazon, Azure, etc. when their policy define a minimum granularity on instance costs. Example for Amazon : 3600000 ms (1 hour). Default is 0 (not a paid instance, no delay).
+
+-   *threshold* - Nodes can be released if the current time is in interval [releaseDelay - threshold, releaseDelay]. Default is 0 (not a paid instance, no delay). Related to releaseDelay. Example for amazon : 600000 ms (10 minutes).
 
 -   *acquisionAllowed* - The time when the policy starts to work as the
 *"scheduler loading" policy* (e.g. "0 12 \* \* \*" every day at 12.00).
@@ -255,6 +263,12 @@ passed, one node will be removed since 99 divided by 3 is 33. When there
 will remain 96 tasks (assuming that no other tasks are scheduled
 meanwhile), an other node will be removed at the next calculation time,
 and so on and so forth...
+
+-   *refreshCycleWindow* - Number of refresh cycles used to memorize scheduler load. Actual load will be computed as an average.
+
+-   *releaseDelay* - Delay in milliseconds used before removing a free node. This parameter can be used for paid cloud instances such as Amazon, Azure, etc. when their policy define a minimum granularity on instance costs. Example for Amazon : 3600000 ms (1 hour). Default is 0 (not a paid instance, no delay).
+
+-   *threshold* - Nodes can be released if the current time is in interval [releaseDelay - threshold, releaseDelay]. Default is 0 (not a paid instance, no delay). Related to releaseDelay. Example for amazon : 600000 ms (10 minutes).
 
 -   *deployAllAt* - Time when all nodes are deployed (crontab format) (e.g. "0 12 \* \* \*" every day at 12.00).
 
