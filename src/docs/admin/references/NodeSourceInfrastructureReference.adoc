@@ -4,11 +4,11 @@ nodes.
 
 When creating a node source, a Node Source Infrastructure and a <<_node_source_policies,Node Source Policy>> must be chosen.
 
-NOTE: New Node Source Infrastructures can be dynamically plugged into the Resource Manager. In order to do that, it is required to add classes extending the link:../javadoc/org/ow2/proactive/resourcemanager/nodesource/infrastructure/InfrastructureManager.html[InfrastructureManager class] in the server class path and update the policy implementation list in the configuration file (+PROACTIVE_HOME/config/rm/nodesource/infrastructures+).
+NOTE: New Node Source Infrastructures can be dynamically plugged into the Resource Manager. In order to do that, it is required to add classes extending the link:../javadoc/org/ow2/proactive/resourcemanager/nodesource/infrastructure/InfrastructureManager.html[InfrastructureManager class] in the server class path and update the infrastructure implementation list in the configuration file (+PROACTIVE_HOME/config/rm/nodesource/infrastructures+).
 
 Node Sources can be created using the Resource Manager portal or the command line (see <<_command_line_examples>> for more information).
 
-WARNING: When using the command line, the order of parameters is important, and each infrastructure section below describes the correct parameter order. Each section show as well the fully qualified name of the infrastructure, to pass on the command line.
+WARNING: When using the command line, the order of parameters is important, and each infrastructure section below describes the correct parameter order. Each section shows as well the fully qualified name of the infrastructure, to pass on the command line. On the Resource Manager portal, the order of parameters displayed on the interface is slightly different as parameters are grouped into categories.
 
 ==== Default Infrastructure
 
@@ -39,10 +39,9 @@ source with this infrastructure, use the Resource Manager portal or run the foll
 
 -   *maxNodes* - The number of nodes to deploy.
 
--   *timeout* - The length in ms after which one a node is not expected
-    anymore.
+-   *nodeTimeout* - The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost.
 
--   *javaProperties* - Java options appended to the command used to start the node on the remote host.
+-   *paProperties* - Java options appended to the command used to start the node on the remote host.
 
 ==== SSH Infrastructure
 
@@ -62,16 +61,15 @@ This infrastructure needs 10 arguments, described hereafter:
         test.example.net 5
         192.168.9.10 2
 
--   **nodeTimeOut** - A duration after which one the remote nodes are
-    considered to be lost.
+-   **nodeTimeOut** - The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost.
 
--   **maxDeploymentFailure** - Maximum number of failed attempt to deploy on host before discarding it.
+-   **maxDeploymentFailure** - Maximum number of failed attempts to deploy on host before discarding it.
 
--   **waitBetweenDeploymentFailures** - The time in milliseconds that the Resource Manager wait before trying to
-    acquire a node for which one the deployment fails before.
+-   **waitBetweenDeploymentFailures** - The time in milliseconds that the Resource Manager waits before retrying to
+    acquire a node for which the deployment failed before.
 
 -   **sshOptions** - Options you can pass to the SSHClient executable (
-    -l inria to specify the user for instance )
+    -l mysuser to specify the user for instance ).
 
 -   **javaPath** - Path to the java executable on the remote hosts.
 
@@ -95,7 +93,7 @@ This infrastructure needs 10 arguments, described hereafter:
 *Full name:* `org.ow2.proactive.resourcemanager.nodesource.infrastructure.SSHInfrastructureV2`
 
 This infrastructure allows to deploy nodes over SSH.
-This infrastructure needs 14 arguments, described hereafter:
+This infrastructure needs 13 arguments, described hereafter:
 
 -   **hostsList** - Path to a file containing the hosts on which
     resources should be acquired. This file should contain one host per
@@ -107,24 +105,22 @@ This infrastructure needs 14 arguments, described hereafter:
         test.example.net 5
         192.168.9.10 2
 
--   **nodeTimeOut** - A duration after which one the remote nodes are
-    considered to be lost.
+-   **nodeTimeOut** - The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost.
 
--   **maxDeploymentFailure** - Maximum number of failed attempt to deploy on host before discarding it.
+-   **maxDeploymentFailure** - Maximum number of failed attempts to deploy on host before discarding it.
 
--   **waitBetweenDeploymentFailures** - The time in milliseconds that the Resource Manager wait before trying to
-    acquire a node for which one the deployment fails before.
+-   **waitBetweenDeploymentFailures** - The time in milliseconds that the Resource Manager waits before retrying to
+    acquire a node for which the deployment failed before.
 
--   **sshPort** - Port used for the SSH connection
+-   **sshPort** - Port used for the SSH connection.
 
--   **sshUsername** - Username of the SSH connection
+-   **sshUsername** - Username of the SSH connection.
 
--   **sshPassword ** - Password of the SSH connection
+-   **sshPassword ** - Password of the SSH connection.
 
--   **sshPrivateKey ** - Alternately, use a private key to authenticate the SSH connection
+-   **sshPrivateKey ** - Alternately, use a private key to authenticate the SSH connection.
 
--   **sshOptions** - Options you can pass to the SSHClient executable (
-    -l inria to specify the user for instance )
+-   **sshOptions** - Options you can pass to the SSHClient executable.
 
 -   **javaPath** - Path to the java executable on the remote hosts.
 
@@ -136,10 +132,6 @@ This infrastructure needs 14 arguments, described hereafter:
 
 -   **javaOptions** - Java options appended to the command used to
     start the node on the remote host.
-
--   **rmCredentialsPath** - (Optional) The absolute path of the 'rm.cred' file to
-    make the deployed nodes able to register to the Resource Manager (
-    config/authentication/rm.cred ). By default it will use the currently connected user credentials.
 
 ==== CLI Infrastructure
 
@@ -167,18 +159,17 @@ This infrastructure needs 7 arguments, described hereafter:
         test.example.net 5
         192.168.9.10 2
 
--   **nodeTimeOut** - A duration after which one the remote nodes are
-    considered to be lost.
+-   **nodeTimeOut** - The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost.
 
--   **maxDeploymentFailure** - Maximum number of failed attempt to deploy on host before discarding it.
+-   **maxDeploymentFailure** - Maximum number of failed attempts to deploy on host before discarding it.
 
--   **waitBetweenDeploymentFailures** - The time in milliseconds that the Resource Manager wait before trying to
-    acquire a node for which one the deployment fails before.
+-   **waitBetweenDeploymentFailures** - The time in milliseconds that the Resource Manager waits before retrying to
+    acquire a node for which the deployment failed before.
 
 -   **interpreter** - Path to the script interpreter (bash by default).
 
--   **deploymentScript** - A script that launches a ProActive node and
-    register it to the RM.
+-   **deploymentScript** - A script that launches a ProActive Node and
+    registers it to the RM.
 
 -   **removalScript** - A script that removes the node from the
     Resource Manager.
@@ -290,7 +281,7 @@ WARNING: If the combination between RAM and CORES does not match any existing AW
 -   *additionalProperties*: Additional Java command properties to be added when starting each ProActive node JVM in AWS instances (e.g. `-Dpropertyna
 me=propertyvalue`). This is an optional property.
 
--   *nodeTimeout*: The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node is considered as lost.
+-   *nodeTimeout*: The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost.
 
 Using this configuration, you can start a ProActive Resource Manager and Scheduler using the */bin/proactive-server* script.
 An AWS EC2 NodeSource can now be added using the *Create Node Source* panel in the Resource Manager Portal or the command line interface:
@@ -422,7 +413,7 @@ An AWS Autoscaling NodeSource can now be added using the *Create Node Source* pa
 WARNING: When ProActive server is stopped (without removing the created infrastructure), AWS instances will not be terminated. And when ProActive server is restarted, the infrastructure will be re-configured as per the previous settings. If the instances were deleted at the cloud side, they will be re-created and re-configured.
 
  
-==== Openstack Infrastructure
+==== OpenStack Infrastructure
 
 *Full name:* `org.ow2.proactive.resourcemanager.nodesource.infrastructure.OpenstackInfrastructure`
 
@@ -626,7 +617,7 @@ TIP: If all the nodes of a GoogleComputeEngine instance are removed, the instanc
 -   *nodeJarURL*: The full URL path of the _node.jar_ to download the ProActive node.jar on each new created GoogleComputeEngine instance.
         The URL needs to be accessible from the GoogleComputeEngine server.
 -   *additionalProperties*: Additional Java command properties to be added when starting each ProActive node JVM in GoogleComputeEngine instances (e.g. "-Dpropertyname=propertyvalue").
--   *nodeTimeout*: The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node is considered as lost.
+-   *nodeTimeout*: The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost.
 
 Using this configuration, you can start a Resource Manager and a Scheduler using the */bin/proactive-server* script.
 A GoogleComputeEngine NodeSource can now be added using the *Create Node Source* panel in the Resource Manager or the command line interface:
@@ -791,7 +782,7 @@ This infrastructure knows how to acquire nodes from LSF by submitting a
 corresponding job. It will be submitted through SSH from the RM to the
 LSF server. This is the static version of the LSF infrastructure, for a more dynamic mechanism, as described in <<_deploy_via_other_schedulers>>, use the <<_native_scheduler_infrastructure>> instead.
 
-    $ PROACTIVE_HOME/bin/proactive-client --createns lsf -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.LSFInfrastructure rmURL javaPath SSHOptions schedulingPath javaOptions maxNodes nodeTimeout LSFServer RMCredentialsPath bsubOptions
+    $ PROACTIVE_HOME/bin/proactive-client --createns lsf -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.LSFInfrastructure javaPath SSHOptions schedulingPath javaOptions maxNodes nodeTimeout LSFServer RMCredentialsPath bsubOptions
 
 where:
 
@@ -815,8 +806,7 @@ where:
   resources to come up for a very long time as the request would be
   queued until satisfiable.
 
--   **nodeTimeOut** - The length in ms after which one a node is not
-  expected anymore.
+-   **nodeTimeOut** - The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost.
 
 -   **serverName** - URL of the LSF server, which is responsible for
   acquiring LSF nodes. This server will be contacted by the Resource
@@ -838,7 +828,7 @@ This infrastructure knows how to acquire nodes from PBS (i.e. Torque) by
 submitting a corresponding job. It will be submitted through SSH from
 the RM to the PBS server. This is the static version of the PBS infrastructure, for a more dynamic mechanism, as described in <<_deploy_via_other_schedulers>>, use the <<_native_scheduler_infrastructure>> instead.
 
-    $ PROACTIVE_HOME/bin/proactive-client --createns pbs -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.PBSInfrastructure rmURL javaPath SSHOptions schedulingPath javaOptions maxNodes nodeTimeout PBSServer RMCredentialsPath qsubOptions
+    $ PROACTIVE_HOME/bin/proactive-client --createns pbs -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.PBSInfrastructure javaPath SSHOptions schedulingPath javaOptions maxNodes nodeTimeout PBSServer RMCredentialsPath qsubOptions
 
 where:
 
@@ -862,8 +852,7 @@ where:
     resources to come up for a very long time as the request would be
     queued until satisfiable.
 
--   **nodeTimeOut** - The length in ms after which one a node is not
-    expected anymore.
+-   **nodeTimeOut** - The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost.
 
 -   **serverName** - URL of the PBS server, which is responsible for
     acquiring PBS nodes. This server will be contacted by the Resource
@@ -893,7 +882,7 @@ Once you have written the implementation of the desired class, you can create a 
 which makes usage of this infrastructure by running the following
 command:
 
-    $ PROACTIVE_HOME/bin/proactive-client --createns pbs -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.GenericBatchJobInfrastructure rmURL javaPath SSHOptions schedulingPath javaOptions maxNodes nodeTimeout BatchJobServer RMCredentialsPath subOptions implementationName implementationPath
+    $ PROACTIVE_HOME/bin/proactive-client --createns pbs -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.GenericBatchJobInfrastructure javaPath SSHOptions schedulingPath javaOptions maxNodes nodeTimeout BatchJobServer RMCredentialsPath subOptions implementationClassName implementationFile
 
 where:
 
@@ -916,8 +905,7 @@ where:
 -   **maxNodes** - maximum number of nodes this infrastructure can
     simultaneously hold from the batch job scheduler server.
 
--   **nodeTimeOut** - The length in ms after which one a node is not
-    expected anymore.
+-   **nodeTimeOut** - The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost.
 
 -   **serverName** - URL of the batch job scheduler server, which is
     responsible for acquiring nodes. This server will be contacted by
@@ -930,12 +918,12 @@ where:
 -   **submitJobOpt** - Options for the submit command client when
     acquiring nodes on the batch job scheduler master.
 
--   **implementationName** - Fully qualified name of the implementation
+-   **implementationClassName** - Fully qualified name of the implementation
     of
     org.ow2.proactive.resourcemanager.nodesource.infrastructure.BatchJobInfrastructure
     provided by the end user.
 
--   **implementationPath** - The absolute path of the implementation of
+-   **implementationFile** - The absolute path of the implementation of
     org.ow2.proactive.resourcemanager.nodesource.infrastructure.BatchJobInfrastructure.
 
 ==== Native Scheduler Infrastructure

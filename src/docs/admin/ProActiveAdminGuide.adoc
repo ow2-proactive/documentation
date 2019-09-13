@@ -185,7 +185,7 @@ In order to use ProActive Scheduler every user must have an account. It supports
 By default the ProActive Scheduler is configured to use *file based* authentication and has some default accounts ('demo/demo', 'admin/admin') that
 work out of the box.
 
-If you would like to change the method authentication type to use your *LDAP* server or use Linux PAM, you need to modify two configs:
+If you would like to change the authentication mechanism to use your *LDAP* server or use Linux PAM, you need to modify two configuration files:
 
 * *Resource Manager* configuration (`PROACTIVE_HOME/config/rm/settings.ini`)
 +
@@ -217,7 +217,7 @@ pa.scheduler.core.authentication.loginMethod=SchedulerLDAPLoginMethod
 By default, the ProActive Resource Manager stores users accounts, passwords, and group memberships (user or admins), in two files:
 
 * users and passwords accounts are stored in `PROACTIVE_HOME/config/authentication/login.cfg`.
-Each line has to follow the format *user:encypted password*.
+Each line has to follow the format *user:encrypted password*.
 The default accounts in `login.cfg` file correspond to the following passwords, which are encrypted in the actual login.cfg file:
 +
 .unencrypted_login.cfg
@@ -259,6 +259,20 @@ watcher:watchers
 
 ProActive contains a set of predefined groups such as "user" and "providers". Groups are defined in `PROACTIVE_HOME/config/security.java.policy-server` as described in chapter <<User Permissions>>.
 
+The default file path to store users and group memberships can be modified by changing the following settings:
+
+.PROACTIVE_HOME/config/rm/settings.ini
+----
+pa.rm.defaultloginfilename=config/authentication/login.cfg
+pa.rm.defaultgroupfilename=config/authentication/group.cfg
+----
+
+.PROACTIVE_HOME/config/scheduler/settings.ini
+----
+pa.scheduler.core.defaultloginfilename=config/authentication/login.cfg
+pa.scheduler.core.defaultgroupfilename=config/authentication/group.cfg
+----
+
 In order to create new users, delete an existing user, or modify the groups or password for an existing user, a command-line tool is available.
 
 This command is available inside the *tools* folder: `PROACTIVE_HOME/tools/proactive-users`.
@@ -270,7 +284,7 @@ usage: proactive-users [-C | -D | -U]  [-g <GROUPS>] [-gf <GROUPFILE>] [-h] [-kf
        <PASSWORD>] [-sgf <SOURCEGROUPFILE>] [-slf <SOURCELOGINFILE>]
 ----
 
-Here are examples of use:
+Here are some example usages:
 
 * Creating users
 +
@@ -337,16 +351,16 @@ Stored group file in H:\Install\scheduling\tools\..\config/authentication/group.
 === LDAP
 
 The ProActive Resource Manager is able to connect to an existing *LDAP* server, to check users login/password and verify users group
-membership. This authentication method can be used with existing LDAP server that is already configured.
+membership. This authentication method can be used with an existing LDAP server that is already configured.
 
 
 In order to use it, few parameters have to be configured, such as *path in LDAP tree users*, LDAP *groups* that define
 user and admin group membership, *URL* of the LDAP server, LDAP *binding method* used by connection and configuration
 of SSL/TLS if you want a secured connection between the ProActive Resource Manager and LDAP.
 
-We assume that LDAP server is configured in the way that:
+We assume that the LDAP server is configured in a way that:
 
-* all existing users and groups are located under single domain
+* all existing users and groups are located under a single domain
 * users have object class specified in parameter *pa.ldap.user.objectclass*
 * groups have object class specified in parameter *pa.ldap.group.objectclass*
 * user and group name is defined in cn (Common Name) attribute
@@ -375,11 +389,11 @@ The LDAP configuration is defined in `PROACTIVE_HOME/config/authentication/ldap.
 
 . *Set the LDAP server URL*
 +
-First, you have to define the LDAP's URL of your organisation. This address corresponds to the property: `pa.ldap.url`. You have to put a standard LDAP-like URL, for example *ldap://myLdap*. You can also set a URL with secure access: *ldaps://myLdap:636*.
+First, you have to define the LDAP's URL of your organization. This address corresponds to the property: `pa.ldap.url`. You have to put a standard LDAP-like URL, for example *ldap://myLdap*. You can also set a URL with secure access: *ldaps://myLdap:636*.
 +
 . *Define object class of user and group entities*
 +
-Then you need to define how to differ user and group entities in LDAP tree. The users object class is defined by
+Then, you need to define how to differentiate user and group entities in the LDAP tree. The users object class is defined by
 property `pa.ldap.user.objectclass` and by default is _inetOrgPerson_. For groups, the property `pa.ldap.group.objectclass`
 has a default value _groupOfUniqueNames_ which could be changed.
 
@@ -389,7 +403,7 @@ By default, the ProActive Scheduler binds to LDAP in anonymous mode. You can cha
 method by modifying the property `pa.ldap.authentication.method`. This property can have several values:
 +
 * none (default value) - the ProActive Resource Manager performs connection to LDAP in anonymous mode.
-* simple - the ProActive Resource Manager performs connection to LDAP with a specified login/password (see below for user password setting).
+* simple - the ProActive Resource Manager performs connection to LDAP with a specified user/password (see below for user password setting).
 +
 You can also specify a SASL mechanism for LDAPv3. There are many SASL available mechanisms: cram-md5, digest-md5, kerberos4. Just set this property to *sasl* to let the ProActive Resource Manager JVM choose SASL authentication mechanism.
 If you specify an authentication method different from 'none' (anonymous connection to LDAP), you must specify a login/password for authentication.
@@ -401,10 +415,10 @@ There are two properties to set in LDAP configuration file:
 +
 . *Set SSL/TLS parameters*
 +
-A secured SSL/TLS layer can be useful if your network is not trusted, and critical information is transmitted between the rm server and LDAP, such as user passwords.
-First, set the LDAP URL property `pa.ldap.url` to a URL of type *ldaps://myLdap*. Then set `pa.ldap.authentication.method` to *none* so as to delegate authentication to SSL.
+A secured SSL/TLS layer can be useful if your network is not trusted, and critical information is transmitted between the Resource Manager server and LDAP, such as user passwords.
+First, set the LDAP URL property `pa.ldap.url` to a URL of type *ldaps://myLdap*. Then, set `pa.ldap.authentication.method` to *none* so as to delegate authentication to SSL.
 +
-For using SSL properly, you have to specify your certificate and public keys for SSL handshake. Java stores certificates in a keyStore and public keys in a trustStore. In most of the cases, you just have to define a trustStore with public key part of LDAP's certificate. Put certificate in a keyStore, and public keys in a trustStore with the keytool command (keytool command is distributed with standard java platforms):
+For using SSL properly, you have to specify your certificate and public keys for SSL handshake. Java stores certificates in a keyStore and public keys in a trustStore. In most of the cases, you just have to define a trustStore with public key part of LDAP's certificate. Put the certificate in a keyStore, and the public keys in a trustStore with the keytool command (keytool command is distributed with standard java platforms):
 +
 
     keytool -import -alias myAlias -file myCertificate -keystore myKeyStore
@@ -415,7 +429,13 @@ Put LDAP certificate's public key in a trustStore, with the keytool command:
 +
     keytool -import -alias myAlias -file myPublicKey -keystore myTrustStore
 +
-myAlias is the alias name of your certificate's public key, myPublicKey is your certificate's public key file and myTrustore is the new trustStore file produced in output. This command asks you to enter a password for your trustStore.
+where:
++
+* `myAlias` is the alias name of your certificate's public key.
+* `myPublicKey` is your certificate's public key file.
+* `myTrustore` is the new trustStore file produced in output.
++
+This command asks you to enter a password for your trustStore.
 +
 Finally, in `config/authentication/ldap.cfg`, set keyStore and trustStore created before to their respective passwords:
 +
@@ -426,20 +446,23 @@ Finally, in `config/authentication/ldap.cfg`, set keyStore and trustStore create
 
 . *Use fall back to file authentication*
 +
-You can use simultaneously file-based authentication and LDAP-based authentication. Then, ProActive Scheduler can check at first user password and group membership in
-login and group files, as performed in FileLogin method. If user or group is not found in login file, login or group will be searched in LDAP.
-It uses `pa.rm.defaultloginfilename` and `pa.rm.defaultgroupfilename` files to authenticate user and check group membership. There are two rules:
+You can use simultaneously file-based authentication and LDAP-based authentication.
+In this scenario, ProActive Scheduler checks at first user/password and group memberships in
+the login and group files, as performed in the <<_file,File login method>>.
+If the user or group attribution is not found in the login/group files, login or groups will be searched via LDAP.
++
+There are two configuration options to control this mechanism (present in the `ldap.cfg` configuration file):
++
+* `pa.ldap.authentication.fallback`: if set to `true`, the user login/password will be searched first in the login file, and then on the LDAP server. If set to `false`, only the LDAP server will be queried.
+* `pa.ldap.group.membership.fallback`: if set to `true`, group memberships will be read from the group file and then from the LDAP server. In that sense, a user will be affected to groups defined in both file and LDAP server. If set to `false`, only the LDAP server will be queried.
 
-* If file group membership checking fails, fall back to group membership checking with LDAP.
-To activate this behavior set `pa.ldap.group.membership.fallback` to true, in LDAP configuration file.
-* If a user is not found in the login file, fall back to authentication and group membership checking with LDAP. To activate this behavior, set `pa.ldap.authentication.fallback` to true, in LDAP configuration file.
 
 === PAM
 
-The ProActive Scheduler & Resource Manager are able to interact with Linux *PAM (Pluggable Authentication Modules)* to check users login/password.
-It is not currently possible to retrieve linux system group memberships for users. Thus groups must be managed using the `PROACTIVE_HOME/config/authentication/group.cfg` file.
+The ProActive Scheduler & Resource Manager are able to interact with *Linux PAM (Pluggable Authentication Modules)* to check users login/password.
+It is not currently possible to retrieve linux system group memberships for users. Thus, groups must be managed using the `PROACTIVE_HOME/config/authentication/group.cfg` file.
 
-In order to enable PAM authentication, follow the following steps:
+In order to enable PAM authentication, follow the steps below:
 
 1. Configure the PAM login methods in the Scheduler and RM settings:
 +
@@ -1433,7 +1456,7 @@ Node Source undeploying can be *preemptive* or not. If a Node Source undeploying
 requirement, then the Nodes of this Node Source which are currently running <<_glossary_task,Tasks>> will not be
 removed until their Task is finished. In this case, these Nodes are displayed in the
 _to-be-removed_ state. In other terms, if a Node Source is undeployed *non-preemptively*, it will be completely
-undeployed as soon as all of its Nodes have finished executing their Task. On the opposite, if a Node Source is
+undeployed as soon as all of its Nodes have finished executing their Task. On the other hand, if a Node Source is
 undeployed *with preemption*, its Nodes are immediately removed regardless of whether they execute Tasks, and this may
 cause Tasks to fail.
 
@@ -1452,7 +1475,7 @@ features: _speed_, _security_, _fast error detection_, _firewall_ or
 _NAT friendliness_ but none of the protocols can offer all these features at
 the same time.
 Consequently, the selection should be made carefully. Below are introduced
-available network protocols.
+the available network protocols.
 Configuration and properties are discussed in <<_network_properties>>.
 
 === ProActive Network Protocol
@@ -1521,7 +1544,7 @@ This sample configuration requires to open only one port `33647` for *incoming c
 and all the ProActive Nodes will be able to connect to the Scheduler.
 
 PAMR communication can be tunneled using SSH for better security. In that case, the ProActive node will establish
-a SSH tunnel between him and the ProActive Scheduler and use that tunnel for PAMR traffic.
+a SSH tunnel between it and the ProActive Scheduler and use that tunnel for PAMR traffic.
 
 See <<_pamr_protocol_properties>> reference for a detailed explanation of each property.
 
