@@ -172,6 +172,360 @@ then you have to download the database driver and put it at: *PROACTIVE_HOME/add
 
 Scheduler, and 3 microservices (*scheduling-api*, *job-planner*, and *proactive-cloud-watch*) have to point to the same database.
 
+== User Authentication
+
+In order to use ProActive Scheduler every user must have an account. It supports three methods for authentication:
+
+* *File based*
+* *LDAP*
+* *PAM*
+
+=== Select authentication method
+
+By default the ProActive Scheduler is configured to use *file based* authentication and has some default accounts ('demo/demo', 'admin/admin') that
+work out of the box.
+
+If you would like to change the authentication mechanism to use your *LDAP* server or use Linux PAM, you need to modify two configuration files:
+
+* *Resource Manager* configuration (`PROACTIVE_HOME/config/rm/settings.ini`)
++
+[source]
+----
+#Property that defines the method that has to be used for logging users to the Resource Manager
+#It can be one of the following values:
+#    - "RMFileLoginMethod" to use file login and group management
+#    - "RMLDAPLoginMethod" to use LDAP login management
+#    - "RMPAMLoginMethod" to use PAM login management
+pa.rm.authentication.loginMethod=RMLDAPLoginMethod
+----
+
+* *Scheduler* configuration (`PROACTIVE_HOME/config/scheduler/settings.ini`)
++
+[source]
+----
+#Property that define the method that have to be used for logging users to the Scheduler
+#It can be one of the following values:
+#	- "SchedulerFileLoginMethod" to use file login and group management
+#	- "SchedulerLDAPLoginMethod" to use LDAP login management
+#   - "SchedulerPAMLoginMethod" to use PAM login management
+pa.scheduler.core.authentication.loginMethod=SchedulerLDAPLoginMethod
+----
+
+
+=== File
+
+By default, the ProActive Resource Manager stores users accounts, passwords, and group memberships (user or admins), in two files:
+
+* users and passwords accounts are stored in `PROACTIVE_HOME/config/authentication/login.cfg`.
+Each line has to follow the format *user:encrypted password*.
+The default accounts in `login.cfg` file correspond to the following passwords, which are encrypted in the actual login.cfg file:
++
+.unencrypted_login.cfg
+----
+admin:admin
+user:pwd
+demo:demo
+guest:pwd
+test:pwd
+radmin:pwd
+nsadmin:pwd
+provider:pwd
+scheduler:scheduler_pwd
+rm:rm_pwd
+watcher:w_pwd
+test_executor:pwd
+----
+
+* users membership is stored in `PROACTIVE_HOME/config/authentication/group.cfg`. For each user registered in login.cfg,
+a group membership has to be defined in this file. Each line has to look like *user:group*. Group has to be
+`user` to have user rights, `scheduleradmins` to have administrator rights on the scheduler, `rmcoreadmins` to have administrator rights on the resource manager, etc. Below is an example `group.cfg` file:
++
+.group.cfg
+----
+admin:scheduleradmins
+admin:rmcoreadmins
+demo:scheduleradmins
+demo:rmcoreadmins
+guest:guests
+nsadmin:nsadmins
+provider:providers
+rm:admin
+rm:nsadmins
+scheduler:user
+scheduler:scheduleradmins
+user:user
+watcher:watchers
+----
+
+ProActive contains a set of predefined groups such as "user" and "providers". Groups are defined in `PROACTIVE_HOME/config/security.java.policy-server` as described in chapter <<User Permissions>>.
+
+The default file path to store users and group memberships can be modified by changing the following settings:
+
+.PROACTIVE_HOME/config/rm/settings.ini
+----
+pa.rm.defaultloginfilename=config/authentication/login.cfg
+pa.rm.defaultgroupfilename=config/authentication/group.cfg
+----
+
+.PROACTIVE_HOME/config/scheduler/settings.ini
+----
+pa.scheduler.core.defaultloginfilename=config/authentication/login.cfg
+pa.scheduler.core.defaultgroupfilename=config/authentication/group.cfg
+----
+
+In order to create new users, delete an existing user, or modify the groups or password for an existing user, a command-line tool is available.
+
+This command is available inside the *tools* folder: `PROACTIVE_HOME/tools/proactive-users`.
+You can check the command syntax using the -h option.
+
+----
+$ proactive-users -h
+usage: proactive-users [-C | -D | -U]  [-g <GROUPS>] [-gf <GROUPFILE>] [-h] [-kf <KEYFILE>] [-l <LOGIN>] [-lf <LOGINFILE>] [-p
+       <PASSWORD>] [-sgf <SOURCEGROUPFILE>] [-slf <SOURCELOGINFILE>]
+----
+
+Here are some example usages:
+
+* Creating users
++
+----
+$ proactive-users -C -l user1 -p pwd1 -g user
+Created user user1 in H:\Install\scheduling\tools\..\config/authentication/login.cfg
+Added group user to user user1
+----
+The user with login "user1", password "pwd1" and group "user" was created
+
+* Updating users
++
+----
+$ proactive-users -U -l user1 -p pwd2 -g nsadmins,admin
+Changed password for user user1 in H:\Install\scheduling\tools\..\config/authentication/login.cfg
+Added group nsadmins to user user1
+Added group admin to user user1
+----
+User "user1" now has password pwd2 and groups nsadmins & admin (group "user" was removed).
+
+* Deleting users
++
+----
+$ proactive-users -D -l user1
+Deleted user user1 in H:\Install\scheduling\tools\..\config/authentication/login.cfg
+----
+User "user1" does not exist any more.
+
+* Creating multiple users
++
+It is also possible to create multiple users at once using a source login file and a source group file.
+In that case, the source login file contains, for each user, a line with the format "login:unencrypted_password".
+The source group file has the same structure as the `PROACTIVE_HOME/config/authentication/group.cfg` file.
+This can be used, for example, to convert login files used by ProActive Scheduler versions prior to 7.19.0.
++
+----
+$ proactive-users -C -slf source_login.cfg -sgf source_group.cfg
+Adding group admin to user admin1
+Created user admin1
+Adding group user to user user2
+Created user user2
+Adding group user to user user1
+Created user user1
+Stored login file in H:\Install\scheduling\tools\..\config/authentication/login.cfg
+Stored group file in H:\Install\scheduling\tools\..\config/authentication/group.cfg
+----
+
+* Updating multiple users
++
+Similarly, it is possible to update existing users with source login or group files. It is possible to update only group membership for existing users, or only passwords, or both.
++
+The example below shows how to update only groups for existing users:
++
+----
+proactive-users -U -sgf source_group_2.cfg
+Adding group admin to user user1
+Updated user user1
+Adding group admin to user user2
+Updated user user2
+Stored login file in H:\Install\scheduling\tools\..\config/authentication/login.cfg
+Stored group file in H:\Install\scheduling\tools\..\config/authentication/group.cfg
+----
+
+=== LDAP
+
+The ProActive Resource Manager is able to connect to an existing *LDAP* server, to check users login/password and verify users group
+membership. This authentication method can be used with an existing LDAP server that is already configured.
+
+
+In order to use it, few parameters have to be configured, such as *path in LDAP tree users*, LDAP *groups* that define
+user and admin group membership, *URL* of the LDAP server, LDAP *binding method* used by connection and configuration
+of SSL/TLS if you want a secured connection between the ProActive Resource Manager and LDAP.
+
+We assume that the LDAP server is configured in a way that:
+
+* all existing users and groups are located under a single domain
+* users have object class specified in parameter *pa.ldap.user.objectclass*
+* groups have object class specified in parameter *pa.ldap.group.objectclass*
+* user and group name is defined in cn (Common Name) attribute
+
+[source]
+----
+# EXAMPLE of user entry
+#
+# dn: cn=jdoe,dc=example,dc=com
+# cn: jdoe
+# firstName: John
+# lastName: Doe
+# objectClass: inetOrgPerson
+
+# EXAMPLE of group entry
+#
+# dn: cn=mygroup,dc=example,dc=com
+# cn: mygroup
+# firstName: John
+# lastName: Doe
+# uniqueMember: cn=djoe,dc=example,dc=com
+# objectClass: groupOfUniqueNames
+----
+
+The LDAP configuration is defined in `PROACTIVE_HOME/config/authentication/ldap.cfg`. You need to:
+
+. *Set the LDAP server URL*
++
+First, you have to define the LDAP's URL of your organization. This address corresponds to the property: `pa.ldap.url`. You have to put a standard LDAP-like URL, for example *ldap://myLdap*. You can also set a URL with secure access: *ldaps://myLdap:636*.
++
+. *Define object class of user and group entities*
++
+Then, you need to define how to differentiate user and group entities in the LDAP tree. The users object class is defined by
+property `pa.ldap.user.objectclass` and by default is _inetOrgPerson_. For groups, the property `pa.ldap.group.objectclass`
+has a default value _groupOfUniqueNames_ which could be changed.
+
+. *Configure LDAP authentication parameters*
++
+By default, the ProActive Scheduler binds to LDAP in anonymous mode. You can change this authentication
+method by modifying the property `pa.ldap.authentication.method`. This property can have several values:
++
+* none (default value) - the ProActive Resource Manager performs connection to LDAP in anonymous mode.
+* simple - the ProActive Resource Manager performs connection to LDAP with a specified user/password (see below for user password setting).
++
+You can also specify a SASL mechanism for LDAPv3. There are many SASL available mechanisms: cram-md5, digest-md5, kerberos4. Just set this property to *sasl* to let the ProActive Resource Manager JVM choose SASL authentication mechanism.
+If you specify an authentication method different from 'none' (anonymous connection to LDAP), you must specify a login/password for authentication.
++
+There are two properties to set in LDAP configuration file:
++
+** `pa.ldap.bind.login` - sets user name for authentication.
+** `pa.ldap.bind.pwd` - sets password for authentication.
++
+. *Set SSL/TLS parameters*
++
+A secured SSL/TLS layer can be useful if your network is not trusted, and critical information is transmitted between the Resource Manager server and LDAP, such as user passwords.
+First, set the LDAP URL property `pa.ldap.url` to a URL of type *ldaps://myLdap*. Then, set `pa.ldap.authentication.method` to *none* so as to delegate authentication to SSL.
++
+For using SSL properly, you have to specify your certificate and public keys for SSL handshake. Java stores certificates in a keyStore and public keys in a trustStore. In most of the cases, you just have to define a trustStore with public key part of LDAP's certificate. Put the certificate in a keyStore, and the public keys in a trustStore with the keytool command (keytool command is distributed with standard java platforms):
++
+
+    keytool -import -alias myAlias -file myCertificate -keystore myKeyStore
++
+myAlias is the alias name of your certificate, myCertificate is your private certificate file and myKeyStore is the new keyStore file produced in output. This command asks you to enter a password for your keyStore.
++
+Put LDAP certificate's public key in a trustStore, with the keytool command:
++
+    keytool -import -alias myAlias -file myPublicKey -keystore myTrustStore
++
+where:
++
+* `myAlias` is the alias name of your certificate's public key.
+* `myPublicKey` is your certificate's public key file.
+* `myTrustore` is the new trustStore file produced in output.
++
+This command asks you to enter a password for your trustStore.
++
+Finally, in `config/authentication/ldap.cfg`, set keyStore and trustStore created before to their respective passwords:
++
+* Set `pa.ldap.keystore.path` to the path of your keyStore.
+* Set `pa.ldap.keystore.passwd` to the password defined previously for keyStore.
+* Set `pa.ldap.truststore.path` to the path of your trustStore.
+* Set `pa.ldap.truststore.passwd` to the password defined previously for trustStore.
+
+. *Use fall back to file authentication*
++
+You can use simultaneously file-based authentication and LDAP-based authentication.
+In this scenario, ProActive Scheduler checks at first user/password and group memberships in
+the login and group files, as performed in the <<_file,File login method>>.
+If the user or group attribution is not found in the login/group files, login or groups will be searched via LDAP.
++
+There are two configuration options to control this mechanism (present in the `ldap.cfg` configuration file):
++
+* `pa.ldap.authentication.fallback`: if set to `true`, the user login/password will be searched first in the login file, and then on the LDAP server. If set to `false`, only the LDAP server will be queried.
+* `pa.ldap.group.membership.fallback`: if set to `true`, group memberships will be read from the group file and then from the LDAP server. In that sense, a user will be affected to groups defined in both file and LDAP server. If set to `false`, only the LDAP server will be queried.
+
+
+=== PAM
+
+The ProActive Scheduler & Resource Manager are able to interact with *Linux PAM (Pluggable Authentication Modules)* to check users login/password.
+It is not currently possible to retrieve linux system group memberships for users. Thus, groups must be managed using the `PROACTIVE_HOME/config/authentication/group.cfg` file.
+
+In order to enable PAM authentication, follow the steps below:
+
+1. Configure the PAM login methods in the Scheduler and RM settings:
++
+.PROACTIVE_HOME/config/rm/settings.ini
+----
+pa.rm.authentication.loginMethod=RMPAMLoginMethod
+----
++
+.PROACTIVE_HOME/config/scheduler/settings.ini
+----
+pa.scheduler.core.authentication.loginMethod=SchedulerPAMLoginMethod
+----
++
+
+2. Copy the file `PROACTIVE_HOME/config/authentication/proactive-jpam` to `/etc/pam.d` (you must be root to perform this operation).
++
+You can modify this default PAM configuration file if you need specific PAM policies.
+
+
+3. Add the user which will start the scheduler process `PROACTIVE_HOME/bin/proactive-server` to the *shadow* group
++
+[source]
+----
+sudo usermod -aG shadow your_user
+----
++
+After this command, the user, called "your_user" here in this example, will be added to group *shadow*. You may need to logoff/logon before this modification can be effective.
+
+4. Associate, for each Linux system users which will connect to the Scheduler, a ProActive group.
++
+Following the procedure described in chapter <<File>>, groups must be associated to existing PAM users in the ProActive group file `PROACTIVE_HOME/config/authentication/group.cfg`.
++
+In case of PAM users, the login file should not be modified as password authentication will be performed at the Linux system level. Accordingly, you should not use the *proactive-users* command to associate groups to PAM users.
+
+NOTE: Similarly to the LDAP authentication, there is a fallback mechanism for login authentication, with the difference that it is always activated.
+A user defined in the ProActive login file always has precedence over the same user defined on the Linux system.
+
+== User Permissions
+
+All users authenticated in the Resource Manager have their own role according to granted permissions.
+In ProActive Scheduler, we use the standard
+https://www.oracle.com/technetwork/java/javase/jaas/index.html[Java Authentication and Authorization Service (JAAS)^]
+to address these needs.
+
+The file `PROACTIVE_HOME/config/security.java.policy-server` allows to configure fine-grained access for all users, e.g. who has the right to:
+
+* Deploy ProActive Nodes
+* Execute jobs
+* Pause the Scheduler
+* etc
+
+The following groups are defined by default in the `security.java.policy-server` file:
+
+* `user`: can submit a job to the scheduler and control this job execution (pause, kill, etc). Cannot interact with other users jobs.
+* `guests`: can only log into the scheduler/resource manager, but cannot interact with it.
+* `scheduleradmins`: has the same permissions as `user` but can also control other users' job execution. Can manage the scheduler life-cycle such as pausing or stopping the scheduler.
+* `nsadmins`: this group gives the permission to create, edit or remove Node Sources in the resource manager.
+* `providers`: this group gives only the permission to add nodes to the resource manager or to an existing Node Source.
+* `rmcoreadmins` : this group gives full interaction capability with the resource manager (create, edit, remove Node Sources, add nodes, etc)
+* `admin` : this group gives full permission on every aspect, this group is [.underline]#deprecated# and is kept for backward compatibility purpose only (use the above `scheduleradmins` and `rmcoreadmins` instead).
+* `watchers` : this group allows to receive notification events from the scheduler and resource manager, but cannot perform any action. It is mostly used internally.
+
+
 == Deploy ProActive Nodes
 
 In the ProActive Scheduler, Computational Resources are managed by the ProActive Resource Manager component.
@@ -572,8 +926,6 @@ Here is the full list of command line options which can be passed to the install
 
 |===
 
-
-
 ==== Configuring Linux Or Windows Agents For Auto-Update
 
 The *Linux* or *Windows Agents* can be configured to automatically synchronize the node libary (node.jar) with the ProActive server.
@@ -610,7 +962,7 @@ ProActive Resource Manager provides three ways to create a Node Source:
 * Use the https://try.activeeon.com/rest/doc/[REST API]
 * Use the <<_resource_manager_command_line>>
 
-Whichever the way you use to create a node source, ultimately you just need to choose a *Node Source Infrastructure* from the list of <<_node_source_infrastructures,supported Node Source Infrastructures>>
+Whichever the way you use to create a node source, ultimately you just need to choose a <<_node_source_infrastructures,*Node Source Infrastructure*>>
 and a <<_node_source_policies,*Node Source Policy*>> that defines rules and limitations of nodes' utilization.
 Then according to the chosen node source infrastructure and policy, you need to fill out the required parameters.
 
@@ -993,102 +1345,50 @@ log4j.logger.org.ow2.proactive.nativescheduler=DEBUG
 ```
  * inspect the ProActive Scheduler server logs.
 
-== Available Network Protocols
+[[_node_source_infrastructures]]
+=== Node Source Infrastructures
 
-ProActive Workflows and Scheduling offers several protocols for
-the Scheduler and nodes to communicate. These protocols provide different
-features: _speed_, _security_, _fast error detection_, _firewall_ or
-_NAT friendliness_ but none of the protocols can offer all these features at
-the same time.
-Consequently, the selection should be made carefully. Below are introduced
-available network protocols.
-Configuration and properties are discussed in <<_network_properties>>.
-
-=== ProActive Network Protocol
-
-ProActive Network Protocol (PNP) is the general purpose communication protocol
-(`pnp://` scheme). Its performances are quite similar to the well known Java RMI
-protocol, but it is much more robust and network friendly. It requires only one
-TCP port per JVM and no shared registry. Besides, it enables fast network
-failure discovery and better scalability.
-PNP binds to a given TCP port at startup. All incoming communications use this
-TCP port. Deploying the Scheduler or a node with PNP requires to open one and
-only one incoming TCP port per machine.
-
-=== ProActive Network Protocol over SSL
-
-ProActive Network Protocol over SSL (PNPS) is the PNP protocol wrapped inside
-an SSL tunnel. The URI scheme used for the protocol is `pnps://`. It includes
-the same features as PNP plus ciphering and optionally authentication.
-Using SSL creates some CPU overhead which implies that PNPS is slower than PNP.
-
-=== ProActive Message Routing
-
-ProActive Message Routing (PAMR) allows the deployment of the Scheduler and nodes
-behind a firewall. Its associated URI
-scheme is `pamr://`. PAMR has the weakest expectations on how the network is
-configured. Unlike all the other communication protocols introduced previously,
-it has been designed to work when only outgoing TCP connections are available.
-
-== Installation on a Cluster with Firewall
-
-When incoming connections are not allowed (ports closed, firewalls, etc.), the
-ProActive Scheduler allows you to connect nodes without significant changes
-in your network firewall configuration. It relies on the PAMR protocol.
-
-This last does *not* expect *bidirectional* TCP connections.
-It has been designed to work when only outgoing TCP connections are available.
-Such environments can be encountered due to:
-
-  - Network address translation devices
-  - Firewalls allowing only outgoing connections (this is the default setup of many firewalls)
-  - Virtual Machines with a virtualized network stack
-
-image::firewall.png[]
-
-When PAMR is activated, the ProActive Scheduler and nodes connect to a PAMR router. This connection is kept open, and used
-as a tunnel to receive incoming messages. If the tunnel goes down, it is automatically reopened by nodes.
-
-The biggest drawback of PAMR is that a centralized PAMR router is in charge of routing message between all the PAMR clients.
-To soften this limitation PAMR can be used with other communication protocols. This way, PAMR is used only when needed.
-
-By default, PNP is enabled. PNP is the default protocol for better performance and nodes can also use PAMR if needed.
-The PAMR Router is started by default along with the ProActive Scheduler.
-
-For a ProActive Node to connect to the ProActive Scheduler using PAMR, the following ProActive configuration file can be used
-(`PROACTIVE_HOME/config/network/node.ini`). The properties tell the ProActive Node where to find the PAMR router.
-The ProActive Node will then connect to `pamr://0` where `0` is the PAMR id of the Scheduler (0 by default).
-
-[source]
-----
-proactive.communication.protocol=pamr
-proactive.pamr.router.address=ROUTER_HOSTNAME
-proactive.pamr.router.port=33647
-----
-
-This sample configuration requires to open only one port `33647` for *incoming connections* on the router host
-and all the ProActive Nodes will be able to connect to the Scheduler.
-
-PAMR communication can be tunneled using SSH for better security. In that case, the ProActive node will establish
-a SSH tunnel between him and the ProActive Scheduler and use that tunnel for PAMR traffic.
-
-See <<_pamr_protocol_properties>> reference for a detailed explanation of each property.
+include::./references/NodeSourceInfrastructureReference.adoc[]
 
 == Control the resource usage
 
-=== Policies
+[[_node_source_policies]]
+=== Node Source Policies
 
 You can limit the utilization of resources connected to the ProActive Scheduler in different ways. When you create node
-sources you can use a node source *policy*. A node source policy is a set of rules and conditions which describes when and how many nodes have to be selected for computations.
+sources you can use a *Node Source Policy*. A node source policy is a set of rules and conditions which describes, inside a <<_deploy_nodes_from_proactive_rm,*Node Source*>>, when and how many nodes have to be acquired or released.
 
-NOTE: Node source policy are enforced for *non-admin* users *only*, and will have no effect for a user granted with the administrator privileges.
+When creating a node source, a <<_node_source_infrastructures,*Node Source Infrastructure*>> and a Node Source Policy must be chosen.
+Node Sources can be created using the Resource Manager portal or the command line (see <<_command_line_examples>> for more information).
+
+The Node Source Policy interacts internally with the associated <<_node_source_infrastructures,*Node Source Infrastructure*>> to request new nodes deployments or nodes removal.
+
+Node Sources were designed in a way that:
+
+* All logic related to node acquisition is encapsulated in the *Infrastructure Manager*.
+* Conditions and rules of node acquisition is described in the *Node Source Policy*.
+
+In the ProActive Resource Manager, there is always a default node source configured with a *DefaultInfrastructureManager* and a *Static policy*.
+It is not able to deploy nodes anywhere but makes it possible to add existing nodes to the Scheduler (see <<run_node_manually>>)
+
+Out of the box the Scheduler supports time slot policies, cron policies, load based policies and many others.
+Please see detailed information about policies in the following sections.
+
+
+[[_policy_common_parameters]]
+==== Common Parameters
 
 Each node source policy regardless it specifics has a common part where you describe users' and groups' permissions.
 When you create a policy you must specify them:
 
 * *nodeUsers* - utilization permission that defines who can get nodes for computations from this node source. It has to take one of the following values:
 ** `ME` - only the node source creator
-** `users=user1,user2;groups=group1,group2;tokens=t1,t2` - only specific users, groups or tokens. I.e. users=user1 - node access is limited to user1; users=user1;groups=group1 - node access is limited to user1 and all users from group group1; users=user1;tokens=t1 - node access is limited to user1 or anyone who specified token t1. If node access is protected by a token, node will not be found by the ProActive Resource Manager when trying to execute workflows, unless the corresponding token is specified inside the workflow(s). To exclude specific users or groups use users=!user1,!user2;groups=!group1,!group2. Tokens can not be excluded, and mixing inclusion with exclusion is not permitted (i.e. users=user1,!user2;groups=!group1,group2).
+** `users=user1,user2;groups=group1,group2;tokens=t1,t2` - only specific users, groups or tokens. For example:
+*** users=user1 - node access is limited to user1
+*** users=user1;groups=group1 - node access is limited to user1 and all users from group group1
+*** users=user1;tokens=t1 - node access is limited to user1 or anyone who specified token t1. If node access is protected by a token, node will not be found by the ProActive Resource Manager when trying to execute workflows, unless the corresponding token is specified inside the workflow(s).
+To exclude specific users or groups use for example:
+*** users=!user1,!user2;groups=!group1,!group2. Tokens can not be excluded, and mixing inclusion with exclusion is not permitted (i.e. users=user1,!user2;groups=!group1,group2).
 ** `ALL` - everybody can use nodes from this node source
 
 NOTE: To specify a token inside a chosen workflow, add the key/value pair *NODE_ACCESS_TOKEN:<token>* to its generic information.
@@ -1101,11 +1401,10 @@ NOTE: To specify a token inside a chosen workflow, add the key/value pair *NODE_
 The user who created the node source is the administrator of this node source. He can add and removed nodes to it, remove the node source itself,
 but cannot use nodes if usage policy is set to *PROVIDER* or *PROVIDER_GROUPS*.
 
-In the ProActive Resource Manager, there is always a default node source configured with a *DefaultInfrastructureManager* and a *Static policy*.
-It is not able to deploy nodes anywhere but makes it possible to add existing nodes to the Scheduler (see <<run_node_manually>>)
+NOTE: Node source policy user restrictions are not enforced for members of the [.underline]#deprecated# `admin` group, they will have no effect on such users (see <<_user_permissions>>).
 
-Out of the box the Scheduler supports time slot policies, cron policies, load based policies and many others.
-Please see detailed information about policies in <<_node_source_policies>>.
+
+include::./references/NodeSourcePolicyReference.adoc[]
 
 === Agents schedule
 
@@ -1157,7 +1456,7 @@ Node Source undeploying can be *preemptive* or not. If a Node Source undeploying
 requirement, then the Nodes of this Node Source which are currently running <<_glossary_task,Tasks>> will not be
 removed until their Task is finished. In this case, these Nodes are displayed in the
 _to-be-removed_ state. In other terms, if a Node Source is undeployed *non-preemptively*, it will be completely
-undeployed as soon as all of its Nodes have finished executing their Task. On the opposite, if a Node Source is
+undeployed as soon as all of its Nodes have finished executing their Task. On the other hand, if a Node Source is
 undeployed *with preemption*, its Nodes are immediately removed regardless of whether they execute Tasks, and this may
 cause Tasks to fail.
 
@@ -1168,304 +1467,87 @@ Deploying and undeploying Node Sources is possible from the
 TIP: The deployment status of a Node Source is persistent. If the Resource Manager is restarted, then all Node Sources
 will be *restored* to their previous state.
 
-== User Authentication
+== Available Network Protocols
 
-In order to use ProActive Scheduler every user must have an account. It supports three methods for authentication:
+ProActive Workflows and Scheduling offers several protocols for
+the Scheduler and nodes to communicate. These protocols provide different
+features: _speed_, _security_, _fast error detection_, _firewall_ or
+_NAT friendliness_ but none of the protocols can offer all these features at
+the same time.
+Consequently, the selection should be made carefully. Below are introduced
+the available network protocols.
+Configuration and properties are discussed in <<_network_properties>>.
 
-* *File based*
-* *LDAP*
-* *PAM*
+=== ProActive Network Protocol
 
-=== Select authentication method
+ProActive Network Protocol (PNP) is the general purpose communication protocol
+(`pnp://` scheme). Its performances are quite similar to the well known Java RMI
+protocol, but it is much more robust and network friendly. It requires only one
+TCP port per JVM and no shared registry. Besides, it enables fast network
+failure discovery and better scalability.
+PNP binds to a given TCP port at startup. All incoming communications use this
+TCP port. Deploying the Scheduler or a node with PNP requires to open one and
+only one incoming TCP port per machine.
 
-By default the ProActive Scheduler is configured to use *file based* authentication and has some default accounts ('demo/demo', 'admin/admin') that
-work out of the box.
+=== ProActive Network Protocol over SSL
 
-If you would like to change the method authentication type to use your *LDAP* server or use Linux PAM, you need to modify two configs:
+ProActive Network Protocol over SSL (PNPS) is the PNP protocol wrapped inside
+an SSL tunnel. The URI scheme used for the protocol is `pnps://`. It includes
+the same features as PNP plus ciphering and optionally authentication.
+Using SSL creates some CPU overhead which implies that PNPS is slower than PNP.
 
-* *Resource Manager* configuration (`PROACTIVE_HOME/config/rm/settings.ini`)
-+
-[source]
-----
-#Property that defines the method that has to be used for logging users to the Resource Manager
-#It can be one of the following values:
-#    - "RMFileLoginMethod" to use file login and group management
-#    - "RMLDAPLoginMethod" to use LDAP login management
-#    - "RMPAMLoginMethod" to use PAM login management
-pa.rm.authentication.loginMethod=RMLDAPLoginMethod
-----
+=== ProActive Message Routing
 
-* *Scheduler* configuration (`PROACTIVE_HOME/config/scheduler/settings.ini`)
-+
-[source]
-----
-#Property that define the method that have to be used for logging users to the Scheduler
-#It can be one of the following values:
-#	- "SchedulerFileLoginMethod" to use file login and group management
-#	- "SchedulerLDAPLoginMethod" to use LDAP login management
-#   - "SchedulerPAMLoginMethod" to use PAM login management
-pa.scheduler.core.authentication.loginMethod=SchedulerLDAPLoginMethod
-----
+ProActive Message Routing (PAMR) allows the deployment of the Scheduler and nodes
+behind a firewall. Its associated URI
+scheme is `pamr://`. PAMR has the weakest expectations on how the network is
+configured. Unlike all the other communication protocols introduced previously,
+it has been designed to work when only outgoing TCP connections are available.
 
+=== Installation on a Cluster with Firewall
 
-=== File
+When incoming connections are not allowed (ports closed, firewalls, etc.), the
+ProActive Scheduler allows you to connect nodes without significant changes
+in your network firewall configuration. It relies on the PAMR protocol.
 
-By default, the ProActive Resource Manager stores users accounts, passwords, and group memberships (user or admin), in two files:
+This last does *not* expect *bidirectional* TCP connections.
+It has been designed to work when only outgoing TCP connections are available.
+Such environments can be encountered due to:
 
-* users and passwords accounts are stored in `PROACTIVE_HOME/config/authentication/login.cfg`.
-Each line has to follow the format *user:encypted password*.
-The default accounts in `login.cfg` file correspond to the following passwords, which are encrypted in the actual login.cfg file:
-+
-.unencrypted_login.cfg
-----
-admin:admin
-user:pwd
-demo:demo
-guest:pwd
-test:pwd
-radmin:pwd
-nsadmin:pwd
-provider:pwd
-scheduler:scheduler_pwd
-rm:rm_pwd
-watcher:w_pwd
-test_executor:pwd
-----
+  - Network address translation devices
+  - Firewalls allowing only outgoing connections (this is the default setup of many firewalls)
+  - Virtual Machines with a virtualized network stack
 
-* users membership is stored in `PROACTIVE_HOME/config/authentication/group.cfg`. For each user registered in login.cfg,
-a group membership has to be defined in this file. Each line has to look like *user:group*. Group has to be
-user to have user rights, or admin to have administrator rights. Below is an example `group.cfg` file:
-+
-.group.cfg
-----
-admin:admin
-demo:admin
-guest:guests
-rm:admin
-scheduler:user
-user:user
-watcher:watchers
-----
+image::firewall.png[]
 
-ProActive contains a set of predefined groups such as "user" and "admin". Groups are defined in `PROACTIVE_HOME/config/security.java.policy-server` as described in chapter <<User Permissions>>.
+When PAMR is activated, the ProActive Scheduler and nodes connect to a PAMR router. This connection is kept open, and used
+as a tunnel to receive incoming messages. If the tunnel goes down, it is automatically reopened by nodes.
 
-In order to create new users, delete an existing user, or modify the groups or password for an existing user, a command-line tool is available.
+The biggest drawback of PAMR is that a centralized PAMR router is in charge of routing message between all the PAMR clients.
+To soften this limitation PAMR can be used with other communication protocols. This way, PAMR is used only when needed.
 
-This command is available inside the *tools* folder: `PROACTIVE_HOME/tools/proactive-users`.
-You can check the command syntax using the -h option.
+By default, PNP is enabled. PNP is the default protocol for better performance and nodes can also use PAMR if needed.
+The PAMR Router is started by default along with the ProActive Scheduler.
 
-----
-$ proactive-users -h
-usage: proactive-users [-C | -D | -U]  [-g <GROUPS>] [-gf <GROUPFILE>] [-h] [-kf <KEYFILE>] [-l <LOGIN>] [-lf <LOGINFILE>] [-p
-       <PASSWORD>] [-sgf <SOURCEGROUPFILE>] [-slf <SOURCELOGINFILE>]
-----
-
-Here are examples of use:
-
-* Creating users
-+
-----
-$ proactive-users -C -l user1 -p pwd1 -g user
-Created user user1 in H:\Install\scheduling\tools\..\config/authentication/login.cfg
-Added group user to user user1
-----
-The user with login "user1", password "pwd1" and group "user" was created
-
-* Updating users
-+
-----
-$ proactive-users -U -l user1 -p pwd2 -g nsadmins,admin
-Changed password for user user1 in H:\Install\scheduling\tools\..\config/authentication/login.cfg
-Added group nsadmins to user user1
-Added group admin to user user1
-----
-User "user1" now has password pwd2 and groups nsadmins & admin (group "user" was removed).
-
-* Deleting users
-+
-----
-$ proactive-users -D -l user1
-Deleted user user1 in H:\Install\scheduling\tools\..\config/authentication/login.cfg
-----
-User "user1" does not exist any more.
-
-* Creating multiple users
-+
-It is also possible to create multiple users at once using a source login file and a source group file.
-In that case, the source login file contains, for each user, a line with the format "login:unencrypted_password".
-The source group file has the same structure as the `PROACTIVE_HOME/config/authentication/group.cfg` file.
-This can be used, for example, to convert login files used by ProActive Scheduler versions prior to 7.19.0.
-+
-----
-$ proactive-users -C -slf source_login.cfg -sgf source_group.cfg
-Adding group admin to user admin1
-Created user admin1
-Adding group user to user user2
-Created user user2
-Adding group user to user user1
-Created user user1
-Stored login file in H:\Install\scheduling\tools\..\config/authentication/login.cfg
-Stored group file in H:\Install\scheduling\tools\..\config/authentication/group.cfg
-----
-
-* Updating multiple users
-+
-Similarly, it is possible to update existing users with source login or group files. It is possible to update only group membership for existing users, or only passwords, or both.
-+
-The example below shows how to update only groups for existing users:
-+
-----
-proactive-users -U -sgf source_group_2.cfg
-Adding group admin to user user1
-Updated user user1
-Adding group admin to user user2
-Updated user user2
-Stored login file in H:\Install\scheduling\tools\..\config/authentication/login.cfg
-Stored group file in H:\Install\scheduling\tools\..\config/authentication/group.cfg
-----
-
-=== LDAP
-
-The ProActive Resource Manager is able to connect to an existing *LDAP* server, to check users login/password and verify users group
-membership. This authentication method can be used with existing LDAP server that is already configured.
-
-
-In order to use it, few parameters have to be configured, such as *path in LDAP tree users*, LDAP *groups* that define
-user and admin group membership, *URL* of the LDAP server, LDAP *binding method* used by connection and configuration
-of SSL/TLS if you want a secured connection between the ProActive Resource Manager and LDAP.
-
-We assume that LDAP server is configured in the way that:
-
-* all existing users and groups are located under single domain
-* users have object class specified in parameter *pa.ldap.user.objectclass*
-* groups have object class specified in parameter *pa.ldap.group.objectclass*
-* user and group name is defined in cn (Common Name) attribute
+For a ProActive Node to connect to the ProActive Scheduler using PAMR, the following ProActive configuration file can be used
+(`PROACTIVE_HOME/config/network/node.ini`). The properties tell the ProActive Node where to find the PAMR router.
+The ProActive Node will then connect to `pamr://0` where `0` is the PAMR id of the Scheduler (0 by default).
 
 [source]
 ----
-# EXAMPLE of user entry
-#
-# dn: cn=jdoe,dc=example,dc=com
-# cn: jdoe
-# firstName: John
-# lastName: Doe
-# objectClass: inetOrgPerson
-
-# EXAMPLE of group entry
-#
-# dn: cn=mygroup,dc=example,dc=com
-# cn: mygroup
-# firstName: John
-# lastName: Doe
-# uniqueMember: cn=djoe,dc=example,dc=com
-# objectClass: groupOfUniqueNames
+proactive.communication.protocol=pamr
+proactive.pamr.router.address=ROUTER_HOSTNAME
+proactive.pamr.router.port=33647
 ----
 
-The LDAP configuration is defined in `PROACTIVE_HOME/config/authentication/ldap.cfg`. You need to:
+This sample configuration requires to open only one port `33647` for *incoming connections* on the router host
+and all the ProActive Nodes will be able to connect to the Scheduler.
 
-. *Set the LDAP server URL*
-+
-First, you have to define the LDAP's URL of your organisation. This address corresponds to the property: `pa.ldap.url`. You have to put a standard LDAP-like URL, for example *ldap://myLdap*. You can also set a URL with secure access: *ldaps://myLdap:636*.
-+
-. *Define object class of user and group entities*
-+
-Then you need to define how to differ user and group entities in LDAP tree. The users object class is defined by
-property `pa.ldap.user.objectclass` and by default is _inetOrgPerson_. For groups, the property `pa.ldap.group.objectclass`
-has a default value _groupOfUniqueNames_ which could be changed.
+PAMR communication can be tunneled using SSH for better security. In that case, the ProActive node will establish
+a SSH tunnel between it and the ProActive Scheduler and use that tunnel for PAMR traffic.
 
-. *Configure LDAP authentication parameters*
-+
-By default, the ProActive Scheduler binds to LDAP in anonymous mode. You can change this authentication
-method by modifying the property `pa.ldap.authentication.method`. This property can have several values:
-+
-* none (default value) - the ProActive Resource Manager performs connection to LDAP in anonymous mode.
-* simple - the ProActive Resource Manager performs connection to LDAP with a specified login/password (see below for user password setting).
-+
-You can also specify a SASL mechanism for LDAPv3. There are many SASL available mechanisms: cram-md5, digest-md5, kerberos4. Just set this property to *sasl* to let the ProActive Resource Manager JVM choose SASL authentication mechanism.
-If you specify an authentication method different from 'none' (anonymous connection to LDAP), you must specify a login/password for authentication.
-+
-There are two properties to set in LDAP configuration file:
-+
-** `pa.ldap.bind.login` - sets user name for authentication.
-** `pa.ldap.bind.pwd` - sets password for authentication.
-+
-. *Set SSL/TLS parameters*
-+
-A secured SSL/TLS layer can be useful if your network is not trusted, and critical information is transmitted between the rm server and LDAP, such as user passwords.
-First, set the LDAP URL property `pa.ldap.url` to a URL of type *ldaps://myLdap*. Then set `pa.ldap.authentication.method` to *none* so as to delegate authentication to SSL.
-+
-For using SSL properly, you have to specify your certificate and public keys for SSL handshake. Java stores certificates in a keyStore and public keys in a trustStore. In most of the cases, you just have to define a trustStore with public key part of LDAP's certificate. Put certificate in a keyStore, and public keys in a trustStore with the keytool command (keytool command is distributed with standard java platforms):
-+
+See <<_pamr_protocol_properties>> reference for a detailed explanation of each property.
 
-    keytool -import -alias myAlias -file myCertificate -keystore myKeyStore
-+
-myAlias is the alias name of your certificate, myCertificate is your private certificate file and myKeyStore is the new keyStore file produced in output. This command asks you to enter a password for your keyStore.
-+
-Put LDAP certificate's public key in a trustStore, with the keytool command:
-+
-    keytool -import -alias myAlias -file myPublicKey -keystore myTrustStore
-+
-myAlias is the alias name of your certificate's public key, myPublicKey is your certificate's public key file and myTrustore is the new trustStore file produced in output. This command asks you to enter a password for your trustStore.
-+
-Finally, in `config/authentication/ldap.cfg`, set keyStore and trustStore created before to their respective passwords:
-+
-* Set `pa.ldap.keystore.path` to the path of your keyStore.
-* Set `pa.ldap.keystore.passwd` to the password defined previously for keyStore.
-* Set `pa.ldap.truststore.path` to the path of your trustStore.
-* Set `pa.ldap.truststore.passwd` to the password defined previously for trustStore.
-
-. *Use fall back to file authentication*
-+
-You can use simultaneously file-based authentication and LDAP-based authentication. Then, ProActive Scheduler can check at first user password and group membership in
-login and group files, as performed in FileLogin method. If user or group is not found in login file, login or group will be searched in LDAP.
-It uses `pa.rm.defaultloginfilename` and `pa.rm.defaultgroupfilename` files to authenticate user and check group membership. There are two rules:
-
-* If file group membership checking fails, fall back to group membership checking with LDAP.
-To activate this behavior set `pa.ldap.group.membership.fallback` to true, in LDAP configuration file.
-* If a user is not found in the login file, fall back to authentication and group membership checking with LDAP. To activate this behavior, set `pa.ldap.authentication.fallback` to true, in LDAP configuration file.
-
-=== PAM
-
-The ProActive Scheduler & Resource Manager are able to interact with Linux *PAM (Pluggable Authentication Modules)* to check users login/password.
-It is not currently possible to retrieve linux system group memberships for users. Thus groups must be managed using the `PROACTIVE_HOME/config/authentication/group.cfg` file.
-
-In order to enable PAM authentication, follow the following steps:
-
-1. Configure the PAM login methods in the Scheduler and RM settings:
-+
-.PROACTIVE_HOME/config/rm/settings.ini
-----
-pa.rm.authentication.loginMethod=RMPAMLoginMethod
-----
-+
-.PROACTIVE_HOME/config/scheduler/settings.ini
-----
-pa.scheduler.core.authentication.loginMethod=SchedulerPAMLoginMethod
-----
-+
-
-2. Copy the file `PROACTIVE_HOME/config/authentication/proactive-jpam` to `/etc/pam.d` (you must be root to perform this operation).
-+
-You can modify this default PAM configuration file if you need specific PAM policies.
-
-
-3. Add the user which will start the scheduler process `PROACTIVE_HOME/bin/proactive-server` to the *shadow* group
-+
-[source]
-----
-sudo usermod -aG shadow your_user
-----
-+
-After this command, the user, called "your_user" here in this example, will be added to group *shadow*. You may need to logoff/logon before this modification can be effective.
-
-4. Associate, for each Linux system users which will connect to the Scheduler, a ProActive group.
-+
-Following the procedure described in chapter <<File>>, groups must be associated to existing PAM users in the ProActive group file `PROACTIVE_HOME/config/authentication/group.cfg`.
-+
-In case of PAM users, the login file should not be modified as password authentication will be performed at the Linux system level. Accordingly, you should not use the *proactive-users* command to associate groups to PAM users.
-
-NOTE: Similarly to the LDAP authentication, there is a fallback mechanism for login authentication, with the difference that it is always activated.
-A user defined in the ProActive login file always has precedence over the same user defined on the Linux system.
 
 == Task Termination Behavior
 
@@ -1570,21 +1652,6 @@ the forceful removal of the running process.
 
 
 |===
-
-
-== User Permissions
-
-All users authenticated in the Resource Manager have their own role according to granted permissions.
-In ProActive Scheduler, we use the standard
-https://www.oracle.com/technetwork/java/javase/jaas/index.html[Java Authentication and Authorization Service (JAAS)^]
-to address these needs.
-
-The file `PROACTIVE_HOME/config/security.java.policy-server` allows to configure fine-grained access for all users, e.g. who has the right to:
-
-* Deploy ProActive Nodes
-* Execute jobs
-* Pause the Scheduler
-* etc
 
 == Monitor the cluster state
 
@@ -2559,16 +2626,6 @@ include::./references/CatalogReference.adoc[]
 [[_scheduler_portal_properties]]
 === Scheduler Portal Properties
 include::./references/SchedulerPortalReference.adoc[]
-
-[[_node_source_infrastructures]]
-=== Node Source Infrastructures
-
-include::./references/NodeSourceInfrastructureReference.adoc[]
-
-[[_node_source_policies]]
-=== Node Source Policies
-
-include::./references/NodeSourcePolicyReference.adoc[]
 
 [[_resource_manager_command_line]]
 === Command Line

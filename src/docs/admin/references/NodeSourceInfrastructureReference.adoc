@@ -2,80 +2,56 @@ A *Node Source Infrastructure*, also called *Infrastructure Manager*, is respons
 on a remote machine. For instance the SSH infrastructure manager connects via SSH to a remote machine and launches
 nodes.
 
+When creating a node source, a Node Source Infrastructure and a <<_node_source_policies,Node Source Policy>> must be chosen.
+
+NOTE: New Node Source Infrastructures can be dynamically plugged into the Resource Manager. In order to do that, it is required to add classes extending the link:../javadoc/org/ow2/proactive/resourcemanager/nodesource/infrastructure/InfrastructureManager.html[InfrastructureManager class] in the server class path and update the infrastructure implementation list in the configuration file (+PROACTIVE_HOME/config/rm/nodesource/infrastructures+).
+
+Node Sources can be created using the Resource Manager portal or the command line (see <<_command_line_examples>> for more information).
+
+WARNING: When using the command line, the order of parameters is important, and each infrastructure section below describes the correct parameter order. Each section shows as well the fully qualified name of the infrastructure, to pass on the command line. On the Resource Manager portal, the order of parameters displayed on the interface is slightly different as parameters are grouped into categories.
+
 ==== Default Infrastructure
+
+*Full name:* `org.ow2.proactive.resourcemanager.nodesource.infrastructure.DefaultInfrastructureManager`
 
 *Default Infrastructure* is designed to be used with ProActive
 agent. It cannot perform an automatic deployment but any users
 (including an agent) can add already existing nodes into it. In order to
-create a node source with this infrastructure, run the following
+create a node source with this infrastructure, use the Resource Manager portal or run the following
 command:
 
-    $ PROACTIVE_HOME/bin/proactive-client --createns defaultns -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.DefaultInfrastructureManager rmURL
+    $ PROACTIVE_HOME/bin/proactive-client --createns defaultns -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.DefaultInfrastructureManager
 
-The only parameter to provide is the following one:
-
--   **rmURL** - the URL of the Resource Manager.
+This infrastructure has no parameter.
 
 ==== Local Infrastructure
 
+*Full name:* `org.ow2.proactive.resourcemanager.nodesource.infrastructure.LocalInfrastructure`
+
 *Local Infrastructure* can be used to start nodes locally, i.e,
 on the host running the Resource Manager. In order to create a node
-source with this infrastructure, run the following command:
+source with this infrastructure, use the Resource Manager portal or run the following command:
 
-    $ PROACTIVE_HOME/bin/proactive-client --createns localns -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.LocalInfrastructure rmURL credentialsPath numberOfNodes timeout javaProperties
+    $PROACTIVE_HOME/bin/proactive-client --createns localns -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.LocalInfrastructure credentialsPath numberOfNodes timeout javaProperties
 
--   *rmURL* - URL of the Resource Manager server (can leave it empty to
-    use default value, i.e, the URL of the Resource Manager you connect
-    to)
+-   *credentialsPath* - (Optional) The absolute path of the credentials file used
+    to set the provider of the nodes. By default it will use the connected user credentials.
 
--   *credentialsPath* - The absolute path of the credentials file used
-    to set the provider of the nodes.
+-   *maxNodes* - The number of nodes to deploy.
 
--   *numberOfNodes* - The number of nodes to deploy.
+-   *nodeTimeout* - The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost.
 
--   *timeout* - The length in ms after which one a node is not expected
-    anymore.
-
--   *javaProperties* - The java properties to setup the ProActive
-    environment for the nodes
+-   *paProperties* - Java options appended to the command used to start the node on the remote host.
 
 ==== SSH Infrastructure
 
+*Full name:* `org.ow2.proactive.resourcemanager.nodesource.infrastructure.SSHInfrastructure`
+
 This infrastructure allows to deploy nodes over SSH.
+It is deprecated in favor of <<_ssh_infrastructure_v2>>
 This infrastructure needs 10 arguments, described hereafter:
 
--   **RM URL** - The Resource Manager's URL that will be used by the
-    deployed nodes to register by themselves.
-
--   **SSH Options** - Options you can pass to the SSHClient executable (
-    -l inria to specify the user for instance )
-
--   **Java Path** - Path to the java executable on the remote hosts.
-
--   **Scheduling Path** - Path to the Scheduler installation
-    directory on the remote hosts.
-
--   **Node Time Out** - A duration after which one the remote nodes are
-    considered to be lost.
-
--   **Attempt** - The number of time the Resource Manager tries to
-    acquire a node for which one the deployment fails before discarding
-    it forever.
-    
-    **Wait time between failed attempts** - The time in milliseconds that the Resource Manager wait before trying to
-    acquire a node for which one the deployment fails before.
-
--   **Target OS** - One of 'LINUX', 'CYGWIN' or 'WINDOWS' depending on
-    the machines' ( in Hosts List file ) operating system.
-
--   **Java Options** - Java options appended to the command used to
-    start the node on the remote host.
-
--   **RM Credentials Path** - The absolute path of the 'rm.cred' file to
-    make the deployed nodes able to register to the Resource Manager (
-    config/authentication/rm.cred ).
-
--   **Hosts List** - Path to a file containing the hosts on which
+-   **hostsList** - Path to a file containing the hosts on which
     resources should be acquired. This file should contain one host per
     line, described as a host name or a public IP address, optionally
     followed by a positive integer describing the number of runtimes to
@@ -85,7 +61,81 @@ This infrastructure needs 10 arguments, described hereafter:
         test.example.net 5
         192.168.9.10 2
 
+-   **nodeTimeOut** - The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost.
+
+-   **maxDeploymentFailure** - Maximum number of failed attempts to deploy on host before discarding it.
+
+-   **waitBetweenDeploymentFailures** - The time in milliseconds that the Resource Manager waits before retrying to
+    acquire a node for which the deployment failed before.
+
+-   **sshOptions** - Options you can pass to the SSHClient executable (
+    -l mysuser to specify the user for instance ).
+
+-   **javaPath** - Path to the java executable on the remote hosts.
+
+-   **schedulingPath** - Path to the Scheduler Node installation
+    directory on the remote hosts.
+
+-   **targetOs** - One of 'LINUX', 'CYGWIN' or 'WINDOWS' depending on
+    the machines' ( in Hosts List file ) operating system.
+
+-   **javaOptions** - Java options appended to the command used to
+    start the node on the remote host.
+
+-   **rmCredentialsPath** - (Optional) The absolute path of the 'rm.cred' file to
+    make the deployed nodes able to register to the Resource Manager (
+    config/authentication/rm.cred ). By default it will use the currently connected user credentials.
+
+
+
+==== SSH Infrastructure V2
+
+*Full name:* `org.ow2.proactive.resourcemanager.nodesource.infrastructure.SSHInfrastructureV2`
+
+This infrastructure allows to deploy nodes over SSH.
+This infrastructure needs 13 arguments, described hereafter:
+
+-   **hostsList** - Path to a file containing the hosts on which
+    resources should be acquired. This file should contain one host per
+    line, described as a host name or a public IP address, optionally
+    followed by a positive integer describing the number of runtimes to
+    start on the related host (default to 1 if not specified). Example:
+
+        rm.example.com
+        test.example.net 5
+        192.168.9.10 2
+
+-   **nodeTimeOut** - The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost.
+
+-   **maxDeploymentFailure** - Maximum number of failed attempts to deploy on host before discarding it.
+
+-   **waitBetweenDeploymentFailures** - The time in milliseconds that the Resource Manager waits before retrying to
+    acquire a node for which the deployment failed before.
+
+-   **sshPort** - Port used for the SSH connection.
+
+-   **sshUsername** - Username of the SSH connection.
+
+-   **sshPassword ** - Password of the SSH connection.
+
+-   **sshPrivateKey ** - Alternately, use a private key to authenticate the SSH connection.
+
+-   **sshOptions** - Options you can pass to the SSHClient executable.
+
+-   **javaPath** - Path to the java executable on the remote hosts.
+
+-   **schedulingPath** - Path to the Scheduler Node installation
+    directory on the remote hosts.
+
+-   **targetOs** - One of 'LINUX', 'CYGWIN' or 'WINDOWS' depending on
+    the machines' ( in Hosts List file ) operating system.
+
+-   **javaOptions** - Java options appended to the command used to
+    start the node on the remote host.
+
 ==== CLI Infrastructure
+
+*Full name:* `org.ow2.proactive.resourcemanager.nodesource.infrastructure.CLIInfrastructure`
 
 This generic infrastructure allows to deploy nodes using deployment
 script written in arbitrary language. The infrastructure just launches
@@ -99,18 +149,7 @@ removal script has 2 parameters: +HOST_NAME+ and +NODE_NAME+.
 
 This infrastructure needs 7 arguments, described hereafter:
 
--   **RM URL** - The Resource Manager's URL that will be used by the
-    deployed nodes to register by themselves.
-
--   **Interpreter** - Path to the script interpreter (bash by default).
-
--   **Deployment Script** - A script that launches a ProActive node and
-    register it to the RM.
-
--   **Removal Script** - A script that removes the node from the
-    Resource Manager.
-
--   **Hosts List** - Path to a file containing the hosts on which
+-   **hostsList** - Path to a file containing the hosts on which
     resources should be acquired. This file should contain one host per
     line, described as a host name or a public IP address, optionally
     followed by a positive integer describing the number of runtimes to
@@ -120,13 +159,24 @@ This infrastructure needs 7 arguments, described hereafter:
         test.example.net 5
         192.168.9.10 2
 
--   **Node Time Out** - The length in ms after which one a node is not
-    expected anymore.
+-   **nodeTimeOut** - The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost.
 
--   **Max Deployment Failure** - the number of times the resource
-    manager tries to relaunch the deployment script in case of failure.
+-   **maxDeploymentFailure** - Maximum number of failed attempts to deploy on host before discarding it.
+
+-   **waitBetweenDeploymentFailures** - The time in milliseconds that the Resource Manager waits before retrying to
+    acquire a node for which the deployment failed before.
+
+-   **interpreter** - Path to the script interpreter (bash by default).
+
+-   **deploymentScript** - A script that launches a ProActive Node and
+    registers it to the RM.
+
+-   **removalScript** - A script that removes the node from the
+    Resource Manager.
 
 ==== EC2 Infrastructure
+
+*Full name:* `org.ow2.proactive.resourcemanager.nodesource.infrastructure.AWSEC2Infrastructure`
 
 The Elastic Compute Cloud, aka *EC2*, is an Amazon Web Service, that
 allows its users to use machines (instances) on demand on the cloud. An
@@ -231,7 +281,7 @@ WARNING: If the combination between RAM and CORES does not match any existing AW
 -   *additionalProperties*: Additional Java command properties to be added when starting each ProActive node JVM in AWS instances (e.g. `-Dpropertyna
 me=propertyvalue`). This is an optional property.
 
--   *nodeTimeout*: The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node is considered as lost.
+-   *nodeTimeout*: The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost.
 
 Using this configuration, you can start a ProActive Resource Manager and Scheduler using the */bin/proactive-server* script.
 An AWS EC2 NodeSource can now be added using the *Create Node Source* panel in the Resource Manager Portal or the command line interface:
@@ -244,6 +294,8 @@ WARNING: If ProActive server is forcibly killed, the created AWS instances will 
 
 
 ==== AWS Autoscaling Infrastructure
+
+*Full name:* `org.ow2.proactive.resourcemanager.nodesource.infrastructure.AwsAutoScalingInfrastructure`
 
 Similarly to the EC2 Infrastructure, the *AWS Autoscaling Infrastructure* operates AWS EC2 service to provide computing nodes to the Resource Manager.
 However, it implements a different instance management strategy that reduces the delay of node acquisition and node removal process and facilitates inter-node collaboration in the same cluster, thanks to the following changes:
@@ -363,6 +415,8 @@ WARNING: When ProActive server is stopped (without removing the created infrastr
  
 ==== OpenStack Infrastructure
 
+*Full name:* `org.ow2.proactive.resourcemanager.nodesource.infrastructure.OpenstackInfrastructure`
+
 To use OpenStack instances as computing nodes, a specific OpenStack Infrastructure
 can be created using the Resource Manager. This section describes briefly how to make it.
 
@@ -381,7 +435,7 @@ Other properties needed for the authentication are:
    -   *domain:* The name of the domain to use that refers to the collection of projects and users defining administrative boundaries for managing Identity entities. For more information see https://docs.openstack.org/security-guide/identity/domains.html[OpenStack domain].
 
 
-  -   *endpoint:* The hostname or the IP address of the OpenStack server. This address needs to be accessible from the Resource Manager.
+   -   *endpoint:* The hostname or the IP address of the OpenStack server. This address needs to be accessible from the Resource Manager.
     
 
    -   *scopePrefix:* The scope prefix to use. It can be project, projectId, domain or domainId.
@@ -442,6 +496,8 @@ WARNING: When ProActive server is stopped (without removing the created infrastr
 
 
 ==== VMware Infrastructure
+
+*Full name:* `org.ow2.proactive.resourcemanager.nodesource.infrastructure.VMWareInfrastructure`
 
 To use VMware instances as computing nodes, a specific VMware Infrastructure
 can be created using the Resource Manager. This section describes briefly how to make it.
@@ -506,6 +562,8 @@ WARNING: When ProActive server is stopped (without removing the created infrastr
 
 ==== GCE Infrastructure
 
+*Full name:* `org.ow2.proactive.resourcemanager.nodesource.infrastructure.GCEInfrastructure`
+
 Google Compute Engine, aka GCE, delivers virtual machines running on Google's infrastructure.
 To use GCE virtual machines as computing nodes, a specific GCE Infrastructure needs to be created using the Resource Manager.
 This section describes briefly how to make it.
@@ -559,7 +617,7 @@ TIP: If all the nodes of a GoogleComputeEngine instance are removed, the instanc
 -   *nodeJarURL*: The full URL path of the _node.jar_ to download the ProActive node.jar on each new created GoogleComputeEngine instance.
         The URL needs to be accessible from the GoogleComputeEngine server.
 -   *additionalProperties*: Additional Java command properties to be added when starting each ProActive node JVM in GoogleComputeEngine instances (e.g. "-Dpropertyname=propertyvalue").
--   *nodeTimeout*: The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node is considered as lost.
+-   *nodeTimeout*: The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost.
 
 Using this configuration, you can start a Resource Manager and a Scheduler using the */bin/proactive-server* script.
 A GoogleComputeEngine NodeSource can now be added using the *Create Node Source* panel in the Resource Manager or the command line interface:
@@ -569,6 +627,8 @@ A GoogleComputeEngine NodeSource can now be added using the *Create Node Source*
 WARNING: When ProActive server is stopped, GoogleComputeEngine instances will be automatically deleted. And when ProActive server is restarted, the infrastructure will be recovered as per the previous settings. The required GoogleComputeEngine instances will be re-created and re-configured.
 
 ==== Azure Infrastructure
+
+*Full name:* `org.ow2.proactive.resourcemanager.nodesource.infrastructure.AzureInfrastructure`
 
 The Resource Manager allows to deploy ProActive nodes on the Microsoft Azure cloud. This infrastructure will create and manage virtual machines (VMs) with your custom Azure image and host ProActive nodes on them. In this section we will guide you through the requirements and configuration needed to setup an Azure infrastructure.
 
@@ -624,6 +684,8 @@ The next four parameters are optional, and apply to advanced Azure endpoint conf
 The Azure infrastructure offers a simple interface to easily create ProActive nodes on Azure. If your project requires a dynamic and customizable set of Azure VMs, you can opt for an <<_azure_scale_set_infrastructure>>.
 
 ==== Azure Scale Set Infrastructure
+
+*Full name:* `org.ow2.proactive.resourcemanager.nodesource.infrastructure.AzureVMScaleSetInfrastructure`
 
 We provide a highly customizable infrastructure to deploy ProActive nodes using an https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview[Azure Scale Set]. This infrastructure will allow you to automatically adjust the number of deployed virtual machines (VM) in response to the current workload, and according to your configured parameters, e.g. min/max number of nodes, number of nodes per VM, or minimal up-time. Auto-scaling will help you increase your processing capacity during peak computation periods, while keeping your expenses low during less intensive or idle periods.
 
@@ -719,22 +781,20 @@ As you can see, these parameters provide a lot of flexibility to configure your 
 
 ==== Load Sharing Facility (LSF) Infrastructure
 
+*Full name:* `org.ow2.proactive.resourcemanager.nodesource.infrastructure.LSFInfrastructure`
+
 This infrastructure knows how to acquire nodes from LSF by submitting a
 corresponding job. It will be submitted through SSH from the RM to the
 LSF server. This is the static version of the LSF infrastructure, for a more dynamic mechanism, as described in <<_deploy_via_other_schedulers>>, use the <<_native_scheduler_infrastructure>> instead.
 
-    $ PROACTIVE_HOME/bin/proactive-client --createns lsf -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.LSFInfrastructure rmURL javaPath SSHOptions schedulingPath javaOptions maxNodes nodeTimeout LSFServer RMCredentialsPath bsubOptions
+    $ PROACTIVE_HOME/bin/proactive-client --createns lsf -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.LSFInfrastructure javaPath SSHOptions schedulingPath javaOptions maxNodes nodeTimeout LSFServer RMCredentialsPath bsubOptions
 
 where:
-
--   **RMURL** - URL of the Resource Manager from the LSF nodes point of
-  view - this is the URL the nodes will try to lookup when attempting
-  to register to the RM after their creation.
 
 -   **javaPath** - path to the java executable on the remote hosts (ie
   the LSF slaves).
 
--   **SSH Options** - Options you can pass to the SSHClient executable (
+-   **sshOptions** - Options you can pass to the SSHClient executable (
   -l inria to specify the user for instance )
 
 -   **schedulingPath** - path to the Scheduling/RM installation
@@ -751,39 +811,36 @@ where:
   resources to come up for a very long time as the request would be
   queued until satisfiable.
 
--   **Node Time Out** - The length in ms after which one a node is not
-  expected anymore.
+-   **nodeTimeOut** - The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost.
 
--   **Server Name** - URL of the LSF server, which is responsible for
+-   **serverName** - URL of the LSF server, which is responsible for
   acquiring LSF nodes. This server will be contacted by the Resource
   Manager through an SSH connection.
 
--   **RM Credentials Path** - Encrypted credentials file, as created by
+-   **rmCredentialsPath** - Encrypted credentials file, as created by
   the create-cred[.bat] utility. These credentials will be used by the
   nodes to authenticate on the Resource Manager.
 
--   **Submit Job Opt** - Options for the bsub command client when
+-   **submitJobOpt** - Options for the bsub command client when
   acquiring nodes on the LSF master. Default value should be enough in
   most cases, if not, refer to the documentation of the LSF cluster.
 
 ==== Portable Batch System (PBS) Infrastructure
 
+*Full name:* `org.ow2.proactive.resourcemanager.nodesource.infrastructure.PBSInfrastructure`
+
 This infrastructure knows how to acquire nodes from PBS (i.e. Torque) by
 submitting a corresponding job. It will be submitted through SSH from
 the RM to the PBS server. This is the static version of the PBS infrastructure, for a more dynamic mechanism, as described in <<_deploy_via_other_schedulers>>, use the <<_native_scheduler_infrastructure>> instead.
 
-    $ PROACTIVE_HOME/bin/proactive-client --createns pbs -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.PBSInfrastructure rmURL javaPath SSHOptions schedulingPath javaOptions maxNodes nodeTimeout PBSServer RMCredentialsPath qsubOptions
+    $ PROACTIVE_HOME/bin/proactive-client --createns pbs -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.PBSInfrastructure javaPath SSHOptions schedulingPath javaOptions maxNodes nodeTimeout PBSServer RMCredentialsPath qsubOptions
 
 where:
-
--   **RMURL** - URL of the Resource Manager from the PBS nodes point of
-    view - this is the URL the nodes will try to lookup when attempting
-    to register to the RM after their creation.
 
 -   **javaPath** - path to the java executable on the remote hosts (ie
     the PBS slaves).
 
--   **SSH Options** - Options you can pass to the SSHClient executable (
+-   **sshOptions** - Options you can pass to the SSHClient executable (
     -l inria to specify the user for instance )
 
 -   **schedulingPath** - path to the Scheduling/RM installation
@@ -800,33 +857,37 @@ where:
     resources to come up for a very long time as the request would be
     queued until satisfiable.
 
--   **Node Time Out** - The length in ms after which one a node is not
-    expected anymore.
+-   **nodeTimeOut** - The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost.
 
--   **Server Name** - URL of the PBS server, which is responsible for
+-   **serverName** - URL of the PBS server, which is responsible for
     acquiring PBS nodes. This server will be contacted by the Resource
     Manager through an SSH connection.
 
--   **RM Credentials Path** - Encrypted credentials file, as created by
+-   **rmCredentialsPath** - Encrypted credentials file, as created by
     the create-cred[.bat] utility. These credentials will be used by the
     nodes to authenticate on the Resource Manager.
 
--   **Submit Job Opt** - Options for the qsub command client when
+-   **submitJobOpt** - Options for the qsub command client when
     acquiring nodes on the PBS master. Default value should be enough in
     most cases, if not, refer to the documentation of the PBS cluster.
 
 
 ==== Generic Batch Job Infrastructure
 
+*Full name:* `org.ow2.proactive.resourcemanager.nodesource.infrastructure.GenericBatchJobInfrastructure`
+
 *Generic Batch Job infrastructure* provides users with the capability to
 add the support of new batch job scheduler by providing a class
 extending
 org.ow2.proactive.resourcemanager.nodesource.infrastructure.BatchJobInfrastructure.
-Once you have written that implementation, you can create a node source
+
+This is the static version of the Generic Batch Job infrastructure, for a more dynamic mechanism, as described in <<_deploy_via_other_schedulers>>, use the <<_native_scheduler_infrastructure>> instead (generic also).
+
+Once you have written the implementation of the desired class, you can create a node source
 which makes usage of this infrastructure by running the following
 command:
 
-    $ PROACTIVE_HOME/bin/proactive-client --createns pbs -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.GenericBatchJobInfrastructure rmURL javaPath SSHOptions schedulingPath javaOptions maxNodes nodeTimeout BatchJobServer RMCredentialsPath subOptions implementationName implementationPath
+    $ PROACTIVE_HOME/bin/proactive-client --createns pbs -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.GenericBatchJobInfrastructure javaPath SSHOptions schedulingPath javaOptions maxNodes nodeTimeout BatchJobServer RMCredentialsPath subOptions implementationClassName implementationFile
 
 where:
 
@@ -837,7 +898,7 @@ where:
 -   **javaPath** - path to the java executable on the remote hosts (ie
     the slaves of the batch job scheduler).
 
--   **SSH Options** - Options you can pass to the SSHClient executable (
+-   **sshOptions** - Options you can pass to the SSHClient executable (
     -l inria to specify the user for instance )
 
 -   **schedulingPath** - path to the Scheduling/RM installation
@@ -849,26 +910,25 @@ where:
 -   **maxNodes** - maximum number of nodes this infrastructure can
     simultaneously hold from the batch job scheduler server.
 
--   **Node Time Out** - The length in ms after which one a node is not
-    expected anymore.
+-   **nodeTimeOut** - The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost.
 
--   **Server Name** - URL of the batch job scheduler server, which is
+-   **serverName** - URL of the batch job scheduler server, which is
     responsible for acquiring nodes. This server will be contacted by
     the Resource Manager through an SSH connection.
 
--   **RM Credentials Path** - Encrypted credentials file, as created by
+-   **rmCredentialsPath** - Encrypted credentials file, as created by
     the create-cred[.bat] utility. These credentials will be used by the
     nodes to authenticate on the Resource Manager.
 
--   **Submit Job Opt** - Options for the submit command client when
+-   **submitJobOpt** - Options for the submit command client when
     acquiring nodes on the batch job scheduler master.
 
--   **implementationName** - Fully qualified name of the implementation
+-   **implementationClassName** - Fully qualified name of the implementation
     of
     org.ow2.proactive.resourcemanager.nodesource.infrastructure.BatchJobInfrastructure
     provided by the end user.
 
--   **implementationPath** - The absolute path of the implementation of
+-   **implementationFile** - The absolute path of the implementation of
     org.ow2.proactive.resourcemanager.nodesource.infrastructure.BatchJobInfrastructure.
 
 ==== Native Scheduler Infrastructure
