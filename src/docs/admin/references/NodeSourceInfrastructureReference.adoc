@@ -801,7 +801,7 @@ https://gist.githubusercontent.com/activeeon-bot/fe7c6a89e248f7363f02fa75a641dd3
 * CentOS: `yum` based script, includes installation of Python3 and R.
 +
 https://gist.githubusercontent.com/activeeon-bot/94cc622e7640832682f172e23256cd3f/raw
-+
+
 [NOTE]
 ====
 Note that this user custom script will be run as root/admin user.
