@@ -761,7 +761,7 @@ You can opt to place this file in `$PROACTIVE_HOME/config/authentication/azure.c
 `marketplace#OpenLogic:CentOS:7.5` +
 `marketplace#OpenLogic:CentOS:7.5:latest` +
 `marketplace#credativ:Debian:8:8.0.201901221`
-* *_Shared Image Gallery:_* The prefix `gallery#` allows you to use images from an existing Azure https://docs.microsoft.com/en-us/azure/virtual-machines/linux/shared-image-galleries[Shared Image Gallery]. Simply provide the name of your Resource Group, your Gallery and your Image as `resourceGroup:gallery:image`. Optionally, you can specify a version too (`:version`); if no version is given, the latest image version will be used by ProActive. For example: +
+* *_Shared Image Gallery:_* The prefix `gallery#` allows you to use images from an existing Azure https://docs.microsoft.com/en-us/azure/virtual-machines/linux/shared-image-galleries[Shared Image Gallery]. Append the name of your Resource Group, your Gallery and your Image as `resourceGroup:gallery:image`. Optionally, you can specify a version too (`:version`); if no version is given, the latest image version will be used by ProActive. For example: +
 `gallery#proactive-rg:activeeon-gallery:my-image` +
 `gallery#myRG:myGallery:myImage:1.0`
 * *_Custom Image:_* ProActive allows you to use a https://docs.microsoft.com/en-us/azure/virtual-machines/linux/tutorial-custom-images[custom image] to create Scale Sets. Use the prefix `custom#` followed by the resource group and the custom image name. For example: +
