@@ -735,20 +735,37 @@ You can opt to place this file in `$PROACTIVE_HOME/config/authentication/azure.c
 - *maxNodesPerVm:* Define the number of ProActive worker nodes to be deployed per VM. As a guideline, you might want to allocate one node per VM core, but you can set the number to better match your processing requirements. Default value is _2_.
 - *machineType:* Define the type of Azure VM that you want to use for your Scale Set. You can use any size from Azure's Standard Tier, provided you have enough quota and budget to launch them. The default value is _Standard_D1_v2_, you should provide a valid type using a similar syntax (case insensitive). Azure provides an extensive list of VM sizes for https://docs.microsoft.com/en-us/azure/virtual-machines/linux/sizes[Linux] and https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes[Windows] VMs. If you want to know the available sizes for a specific region or subscription you can use https://docs.microsoft.com/en-us/cli/azure/vm?view=azure-cli-latest#az-vm-list-sizes[Azure CLI command] `az vm list-sizes -l {your location}`.
 - *osType:* A choice between _linux_ and _windows_. Default value is _linux_.
-- *Image:* You can either provide a custom Azure image, or select one of the available standard ones. To provide a custom image use the format _{resourceGroupName}:{imageName}_. If you prefer to use a generic image, you can choose from the following lists (provided by Azure API):
+- *Image:* There are four possible ways to specify the source image for your Scale Set VMs: _known images_, Azure Marketplace, Shared Image Gallery and Custom images. We describe each of them below.
+* *Syntax summary*
+** Known image: `MY_KNOWN_IMAGE`
+** Marketplace: `marketplace#publisher:offer:sku[:version]`
+** Shared Image Gallery: `gallery#resourceGroup:gallery:image[:version]`
+** Custom image: `custom#resourceGroup:customImage`
+* *_Known image._* Refers to commonly used images as defined in Azure's SDK. Accepted values are simple strings, as listed in the following table:
+
 +
 |===
 |https://github.com/Azure/azure-libraries-for-java/blob/master/azure-mgmt-compute/src/main/java/com/microsoft/azure/management/compute/KnownLinuxVirtualMachineImage.java[Linux] |https://github.com/Azure/azure-libraries-for-java/blob/master/azure-mgmt-compute/src/main/java/com/microsoft/azure/management/compute/KnownWindowsVirtualMachineImage.java[Windows]
 
-a|- UBUNTU_SERVER_14_04_LTS
-  - UBUNTU_SERVER_16_04_LTS
-  - DEBIAN_8 +*+ _default value_ +*+
-  - CENTOS_7_2
+|UBUNTU_SERVER_14_04_LTS +
+  UBUNTU_SERVER_16_04_LTS +
+  DEBIAN_8 +*+ _default value_ +*+ +
+  CENTOS_7_2
 
-a|- WINDOWS_SERVER_2008_R2_SP1
-  - WINDOWS_SERVER_2012_DATACENTER
-  - WINDOWS_SERVER_2012_R2_DATACENTER
+|WINDOWS_SERVER_2008_R2_SP1 +
+  WINDOWS_SERVER_2012_DATACENTER +
+  WINDOWS_SERVER_2012_R2_DATACENTER
 |===
+
+* *_Azure Marketplace._* If you want to choose a particular image from Azure's Marketplace, use the prefix `marketplace#` plus the image's https://docs.microsoft.com/en-us/azure/virtual-machines/linux/cli-ps-findimage[URN] in the form `publisher:offer:sku[:version]`. Similarly to Azure CLI or PowerShell, ProActive allows you to specify a version of the image (with `:version`), or it will use the latest one if the version is omitted. Examples of valid inputs are: +
+`marketplace#OpenLogic:CentOS:7.5` +
+`marketplace#OpenLogic:CentOS:7.5:latest` +
+`marketplace#credativ:Debian:8:8.0.201901221`
+* *_Shared Image Gallery:_* The prefix `gallery#` allows you to use images from an existing Azure https://docs.microsoft.com/en-us/azure/virtual-machines/linux/shared-image-galleries[Shared Image Gallery]. Append the name of your Resource Group, your Gallery and your Image as `resourceGroup:gallery:image`. Optionally, you can specify a version too (`:version`); if no version is given, the latest image version will be used by ProActive. For example: +
+`gallery#proactive-rg:activeeon-gallery:my-image` +
+`gallery#myRG:myGallery:myImage:1.0`
+* *_Custom Image:_* ProActive allows you to use a https://docs.microsoft.com/en-us/azure/virtual-machines/linux/tutorial-custom-images[custom image] to create Scale Sets. Use the prefix `custom#` followed by the resource group and the custom image name. For example: +
+`custom#proactive-rg:custom-ubuntu`
 
 - *sshPublicKey:* Optional parameter. In case of Linux, use it to provide a public RSA key to connect to your VMs via SSH. In case of Windows, use it to define a password to connect to your VMs via Remote Desktop. In both cases, the default user is _activeeon_. If the field is left blank a password will be automatically generated and written in the Scheduler log.
 - *targetNetwork:* Optional parameter. Use it to define a specific Azure Virtual Network subnet for your Scale Set. If defined, the format should be _{resourceGroupName}:{network}:{subnet}_, e.g. _myGroup:myVNet:default_. If left unset, a new Virtual Network and subnet will be created inside the Resource Group.
@@ -758,10 +775,33 @@ a|- WINDOWS_SERVER_2008_R2_SP1
 - *deploymentTimeout:* Delay before the Resource Manager can declare a deploying node as lost. To be set in _minutes_. You can set it to a reasonable time after which you expect the node to be running or marked as lost otherwise (e.g. _10_ minutes). Default value is _120_.
 - *cleaningDelay:* Periodical cleaning delay, expressed in _seconds_. Every _X_ seconds the Resource Manager will remove from the Scale Set any VM that has been identified as idle. Default value is _60_. Note that setting a very short interval implies more frequent communication between the Resource Manager and Azure, which might impact on performance or responsiveness.
 - *externalStorageAccount:* Optional parameter. Use it if you want to define a specific location of your ProActive node.jar worker; leave blank otherwise. If provided, the format should be: _{storageAccount}:{sas_key_token}[:has_node.jar]_.
-- *linuxInternalCustomStartupScriptUrl:* If you are using Linux, provide a URL of a valid Linux bash script to configure your nodes. We strongly recommend to use the default provided script. You are free to copy the script and add custom steps, but be aware that any modification to the default script might cause the deployment to fail. We recommend to use _userCustomStartupScriptUrl_ field to add your custom configurations.
-- *windowsInternalCustomStartupScriptUrl:* If you are using Windows, provide a URL of a valid Windows PowerShell script to configure your nodes. We strongly recommend to use the default provided script. You are free to copy the script and add custom steps, but be aware that any modification to the default script might cause the deployment to fail. We recommend to use _userCustomStartupScriptUrl_ field to add your custom configurations.
-- *userCustomStartupScriptUrl:* Optional parameter. Use it to provide a URL of a valid custom script (_.sh_ for Linux, _.ps1_ for Windows) that will be called at the VMs' startup. The script is called after the default ProActive configuration and before the node application is actually executed. You can use this script, for instance, to create directories, assign permissions, or download utilities.
+- *linuxInternalCustomStartupScriptUrl:* If you are using Linux, provide a URL of a valid Linux bash script to configure your nodes. Otherwise, the parameter can be left empty.  We strongly recommend to use one of our default scripts listed below. You are free to copy the script and add custom steps, but be aware that any modification to the default script might cause the deployment to fail. Our startup scripts cover the minimum requirements to start ProActive; additional script engines like R can be installed through a _userCustomStartupScriptUrl_, where you can also add your custom configuration steps. +
 +
+Sample scripts (might require some customization for specific versions or OS):
+
+* Debian 8 - `apt` based script, uses `systemd` for launching the node service. Default value.
++
+https://gist.githubusercontent.com/activeeon-bot/1d4194fefff12cc9c5046c2455bd457b/raw
+* CentOS 7 - `yum` based script, uses `systemd` for launching the node service.
++
+https://gist.githubusercontent.com/activeeon-bot/c6f303c2c832fa40691874ef76484e92/raw
+* CentOS 6 - `yum` based script, uses `init.d` for launching the node service.
++
+https://gist.githubusercontent.com/activeeon-bot/7d1c10ede4599a78ce95e0c9201f9746/raw
+
+- *windowsInternalCustomStartupScriptUrl:* If you are using Windows, provide a URL of a valid Windows PowerShell script to configure your nodes. Otherwise, the parameter can be left empty. We strongly recommend to our default script (see link below). You are free to copy the script and add custom steps, but be aware that any modification to the default script might cause the deployment to fail. Our startup scripts cover the minimum requirements to start ProActive; additional script engines like R can be installed through a _userCustomStartupScriptUrl_, where you can also add your custom configuration steps.
+* Windows script - PowerShell script, compatible with Windows Server 2012 or later.
++
+https://gist.githubusercontent.com/activeeon-bot/100ea57c89d6a0975f051a062187bf51/raw
+
+- *userCustomStartupScriptUrl:* Optional parameter. Use it to provide a URL of a valid custom script (_.sh_ for Linux, _.ps1_ for Windows) that will be called at the VMs' startup. The script is called after the default ProActive configuration and before the node application is actually executed. You can use this script, for instance, to create directories, assign permissions, or download utilities. As a reference, we provide some sample user scripts:
+* Debian: `apt` based script, includes installation of Python3, R, or SciLab.
++
+https://gist.githubusercontent.com/activeeon-bot/fe7c6a89e248f7363f02fa75a641dd39/raw
+* CentOS: `yum` based script, includes installation of Python3 and R.
++
+https://gist.githubusercontent.com/activeeon-bot/94cc622e7640832682f172e23256cd3f/raw
+
 [NOTE]
 ====
 Note that this user custom script will be run as root/admin user.
