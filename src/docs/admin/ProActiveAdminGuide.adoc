@@ -1077,7 +1077,7 @@ Dynamic deployment of ProActive Nodes on a cluster to execute ProActive Tasks is
 
  * The `Native Scheduler Scheduling Policy`: a <<_glossary_scheduling_policy,*Scheduling Policy*>> which allows the execution of ProActive Tasks on ProActive Nodes provisioned by the Native Scheduler Policy.
 
-The provisioning of ProActive Nodes is controlled by a specific <<_glossary_generic_information>> `"NS"` which can be defined at _Task_ or _Job_ level.
+The provisioning of ProActive Nodes is controlled by a specific <<_glossary_generic_information,*Generic Information*>> `"NS"` which can be defined at _Task_ or _Job_ level.
 
 When this generic information is configured for a _Task_, a ProActive Node will be dynamically deployed on the cluster to execute the Task. This ProActive Node will be associated with the Task and will only accept this Task execution. When the Task terminates, the ProActive Node will also be terminated.
 
