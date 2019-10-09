@@ -359,7 +359,7 @@ Set the following variables :
 |===
 | *Variable name* | *Description* | *Type*
 | `DOCKER_IMAGE`
-| the Docker image that contains all the dependencies and libraries needed for the model execution.
+| The Docker image that contains all the dependencies and libraries needed for the model execution.
 | String (default="activeeon/dlm3")
 | `INSTANCE_NAME`
 | The name of the service that will be deployed.
@@ -469,7 +469,7 @@ There is two ways to call the web service to score input data using MLOS:
 
 *Via Swagger UI*
 
-Open the swagger UI.
+Open the Swagger UI.
 
 Open the get_token` operation and get an api_token by entering your username (default value is `user`).
 
@@ -532,7 +532,7 @@ Add the `model_as_a_service` bucket.
 
 Drag and drop the `Model_Service_Actions` task from the bucket.
 
-Execute the Workflow and set the different workflow variables as following:
+Execute the Workflow and set the different workflow variables as follows:
 
 .Model_Service_Actions variables
 [cols="2,5,2"]
