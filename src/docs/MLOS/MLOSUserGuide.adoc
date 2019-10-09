@@ -569,12 +569,12 @@ In the following, we describe in depth the content of each element :
 
 *PYTHON_ENTRYPOINT file* :  The following python script refers to the ml_service.py file stored in the catalog under the `model_as_a_service_resources` bucket.
 This script defines the different functions needed to deploy the model, score data and generate tokens.
-It is possible to edit this script to make it more customized to your model. The entry script must take into consideration:
+It is possible to edit this script to make it more customized to your model. The entry script must take into consideration the:
 
-* the list of users that are allowed to consume the service endpoints
-* the format of the model expected by the deployment and the prediction functions
-* the format of the incoming data
-* the data format expected by the model
+* List of users that are allowed to consume the service endpoints
+* Format of the model expected by the deployment and the prediction functions
+* Format of the incoming data
+* Data format expected by the model
 
 ml_service.py [code source]
 [source,python]
