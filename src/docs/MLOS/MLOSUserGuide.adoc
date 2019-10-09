@@ -378,12 +378,12 @@ image::MAS_Model_Servie_PCA.png[500,500,align=center]
 
 Open the Endpoint and concatenate the base url `api/ui`to your endpoint.
 
-Through this Swagger api, you are now able to :
+Through this Swagger API, you are now able to :
 
-** access the different defined endpoints
-** ask for an api_token
-** deploy a model
-** score some data based on the deployed model
+** Access the different defined endpoints
+** Ask for an api_token
+** Deploy a model
+** Score some data based on the deployed model
 
 Each generated endpoint will be explained in the next subsections.
 
@@ -458,7 +458,7 @@ Execute the Workflow and set the different workflow variables as follows:
 | The URL of the model that need to be deployed.
 | URL
 | `SERVICE_TOKEN`
-| The api token to be able to deploy the model.
+| The api_token to be able to deploy the model.
 | String
 |===
 
@@ -500,7 +500,7 @@ Execute the Workflow and set the different workflow variables as follows:
 | The base path to access the prediction endpoint.
 | String (default="/api/predict")
 | `SERVICE_TOKEN`
-| The api token to be able to deploy the model.
+| The api_token to be able to deploy the model.
 | String
 | `INPUT_DATA`
 | Entry data that needs to be scored by the deployed model.
