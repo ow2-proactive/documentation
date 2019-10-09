@@ -397,7 +397,7 @@ Add the `model_as_a_service` bucket.
 
 Drag and drop the `Model_Service_Start` task from the bucket.
 
-Execute the Workflow by setting the different workflow variables as follows:
+Execute the Workflow by setting the different workflow's variables as follows:
 
 .Model_Service_Start variables
 [cols="2,5,2"]
@@ -442,7 +442,7 @@ Add the `model_as_a_service` bucket.
 
 Drag and drop the `Deploy_Model` task from the bucket.
 
-Execute the Workflow and set the different workflow variables as follows:
+Execute the Workflow and set the different workflow's variables as follows:
 
 .Deploy_Model variables
 [cols="2,5,2"]
@@ -487,7 +487,7 @@ Add the `model_as_a_service` bucket.
 
 Drag and drop the `Call_Prediction_Service` task from the bucket.
 
-Execute the Workflow and set the different workflow variables as follows:
+Execute the Workflow and set the different workflow's variables as follows:
 
 .Call_Prediction_Service variables
 [cols="2,5,2"]
@@ -532,7 +532,7 @@ Add the `model_as_a_service` bucket.
 
 Drag and drop the `Model_Service_Actions` task from the bucket.
 
-Execute the Workflow and set the different workflow variables as follows:
+Execute the Workflow and set the different workflow's variables as follows:
 
 .Model_Service_Actions variables
 [cols="2,5,2"]
@@ -850,7 +850,7 @@ The job search panel allows to select multi-value filters for the following job 
 - _Job State(s)_: You can specify the state of jobs you are looking for. The possible job states are: `Pending`, `Running`, `Stalled`, `Paused`, `In_Error`, `Finished`, `Canceled`, `Failed`, and `Killed`. For more information about job states, check the documentation link:../user/ProActiveUserGuide.html#_states[here.] Multiple values are accepted as well.
 - _User(s)_: This filter allows to either select only the jobs of the connected/current user or to specify a list of users that have executed the jobs. By default, the toggle filter is activated to select only the user jobs.
 - _Submission Time_: From the dropdown list, users can select a submission time frame (e.g., yesterday, last week, this month, etc.), or choose custom dates.
-- _Variables and results_: It is possible to choose whether to display or not the workflow variables and results. When deactivated, the charts related to variables and results evolution/correlation will not be displayed in the dashboard.
+- _Variables and results_: It is possible to choose whether to display or not the workflow's variables and results. When deactivated, the charts related to variables and results evolution/correlation will not be displayed in the dashboard.
 
 More advanced search options (_highlighted in advanced search hints_) could be used to provide filter values such as _wildcards_. For example, names that start with a specific string value are selected using `value*`. Other supported expressions are: `_\*value_` for _Ends with_, `*value*` for _Contains_, `!value` for _Not equals_, and `!\*value*` for _Not contains_.
 
