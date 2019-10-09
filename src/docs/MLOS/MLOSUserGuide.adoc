@@ -331,24 +331,493 @@ The following workflows represent some mathematical functions that can be optimi
 
 *Himmelblau_Function:* is a multi-modal function, used to test the performance of optimization algorithms.
 
-//.Himmelblau_Function_Workflow variables
-//[cols="2,5,2"]
-//|===
-//| *Variable name* | *Description* | *Type*
-//| `DOCKER_ENABLED`
-//|If True,  the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-//| Boolean (default=True)
-//| `DOCKER_IMAGE`
-//| Specifies the docker image that will be used to execute the task.
-//| String (default="activeeon/dlm3")
-//| `INPUT_VARIABLES`
-//| Specifies the x and y values.
-//| JSON format (default={"x": 3.5976705887960527, "y": -1.8471754188451843})
-//| `TOKEN`
-//|  Specifies the id for the tested parameters.
-//| String (default=-1)
-//|===
+== Model as a Service
 
+Using MLOS, you can deploy any machine learning model as a web service in any compute resource deployed on Proactive.
+
+The following deployment steps are similar wherever you need to deploy your model:
+
+. <<Start a Model Service>>
+. <<Deploy a Model>>
+. <<Call the service for predictions>>
+. <<Delete the service>>
+
+=== Start a Model Service
+
+There is two ways to start a web service (i.e. where you will deploy, update and call your model) using MLOS:
+
+*Via Cloud Automation portal*
+
+Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Cloud Automation Portal].
+
+Search for `Model_Service` in Services Workflows List.
+
+Set the following variables :
+
+.Model_Service variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_IMAGE`
+| the Docker image that contains all the dependencies and libraries needed for the model execution.
+| String (default="activeeon/dlm3")
+| `INSTANCE_NAME`
+| the name of the service that will be deployed.
+| String (default="model-server")
+| `YAML_FILE`
+| A YAML file that describes the OpenAPI Specification (known as Swagger Spec) of the service. This file should be stored in the catalog under the `model_as_service_resources` bucket. This file should be stored in the Catalog. More information about the structure of this file can be found in the section <<Customize the Service>>.
+| String (default="ml_service-api").
+| `PYTHON_ENTRYPOINT`
+| This entry script starts the service and defines the different functions to deploy the model, score the requests by using the model, and return the results. This specific script is specific to your model. This file should be stored in the Catalog. More information about this file can be found in the <<Customize the Service>> section.
+| String (default="ml_service").
+|===
+
+Click on `Execute Action` and follow the progress of the service creation.
+
+image::MAS_Model_Servie_PCA.png[500,500,align=center]
+
+Open the Endpoint and concatenate the base url `api/ui`to your endpoint.
+
+Through this Swagger api, you are now able to :
+
+** access the different defined endpoints
+** ask for an api_token
+** deploy a model
+** score some data based on the deployed model
+
+Each generated endpoint will be explained in the next subsections.
+
+*Via Studio portal*
+
+Open the link:https://try.activeeon.com/Studio[Studio Portal].
+
+Create a new workflow.
+
+Add the `model_as_a_service` bucket.
+
+Drag and drop the `Model_Service_Start` task from the bucket.
+
+Execute the Workflow by setting the different workflow variables as following:
+
+.Model_Service_Start variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_IMAGE`
+| the Docker image that contains all the dependencies and libraries needed for the model execution.
+| String (default="activeeon/dlm3")
+| `INSTANCE_NAME`
+| the name of the service that will be deployed.
+| String (default="model-server")
+| `YAML_FILE`
+| A YAML file that describes the OpenAPI Specification (known as Swagger Spec) of the service. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about the structure of this file can be found in the section <<Customize the Service>>.
+| String (default="ml_service-api").
+| `PYTHON_ENTRYPOINT`
+| This entry script starts the service and defines the different functions to deploy the model, score the requests by using the model, and return the results. This specific script is specific to your model. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about this file can be found in the <<Customize the Service>> section.
+| String (default="ml_service").
+|===
+
+
+=== Deploy a Model
+
+There is two ways to deploy a model in the started model_server (i.e. where you will deploy, update and call your model) using MLOS:
+
+*Via Swagger UI*
+
+Open the swagger UI.
+
+Open the `get_token` operation and get an api_token by entering your username (default value is `user`).
+
+Open the `deploy` operation and set the provided token and upload the model that need to be deployed.
+
+image::MAS_Deploy_Swagger.png[align=center]
+
+* *via Studio portal*
+
+Open the link:https://try.activeeon.com/Studio[Studio Portal].
+
+Create a new workflow.
+
+Add the `model_as_a_service` bucket.
+
+Drag and drop the `Deploy_Model` task from the bucket.
+
+Execute the Workflow and set the different workflow variables as following:
+
+.Deploy_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DEPLOY_MODEL_ENDPOINT`
+| the endpoint of the started service.
+| URL
+| `API_EXTENSION`
+| the base path to access the deployment endpoint.
+| String (default="/api/deploy")
+| `MODEL_URL`
+| the URL of the model that need to be deployed.
+| URL
+| `SERVICE_TOKEN`
+| the api token to be able to deploy the model.
+| String
+|===
+
+
+=== Call the service for predictions
+
+There is two ways to call the web service to score input data using MLOS:
+
+*Via Swagger UI*
+
+Open the swagger UI.
+
+Open the get_token` operation and get an api_token by entering your username (default value is `user`).
+
+Open the `predict` operation and set the provided token and the data that you need to score.
+
+image::MAS_Predict_Swagger.png[align=center]
+
+* *via Studio portal*
+
+Open the link:https://try.activeeon.com/Studio[Studio Portal].
+
+Create a new workflow.
+
+Add the `model_as_a_service` bucket.
+
+Drag and drop the `Call_Prediction_Service` task from the bucket.
+
+Execute the Workflow and set the different workflow variables as following:
+
+.Call_Prediction_Service variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `PREDICT_MODEL_ENDPOINT`
+| the endpoint of the started service.
+| URL
+| `PREDICT_EXTENSION`
+| the base path to access the prediction endpoint.
+| String (default="/api/predict")
+| `SERVICE_TOKEN`
+| the api token to be able to deploy the model.
+| String
+| `INPUT_DATA`
+| entry data that needs to be scored by the deployed model.
+| JSON
+| `LABEL_COLUMN`
+| need to be set if data is labeled.
+| String (default='class')
+|===
+
+=== Delete the service
+
+There is two ways to delete a web service (i.e. where you will deploy, update and call your model) using MLOS:
+
+*Via Cloud Automation Portal*
+
+Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Cloud Automation Portal].
+
+Set the action `Finish_Service` and click on execute.
+
+image::MAS_Delete_Service.png[align=center]
+
+*Via Studio portal*
+
+Open the link:https://try.activeeon.com/Studio[Studio Portal].
+
+Create a new workflow.
+
+Add the `model_as_a_service` bucket.
+
+Drag and drop the `Model_Service_Actions` task from the bucket.
+
+Execute the Workflow and set the different workflow variables as following:
+
+.Model_Service_Actions variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `ACTION`
+| The action that will be processed regarding the service status.
+| List (Pause_Model_Service, Resume_Model_Service, Finish_Model_Service) (default="Finish_Model_Service")
+| `INSTANCE_NAME`
+| the service name that need to be deleted, resumed or paused.
+| String (default="model-server-${PA_JOB_ID}")
+| `INSTANCE_ID`
+| the service instance id
+| String
+|===
+
+=== Deployment Pipeline Example
+
+You can connect the different tasks in a single workflow to get the full pipeline from the model training step to the model deployment and consumption steps. Each task will propagate the acquired variables to the connected tasks.
+The following workflow example is available on the `model_as_a_service` bucket under the name of `Deploy_And_Call_IRIS_Flower_Classifier_Model`.
+This example trains an Iris Flower Classifier, starts a web service where the trained model is deployed and input data is scored by consuming the endpoints exposed by the model_service.
+
+image::MAS_IRIS_Workflow_Example.png[align=center]
+
+==== Customize the Service
+
+It is possible to customize the model as a service defined by default and adapt it to your specific needs. Indeed, you can customize the following elements according to your needs:
+
+* The file specified in the PYTHON_ENTRYPOINT variable
+* The file specified in the YAML_FILE variable
+* The docker image specified in the DOCKER_IMAGE variable
+
+In the following, we describe in depth the content of each element :
+
+*PYTHON_ENTRYPOINT file* :  The following python script refers to the ml_service.py file stored in the catalog under the `model_as_a_service_resources` bucket.
+This script defines the different functions needed to deploy the model, score data and generate tokens.
+It is possible to edit this script to make it more customized to your model. The entry script must take into consideration:
+
+* the list of users that are allowed to consume the service endpoints
+* the format of the model expected by the deployment and the prediction functions
+* the format of the incoming data
+* the data format expected by the model
+
+ml_service.py [code source]
+[source,python]
+----
+#Imports # <1>
+import os, sys, bz2, uuid, pickle, json, connexion, wget
+import pandas as pd
+import numpy as np
+
+from joblib import load
+from binascii import hexlify
+
+#Models versioning configuration # <2>
+UPLOAD_MODELS_FOLDER = "model_as_a_service"
+
+# load default model
+DEFAULT_MODEL_FILE = os.path.join(UPLOAD_MODELS_FOLDER, 'final_model.pkl')
+global SERVICE_CONFIG
+
+#Token generation # <3>
+API_KEY = hexlify(os.urandom(16)).decode() # str(uuid.uuid4())
+# tokens
+TOKENS = {
+  'user'  : API_KEY
+}
+
+#Get_token function # <4>
+def get_token_api() -> str:
+  user = connexion.request.form["user"]
+  token = TOKENS.get(user)
+  if not token:
+    return "Invalid user"
+  else:
+    print('Your token is: {uid}'.format(uid=token))
+    return token
+
+#Predict functions # <5>
+def predict_api(data: str) -> str:
+  api_token = data['api_token']
+  result = ""
+  if api_token == API_KEY:
+    dataframe_json = data['dataframe_json']
+    dataframe = pd.read_json(dataframe_json, orient='values')
+    predictions = predict(dataframe)
+    result = np.array2string(predictions)
+  return json.dumps(result)
+
+def predict(dataframe):
+  global SERVICE_CONFIG
+  SERVICE_CONFIG = {
+    "model": load(DEFAULT_MODEL_FILE)
+  }
+  model = SERVICE_CONFIG['model']
+  print("model:\n", model)
+  print("dataframe:\n", dataframe)
+  predictions = model.predict(dataframe.values)
+  return predictions
+
+#Deploy functions # <6>
+def deploy_api():
+  api_token = connexion.request.form["api_token"]
+  if api_token == API_KEY:
+    modelfile = connexion.request.files['modelfile']
+    print("modelfile:\n", modelfile)
+    model_id = "final_model"
+    filename = model_id + ".pkl"
+    model_file_path = os.path.join(UPLOAD_MODELS_FOLDER, filename)
+    print("model_file_path:\n", model_file_path)
+    modelfile.save(model_file_path)
+    return "Model deployed"
+  else:
+    return "Invalid Token"
+
+def load_model(model_file_path):
+  import pickle
+  global SERVICE_CONFIG
+  SERVICE_CONFIG = {
+    "model": load(DEFAULT_MODEL_FILE)
+  }
+  model = pickle.load(open(model_file_path,'rb'))
+  SERVICE_CONFIG['model'] = model
+  print("model:\n", model)
+
+def load_yaml(yaml_url):
+  from urllib.request import urlopen
+  import ssl, os
+  context = ssl._create_unverified_context()
+  yaml_file = urlopen(yaml_url, context=context).read()
+  os.mkdir("/model_as_a_service/swagger/")
+  yaml_file_name="/model_as_a_service/swagger/ml_service_swagger.yaml"
+  yaml_file_content=yaml_file.decode('utf-8')
+  f = open(yaml_file_name, "w")
+  f.write(yaml_file_content)
+  f.close()
+
+#main function # <7>
+if __name__ == '__main__':
+  load_yaml(os.getenv('YAML_FILE'))
+  app = connexion.FlaskApp(__name__, port=9090, specification_dir='/model_as_a_service/swagger/')
+  app.add_api('ml_service_swagger.yaml', arguments={'title': 'Machine Learning Model Service'})
+  app.run()
+----
+<1> Imports the different required libraries
+<2> Defines the path of the deployed model
+<3> Generates a token for the registered users
+<4> Returns an api_token for the registered users
+<5> Generate predictions based on the deployed model
+<6> Loads the trained model and deploys it
+<7> Launches a REST service based in the Connexion Python library.
+--
+
+*YAML_FILE file* :  The following YAML script refers to the ml_service-api.yml file stored in the catalog under the `model_as_a_service_resources` bucket.
+This script defines the OpenAPI specification describing the entire API built once a model_service is started.
+You can adapt and edit this script in order to customize your service.
+
+service_ml-api.yaml [code source]
+[source,yaml]
+----
+swagger: "2.0"
+
+# <1>
+info:
+  title: "{{title}}"
+  version: "1.0.0"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+
+basePath: /api
+
+paths:
+# <2>
+  /get_token:
+    post:
+      summary: Return secret string
+      operationId: ml_service.get_token_api
+      produces:
+        - "text/plain"
+      responses:
+        200:
+          description: secret response
+          schema:
+            type: string
+      parameters:
+        - in: formData
+          name: user
+          type: string
+          required: true
+          default: "user"
+          description: Returns the token for the user.
+# <3>
+  /deploy:
+    post:
+      summary: Deploy a machine learning model.
+      operationId: ml_service.deploy_api
+      consumes:
+        - "multipart/form-data"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: prediction response
+          schema:
+            type: string
+          examples:
+            "application/json": "OK"
+      parameters:
+        - in: formData
+          name: modelfile
+          type: file
+          required: true
+          description: The machine learning model file to upload.
+        - in: formData
+          name: api_token
+          type: string
+          required: true
+          default: "376d873c859d7f9f268e1b9be883745b"
+          description: The API token to be sent to the deploy api.
+      responses:
+        200:
+          description: "Model updated"
+# <4>
+  /predict:
+    post:
+      summary: Generate predictions
+      description: Generate predictions from a given dataframe in a JSON format.
+      operationId: ml_service.predict_api
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: prediction response
+          schema:
+            type: string
+          examples:
+            "application/json": "[2 2 0]"
+      parameters:
+        - in: body
+          name: data
+          description: The data to be sent to the predict api.
+          schema:
+            type: object
+            required:
+              - dataframe_json
+              - api_token
+            properties:
+              dataframe_json:
+                type: string
+                default: "[[6.5,3.0,5.5,1.8],[6.1,3.0,4.9,1.8],[4.8,3.0,1.4,0.1]]"
+              api_token:
+                type: string
+                default: "376d873c859d7f9f268e1b9be883745b"
+----
+<1> Contains API information: title, description (optional), version, licence.
+<2> Defines the get_token endpoint calling the get_token` function defined in the entry script.
+<3> Defines the deploy endpoint calling the `deploy_api`` function defined in the entry script.
+<4> Defines the predict endpoint calling the `predict_api` function defined in the entry script.
+--
+
+*DOCKER_IMAGE name* : Choose your own image containing the different dependencies required to run your ENTRYPOINT_SCRIPT.
+Activeeon provides a pre-built image https://github.com/ow2-proactive/docker/blob/master/dlm3/Dockerfile[activeeon/dlm3] ìncluding different machine learning and deep learning libraries.
+If you need to use your own image to start the service. You need to install the following libraries in your image :
+
+[source,bash]
+----
+#install java
+apt-get update && apt-get install -y openjdk-11-jdk
+apt-get install ca-certificates-java && update-ca-certificates -f
+JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64/
+export JAVA_HOME
+apt-get clean
+
+# install python libraries
+pip install connexion[swagger-ui]# <1>
+pip install py4j# <2>
+
+#install your dependent libraries
+...
+----
+<1> _Connexion_ allows you to write an OpenAPI specification, then maps the endpoints to your Python functions.
+<2> _py4j_ enables Python programs running in a Python interpreter to dynamically access Java objects in a Java Virtual Machine.
 
 == Job Analytics
 
