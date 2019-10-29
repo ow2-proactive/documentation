@@ -340,10 +340,10 @@ Interfacing with the Web Service could be set up in different ways:
 
 - Either you provide a user identifier, deploy the model of your choice and have the Web Service available to compute the prediction and return its value.
 
-- Or you accept a payload, convert it to json data, make the prediction using MaaS and return its value.
+- Or you accept a payload, convert it to json data, calculate the prediction using MaaS and return its value.
 
-Using MaaS, you can easily deploy and use any machine learning model as a Web Service in any compute host, physical or virtual, on which there is a Proactive Node available.
-You can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and continue by deploying a Model-Service on that specific node.
+Using MaaS, you can easily deploy and use any machine learning model as a Web Service on physical or virtual compute host on which there is a Proactive Node available.
+You can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and eventually, deploy a a Model-Service on that specific node.
 
 The following deployment steps are similar wherever you need to deploy and use your model:
 
@@ -354,7 +354,7 @@ The following deployment steps are similar wherever you need to deploy and use y
 
 === Start a Model Service
 
-There are two ways to start a web service (i.e. where you will deploy, update and call your model) using MLOS:
+There are two ways to start a web service (i.e., where you will deploy, update and call your model) using MLOS:
 
 *Via Cloud Automation portal*
 
@@ -430,7 +430,7 @@ Execute the Workflow by setting the different workflow's variables as follows:
 
 === Deploy a Model
 
-There is two ways to deploy a model in the started model_server (i.e. where you will deploy, update and call your model) using MLOS:
+There are two ways to deploy a model in the started model_server (i.e., where you will deploy, update and call your model) using MLOS:
 
 *Via Swagger UI*
 
@@ -475,7 +475,7 @@ Execute the Workflow and set the different workflow's variables as follows:
 
 === Call the service for predictions
 
-There is two ways to call the web service to score input data using MLOS:
+There are two ways to call the web service to score input data using MLOS:
 
 *Via Swagger UI*
 
@@ -522,7 +522,7 @@ Execute the Workflow and set the different workflow's variables as follows:
 
 === Delete the service
 
-There is two ways to delete a web service (i.e. where you will deploy, update and call your model) using MLOS:
+There are two ways to delete a web service (i.e., where you will deploy, update and call your model) using MLOS:
 
 *Via Cloud Automation Portal*
 
