@@ -338,9 +338,9 @@ This will be particularly useful for engineering teams that want to take advanta
 
 Interfacing with the Web Service could be set up in different ways:
 
-- Either providing a user identifier deploy the model of your choice and having the Web Service available to compute the prediction and return its value.
+- Either you provide a user identifier deploy the model of your choice and have the Web Service available to compute the prediction and return its value.
 
-- Or by accepting a payload, converting it to json data, making the prediction using MaaS and returning its value.
+- Or accept a payload, convert it to json data, make the prediction using MaaS and return its value.
 
 Using MaaS, you can easily deploy and use any machine learning model as a Web Service in any compute host, physical or virtual, on which there is a Proactive Node available.
 You can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and continue by deploying a Model-Service on that specific node.
