@@ -331,11 +331,21 @@ The following workflows represent some mathematical functions that can be optimi
 
 *Himmelblau_Function:* is a multi-modal function, used to test the performance of optimization algorithms.
 
-== Model as a Service
+== Model as a Service (MaaS)
 
-Using MLOS, you can deploy any machine learning model as a web service in any compute resource deployed on Proactive.
+Once a predictive model is built, tested and validated, you can easily use it in real world production pipelines by deploying it as a Model-Service.
+This will be particularly useful for engineering teams that want to take advantage of this model.
 
-The following deployment steps are similar wherever you need to deploy your model:
+Interfacing with the Web Service could be setup in different way:
+
+- Either providing a user identifier deploy the model of your choice and having the Web Service available to compute the prediction and return its value.
+
+- Or by accepting a payload, converting it to json data, making the prediction using MaaS and returning its value.
+
+Using MaaS, you can easily deploy and use any machine learning model as a Web Service in any compute host, physical or virtual, on which there is a Proactive Node available.
+You can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and continue by deploying a Model-Service on that specific node.
+
+The following deployment steps are similar wherever you need to deploy and use your model:
 
 . <<Start a Model Service>>
 . <<Deploy a Model>>
@@ -344,7 +354,7 @@ The following deployment steps are similar wherever you need to deploy your mode
 
 === Start a Model Service
 
-There is two ways to start a web service (i.e. where you will deploy, update and call your model) using MLOS:
+There are two ways to start a web service (i.e. where you will deploy, update and call your model) using MLOS:
 
 *Via Cloud Automation portal*
 
