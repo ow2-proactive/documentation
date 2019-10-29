@@ -333,10 +333,10 @@ The following workflows represent some mathematical functions that can be optimi
 
 == Model as a Service (MaaS)
 
-Once a predictive model is built, tested and validated, you can easily use it in real world production pipelines by deploying it as a Model-Service.
+Once a predictive model is built, tested and validated, you can easily use it in real world production pipelines by deploying it as a service.
 This will be particularly useful for engineering teams that want to take advantage of this model.
 
-Interfacing with the Web Service could be setup in different way:
+Interfacing with the Web Service could be set up in different ways:
 
 - Either providing a user identifier deploy the model of your choice and having the Web Service available to compute the prediction and return its value.
 
