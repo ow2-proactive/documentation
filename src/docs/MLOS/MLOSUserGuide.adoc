@@ -331,7 +331,7 @@ The following workflows represent some mathematical functions that can be optimi
 
 *Himmelblau_Function:* is a multi-modal function, used to test the performance of optimization algorithms.
 
-== Model as a Service (MaaS)
+== Machine Learning Model as a Service (ML MaaS)
 
 Once a predictive model is built, tested and validated, you can easily use it in real world production pipelines by deploying it as a service.
 This will be particularly useful for engineering teams that want to take advantage of this model.
