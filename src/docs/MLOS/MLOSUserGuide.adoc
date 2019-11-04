@@ -3044,15 +3044,15 @@ NOTE: More information about the source of this task can be found https://scikit
 | `DOCKER_ENABLED`
 |If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LABEL_COLUMN`
 | Enter the column label name.
 | String
+| `USE_NVIDIA_RAPIDS`
+| Enable NVIDIA RAPIDS support.
+| Boolean (default=False)
 |===
 
 *Usage:* It should be used after a classification, a regression or an anomaly algorithm, such as <<Support_Vector_Machines>>, <<Gaussian_Naive_Bayes>>, <<Linear_Regression>>, <<Bayesian_Ridge_Regression>>, <<Linear_Regression>>, <<Support_Vector_Regression>>, <<Isolation_Forest>>, <<One_Class_SVM>>, <<AdaBoost>>, <<CatBoost>>, <<Gradient_Boosting>>, <<Random_Forest>>, and <<XGBoost>>.
@@ -3078,15 +3078,15 @@ NOTE: More information about the source of this task can be found https://scikit
 | `DOCKER_ENABLED`
 |If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LABEL_COLUMN`
 | Enter the column label name.
 | String
+| `USE_NVIDIA_RAPIDS`
+| Enable NVIDIA RAPIDS support.
+| Boolean (default=False)
 |===
 
 *Usage:* It should be used after the task <<Train_Model>>.
