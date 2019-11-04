@@ -1247,6 +1247,140 @@ To add a post-script to a task, use:
 #%post_script(name=TASK_NAME, language=SCRIPT_LANGUAGE, [path=./POST_SCRIPT_FILE.py])
 ```
 
+==== Branch control
+
+The https://doc.activeeon.com/latest/user/ProActiveUserGuide.html#_branch[branch] control provides the ability to
+choose between two alternative task flows, with the possibility to merge back to a common one.
+
+To add a branch control to the current workflow, four specific tasks and one control condition should be added in
+accordance with the following order:
+
+1. a `branch` task,
+2. the related branching `condition` script,
+3. an `if` task that should be executed if the result of the `condition` task if `true`,
+4. an `else` task that should be executed if the result of the `condition` task if `false`,
+5. a `continuation` task that should be executed after the `if` or the `else` tasks.
+
+To add a `branch` task, you can rely on the following macro:
+
+```python
+#%branch([name=TASK_NAME], [dep=[TASK_NAME1,TASK_NAME2,...]], [generic_info=[(KEY1,VAL1), (KEY2,VALUE2),...]], [language=SCRIPT_LANGUAGE], [path=./FORK_ENV_FILE.py])
+```
+
+For the branching `condition` script, use:
+
+```python
+#%condition()
+```
+
+For an `if` task, please use:
+
+```python
+#%if([name=TASK_NAME], [generic_info=[(KEY1,VAL1),(KEY2,VALUE2),...]], [language=SCRIPT_LANGUAGE], [path=./FORK_ENV_FILE.py])
+```
+
+For an `else` task, use:
+
+```python
+#%else([name=TASK_NAME], [generic_info=[(KEY1,VAL1),(KEY2,VALUE2),...]], [language=SCRIPT_LANGUAGE], [path=./FORK_ENV_FILE.py])
+```
+
+And finally, for the `continuation` task:
+
+```python
+#%continuation([name=TASK_NAME], [generic_info=[(KEY1,VAL1),(KEY2,VALUE2),...]], [language=SCRIPT_LANGUAGE], [path=./FORK_ENV_FILE.py])
+```
+
+
+==== Loop control
+
+The https://doc.activeeon.com/latest/user/ProActiveUserGuide.html#_loop[loop] control provides the ability to repeat
+a set of tasks.
+
+To add a loop control to the current workflow, two specific tasks and one control condition should be added
+in the following order:
+
+1. a `start` task,
+2. the related looping `condition` script,
+3. a `loop` task.
+
+For a `start` task, use:
+
+```python
+#%start([name=TASK_NAME], [dep=[TASK_NAME1,TASK_NAME2,...]], [generic_info=[(KEY1,VAL1), (KEY2,VALUE2),...]], [language=SCRIPT_LANGUAGE], [path=./FORK_ENV_FILE.py])
+```
+
+For the looping `condition` script, use:
+
+```python
+#%condition()
+```
+
+For a `loop` task, please use:
+
+```python
+#%loop([name=TASK_NAME], [generic_info=[(KEY1,VAL1),(KEY2,VALUE2),...]], [language=SCRIPT_LANGUAGE], [path=./FORK_ENV_FILE.py])
+```
+
+==== Replicate control
+
+The https://doc.activeeon.com/latest/user/ProActiveUserGuide.html#_replicate[replication] allows the execution of
+multiple tasks in parallel when only one task is defined, and the number of tasks to run could change.
+
+Through the ProActive Jupyter Kernel, users can add replicate controls in two main ways, a generic and a straight
+forward way.
+
+===== Generic usage
+
+To add a replicate control to the current workflow in the generic method, three specific tasks and one control runs
+script should be added according to the following order:
+
+1. a `split` task,
+2. the related replication `runs` script,
+3. a `process` task,
+4. a `merge` task.
+
+For a `split` task, use:
+
+```python
+#%split([name=TASK_NAME], [dep=[TASK_NAME1,TASK_NAME2,...]], [generic_info=[(KEY1,VAL1), (KEY2,VALUE2),...]], [language=SCRIPT_LANGUAGE], [path=./FORK_ENV_FILE.py])
+```
+
+For the replication `runs` script, use:
+
+```python
+#%runs()
+```
+
+For a `process` task, please use:
+
+```python
+#%process([name=TASK_NAME], [generic_info=[(KEY1,VAL1),(KEY2,VALUE2),...]], [language=SCRIPT_LANGUAGE], [path=./FORK_ENV_FILE.py])
+```
+
+And finally, for a `merge` task, use:
+
+```python
+#%merge([name=TASK_NAME], [generic_info=[(KEY1,VAL1),(KEY2,VALUE2),...]], [language=SCRIPT_LANGUAGE], [path=./FORK_ENV_FILE.py])
+```
+
+===== Straight forward usage
+
+The straight forward method to add a replication is most of all useful when the parallelism that should be
+implemented is a task parallelism (the generic usage is more adapted to data parallelism).
+
+To add a replication to a task, just add the runs control script by providing the `runs` option of the `task` pragma.
+Example:
+
+```python
+#%task(name=T2,dep=[T1],runs=3)
+print("This output should be displayed 3 times ...")
+```
+
+NOTE: To construct a valid workflow, straight forward replicated tasks must have one and only one parent task and one
+child task at most. (More information about replicate validation criteria are available
+https://doc.activeeon.com/latest/user/ProActiveUserGuide.html#_replicate[here]).
+
 ==== Delete a task
 
 To delete a task from the workflow, the user should run the pragma `#%delete_task()` in the following way:
