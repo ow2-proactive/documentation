@@ -3051,7 +3051,7 @@ NOTE: More information about the source of this task can be found https://scikit
 | Enter the column label name.
 | String
 | `USE_NVIDIA_RAPIDS`
-| Enable Nvidia Rapids support.
+| Enable NVIDIA RAPIDS support.
 | Boolean (default=False)
 |===
 
@@ -3085,7 +3085,7 @@ NOTE: More information about the source of this task can be found https://scikit
 | Enter the column label name.
 | String
 | `USE_NVIDIA_RAPIDS`
-| Enable Nvidia Rapids support.
+| Enable NVIDIA RAPIDS support.
 | Boolean (default=False)
 |===
 
