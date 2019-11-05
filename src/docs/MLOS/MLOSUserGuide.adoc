@@ -1507,10 +1507,12 @@ Notice that the _.xml_ file will be saved under one of the following names:
 
 ==== Get results
 
-After the execution of a ProActive workflow, two outputs can be obtained,
+After the execution of a ProActive workflow, two outputs can be obtained:
+
 * results: values that have been saved in the
 https://doc.activeeon.com/latest/user/ProActiveUserGuide.html#_task_result[task result variable],
-* console outputs: classic outputs that have been displayed/printed
+
+* console outputs: classic outputs that have been displayed/printed.
 
 To get task results, please use the `#%get_task_result()` pragma by providing the task name, and either the job ID or
 the job name:
