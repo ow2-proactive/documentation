@@ -130,12 +130,13 @@ into
 |User permissions|config/security.java.policy-server|<<_user_permissions>>
 |LDAP configuration|config/authentication/ldap.cfg|<<_ldap>>
 
-.5+^.^|Database
+.6+^.^|Database
 |Scheduler configuration|config/scheduler/database.properties|<<Database configuration>>
 |Resource Manager configuration|config/rm/database.properties|<<Database configuration>>
 |Scheduling-api microservice|dist/war/scheduling-api/WEB-INF/classes/application.properties|<<Database configuration>>
 |Job-planner microservice|dist/war/job-planner/WEB-INF/classes/application.properties|<<Database configuration>>
 |Catalog microservice|dist/war/catalog/WEB-INF/classes/application.properties|<<Database configuration>>
+|Cloud-Watch microservice|dist/war/proactive-cloud-watch/WEB-INF/classes/application.properties|<<Database configuration>>
 
 |===
 
@@ -155,7 +156,7 @@ The following five properties must be configured:
 * `hibernate.connection.username`
 * `hibernate.connection.password`
 
-TIP: There are usefull templates for different databases in *PROACTVE_HOME/config/scheduler/templates/* and *PROACTVE_HOME/config/rm/templates/*.
+TIP: There are useful templates for different databases in *PROACTVE_HOME/config/scheduler/templates/* and *PROACTVE_HOME/config/rm/templates/*.
 
 The *job-planner*, *catalog*, *scheduling-api*, and *proactive-cloud-watch* microservices must contain a database configuration.
 For each microservice, a microservice configuration file can be found in: *PROACTIVE_HOME/dist/war/MICROSERVICE-NAME/WEB-INF/classes/application.properties*.
@@ -171,6 +172,29 @@ Moreover, it is mandatory to put the proper database driver in *PROACTIVE_HOME/a
 then you have to download the database driver and put it at: *PROACTIVE_HOME/addons/mysql-connector-java-8.0.11.jar*.
 
 Scheduler, and 3 microservices (*scheduling-api*, *job-planner*, and *proactive-cloud-watch*) have to point to the same database.
+
+=== Encrypting configuration passwords
+Some configuration settings such as *database passwords* should be encrypted to prevent their exposition.
+In order to encrypt any configuration setting, the command-line `PROACTIVE_HOME/tools/encrypt` or `PROACTIVE_HOME\tools\encrypt.bat` can be used.
+
+Here is an example of usage:
+
+----
+encrypt -d mypass
+Encrypted value (to use in configuration files):
+ENC(/b0izhUHO846/GmAn8Hbhg==)
+----
+
+The interactive mode can also be used:
+
+----
+encrypt -i
+Data to encrypt:*****
+Encrypted value (to use in configuration files):
+ENC(xtlMWGd0ZK/EzTMyrgPiPw==)
+----
+The encrypted value can then be used as displayed by the `encrypt` command, for example, in *PROACTIVE_HOME/config/scheduler/database.properties*:
+`hibernate.connection.password=ENC(xtlMWGd0ZK/EzTMyrgPiPw==)`
 
 == User Authentication
 
