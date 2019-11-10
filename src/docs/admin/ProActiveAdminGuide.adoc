@@ -262,13 +262,12 @@ test_executor:pwd
 
 * users membership is stored in `PROACTIVE_HOME/config/authentication/group.cfg`. For each user registered in login.cfg,
 a group membership has to be defined in this file. Each line has to look like *user:group*. Group has to be
-`user` to have user rights, `scheduleradmins` to have administrator rights on the scheduler, `rmcoreadmins` to have administrator rights on the resource manager, etc. Below is an example `group.cfg` file:
+`user` to have user rights, `admin` to have administrator rights on the scheduler and resource manager. Below is an example `group.cfg` file:
 +
 .group.cfg
 ----
-admin:scheduleradmins
-admin:rmcoreadmins
-demo:scheduleradmins
+admin:admin
+demo:admin
 demo:rmcoreadmins
 guest:guests
 nsadmin:nsadmins
@@ -276,7 +275,7 @@ provider:providers
 rm:admin
 rm:nsadmins
 scheduler:user
-scheduler:scheduleradmins
+scheduler:admin
 user:user
 watcher:watchers
 ----
@@ -542,11 +541,10 @@ The following groups are defined by default in the `security.java.policy-server`
 
 * `user`: can submit a job to the scheduler and control this job execution (pause, kill, etc). Cannot interact with other users jobs.
 * `guests`: can only log into the scheduler/resource manager, but cannot interact with it.
-* `scheduleradmins`: has the same permissions as `user` but can also control other users' job execution. Can manage the scheduler life-cycle such as pausing or stopping the scheduler.
 * `nsadmins`: this group gives the permission to create, edit or remove Node Sources in the resource manager.
 * `providers`: this group gives only the permission to add nodes to the resource manager or to an existing Node Source.
 * `rmcoreadmins` : this group gives full interaction capability with the resource manager (create, edit, remove Node Sources, add nodes, etc)
-* `admin` : this group gives full permission on every aspect, this group is [.underline]#deprecated# and is kept for backward compatibility purpose only (use the above `scheduleradmins` and `rmcoreadmins` instead).
+* `admin` : this group gives full permission on every aspects.
 * `watchers` : this group allows to receive notification events from the scheduler and resource manager, but cannot perform any action. It is mostly used internally.
 
 
