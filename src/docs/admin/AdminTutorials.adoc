@@ -6,7 +6,7 @@ include::../common-settings.adoc[]
 This is a step by step tutorial, which was tested on Ubuntu 14.04 and Microsoft Windows 7.
 
 ProActive Workflows & Scheduling allows advanced user management with the *Run As Me* feature. Run as me allows
-to execute a task under the current ProActive user, if an equally named system user exists on the executing machine.
+to execute a task in a new forked JVM under the current ProActive user, if an equally named system user exists on the executing machine.
 
 === Node configuration
 
