@@ -1268,9 +1268,9 @@ This behavior can be controlled *globally* at the ProActive server level by modi
 
 
 ==== Docker fork execution environment
-A Docker fork execution environment executes a JVM inside a Docker container. Hence the task
-which is executed in the Docker fork execution environment can be customized by the JVM settings
-and by the tool-set and isolation provided by Docker containers.
+A Docker fork execution environment is a specific usage of the fork environment mechanism.
+In that case, the ProActive Node's JVM starts a docker container which will run the forked JVM described above.
+This forked JVM can be customized by the JVM settings and by the tool-set and isolation provided by Docker containers.
 
 TIP: If your task needs to install new software or updates software, then run it inside a Docker container.
 That way, other tasks will not be affected by changes, because Docker containers provide isolation so that
