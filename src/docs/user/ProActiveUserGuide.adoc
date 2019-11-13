@@ -1244,11 +1244,8 @@ variable *operating_system* (task scope) resolves to variable *operating_system_
 ----
 
 === Fork environment
-A fork execution environment is a new Java Virtual Machine (JVM) which is started exclusively to execute a task. This task may need to use some third-party libraries, so it can be executed properly. To do that, the list of path elements to be added when starting a new JVM can be specified inside the `Additional Classpath` field.
+A fork execution environment is a new forked Java Virtual Machine (JVM) which is started exclusively to execute a task. This task may need to use some third-party libraries, so it can be executed properly. To do that, the list of path elements to be added when starting a new JVM can be specified inside the `Additional Classpath` field.
 Starting a new JVM means that the task inside it will run in a dedicated, configurable environment.
-By default, all workflow tasks are executed in a JVM separated from the ProActive Node JVM.
-This behavior can only be changed globally at the ProActive server level, by modifying the global setting `pa.scheduler.task.fork` in the <<../admin/ProActiveAdminGuide.adoc#_general_configuration,scheduler configuration file>>.
-
 The fork execution environment can be changed by writing a <<_glossary_fork_environment_script,fork environment script>>.
 This script contains a specific <<_glossary_script_bindings,script binding>> called `forkEnvironment` containing a link:../javadoc/org/ow2/proactive/scheduler/common/task/ForkEnvironment.html[ForkEnvironment java object]
 giving access to various configuration settings.
@@ -1259,6 +1256,16 @@ For example, the following fork environment groovy script can be written to chan
 forkEnvironment.setWorkingDir("/data/folder")
 forkEnvironment.setJavaHome("/usr/java/default")
 ```
+
+By default, the forked mode is configured then all workflow tasks are executed in a forked JVM separated from the ProActive Node's JVM.
+This behavior can be controlled *globally* at the ProActive server level by modifying the global setting `pa.scheduler.task.fork` in the <<../admin/ProActiveAdminGuide.adoc#_general_configuration,scheduler configuration file>> and also *locally* at the task level via the optional checkbox property *Fork*.
+
+- In case the server is configured in non forked mode (i.e. `pa.scheduler.task.fork` = `false`), the checkbox property *Fork* is unchecked and uneditable and all the fields under *Fork Environment* are uneditable.
+
+- In case the server is configured in a forked mode (i.e. `pa.scheduler.task.fork` = `true`), the checkbox property *Fork* is checked and uneditable and all the fields under *Fork Environment* are editable.
+
+- In case the global setting is not set (i.e. `#pa.scheduler.task.fork` = `true`), each task can specify its execution mode through the checkbox property *Fork*. If the checkbox property *Fork* is unchecked, then all the other fields under *Fork Environment* are disabled.
+
 
 ==== Docker fork execution environment
 A Docker fork execution environment executes a JVM inside a Docker container. Hence the task
@@ -1280,27 +1287,93 @@ TIP: If the executing Node has no Docker installed, the task will fail. A <<_sel
 that tasks are executed only on Nodes which have Docker installed.
 
 ===== Docker fork environment script
-The default Docker fork environment script contains the following jython code:
-[source, python]
+The default Docker fork environment script contains the following groovy code:
+[source, groovy]
 ----
-# In the Java Home location field, use the value: "/usr" to force using the JRE provided in the docker image below (Recommended).
-# Be aware, that the prefix command is internally split by spaces. So paths with spaces won't work.
-# Prepare Docker parameters
-containerName = 'java'
-dockerRunCommand =  'docker run '
-dockerParameters = '--rm '
-# Prepare ProActive home volume
+// This script creates a docker fork environment using java as docker image
+
+// If used on windows:
+//  - currently, only linux containers are supported
+//  - make sure the drives containing the scheduler installation and TEMP folders are shared with docker containers
+//  - the container used must have java installed by default in the /usr folder. Change the value of the java home parameter to use a different installation path
+// On linux, the java installation used by the ProActive Node will be also used inside the container
+
+// Prepare Docker parameters
+import org.ow2.proactive.utils.OperatingSystem;
+import org.ow2.proactive.utils.OperatingSystemFamily;
+
+containerName = "java"
+cmd = []
+cmd.add("docker")
+cmd.add("run")
+cmd.add("--rm")
+cmd.add("--env")
+cmd.add("HOME=/tmp")
+
+String osName = System.getProperty("os.name");
+println "Operating system : " + osName;
+OperatingSystem operatingSystem = OperatingSystem.resolveOrError(osName);
+OperatingSystemFamily family = operatingSystem.getFamily();
+
+switch (family) {
+    case OperatingSystemFamily.WINDOWS:
+    	isWindows = true;
+    	break;
+    default:
+        isWindows = false;
+}
+forkEnvironment.setDockerWindowsToLinux(isWindows)
+
+// Prepare ProActive home volume
 paHomeHost = variables.get("PA_SCHEDULER_HOME")
-paHomeContainer = variables.get("PA_SCHEDULER_HOME")
-proActiveHomeVolume = '-v '+paHomeHost +':'+paHomeContainer+' '
-# Prepare working directory (For Dataspaces and serialized task file)
+paHomeContainer = (isWindows ? forkEnvironment.convertToLinuxPath(variables.get("PA_SCHEDULER_HOME")) : variables.get("PA_SCHEDULER_HOME"))
+cmd.add("-v")
+cmd.add(paHomeHost + ":" + paHomeContainer)
+// Prepare working directory (For Dataspaces and serialized task file)
 workspaceHost = localspace
-workspaceContainer = localspace
-workspaceVolume = '-v '+localspace +':'+localspace+' '
-# Prepare container working directory
-containerWorkingDirectory = '-w '+workspaceContainer+' '
-# Save pre execution command into magic variable 'preJavaHomeCmd', which is picked up by the node
-preJavaHomeCmd = dockerRunCommand + dockerParameters + proActiveHomeVolume + workspaceVolume + containerWorkingDirectory + containerName
+workspaceContainer = (isWindows ? forkEnvironment.convertToLinuxPath(workspaceHost) : workspaceHost)
+cmd.add("-v")
+cmd.add(workspaceHost + ":" + workspaceContainer)
+
+cachespaceHost = cachespace
+cachespaceContainer = (isWindows ? forkEnvironment.convertToLinuxPath(cachespaceHost) : cachespaceHost)
+cmd.add("-v")
+cmd.add(cachespaceHost + ":" + cachespaceContainer)
+
+if (!isWindows) {
+     // when not on windows, mount and use the current JRE
+    currentJavaHome = System.getProperty("java.home")
+	forkEnvironment.setJavaHome(currentJavaHome)
+    cmd.add("-v")
+    cmd.add(currentJavaHome + ":" + currentJavaHome)
+}
+
+// Prepare container working directory
+cmd.add("-w")
+cmd.add(workspaceContainer)
+
+if (isWindows) {
+    // linux on windows does not allow sharing identities (such as AD identities)
+} else {
+    sigar = new org.hyperic.sigar.Sigar()
+    try {
+        pid = sigar.getPid()
+        creds = sigar.getProcCred(pid)
+        uid = creds.getUid()
+        gid = creds.getGid()
+        cmd.add("--user=" + uid + ":" + gid)
+    } catch (Exception e) {
+        println "Cannot retrieve user or group id : " + e.getMessage()
+    } finally {
+        sigar.close()
+    }
+}
+cmd.add(containerName)
+
+forkEnvironment.setPreJavaCommand(cmd)
+
+// Show the generated command
+println "DOCKER COMMAND : " + forkEnvironment.getPreJavaCommand()
 ----
 This script exports a variable called `preJavaHomeCmd`, which is picked up by the Node executing the Task.
 This variable is supposed to be a Docker run command inside a string.
