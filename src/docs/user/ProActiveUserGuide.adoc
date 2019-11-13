@@ -1375,7 +1375,7 @@ forkEnvironment.setPreJavaCommand(cmd)
 // Show the generated command
 println "DOCKER COMMAND : " + forkEnvironment.getPreJavaCommand()
 ----
-This script exports a variable called `preJavaHomeCmd`, which is picked up by the Node executing the Task.
+This script exports a variable composed of a list of command + arguments via the forkEnvironment.getPreJavaCommand function, which is picked up by the Node executing the Task.
 This variable is supposed to be a Docker run command inside a string.
 This string will be split by space and added in front of the fork execution command. As an example:
 ----
