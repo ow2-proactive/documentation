@@ -285,7 +285,7 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
 | bash, cmd, perl, R, PowerShell
 
-| *RM API*. RM API variable which can connect to the ProActive RM frontend and interact directly with its <<_task_apis,API>>.
+| *Resource Manager API*. Resource Manager API variable which can connect to the ProActive RM frontend and interact directly with its <<_task_apis,API>>.
 | rmapi.connect()
 | -
 | -
