@@ -2111,13 +2111,15 @@ key is not present, no replacement occurs):
 ----
 
 [[_task_apis]]
-== Scheduler, DataSpace, and Synchronization APIs
+== Scheduler, Resource Manager, DataSpace, and Synchronization APIs
 
 From a <<_glossary_task_executable_script,Script Task>>, several APIs are accessible via Java objects bound to dedicated <<_glossary_script_bindings,script bindings>>:
 
 - Scheduler API: using the `schedulerapi` binding, it is possible to interact directly with the scheduler server and do several operations (submit jobs, wait for tasks termination, list running jobs, etc.).
+- Resource Manager API: using the `rmapi` binding, it is possible to interact directly with the RM and do several operations (lock nodes, change node tags, monitor nodes, get thread dump, etc.).
 - DataSpace API: the `userspaceuri` or `globalspaceuri` bindings allow to manipulate files present in User or Global spaces. Operations include listing, uploading, downloading, or deleting files.
 - Synchronization API: using the `synchronizationapi` binding, it is possible to handle advanced task synchronization dynamically.
+
 
 === Scheduler API
 
@@ -2157,6 +2159,54 @@ The complete API description can be found in the link:../javadoc/org/ow2/proacti
 
 NOTE: The `schedulerapi` <<_glossary_script_bindings,script binding>> can also be used in <<_glossary_additional_task_scripts,additional scripts>> defined inside a <<_glossary_task,ProActive Task>>.
 To know in which scripts `schedulerapi` is available, study the <<_variables_quick_reference,Script Bindings Reference>>.
+
+
+=== Resource Manager API
+
+From inside a <<_glossary_task_executable_script,Script Task>>, you can use the Resource Manager API binding like the following:
+
+[source,groovy]
+----
+
+// connect to the rm
+rmapi.connect()
+
+// displaying the RM state
+full = rmapi.getRMStateFull()
+full.getNodesEvent().each { event ->
+    println(event.getNodeUrl())
+    println(event.getNodeState())
+}
+
+// add node token to the current node
+// get current node url
+nodeUrl = variables.get("PA_NODE_URL")
+rmapi.addNodeToken(nodeUrl, "MyOwnToken")
+
+
+println "Test rmapi.getTopology() " + rmapi.getTopology()
+println "Test rmapi.getExistingNodeSources() " + rmapi.getExistingNodeSources()
+println "Test rmapi.getInfrasToPoliciesMapping() " + rmapi.getInfrasToPoliciesMapping()
+println "Test rmapi.getConnectionInfo() " + rmapi.getConnectionInfo()
+println "Test rmapi.getRMStateFull() " + rmapi.getRMStateFull()
+println "Test rmapi.getRMThreadDump() " + rmapi.getRMThreadDump()
+println "Test rmapi.getState() " + rmapi.getState()
+println "Test rmapi.getSupportedNodeSourceInfrastructures() " + rmapi.getSupportedNodeSourceInfrastructures()
+println "Test rmapi.getSupportedNodeSourcePolicies() " + rmapi.getSupportedNodeSourcePolicies()
+println "Test rmapi.getVersion() " + rmapi.getVersion()
+println "Test rmapi.isActive() " + rmapi.isActive()
+
+
+// do not forget to disconnect from the rm
+rmapi.disconnect();
+----
+
+The complete API description can be found in the link:../rest[Resource Manager Rest Interface].
+
+NOTE: The `rmapi` <<_glossary_script_bindings,script binding>> can also be used in <<_glossary_additional_task_scripts,additional scripts>> defined inside a <<_glossary_task,ProActive Task>>.
+To know in which scripts `rmapi` is available, study the <<_variables_quick_reference,Script Bindings Reference>>.
+
+
 
 [[_dataspace_apis]]
 === DataSpace API
