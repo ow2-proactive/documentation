@@ -158,7 +158,7 @@ The following five properties must be configured:
 
 TIP: There are useful templates for different databases in *PROACTVE_HOME/config/scheduler/templates/* and *PROACTVE_HOME/config/rm/templates/*.
 
-The *job-planner*, *catalog*, *scheduling-api*, *cloud-automation-service* and *proactive-cloud-watch* microservices must contain a database configuration.
+The *job-planner*, *catalog*, *scheduling-api*, *cloud-automation-service*, *notification-service* and *proactive-cloud-watch* microservices must contain a database configuration.
 For each microservice, a microservice configuration file can be found in: *PROACTIVE_HOME/dist/war/MICROSERVICE-NAME/WEB-INF/classes/application.properties*.
 In their *application.properties* file, you need to set the following five properties:
 
