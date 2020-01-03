@@ -173,6 +173,26 @@ then you have to download the database driver and put it at: *PROACTIVE_HOME/add
 
 Scheduler, and 3 microservices (*scheduling-api*, *job-planner*, and *proactive-cloud-watch*) have to point to the same database.
 
+[[_backup]]
+=== Configure automated backup
+
+We provide an internal backup mechanism for the database,
+in case HSQLDB is used, and for data files (workflows, logs).
+In case another DB is used, it is possible to combine a vendor specific backup mechanism
+with the internal mechanism for data files.
+
+To use the automated backup, edit the file `PROACTIVE_HOME/config/shared/settings.ini`.
+Enable backup mechanism by setting `pa.server.backup` to true.
+Backup will be performed according to provided cron expression in `pa.server.backup.period`.
+Set file/folders you want to backup into `pa.server.backup.targets`.
+Backup will appear in the folder specified by `pa.server.backup.destination`.
+
+The backup mechanism automatically freezes the scheduler
+while performing the backup to guarantee data integrity.
+Backup may not happen if ProActive Scheduler is busy.
+Backup mechanism will try to perform backup several times during the period set in `pa.server.backup.possile.delay`.
+If all this time ProActive Scheduler would be busy then the backup will not be performed.
+
 === Encrypting configuration passwords
 Some configuration settings such as *database passwords* should be encrypted to prevent their exposition.
 In order to encrypt any configuration setting, the command-line `PROACTIVE_HOME/tools/encrypt` or `PROACTIVE_HOME\tools\encrypt.bat` can be used.
@@ -2106,20 +2126,6 @@ For more information, see https://github.com/ow2-proactive/scheduling/blob/maste
 [[_catalog]]
 === Catalog
 include::./Catalog.adoc[]
-
-[[_backup]]
-== Configure automated backup
-
-To use the automated backup, edit the file `PROACTIVE_HOME/config/shared/settings.ini`.
-Enable backup mechanism by setting `pa.server.backup` to true.
-Backup will be performed according to provided cron expression in `pa.server.backup.period`.
-Set file/folders you want to backup into `pa.server.backup.targets`.
-Backup will appear in the folder specified by `pa.server.backup.destination`.
-
-Backup mechanism requires ProActive Scheduler freeze during backup.
-Backup may not happen if ProActive Scheduler is busy.
-Backup mechanism will try to perform backup several times during the period set in `pa.server.backup.possile.delay`.
-If all this time ProActive Scheduler would be busy then the backup will not be performed.
 
 [[_script_engines]]
 == Configure script engines
