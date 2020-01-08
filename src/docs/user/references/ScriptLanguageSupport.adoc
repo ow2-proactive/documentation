@@ -124,7 +124,7 @@ echo "%variables_foo%"
 
 === Javascript
 
-Javascript engine allows to run *Javascript* scripts inside ProActive Tasks.
+Javascript engine allows running *Javascript* scripts inside ProActive Tasks.
 This engine is based on link:https://docs.oracle.com/javase/10/nashorn/introduction.htm#JSNUG136[Nashorn Javascript engine].
 Nashorn Javascript engine provides Rhino compatibility mode which is described in the following
 link:https://wiki.openjdk.java.net/display/Nashorn/Rhino+Migration+Guide[documentation].
@@ -153,7 +153,7 @@ variables["jsonVariable"] = serializedJsonVariable // and finally you can overwr
 Please note, that you have to use `variables["myVarName"] = "myVarValue"` syntax,
 instead of `variables.put("myVarName", "myVarValue")` syntax, for storing the variables in Javascript tasks.
 
-Example of Javascript ProActive Task which returns JSON obejct as a result:
+Example of Javascript ProActive Task which returns JSON object as a result:
 
 [source,javascript]
 ----
@@ -162,7 +162,7 @@ var serializedJsonObject = JSON.stringify(jsonObject) // then you need to serial
 result = serializedJsonVariable
 ----
 
-TIP: To save JSON object as a variable or as a task result
+TIP: To save a JSON object as a variable or as a task result
 you have to serialize to a string first, by using `JSON.stringify()`
 
 
