@@ -137,7 +137,8 @@ var status = variables.get("orderStatus")
 if (status == "delivered") {
     status = "returned"
 }
-variables.put("orderStatus", status)
+variables["orderStatus"] = status
+variables.put("otherVar", "someConstValue")
 ----
 
 Example of Javascript ProActive Task which modifies Job Variable containing JSON object:
@@ -150,8 +151,10 @@ var serializedJsonVariable = JSON.stringify(jsonVariable) // then you need to se
 variables["jsonVariable"] = serializedJsonVariable // and finally you can overwrite existing variable
 ----
 
-Please note, that you have to use `variables["myVarName"] = "myVarValue"` syntax,
-instead of `variables.put("myVarName", "myVarValue")` syntax, for storing the variables in Javascript tasks.
+NOTE: You have to use `variables["myVarName"] = somevar` syntax,
+instead of `variables.put("myVarName", somevar)` syntax, for storing the variables if you are using Javascript variables.
+You still can use `variables.put("myVarName", "someConstantValue")` syntax for storing constants.
+
 
 Example of Javascript ProActive Task which returns JSON object as a result:
 
@@ -162,7 +165,7 @@ var serializedJsonObject = JSON.stringify(jsonObject) // then you need to serial
 result = serializedJsonVariable
 ----
 
-TIP: To save a JSON object as a variable or as a task result
+NOTE: To save a JSON object as a variable or as a task result
 you have to serialize to a string first, by using `JSON.stringify()`
 
 
