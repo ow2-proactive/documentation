@@ -178,9 +178,9 @@ Scheduler, and 3 microservices (*scheduling-api*, *job-planner*, and *proactive-
 
 ProActive Workflows & Scheduling features an automated backup mechanism which can be used to save the server state at regular intervals. Usage of this mechanism will depend on the database in use by the server:
 
-* In case the default database is used (HSQLDB), the backup mechanism can be used to store the database content, data and log files of the server.
+* In case the default database is used (HSQLDB), the backup mechanism can store the database contents, data and log files of the server.
 * In case another database is used (MySQL, Oracle, etc), the integrated backup mechanism can only
-be used to store data and log files. Backup of the database contents will need
+store data and log files. Backup of the database contents will need
 to be activated separately, using the database vendor backup mechanism.
 
 To use the automated backup, edit the file `PROACTIVE_HOME/config/shared/settings.ini`.
