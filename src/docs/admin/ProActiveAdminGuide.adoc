@@ -193,7 +193,7 @@ Backup archives will appear in the folder specified by `pa.server.backup.destina
 NOTE: The backup mechanism automatically freezes the scheduler
 while performing the backup to guarantee data integrity.
 It expects currently running tasks to terminate in a reasonable amount of time
-(configurable using the pa.server.backup.possile.delay property). In case a currently running
+(configurable using the pa.server.backup.possible.delay property). In case a currently running
 task does not terminate after the expected delay, backup will not be performed.
 
 === Encrypting configuration passwords
