@@ -122,6 +122,53 @@ echo "%variables_foo%"
 ----
 
 
+=== Javascript
+
+Javascript engine allows running *Javascript* scripts inside ProActive Tasks.
+This engine is based on link:https://docs.oracle.com/javase/10/nashorn/introduction.htm#JSNUG136[Nashorn Javascript engine].
+Nashorn Javascript engine provides Rhino compatibility mode which is described in the following
+link:https://wiki.openjdk.java.net/display/Nashorn/Rhino+Migration+Guide[documentation].
+
+Example of Javascript ProActive Task which modifies Job Variable:
+
+[source,javascript]
+----
+var status = variables.get("orderStatus")
+if (status == "delivered") {
+    status = "returned"
+}
+variables["orderStatus"] = status
+variables.put("otherVar", "someConstValue")
+----
+
+Example of Javascript ProActive Task which modifies Job Variable containing JSON object:
+
+[source,javascript]
+----
+var jsonVariable = JSON.parse(variables.get("jsonVariable")) // you need to parse your variable first
+jsonVariable["newVar"] = "newValue" // then you can modify it as regular json
+var serializedJsonVariable = JSON.stringify(jsonVariable) // then you need to serialize it to string
+variables["jsonVariable"] = serializedJsonVariable // and finally you can overwrite existing variable
+----
+
+NOTE: You have to use `variables["myVarName"] = somevar` syntax,
+instead of `variables.put("myVarName", somevar)` syntax, for storing the variables if you are using Javascript variables.
+You still can use `variables.put("myVarName", "someConstantValue")` syntax for storing constants.
+
+
+Example of Javascript ProActive Task which returns JSON object as a result:
+
+[source,javascript]
+----
+var jsonObject = {"orderStatus": "done", "customerName": "privatePrivacy"};
+var serializedJsonObject = JSON.stringify(jsonObject) // then you need to serialize it to string
+result = serializedJsonVariable
+----
+
+NOTE: To save a JSON object as a variable or as a task result
+you have to serialize to a string first, by using `JSON.stringify()`
+
+
 === Python
 We support both Jython and Python Script Engines. Jython is an implementation of the Python programming language designed to run on the Java platform, Jython programs use Java classes instead of Python modules.
 The advantage of using our Jython Script Engine is that you do not need to do any installation. It includes some modules in the standard Python programming language distribution, but lacking the modules implemented originally in C.
