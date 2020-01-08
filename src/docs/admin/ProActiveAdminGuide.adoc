@@ -173,6 +173,29 @@ then you have to download the database driver and put it at: *PROACTIVE_HOME/add
 
 Scheduler, and 3 microservices (*scheduling-api*, *job-planner*, and *proactive-cloud-watch*) have to point to the same database.
 
+[[_backup]]
+=== Configure automated backup
+
+ProActive Workflows & Scheduling features an automated backup mechanism which can be used to save the server state at regular intervals. Usage of this mechanism will depend on the database in use by the server:
+
+* In case the default database is used (HSQLDB), the backup mechanism can store the database contents, data and log files of the server.
+* In case another database is used (MySQL, Oracle, etc), the integrated backup mechanism can only
+store data and log files. Backup of the database contents will need
+to be activated separately, using the database vendor backup mechanism.
+
+To use the automated backup, edit the file `PROACTIVE_HOME/config/shared/settings.ini`.
+Enable backup mechanism by setting `pa.server.backup` to true.
+Backup will be performed according to the provided cron expression in `pa.server.backup.period`.
+Set file/folders you want to backup into `pa.server.backup.targets`.
+Backup archives will appear in the folder specified by `pa.server.backup.destination`.
+`pa.server.backup.windows` controls how many backup archives needs to be kept in the destination folder.
+
+NOTE: The backup mechanism automatically freezes the scheduler
+while performing the backup to guarantee data integrity.
+It expects currently running tasks to terminate in a reasonable amount of time
+(configurable using the pa.server.backup.possible.delay property). In case a currently running
+task does not terminate after the expected delay, backup will not be performed.
+
 === Encrypting configuration passwords
 Some configuration settings such as *database passwords* should be encrypted to prevent their exposition.
 In order to encrypt any configuration setting, the command-line `PROACTIVE_HOME/tools/encrypt` or `PROACTIVE_HOME\tools\encrypt.bat` can be used.
