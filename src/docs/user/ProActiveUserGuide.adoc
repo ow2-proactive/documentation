@@ -1664,6 +1664,9 @@ Add a "NOTIFICATION_EVENTS" Generic information in the workflow level, to list e
 * *Job resumed (or JOB_RESUMED)*
 * *Job running to finished (or JOB_RUNNING_TO_FINISHED)*
 * *Job submitted (or JOB_SUBMITTED)*
+* *Job running to finished with errors (or JOB_RUNNING_TO_FINISHED_WITH_ERRORS)*
+* *Job aborted (or JOB_ABORTED)*
+
 
 Scheduler can send email to the users when one of the above events is received.
 
