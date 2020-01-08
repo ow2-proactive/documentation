@@ -124,11 +124,23 @@ echo "%variables_foo%"
 
 === Javascript
 
-Javascript ProActive script engine is based on Nashorn Javascript engine.
+Javascript engine allows to run *Javascript* scripts inside ProActive Tasks.
+This engine is based on link:https://docs.oracle.com/javase/10/nashorn/introduction.htm#JSNUG136[Nashorn Javascript engine].
+Nashorn Javascript engine provides Rhino compatibility mode which is described in the following
+link:https://wiki.openjdk.java.net/display/Nashorn/Rhino+Migration+Guide[documentation].
 
-You cannot save Json object as a variable or as a task result,
-because Json objects are not serializable in javascript.
-That is why you need to serialize your Json objects before.
+Example of Javascript ProActive Task which modifies Job Variable:
+
+[source,javascript]
+----
+var status = variables.get("orderStatus")
+if (status == "delivered") {
+    status = "returned"
+}
+variables.put("orderStatus", status)
+----
+
+Example of Javascript ProActive Task which modifies Job Variable containing JSON object:
 
 [source,javascript]
 ----
@@ -136,11 +148,22 @@ var jsonVariable = JSON.parse(variables.get("jsonVariable")) // you need to pars
 jsonVariable["newVar"] = "newValue" // then you can modify it as regular json
 var serializedJsonVariable = JSON.stringify(jsonVariable) // then you need to serialize it to string
 variables["jsonVariable"] = serializedJsonVariable // and finally you can overwrite existing variable
-result = serializedJsonVariable // or write it to result
 ----
 
-Also, please note, that you have to use `variables["myVarName"] = "myVarValue"` syntax,
+Please note, that you have to use `variables["myVarName"] = "myVarValue"` syntax,
 instead of `variables.put("myVarName", "myVarValue")` syntax, for storing the variables in Javascript tasks.
+
+Example of Javascript ProActive Task which returns JSON obejct as a result:
+
+[source,javascript]
+----
+var jsonObject = {"orderStatus": "done", "customerName": "privatePrivacy"};
+var serializedJsonObject = JSON.stringify(jsonObject) // then you need to serialize it to string
+result = serializedJsonVariable
+----
+
+TIP: To save JSON object as a variable or as a task result
+you have to serialize to a string first, by using `JSON.stringify()`
 
 
 === Python
