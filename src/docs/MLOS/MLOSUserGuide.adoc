@@ -427,10 +427,32 @@ Execute the Workflow by setting the different workflow's variables as follows:
 | String (default="ml_service").
 |===
 
-
 === Deploy a Model
 
-There are two ways to deploy a model in the started model_server (i.e., where you will deploy, update and call your model) using MLOS:
+There are three ways to deploy a model in the running model_server (i.e., where you will deploy, update and call your model) using MLOS:
+
+*Via Cloud Automation portal*
+
+Once the status of your model service is displayed as `RUNNING` on `Cloud Automation`, you can deploy your model by following the steps below :
+
+Select and execute the `Deploy_Model_Action` to deploy your model.
+
+Set the Following variables :
+
+.Deploy_Model variables
+[cols="2,5,2"]
+|===
+| `MODEL_URL`
+| The URL of the model that need to be deployed.
+| URL
+| `USER_NAME`
+| A valid user name having the needed privileges to execute this action.
+| String
+|===
+
+Click on `Execute Action` and follow the progress of the model deployment.
+
+Check that the current status is correctly set to `MODEL_DEPLOYED`.
 
 *Via Swagger UI*
 
