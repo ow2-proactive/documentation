@@ -443,7 +443,7 @@ Set the Following variables :
 [cols="2,5,2"]
 |===
 | `MODEL_URL`
-| The URL of the model that need to be deployed.
+| The URL of the model that needs to be deployed.
 | URL
 | `USER_NAME`
 | A valid user name having the needed privileges to execute this action.
