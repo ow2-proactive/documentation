@@ -1030,16 +1030,36 @@ To connect to another ProActive server host, use the later pragma this way:
 
 NOTE: Notice that the `port` parameter is optional. The default connexion port is `8080`.
 
+You can also connect to a distant server by providing its `url` in the following way:
+
+```python
+#%connect(url=YOUR_SERVER_URL, login=YOUR_LOGIN, password=YOUR_PASSWORD)
+```
+
+By providing the complete `url` of the server, users can eventually connect through the secure HTTPS protocol.
+
 ==== Using a configuration file
 
 For automatic sign in, create a file named *proactive_config.ini* in your notebook working directory.
 
-Fill your configuration file according to the following format:
+Fill your configuration file according to one of the following two formats:
+
+- By providing the server `host` and `port`:
 
 ```ini
 [proactive_server]
 host=YOUR_HOST
 port=YOUR_PORT
+[user]
+login=YOUR_LOGIN
+password=YOUR_PASSWORD
+```
+
+- By providing the server `url`:
+
+```ini
+[proactive_server]
+url=YOUR_SERVER_URL
 [user]
 login=YOUR_LOGIN
 password=YOUR_PASSWORD
