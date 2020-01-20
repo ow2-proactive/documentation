@@ -364,6 +364,7 @@ Search for `Model_Service` in Services Workflows List.
 
 Set the following variables :
 
+[#table_maas]
 .Model_Service variables
 [cols="2,5,2"]
 |===
@@ -419,7 +420,7 @@ Add the `model_as_a_service` bucket.
 
 Drag and drop the `Model_Service_Start` task from the bucket.
 
-Execute the Workflow by setting the different workflow's variables as described in Table 5.
+Execute the Workflow by setting the different workflow's variables as described in Table <<table_maas>>.
 
 === Deploy a Model
 
