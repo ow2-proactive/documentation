@@ -30,6 +30,11 @@ NOTE: Script engine naming is case-sensitive
 |Windows
 |Powershell 2.0 Engine and .NET Framework 3.5 must be installed
 
+|`vbscript`
+|An engine able to run VBScript commands and scripts.
+|Windows
+|
+
 |`docker`
 |An engine able to run Docker containers defined as Dockerfile.
 |Linux, Mac, Windows

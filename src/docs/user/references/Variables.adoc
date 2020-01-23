@@ -405,6 +405,7 @@ in case of job variables, just before submitting the job.
 We can also combine recursive definitions of variables.
 
 For example, one could write:
+[source, xml]
 ----
 <job ...>
     ...

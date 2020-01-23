@@ -126,6 +126,7 @@ link:https://jruby.org[JRuby, window="_blank"],
 link:https://docs.oracle.com/javase/8/docs/technotes/guides/scripting/index.html#jsengine[Javascript, window="_blank"],
 link:https://www.scala-lang.org/[Scala, window="_blank"],
 link:https://docs.microsoft.com/fr-fr/powershell/scripting/overview?view=powershell-5.0[Powershell, window="_blank"],
+link:https://en.wikipedia.org/wiki/VBScript[VBScript, window="_blank"],
 link:https://www.r-project.org/[R, window="_blank"],
 link:https://www.perl.org/[Perl, window="_blank"],
 link:https://www.gnu.org/software/bash/[Bash, window="_blank"],
@@ -1072,21 +1073,23 @@ Here is how to access those variables:
 
 -   *Native Executable arguments:*
 
-``` {.xml}
+[source, xml]
+----
 <staticCommand value="/path/to/bin.sh">
   <arguments>
     <argument value="/some/path/${PA_TASK_ITERATION}/${PA_TASK_REPLICATION}.dat" />
-```
+----
 
 -   *Dataspace input and output:*
 
-``` {.xml}
+[source, xml]
+----
 <task name="t1" retries="2">
   <inputFiles>
     <files includes="foo_${PA_TASK_ITERATION}_${PA_TASK_REPLICATION}.dat" accessMode="transferFromInputSpace"/>
   </inputFiles><outputFiles>
     <files includes="bar_${PA_TASK_ITERATION}_${PA_TASK_REPLICATION}.res" accessMode="transferToOutputSpace"/>
-```
+----
 
 NOTE: Scripts affected by the variable substitutions are: Pre, Post, Control Flow.
 *No substitution will occur in selection scripts or clean scripts.*
@@ -2330,49 +2333,57 @@ image::KeyValue.png[Key/Value With Selection Script, , title="Key/Value With Sel
 This workflow contains the following Tasks:
 
  * *Init*: Initialize the channel. This task creates a channel using the current _job id_. It also sets a `lock` binding in the key/value store with an initial _true_ value.
-```groovy
++
+[source, groovy]
+----
 jobid = variables.get("PA_JOB_ID")
 synchronizationapi.createChannel(jobid, false)
 synchronizationapi.put(jobid, "lock", true)
 println "Channel " + jobid + " created."
-```
+----
 
  * *TaskB_Wait*: Wait to be unlocked. This task will not be executed until the `lock` binding changed to _false_. A <<_selection, selection script>> allows to handle this verification:
-```groovy
++
+[source, groovy]
+----
 selected = !(synchronizationapi.get(variables.get("PA_JOB_ID"), "lock"))
-```
+----
 
  * *TaskA*: Unlock TaskB. This task will sleep for a few seconds and then unlock TaskB using the Synchronization API:
-```groovy
++
+[source, groovy]
+----
 println "Sleeping 5 seconds"
 Thread.sleep(5000)
 println "Unlocking Task B"
 synchronizationapi.put(variables.get("PA_JOB_ID"), "lock", false)
-```
+----
 
  * *Clean*: Delete the channel. This task simply deletes the channel used in this job. As there is no automatic mechanism to remove channels, it is necessary to delete them explicitely when they are not used any more.
-```groovy
++
+[source, groovy]
+----
 jobid = variables.get("PA_JOB_ID")
 synchronizationapi.deleteChannel(jobid )
 println "Channel " + jobid + " deleted."
-```
+----
 
 Here is output of the Key/Value workflow:
-```
+----
 [28t2@trydev.activeeon.com;14:24:22] Channel 28 created.
 [28t0@trydev.activeeon.com;14:24:28] Sleeping 5 seconds
 [28t0@trydev.activeeon.com;14:24:33] Unlocking Task B
 [28t1@trydev.activeeon.com;14:24:40] Task B has been unlocked by Task A
 [28t3@trydev.activeeon.com;14:24:46] Channel 28 deleted.
-```
+----
 
 NOTE: It is also possible to debug the operations performed on the Synchronization Store. This is possible by using the *Server Logs* associated with the job. Server Logs are very verbose, the _[Synchronization]_ pattern helps to find logs associated with the Synchronization API:
-```
+----
 [2018-04-24 14:24:22,685 de72716883 INFO            o.o.p.s.u.TaskLogger] task 28t2 (Init) [Synchronization]Created new memory channel '28'
 [2018-04-24 14:24:22,786 de72716883 INFO            o.o.p.s.u.TaskLogger] task 28t2 (Init) [Synchronization][Channel=28] Put true on key 'lock', previous value was null
 [2018-04-24 14:24:34,431 de72716883 INFO            o.o.p.s.u.TaskLogger] task 28t0 (TaskA) [Synchronization][Channel=28] Put false on key 'lock', previous value was true
 [2018-04-24 14:24:46,882 de72716883 INFO            o.o.p.s.u.TaskLogger] task 28t3 (Clean) [Synchronization]Deleted memory channel '28'
-```
+----
 
 The Complete Workflow example can be downloaded link:examples/KeyValue.xml[here].
 
@@ -2385,25 +2396,27 @@ This example is very similar to the first example, but instead of delaying the e
  * Tasks *Init*, *TaskA* and *Clean* do not change
 
  * *TaskB_Wait* is modified. The selection script is removed and instead the following code is used in the main task definition:
-```groovy
++
+[source, groovy]
+----
 println "Waiting for Task A"
 synchronizationapi.waitUntil(variables.get("PA_JOB_ID"), "lock", "{k, x -> x == false}")
 println "Task B has been unlocked by Task A"
-```
-
+----
++
 As you can see, the link:../javadoc/org/ow2/proactive/scheduler/synchronization/Synchronization.html#waitUntil-java.lang.String-java.lang.String-java.lang.String-[waitUntil] method expects a https://docs.oracle.com/javase/8/docs/api/java/util/function/BiPredicate.html?is-external=true[BiPredicate] defined as a string http://groovy-lang.org/closures.html[Groovy Closure].
 The predicate receives two parameters: `k` contains the key, and `x` contains the binding associated with this key.
 This predicate is evaluated on the *lock* binding, and waits until this binding *== false*.
 
 Here is the output of the Example 2 workflow:
-```
+----
 [29t2@trydev.activeeon.com;14:43:42] Channel 29 created.
 [29t0@trydev.activeeon.com;14:43:49] Sleeping 5 seconds
 [29t1@trydev.activeeon.com;14:43:48] Waiting for Task A
 [29t0@trydev.activeeon.com;14:43:54] Unlocking Task B
 [29t1@trydev.activeeon.com;14:43:55] Task B has been unlocked by Task A
 [29t3@trydev.activeeon.com;14:44:01] Channel 29 deleted.
-```
+----
 
 The Complete Workflow example can be downloaded link:examples/KeyValueWait.xml[here].
 
@@ -2418,20 +2431,27 @@ image::CriticalSection.png[Critical Section, , title="Critical Section"]
 It contains the following Tasks:
 
  * *Init*: Initialize the channel. This task creates a channel using the current _job id_. It also sets a `available_slots` binding in the key/value store with an initial value based on the workflow user-defined `NB_SLOTS` <<_job_variables, job variable>>.
-```groovy
++
+[source, groovy]
+----
 jobid = variables.get("PA_JOB_ID")
 synchronizationapi.createChannel(jobid, false)
 synchronizationapi.put(jobid, "available_slots", Integer.parseInt(variables.get("NB_SLOTS")))
 println "Channel " + jobid + " created."
-```
+----
++
 This tasks also define a <<_control_flow_scripts, control flow script>> used to define the number of replicated tasks. The number of replicated tasks is parametrized with the user-defined `NB_TASKS` <<_job_variables, job variable>>:
-```groovy
++
+[source, groovy]
+----
 runs=Integer.parseInt(variables.get("NB_TASKS"))
-```
+----
 
  * *Section*: Wait for the critical section to be available. This task will block until the number of available slots is greater than 0. As soon as at least one slot is available, it decrements the `available_slots` counter and perform some computation.
 When the computation is terminated, it releases the slot by incrementing back the `available_slots` counter.
-```groovy
++
+[source, groovy]
+----
 println "Waiting for available slot"
 jobid = variables.get("PA_JOB_ID")
 synchronizationapi.waitUntilThen(jobid, "available_slots", "{k, x -> x > 0}", "{k, x -> x - 1}")
@@ -2440,20 +2460,20 @@ println "Enter critical section"
 Thread.sleep(10000)
 println "Release slot"
 synchronizationapi.compute(jobid,"available_slots", "{k, x -> x + 1}")
-```
-
+----
++
 As you can see, the first method used in this section is link:../javadoc/org/ow2/proactive/scheduler/synchronization/Synchronization.html#waitUntilThen-java.lang.String-java.lang.String-java.lang.String-java.lang.String-[waitUntilThen]. This method expects both a https://docs.oracle.com/javase/8/docs/api/java/util/function/BiPredicate.html?is-external=true[BiPredicate] and a https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html?is-external=true[BiFunction] defined as strings http://groovy-lang.org/closures.html[Groovy Closure].
-
++
 The semantic of this method is to wait until the predicate is met and, as soon as it is, immediately perform a remapping.
-
++
 In our scenario, the number of available slots is immediately decremented to reserve a slot and enter the critical section.
-
++
 Releasing of the slot is performed at the end of the task using the link:../javadoc/org/ow2/proactive/scheduler/synchronization/Synchronization.html#compute-java.lang.String-java.lang.String-java.lang.String-[compute] method.
 
  * *Clean*: Delete the channel. Same code as the previous examples.
 
 Here is the output of the Example 3 workflow:
-```
+----
 [3t0@trydev.activeeon.com;16:14:14] Channel 3 created.
 [3t1@trydev.activeeon.com;16:14:22] Waiting for available slot
 [3t4@trydev.activeeon.com;16:14:22] Waiting for available slot
@@ -2471,7 +2491,7 @@ Here is the output of the Example 3 workflow:
 [3t6@trydev.activeeon.com;16:14:44] Enter critical section
 [3t6@trydev.activeeon.com;16:14:54] Release slot
 [3t2@trydev.activeeon.com;16:14:59] Channel 3 deleted.
-```
+----
 
 We can see that no more than two replicated tasks enter the critical section at the same time, and that releasing slots allows new tasks to enter the critical section.
 

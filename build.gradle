@@ -44,6 +44,7 @@ asciidoctor {
             include 'user/examples/**'
             include 'images/**'
             include 'tocbot/**'
+            include 'highlight/**'
         }
     }
 }
