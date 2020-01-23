@@ -2,7 +2,9 @@ The Activeeon team <contact@activeeon.com>
 :toc: left
 :toclevels: 1
 :numbered:
-:source-highlighter: prettify
+:source-highlighter: highlightjs
+:highlightjsdir: ../highlight
+:highlightjs-theme: idea
 :sectlinks:
 :linkattrs:
 :sectanchors:
