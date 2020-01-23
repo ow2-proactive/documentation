@@ -1244,12 +1244,33 @@ variable *operating_system* (task scope) resolves to variable *operating_system_
 ----
 
 === Fork environment
-A fork execution environment is a new Java Virtual Machine (JVM) which is started exclusively to execute a task. This task may need to use some third-party libraries, so it can be executed properly. To do that, the list of path elements to be added when starting a new JVM can be specified inside the `Additional Classpath` field.
-Starting a new JVM means that the task inside it will run in a dedicated, configurable environment.
-By default, all workflow tasks are executed in a JVM separated from the ProActive Node JVM.
-This behavior can only be changed globally at the ProActive server level, by modifying the global setting `pa.scheduler.task.fork` in the <<../admin/ProActiveAdminGuide.adoc#_general_configuration,scheduler configuration file>>.
 
-The fork execution environment can be changed by writing a <<_glossary_fork_environment_script,fork environment script>>.
+A fork environment is a new forked Java Virtual Machine (JVM) which is started exclusively to execute a task. For example, this task may need to use some third-party libraries, so it can be executed properly. In this example, the list of path elements to be added when starting a new JVM will be specified inside the `Additional Classpath` field.
+Starting a new JVM means that the task inside it will run in a dedicated, configurable environment.
+
+==== Fork environment modes
+The fork environment can be activated through one of these four executions modes:
+
+- Standard forked mode,
+- Fork mode with customized configuration,
+-  link:../admin/AdminTutorials.html#_run_as_me[Run as me] mode,
+- Fork mode with docker.
+
+image::fork-environment.png[align=center]
+
+
+By default, all workflow tasks are executed in a standard fork mode, that is, executed in a forked JVM separated from the ProActive Node's JVM.
+This behavior can be controlled *globally* at the ProActive server level by modifying the global setting `pa.scheduler.task.fork` in the <<../admin/ProActiveAdminGuide.adoc#_general_configuration,scheduler configuration file>> and also *locally* at the task level via the optional checkbox property *Fork*.
+
+- In case the server is configured in non-fork mode (i.e. `pa.scheduler.task.fork` = `false`), the checkbox property *Fork* is unchecked and uneditable and all the fields under *Fork Environment* are uneditable.
+
+- In case the server is configured in a fork mode (i.e. `pa.scheduler.task.fork` = `true`), the checkbox property *Fork* is checked and uneditable and all the fields under *Fork Environment* are editable.
+
+- In case the global setting is not set (i.e. comment out the related configuration through `#pa.scheduler.task.fork` = `true`), each task can specify its execution mode through the checkbox property *Fork*. If the checkbox property *Fork* is unchecked, then all the other fields under *Fork Environment* are disabled.
+
+==== Fork environment customization
+
+The fork execution environment mechanism can be customized by writing a <<_glossary_fork_environment_script,fork environment script>>.
 This script contains a specific <<_glossary_script_bindings,script binding>> called `forkEnvironment` containing a link:../javadoc/org/ow2/proactive/scheduler/common/task/ForkEnvironment.html[ForkEnvironment java object]
 giving access to various configuration settings.
 
@@ -1261,9 +1282,9 @@ forkEnvironment.setJavaHome("/usr/java/default")
 ```
 
 ==== Docker fork execution environment
-A Docker fork execution environment executes a JVM inside a Docker container. Hence the task
-which is executed in the Docker fork execution environment can be customized by the JVM settings
-and by the tool-set and isolation provided by Docker containers.
+A Docker fork execution environment is a specific usage of the fork environment mechanism.
+In that case, the ProActive Node's JVM starts a docker container which will run the forked JVM described above.
+This forked JVM can be customized by the JVM settings and by the tool-set and isolation provided by Docker containers.
 
 TIP: If your task needs to install new software or updates software, then run it inside a Docker container.
 That way, other tasks will not be affected by changes, because Docker containers provide isolation so that
@@ -1280,29 +1301,95 @@ TIP: If the executing Node has no Docker installed, the task will fail. A <<_sel
 that tasks are executed only on Nodes which have Docker installed.
 
 ===== Docker fork environment script
-The default Docker fork environment script contains the following jython code:
-[source, python]
+The default Docker fork environment script contains the following groovy code:
+[source, groovy]
 ----
-# In the Java Home location field, use the value: "/usr" to force using the JRE provided in the docker image below (Recommended).
-# Be aware, that the prefix command is internally split by spaces. So paths with spaces won't work.
-# Prepare Docker parameters
-containerName = 'java'
-dockerRunCommand =  'docker run '
-dockerParameters = '--rm '
-# Prepare ProActive home volume
+// This script creates a docker fork environment using java as docker image
+
+// If used on windows:
+//  - currently, only linux containers are supported
+//  - make sure the drives containing the scheduler installation and TEMP folders are shared with docker containers
+//  - the container used must have java installed by default in the /usr folder. Change the value of the java home parameter to use a different installation path
+// On linux, the java installation used by the ProActive Node will be also used inside the container
+
+// Prepare Docker parameters
+import org.ow2.proactive.utils.OperatingSystem;
+import org.ow2.proactive.utils.OperatingSystemFamily;
+
+containerName = "java"
+cmd = []
+cmd.add("docker")
+cmd.add("run")
+cmd.add("--rm")
+cmd.add("--env")
+cmd.add("HOME=/tmp")
+
+String osName = System.getProperty("os.name");
+println "Operating system : " + osName;
+OperatingSystem operatingSystem = OperatingSystem.resolveOrError(osName);
+OperatingSystemFamily family = operatingSystem.getFamily();
+
+switch (family) {
+    case OperatingSystemFamily.WINDOWS:
+    	isWindows = true;
+    	break;
+    default:
+        isWindows = false;
+}
+forkEnvironment.setDockerWindowsToLinux(isWindows)
+
+// Prepare ProActive home volume
 paHomeHost = variables.get("PA_SCHEDULER_HOME")
-paHomeContainer = variables.get("PA_SCHEDULER_HOME")
-proActiveHomeVolume = '-v '+paHomeHost +':'+paHomeContainer+' '
-# Prepare working directory (For Dataspaces and serialized task file)
+paHomeContainer = (isWindows ? forkEnvironment.convertToLinuxPath(variables.get("PA_SCHEDULER_HOME")) : variables.get("PA_SCHEDULER_HOME"))
+cmd.add("-v")
+cmd.add(paHomeHost + ":" + paHomeContainer)
+// Prepare working directory (For Dataspaces and serialized task file)
 workspaceHost = localspace
-workspaceContainer = localspace
-workspaceVolume = '-v '+localspace +':'+localspace+' '
-# Prepare container working directory
-containerWorkingDirectory = '-w '+workspaceContainer+' '
-# Save pre execution command into magic variable 'preJavaHomeCmd', which is picked up by the node
-preJavaHomeCmd = dockerRunCommand + dockerParameters + proActiveHomeVolume + workspaceVolume + containerWorkingDirectory + containerName
+workspaceContainer = (isWindows ? forkEnvironment.convertToLinuxPath(workspaceHost) : workspaceHost)
+cmd.add("-v")
+cmd.add(workspaceHost + ":" + workspaceContainer)
+
+cachespaceHost = cachespace
+cachespaceContainer = (isWindows ? forkEnvironment.convertToLinuxPath(cachespaceHost) : cachespaceHost)
+cmd.add("-v")
+cmd.add(cachespaceHost + ":" + cachespaceContainer)
+
+if (!isWindows) {
+     // when not on windows, mount and use the current JRE
+    currentJavaHome = System.getProperty("java.home")
+	forkEnvironment.setJavaHome(currentJavaHome)
+    cmd.add("-v")
+    cmd.add(currentJavaHome + ":" + currentJavaHome)
+}
+
+// Prepare container working directory
+cmd.add("-w")
+cmd.add(workspaceContainer)
+
+if (isWindows) {
+    // linux on windows does not allow sharing identities (such as AD identities)
+} else {
+    sigar = new org.hyperic.sigar.Sigar()
+    try {
+        pid = sigar.getPid()
+        creds = sigar.getProcCred(pid)
+        uid = creds.getUid()
+        gid = creds.getGid()
+        cmd.add("--user=" + uid + ":" + gid)
+    } catch (Exception e) {
+        println "Cannot retrieve user or group id : " + e.getMessage()
+    } finally {
+        sigar.close()
+    }
+}
+cmd.add(containerName)
+
+forkEnvironment.setPreJavaCommand(cmd)
+
+// Show the generated command
+println "DOCKER COMMAND : " + forkEnvironment.getPreJavaCommand()
 ----
-This script exports a variable called `preJavaHomeCmd`, which is picked up by the Node executing the Task.
+This script exports a variable composed of a list of command + arguments via the forkEnvironment.getPreJavaCommand function, which is picked up by the Node executing the Task.
 This variable is supposed to be a Docker run command inside a string.
 This string will be split by space and added in front of the fork execution command. As an example:
 ----
@@ -1577,6 +1664,9 @@ Add a "NOTIFICATION_EVENTS" Generic information in the workflow level, to list e
 * *Job resumed (or JOB_RESUMED)*
 * *Job running to finished (or JOB_RUNNING_TO_FINISHED)*
 * *Job submitted (or JOB_SUBMITTED)*
+* *Job running to finished with errors (or JOB_RUNNING_TO_FINISHED_WITH_ERRORS)*
+* *Job aborted (or JOB_ABORTED)*
+
 
 Scheduler can send email to the users when one of the above events is received.
 
@@ -2024,13 +2114,15 @@ key is not present, no replacement occurs):
 ----
 
 [[_task_apis]]
-== Scheduler, DataSpace, and Synchronization APIs
+== Scheduler, Resource Manager, DataSpace, and Synchronization APIs
 
 From a <<_glossary_task_executable_script,Script Task>>, several APIs are accessible via Java objects bound to dedicated <<_glossary_script_bindings,script bindings>>:
 
 - Scheduler API: using the `schedulerapi` binding, it is possible to interact directly with the scheduler server and do several operations (submit jobs, wait for tasks termination, list running jobs, etc.).
+- Resource Manager API: using the `rmapi` binding, it is possible to interact directly with the RM and do several operations (lock nodes, change node tags, monitor nodes, get thread dump, etc.).
 - DataSpace API: the `userspaceuri` or `globalspaceuri` bindings allow to manipulate files present in User or Global spaces. Operations include listing, uploading, downloading, or deleting files.
 - Synchronization API: using the `synchronizationapi` binding, it is possible to handle advanced task synchronization dynamically.
+
 
 === Scheduler API
 
@@ -2070,6 +2162,54 @@ The complete API description can be found in the link:../javadoc/org/ow2/proacti
 
 NOTE: The `schedulerapi` <<_glossary_script_bindings,script binding>> can also be used in <<_glossary_additional_task_scripts,additional scripts>> defined inside a <<_glossary_task,ProActive Task>>.
 To know in which scripts `schedulerapi` is available, study the <<_variables_quick_reference,Script Bindings Reference>>.
+
+
+=== Resource Manager API
+
+From inside a <<_glossary_task_executable_script,Script Task>>, you can use the Resource Manager API binding like the following:
+
+[source,groovy]
+----
+
+// connect to the rm
+rmapi.connect()
+
+// displaying the RM state
+full = rmapi.getRMStateFull()
+full.getNodesEvent().each { event ->
+    println(event.getNodeUrl())
+    println(event.getNodeState())
+}
+
+// add node token to the current node
+// get current node url
+nodeUrl = variables.get("PA_NODE_URL")
+rmapi.addNodeToken(nodeUrl, "MyOwnToken")
+
+
+println "Test rmapi.getTopology() " + rmapi.getTopology()
+println "Test rmapi.getExistingNodeSources() " + rmapi.getExistingNodeSources()
+println "Test rmapi.getInfrasToPoliciesMapping() " + rmapi.getInfrasToPoliciesMapping()
+println "Test rmapi.getConnectionInfo() " + rmapi.getConnectionInfo()
+println "Test rmapi.getRMStateFull() " + rmapi.getRMStateFull()
+println "Test rmapi.getRMThreadDump() " + rmapi.getRMThreadDump()
+println "Test rmapi.getState() " + rmapi.getState()
+println "Test rmapi.getSupportedNodeSourceInfrastructures() " + rmapi.getSupportedNodeSourceInfrastructures()
+println "Test rmapi.getSupportedNodeSourcePolicies() " + rmapi.getSupportedNodeSourcePolicies()
+println "Test rmapi.getVersion() " + rmapi.getVersion()
+println "Test rmapi.isActive() " + rmapi.isActive()
+
+
+// do not forget to disconnect from the rm
+rmapi.disconnect();
+----
+
+The complete API description can be found in the link:../rest[Resource Manager Rest Interface].
+
+NOTE: The `rmapi` <<_glossary_script_bindings,script binding>> can also be used in <<_glossary_additional_task_scripts,additional scripts>> defined inside a <<_glossary_task,ProActive Task>>.
+To know in which scripts `rmapi` is available, study the <<_variables_quick_reference,Script Bindings Reference>>.
+
+
 
 [[_dataspace_apis]]
 === DataSpace API
@@ -2359,7 +2499,7 @@ A complete example of Producer / Consumer, _ServiceDeployerConsumer_ can be down
 
 == Scheduling policies
 
-See link:../admin/ProActiveAdminGuide.html#_scheduling_policies[Admin Guide] to congifure scheduling policies.
+See link:../admin/ProActiveAdminGuide.html#_scheduling_policies[Admin Guide] to configure scheduling policies.
 
 === Earliest deadline first (EDF) policy
 
