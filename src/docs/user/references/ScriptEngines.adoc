@@ -1,0 +1,93 @@
+This section gathers the available scripts engines and the operating system where they run.
+
+NOTE: Script engine naming is case-sensitive
+
+[cols="1,1,1,1", options="header"]
+|====
+
+|Script Engine Name
+|Description
+|Operating System
+|Additional Requirements
+
+|`shell`
+|An engine able to run several linux shell scripts using the shebang notation.
+|Linux, Mac
+|
+
+|`bash`
+|An engine able to run linux bash shell scripts.
+|Linux, Mac
+|
+
+|`cmd`
+|An engine able to run Windows CMD scripts.
+|Windows
+|
+
+|`powershell`
+|An engine able to run PowerShell scripts.
+|Windows
+|Powershell 2.0 Engine and .NET Framework 3.5 must be installed
+
+|`vbscript`
+|An engine able to run VBScript commands and scripts.
+|Windows
+|
+
+|`docker`
+|An engine able to run Docker containers defined as Dockerfile.
+|Linux, Mac, Windows
+|Docker must be installed
+
+|`docker-compose`
+|An engine able to run composite Docker containers defined as Docker-compose description file.
+|Linux, Mac, Windows
+|Docker and Docker-Compose must be installed
+
+|`kubernetes`
+|An engine able to run Kubernetes pods using a kubernetes yaml job description file.
+|Linux, Mac, Windows
+|Kubernetes client kubectl must be installed
+
+|`javascript`
+|An engine able to run Javascript code using the Nashorn JSR223 implementation.
+|Linux, Mac, Windows
+|
+
+|`groovy`
+|An engine able to run Groovy scripts.
+|Linux, Mac, Windows
+|
+
+|`ruby`
+|An engine able to run JRuby scripts.
+|Linux, Mac, Windows
+|
+
+|`python`
+|An engine able to run Jython scripts
+|Linux, Mac, Windows
+|
+
+|`cpython`
+|An engine able to run native CPython scripts
+|Linux, Mac, Windows
+|CPython and py4j module must be installed
+
+|`R`
+|An engine able to run R language scripts
+|Linux, Mac, Windows
+|R must be installed and the rJava library
+
+|`perl`
+|An engine able to run Perl scripts
+|Linux, Mac, Windows
+|Perl must be installed
+
+|`scalaw`
+|An engine able to run Scala scripts
+|Linux, Mac, Windows
+|
+
+|====

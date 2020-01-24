@@ -1,0 +1,504 @@
+=== Bash and Shell
+The *Bash* and *Shell* script engines allows to run linux shell scripts inside ProActive Tasks.
+The main difference between the two script engines is that the Shell script engine must use the link:https://en.wikipedia.org/wiki/Shebang_(Unix)[Shebang instruction] to define the Shell in use inside the script.
+
+Both engines features the following behaviors:
+
+ * Script bindings are translated as environment variables.
+ * Workflow variables are un-modifiable except by using a post-script written in another language such as the `update_variables_from_file` script.
+ * The _result_ of the script engine execution corresponds to the return code of the bash or shell process executed.
+
+Example `bash` script (the shebang notation is omitted):
+
+[source,bash]
+----
+echo "Hello world"
+----
+
+Example `shell` script:
+
+[source,bash]
+----
+#!/bin/ksh
+print "Hello world"
+----
+
+Writing Bash or Shell scripts in ProActive Workflows is rather straightforward, but a few considerations need to be taken into account.
+
+The <<../user/ProActiveUserGuide.adoc#_script_bindings,automatic binding mechanism>> works differently as other scripting language: it makes use of *environment variables*.
+
+For example, suppose that the workflow variable _foo_ is defined. This workflow variable can be accessed in the script engine through a specific environment variable created by the ProActive Scheduler:
+
+[source,bash]
+----
+echo "Here is the value of the foo variable:"
+echo "$variables_foo"
+----
+
+The <<../user/ProActiveUserGuide.adoc#_variables_quick_reference,Script Bindings Reference>> chapter shows how various bindings can be used in `bash` or `shell` script engines.
+
+In chapter <<../user/ProActiveUserGuide.adoc#_inherited_variables,Script variables>>, we explain how a given task script can modify the variable map and propagate its modifications inside the workflow. This does not apply to shell script engines, i.e. a shell script engine cannot modify the variables map directly.
+
+For example, suppose the initial value of the _foo_ variable is "Old Value" and _Task_A_ contains the script:
+
+[source,bash]
+----
+echo "Here is the value of the foo variable:"
+echo "$variables_foo"
+echo "I want to modify the value of the foo variable:"
+variables_foo="New Value"
+----
+
+And _Task_B_ a child of _Task_A_ contains:
+
+[source,bash]
+----
+echo "Here is the value of the foo variable:"
+echo "$variables_foo"
+----
+
+Then, _Task_B_ will display
+
+----
+Here is the value of the foo variable:
+Old Value
+----
+
+We can see that the execution of _Task_A_ had no impact on the _foo_ variable.
+
+In general, when a modification of a workflow variable is needed, other script engines should be used.
+In ProActive Catalog, an example groovy <<../user/ProActiveUserGuide.adoc#_pre_post_clean,post script>> called `update_variables_from_file` allows to propagate a variable modification from a shell main Task script using a temporary file:
+
+_Task_A_ main bash script:
+
+[source,bash]
+----
+echo "Here is the value of the foo variable:"
+echo "$variables_foo"
+echo "I want to modify the value of the foo variable:"
+variables_foo="New Value"
+echo "foo=$variables_foo">>$localspace/.variables
+----
+
+_Task_A_ grovy post script (`update_variables_from_file`)
+
+[source,groovy]
+----
+new File(localspace, ".variables").eachLine { line ->
+    keyvalue = line.split("\\s*=\\s*")
+    if (keyvalue.length == 2) {
+        variables.put(keyvalue[0], keyvalue[1])
+    }
+}
+----
+
+_Task_B_ a child of _Task_A_:
+
+[source,bash]
+----
+echo "Here is the value of the foo variable:"
+echo "$variables_foo"
+----
+
+Displays:
+----
+Here is the value of the foo variable:
+New Value
+----
+
+=== Windows Cmd
+
+Windows Cmd script engine behaves similarly as <<_bash_and_shell,bash script engine>>, but for Microsoft Windows Operating systems.
+
+It features the following behaviors:
+
+ * Script bindings are translated as environment variables.
+ * Workflow variables are un-modifiable except by using a post-script written in another language such as the `update_variables_from_file` script (see <<_bash_and_shell,Bash script language>> for further explanations).
+ * The _result_ of the script engine execution corresponds to the return code of the `cmd.exe` process executed.
+
+Example variable usage:
+
+[source, dos]
+----
+echo "Here is the value of the foo variable:"
+echo "%variables_foo%"
+----
+
+=== VBScript
+
+VBScript engine behaves similarly as <<_windows_cmd,Windows CMD>> but using visual basic syntax instead of batch. It uses the `cscript.exe` command to execute `vbs` scripts.
+
+It features the following behaviors:
+
+* Script bindings are translated as environment variables. They must be accessed inside the script as a process variable.
+* Workflow variables are un-modifiable except by using a post-script written in another language such as the `update_variables_from_file` script (see <<_bash_and_shell,Bash script language>> for further explanations).
+* The _result_ of the script engine execution corresponds to the return code of the `cscript.exe` process executed.
+
+Example variable usage:
+
+[source, vbscript]
+----
+Set wshShell = CreateObject( "WScript.Shell" )
+Set wshProcessEnv = wshShell.Environment( "PROCESS" )
+Wscript.Echo "Hello World from Job " & wshProcessEnv( "variables_PA_JOB_ID" )
+----
+
+Any error occurring during the script execution does not imply necessarily that the workflow task running the script will fail. This is due to the cscript command not immediately exiting upon error.
+
+In order to report a failure to the task when running a VB script, the following instruction can be added in the beginning of the script:
+
+[source, vbscript]
+----
+On Error Quit 1
+----
+
+Example:
+
+[source, vbscript]
+----
+On Error Quit 1
+Wscript.Echo "This will produce an error" & (1 / 0)
+----
+
+=== Javascript
+
+Javascript engine allows running *Javascript* scripts inside ProActive Tasks.
+This engine is based on link:https://docs.oracle.com/javase/10/nashorn/introduction.htm#JSNUG136[Nashorn Javascript engine].
+Nashorn Javascript engine provides Rhino compatibility mode which is described in the following
+link:https://wiki.openjdk.java.net/display/Nashorn/Rhino+Migration+Guide[documentation].
+
+Example of Javascript ProActive Task which modifies Job Variable:
+
+[source, javascript]
+----
+var status = variables.get("orderStatus")
+if (status == "delivered") {
+    status = "returned"
+}
+variables["orderStatus"] = status
+variables.put("otherVar", "someConstValue")
+----
+
+Example of Javascript ProActive Task which modifies Job Variable containing JSON object:
+
+[source, javascript]
+----
+var jsonVariable = JSON.parse(variables.get("jsonVariable")) // you need to parse your variable first
+jsonVariable["newVar"] = "newValue" // then you can modify it as regular json
+var serializedJsonVariable = JSON.stringify(jsonVariable) // then you need to serialize it to string
+variables["jsonVariable"] = serializedJsonVariable // and finally you can overwrite existing variable
+----
+
+NOTE: You have to use `variables["myVarName"] = somevar` syntax,
+instead of `variables.put("myVarName", somevar)` syntax, for storing the variables if you are using Javascript variables.
+You still can use `variables.put("myVarName", "someConstantValue")` syntax for storing constants.
+
+
+Example of Javascript ProActive Task which returns JSON object as a result:
+
+[source, javascript]
+----
+var jsonObject = {"orderStatus": "done", "customerName": "privatePrivacy"};
+var serializedJsonObject = JSON.stringify(jsonObject) // then you need to serialize it to string
+result = serializedJsonVariable
+----
+
+NOTE: To save a JSON object as a variable or as a task result
+you have to serialize to a string first, by using `JSON.stringify()`
+
+
+=== Python
+We support both Jython and Python Script Engines. Jython is an implementation of the Python programming language designed to run on the Java platform, Jython programs use Java classes instead of Python modules.
+The advantage of using our Jython Script Engine is that you do not need to do any installation. It includes some modules in the standard Python programming language distribution, but lacking the modules implemented originally in C.
+Besides, the libraries such as numpy, matplotlib, pandas, etc. are not supported by Jython. And the libraries which depends on numpy such as TensorFlow, PyTorch and Keras etc. are not supported neither.
+
+In order to support native Python, we provide also a Python Script Engine. To use the Python Script Engine, the 'Language' field should be put to 'cpython'. By using Python Script Engine, you can personalize the Python version that you want to use.
+Since there are many different versions of Python (mainly Python2 and Python3) which are not compatible, ProActive supports all the Python versions (Python2, Python3, etc).
+By default, the Python used to execute the script is the default Python version on your machine. In order to use another Python version to execute
+the task, it is required to add a 'PYTHON_COMMAND' link:../user/ProActiveUserGuide.html#_glossary_generic_information[Generic Information]. Its value should contain the symbolic or absolute path to the desired python command to run (for example 'python3' or '/usr/local/opt/python3/bin/python3.6'). If the link:../user/ProActiveUserGuide.html#_glossary_generic_information[Generic Information] is put at task level this version of Python will be only used for this task, if
+it is put in the job level this version of Python will be used for all the tasks in this job.
+
+For every tasks which use the native python script engine:
+
+- Python must be installed on the ProActive Node which will be used to execute the task.
+- The py4j module must be installed. Please refer to
+link:../admin/ProActiveAdminGuide.html#_python_script_engine_python_task[Python Script Engine (Python task)] for the introduction about the installation of Python Script Engine.
+
+Here is a workflow example (in xml format) about a simple Python task:
+
+[source, xml]
+----
+  <taskFlow>
+    <task name="Python_Task" >
+      <description>
+        <![CDATA[ The simplest task, ran by a python engine. ]]>
+      </description>
+      <genericInformation>
+        <info name="PYTHON_COMMAND" value="python3"/>
+      </genericInformation>
+      <scriptExecutable>
+        <script>
+          <code language="cpython">
+            <![CDATA[
+import platform
+print("The current version of python you are using is: " + platform.python_version())
+print("Hello World")
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+  </taskFlow>
+----
+
+A `jython` script engine execution runs in the same Java process as the Task execution. A `cpython` script engine execution runs inside a separate python process.
+
+=== R
+ProActive R script engine is based on the link:https://www.rforge.net/JRI/[Java R Interface].
+In order to use the R script engine inside a ProActive Node (container which executes a workflow Task), the following prerequisites are needed:
+
+ * A R distribution must be installed.
+ * The link:https://cran.r-project.org/web/packages/rJava/index.html[rJava] package must be installed.
+ * The `R_HOME` environment variable needs to be configured, to allow the script engine finding the R distribution.
+ * The `R_LIBS` environment variable might need to be configured if R libraries cannot be found automatically in $R_HOME/library.
+
+The ProActive R script engine works on both Linux and Windows.
+
+Here is an example of R script:
+
+[source, R]
+----
+jobName <- variables[['PA_JOB_NAME']]
+cat('My job is called', jobName, '\n')
+----
+
+The following paragraphs describes the R script language specific syntaxes.
+
+The progress variable is set as follows (notice the leading dot):
+
+[source, R]
+----
+.set_progress(50)
+----
+
+In contrary to other languages such as groovy or jruby, the parent tasks results (*results* variable) is accessed directly:
+
+[source, R]
+----
+print(results[[0]])
+----
+
+Variable affectation can be done via:
+
+[source, R]
+----
+variables[["myvar"]] <- "some value"
+----
+
+Access to dataspaces variables is similar to other languages:
+
+[source, R]
+----
+print(userspace)
+print(globalspace)
+print(inputspace)
+print(localspace)
+print(cachespace)
+print(outputspace)
+----
+
+Some internal R types (such as lists, vectors, strings) are automatically converted when stored as a result or in the workflow variable map,
+but other types such as data.table are not automatically converted. Conversion for these types should be done manually, for example using json serialization or an output file.
+
+Java objects such as fork environment variable, scheduler, userspace or globalspace APIs are not available in R.
+
+=== PowerShell
+ProActive PowerShell script engine is based on link:https://github.com/jni4net/jni4net[jni4net] to call the Powershell API from Java.
+
+It requires that Powershell 2.0 Engine and .NET Framework 3.5 are installed on the relevant machines.
+
+An example of Powershell script:
+
+[source, PowerShell]
+----
+$variables.Set_Item('myvar', 'value')
+$result = Get-Date
+----
+
+In contrary to other languages such as groovy or jruby, the parent tasks results (*results* variable) is accessed directly:
+
+[source, PowerShell]
+----
+Write-Output $results[0]
+----
+
+Variable affectation can be done via:
+
+[source, PowerShell]
+----
+$variables.Set_Item('myvar', 'value')
+----
+
+Internal PowerShell types such as Dates are automatically serialized to an internal format which can be understood by another powershell task, for example in the following two tasks:
+
+Task1:
+
+[source, PowerShell]
+----
+$result = Get-Date
+----
+
+Task2:
+
+[source, PowerShell]
+----
+Write-Output $results[0].Day
+----
+
+The second task is able to automatically use the Date object received from the first task.
+
+When an internal PowerShell type needs to be used by another language than PowerShell, a manual conversion such as json must be performed.
+
+=== Perl
+
+The Perl script engines features the following behaviors:
+
+ * Script bindings are translated as environment variables.
+ * Workflow variables are un-modifiable except by using a post-script written in another language such as the `update_variables_from_file` script (see <<_bash_and_shell,Bash script language>> for further explanations).
+ * The _result_ of the script engine execution corresponds to the return code of the `perl` process executed.
+
+In that sense, the Perl script engine behaves similarly as the Bash or Cmd script engines.
+
+Please refer to link:../user/ProActiveUserGuide.html#_variables_quick_reference[Script Bindings Reference] for the complete list of bindings accessible through environment variables.
+
+Inside Perl, you can access environment variables using the *%ENV* hash.
+
+The aim of next examples is to clarify how script engine bindings can be accessed inside Perl scripts.
+
+A workflow variable can be accessed using system environment variables:
+
+[source, perl]
+----
+my $jobName= $ENV{"variables_PA_JOB_NAME"};
+----
+
+Similarly, the result of a parent task:
+
+[source, perl]
+----
+my $parent_task_result= $ENV{"results_0"};
+----
+
+Or another script binding (for example, USERSPACE):
+
+[source, perl]
+----
+my $USERSPACE= $ENV{"USERSPACE"};
+----
+
+=== Docker Compose
+
+In order for Docker_Compose tasks to work, the _Node_ must have Docker and Docker Compose installed. Please refer to the official
+ Docker documentation to see how to install https://docs.docker.com/engine/installation/[Docker^] and https://docs.docker.com/compose/install/[Docker Compose^].
+
+A Docker_Compose task expects the content of a Docker Compose file inside the _Script_ section. You can find out how to write Docker Compose files
+in the official https://docs.docker.com/compose/[Docker Compose documentation^].
+
+To get started, a simple Docker Compose example is explained below.
+
+The content of the _Script_ section (equal to the content of a Docker Compose file) is:
+
+[source, yaml]
+----
+helloworld:
+    image: busybox
+    command: echo "Hello ProActive"
+----
+
+The above example describes a container which is called 'helloworld'. That container is created from a busybox image,
+ which will run the command 'echo "Hello ProActive"'
+
+The Docker_Compose task allows to set parameters to the `docker-compose` tool with regard to the docker-compose CLI https://docs.docker.com/compose/reference/overview/[reference].
+
+----
+docker-compose [general parameters] COMMAND [options]
+----
+
+It supports general parameters as well as commands options (we currently only support options for the `up` command).
+You can specify these options by supplying a space character separated list in the <<_glossary_generic_information, generic informations>>.
+
+* To define a _general parameter_, use the key *docker-compose-options* and supply "--verbose" as an example value.
+* To define a _docker-compose up option_, use the key *docker-compose-up-options* and supply "--exit-code-from helloworld".
+
+The two latter generic informations will be used to generate the following command:
+
+----
+docker-compose --verbose up --exit-code-from helloworld
+----
+
+If splitting by space is prohibitive you can specify the split regex in the <<_glossary_generic_information, generic informations>> with the
+key *docker-compose-options-split-regex*. If you supply e.g. "!SPLIT!" as value, then your *docker-compose-up-options* will need to look like this: "--option1!SPLIT!--option2".
+
+=== Docker File
+
+The main behavior of a Docker_File task is to first build an image and then run a container instance from it. Once the execution is done, the container is stopped and the built image is deleted.
+
+Advanced options will allow to parametrize these actions.
+
+In order for Docker_File tasks to work, the _Node_ must have Docker installed. Please refer to the official
+ Docker documentation to see how to install https://docs.docker.com/engine/installation/[Docker^].
+
+To use a Docker_File task, put the content of a Dockerfile inside the _Task Implementation_ section. You can find out how to write Dockerfile
+in the official https://docs.docker.com/engine/reference/builder/[Dockerfile documentation^].
+A Docker_File task allows executing a succession of docker commands according to the lifecycle of Docker containers. In order, docker build, docker run, docker stop, and docker rmi are ran when a Docker_File task is executed.
+
+To get started, a simple Docker_File task can be tested by using this Dockerfile as the content of the _Script_ section (task implementation)
+
+[source, dockerfile]
+----
+FROM ubuntu:18.04
+RUN echo "Hello ProActive" 
+RUN sleep 30
+----
+
+It will create an image using the Docker build command, by specifying commands to start (echo and sleep) for every running containers from this image. At the end the built image and the started container are deleted.
+
+The build, start, stop and remove commands can be parametrized through optional command line options explained after.
+
+* The Docker_File task allows to set parameters to the `docker build` command with regard to the docker-build CLI https://docs.docker.com/engine/reference/builder/[reference].
+----
+docker build [OPTIONS] PATH | URL | -
+----
+
+To define a _docker-build option_, use the generic information *docker-build-options*
+
+For instance by using the docker-build-options generic information with the value --add-host, a custom host-to-IP mapping will be added to the image.
+
+* The Docker_File task allows to set parameters to the `docker run` command with regard to the docker-run CLI https://docs.docker.com/engine/reference/run/[reference].
+----
+docker run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
+----
+
+To define a _docker-run option_, use the generic information *docker-run-options*
+
+For instance by using the docker-run-options generic information with the value -d=true, the container will be started in detached mode.
+
+* The Docker_File task allows to set parameters to the `docker stop` command with regard to the docker-stop CLI https://docs.docker.com/engine/reference/commandline/stop/[reference].
+----
+docker stop [OPTIONS] CONTAINER [CONTAINER...]
+----
+
+To define a _docker-run option_, use the generic information *docker-stop-options*
+
+For instance by using the docker-stop-options generic information with the value --time 30, the container will be stopped after 30s.
+
+TIP:  a parameter *docker.file.keepcontainer* is defined in the dockerfile script engine properties file (in config/scriptengines/ folder). Put the value to *yes* if you do not want to stop the container.
+
+* The Docker_File task allows to set parameters to the `docker rmi` command with regard to the docker-rmi CLI https://docs.docker.com/engine/reference/commandline/rmi/#options[reference].
+----
+docker rmi [OPTIONS] IMAGE [IMAGE...]
+----
+
+To define a _docker-rmi option_, use the generic information *docker-rmi-options*
+
+TIP:  a parameter *docker.file.keepimage* is defined in the dockerfile script engine properties file (in config/scriptengines/ folder). Put the value to *yes* if you do not want to delete the built image.

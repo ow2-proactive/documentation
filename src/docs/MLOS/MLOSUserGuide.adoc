@@ -1,13 +1,13 @@
 :docinfo:
 :toc:
-:toc-title: ML-OS User Guide
+:toc-title: MLOS User Guide
 = Machine Learning Open Studio
 include::../common-settings.adoc[]
 include::../all-doc-links.adoc[]
 
 == Overview
 
-=== What is Machine Learning Open Studio (ML-OS)?
+=== What is Machine Learning Open Studio (MLOS)?
 
 include::references/Overview.adoc[]
 
@@ -17,7 +17,7 @@ include::references/Glossary.adoc[]
 
 == Get Started
 
-To submit your first Machine Learning workflow to *ProActive Scheduler*, link:../admin/ProActiveAdminGuide.html#_run_the_proactive_scheduler[install] it in
+To submit your first Machine Learning (ML) workflow to *ProActive Scheduler*, link:../admin/ProActiveAdminGuide.html#_run_the_proactive_scheduler[install] it in
 your environment (default credentials: admin/admin) or just use our demo platform https://try.activeeon.com[try.activeeon.com^].
 
 *ProActive Scheduler* provides comprehensive interfaces that allow to:
@@ -55,11 +55,11 @@ Suppose you need to predict houses prices based on this information (features) p
 - *LSTAT* % lower status of the population
 - *MDEV* Median value of owner-occupied homes in $1000' s
 
-Predicting houses prices is a complex problem, but we can simplify it a bit for this step by step example. We'll show you how you can easily create a predictive analytics solution using Machine Learning Open Studio.
+Predicting houses prices is a complex problem, but we can simplify it a bit for this step by step example. We'll show you how you can easily create a predictive analytics solution using MLOS.
 
 === Manage the Canvas
 
-To use Machine Learning Open Studio, you need to add the *Machine Learning Bucket* as main catalog in the ProActive Studio. This bucket contains a set of generic tasks that enables you to upload and prepare data, train a model and test it.
+To use MLOS, you need to add the *Machine Learning Bucket* as main catalog in the ProActive Studio. This bucket contains a set of generic tasks that enables you to upload and prepare data, train a model and test it.
 
 A. Open +++<a class="studioUrl" href="/studio" target="_blank">ProActive Workflow Studio</a>+++ home page.
 
@@ -115,14 +115,14 @@ image::prepare_data.gif[100000,2000]
 
 === Train a Predictive Model
 
-Using Machine Learning Open Studio, you can easily create different machine learning models in a single experiment and compare their results. This type of experimentation helps you find the best solution for your problem.
-You can also enrich the `machine-learning` bucket by adding new machine learning algorithms and publish or customize an existing task according to your requirements as the tasks are open source.
+Using MLOS, you can easily create different ML models in a single experiment and compare their results. This type of experimentation helps you find the best solution for your problem.
+You can also enrich the `machine-learning` bucket by adding new ML algorithms and publish or customize an existing task according to your requirements as the tasks are open source.
 
 NOTE: To change the code of a task click on it and click the `Task Implementation`. You can also add new variables to a specific task.
 
 In this step, we will create two different types of models and then compare their scores to decide which algorithm is most suitable to our problem. As the Boston dataset used for this example consists of predicting price of houses (continuous label). As such, we need to deal with a regression predictive problem.
 
-To solve this problem, we have to choose a regression algorithm to train the predictive model. To see the available regression algorithms available on the Machine Learning Open Studio, see *ML Regression* Section in the *machine-learning* bucket.
+To solve this problem, we have to choose a regression algorithm to train the predictive model. To see the available regression algorithms available on the MLOS, see *ML Regression* Section in the *machine-learning* bucket.
 
 For this example, we will use <<Linear_Regression>> Task and <<Support_Vector_Regression>> Task.
 
@@ -148,13 +148,13 @@ C. Connect the second <<Predict_Model>> Task to the <<Train_Model>> Task that is
 
 D. Connect the second <<Predict_Model>> Task to the <<Split_Data>> Task
 
-E. Find the <<Preview_Results>> Task in the Machine Learning bucket and drag and drop it twice into the canvas.
+E. Find the <<Preview_Results>> Task in the ML bucket and drag and drop it twice into the canvas.
 
 F. Connect each <<Preview_Results>> Task with <<Predict_Model>>.
 
 image::test_the_predictive_model.png[100000,2000]
 
-NOTE: if you have a pickled file (.pkl) containing a predictive model that you have learned using another platform and you need to test it in the Machine Learning Open Studio, you can load it using *Import_Model* Task.
+NOTE: if you have a pickled file (.pkl) containing a predictive model that you have learned using another platform and you need to test it in the MLOS, you can load it using *Import_Model* Task.
 
 === Run the Experiment and Preview the Results
 
@@ -171,6 +171,769 @@ D. Visualize the output logs by clicking on the output tab and check the streami
 E. Click the *Tasks* tab, select an *Preview_Results* task and click on the *Preview* tab, then click either on *Open in browser* to preview the results on your browser or on *Save as file* to download the results locally.
 
 image::execute.gif[100000,2000]
+
+[[_AutoML]]
+
+== AutoML
+
+The `auto-ml-optimization` bucket contains the Multi_Tuners_AutoML workflow that can be easily used to find the operating parameters for any system whose performance can be measured as a function of adjustable parameters.
+It is an estimator that minimizes the posterior expected value of a loss function.
+This bucket also comes with a set of workflows' examples that demonstrates how we can optimize mathematical functions, MLOS workflows and machine/deep learning algorithms from scripts using AutoML tuners.
+
+=== AutoML Variants
+
+All Multi_Tuners_AutoML variants propose six algorithms for hyperparameters' optimization.  The choice of the sampling/search strategy depends strongly on the tackled problem.
+Three variants of AutoML are proposed. Each variant comes with specific pipelines (parallel or sequential) and visualization tools (Visdom or Tensorboard) as described in the subsections below (<<Multi_Tuners_AutoML_V1>>, <<Multi_Tuners_AutoML_V2>>, <<Multi_Tuners_AutoML_V3>>).
+
+*Common variables:*
+
+.Multi_Tuners_AutoML_Variants_Common Variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `TUNING_ALGORITHM`
+| Specifies the tuner algorithm that will be used for hyperparameters optimization.
+| List(Bayes, Grid, Random, QuasiRandom, CMAES, MOCMAES) default=Bayes
+| `WORKFLOW_TO_OPTIMIZE`
+| Specifies the path of the workflow that we need to optimize.
+| String [default=auto-ml-optimization/Himmelblau_Function]
+| `SEARCH_SPACE`
+|  Specifies the representation of the search space which has to be defined using dictionaries.
+| JSON format (see search space representation below)
+| `MAX_ITERATIONS`
+|  Specifies the number of maximum iterations.
+| Int (default=2)
+| `PARALLEL_SAMPLES_PER_LOOP`
+|  Specifies the number of samples per iteration.
+| Int (default=2)
+| `DOCKER_ENABLED`
+|   If True, the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+|===
+
+*How to define the search space:*
+
+This subsection describes common building blocks to define a search space:
+
+    - uniform: Uniform continuous distribution.
+    - quantized_uniform: Uniform discrete distribution.
+    - log: Logarithmic uniform continuous distribution.
+    - quantized_log: Logarithmic uniform discrete distribution.
+    - choice: Uniform choice distribution between non-numeric samples.
+
+*Which tuner algorithm to choose?*
+
+The choice of the tuner depends on the following aspects:
+
+    - Time required to evalute the model.
+    - Number of hyperparameters to optimize.
+    - Type of variable.
+    - The size of the search space.
+
+In the following, we briefly describe the different tuners proposed by the Multi_Tuners_AutoML workflow:
+
+    - *Grid sampling* applies when all variables are discrete and the number of possibilities is low.
+      A grid search is a naive approach that will simply try all possibilities making the search extremely long even for medium sized problems.
+
+    - *Random sampling* is an alternative to grid search when the number of discrete parameters to optimize and the time required for each evaluation is high.
+      Random search picks the point randomly from the configuration space.
+
+    - *QuasiRandom sampling* ensures a much more uniform exploration of the search space than traditional pseudo random.
+      Thus, quasi random sampling is preferable when not all variables are discrete, the number of dimensions is high and the time required to evaluate a solution is high.
+
+    - *Bayes search* models the search space using gaussian process regression, which allows to have an estimate of the loss function and the uncertainty on that estimate at every point of the search space.
+      Modeling the search space suffers from the curse of dimensionality, which makes this method more suitable when the number of dimensions is low.
+
+    - *CMAES search* is one of the most powerful black-box optimization algorithm.
+      However, it requires a significant number of model evaluation (in the order of 10 to 50 times the number of dimensions) to converge to an optimal solution.
+      This search method is more suitable when the time required for a model evaluation is relatively low.
+
+    - *MOCMAES search* is a multi-objective algorithm optimizing multiple tradeoffs simultaneously.
+      To do that, MOCMAES employs a number of CMAES algorithms.
+
+===== Multi_Tuners_AutoML_V1
+
+*Workflow Overview:* generates at first the chosen values of hyperparameters for each trial. Then, it executes the different trials in parallel. Finally, it plots the different results using Visdom.
+
+*Specific variables:*
+
+.Multi_Tuners_AutoML_V1 specific variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `VISDOM_ENABLED`
+|  If True, the results will be plotted in real time in the Visdom dashboard.
+| Boolean (default=True)
+|===
+
+image::MLOS-AutoML-V1.png[align=center]
+===== Multi_Tuners_AutoML_V2
+
+*Workflow Overview:* considers two execution pipelines (parallel and sequential).
+For all the tuning algorithms except the Bayesian one, the parallel pipeline is executed similar as `Multi_Tuners_AutoML_V1`. For the Bayesian algorithm, the sequential one is executed. This pipeline both generates the hyperparameters' values, and executes the associated trials sequentially.
+The results can be visualized using Visdom.
+
+*Specific variables:*
+
+.Multi_Tuners_AutoML_V2 specific variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `VISDOM_ENABLED`
+|  If True, the results will be plotted in real time in the Visdom dashboard.
+| Boolean (default=True)
+|===
+
+image::MLOS-AutoML-V2.png[align=center]
+
+===== Multi_Tuners_AutoML_V3
+*Workflow Overview:* is similar to `Multi_Tuners_AutoML_V2`. However, this version uses `Tensorboard` to visualize the different results.
+
+*Specific variables:*
+
+.Multi_Tuners_AutoML_V3 specific variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `MOUNT_LOG_PATH`
+|  The path of the shared folder in which the Tensorboard logs will be saved.
+| String (default=/shared/$INSTANCE_NAME)
+| `DOCKER_LOG_PATH`
+|  The path of the folder in which the Tensorboard logs will be saved in the docker container.
+| String (default=/graphs/$INSTANCE_NAME)
+| `INSTANCE_NAME`
+|  The instance name of the Tensorboard server that is/will be launched.
+| String (default=tensorboard-server)
+| `TENSORBOARD_ENABLED`
+|  If True, the results will be plotted in real time in the Tensorboard dashboard.
+| Boolean (default=True)
+|===
+
+image::MLOS-AutoML-V3.png[align=center]
+
+=== Objective ML Examples
+
+The following workflows represent some machine learning and deep learning algorithms that can be optimized:
+
+*Diabetics Detection Using Logistic Regression:* train a logistic regression model using MLOS machine learning generic tasks in order to detect diabetics.
+
+*CIFAR10 CNN:* train a simple deep CNN on the CIFAR10 images dataset using the Keras library.
+
+*CIFAR100 CNN:* train a simple deep CNN on the CIFAR100 images dataset using the Keras library.
+
+*Image Object Detection:* train a YOLO model on the coco dataset using MLOS deep learning generic tasks.
+
+*Multiple SVM Models:* train multiple types of SVMs models that can be optimized using AutoML.
+
+=== Objective Function Examples
+
+The following workflows represent some mathematical functions that can be optimized by the AutoML tuners.
+
+*Himmelblau_Function:* is a multi-modal function, used to test the performance of optimization algorithms.
+
+== Machine Learning Model as a Service (ML MaaS)
+
+Once a predictive model is built, tested and validated, you can easily use it in real world production pipelines by deploying it as a service.
+This will be particularly useful for engineering teams that want to take advantage of this model.
+
+Interfacing with the Web Service could be set up in different ways:
+
+- Either you provide a user identifier, deploy the model of your choice and have the Web Service available to compute the prediction and return its value.
+
+- Or you accept a payload, convert it to json data, calculate the prediction using MaaS and return its value.
+
+Using MaaS, you can easily deploy and use any machine learning model as a Web Service on physical or virtual compute host on which there is a Proactive Node available.
+You can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and eventually, deploy a a Model-Service on that specific node.
+
+The following deployment steps are similar wherever you need to deploy and use your model:
+
+. <<Start a Model Service>>
+. <<Deploy a Model>>
+. <<Call the service for predictions>>
+. <<Delete the service>>
+
+=== Start a Model Service
+
+There are two ways to start a web service (i.e., where you will deploy, update and call your model) using MLOS:
+
+*Via Cloud Automation portal*
+
+Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Cloud Automation Portal].
+
+Search for `Model_Service` in Services Workflows List.
+
+Set the following variables :
+
+.Model_Service variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_IMAGE`
+| The Docker image that contains all the dependencies and libraries needed for the model execution.
+| String (default="activeeon/dlm3")
+| `INSTANCE_NAME`
+| The name of the service that will be deployed.
+| String (default="model-server")
+| `YAML_FILE`
+| A YAML file that describes the OpenAPI Specification ver. 2 (known as Swagger Spec) of the service. This file should be stored in the catalog under the `model_as_service_resources` bucket. More information about the structure of this file can be found in the section <<Customize the Service>>.
+| String (default="ml_service-api").
+| `PYTHON_ENTRYPOINT`
+| This entry script starts the service and defines the different functions to deploy the model, score the requests by using the model, and return the results. This script is specific to your model. This file should be stored in the Catalog. More information about this file can be found in the <<Customize the Service>> section.
+| String (default="ml_service").
+|===
+
+Click on `Execute Action` and follow the progress of the service creation.
+
+image::MAS_Model_Servie_PCA.png[500,500,align=center]
+
+Open the Endpoint and concatenate the base url `api/ui`to your endpoint.
+
+Through this Swagger API, you are now able to :
+
+** Access the different defined endpoints
+** Ask for an api_token
+** Deploy a model
+** Score some data based on the deployed model
+
+Each generated endpoint will be explained in the next subsections.
+
+*Via Studio portal*
+
+Open the link:https://try.activeeon.com/Studio[Studio Portal].
+
+Create a new workflow.
+
+Add the `model_as_a_service` bucket.
+
+Drag and drop the `Model_Service_Start` task from the bucket.
+
+Execute the Workflow by setting the different workflow's variables as follows:
+
+.Model_Service_Start variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DOCKER_IMAGE`
+| The Docker image that contains all the dependencies and libraries needed for the model execution.
+| String (default="activeeon/dlm3")
+| `INSTANCE_NAME`
+| The name of the service that will be deployed.
+| String (default="model-server")
+| `YAML_FILE`
+| A YAML file that describes the OpenAPI Specification ver. 2 (known as Swagger Spec) of the service. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about the structure of this file can be found in the section <<Customize the Service>>.
+| String (default="ml_service-api").
+| `PYTHON_ENTRYPOINT`
+| This entry script starts the service and defines the different functions to deploy the model, score the requests by using the model, and return the results. This script is specific to your model. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about this file can be found in the <<Customize the Service>> section.
+| String (default="ml_service").
+|===
+
+=== Deploy a Model
+
+There are three ways to deploy a model in the running model_server (i.e., where you will deploy, update and call your model) using MLOS:
+
+*Via Cloud Automation portal*
+
+Once the status of your model service is displayed as `RUNNING` on `Cloud Automation`, you can deploy your model by following the steps below :
+
+Select and execute the `Deploy_Model_Action` to deploy your model.
+
+Set the Following variables :
+
+.Deploy_Model variables
+[cols="2,5,2"]
+|===
+| `MODEL_URL`
+| The URL of the model that needs to be deployed.
+| URL
+| `USER_NAME`
+| A valid user name having the needed privileges to execute this action.
+| String
+|===
+
+Click on `Execute Action` and follow the progress of the model deployment.
+
+Check that the current status is correctly set to `MODEL_DEPLOYED`.
+
+*Via Swagger UI*
+
+Open the Swagger UI.
+
+Open the `get_token` operation and get an api_token by entering your username (default value is `user`).
+
+Open the `deploy` operation and set the provided token and upload the model that need to be deployed.
+
+image::MAS_Deploy_Swagger.png[align=center]
+
+* *via Studio portal*
+
+Open the link:https://try.activeeon.com/Studio[Studio Portal].
+
+Create a new workflow.
+
+Add the `model_as_a_service` bucket.
+
+Drag and drop the `Deploy_Model` task from the bucket.
+
+Execute the Workflow and set the different workflow's variables as follows:
+
+.Deploy_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `DEPLOY_MODEL_ENDPOINT`
+| The endpoint of the started service.
+| URL
+| `API_EXTENSION`
+| The base path to access the deployment endpoint.
+| String (default="/api/deploy")
+| `MODEL_URL`
+| The URL of the model that need to be deployed.
+| URL
+| `SERVICE_TOKEN`
+| The api_token to be able to deploy the model.
+| String
+|===
+
+
+=== Call the service for predictions
+
+There are two ways to call the web service to score input data using MLOS:
+
+*Via Swagger UI*
+
+Open the Swagger UI.
+
+Open the get_token` operation and get an api_token by entering your username (default value is `user`).
+
+Open the `predict` operation and set the provided token and the data that you need to score.
+
+image::MAS_Predict_Swagger.png[align=center]
+
+* *via Studio portal*
+
+Open the link:https://try.activeeon.com/Studio[Studio Portal].
+
+Create a new workflow.
+
+Add the `model_as_a_service` bucket.
+
+Drag and drop the `Call_Prediction_Service` task from the bucket.
+
+Execute the Workflow and set the different workflow's variables as follows:
+
+.Call_Prediction_Service variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `PREDICT_MODEL_ENDPOINT`
+| The endpoint of the started service.
+| URL
+| `PREDICT_EXTENSION`
+| The base path to access the prediction endpoint.
+| String (default="/api/predict")
+| `SERVICE_TOKEN`
+| The api_token to be able to deploy the model.
+| String
+| `INPUT_DATA`
+| Entry data that needs to be scored by the deployed model.
+| JSON
+| `LABEL_COLUMN`
+| Name of the label column. It needs to be set if data is labeled.
+| String (default='class')
+|===
+
+=== Delete the service
+
+There are two ways to delete a web service (i.e., where you will deploy, update and call your model) using MLOS:
+
+*Via Cloud Automation Portal*
+
+Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Cloud Automation Portal].
+
+Set the action `Finish_Service` and click on execute.
+
+image::MAS_Delete_Service.png[align=center]
+
+*Via Studio portal*
+
+Open the link:https://try.activeeon.com/Studio[Studio Portal].
+
+Create a new workflow.
+
+Add the `model_as_a_service` bucket.
+
+Drag and drop the `Model_Service_Actions` task from the bucket.
+
+Execute the Workflow and set the different workflow's variables as follows:
+
+.Model_Service_Actions variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `ACTION`
+| The action that will be processed regarding the service status.
+| List (Pause_Model_Service, Resume_Model_Service, Finish_Model_Service) (default="Finish_Model_Service")
+| `INSTANCE_NAME`
+| The service name that need to be deleted, resumed or paused.
+| String (default="model-server-${PA_JOB_ID}")
+| `INSTANCE_ID`
+| The service instance id
+| String
+|===
+
+=== Deployment Pipeline Example
+
+You can connect the different tasks in a single workflow to get the full pipeline from the model training step to the model deployment and consumption steps. Each task will propagate the acquired variables to the connected tasks.
+The following workflow example is available on the `model_as_a_service` bucket under the name of `Deploy_And_Call_IRIS_Flower_Classifier_Model`.
+This example trains an Iris Flower Classifier, starts a web service where the trained model is deployed and the input data is scored by consuming the endpoints exposed by the model_service.
+
+image::MAS_IRIS_Workflow_Example.png[align=center]
+
+==== Customize the Service
+
+It is possible to customize the model as a service defined by default and adapt it to your specific needs. Indeed, you can customize the following elements according to your needs:
+
+* The file specified in the PYTHON_ENTRYPOINT variable
+* The file specified in the YAML_FILE variable
+* The docker image specified in the DOCKER_IMAGE variable
+
+In the following, we describe in depth the content of each element :
+
+*PYTHON_ENTRYPOINT file* :  The following python script refers to the ml_service.py file stored in the catalog under the `model_as_a_service_resources` bucket.
+This script defines the different functions needed to deploy the model, score data and generate tokens.
+It is possible to edit this script to make it more customized to your model. The entry script must take into consideration the:
+
+* List of users that are allowed to consume the service endpoints
+* Format of the model expected by the deployment and the prediction functions
+* Format of the incoming data
+* Data format expected by the model
+
+ml_service.py [code source]
+[source,python]
+----
+#Imports # <1>
+import os, sys, bz2, uuid, pickle, json, connexion, wget
+import pandas as pd
+import numpy as np
+
+from joblib import load
+from binascii import hexlify
+
+#Models versioning configuration # <2>
+UPLOAD_MODELS_FOLDER = "model_as_a_service"
+
+# load default model
+DEFAULT_MODEL_FILE = os.path.join(UPLOAD_MODELS_FOLDER, 'final_model.pkl')
+global SERVICE_CONFIG
+
+#Token generation # <3>
+API_KEY = hexlify(os.urandom(16)).decode() # str(uuid.uuid4())
+# tokens
+TOKENS = {
+  'user'  : API_KEY
+}
+
+#Get_token function # <4>
+def get_token_api() -> str:
+  user = connexion.request.form["user"]
+  token = TOKENS.get(user)
+  if not token:
+    return "Invalid user"
+  else:
+    print('Your token is: {uid}'.format(uid=token))
+    return token
+
+#Predict functions # <5>
+def predict_api(data: str) -> str:
+  api_token = data['api_token']
+  result = ""
+  if api_token == API_KEY:
+    dataframe_json = data['dataframe_json']
+    dataframe = pd.read_json(dataframe_json, orient='values')
+    predictions = predict(dataframe)
+    result = np.array2string(predictions)
+  return json.dumps(result)
+
+def predict(dataframe):
+  global SERVICE_CONFIG
+  SERVICE_CONFIG = {
+    "model": load(DEFAULT_MODEL_FILE)
+  }
+  model = SERVICE_CONFIG['model']
+  print("model:\n", model)
+  print("dataframe:\n", dataframe)
+  predictions = model.predict(dataframe.values)
+  return predictions
+
+#Deploy functions # <6>
+def deploy_api():
+  api_token = connexion.request.form["api_token"]
+  if api_token == API_KEY:
+    modelfile = connexion.request.files['modelfile']
+    print("modelfile:\n", modelfile)
+    model_id = "final_model"
+    filename = model_id + ".pkl"
+    model_file_path = os.path.join(UPLOAD_MODELS_FOLDER, filename)
+    print("model_file_path:\n", model_file_path)
+    modelfile.save(model_file_path)
+    return "Model deployed"
+  else:
+    return "Invalid Token"
+
+def load_model(model_file_path):
+  import pickle
+  global SERVICE_CONFIG
+  SERVICE_CONFIG = {
+    "model": load(DEFAULT_MODEL_FILE)
+  }
+  model = pickle.load(open(model_file_path,'rb'))
+  SERVICE_CONFIG['model'] = model
+  print("model:\n", model)
+
+def load_yaml(yaml_url):
+  from urllib.request import urlopen
+  import ssl, os
+  context = ssl._create_unverified_context()
+  yaml_file = urlopen(yaml_url, context=context).read()
+  os.mkdir("/model_as_a_service/swagger/")
+  yaml_file_name="/model_as_a_service/swagger/ml_service_swagger.yaml"
+  yaml_file_content=yaml_file.decode('utf-8')
+  f = open(yaml_file_name, "w")
+  f.write(yaml_file_content)
+  f.close()
+
+#main function # <7>
+if __name__ == '__main__':
+  load_yaml(os.getenv('YAML_FILE'))
+  app = connexion.FlaskApp(__name__, port=9090, specification_dir='/model_as_a_service/swagger/')
+  app.add_api('ml_service_swagger.yaml', arguments={'title': 'Machine Learning Model Service'})
+  app.run()
+----
+<1> Imports the different required libraries
+<2> Defines the path of the deployed model
+<3> Generates a token for the registered users
+<4> Returns an api_token for the registered users
+<5> Generate predictions based on the deployed model
+<6> Loads the trained model and deploys it
+<7> Launches a REST service based in the Connexion Python library.
+--
+
+*YAML_FILE file* :  The following YAML script refers to the ml_service-api.yml file stored in the catalog under the `model_as_a_service_resources` bucket.
+This script defines the OpenAPI specification describing the entire API built once a model_service is started.
+You can adapt and edit this script in order to customize your service.
+
+service_ml-api.yaml [code source]
+[source,yaml]
+----
+swagger: "2.0"
+
+# <1>
+info:
+  title: "{{title}}"
+  version: "1.0.0"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+
+basePath: /api
+
+paths:
+# <2>
+  /get_token:
+    post:
+      summary: Return secret string
+      operationId: ml_service.get_token_api
+      produces:
+        - "text/plain"
+      responses:
+        200:
+          description: secret response
+          schema:
+            type: string
+      parameters:
+        - in: formData
+          name: user
+          type: string
+          required: true
+          default: "user"
+          description: Returns the token for the user.
+# <3>
+  /deploy:
+    post:
+      summary: Deploy a machine learning model.
+      operationId: ml_service.deploy_api
+      consumes:
+        - "multipart/form-data"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: prediction response
+          schema:
+            type: string
+          examples:
+            "application/json": "OK"
+      parameters:
+        - in: formData
+          name: modelfile
+          type: file
+          required: true
+          description: The machine learning model file to upload.
+        - in: formData
+          name: api_token
+          type: string
+          required: true
+          default: "376d873c859d7f9f268e1b9be883745b"
+          description: The API token to be sent to the deploy api.
+      responses:
+        200:
+          description: "Model updated"
+# <4>
+  /predict:
+    post:
+      summary: Generate predictions
+      description: Generate predictions from a given dataframe in a JSON format.
+      operationId: ml_service.predict_api
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: prediction response
+          schema:
+            type: string
+          examples:
+            "application/json": "[2 2 0]"
+      parameters:
+        - in: body
+          name: data
+          description: The data to be sent to the predict api.
+          schema:
+            type: object
+            required:
+              - dataframe_json
+              - api_token
+            properties:
+              dataframe_json:
+                type: string
+                default: "[[6.5,3.0,5.5,1.8],[6.1,3.0,4.9,1.8],[4.8,3.0,1.4,0.1]]"
+              api_token:
+                type: string
+                default: "376d873c859d7f9f268e1b9be883745b"
+----
+<1> Contains API information: title, description (optional), version, licence.
+<2> Defines the get_token endpoint calling the get_token` function defined in the entry script.
+<3> Defines the deploy endpoint calling the `deploy_api`` function defined in the entry script.
+<4> Defines the predict endpoint calling the `predict_api` function defined in the entry script.
+--
+
+*DOCKER_IMAGE name* : Choose your own image containing the different dependencies required to run your ENTRYPOINT_SCRIPT.
+Activeeon provides a pre-built image https://github.com/ow2-proactive/docker/blob/master/dlm3/Dockerfile[activeeon/dlm3] ìncluding different machine learning and deep learning libraries.
+If you need to use your own docker image to start the service. You need to install the following libraries in your image :
+
+[source,bash]
+----
+#install java
+apt-get update && apt-get install -y openjdk-11-jdk
+apt-get install ca-certificates-java && update-ca-certificates -f
+JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64/
+export JAVA_HOME
+apt-get clean
+
+# install python libraries
+pip install connexion[swagger-ui]# <1>
+pip install py4j# <2>
+
+#install your dependent libraries
+...
+----
+<1> _Connexion_ allows you to write an OpenAPI specification, then maps the endpoints to your Python functions.
+<2> _py4j_ enables Python programs running in a Python interpreter to dynamically access Java objects in a Java Virtual Machine.
+
+== Job Analytics
+
+The *ProActive Job Analytics* is a dashboard that provides an overview of executed workflows
+along with their input variables and results.
+
+It offers several functionalities, including:
+
+- Advanced search by name, user, date, state, etc.
+- Execution metrics summary about durations, encountered issues, etc.
+- Charts to track variables and results evolution and correlation.
+- Export data in multiple formats for further use in analytics tools.
+
+
+The screenshot below shows an overview of the Job Analytics Portal.
+
+[[_JA-overview]]
+image::JA-overview.png[align=center]
+Job Analytics is very useful to compare metrics and charts of workflows that have common variables and results. For example, a ML algorithm might take different variable values and produce multiple results. It would be interesting to analyze the correlation and evolution of algorithm results regarding the input variation (See also a similar example of link:../MLOS/MLOSUserGuide.html#_AutoML[AutoML]).
+The following sections will show you some key features of the dashboard and how to use them for a better understanding of your job executions.
+
+[[_job_search]]
+=== Job Search
+
+Job Analytics Portal includes a search window that allows users to search for jobs based on specific criteria (see screenshot below).
+The job search panel allows to select multi-value filters for the following job parameters:
+
+- _Workflow Name(s)_: Jobs can be filtered by workflow name. Selecting/Typing one or more workflow names is provided by a built-in `auto-complete` feature that helps you search for workflows or buckets from the link:../user/ProActiveUserGuide.html#_catalog_portal[ProActive Catalog.]
+- _Project Name(s)_: You can also filter by one or more project names. You just have to specify the project names for the jobs you would like to analyze.
+- _Job State(s)_: You can specify the state of jobs you are looking for. The possible job states are: `Pending`, `Running`, `Stalled`, `Paused`, `In_Error`, `Finished`, `Canceled`, `Failed`, and `Killed`. For more information about job states, check the documentation link:../user/ProActiveUserGuide.html#_states[here.] Multiple values are accepted as well.
+- _User(s)_: This filter allows to either select only the jobs of the connected/current user or to specify a list of users that have executed the jobs. By default, the toggle filter is activated to select only the user jobs.
+- _Submission Time_: From the dropdown list, users can select a submission time frame (e.g., yesterday, last week, this month, etc.), or choose custom dates.
+- _Variables and results_: It is possible to choose whether to display or not the workflow's variables and results. When deactivated, the charts related to variables and results evolution/correlation will not be displayed in the dashboard.
+
+More advanced search options (_highlighted in advanced search hints_) could be used to provide filter values such as _wildcards_. For example, names that start with a specific string value are selected using `value*`. Other supported expressions are: `_\*value_` for _Ends with_, `*value*` for _Contains_, `!value` for _Not equals_, and `!\*value*` for _Not contains_.
+
+Now you can hit the search button to request jobs from the scheduler database according to the provided filter values. The search bar at the top shows a summary of the active search filters.
+
+[[_JA-search-png]]
+image::JA-search.png[align=center]
+
+=== Execution Metrics
+As shown in the screenshot below, Job Analytics Portal provides a summary of the most important job execution metrics. For instance, the dashboard shows:
+
+- A first panel that displays the number of total jobs that correspond to the search query. It also shows the ratio of successful jobs over the total number, and the number of jobs that are in progress and not yet finished. Please note that the number of in-progress jobs corresponds to the moment when the search query is executed and it is not automatically refreshed.
+- A second summary panel that displays the number of jobs with issues. We distinguish two types of issues: jobs that are finished but have encountered issues during their execution and interrupted jobs that did not finish their execution and were stopped due to diverse causes, such as insufficient resources, manual interruption, etc. Interrupted jobs include four states: `In-Error`, `Failed`, `Canceled`, and `Killed`.
+- The last metric gives an overview of the average duration of the selected jobs.
+
+image::JA-metrics.png[align=center]
+
+=== Job Charts
+
+Job Analytics includes three types of charts:
+
+- *Job duration chart:* This chart shows durations per job. The x-axis shows the job ID and the y-axis shows the job duration. Hovering over the lines will also display the same information as a tooltip (see screenshot below). Using the duration chart will eventually help the users to identify any abnormal performance behaviour among several workflow executions.
+[[_JA-duration]]
+
+image::JA-duration.png[align=center]
+- *Job variables chart:* This chart is intended to show all variable values of selected jobs. It represents the evolution chart for all numeric-only variables of the selected jobs. The chart provides the ability to hide or show specific input variables by clicking on the variable name in the legend, as shown in the figure below.
+
+- *Job results chart:* This chart is intended to show all result values of selected jobs. It represents the evolution chart for all numeric-only results of the selected jobs. The chart provides also the ability to hide or show specific results by clicking on the variable name in the legend, as shown in the figure below.
+
+image::JA-chart.png[align=center]
+
+All charts provide some advanced features such as "maximize" and "enlarge" to better visualize the results, and "move" to customize the dashboard layout (see top left side of charts). All of them provide the hovering feature as previously described and two types of charts to display: line and bar charts. Switching from one to the other can be activated through a toggle button located at the top right of the chart. Same for show/hide variables and results.
+
+
+=== Job Execution Table
+
+
+The last element of the Job Analytics dashboard shows a summary table that contains all job executions returned by the search query. It includes the job ID, status, duration, submission time, variables, results, etc.
+The jobs table provides many features:
+
+- _Filtering_: users can specify filter values for every column. For instance, the picture below applies a filter on the duration where we filter only jobs that last more than 30s. For string values, we can apply string-related filters such as _Contains_. For dates, a calendar is displayed to help users select the right date. Please note that variables and results types are not automatically detected. Therefore users can choose either the _Contains_ filter or the _Greater than_ and _Less than_ filters.
+- _Sort, hide, pin left and right columns_: allows users to easily handle and display data with respect to their needs.
+- _Export the job data to CSV format_: enables users to exploit and process job data using other analytics tools such as R, Matlab, BI tools, ML APIs, etc.
+- _Clear and apply filters_: When filters are applied, the displayed data is updated. Therefore, we provide a button (see _apply filters to charts_ on the top left of the of the table screenshot) that allows to synchronize the charts with the filtered data in the table. Finally, it is possible to clear all filters. This will automatically deactivate the synchronization.
+- _Link to scheduler jobs_: data in the job ID column is linked to the job executions in the scheduler. For example, if users want to access to the logs of a failing job, they can click on the corresponding job ID to be redirected to the job location in the Scheduling Portal.
+
+We note also that clicking on the issue types and charts described in the previous sections filters the table to show the corresponding jobs.
+
+NOTE: It is important to notice that the dashboard layout and search preferences are saved in the browser cache so that users can have access to their last dashboard and search settings.
+
+image::JA-table.png[align=center]
 
 == ProActive Jupyter Kernel
 
@@ -262,19 +1025,41 @@ Once you receive your login and password, connect to the trial platform using th
 To connect to another ProActive server host, use the later pragma this way:
 
 ```python
-#%connect(host=YOUR_HOST, port=YOUR_PORT, login=YOUR_LOGIN, password=YOUR_PASSWORD)
+#%connect(host=YOUR_HOST, [port=YOUR_PORT], login=YOUR_LOGIN, password=YOUR_PASSWORD)
 ```
+
+NOTE: Notice that the `port` parameter is optional. The default connexion port is `8080`.
+
+You can also connect to a distant server by providing its `url` in the following way:
+
+```python
+#%connect(url=YOUR_SERVER_URL, login=YOUR_LOGIN, password=YOUR_PASSWORD)
+```
+
+By providing the complete `url` of the server, users can eventually connect through the secure HTTPS protocol.
 
 ==== Using a configuration file
 
 For automatic sign in, create a file named *proactive_config.ini* in your notebook working directory.
 
-Fill your configuration file according to the following format:
+Fill your configuration file according to one of the following two formats:
+
+- By providing the server `host` and `port`:
 
 ```ini
 [proactive_server]
 host=YOUR_HOST
 port=YOUR_PORT
+[user]
+login=YOUR_LOGIN
+password=YOUR_PASSWORD
+```
+
+- By providing the server `url`:
+
+```ini
+[proactive_server]
+url=YOUR_SERVER_URL
 [user]
 login=YOUR_LOGIN
 password=YOUR_PASSWORD
@@ -504,6 +1289,148 @@ To add a post-script to a task, use:
 #%post_script(name=TASK_NAME, language=SCRIPT_LANGUAGE, [path=./POST_SCRIPT_FILE.py])
 ```
 
+==== Branch control
+
+The https://doc.activeeon.com/latest/user/ProActiveUserGuide.html#_branch[branch] control provides the ability to
+choose between two alternative task flows, with the possibility to merge back to a common one.
+
+To add a branch control to the current workflow, four specific tasks and one control condition should be added in
+accordance with the following order:
+
+1. a `branch` task,
+2. the related branching `condition` script,
+3. an `if` task that should be executed if the result of the `condition` task if `true`,
+4. an `else` task that should be executed if the result of the `condition` task if `false`,
+5. a `continuation` task that should be executed after the `if` or the `else` tasks.
+
+To add a `branch` task, you can rely on the following macro:
+
+```python
+#%branch([name=TASK_NAME], [dep=[TASK_NAME1,TASK_NAME2,...]], [generic_info=[(KEY1,VAL1), (KEY2,VALUE2),...]], [language=SCRIPT_LANGUAGE], [path=./FORK_ENV_FILE.py])
+```
+
+For the branching `condition` script, use:
+
+```python
+#%condition()
+```
+
+For an `if` task, please use:
+
+```python
+#%if([name=TASK_NAME], [generic_info=[(KEY1,VAL1),(KEY2,VALUE2),...]], [language=SCRIPT_LANGUAGE], [path=./FORK_ENV_FILE.py])
+```
+
+For an `else` task, use:
+
+```python
+#%else([name=TASK_NAME], [generic_info=[(KEY1,VAL1),(KEY2,VALUE2),...]], [language=SCRIPT_LANGUAGE], [path=./FORK_ENV_FILE.py])
+```
+
+And finally, for the `continuation` task:
+
+```python
+#%continuation([name=TASK_NAME], [generic_info=[(KEY1,VAL1),(KEY2,VALUE2),...]], [language=SCRIPT_LANGUAGE], [path=./FORK_ENV_FILE.py])
+```
+
+
+==== Loop control
+
+The https://doc.activeeon.com/latest/user/ProActiveUserGuide.html#_loop[loop] control provides the ability to repeat
+a set of tasks.
+
+To add a loop control to the current workflow, two specific tasks and one control condition should be added
+in the following order:
+
+1. a `start` task,
+2. the related looping `condition` script,
+3. a `loop` task.
+
+For a `start` task, use:
+
+```python
+#%start([name=TASK_NAME], [dep=[TASK_NAME1,TASK_NAME2,...]], [generic_info=[(KEY1,VAL1), (KEY2,VALUE2),...]], [language=SCRIPT_LANGUAGE], [path=./FORK_ENV_FILE.py])
+```
+
+For the looping `condition` script, use:
+
+```python
+#%condition()
+```
+
+For a `loop` task, please use:
+
+```python
+#%loop([name=TASK_NAME], [generic_info=[(KEY1,VAL1),(KEY2,VALUE2),...]], [language=SCRIPT_LANGUAGE], [path=./FORK_ENV_FILE.py])
+```
+
+==== Replicate control
+
+The https://doc.activeeon.com/latest/user/ProActiveUserGuide.html#_replicate[replication] allows the execution of
+multiple tasks in parallel when only one task is defined, and the number of tasks to run could change.
+
+Through the ProActive Jupyter Kernel, users can add replicate controls in two main ways, a generic and a straight
+forward way.
+
+===== Generic usage
+
+To add a replicate control to the current workflow in the generic method, three specific tasks and one control runs
+script should be added according to the following order:
+
+1. a `split` task,
+2. the related replication `runs` script,
+3. a `process` task,
+4. a `merge` task.
+
+For a `split` task, use:
+
+```python
+#%split([name=TASK_NAME], [dep=[TASK_NAME1,TASK_NAME2,...]], [generic_info=[(KEY1,VAL1), (KEY2,VALUE2),...]], [language=SCRIPT_LANGUAGE], [path=./FORK_ENV_FILE.py])
+```
+
+For the replication `runs` script, use:
+
+```python
+#%runs()
+```
+
+For a `process` task, please use:
+
+```python
+#%process([name=TASK_NAME], [generic_info=[(KEY1,VAL1),(KEY2,VALUE2),...]], [language=SCRIPT_LANGUAGE], [path=./FORK_ENV_FILE.py])
+```
+
+And finally, for a `merge` task, use:
+
+```python
+#%merge([name=TASK_NAME], [generic_info=[(KEY1,VAL1),(KEY2,VALUE2),...]], [language=SCRIPT_LANGUAGE], [path=./FORK_ENV_FILE.py])
+```
+
+===== Straight forward usage
+
+The straight forward method to add a replication is most of all useful when the parallelism that should be
+implemented is a task parallelism (the generic usage is more adapted to data parallelism).
+
+To add a replication to a task, just add the runs control script by providing the `runs` option of the `task` pragma.
+Example:
+
+```python
+#%task(name=T2,dep=[T1],runs=3)
+print("This output should be displayed 3 times ...")
+```
+
+NOTE: To construct a valid workflow, straight forward replicated tasks must have one and only one parent task and one
+child task at most. (More information about replicate validation criteria are available
+https://doc.activeeon.com/latest/user/ProActiveUserGuide.html#_replicate[here]).
+
+==== Delete a task
+
+To delete a task from the workflow, the user should run the pragma `#%delete_task()` in the following way:
+
+```python
+#%delete_task(name=TASK_NAME)
+```
+
 ==== Create a job
 
 To create a job, use the `#%job()` pragma:
@@ -553,7 +1480,7 @@ Note that the job's name can take one of the following possible values:
 1. The parameter `name` 's value, if provided
 2. The job's name, if created
 3. The notebook's name, if the kernel can retrieve it
-4. `Unnamed_job`, otherwise.
+4. `Unnamed_job`, otherwise
 
 General usage:
 
@@ -569,6 +1496,16 @@ To export the created workflow into a https://www.graphviz.org/[GraphViz] _.dot_
 #%write_dot(name=FILE_NAME)
 ```
 
+==== Import a workflow from a dot file
+
+To create a workflow according to a https://www.graphviz.org/[GraphViz] _.dot_ file, use the pragma `#%import_dot()`:
+
+```python
+#%import_dot(path=PATH_TO/FILE_NAME.dot)
+```
+
+By default, the workflow will contain _Python_ tasks with empty implementation scripts. If you want to modify or add
+any information to a specific task, please use, as explained in <<Creating a Python task>>, the `#%task()` pragma.
 
 ==== Submit your job to the scheduler
 
@@ -595,21 +1532,56 @@ To get all submitted job IDs and names, use `list_submitted_jobs` pragma this wa
 #%list_submitted_jobs()
 ```
 
-==== Print results
+==== Export the workflow in XML format
 
-To get the job result(s), the user has to use the `#%get_result()` pragma by providing the job name:
-
-```python
-#%get_result(name=JOB_NAME)
-```
-
-Or, by the job ID:
+To export the created workflow in _.xml_ format, use the `#%export_xml()` pragma:
 
 ```python
-#%get_result(id=JOB_ID)
+#%export_xml([name=FILENAME])
 ```
 
-The returned values of your final tasks will be automatically printed.
+Notice that the _.xml_ file will be saved under one of the following names:
+
+1. The parameter `name` 's value, if provided
+2. The job's name, if created
+3. The notebook's name, if the kernel can retrieve it
+4. `Unnamed_job`, otherwise
+
+==== Get results
+
+After the execution of a ProActive workflow, two outputs can be obtained:
+
+* results: values that have been saved in the
+https://doc.activeeon.com/latest/user/ProActiveUserGuide.html#_task_result[task result variable],
+
+* console outputs: classic outputs that have been displayed/printed.
+
+To get task results, please use the `#%get_task_result()` pragma by providing the task name, and either the job ID or
+the job name:
+
+```python
+#%get_task_result([job_id=JOB_ID], [job_name=JOB_NAME], task_name=TASK_NAME)
+```
+
+The result(s) of all the tasks of a job can be obtained with the `#%get_job_result()` pragma, by providing the job name
+or the job ID:
+
+```python
+#%get_job_result([job_id=JOB_ID], [job_name=JOB_NAME])
+```
+
+To get and display console outputs of a task, you can use the `#%print_task_output()` pragma in the following
+way:
+
+```python
+#%print_task_output([job_id=JOB_ID], [job_name=JOB_NAME], task_name=TASK_NAME)
+```
+
+Finally, the  `#%print_job_output()` pragma allows to print all job outputs, by providing the job name or the job ID:
+
+```python
+#%print_job_output([job_id=JOB_ID], [job_name=JOB_NAME])
+```
 
 === Display and use ActiveEon Portals directly in Jupyter
 
@@ -640,15 +1612,15 @@ And, for the related workflow automation:
 
 NOTE: The parameters `height` and `width` allow the user to adjust the size of the window inside the notebook.
 
-== Customize the Machine Learning Bucket
+== Customize the ML Bucket
 
 === Create or Update a ML Task
 
 *Machine Learning Bucket* contains various open source tasks that can be easily used by a simple drag and drop.
 
-It is possible to enrich the Machine Learning Bucket by adding your own tasks. (see section 4.3)
+It is possible to enrich the ML Bucket by adding your own tasks. (see section 4.3)
 
-It is also possible to customize the code of the generic Machine Learning tasks. In this case, you need to drag and drop the targeted task to modify its code in the *Task Implementation* section.
+It is also possible to customize the code of the generic ML tasks. In this case, you need to drag and drop the targeted task to modify its code in the *Task Implementation* section.
 
 NOTE: It is also possible to add or/and delete variables of each task, set your own fork environments, etc. More details available on link:../user/ProActiveUserGuide.html#_studio_tasks[ProActive User Guide^]
 
@@ -656,7 +1628,7 @@ NOTE: It is also possible to add or/and delete variables of each task, set your 
 
 A fork execution environment is a new Java Virtual Machine (JVM) which is started exclusively to execute a task. Starting a new JVM means that the task inside it will run in a new environment. This environment can be set up by the creator of the task. A new JVMs is set up with a new classpath, new system properties and more customization.
 
-We used a `Docker fork environment` for all the Machine Learning tasks. *activeeon/dlm3* was used as a docker container for all tasks. If your task needs to install new Machine Learning libraries which are not available in this container, then, use your own docker container or an appropriate environment with the needed libraries.
+We used a `Docker fork environment` for all the ML tasks. *activeeon/dlm3* was used as a docker container for all tasks. If your task needs to install new ML libraries which are not available in this container, then, use your own docker container or an appropriate environment with the needed libraries.
 
 NOTE: The use of docker containers is recommended as that way other tasks will not be affected by change. Docker containers provide isolation so that the host machine’s software stays the same. More details available on link:../user/ProActiveUserGuide.html#_fork_environment[ProActive User Guide^]
 
@@ -688,9 +1660,9 @@ At the left part, are illustrated the **General Parameters** of the workflow wit
 
 NOTE: The workflow represented in the above is available on the 'machine-learning-workflows' bucket.
 
-== Machine Learning Workflows Examples
+== ML Workflows Examples
 
-The Machine Learning Open Studio provides a fast, easy and practical way to execute different workflows using the machine learning  bucket. We present useful machine learning workflows for different applications in the following sub-sections.
+The MLOS provides a fast, easy and practical way to execute different workflows using the ML bucket. We present useful ML workflows for different applications in the following sub-sections.
 
 To test these workflows, you need to add the *machine-Learning-workflows Bucket* as main catalog in the ProActive Studio.
 
@@ -706,9 +1678,9 @@ E. Execute the chosen workflow, track its progress and preview its results.
 
 More details about these workflows are available in this in link:https://www.activeeon.com/resources/automated-machine-learning-activeeon.pdf[ActiveEon's Machine Learning Documentation]
 
-=== Basic Machine Learning
+=== Basic ML
 
-The following workflows present some machine learning basic examples. These workflows are built using generic Machine learning and data visualization tasks available on the Machine Learning and Data Visualization buckets.
+The following workflows present some ML basic examples. These workflows are built using generic ML and data visualization tasks available on the ML and Data Visualization buckets.
 
 *Diabetics_Detection_using_K_means:* trains and tests a clustering model using Mean_shift algorithm.
 
@@ -725,12 +1697,11 @@ The following workflows present some machine learning basic examples. These work
 *Parallel_Regression_Model_Training:* trains three different regression models.
 
 === Basic AutoML
+The following workflows present some ML basic examples using AutoML generic tasks available in the `machine-learning` bucket.
 
-The following workflows present some machine learning basic examples using AutoML generic tasks available in the machine-learning bucket.
+*Breast_Cancer_Detection_Using_AutoSklearn_Classifier:* tests several ML pipelines and selects the best model for Cancer Breast detection.
 
-*Breast_Cancer_Detection_Using_AutoSklearn_Classifier:* tests several machine learning pipelines and selects the best model for Cancer Breast detection.
-
-*California_Housing_Prediction_Using_TPOT_Regressor:* tests several machine learning pipelines and selects the best model for California housing prediction.
+*California_Housing_Prediction_Using_TPOT_Regressor:* tests several ML pipelines and selects the best model for California housing prediction.
 
 === Log Analysis
 
@@ -762,7 +1733,7 @@ The following workflows are designed to feature engineering and fusion.
 
 == Deep Learning Workflows Examples
 
-ML-OS provides a fast, easy and practical way to execute deep learning workflows. In the following sub-sections, we present useful deep learning workflows for text and image classification and generation.
+MLOS provides a fast, easy and practical way to execute deep learning workflows. In the following sub-sections, we present useful deep learning workflows for text and image classification and generation.
 
 video::FwMPR87wzoo[youtube, width=700, height=400 start=0, position=center]
 
@@ -819,7 +1790,9 @@ NOTE: Instead of training a model from scratch, you can use a pre-trained sentim
 
 *Image_Segmentation:* predicts a segmentation model using SegNet network on http://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]. The pre-trained image segmentation model which is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_segnet.zip[link^]
 
-*Image_Object_Detection:* detects objects using a pre-trained https://pjreddie.com/media/files/papers/YOLOv3.pdf[YOLO v3 model^] on http://cocodataset.org/#home[COCO dataset^] proposed by Microsoft Research. The pre-trained model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/yolo3_coco.zip[link^].
+*Deep_Model_Explainability:* explains a VGG16 model using GradientExplainer.
+
+*Image_Object_Detection:* detects objects using a pre-trained YOLO v3 model on COCO dataset proposed by Microsoft Research. The pre-trained model is available on this link.
 
 WARNING: It is recommended to use an enabled-GPU node to run the deep learning tasks.
 
@@ -846,129 +1819,12 @@ WARNING: It is recommended to use an enabled-GPU node to run the deep learning t
 
 == References
 
-[[_AutoML]]
+=== ML Bucket
 
-=== AutoML Optimization Bucket
-
-The `auto-ml-optimization` bucket contains the Multi_Tuners_AutoML workflow that can be easily used to find the operating parameters for any system whose performance can be measured as a function of adjustable parameters.
-This bucket also comes with a set of workflows' examples that demonstrates how we can optimize mathematical functions, MLOS workflows and machine/deep learning algorithms from scripts using AutoML tuners.
-
-==== Tuning Algorithms
-
-===== Multi_Tuners_AutoML
-
-*Task Overview:*  is an estimator that minimizes the posterior expected value of a loss function.
-
-.Multi_Tuners_AutoML_Task variables
-[cols="2,5,2"]
-|===
-| *Variable name* | *Description* | *Type*
-| `TUNING_ALGORITHM`
-| Specifies the tuner algorithm that will be used for hyperparameters optimization.
-| List(Bayes, Grid, Random, QuasiRandom, CMAES, MOCMAES) default=Bayes
-| `WORKFLOW_TO_OPTIMIZE`
-| Specifies the path of the workflow that we need to optimize.
-| String [default=auto-ml-optimization/Himmelblau_Function]
-| `SEARCH_SPACE`
-|  Specifies the representation of the search space which has to be defined using dictionaries.
-| JSON format (see search space representation below)
-| `MAX_ITERATIONS`
-|  Specifies the number of maximum iterations.
-| Int (default=2)
-| `PARALLEL_SAMPLES_PER_LOOP`
-|  Specifies the number of samples per iteration.
-| Int (default=-1)
-| `VISDOM_ENABLED`
-|  If True, the results will be plotted in real time in the Visdom dashboard.
-| Int (default=-1)
-| `DOCKER_ENABLED`
-|   If True, the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-|===
-
-*How to define the search space:*
-
-This subsection describes common building blocks to define a search space:
-
-    - uniform: Uniform continuous distribution.
-    - quantized_uniform: Uniform discrete distribution.
-    - log: Logarithmic uniform continuous distribution.
-    - quantized_log: Logarithmic uniform discrete distribution.
-    - choice: Uniform choice distribution between non-numeric samples.
-
-*Which tuner algorithm to choose?*
-
-The choice of the tuner depends on the following aspects:
-
-    - Time required to evalute the model.
-    - Number of hyperparameters to optimize.
-    - Type of variable.
-    - The size of the search space.
-
-In the following, we briefly describe the different tuners proposed by the Multi_Tuners_Automl workflow:
-
-    - *Grid sampling* applies when all variables are discrete and the number of possibilities is low.
-      A grid search is a naive approach that will simply try all possibilities making the search extremely long even for medium sized problems.
-
-    - *Random sampling* is an alternative to grid search when the number of discrete parameters to optimize and the time required for each evaluation is high.
-      Random search picks the point randomly from the configuration space.
-
-    - *QuasiRandom sampling* ensures a much more uniform exploration of the search space than traditional pseudo random.
-      Thus, quasi random sampling is preferable when not all variables are discrete, the number of dimensions is high and the time required to evaluate a solution is high.
-
-    - *Bayes search* models the search space using gaussian process regression, which allows to have an estimate of the loss function and the uncertainty on that estimate at every point of the search space.
-      Modeling the search space suffers from the curse of dimensionality, which makes this method more suitable when the number of dimensions is low.
-
-    - *CMAES search* is one of the most powerful black-box optimization algorithm.
-      However, it requires a significant number of model evaluation (in the order of 10 to 50 times the number of dimensions) to converge to an optimal solution.
-      This search method is more suitable when the time required for a model evaluation is relatively low.
-
-    - *MOCMAES search* is a multi-objective algorithm optimizing multiple tradeoffs simultaneously.
-      To do that, MOCMAES employs a number of CMAES algorithms.
-
-
-==== Objective ML Examples
-
-The following workflows represent some machine learning and deep learning algorithms that can be optimized:
-
-*Diabetics Detection Using Logistic Regression:* train a logistic regression model using MLOS machine learning generic tasks in order to detect diabetics.
-
-*CIFAR10 CNN:* train a simple deep CNN on the CIFAR10 images dataset using the Keras library.
-
-*Image Object Detection:* train a YOLO model on the coco dataset using MLOS deep learning generic tasks.
-
-*Multiple SVM Models:* train multiple types of SVMs models that can be optimized using AutoML.
-
-==== Objective Function Examples
-
-The following workflows represent some mathematical functions that can be optimized by the AutoML tuners.
-
-*Himmelblau_Function:* is a multi-modal function, used to test the performance of optimization algorithms.
-
-//.Himmelblau_Function_Workflow variables
-//[cols="2,5,2"]
-//|===
-//| *Variable name* | *Description* | *Type*
-//| `DOCKER_ENABLED`
-//|If True,  the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-//| Boolean (default=True)
-//| `DOCKER_IMAGE`
-//| Specifies the docker image that will be used to execute the task.
-//| String (default="activeeon/dlm3")
-//| `INPUT_VARIABLES`
-//| Specifies the x and y values.
-//| JSON format (default={"x": 3.5976705887960527, "y": -1.8471754188451843})
-//| `TOKEN`
-//|  Specifies the id for the tested parameters.
-//| String (default=-1)
-//|===
-
-=== Machine Learning Bucket
-
-The `machine-learning` bucket contains diverse generic machine learning tasks that enable you to easily compose workflows for predictive models learning and testing. This bucket can be easily customized according to your needs.
+The `machine-learning` bucket contains diverse generic ML tasks that enable you to easily compose workflows for predictive models learning and testing. This bucket can be easily customized according to your needs.
 This bucket offers different options, you can customize it by adding new tasks or update the existing tasks.
 
-NOTE: All machine learning tasks were implemented using https://scikit-learn.org/stable/[Scikit-learn library^].
+NOTE: All ML tasks were implemented using https://scikit-learn.org/stable/[Scikit-learn library^].
 
 ==== Public Datasets
 
@@ -1004,7 +1860,7 @@ NOTE: All machine learning tasks were implemented using https://scikit-learn.org
 | Int (default=-1) (-1 means preview all the rows)
 |===
 
-*How to use this task:*
+*Usage:*
 
 - The Boston House-Prices is a dataset for regression, you can only use it with a regression algorithm, such as Linear Regression and Support Vector Regression.
 
@@ -1044,7 +1900,7 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 |===
 
 
-*How to use this task:*
+*Usage:*
 
 - The Iris is a dataset for classification, you can only use it with a classification algorithm, such as Support Vector Machines and Logistic Regression.
 
@@ -1075,7 +1931,7 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 | Boolean (default=True)
 |===
 
-*How to use this task:* It should be used after the <<Train_Model>> tasks.
+*Usage:* It should be used after the task <<Train_Model>>.
 
 ===== Export_Data
 
@@ -1104,7 +1960,7 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 | Int (default=-1) (-1 means preview all the rows)
 |===
 
-*How to use this task:* It should be used after <<Predict_Model>> tasks.
+*Usage:* It should be used after the task <<Predict_Model>>.
 
 ===== Import_Data
 
@@ -1165,7 +2021,7 @@ default:  https://s3.eu-west-2.amazonaws.com/activeeon-public/models/pima-indian
 | String
 |===
 
-*How to use this task:* It should be used before <<Predict_Model>> to make predictions.
+*Usage:* It should be used before <<Predict_Model>> to make predictions.
 
 ===== Preview_Results
 
@@ -1194,7 +2050,7 @@ default:  https://s3.eu-west-2.amazonaws.com/activeeon-public/models/pima-indian
 | String [CSV, JSON or HTML]
 |===
 
-*How to use this task:* It should be used after <<Predict_Model>> tasks.
+*Usage:* It should be used after the task <<Predict_Model>>.
 
 ===== Log_Parser
 
@@ -1241,7 +2097,7 @@ default:  https://s3.eu-west-2.amazonaws.com/activeeon-public/models/pima-indian
 
 image::pattern_file.png[align="center"]
 
-*How to use this task:* Could be connected with <<Query_Data>> task and <<Feature_Vector_Extractor>> tasks.
+*Usage:* Could be connected with the tasks <<Query_Data>> and <<Feature_Vector_Extractor>>.
 
 ==== Data Preprocessing
 
@@ -1461,7 +2317,7 @@ NOTE: More details about the source code of this task can be found https://sciki
 | Float
 |===
 
-*How to use this task:* It should be used before Train and Predict tasks.
+*Usage:* It should be used before the tasks <<Train>> and <<Predict>>.
 
 NOTE: More details about the source code of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html[here^].
 
@@ -1588,7 +2444,7 @@ NOTE: More details about the source code of this task can be found https://tsfre
 
 ===== Feature_Vector_Extractor
 
-*Task Overview:* Encode structured data into numerical feature vectors whereby machine learning models can be applied.
+*Task Overview:* Encode structured data into numerical feature vectors whereby ML models can be applied.
 
 *Task Variables:*
 
@@ -1632,13 +2488,13 @@ N.B: separate the different variables with a comma ','
 | Boolean [True or False]
 |===
 
-*How to use this task:* Could be connected with <<Train_Model>> if you need to train a model using unsupervised machine learning techniques.
+*Usage:* Could be connected with <<Train_Model>> if you need to train a model using unsupervised ML techniques.
 
 ==== AutoML
 
 ===== TPOT_Classifier
 
-*Task Overview:* TPOT_Classifier performs an intelligent search over machine learning pipelines that can contain supervised classification models, preprocessors, feature selection techniques, and any other estimator or transformer that follows the scikit-learn API.
+*Task Overview:* TPOT_Classifier performs an intelligent search over ML pipelines that can contain supervised classification models, preprocessors, feature selection techniques, and any other estimator or transformer that follows the scikit-learn API.
 
 *Task Variables:*
 
@@ -1669,13 +2525,13 @@ N.B: separate the different variables with a comma ','
 | Integer (default=1)
 |===
 
-*How to use this task:* It should be connected with <<Train_Model>> .
+*Usage:* It should be connected with <<Train_Model>>.
 
 NOTE: More information about this task can be found https://epistasislab.github.io/tpot/api/#classification[here^].
 
 ===== AutoSklearn_Classifier
 
-*Task Overview:* AutoSklearn_Classifier leverages recent advantages in Bayesian optimization, meta-learning and ensemble construction to performs an intelligent search over machine learning classification algorithms.
+*Task Overview:* AutoSklearn_Classifier leverages recent advantages in Bayesian optimization, meta-learning and ensemble construction to performs an intelligent search over ML classification algorithms.
 
 *Task Variables:*
 
@@ -1696,7 +2552,7 @@ NOTE: More information about this task can be found https://epistasislab.github.
 | Time limit in seconds for the search of appropriate models. .
 | Integer (default=30)
 | `RUN_TIME`
-| Time limit for a single call to the machine learning model. Model fitting will be stopped if the machine learning algorithm runs over the time limit.
+| Time limit for a single call to the ML model. Model fitting will be stopped if the ML algorithm runs over the time limit.
 | Integer (default=27)
 | `SAMPLING`
 | If True, the defined resampling strategy will be applied.
@@ -1709,7 +2565,7 @@ NOTE: More information about this task can be found https://epistasislab.github.
 | Integer (default=5)
 |===
 
-*How to use this task:* It should be connected with <<Train_Model>>.
+*Usage:* It should be connected with <<Train_Model>>.
 
 [NOTE]
 ====
@@ -1719,7 +2575,7 @@ NOTE: More information about this task can be found https://epistasislab.github.
 
 ===== TPOT_Regressor
 
-*Task Overview:* TPOT_Regressor performs an intelligent search over machine learning pipelines that can contain supervised regression models, preprocessors, feature selection techniques, and any other estimator or transformer.
+*Task Overview:* TPOT_Regressor performs an intelligent search over ML pipelines that can contain supervised regression models, preprocessors, feature selection techniques, and any other estimator or transformer.
 
 *Task Variables:*
 
@@ -1750,13 +2606,13 @@ NOTE: More information about this task can be found https://epistasislab.github.
 | Integer (default=1)
 |===
 
-*How to use this task:* It should be connected with <<Train_Model>> .
+*Usage:* It should be connected with <<Train_Model>> .
 
 NOTE: More information about this task can be found https://epistasislab.github.io/tpot/api/#regression[here^].
 
 ===== AutoSklearn_Regressor
 
-*Task Overview:* AutoSklearn_Regressor leverages recent advantages in Bayesian optimization, meta-learning and ensemble construction to performs an intelligent search over machine learning regression algorithms.
+*Task Overview:* AutoSklearn_Regressor leverages recent advantages in Bayesian optimization, meta-learning and ensemble construction to performs an intelligent search over ML regression algorithms.
 
 *Task Variables:*
 
@@ -1777,7 +2633,7 @@ NOTE: More information about this task can be found https://epistasislab.github.
 | Time limit in seconds for the search of appropriate models. .
 | Integer (default=120)
 | `RUN_TIME`
-| Time limit for a single call to the machine learning model. Model fitting will be stopped if the machine learning algorithm runs over the time limit.
+| Time limit for a single call to the ML model. Model fitting will be stopped if the ML algorithm runs over the time limit.
 | Integer (default=30)
 | `SAMPLING`
 | If True, the defined resampling strategy will be applied.
@@ -1790,7 +2646,7 @@ NOTE: More information about this task can be found https://epistasislab.github.
 | Integer (default=5)
 |===
 
-*How to use this task:* It should be connected with <<Train_Model>> .
+*Usage:* It should be connected with <<Train_Model>> .
 
 NOTE: More information about this task can be found https://automl.github.io/auto-sklearn/master/api.html#regression[here^].
 
@@ -1819,7 +2675,7 @@ NOTE: More information about this task can be found https://automl.github.io/aut
 | JSON format
 |===
 
-*How to use this task:* It should be connected with <<Train_Model>> or <<Predict_Model>>.
+*Usage:* It should be connected with <<Train_Model>> or <<Predict_Model>>.
 
 NOTE: More information about this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html[here^].
 
@@ -1858,7 +2714,7 @@ NOTE: More information about this task can be found https://scikit-learn.org/sta
 //| Integer (default=1)
 |===
 
-*How to use this task:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
+*Usage:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
 
 NOTE: More information about the source code of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html[here^].
 
@@ -1892,7 +2748,7 @@ NOTE: More information about the source code of this task can be found https://s
 //| string, optional (default=’rbf’)
 |===
 
-*How to use this task:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
+*Usage:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
 
 NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html[here^].
 
@@ -1937,7 +2793,7 @@ NOTE: More information about the source of this task can be found https://scikit
 //| Float (default=1.e-6)
 |===
 
-*How to use this task:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
+*Usage:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
 
 NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html[here^].
 
@@ -1968,7 +2824,7 @@ NOTE: More information about the source of this task can be found https://scikit
 //| Integer (default=1)
 |===
 
-*How to use this task:* IT should be connected with <<Train_Model>> and <<Predict_Model>>.
+*Usage:* IT should be connected with <<Train_Model>> and <<Predict_Model>>.
 
 NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html[here^].
 
@@ -2005,7 +2861,7 @@ NOTE: More information about the source of this task can be found https://scikit
 //| Float, optional (default=0.1)
 |===
 
-*How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
+*Usage:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
 
 NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html[here^].
 
@@ -2114,7 +2970,7 @@ NOTE: More information about the source of this task can be found https://scikit
 //| Integer, optional (default=1)
 |===
 
-*How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
+*Usage:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
 
 NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
 
@@ -2148,7 +3004,7 @@ NOTE: More information about the source of this task can be found https://scikit
 //| Integer (default=1)
 |===
 
-*How to use this task:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
+*Usage:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
 
 NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.cluster.MeanShift.html[here^].
 
@@ -2191,7 +3047,7 @@ NOTE: More information about the source of this task can be found https://scikit
 //| Integer, optional (default=1)
 |===
 
-*How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
+*Usage:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
 
 NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html[here^].
 
@@ -2231,7 +3087,7 @@ NOTE: More information about the source of this task can be found https://scikit
 //| Integer, optional (default=1)
 |===
 
-*How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
+*Usage:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
 
 NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
 
@@ -2270,7 +3126,7 @@ NOTE: More information about the source of this task can be found https://scikit
 //| Integer, optional (default=1)
 |===
 
-*How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
+*Usage:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
 
 NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
 
@@ -2309,7 +3165,7 @@ NOTE: More information about the source of this task can be found https://scikit
 //| Integer, optional (default=1)
 |===
 
-*How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
+*Usage:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
 
 NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
 
@@ -2349,7 +3205,7 @@ NOTE: More information about the source of this task can be found https://scikit
 //| Integer, optional (default=1)
 |===
 
-*How to use this task:*  It should be connected with <<Train_Model>> and <<Predict_Model>>.
+*Usage:* It should be connected with <<Train_Model>> and <<Predict_Model>>.
 
 NOTE: More information about the source of this task can be found https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html[here^].
 
@@ -2366,18 +3222,18 @@ NOTE: More information about the source of this task can be found https://scikit
 | `DOCKER_ENABLED`
 |If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LABEL_COLUMN`
 | Enter the column label name.
 | String
+| `USE_NVIDIA_RAPIDS`
+| Enable NVIDIA RAPIDS support.
+| Boolean (default=False)
 |===
 
-*How to use this task:* It should be used after a classification, a regression or an anomaly algorithm, such as <<Support_Vector_Machines>>, <<Gaussian_Naive_Bayes>>, <<Linear_Regression>>, <<Bayesian_Ridge_Regression>>, <<Linear_Regression>>, <<Support_Vector_Regression>>, <<Isolation_Forest>>, <<One_Class_SVM>>, <<AdaBoost>>, <<CatBoost>>, <<Gradient_Boosting>>, <<Random_Forest>>, and <<XGBoost>>.
+*Usage:* It should be used after a classification, a regression or an anomaly algorithm, such as <<Support_Vector_Machines>>, <<Gaussian_Naive_Bayes>>, <<Linear_Regression>>, <<Bayesian_Ridge_Regression>>, <<Linear_Regression>>, <<Support_Vector_Regression>>, <<Isolation_Forest>>, <<One_Class_SVM>>, <<AdaBoost>>, <<CatBoost>>, <<Gradient_Boosting>>, <<Random_Forest>>, and <<XGBoost>>.
 
 [NOTE]
 ====
@@ -2400,23 +3256,23 @@ NOTE: More information about the source of this task can be found https://scikit
 | `DOCKER_ENABLED`
 |If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LABEL_COLUMN`
 | Enter the column label name.
 | String
+| `USE_NVIDIA_RAPIDS`
+| Enable NVIDIA RAPIDS support.
+| Boolean (default=False)
 |===
 
-*How to use this task:* It should be used after the <<Train_Model>> Task.
+*Usage:* It should be used after the task <<Train_Model>>.
 
 ==== ML Explainability
 ===== Model_Explainability
 
-*Task Overview:* Explain machine learning models globally on all data, or locally on a specific data points using the  SHAP and eli5 Python libraries. You can see more details at: https://www.kaggle.com/learn/machine-learning-explainability
+*Task Overview:* Explain ML models globally on all data, or locally on a specific data points using the  SHAP and eli5 Python libraries. You can see more details at: https://www.kaggle.com/learn/machine-learning-explainability
 
 .Model_Explainability_Task variables
 [cols="2,5,2"]
@@ -2445,7 +3301,7 @@ NOTE: More information about the source of this task can be found https://scikit
 | Integer
 |===
 
-*How to use this task:*  It should be connected with <<Train_Model>> Task.
+*Usage:*  It should be connected with <<Train_Model>>.
 
 === Deep Learning Bucket
 
@@ -2467,7 +3323,7 @@ There are some simple rules for organizing your files and folders.
 
 . _Image Classification Dataset:_ Each class must have its own folder which should contain its related images. The Figure below shows how your folders and files should be organized.
 
-image::image_classification.png[300,300]
+image::image_classification.png[200,200]
 
 NOTE: You can use RGB images in JPG or PNG formats.
 
@@ -2476,7 +3332,7 @@ NOTE: You can find an example of the organization of the folders at: https://s3.
 
 . _Image Segmentation Dataset:_ Two folders are required: the first folder should contain the RGB images in JPG format and another folder should contain its corresponding annotations in http://host.robots.ox.ac.uk/pascal/VOC/voc2012/index.html[PASCAL VOC^] format. RGB images and annotations should be organized as follows:
 
-image::image_segmentation.png[300,300]
+image::image_segmentation.png[150,150]
 
 NOTE: You can use RGB images in JPG format (Images folder) and the groundtruth annotations (Classes folder) in the PNG format using Pascal VOC pattern.
 
@@ -2484,7 +3340,7 @@ NOTE: You can find an example of the organization of the folders at: https://s3.
 
 . _Object Detection Dataset:_ Two folders are demanded: the first folder should contain the RGB images in JPG format and another folder should contain its corresponding anotations in XML format using http://host.robots.ox.ac.uk/pascal/VOC/voc2012/index.html[PASCAL VOC^] format or TXT format using COCO format (http://cocodataset.org/#home). The RGB images and annotations should be organized as follows:
 
-image::object_detection.png[300,300]
+image::object_detection.png[150,150]
 
 NOTE: You can use RGB images in JPG format (Images folder) and the annotations (Classes folder) in the XML format using Pascal VOC or COCO pattern.
 
@@ -2519,7 +3375,7 @@ NOTE: In these links, you can find an example of the organization of the folders
 | List [Classification, Detection or Segmentation]
 |===
 
-*How to use this task:* It should be connected with <<Train_Image_Segmentation_Model>>, <<Train_Image_Classification_Model>> or <<Predict_Image_Classification_Model>>, <<Predict_Image_Segmentation_Model>>.
+*Usage:* It should be connected with <<Train_Image_Segmentation_Model>>, <<Train_Image_Classification_Model>> or <<Predict_Image_Classification_Model>>, <<Predict_Image_Segmentation_Model>>.
 
 
 ===== Download_Model
@@ -2547,7 +3403,7 @@ NOTE: In these links, you can find an example of the organization of the folders
 NOTE: Not all deep networks support the ONNX model yet. You can download ONNX model of the following networks: <<AlexNet>>, <<DenseNet-161>>, <<ResNet-18>>, <<VGG-16>> and <<YOLO>>.
 
 
-*How to use this task:* It should be connected with <<Train_Image_Classification_Model>>   or <<Train_Text_Classification_Model>> or <<Train_Image_Segmentation_Model>> or <<Train_Image_Object_Detection_Model>>.
+*Usage:* It should be connected with <<Train_Image_Classification_Model>> or <<Train_Text_Classification_Model>> or <<Train_Image_Segmentation_Model>> or <<Train_Image_Object_Detection_Model>>.
 
 ===== Import_Model
 
@@ -2570,7 +3426,7 @@ NOTE: Not all deep networks support the ONNX model yet. You can download ONNX mo
 | String
 |===
 
-*How to use this task:* It should be connected with <<Predict_Text_Classification_Model>> or <<Predict_Image_Classification_Model>>,  <<Predict_Image_Segmentation_Model>>.
+*Usage:* It should be connected with <<Predict_Text_Classification_Model>> or <<Predict_Image_Classification_Model>> or <<Predict_Image_Segmentation_Model>>.
 
 ===== Import_Text_Dataset
 
@@ -2617,7 +3473,7 @@ NOTE: Not all deep networks support the ONNX model yet. You can download ONNX mo
 | Boolean (default=True)
 |===
 
-*How to use this task:* It should be connected with <<Train_Text_Classification_Model>> or <<Predict_Text_Classification_Model>>.
+*Usage:* It should be connected with <<Train_Text_Classification_Model>> or <<Predict_Text_Classification_Model>>.
 
 NOTE: Torchtext were used to preprocess and load the text input. More information about this library can be found https://github.com/pytorch/text[here^].
 
@@ -2642,7 +3498,7 @@ NOTE: Torchtext were used to preprocess and load the text input. More informatio
 | List (default='HTML')
 |===
 
-*How to use this task:* It should be used after <<Predict_Text_Classification_Model>> or <<Predict_Image_Classification_Model>> or <<Predict_Image_Segmentation_Model>> task.
+*Usage:* It should be used after the tasks <<Predict_Text_Classification_Model>> or <<Predict_Image_Classification_Model>> or <<Predict_Image_Segmentation_Model>>.
 
 ===== Export_Images
 
@@ -2661,7 +3517,7 @@ NOTE: Torchtext were used to preprocess and load the text input. More informatio
 |===
 
 
-*How to use this task:* It should be connected to <<Predict_Image_Classification_Model>> or <<Predict_Image_Segmentation_Model>> task.
+*Usage:* It should be connected to <<Predict_Image_Classification_Model>> or <<Predict_Image_Segmentation_Model>>.
 
 ==== Image Classification
 
@@ -2669,7 +3525,7 @@ NOTE: Torchtext were used to preprocess and load the text input. More informatio
 
 *Task Overview:* AlexNet is the name of a Convolutional Neural Network (CNN), originally written with CUDA to run with GPU support, which competed in the ImageNet Large Scale Visual Recognition Challenge in 2012.
 
-*How to use this task:* It should be connected to <<Train_Image_Classification_Model>> task.
+*Usage:* It should be connected to <<Train_Image_Classification_Model>>.
 
 .AlexNet_Task variables
 [cols="2,5,2"]
@@ -2692,7 +3548,7 @@ NOTE: Pytorch were used to build the model architecture based on https://pytorch
 
 *Task Overview:* Densely Connected Convolutional Network (DenseNet) is a network architecture where each layer is directly connected to every other layer in a feed-forward fashion (within each dense block).
 
-*How to use this task:* It should be connected to <<Train_Image_Classification_Model>> task.
+*Usage:* It should be connected to <<Train_Image_Classification_Model>>.
 
 NOTE: Pytorch were used to build the model architecture based on https://pytorch.org/docs/master/torchvision/models.html[DenseNet-161^].
 
@@ -2715,7 +3571,7 @@ NOTE: Pytorch were used to build the model architecture based on https://pytorch
 
 *Task Overview:* Deep Residual Networks (ResNet-18) is a deep convolutional neural network, trained on 1.28 million ImageNet training images, coming from 1000 classes.
 
-*How to use this task:* It should be connected to <<Train_Image_Classification_Model>> task.
+*Usage:* It should be connected to <<Train_Image_Classification_Model>>.
 
 NOTE: Pytorch were used to build the model architecture based on https://pytorch.org/docs/master/torchvision/models.html[ResNet-18^].
 
@@ -2738,7 +3594,7 @@ NOTE: Pytorch were used to build the model architecture based on https://pytorch
 
 *Task Overview:* The VGG-16 is an image classification convolutional neural network.
 
-*How to use this task:* It should be connected to <<Train_Image_Classification_Model>> task.
+*Usage:* It should be connected to <<Train_Image_Classification_Model>>.
 
 NOTE: Pytorch were used to build the model architecture based on https://pytorch.org/docs/master/torchvision/models.html[VGG-16^].
 
@@ -2761,7 +3617,7 @@ NOTE: Pytorch were used to build the model architecture based on https://pytorch
 ===== FCN
 *Task Overview:* The FCN16 combines layers of the feature hierarchy and refines the spatial precision of the output.
 
-*How to use this task:* It should be connected to <<Train_Image_Segmentation_Model>> task.
+*Usage:* It should be connected to <<Train_Image_Segmentation_Model>>.
 
 NOTE: Pytorch were used to build the model architecture based on https://github.com/bodokaiser/piwise[FCN^].
 
@@ -2785,7 +3641,7 @@ NOTE: Pytorch were used to build the model architecture based on https://github.
 ===== SegNet
 *Task Overview:*  is a deep convolutional encoder-decoder architecture for robust semantic pixel-wise labelling.
 
-*How to use this task:* It should be connected to <<Train_Image_Segmentation_Model>> task.
+*Usage:* It should be connected to <<Train_Image_Segmentation_Model>>.
 
 NOTE: Pytorch were used to build the model architecture based on https://github.com/bodokaiser/piwise[SegNet^].
 
@@ -2809,7 +3665,7 @@ NOTE: Pytorch were used to build the model architecture based on https://github.
 ===== UNet
 *Task Overview:*  consists of a contracting path to capture context and a symmetric expanding path that enables precise localization.
 
-*How to use this task:* It should be connected to <<Train_Image_Segmentation_Model>> task.
+*Usage:* It should be connected to <<Train_Image_Segmentation_Model>>.
 
 NOTE: Pytorch were used to build the model architecture based on https://github.com/bodokaiser/piwise[UNet^].
 
@@ -2837,7 +3693,7 @@ NOTE: Pytorch were used to build the model architecture based on https://github.
 
 *Task Overview:*  produces a fixed-size collection of bounding boxes and scores for the presence of object class instances in those boxes, followed by a non-maximum suppression step to produce the final detections. For more details click on this https://www.cs.unc.edu/~wliu/papers/ssd.pdf[link^]
 
-*How to use this task:* It should be connected to  <<Train_Image_Object_Detection_Model>> task.
+*Usage:* It should be connected to <<Train_Image_Object_Detection_Model>>.
 
 NOTE: Pytorch were used to build the model architecture based on https://github.com/amdegroot/ssd.pytorch[SSD^].
 
@@ -2901,7 +3757,7 @@ NOTE: The default parameters of the SSD network were set for the PASCAL VOC data
 
 *Task Overview:* You only look once (YOLO) is a  single neural network to predict bounding boxes and class probabilities. For more details click on this https://pjreddie.com/media/files/papers/YOLOv3.pdf[link^]
 
-*How to use this task:* It should be connected to  <<Train_Image_Object_Detection_Model>> task.
+*Usage:* It should be connected to <<Train_Image_Object_Detection_Model>>.
 
 NOTE: Pytorch were used to build the model architecture based on https://github.com/eriklindernoren/PyTorch-YOLOv3[YOLO^].
 
@@ -2974,7 +3830,7 @@ NOTE: The default parameters of the YOLO network were set for the COCO dataset (
 | Float (default=0.5)
 |===
 
-*How to use this task:* It should be connected to <<Train_Text_Classification_Model>> task.
+*Usage:* It should be connected to <<Train_Text_Classification_Model>>.
 
 NOTE: Pytorch were used to build the model architecture based on https://pytorch.org/docs/master/nn.html#torch.nn.GRU[GRU^].
 
@@ -3005,7 +3861,7 @@ NOTE: Pytorch were used to build the model architecture based on https://pytorch
 | Float (default=0.5)
 |===
 
-*How to use this task:* It should be connected to <<Train_Text_Classification_Model>> task.
+*HUsage:* It should be connected to <<Train_Text_Classification_Model>>.
 
 NOTE: Pytorch were used to build the model architecture based on https://pytorch.org/docs/master/nn.html#torch.nn.LSTM[LSTM^].
 
@@ -3036,7 +3892,7 @@ NOTE: Pytorch were used to build the model architecture based on https://pytorch
 | Float (default=0.5)
 |===
 
-*How to use this task:* It should be connected to <<Train_Text_Classification_Model>> task.
+*Usage:* It should be connected to <<Train_Text_Classification_Model>>.
 
 NOTE: Pytorch were used to build the model architecture based on https://pytorch.org/docs/master/nn.html#torch.nn.RNN[RNN^].
 
@@ -3072,7 +3928,7 @@ NOTE: Pytorch were used to build the model architecture based on https://pytorch
 | Boolean (default=True)se for data loading. 0 means that the data will be loaded in the main process.
 |===
 
-*How to use this task:* Could be connected to <<Predict_Image_Classification_Model>> and <<Download_Model>> tasks.
+*Usage:* Could be connected to <<Predict_Image_Classification_Model>> and <<Download_Model>>.
 
 
 ===== Train_Text_Classification_Model
@@ -3115,7 +3971,7 @@ NOTE: Pytorch were used to build the model architecture based on https://pytorch
 | Boolean (default=True)
 |===
 
-*How to use this task:* Could be connected to <<Predict_Text_Classification_Model>> and <<Download_Model>> tasks.
+*Usage:* Could be connected to <<Predict_Text_Classification_Model>> and <<Download_Model>>.
 
 ===== Train_Image_Segmentation_Model
 
@@ -3147,7 +4003,7 @@ NOTE: Pytorch were used to build the model architecture based on https://pytorch
 | Boolean (default=True)se for data loading. 0 means that the data will be loaded in the main process.
 |===
 
-*How to use this task:* Could be connected to <<Predict_Image_Segmentation_Model>> and <<Download_Model>> tasks.
+*Usage:* Could be connected to <<Predict_Image_Segmentation_Model>> and <<Download_Model>>.
 
 ===== Train_Image_Object_Detection_Model
 
@@ -3203,7 +4059,7 @@ NOTE: Pytorch were used to build the model architecture based on https://pytorch
 | Boolean (default=True)se for data loading. 0 means that the data will be loaded in the main process.
 |===
 
-*How to use this task:* It should be used after the <<Train_Image_Classification_Model>> or <<Download_Model>> Task.
+*Usage:* It should be used after the tasks <<Train_Image_Classification_Model>> or <<Download_Model>>.
 
 ===== Predict_Text_Classification_Model
 
@@ -3225,7 +4081,7 @@ NOTE: Pytorch were used to build the model architecture based on https://pytorch
 | List (default=NLLLoss)
 |===
 
-*How to use this task:* It should be used after the <<Train_Text_Classification_Model>> or <<Download_Model>> Task.
+*Usage:* It should be used after the tasks <<Train_Text_Classification_Model>> or <<Download_Model>>.
 
 ===== Predict_Image_Segmentation_Model
 
@@ -3252,7 +4108,7 @@ NOTE: Pytorch were used to build the model architecture based on https://pytorch
 | Boolean (default=True)se for data loading. 0 means that the data will be loaded in the main process.
 |===
 
-*How to use this task:* It should be used after the <<Train_Image_Classification_Model>> or <<Download_Model>> Task.
+*Usage:* It should be used after the tasks <<Train_Image_Classification_Model>> or <<Download_Model>>.
 
 
 ===== Predict_Image_Object_Detection_Model
@@ -3280,7 +4136,39 @@ NOTE: Pytorch were used to build the model architecture based on https://pytorch
 | Boolean (default=True)se for data loading. 0 means that the data will be loaded in the main process.
 |===
 
-*How to use this task:* It should be used after the <<Predict_Image_Object_Detection_Model>> or <<Download_Model>> Task.
+*Usage:* It should be used after the task <<Predict_Image_Object_Detection_Model>> or <<Download_Model>>.
+
+===== Model_Explainability
+
+*Task Overview:* Explain a Deep learning Model using GradientExplainer.
+
+.Model_Explainability Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `GPU_NODES_ONLY`
+| If True, the tasks will be executed on GPU nodes.
+| Boolean (default=True)
+| `DOCKER_ENABLED`
+| If True,  the tasks will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+| `IMG_SAMPLES`
+| Number of samples on which to explain the model's output.
+| Integer (default=2)
+| `IMG_LIST`
+| Choice two images to explain.
+| Integer (default=1)
+| `FEATURE_LAYER`
+| Choice the layer to explain
+| String (default=features[7] for a VGG16 model). For example, you can use features[0] for AlexNet, layer1[0].conv1 for ResNet, etc.
+| `RANKED_OUTPUTS`
+| Explain many of the top model outputs  determined by output rank order.
+| Integer (default=4).
+|===
+
+*Usage:* It should be used after the the task <<Train_Image_Classification_Model>>.
+
+NOTE: Shap GradientExplainer to explain a deep learning model. More information about this library can be found https://shap.readthedocs.io/en/latest/index.html?highlight=hap_values#shap.DeepExplainer.shap_values[here^] or on GitHub repository https://github.com/slundberg/shap[here^].
 
 
 === Data Visualization Bucket
@@ -3342,7 +4230,7 @@ WARNING: If two workflows use the same service instance names, then, their gener
 | String
 |===
 
-*How to use this task:*  This task has to be connected to the <<Visdom_Service_Start>> Task. The Visdom server should be up in order to be able to broadcast visualizations.
+*Usage:*  This task has to be connected to <<Visdom_Service_Start>>. The Visdom server should be up in order to be able to broadcast visualizations.
 
 ===== Visdom_Plots
 

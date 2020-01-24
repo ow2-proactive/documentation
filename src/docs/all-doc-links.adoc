@@ -1,24 +1,55 @@
 :sectnums!:
 == All documentation links
 
-=== ProActive Workflows & Scheduling (PWS)
+++++
+<div class="sect2">
+<h3 id="all_doc_pws"><a class="anchor" href="#all_doc_pws"></a><a class="link" href="#all_doc_pws">ProActive Workflows &amp; Scheduling (PWS)</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><h4 id="_all_doc_pws_user_guide" style="display:inline;font-size:1em""><a href="../user/ProActiveUserGuide.html#_all_doc_pws_user_guide">PWS User Guide</a></h4>
+&nbsp;(Workflows, Workload automation, Jobs, Tasks, Catalog, Resource Management, Big Data/ETL, …​)</p>
+</li>
+<li><p><h4 id="all_doc_pws_modules" style="display:inline;font-size:1em""><a class="link" href="#all_doc_pws_modules">PWS Modules</a></h4></p>
 
-* link:../user/ProActiveUserGuide.html[PWS User Guide] (Workflows, Workload automation, Jobs, Tasks, Catalog, Resource Management, Big Data/ETL, …​)
-* MODULE: link:../JobPlanner/JobPlannerUserGuide.html[Job Planner] (Time-based Scheduling)
-* MODULE: link:../JobAnalytics/JobAnalyticsUserGuide.html[Job Analytics] (Jobs execution analysis)
-* MODULE: link:../PCW/PCWUserGuide.html[Cloud Watch] (Event-based Scheduling)
-* MODULE: link:../PCA/PCAUserGuide.html[Cloud Automation] (PaaS On-Demand, Service deployment and management)
-* link:../admin/ProActiveAdminGuide.html[Administration Guide] (Installation, Infrastructure & Nodes setup, Agents,…​)
+<ul>
+<li><p><h5 id="_all_doc_jp_user_guide" style="display:inline;font-size:1em""><a href="../JobPlanner/JobPlannerUserGuide.html#_all_doc_jp_user_guide">Job Planner</a></h5>
+&nbsp;(Time-based Scheduling)</p>
+</li>
+<li><p><h5 id="_all_doc_pcw_user_guide" style="display:inline;font-size:1em""><a href="../PCW/PCWUserGuide.html#_all_doc_pcw_user_guide">Cloud Watch</a></h5>
+&nbsp;(Event-based Scheduling)</p>
+</li>
+<li><p><h5 id="_all_doc_pca_user_guide" style="display:inline;font-size:1em""><a href="../PCA/PCAUserGuide.html#_all_doc_pca_user_guide">Cloud Automation</a></h5>
+&nbsp;(PaaS On-Demand, Service deployment and management)</p>
+</li>
+</ul>
+</li>
+<li><p><h4 id="_all_doc_pws_admin_guide" style="display:inline;font-size:1em""><a href="../admin/ProActiveAdminGuide.html#_all_doc_pws_admin_guide">PWS Admin Guide</a></h4>
+&nbsp;(Installation, Infrastructure &amp; Nodes setup, Agents,…​)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_machine_learning_open_studio_mlos"><a class="anchor" href="#_machine_learning_open_studio_mlos"></a><a class="link" href="#_machine_learning_open_studio_mlos">Machine Learning Open Studio (MLOS)</a></h3>
+<div class="ulist">
+<ul>
+<li><p><h4 id="_all_doc_mlos_user_guide" style="display:inline;font-size:1em"><a href="../MLOS/MLOSUserGuide.html#_all_doc_mlos_user_guide">MLOS User Guide</a></h4>
+&nbsp;(a complete Data Science and Machine Learning Platform)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<h3 id="_all_doc_api_doc"><a class="anchor" href="#_all_doc_api_doc"></a><a class="link" href="#_all_doc_api_doc">API documentation</a></h3>
+<p><strong>
+<a class="restUrl" href="https://try.activeeon.com/rest" target="_blank">Scheduler REST API</a>  
+<a href="../user/ProActiveUserGuide.html#_scheduler_command_line">Scheduler CLI</a>  
+<a href="../javadoc/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html">Scheduler Java</a>  
+<a href="../javadoc/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html">Workflow Creation Java</a>  
+<a href="https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client">Python Client</a></strong></p>
+</div>
+</div>
 
-=== Machine Learning Open Studio (MLOS)
-
-* link:../MLOS/MLOSUserGuide.html[Machine Learning Open Studio User Guide - MLOS] (​a complete Data Science and Machine Learning Platform)
-
-*API documentation: &emsp;
-+++<a class="restUrl" href="/rest" target="_blank">Scheduler REST API</a>+++ &emsp;
-link:../user/ProActiveUserGuide.html#_scheduler_command_line[Scheduler CLI] &emsp;
-link:../javadoc/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html[Scheduler Java] &emsp;
-link:../javadoc/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html[Workflow Creation Java] &emsp;
-https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client[Python Client]*
+++++
 
 :sectnums:

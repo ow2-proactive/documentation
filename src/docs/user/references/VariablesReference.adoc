@@ -51,21 +51,21 @@ The order in this list corresponds to the task life-cycle order.
 | -
 | -
 | <<_control_flow_scripts,flow>> (if)
-| bash, cmd, perl
+| bash, cmd, perl, vbscript
 
 | *Parallel runs*. Number of replications. See <<_replicate, replication>>.
 | runs = 3;
 | -
 | -
 | <<_control_flow_scripts,flow>> (replicate)
-| bash, cmd, perl
+| bash, cmd, perl, vbscript
 
 | *Loop variable*. A boolean variable used in a flow script to decide if the loop continues or not. See <<_control_flow_scripts, loop>>.
 | loop = false;
 | -
 | -
 | <<_control_flow_scripts,flow>> (replicate) (loop)
-| bash, cmd, perl
+| bash, cmd, perl, vbscript
 
 | *Task progress*. Represents the progress of the task. Can be set to a value between 0 and 100.
 | import org.ow2.proactive.scripting.helper.progress.ProgressFile;
@@ -269,42 +269,49 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | -
 | -
 | <<_selection, selection>>
-| bash, cmd, perl
+| bash, cmd, perl, vbscript
 
 | *Fork Environment*. Fork Environment variable is a link:../javadoc/org/ow2/proactive/scheduler/common/task/ForkEnvironment.html[ForkEnvironment java object] allowing a script to set various initialization parameters of the forked JVM. See <<_fork_environment, Fork Environment>>
 | forkEnvironment.setJavaHome( "/usr/java/default" )
 | -
 | -
 | <<_fork_environment, environment>>
-| bash, cmd, perl, R, PowerShell
+| bash, cmd, perl, R, powershell, vbscript
 
 | *Scheduler API*. Scheduler API variable is a link:../javadoc/org/ow2/proactive/scheduler/task/client/SchedulerNodeClient.html[SchedulerNodeClient java object] which can connect to the ProActive Scheduler frontend and interact directly with its <<_task_apis,API>>.
 | schedulerapi.connect()
 | -
 | -
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
-| bash, cmd, perl, R, PowerShell
+| bash, cmd, perl, R, powershell, vbscript
+
+| *Resource Manager API*. Resource Manager API variable which can connect to the ProActive RM frontend and interact directly with its <<_task_apis,API>>.
+| rmapi.connect()
+| -
+| -
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
+| bash, cmd, perl, R, powershell, vbscript
 
 | *UserSpace API*. UserSpace API variable is a link:../javadoc/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient java object] which can connect to the <<_global_and_user_spaces,User Space>> and interact directly with its <<_dataspace_apis,API>>.
 | userspaceapi.connect()
 | -
 | -
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
-| bash, cmd, perl, R, PowerShell
+| bash, cmd, perl, R, powershell, vbscript
 
 | *GlobalSpace API*. GlobalSpace API variable is a link:../javadoc/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient java object] which can connect to the <<_global_and_user_spaces,Global Space>> and interact directly with its <<_dataspace_apis,API>>.
 | globalspaceapi.connect()
 | -
 | -
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
-| bash, cmd, perl, R, PowerShell
+| bash, cmd, perl, R, powershell, vbscript
 
 | *Synchronization API*. Synchronization API variable is a https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/Synchronization.html[Synchronization java object] which can connect to the Synchronization Service and interact directly with its <<_task_synchronization_api,API>>.
 | synchronizationapi.createChannel("channel1", false)
 | -
 | -
 | all scripts
-| bash, cmd, perl, R, PowerShell
+| bash, cmd, perl, R, powershell, vbscript
 
 |===
 
@@ -336,10 +343,24 @@ For R:
 print(variables[["key"]])
 ----
 
-For Bash:
+For Bash (using environment variables):
 [source, bash]
 ----
 echo $variables_key
+----
+
+For Cmd (using environment variables):
+[source, dos]
+----
+echo %variables_key%
+----
+
+For VBScript (using process environment variables):
+[source, vbscript]
+----
+Set wshShell = CreateObject( "WScript.Shell" )
+Set wshProcessEnv = wshShell.Environment( "PROCESS" )
+Wscript.Echo "Hello World from Job " & wshProcessEnv( "variables_key" )
 ----
 
 For PowerShell:
@@ -387,97 +408,9 @@ Example for R:
 print(results[[0]])
 ----
 
-==== R language
+More information about various script engines particularities and syntax is available in the <<../user/ProActiveUserGuide.adoc#_script_languages,Script Languages>> chapter.
 
-This section describes the R script language specific syntaxes.
 
-The progress variable is set as follows (notice the leading dot):
-[source, R]
-----
-.set_progress(50)
-----
 
-In contrary to other languages such as groovy or jruby, the parent tasks results (*results* variable) is accessed directly:
-[source, R]
-----
-print(results[[0]])
-----
-
-Variable affectation can be done via:
-[source, R]
-----
-variables[["myvar"]] <- "some value"
-----
-
-Access to dataspaces variables is similar to other languages:
-[source, R]
-----
-print(userspace)
-print(globalspace)
-print(inputspace)
-print(localspace)
-print(cachespace)
-print(outputspace)
-----
-
-Some internal R types (such as lists, vectors, strings) are automatically converted when stored as a result or in the variable map,
-but other types such as data.table are not automatically converted. Conversion for these types should be done manually, for example using json serialization or an output file.
-
-Java objects such as fork environment variable, scheduler, userspace or globalspace APIs are not available in R.
-
-==== Perl language
-For the perl script: the specification of special variables accesible inside scheduler is corresponding to native task. So for example the result of perl task should be the exit code.
-Please see the proper names of the variables in link:../user/ProActiveUserGuide.html#_variables_quick_reference[Script Bindings Reference]. +
-Inside Perl, you can access the environment variables using the *%ENV* hash.
-
-The aim of next examples is to clarify the usage of variables in Perl:
-
-- to get job name variable you should write the next code:
-[source, perl]
-----
-my $jobName= $ENV{"variables_PA_JOB_NAME"};
-----
-- to get the result of parent task you can implement the next code:
-[source, perl]
-----
-my $parent_task_result= $ENV{"results_0"};
-----
-- to get the userspace please put the next code:
-[source, perl]
-----
-my $USERSPACE= $ENV{"USERSPACE"};
-----
-
-==== PowerShell language
-
-In contrary to other languages such as groovy or jruby, the parent tasks results (*results* variable) is accessed directly:
-[source, PowerShell]
-----
-Write-Output $results[0]
-----
-
-Variable affectation can be done via:
-[source, PowerShell]
-----
-$variables.Set_Item('myvar', 'value')
-----
-
-Internal PowerShell types such as Dates are automatically serialized to an internal format which can be understood by another powershell task, for example in the following two tasks:
-
-Task1:
-[source, PowerShell]
-----
-$result = Get-Date
-----
-
-Task2:
-[source, PowerShell]
-----
-Write-Output $results[0].Day
-----
-
-The second task is able to automatically use the Date object received from the first task.
-
-When an internal PowerShell type needs to be used by another language than PowerShell, a manual conversion such as json must be performed.
 
 
