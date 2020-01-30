@@ -1,8 +1,6 @@
 === LDAP Query Tasks
 
-==== Description
-
-This task features the LDAP searching operation.
+Provides an LDAP client that allows connection to an existing Microsoft Active Directory server to perform search operations and to check users' credentials and their membership groups.
 
 ==== LDAP query task variables table
 

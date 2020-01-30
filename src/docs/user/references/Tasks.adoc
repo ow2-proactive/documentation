@@ -93,14 +93,4 @@ This section describes the available predefined tasks in the *Tasks* menu of *Pr
 |Linux,Windows,Mac
 |R must be installed and the rJava library
 
-|Cron
-|Task executed periodically using a cron syntax
-|Linux,Mac,Windows
-|
-
-|LDAP Query
-|Provides an LDAP client for querying an LDAP server
-|Linux,Mac,Windows
-|
-
 |====
