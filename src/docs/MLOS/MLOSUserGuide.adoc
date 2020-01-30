@@ -685,24 +685,16 @@ def load_model(model_file_path):
   SERVICE_CONFIG['model'] = model
   print("model:\n", model)
 
-def load_yaml(yaml_url):
-  from urllib.request import urlopen
-  import ssl, os
-  context = ssl._create_unverified_context()
-  yaml_file = urlopen(yaml_url, context=context).read()
-  os.mkdir("/model_as_a_service/swagger/")
-  yaml_file_name="/model_as_a_service/swagger/ml_service_swagger.yaml"
-  yaml_file_content=yaml_file.decode('utf-8')
-  f = open(yaml_file_name, "w")
-  f.write(yaml_file_content)
-  f.close()
-
-#main function # <7>
+# main
 if __name__ == '__main__':
-  load_yaml(os.getenv('YAML_FILE'))
-  app = connexion.FlaskApp(__name__, port=9090, specification_dir='/model_as_a_service/swagger/')
+  app = connexion.FlaskApp(__name__, port=9090, specification_dir='/model_as_a_service')
+  CORS(app.app)
   app.add_api('ml_service_swagger.yaml', arguments={'title': 'Machine Learning Model Service'})
-  app.run()
+  https_enabled = os.getenv('HTTPS_ENABLED')
+  if https_enabled.lower()=="true":
+    app.run(ssl_context=('/model_as_a_service/certificate_mas.pem', '/model_as_a_service/key_mas.pem'))
+  else:
+    app.run()
 ----
 <1> Imports the different required libraries
 <2> Defines the path of the deployed model
