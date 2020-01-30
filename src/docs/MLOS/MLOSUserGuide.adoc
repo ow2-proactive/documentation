@@ -342,8 +342,8 @@ Interfacing with the Web Service could be set up in different ways:
 
 - Or you accept a payload, convert it to json data, calculate the prediction using MaaS and return its value.
 
-Using MaaS, you can easily deploy and use any machine learning model as a Web Service on physical or virtual compute host on which there is a Proactive Node available.
-You can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and eventually, deploy a a Model-Service on that specific node.
+Using MaaS, you can easily deploy and use any machine learning model as a Web Service on physical or virtual compute host on which there is an available Proactive Node.
+You can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and eventually, deploy a Model-Service on that specific node.
 
 The following deployment steps are similar wherever you need to deploy and use your model:
 
@@ -364,21 +364,34 @@ Search for `Model_Service` in Services Workflows List.
 
 Set the following variables :
 
+[#table_maas]
 .Model_Service variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
+| `PROXYFIED`
+| True if a proxy is needed to protect the access to this model-service endpoint.
+| Boolean (default=False)
 | `DOCKER_IMAGE`
 | The Docker image that contains all the dependencies and libraries needed for the model execution.
 | String (default="activeeon/dlm3")
+| `HTTPS_ENABLED`
+| True if the protocol https is needed for the defined model-service.
+| Boolean (default=True)
 | `INSTANCE_NAME`
 | The name of the service that will be deployed.
 | String (default="model-server")
+| `ENDPOINT_ID`
+| The endpoint_id that will be used if `PROXYFIED` is set to True.
+| String (default=maas-gui)
+| `NODE_NAME`
+| The name of the node where the service will be deployed. If empty, the service will be deployed on an available node selected randomly.
+| String (default=Empty)
 | `YAML_FILE`
 | A YAML file that describes the OpenAPI Specification ver. 2 (known as Swagger Spec) of the service. This file should be stored in the catalog under the `model_as_service_resources` bucket. More information about the structure of this file can be found in the section <<Customize the Service>>.
 | String (default="ml_service-api").
 | `PYTHON_ENTRYPOINT`
-| This entry script starts the service and defines the different functions to deploy the model, score the requests by using the model, and return the results. This script is specific to your model. This file should be stored in the Catalog. More information about this file can be found in the <<Customize the Service>> section.
+| This entry script starts the service and defines the different functions to deploy the model, scores the prediction requests based on the deployed model, and returns the results. This script is specific to your model. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about this file can be found in the <<Customize the Service>> section.
 | String (default="ml_service").
 |===
 
@@ -386,7 +399,7 @@ Click on `Execute Action` and follow the progress of the service creation.
 
 image::MAS_Model_Servie_PCA.png[500,500,align=center]
 
-Open the Endpoint and concatenate the base url `api/ui`to your endpoint.
+Open the Endpoint.
 
 Through this Swagger API, you are now able to :
 
@@ -407,25 +420,7 @@ Add the `model_as_a_service` bucket.
 
 Drag and drop the `Model_Service_Start` task from the bucket.
 
-Execute the Workflow by setting the different workflow's variables as follows:
-
-.Model_Service_Start variables
-[cols="2,5,2"]
-|===
-| *Variable name* | *Description* | *Type*
-| `DOCKER_IMAGE`
-| The Docker image that contains all the dependencies and libraries needed for the model execution.
-| String (default="activeeon/dlm3")
-| `INSTANCE_NAME`
-| The name of the service that will be deployed.
-| String (default="model-server")
-| `YAML_FILE`
-| A YAML file that describes the OpenAPI Specification ver. 2 (known as Swagger Spec) of the service. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about the structure of this file can be found in the section <<Customize the Service>>.
-| String (default="ml_service-api").
-| `PYTHON_ENTRYPOINT`
-| This entry script starts the service and defines the different functions to deploy the model, score the requests by using the model, and return the results. This script is specific to your model. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about this file can be found in the <<Customize the Service>> section.
-| String (default="ml_service").
-|===
+Execute the Workflow by setting the different workflow's variables as described in Table <<table_maas>>.
 
 === Deploy a Model
 
@@ -464,7 +459,7 @@ Open the `deploy` operation and set the provided token and upload the model that
 
 image::MAS_Deploy_Swagger.png[align=center]
 
-* *via Studio portal*
+*Via Studio portal*
 
 Open the link:https://try.activeeon.com/Studio[Studio Portal].
 
@@ -490,7 +485,7 @@ Execute the Workflow and set the different workflow's variables as follows:
 | The URL of the model that need to be deployed.
 | URL
 | `SERVICE_TOKEN`
-| The api_token to be able to deploy the model.
+| A valid token required to be able to deploy the model.
 | String
 |===
 
@@ -509,7 +504,7 @@ Open the `predict` operation and set the provided token and the data that you ne
 
 image::MAS_Predict_Swagger.png[align=center]
 
-* *via Studio portal*
+*Via Studio portal*
 
 Open the link:https://try.activeeon.com/Studio[Studio Portal].
 
@@ -583,13 +578,13 @@ Execute the Workflow and set the different workflow's variables as follows:
 
 === Deployment Pipeline Example
 
-You can connect the different tasks in a single workflow to get the full pipeline from the model training step to the model deployment and consumption steps. Each task will propagate the acquired variables to the connected tasks.
+You can connect the different tasks in a single workflow to get the full pipeline from the model training step to the model deployment and consumption steps. Each task will propagate the acquired variables to its children tasks.
 The following workflow example is available on the `model_as_a_service` bucket under the name of `Deploy_And_Call_IRIS_Flower_Classifier_Model`.
 This example trains an Iris Flower Classifier, starts a web service where the trained model is deployed and the input data is scored by consuming the endpoints exposed by the model_service.
 
 image::MAS_IRIS_Workflow_Example.png[align=center]
 
-==== Customize the Service
+=== Customize the Service
 
 It is possible to customize the model as a service defined by default and adapt it to your specific needs. Indeed, you can customize the following elements according to your needs:
 
@@ -690,24 +685,16 @@ def load_model(model_file_path):
   SERVICE_CONFIG['model'] = model
   print("model:\n", model)
 
-def load_yaml(yaml_url):
-  from urllib.request import urlopen
-  import ssl, os
-  context = ssl._create_unverified_context()
-  yaml_file = urlopen(yaml_url, context=context).read()
-  os.mkdir("/model_as_a_service/swagger/")
-  yaml_file_name="/model_as_a_service/swagger/ml_service_swagger.yaml"
-  yaml_file_content=yaml_file.decode('utf-8')
-  f = open(yaml_file_name, "w")
-  f.write(yaml_file_content)
-  f.close()
-
-#main function # <7>
+# main
 if __name__ == '__main__':
-  load_yaml(os.getenv('YAML_FILE'))
-  app = connexion.FlaskApp(__name__, port=9090, specification_dir='/model_as_a_service/swagger/')
+  app = connexion.FlaskApp(__name__, port=9090, specification_dir='/model_as_a_service')
+  CORS(app.app)
   app.add_api('ml_service_swagger.yaml', arguments={'title': 'Machine Learning Model Service'})
-  app.run()
+  https_enabled = os.getenv('HTTPS_ENABLED')
+  if https_enabled.lower()=="true":
+    app.run(ssl_context=('/model_as_a_service/certificate_mas.pem', '/model_as_a_service/key_mas.pem'))
+  else:
+    app.run()
 ----
 <1> Imports the different required libraries
 <2> Defines the path of the deployed model
@@ -736,11 +723,14 @@ info:
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 
 basePath: /api
+schemes:
+  - https
+  - http
 
 paths:
 # <2>
   /get_token:
-    post:
+    get:
       summary: Return secret string
       operationId: ml_service.get_token_api
       produces:
@@ -823,8 +813,8 @@ paths:
                 default: "376d873c859d7f9f268e1b9be883745b"
 ----
 <1> Contains API information: title, description (optional), version, licence.
-<2> Defines the get_token endpoint calling the get_token` function defined in the entry script.
-<3> Defines the deploy endpoint calling the `deploy_api`` function defined in the entry script.
+<2> Defines the get_token endpoint calling the `get_token` function defined in the entry script.
+<3> Defines the deploy endpoint calling the `deploy_api` function defined in the entry script.
 <4> Defines the predict endpoint calling the `predict_api` function defined in the entry script.
 --
 
