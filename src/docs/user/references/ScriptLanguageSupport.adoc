@@ -16,7 +16,8 @@ echo "Hello world"
 ----
 
 Example `shell` script:
-[source,ksh]
+
+[source,bash]
 ----
 #!/bin/ksh
 print "Hello world"
@@ -80,6 +81,7 @@ echo "foo=$variables_foo">>$localspace/.variables
 ----
 
 _Task_A_ grovy post script (`update_variables_from_file`)
+
 [source,groovy]
 ----
 new File(localspace, ".variables").eachLine { line ->
@@ -97,6 +99,7 @@ _Task_B_ a child of _Task_A_:
 echo "Here is the value of the foo variable:"
 echo "$variables_foo"
 ----
+
 Displays:
 ----
 Here is the value of the foo variable:
@@ -115,12 +118,47 @@ It features the following behaviors:
 
 Example variable usage:
 
-[source,dos]
+[source, dos]
 ----
 echo "Here is the value of the foo variable:"
 echo "%variables_foo%"
 ----
 
+=== VBScript
+
+VBScript engine behaves similarly as <<_windows_cmd,Windows CMD>> but using visual basic syntax instead of batch. It uses the `cscript.exe` command to execute `vbs` scripts.
+
+It features the following behaviors:
+
+* Script bindings are translated as environment variables. They must be accessed inside the script as a process variable.
+* Workflow variables are un-modifiable except by using a post-script written in another language such as the `update_variables_from_file` script (see <<_bash_and_shell,Bash script language>> for further explanations).
+* The _result_ of the script engine execution corresponds to the return code of the `cscript.exe` process executed.
+
+Example variable usage:
+
+[source, vbscript]
+----
+Set wshShell = CreateObject( "WScript.Shell" )
+Set wshProcessEnv = wshShell.Environment( "PROCESS" )
+Wscript.Echo "Hello World from Job " & wshProcessEnv( "variables_PA_JOB_ID" )
+----
+
+Any error occurring during the script execution does not imply necessarily that the workflow task running the script will fail. This is due to the cscript command not immediately exiting upon error.
+
+In order to report a failure to the task when running a VB script, the following instruction can be added in the beginning of the script:
+
+[source, vbscript]
+----
+On Error Quit 1
+----
+
+Example:
+
+[source, vbscript]
+----
+On Error Quit 1
+Wscript.Echo "This will produce an error" & (1 / 0)
+----
 
 === Javascript
 
@@ -131,7 +169,7 @@ link:https://wiki.openjdk.java.net/display/Nashorn/Rhino+Migration+Guide[documen
 
 Example of Javascript ProActive Task which modifies Job Variable:
 
-[source,javascript]
+[source, javascript]
 ----
 var status = variables.get("orderStatus")
 if (status == "delivered") {
@@ -143,7 +181,7 @@ variables.put("otherVar", "someConstValue")
 
 Example of Javascript ProActive Task which modifies Job Variable containing JSON object:
 
-[source,javascript]
+[source, javascript]
 ----
 var jsonVariable = JSON.parse(variables.get("jsonVariable")) // you need to parse your variable first
 jsonVariable["newVar"] = "newValue" // then you can modify it as regular json
@@ -158,7 +196,7 @@ You still can use `variables.put("myVarName", "someConstantValue")` syntax for s
 
 Example of Javascript ProActive Task which returns JSON object as a result:
 
-[source,javascript]
+[source, javascript]
 ----
 var jsonObject = {"orderStatus": "done", "customerName": "privatePrivacy"};
 var serializedJsonObject = JSON.stringify(jsonObject) // then you need to serialize it to string
@@ -227,6 +265,7 @@ In order to use the R script engine inside a ProActive Node (container which exe
 The ProActive R script engine works on both Linux and Windows.
 
 Here is an example of R script:
+
 [source, R]
 ----
 jobName <- variables[['PA_JOB_NAME']]
@@ -236,24 +275,28 @@ cat('My job is called', jobName, '\n')
 The following paragraphs describes the R script language specific syntaxes.
 
 The progress variable is set as follows (notice the leading dot):
+
 [source, R]
 ----
 .set_progress(50)
 ----
 
 In contrary to other languages such as groovy or jruby, the parent tasks results (*results* variable) is accessed directly:
+
 [source, R]
 ----
 print(results[[0]])
 ----
 
 Variable affectation can be done via:
+
 [source, R]
 ----
 variables[["myvar"]] <- "some value"
 ----
 
 Access to dataspaces variables is similar to other languages:
+
 [source, R]
 ----
 print(userspace)
@@ -275,6 +318,7 @@ ProActive PowerShell script engine is based on link:https://github.com/jni4net/j
 It requires that Powershell 2.0 Engine and .NET Framework 3.5 are installed on the relevant machines.
 
 An example of Powershell script:
+
 [source, PowerShell]
 ----
 $variables.Set_Item('myvar', 'value')
@@ -282,12 +326,14 @@ $result = Get-Date
 ----
 
 In contrary to other languages such as groovy or jruby, the parent tasks results (*results* variable) is accessed directly:
+
 [source, PowerShell]
 ----
 Write-Output $results[0]
 ----
 
 Variable affectation can be done via:
+
 [source, PowerShell]
 ----
 $variables.Set_Item('myvar', 'value')
@@ -296,12 +342,14 @@ $variables.Set_Item('myvar', 'value')
 Internal PowerShell types such as Dates are automatically serialized to an internal format which can be understood by another powershell task, for example in the following two tasks:
 
 Task1:
+
 [source, PowerShell]
 ----
 $result = Get-Date
 ----
 
 Task2:
+
 [source, PowerShell]
 ----
 Write-Output $results[0].Day
@@ -321,22 +369,28 @@ The Perl script engines features the following behaviors:
 
 In that sense, the Perl script engine behaves similarly as the Bash or Cmd script engines.
 
-Please see the proper names of the variables in link:../user/ProActiveUserGuide.html#_variables_quick_reference[Script Bindings Reference]. +
-Inside Perl, you can access the environment variables using the *%ENV* hash.
+Please refer to link:../user/ProActiveUserGuide.html#_variables_quick_reference[Script Bindings Reference] for the complete list of bindings accessible through environment variables.
 
-The aim of next examples is to clarify the usage of variables in Perl:
+Inside Perl, you can access environment variables using the *%ENV* hash.
 
-- to get job name variable you should write the next code:
+The aim of next examples is to clarify how script engine bindings can be accessed inside Perl scripts.
+
+A workflow variable can be accessed using system environment variables:
+
 [source, perl]
 ----
 my $jobName= $ENV{"variables_PA_JOB_NAME"};
 ----
-- to get the result of parent task you can implement the next code:
+
+Similarly, the result of a parent task:
+
 [source, perl]
 ----
 my $parent_task_result= $ENV{"results_0"};
 ----
-- to get the userspace please put the next code:
+
+Or another script binding (for example, USERSPACE):
+
 [source, perl]
 ----
 my $USERSPACE= $ENV{"USERSPACE"};
@@ -353,11 +407,14 @@ in the official https://docs.docker.com/compose/[Docker Compose documentation^].
 To get started, a simple Docker Compose example is explained below.
 
 The content of the _Script_ section (equal to the content of a Docker Compose file) is:
+
+[source, yaml]
 ----
 helloworld:
     image: busybox
     command: echo "Hello ProActive"
 ----
+
 The above example describes a container which is called 'helloworld'. That container is created from a busybox image,
  which will run the command 'echo "Hello ProActive"'
 
@@ -397,6 +454,7 @@ A Docker_File task allows executing a succession of docker commands according to
 
 To get started, a simple Docker_File task can be tested by using this Dockerfile as the content of the _Script_ section (task implementation)
 
+[source, dockerfile]
 ----
 FROM ubuntu:18.04
 RUN echo "Hello ProActive" 

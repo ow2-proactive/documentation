@@ -6,7 +6,7 @@ The Configuration file named `scheduler-portal-display.conf` is located in the f
 
 It is possible to specify a list of Variables or Generic Information to display in new columns of the Execution List table (Job Centric View). The defined columns will be added after the default columns of the view, following the order given in the configuration file. The list of columns is defined as a JSON array, for example:
 
-[source,]
+[source]
 ----
 execution-list-extra-columns: [{ \
 	"title": "start at", \
