@@ -1,6 +1,6 @@
-=== LDAP Query Tasks
+=== LDAP Query
 
-Provides an LDAP client that allows connection to an existing Microsoft Active Directory server to perform search operations and to check users' credentials and their membership groups.
+LDAP Query task provides an LDAP client that enables connection to an existing Microsoft Active Directory server to perform search operations and to check users' credentials and their membership groups.
 
 ==== LDAP query task variables table
 
