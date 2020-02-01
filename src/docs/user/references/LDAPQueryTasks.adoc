@@ -1,14 +1,12 @@
 === LDAP Query
 
-LDAP Query task provides an LDAP client that enables connection to an existing Microsoft Active Directory server to perform search operations and to check users' credentials and their membership groups.
+The LDAP Query connector enables connection to an existing Microsoft Active Directory server to perform search operations and to check users' credentials and their membership groups.
 
-==== LDAP query task variables table
-
-The next parameters are provided as task variables:
+*Variables:*
 
 [width="100%",frame="topbot",options="header"]
 |===
-|Parameter Name | Description | Example
+|Variable Name | Description | Example
 |ldapURL|URL the LDAP server|`ldap://localhost:389` (unsecured) or `ldaps://127.0.0.1:636` (secured)
 |ldapDnBase|The base distinguished name of the catalog| `dc=yourOrganization,dc=com`
 |ldapUsername|The username | `cn=admin` for global admin or `cn=yourName,ou=users` for a specific user
