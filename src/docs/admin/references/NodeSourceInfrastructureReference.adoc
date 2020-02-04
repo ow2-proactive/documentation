@@ -382,9 +382,6 @@ Otherwise, a new and distinct VPC will be used to operate the nodes created by t
  The URL must comply with the specification of the communication protocols used by ProActive, and can therefore be prefixed with *pnp://*, *pnps://* or *pamr://*.
  This parameter is mandatory.
 
-	- *rmCredential:* The administrator has to provide this field with the content of the credentials file created from the Resource Manager.
- This parameter is mandatory.
-
 	- *rmHostname:* This field is to be filled with the domain name or the IP of the host operating the Resource Manager.
  This option is mandatory.
 
