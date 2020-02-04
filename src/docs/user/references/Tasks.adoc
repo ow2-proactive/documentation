@@ -2,7 +2,7 @@ This section describes the available predefined tasks in the *Tasks* menu of *Pr
 
 1. _OS Shells_: Shell, Bash, Windows Cmd, PowerShell
 2. _Languages_: Java, Scalaw, Javascript, Groovy, Ruby, Jython, Python, Perl, PHP, R
-3. _Containers_: Docker File, Docker Compose, Kubernetes
+3. _Containers_: Dockerfile, Docker_Compose, Kubernetes
 
 Please find in the table below a further description of these tasks.
 
@@ -84,12 +84,12 @@ Please find in the table below a further description of these tasks.
 |Linux,Windows,Mac
 |R must be installed and the rJava library
 
-|Docker File
+|Dockerfile
 |Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `dockerfile` script engine.
 |Linux,Windows,Mac
 |Docker must be installed
 
-|Docker Compose
+|Docker_Compose
 |Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `docker-compose` script engine.
 |Linux,Windows,Mac
 |Docker Compose and Docker must be installed
