@@ -2585,8 +2585,6 @@ include::./references/DataConnectors.adoc[]
 
 include::./references/StatisticsOnProActiveJobsAndResourceUsageReference.adoc[]
 
-include::./references/LDAPQueryTasks.adoc[]
-
 === PHP Task
 
 The PHP task is a special, predefined task which executes a PHP script on a ProActive Node’s local PHP installation.

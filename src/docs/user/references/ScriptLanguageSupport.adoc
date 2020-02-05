@@ -398,15 +398,13 @@ my $USERSPACE= $ENV{"USERSPACE"};
 
 === Docker Compose
 
-In order for Docker_Compose tasks to work, the _Node_ must have Docker and Docker Compose installed. Please refer to the official
+The execution of a Docker_Compose task requires that Docker and Docker Compose are installed on the host machine of the ProActive Node. Please refer to the official
  Docker documentation to see how to install https://docs.docker.com/engine/installation/[Docker^] and https://docs.docker.com/compose/install/[Docker Compose^].
 
-A Docker_Compose task expects the content of a Docker Compose file inside the _Script_ section. You can find out how to write Docker Compose files
+A Docker_Compose task expects the content of a Docker Compose file to be implemented inside the _Script_ editor of the *Task Implementation* section. You can find out how to write Docker Compose files
 in the official https://docs.docker.com/compose/[Docker Compose documentation^].
 
-To get started, a simple Docker Compose example is explained below.
-
-The content of the _Script_ section (equal to the content of a Docker Compose file) is:
+To get started, we present below the content of the _Script_ editor of a simple example of a Docker Compose task.
 
 [source, yaml]
 ----
