@@ -1,4 +1,10 @@
-This section describes the available predefined tasks in the *Tasks* menu of *ProActive Studio* and the operating systems where they run.
+This section describes the available predefined tasks in the *Tasks* menu of *ProActive Studio* and the operating systems where they run. These tasks are grouped in three sections:
+
+1. _OS Shells_: Shell, Bash, Windows Cmd, PowerShell
+2. _Languages_: Java, Scalaw, Javascript, Groovy, Ruby, Jython, Python, Perl, PHP, R
+3. _Containers_: Dockerfile, Docker_Compose, Kubernetes
+
+Please find in the table below a further description of these tasks.
 
 [cols="1,1,1,1", options="header"]
 |====
@@ -23,20 +29,10 @@ This section describes the available predefined tasks in the *Tasks* menu of *Pr
 |Windows
 |
 
-|Docker Compose
-|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `docker-compose` script engine.
-|Linux,Windows,Mac
-|Docker Compose and Docker must be installed
-
-|Docker File
-|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `dockerfile` script engine.
-|Linux,Windows,Mac
-|Docker must be installed
-
-|Kubernetes
-|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `kubernetes` script engine.
-|Linux
-|Kubernetes CLI must be installed
+|PowerShell
+|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `powershell` script engine.
+|Windows
+|.NET Framework 3.5 and Poweshell 2.0 Engine must be installed
 
 |Java
 |Sample <<../user/ProActiveUserGuide.adoc#java_tasks,Java Task>>.
@@ -83,24 +79,24 @@ This section describes the available predefined tasks in the *Tasks* menu of *Pr
 |Linux,Mac,Windows
 |PHP interpreter must be installed
 
-|PowerShell
-|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `powershell` script engine.
-|Windows
-|.NET Framework 3.5 and Poweshell 2.0 Engine must be installed
-
 |R
 |Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `R` script engine.
 |Linux,Windows,Mac
 |R must be installed and the rJava library
 
-|Cron
-|Task executed periodically using a cron syntax
-|Linux,Mac,Windows
-|
+|Dockerfile
+|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `dockerfile` script engine.
+|Linux,Windows,Mac
+|Docker must be installed
 
-|LDAP Query
-|Provides an LDAP client for querying an LDAP server
-|Linux,Mac,Windows
-|
+|Docker_Compose
+|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `docker-compose` script engine.
+|Linux,Windows,Mac
+|Docker Compose and Docker must be installed
+
+|Kubernetes
+|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `kubernetes` script engine.
+|Linux
+|Kubernetes CLI must be installed
 
 |====
