@@ -136,7 +136,7 @@ link:https://docs.docker.com/engine/reference/builder/[Dockerfile, window="_blan
 link:https://docs.docker.com/compose/compose-file/[Docker Compose, window="_blank"] and
 link:https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/[Kubernetes, window="_blank"].
 
-NOTE: Though `Dockerfile`, `Docker Compose` and `Kubernetes` are not really scripting language but rather description languages, ProActive tasks can interpret Docker files, Docker Compose or Kubernetes yaml files to start containers or pods.
+NOTE: `Dockerfile`, `Docker Compose` and `Kubernetes` are not really scripting languages but rather description languages, ProActive tasks can interpret Dockerfiles, Docker Compose or Kubernetes yaml files to start containers or pods.
 
 As seen in the list above, *Script Tasks* can be used to run native operating system commands by providing a script written in `bash`, `ksh`, `windows cmd`, `Powershell`, etc...
 Simply set the language attribute to `bash`, `shell`, or `cmd`  and type your command(s) in the workflow.

@@ -398,7 +398,7 @@ my $USERSPACE= $ENV{"USERSPACE"};
 
 === Docker Compose
 
-The execution of a Docker_Compose task requires the installation of Docker and Docker Compose on the host machine of the ProActive Node. Please refer to the official
+The execution of a Docker_Compose task requires the installation of both Docker and Docker Compose on the host machine of the ProActive Node. Please refer to the official
  Docker documentation to see how to install https://docs.docker.com/engine/installation/[Docker^] and https://docs.docker.com/compose/install/[Docker Compose^].
 
 A Docker_Compose task expects the content of a Docker Compose file to be implemented inside the _Script_ editor of the *Task Implementation* section. You can find out how to write Docker Compose files
@@ -439,7 +439,7 @@ key *docker-compose-options-split-regex*. If you supply e.g. "!SPLIT!" as value,
 
 === Dockerfile
 
-The default behavior of the Dockerfile task is to build an image and then start a container instance from it. Once the execution is done, the container is stopped and the built image is deleted. The build, start, stop and remove actions can be parametrized through advanced command line options which will be detailed aferward.
+The default behavior of the Dockerfile task is to build an image and then start a container instance from it. Once the execution is done, the container is stopped and the built image is deleted. The build, start, stop and, remove actions can be parametrized through advanced command line options which will be detailed later.
 
 
 The execution of a Dockerfile task requires the installation of Docker engine on the host machine of the ProActive Node. Please refer to the official Docker documentation to see how to install https://docs.docker.com/engine/installation/[Docker^].
@@ -447,7 +447,7 @@ The execution of a Dockerfile task requires the installation of Docker engine on
 To use a Dockerfile task, you have to put the content of a Dockerfile inside the _Script_ editor of the *Task Implementation* section. You can find out how to write Dockerfile
 in the official https://docs.docker.com/engine/reference/builder/[Dockerfile documentation^].
 A Dockerfile task allows executing a succession of docker commands according to the lifecycle of Docker containers.
-//In order, docker build, docker run, docker stop, and docker rmi are ran when a Dockerfile task is executed.
+In order, docker build, docker run, docker stop, and docker rmi are ran when a Dockerfile task is executed.
 
 To get started, we present below the content of the _Script_ editor of a simple example of a Dockerfile task.
 
