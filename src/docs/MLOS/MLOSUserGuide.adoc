@@ -333,30 +333,42 @@ The following workflows represent some mathematical functions that can be optimi
 
 == Machine Learning Model as a Service (ML MaaS)
 
-Once a predictive model is built, tested and validated, you can easily use it in real world production pipelines by deploying it as a service.
-This will be particularly useful for engineering teams that want to take advantage of this model.
+Once a predictive model is built, tested and validated, you can easily use it in real world production pipelines by deploying it as a Web Service.
+This will be particularly useful for engineering or business teams that want to take advantage of this model.
 
-Interfacing with the Web Service could be set up in different ways:
+The life cycle of any ML MaaS instance (i.e., from starting the instance, deploying an AI specific model to pausing or deleting the instance) can be managed in three different ways in MLOS :
 
-- Either you provide a user identifier, deploy the model of your choice and have the Web Service available to compute the prediction and return its value.
+- Using the *Studio Portal* and more specifically the bucket *model-as-a-service* where specific generic tasks are provided to process all the possible actions (i.e., Model_Service_Start, Deploy_AI_Model, Call_Prediction_Service, Model_Service_Actions[Finish/Pause/Resume]).
+These tasks can be easily integrated to your AI pipelines/workflows as you can see in this <<Deployment Pipeline Example>>.
+- Using the *Cloud Automation Portal* by executing the different actions associated to ML MaaS (i.e., Model_Service, Deploy_AI_Model, Finish_Model_Service, Pause_Model_Service, Resume_Model_Service)
+- Using the *Swagger UI* which is accessible once the ML MaaS instance is up and running.
 
-- Or you accept a payload, convert it to json data, calculate the prediction using MaaS and return its value.
+The management of the life cycle of ML MaaS will be detailed in the next sub-sections.
 
-Using MaaS, you can easily deploy and use any machine learning model as a Web Service on physical or virtual compute host on which there is an available Proactive Node.
-You can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and eventually, deploy a Model-Service on that specific node.
+Once an ML MaaS instance is up and running, it could be used for :
+
+- *AI Model Deployment or Update*: the user has to provide a valid identifier in order to deploy the model of his/her choice.
+
+- *Call of Predictions*: the user requests to give predictions for a specific payload that has to be converted into json data in order to get prediction's values.
+
+Using ML MaaS, you can easily deploy and use any machine learning model as a Web Service on a physical or a virtual compute host on which there is an available Proactive Node. Going through the Proactive Schedular,
+you can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and eventually, deploy a Model-Service on that specific node.
 
 The following deployment steps are similar wherever you need to deploy and use your model:
 
-. <<Start a Model Service>>
-. <<Deploy a Model>>
-. <<Call the service for predictions>>
-. <<Delete the service>>
+. <<Start a Generic Model Service>>
+. <<Deploy a Specific AI Model>>
+. <<Call the Service for Predictions>>
+. <<Delete/Finish the Service>>
 
-=== Start a Model Service
+=== Start a Generic Model Service
 
-There are two ways to start a web service (i.e., where you will deploy, update and call your model) using MLOS:
+There are two ways to start a service instance (i.e., where you will deploy, update and call your model) using MLOS:
 
-*Via Cloud Automation portal*
+- <<Via Cloud Automation Portal>>
+- <<Via Studio Portal>>
+
+==== Via Cloud Automation Portal
 
 Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Cloud Automation Portal].
 
@@ -373,20 +385,20 @@ Set the following variables :
 | True if a proxy is needed to protect the access to this model-service endpoint.
 | Boolean (default=False)
 | `DOCKER_IMAGE`
-| The Docker image that contains all the dependencies and libraries needed for the model execution.
+| The Docker image that contains all the dependencies and libraries needed by the model specific AI model to be deployed.
 | String (default="activeeon/dlm3")
 | `HTTPS_ENABLED`
 | True if the protocol https is needed for the defined model-service.
-| Boolean (default=True)
+| Boolean (default=False)
 | `INSTANCE_NAME`
 | The name of the service that will be deployed.
 | String (default="model-server")
-| `ENDPOINT_ID`
-| The endpoint_id that will be used if `PROXYFIED` is set to True.
-| String (default=maas-gui)
 | `NODE_NAME`
 | The name of the node where the service will be deployed. If empty, the service will be deployed on an available node selected randomly.
 | String (default=Empty)
+| `ENDPOINT_ID`
+| The endpoint_id that will be used if `PROXYFIED` is set to True.
+| String (default=maas-gui)
 | `YAML_FILE`
 | A YAML file that describes the OpenAPI Specification ver. 2 (known as Swagger Spec) of the service. This file should be stored in the catalog under the `model_as_service_resources` bucket. More information about the structure of this file can be found in the section <<Customize the Service>>.
 | String (default="ml_service-api").
@@ -399,9 +411,9 @@ Click on `Execute Action` and follow the progress of the service creation.
 
 image::MAS_Model_Servie_PCA.png[500,500,align=center]
 
-Open the Endpoint.
+Open the endpoint in order to access the Swagger UI.
 
-Through this Swagger API, you are now able to :
+Through this Swagger UI, you are now able to :
 
 ** Access the different defined endpoints
 ** Ask for an api_token
@@ -410,25 +422,58 @@ Through this Swagger API, you are now able to :
 
 Each generated endpoint will be explained in the next subsections.
 
-*Via Studio portal*
+==== Via Studio Portal
 
 Open the link:https://try.activeeon.com/Studio[Studio Portal].
 
 Create a new workflow.
 
-Add the `model_as_a_service` bucket.
+Add the `model_as_a_service` bucket by clicking in the `View` menu field > `Add Bucket Menu to the Palette` > `model_as_a_service`..
 
 Drag and drop the `Model_Service_Start` task from the bucket.
 
-Execute the Workflow by setting the different workflow's variables as described in Table <<table_maas>>.
+Execute the Workflow by setting the different workflow's variables as described in the Table below.
 
-=== Deploy a Model
+.Model_Service variables
+[cols="2,5,2"]
+|===
+|*Variable name* | *Description* | *Type*
+3+^|*Workflow variables*
+| `PYTHON_ENTRYPOINT`
+| This entry script starts the service and defines the different functions to deploy the model, scores the prediction requests based on the deployed model, and returns the results. This script is specific to your model. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about this file can be found in the <<Customize the Service>> section.
+| String (default="ml_service").
+| `USER_NAME`
+| A valid user name having the needed privileges to execute this action.
+| String
+| `DOCKER_IMAGE`
+| The Docker image that contains all the dependencies and libraries needed by the model specific AI model to be deployed.
+| String (default="activeeon/dlm3")
+| `YAML_FILE`
+| A YAML file that describes the OpenAPI Specification ver. 2 (known as Swagger Spec) of the service. This file should be stored in the catalog under the `model_as_service_resources` bucket. More information about the structure of this file can be found in the section <<Customize the Service>>.
+| String (default="ml_service-api").
+| `NODE_NAME`
+| The name of the node where the service will be deployed. If empty, the service will be deployed on an available node selected randomly.
+| String (default=Empty)
+3+^|*Task variables*
+| `SERVICE_ID`
+| The name of the service. Please keep the default value for this variable
+| String (default="Model_Service")
+| `INSTANCE_NAME`
+| The name of the service that will be deployed.
+| String (default="model-server-${PA_JOB_ID}")
+|===
 
-There are three ways to deploy a model in the running model_server (i.e., where you will deploy, update and call your model) using MLOS:
+=== Deploy a Specific AI Model
 
-*Via Cloud Automation portal*
+There are three ways to deploy a model in the running model_server (i.e., where you will deploy, update and call your specific AI model) using MLOS:
 
-Once the status of your model service is displayed as `RUNNING` on `Cloud Automation`, you can deploy your model by following the steps below :
+- <<Via Cloud Automation Portal>>
+- <<Via Swagger UI>>
+- <<Via Studio Portal>>
+
+==== Via Cloud Automation Portal
+
+Once the status of your generic model service is displayed as `RUNNING` on `Cloud Automation`, you can deploy your model by following the steps below :
 
 Select and execute the `Deploy_Model_Action` to deploy your model.
 
@@ -437,6 +482,7 @@ Set the Following variables :
 .Deploy_Model variables
 [cols="2,5,2"]
 |===
+| *Variable name* | *Description* | *Type*
 | `MODEL_URL`
 | The URL of the model that needs to be deployed.
 | URL
@@ -447,9 +493,11 @@ Set the Following variables :
 
 Click on `Execute Action` and follow the progress of the model deployment.
 
-Check that the current status is correctly set to `MODEL_DEPLOYED`.
+Check that the status correctly evolves to `AI_MODEL_DEPLOYED`.
 
-*Via Swagger UI*
+==== Via Swagger UI
+
+You can also deploy a specific AI model using the Swagger UI :
 
 Open the Swagger UI.
 
@@ -459,13 +507,15 @@ Open the `deploy` operation and set the provided token and upload the model that
 
 image::MAS_Deploy_Swagger.png[align=center]
 
-*Via Studio portal*
+==== Via Studio Portal
+
+Finally you can also deploy a specific AI model directly from the Studio.
 
 Open the link:https://try.activeeon.com/Studio[Studio Portal].
 
 Create a new workflow.
 
-Add the `model_as_a_service` bucket.
+Add the `model_as_a_service` bucket by clicking in the `View` menu field > `Add Bucket Menu to the Palette` > `model_as_a_service`.
 
 Drag and drop the `Deploy_Model` task from the bucket.
 
@@ -475,6 +525,14 @@ Execute the Workflow and set the different workflow's variables as follows:
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
+3+^|*Workflow variables*
+| `SERVICE_TOKEN`
+| A valid token required to be able to deploy the model.
+| String
+| `DOCKER_ENABLED`
+|   If True, the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+3+^|*Task variables*
 | `DEPLOY_MODEL_ENDPOINT`
 | The endpoint of the started service.
 | URL
@@ -484,17 +542,19 @@ Execute the Workflow and set the different workflow's variables as follows:
 | `MODEL_URL`
 | The URL of the model that need to be deployed.
 | URL
-| `SERVICE_TOKEN`
-| A valid token required to be able to deploy the model.
-| String
 |===
 
 
-=== Call the service for predictions
+=== Call the Service for Predictions
 
 There are two ways to call the web service to score input data using MLOS:
 
-*Via Swagger UI*
+- <<Via Swagger UI>>
+- <<Via Studio Portal>>
+
+==== Via Swagger UI
+
+Once the model is deployed, you can call the service for predictions using the Swagger UI :
 
 Open the Swagger UI.
 
@@ -504,13 +564,15 @@ Open the `predict` operation and set the provided token and the data that you ne
 
 image::MAS_Predict_Swagger.png[align=center]
 
-*Via Studio portal*
+==== Via Studio Portal
+
+Once the model is deployed, you can also call the service for prediction directly from the Studio Portal :
 
 Open the link:https://try.activeeon.com/Studio[Studio Portal].
 
 Create a new workflow.
 
-Add the `model_as_a_service` bucket.
+Add the `model_as_a_service` bucket by clicking in the `View` menu field > `Add Bucket Menu to the Palette` > `model_as_a_service`..
 
 Drag and drop the `Call_Prediction_Service` task from the bucket.
 
@@ -520,15 +582,20 @@ Execute the Workflow and set the different workflow's variables as follows:
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
+3+^|*Workflow variables*
+| `SERVICE_TOKEN`
+| The api_token to be able to deploy the model.
+| String
+| `DOCKER_ENABLED`
+|   If True, the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
+| Boolean (default=True)
+3+^|*Task variables*
 | `PREDICT_MODEL_ENDPOINT`
 | The endpoint of the started service.
 | URL
 | `PREDICT_EXTENSION`
 | The base path to access the prediction endpoint.
 | String (default="/api/predict")
-| `SERVICE_TOKEN`
-| The api_token to be able to deploy the model.
-| String
 | `INPUT_DATA`
 | Entry data that needs to be scored by the deployed model.
 | JSON
@@ -537,11 +604,15 @@ Execute the Workflow and set the different workflow's variables as follows:
 | String (default='class')
 |===
 
-=== Delete the service
+=== Delete/Finish the Service
 
-There are two ways to delete a web service (i.e., where you will deploy, update and call your model) using MLOS:
+There are two ways to delete a ML MaaS instance (i.e., where you will deploy, update and call your model) using MLOS :
+.<<Via Cloud Automation Portal>>
+.<<Via Studio Portal>>
 
-*Via Cloud Automation Portal*
+==== Via Cloud Automation Portal
+
+You can delete the launched service instance directly from the Cloud Automation portal :
 
 Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Cloud Automation Portal].
 
@@ -549,13 +620,21 @@ Set the action `Finish_Service` and click on execute.
 
 image::MAS_Delete_Service.png[align=center]
 
-*Via Studio portal*
+There are also two other actions that can be executed from the Cloud Automation Portal which are :
+
+- *Pause_Model_Service* : This action will stop the service instance.
+
+- *Resume_Model_Service* : This action will resume the paused service instance.
+
+==== Via Studio Portal
+
+You can also delete the service instance using the Studio portal :
 
 Open the link:https://try.activeeon.com/Studio[Studio Portal].
 
 Create a new workflow.
 
-Add the `model_as_a_service` bucket.
+Add the `model_as_a_service` bucket by clicking in the `View` menu field > `Add Bucket Menu to the Palette` > `model_as_a_service`.
 
 Drag and drop the `Model_Service_Actions` task from the bucket.
 
@@ -565,6 +644,7 @@ Execute the Workflow and set the different workflow's variables as follows:
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
+3+^|*Task variables*
 | `ACTION`
 | The action that will be processed regarding the service status.
 | List (Pause_Model_Service, Resume_Model_Service, Finish_Model_Service) (default="Finish_Model_Service")
@@ -580,7 +660,7 @@ Execute the Workflow and set the different workflow's variables as follows:
 
 You can connect the different tasks in a single workflow to get the full pipeline from the model training step to the model deployment and consumption steps. Each task will propagate the acquired variables to its children tasks.
 The following workflow example is available on the `model_as_a_service` bucket under the name of `Deploy_And_Call_IRIS_Flower_Classifier_Model`.
-This example trains an Iris Flower Classifier, starts a web service where the trained model is deployed and the input data is scored by consuming the endpoints exposed by the model_service.
+This example trains an Iris Flower Classifier, starts a service instance where the trained model is deployed and the input data is scored by consuming the endpoints exposed by the model_service.
 
 image::MAS_IRIS_Workflow_Example.png[align=center]
 
@@ -599,9 +679,9 @@ This script defines the different functions needed to deploy the model, score da
 It is possible to edit this script to make it more customized to your model. The entry script must take into consideration the:
 
 * List of users that are allowed to consume the service endpoints
-* Format of the model expected by the deployment and the prediction functions
-* Format of the incoming data
-* Data format expected by the model
+* Format of the model expected by the deployment and the prediction functions (e.g., pickle, joblib, etc.)
+* Format of the incoming data (e.g., JSON, Array, Matrix, etc.)
+* Data format expected by the model (e.g., JSON, Array, Matrix, etc.)
 
 ml_service.py [code source]
 [source,python]
@@ -820,7 +900,7 @@ paths:
 
 *DOCKER_IMAGE name* : Choose your own image containing the different dependencies required to run your ENTRYPOINT_SCRIPT.
 Activeeon provides a pre-built image https://github.com/ow2-proactive/docker/blob/master/dlm3/Dockerfile[activeeon/dlm3] ìncluding different machine learning and deep learning libraries.
-If you need to use your own docker image to start the service. You need to install the following libraries in your image :
+If you need to use your own docker image to start the service, you need to install the following libraries in your image :
 
 [source,bash]
 ----
