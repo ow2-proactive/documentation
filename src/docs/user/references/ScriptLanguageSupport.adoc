@@ -398,15 +398,13 @@ my $USERSPACE= $ENV{"USERSPACE"};
 
 === Docker Compose
 
-In order for Docker_Compose tasks to work, the _Node_ must have Docker and Docker Compose installed. Please refer to the official
+The execution of a Docker_Compose task requires the installation of both Docker and Docker Compose on the host machine of the ProActive Node. Please refer to the official
  Docker documentation to see how to install https://docs.docker.com/engine/installation/[Docker^] and https://docs.docker.com/compose/install/[Docker Compose^].
 
-A Docker_Compose task expects the content of a Docker Compose file inside the _Script_ section. You can find out how to write Docker Compose files
+A Docker_Compose task expects the content of a Docker Compose file to be implemented inside the _Script_ editor of the *Task Implementation* section. You can find out how to write Docker Compose files
 in the official https://docs.docker.com/compose/[Docker Compose documentation^].
 
-To get started, a simple Docker Compose example is explained below.
-
-The content of the _Script_ section (equal to the content of a Docker Compose file) is:
+To get started, we present below the content of the _Script_ editor of a simple example of a Docker_Compose task.
 
 [source, yaml]
 ----
@@ -430,7 +428,7 @@ You can specify these options by supplying a space character separated list in t
 * To define a _general parameter_, use the key *docker-compose-options* and supply "--verbose" as an example value.
 * To define a _docker-compose up option_, use the key *docker-compose-up-options* and supply "--exit-code-from helloworld".
 
-The two latter generic informations will be used to generate the following command:
+The two latter generic information will be used to generate the following command:
 
 ----
 docker-compose --verbose up --exit-code-from helloworld
@@ -439,20 +437,19 @@ docker-compose --verbose up --exit-code-from helloworld
 If splitting by space is prohibitive you can specify the split regex in the <<_glossary_generic_information, generic informations>> with the
 key *docker-compose-options-split-regex*. If you supply e.g. "!SPLIT!" as value, then your *docker-compose-up-options* will need to look like this: "--option1!SPLIT!--option2".
 
-=== Docker File
+=== Dockerfile
 
-The main behavior of a Docker_File task is to first build an image and then run a container instance from it. Once the execution is done, the container is stopped and the built image is deleted.
+The default behavior of the Dockerfile task is to build an image and then start a container instance from it. Once the execution is done, the container is stopped and the built image is deleted. The build, start, stop and, remove actions can be parametrized through advanced command line options which will be detailed later.
 
-Advanced options will allow to parametrize these actions.
 
-In order for Docker_File tasks to work, the _Node_ must have Docker installed. Please refer to the official
- Docker documentation to see how to install https://docs.docker.com/engine/installation/[Docker^].
+The execution of a Dockerfile task requires the installation of Docker engine on the host machine of the ProActive Node. Please refer to the official Docker documentation to see how to install https://docs.docker.com/engine/installation/[Docker^].
 
-To use a Docker_File task, put the content of a Dockerfile inside the _Task Implementation_ section. You can find out how to write Dockerfile
+To use a Dockerfile task, you have to put the content of a Dockerfile inside the _Script_ editor of the *Task Implementation* section. You can find out how to write Dockerfile
 in the official https://docs.docker.com/engine/reference/builder/[Dockerfile documentation^].
-A Docker_File task allows executing a succession of docker commands according to the lifecycle of Docker containers. In order, docker build, docker run, docker stop, and docker rmi are ran when a Docker_File task is executed.
+A Dockerfile task allows executing a succession of docker commands according to the lifecycle of Docker containers.
+In order, docker build, docker run, docker stop, and docker rmi are ran when a Dockerfile task is executed.
 
-To get started, a simple Docker_File task can be tested by using this Dockerfile as the content of the _Script_ section (task implementation)
+To get started, we present below the content of the _Script_ editor of a simple example of a Dockerfile task.
 
 [source, dockerfile]
 ----
@@ -461,11 +458,10 @@ RUN echo "Hello ProActive" 
 RUN sleep 30
 ----
 
-It will create an image using the Docker build command, by specifying commands to start (echo and sleep) for every running containers from this image. At the end the built image and the started container are deleted.
+The execution of this example will create an image using the Docker build command and start a container from this image using the specified commands (echo and sleep).
+At the end, the built image and the started container are deleted.
 
-The build, start, stop and remove commands can be parametrized through optional command line options explained after.
-
-* The Docker_File task allows to set parameters to the `docker build` command with regard to the docker-build CLI https://docs.docker.com/engine/reference/builder/[reference].
+* The Dockerfile task allows to set parameters to the `docker build` command with regard to the docker-build CLI https://docs.docker.com/engine/reference/builder/[reference].
 ----
 docker build [OPTIONS] PATH | URL | -
 ----
@@ -474,7 +470,7 @@ To define a _docker-build option_, use the generic information *docker-build-opt
 
 For instance by using the docker-build-options generic information with the value --add-host, a custom host-to-IP mapping will be added to the image.
 
-* The Docker_File task allows to set parameters to the `docker run` command with regard to the docker-run CLI https://docs.docker.com/engine/reference/run/[reference].
+* The Dockerfile task allows to set parameters to the `docker run` command with regard to the docker-run CLI https://docs.docker.com/engine/reference/run/[reference].
 ----
 docker run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
 ----
@@ -483,7 +479,7 @@ To define a _docker-run option_, use the generic information *docker-run-options
 
 For instance by using the docker-run-options generic information with the value -d=true, the container will be started in detached mode.
 
-* The Docker_File task allows to set parameters to the `docker stop` command with regard to the docker-stop CLI https://docs.docker.com/engine/reference/commandline/stop/[reference].
+* The Dockerfile task allows to set parameters to the `docker stop` command with regard to the docker-stop CLI https://docs.docker.com/engine/reference/commandline/stop/[reference].
 ----
 docker stop [OPTIONS] CONTAINER [CONTAINER...]
 ----
@@ -494,7 +490,7 @@ For instance by using the docker-stop-options generic information with the value
 
 TIP:  a parameter *docker.file.keepcontainer* is defined in the dockerfile script engine properties file (in config/scriptengines/ folder). Put the value to *yes* if you do not want to stop the container.
 
-* The Docker_File task allows to set parameters to the `docker rmi` command with regard to the docker-rmi CLI https://docs.docker.com/engine/reference/commandline/rmi/#options[reference].
+* The Dockerfile task allows to set parameters to the `docker rmi` command with regard to the docker-rmi CLI https://docs.docker.com/engine/reference/commandline/rmi/#options[reference].
 ----
 docker rmi [OPTIONS] IMAGE [IMAGE...]
 ----
