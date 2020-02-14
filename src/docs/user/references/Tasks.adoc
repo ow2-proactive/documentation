@@ -75,7 +75,7 @@ Please find in the table below a further description of these tasks.
 |Perl must be installed
 
 |PHP
-|A custom <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> able to call the `php` command to run PHP scripts
+|Sample <<../user/ProActiveUserGuide.adoc#_script_tasks,Script Task>> using the `php` script engine.
 |Linux,Mac,Windows
 |PHP interpreter must be installed
 

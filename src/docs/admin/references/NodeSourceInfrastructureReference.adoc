@@ -994,11 +994,11 @@ The infrastructure parameters are described hereafter:
 [cols=2*]
 |===
 
-|PBS |`qsub -N %NS_JOBNAME% -o %LOG_FILE% -j oe`
+|PBS |`qsub -N %NS_JOBNAME% -o %LOG_FILE% -j oe %NS_BATCH%`
 
-|SLURM |`sbatch -J %NS_JOBNAME% -o %LOG_FILE%`
+|SLURM |`sbatch -J %NS_JOBNAME% -o %LOG_FILE% %NS_BATCH%`
 
-|LSF |`bsub -J %NS_JOBNAME% -o %LOG_FILE% -e %LOG_FILE%`
+|LSF |`bsub -J %NS_JOBNAME% -o %LOG_FILE% -e %LOG_FILE% %NS_BATCH%`
 
 |===
 +
@@ -1012,6 +1012,9 @@ The command can use patterns which will be replaced dynamically by the ProActive
 |`%LOG_FILE%` |contains a log file path dynamically created by the resource manager and located in side the NSSchedulerHome installation. This log file is useful to debug errors during <<_glossary_ns_cluster_job,cluster job>> submission.
 
 |`%PA_USERNAME%` |contains the current ProActive Scheduler user.
+
+|`%NS_BATCH%` |contains the arguments defined inside workflow tasks using the NS_BATCH generic information.
+
 |===
 
  * *nsKillCommand:* this is the command used to kill ProActive Nodes started previously by the nsSubmitCommand. Similarly to nsSubmitCommand, *nsKillCommand* will vary for each native scheduler syntax: +

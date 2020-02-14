@@ -5,7 +5,7 @@ The main difference between the two script engines is that the Shell script engi
 Both engines features the following behaviors:
 
  * Script bindings are translated as environment variables.
- * Workflow variables are un-modifiable except by using a post-script written in another language such as the `update_variables_from_file` script.
+ * Workflow variables cannot be modified by shell scripts except when adding a link:../user/ProActiveUserGuide.html#_pre_post_clean[post] script written in another language such as the `update_variables_from_file` script.
  * The _result_ of the script engine execution corresponds to the return code of the bash or shell process executed.
 
 Example `bash` script (the shebang notation is omitted):
@@ -113,7 +113,7 @@ Windows Cmd script engine behaves similarly as <<_bash_and_shell,bash script eng
 It features the following behaviors:
 
  * Script bindings are translated as environment variables.
- * Workflow variables are un-modifiable except by using a post-script written in another language such as the `update_variables_from_file` script (see <<_bash_and_shell,Bash script language>> for further explanations).
+ * Workflow variables cannot be modified by Windows Cmd scripts except when adding a link:../user/ProActiveUserGuide.html#_pre_post_clean[post] script written in another language such as the `update_variables_from_file` script (see <<_bash_and_shell,Bash script language>> for further explanations).
  * The _result_ of the script engine execution corresponds to the return code of the `cmd.exe` process executed.
 
 Example variable usage:
@@ -131,7 +131,7 @@ VBScript engine behaves similarly as <<_windows_cmd,Windows CMD>> but using visu
 It features the following behaviors:
 
 * Script bindings are translated as environment variables. They must be accessed inside the script as a process variable.
-* Workflow variables are un-modifiable except by using a post-script written in another language such as the `update_variables_from_file` script (see <<_bash_and_shell,Bash script language>> for further explanations).
+* Workflow variables cannot be modified by VB scripts except adding a link:../user/ProActiveUserGuide.html#_pre_post_clean[post] script written in another language such as the `update_variables_from_file` script (see <<_bash_and_shell,Bash script language>> for further explanations).
 * The _result_ of the script engine execution corresponds to the return code of the `cscript.exe` process executed.
 
 Example variable usage:
@@ -361,10 +361,10 @@ When an internal PowerShell type needs to be used by another language than Power
 
 === Perl
 
-The Perl script engines features the following behaviors:
+The Perl script engine features the following behaviors:
 
  * Script bindings are translated as environment variables.
- * Workflow variables are un-modifiable except by using a post-script written in another language such as the `update_variables_from_file` script (see <<_bash_and_shell,Bash script language>> for further explanations).
+ * Workflow variables cannot be modified by Perl scripts except when adding a link:../user/ProActiveUserGuide.html#_pre_post_clean[post] script written in another language such as the `update_variables_from_file` script (see <<_bash_and_shell,Bash script language>> for further explanations).
  * The _result_ of the script engine execution corresponds to the return code of the `perl` process executed.
 
 In that sense, the Perl script engine behaves similarly as the Bash or Cmd script engines.
@@ -373,7 +373,7 @@ Please refer to link:../user/ProActiveUserGuide.html#_variables_quick_reference[
 
 Inside Perl, you can access environment variables using the *%ENV* hash.
 
-The aim of next examples is to clarify how script engine bindings can be accessed inside Perl scripts.
+Next examples clarify how script engine bindings can be accessed inside Perl scripts.
 
 A workflow variable can be accessed using system environment variables:
 
@@ -394,6 +394,51 @@ Or another script binding (for example, USERSPACE):
 [source, perl]
 ----
 my $USERSPACE= $ENV{"USERSPACE"};
+----
+
+=== PHP
+
+The PHP script engine features the following behaviors:
+
+* Script bindings are translated as environment variables.
+* Workflow variables cannot be modified by PHP scripts except when adding a link:../user/ProActiveUserGuide.html#_pre_post_clean[post] script written in another language such as the `update_variables_from_file` script (see <<_bash_and_shell,Bash script language>> for further explanations).
+* PHP script engine is meant to return HTML content and makes use of link:../user/ProActiveUserGuide.html#_assigning_metadata_to_task_result[result metadata] through the *content.type*="text/html" link:../user/ProActiveUserGuide.html#_generic_information[generic information]. Using the script engine without defining this generic information in the task is not recommended.
+* The _result_ of the script engine execution is a byte array containing the HTML content produced by the `php` command. In case the `php` command returns a non zero value, the result of the script engine execution will be the command exit code and the associated workflow task will be in error.
+
+NOTE: The `php` command returns a non-zero exit code only in case of syntax errors. When runtime issues occur, PHP will generally output warnings and the `php` command will return a zero exit code, not triggering a workflow task failure. This can be modified by using PHP exception mechanism and calling `exit(error_code)` in case of serious failures.
+
+* The PHP script engine is not well adapted to link:../user/ProActiveUserGuide.html#_pre_post_clean[pre], link:../user/ProActiveUserGuide.html#_pre_post_clean[post] or link:../user/ProActiveUserGuide.html#_pre_post_clean[clean] script execution. Even though pre, post of clean scripts can be defined using the PHP script engine, they will not produce any HTML output in these contexts.
+
+Inside PHP, you can access environment variables using the *getenv()* function.
+
+Next examples clarify how script engine bindings can be accessed inside PHP scripts.
+Please refer to link:../user/ProActiveUserGuide.html#_variables_quick_reference[Script Bindings Reference] for the complete list of bindings accessible through environment variables.
+
+A workflow variable can be accessed using system environment variables:
+
+[source, php]
+----
+<?php
+    echo "<p>Hello World from <b>job ".getenv("variables_PA_JOB_ID")."</b></p>";
+?>
+----
+
+Similarly, the result of a parent task:
+
+[source, php]
+----
+<?php
+    echo "<p>Result of parent task is <b>".getenv("results_0")."</b></p>";
+?>
+----
+
+Or another script binding (for example, USERSPACE):
+
+[source, php]
+----
+<?php
+    echo "<p>Userspace is located at <b>".getenv("USERSPACE")."</b></p>";
+?>
 ----
 
 === Docker Compose

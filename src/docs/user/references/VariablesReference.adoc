@@ -34,7 +34,7 @@ The order in this list corresponds to the task life-cycle order.
 
 | *Task arguments*. Arguments of a script defined in the workflow. Available via all kind of scripts, when referencing an external file or directly as XML elements.
 | ... = args[0];
-| Passed to native executable.
+| Passed to native executable. Can also be used with $args_0
 | -
 | all scripts, as external file, or XML element
 | -
@@ -51,21 +51,21 @@ The order in this list corresponds to the task life-cycle order.
 | -
 | -
 | <<_control_flow_scripts,flow>> (if)
-| bash, cmd, perl, vbscript
+| bash, cmd, perl, php, vbscript
 
 | *Parallel runs*. Number of replications. See <<_replicate, replication>>.
 | runs = 3;
 | -
 | -
 | <<_control_flow_scripts,flow>> (replicate)
-| bash, cmd, perl, vbscript
+| bash, cmd, perl, php, vbscript
 
 | *Loop variable*. A boolean variable used in a flow script to decide if the loop continues or not. See <<_control_flow_scripts, loop>>.
 | loop = false;
 | -
 | -
 | <<_control_flow_scripts,flow>> (replicate) (loop)
-| bash, cmd, perl, vbscript
+| bash, cmd, perl, php, vbscript
 
 | *Task progress*. Represents the progress of the task. Can be set to a value between 0 and 100.
 | import org.ow2.proactive.scripting.helper.progress.ProgressFile;
@@ -196,16 +196,16 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 
 | *Third party credentials*. Credentials stored on the server for this user account. See <<_managing_third_party_credentials>>
 | credentials.get( "pw" )
-| -
+| $credentials_pw
 | $credentials_pw (only in the task arguments)
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
 | -
 
 | *SSH private key*. Private SSH Key used at login. See <<_run_computation_with_your_system_account>>.
 | credentials.get( "SSH_PRIVATE_KEY" )
+| $credentials_SSH_PRIVATE_KEY
 | -
-| -
-| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
 | -
 
 | *Number of nodes*. Number of nodes used by this task. See <<_mpi_application>>.
@@ -269,49 +269,49 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | -
 | -
 | <<_selection, selection>>
-| bash, cmd, perl, vbscript
+| bash, cmd, perl, php, vbscript
 
 | *Fork Environment*. Fork Environment variable is a link:../javadoc/org/ow2/proactive/scheduler/common/task/ForkEnvironment.html[ForkEnvironment java object] allowing a script to set various initialization parameters of the forked JVM. See <<_fork_environment, Fork Environment>>
 | forkEnvironment.setJavaHome( "/usr/java/default" )
 | -
 | -
 | <<_fork_environment, environment>>
-| bash, cmd, perl, R, powershell, vbscript
+| bash, cmd, perl, php, R, powershell, vbscript
 
 | *Scheduler API*. Scheduler API variable is a link:../javadoc/org/ow2/proactive/scheduler/task/client/SchedulerNodeClient.html[SchedulerNodeClient java object] which can connect to the ProActive Scheduler frontend and interact directly with its <<_task_apis,API>>.
 | schedulerapi.connect()
 | -
 | -
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
-| bash, cmd, perl, R, powershell, vbscript
+| bash, cmd, perl, php, R, powershell, vbscript
 
 | *Resource Manager API*. Resource Manager API variable which can connect to the ProActive RM frontend and interact directly with its <<_task_apis,API>>.
 | rmapi.connect()
 | -
 | -
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
-| bash, cmd, perl, R, powershell, vbscript
+| bash, cmd, perl, php, R, powershell, vbscript
 
 | *UserSpace API*. UserSpace API variable is a link:../javadoc/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient java object] which can connect to the <<_global_and_user_spaces,User Space>> and interact directly with its <<_dataspace_apis,API>>.
 | userspaceapi.connect()
 | -
 | -
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
-| bash, cmd, perl, R, powershell, vbscript
+| bash, cmd, perl, php, R, powershell, vbscript
 
 | *GlobalSpace API*. GlobalSpace API variable is a link:../javadoc/org/ow2/proactive/scheduler/task/client/DataSpaceNodeClient.html[DataSpaceNodeClient java object] which can connect to the <<_global_and_user_spaces,Global Space>> and interact directly with its <<_dataspace_apis,API>>.
 | globalspaceapi.connect()
 | -
 | -
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
-| bash, cmd, perl, R, powershell, vbscript
+| bash, cmd, perl, php, R, powershell, vbscript
 
 | *Synchronization API*. Synchronization API variable is a https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/Synchronization.html[Synchronization java object] which can connect to the Synchronization Service and interact directly with its <<_task_synchronization_api,API>>.
 | synchronizationapi.createChannel("channel1", false)
 | -
 | -
 | all scripts
-| bash, cmd, perl, R, powershell, vbscript
+| bash, cmd, perl, php, R, powershell, vbscript
 
 |===
 
@@ -367,6 +367,14 @@ For PowerShell:
 [source, PowerShell]
 ----
 Write-Output $variables.Get_Item('key')
+----
+
+For PHP:
+[source, php]
+----
+<?php
+    echo "<p>Value of variable: ".getenv("variables_key")."</b></p>";
+?>
 ----
 
 ==== Script results
