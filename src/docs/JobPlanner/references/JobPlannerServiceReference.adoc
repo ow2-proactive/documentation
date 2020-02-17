@@ -155,7 +155,7 @@ The description allows users who are not familiar with cron expressions to provi
 
 === Time Zone
 
-The aim of the Time Zone is to make the user able to select a specific time zone for his future scheduled jobs depending on the region. The default time zone is the client time zone and the server time zone is always displayed on the top right corner.
+The aim of the time zone is to make the user able to select a specific time zone for his future scheduled jobs depending on the region. The default time zone is the client time zone. The server time zone is always displayed on the top right corner. It indicates the time of the machine where ProActive instance is running.
 
 === Cron
 
