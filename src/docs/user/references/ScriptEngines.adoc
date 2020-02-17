@@ -85,6 +85,11 @@ NOTE: Script engine naming is case-sensitive
 |Linux, Mac, Windows
 |Perl must be installed
 
+|`php`
+|An engine able to create html content using PHP interpreter
+|Linux, Mac, Windows
+|PHP must be installed
+
 |`scalaw`
 |An engine able to run Scala scripts
 |Linux, Mac, Windows

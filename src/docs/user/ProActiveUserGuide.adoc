@@ -129,6 +129,7 @@ link:https://docs.microsoft.com/fr-fr/powershell/scripting/overview?view=powersh
 link:https://en.wikipedia.org/wiki/VBScript[VBScript, window="_blank"],
 link:https://www.r-project.org/[R, window="_blank"],
 link:https://www.perl.org/[Perl, window="_blank"],
+link:https://www.php.net/[PHP, window="_blank"],
 link:https://www.gnu.org/software/bash/[Bash, window="_blank"],
 link:https://en.wikipedia.org/wiki/Unix_shell[Any Unix Shell, window="_blank"],
 link:https://en.wikipedia.org/wiki/Cmd.exe[Windows CMD, window="_blank"],
@@ -878,6 +879,8 @@ resultMetadata.put("content.type","image/png")
 ----
 
 A Task result can be added to the list of results of a Job, see section <<_result_list>> below.
+
+NOTE: The specific result metadata described above can also be set using <<_generic_information,Generic Information>>. For example, defining the generic information _content.type = text/html_ is equivalent to adding this value to the *resultMetadata* map.
 
 === Job Results
 
@@ -2584,17 +2587,6 @@ include::./references/DataConnectors.adoc[]
 == Addons
 
 include::./references/StatisticsOnProActiveJobsAndResourceUsageReference.adoc[]
-
-=== PHP Task
-
-The PHP task is a special, predefined task which executes a PHP script on a ProActive Node’s local PHP installation.
-The PHP script to execute will be downloaded from the ProActive server <<_global_and_user_spaces, global space>>. So, the PHP script must be present in the dataspace beforehand. The task can also be modified to download the PHP script from other sources. Log forwarding and log streaming during PHP execution is conveniently available through the Scheduler portal.
-
-==== Node configuration
-For a ProActive Node to execute a PHP script, PHP must be installed on the machine of the ProActive Node. The PHP task has a <<_selection,selection script>> which validates a correct PHP installation by searching the PATH and validating if the PHP can be executed successfully.
-The static selection script validates the PHP execution once and stores the result in the cache, so removing or installing PHP requires a restart of the node or a switch to the dynamic selection script.
-The selection script predefined in the PHP task does not validate the PHP version, therefore it is advised to use the same PHP version on the ProActive Nodes or to improve the selection script itself.
-
 
 == Reference
 
