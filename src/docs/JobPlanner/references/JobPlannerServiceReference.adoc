@@ -114,8 +114,8 @@ The "Save Gantt" button will take a screenshot of the visible part of the Gantt 
 
 Job Planner uses a  Calendar Definition to know how the job will be planned over the time. As shown on the example below, this definition is composed of 4 fields:
 
- - a description (providing humain-readable description of the used cron expression, when is the Calendar Definition used, etc.)
- - a time zone to define a specific time zone for the future scheduled jobs depending on the region (Europe/Paris, US/Eastern, etc.)
+ - a description (providing a humain-readable description of the used cron expression, when is the Calendar Definition used, etc.)
+ - a specific time zone for the future scheduled jobs depending on the region (Europe/Paris, US/Eastern, etc.)
  - a cron expression to define the recurrence (every morning at 6am, etc.)
  - a set of inclusions calendars to add specific job executions which cannot be defined by a cron expression (holidays, etc.)
  - a set of exclusions calendars to exclude specific occurrences of the job executions defined in cron and inclusion definitions (maintenances operations, holidays, etc.)
@@ -155,7 +155,7 @@ The description allows users who are not familiar with cron expressions to provi
 
 === Time Zone
 
-The aim of the time zone is to make the user able to select a specific time zone for his future scheduled jobs depending on the region. The default time zone is the client time zone. The server time zone is always displayed on the top right corner. It indicates the time of the machine where ProActive instance is running.
+The aim of the time zone is to make the user able to select a specific time for his future scheduled jobs depending on the region. By default, it is set according to the client location. The server time zone is always displayed on the top right corner. It indicates the time of the machine where ProActive instance is running.
 
 === Cron
 
