@@ -114,11 +114,12 @@ The "Save Gantt" button will take a screenshot of the visible part of the Gantt 
 
 Job Planner uses a  Calendar Definition to know how the job will be planned over the time. As shown on the example below, this definition is composed of 4 fields:
 
- - a description (saying what the cron expression means, when to use the Calendar Definition, etc.)
+ - a description (providing humain-readable description of the used cron expression, when is the Calendar Definition used, etc.)
+ - a time zone to define a specific time zone for the future scheduled jobs depending on the region (Europe/Paris, US/Eastern, etc.)
  - a cron expression to define the recurrence (every morning at 6am, etc.)
  - a set of inclusions calendars to add specific job executions which cannot be defined by a cron expression (holidays, etc.)
  - a set of exclusions calendars to exclude specific occurrences of the job executions defined in cron and inclusion definitions (maintenances operations, holidays, etc.)
-		
+
 
 image::calendar_definition_inclusions_exclusions.png[align="center"]
 
@@ -126,42 +127,35 @@ Based on the above configuration, the following JSON object will be stored in th
 
 ----
 {
-   "description":"Every Week Day at 9:00 AM including holidays (except Christmas and Easter holidays)",
-   "cron":"0 0 9 ? * MON-FRI *",
-   "inclusion_calendars":[
+  "description": "Every Week Day at 9:00 AM including holidays (except Christmas and Easter holidays)",
+  "cron_timezone": "Europe/Paris",
+  "cron": "0 0 9 ? * MON-FRI *",
+  "inclusion_calendars": [
       {
-         "calendar":{
-            "url":"http://localhost:8080/all_holidays_calendar.ics"
-         },
-         "rule":{
-            "action":"EXECUTE_AT_START"
-         }
+        "url": "http://localhost:8080/all_holidays_calendar.ics",
+        "action": "EXECUTE_AT_START"
       }
-   ],
-   "exclusion_calendars":[
-      {
-         "calendar":{
-            "url":"http://localhost:8080/christmas_holidays_calendar.ics"
-         },
-         "rule":{
-            "action":"CANCEL_NEXT_EXECUTION"
-         }
-      },
-      {
-         "calendar":{
-            "url":"http://localhost:8080/easter_holidays_calendar.ics"
-         },
-         "rule":{
-            "action":"CANCEL_NEXT_EXECUTION"
-         }
-      }
-   ]
+  ],
+  "exclusion_calendars": [
+    {
+      "url": "http://localhost:8080/christmas_holidays_calendar.ics",
+      "action": "CANCEL_NEXT_EXECUTION"
+    },
+    {
+      "url": "http://localhost:8080/easter_holidays_calendar.ics",
+      "action": "CANCEL_NEXT_EXECUTION"
+    }
+  ]
 }
 ----
 
 === Description
 
-The description allows users who are not familiar with cron expressions to know when it will occur. It might also be used for other purpose, for example saying when to use a Calendar Definition.
+The description allows users who are not familiar with cron expressions to provide a humain-readable description to know when it occurs. It might also be used for other purpose, for example saying when is the Calendar Definition used.
+
+=== Time Zone
+
+The aim of the Time Zone is to make the user able to select a specific time zone for his future scheduled jobs depending on the region. The default time zone is the client time zone and the server time zone is always displayed on the top right corner.
 
 === Cron
 
@@ -189,7 +183,7 @@ submit a worklfow at event start. Given an event, a predefined action will be ap
 
 === Exclusion Calendar
 
-The purpose of the exclusion calendar is to use an ICS file to prevent workflows to be executed during a calendar event. 
+The purpose of the exclusion calendar is to use an ICS file to prevent workflows to be executed during a calendar event.
 Given an event, a predefined action will be applied on the workflow execution.
 
 [cols="1,1", options="header"]
