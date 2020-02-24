@@ -652,6 +652,16 @@ The following fields are available to configure your Azure infrastructure.
 - *domain:* Corresponds to the Azure _domain_, _tenant ID_, or _directory ID_ of your Active Directory.
 - *subscriptionId:* The _ID_ of your Azure subscription.
 
+The next parameters of the Azure Billing Configuration section, allow you to configure the automatic cloud cost estimator, by considering all the Azure resources related to your reservation (virtual machines, disks,..). This mechanism relies on the Azure Resource RateCard and Usage APIs (https://docs.microsoft.com/en-us/azure/cost-management-billing/manage/usage-rate-card-overview).
+
+- *resourceUsageRefreshFreqInMin:* Periodical resource usage retrieving delay in min. The default value is 30.
+- *rateCardRefreshFreqInMin:* Periodical rate card retrieving delay in min. The default value is 30.
+- *offerId:* The Offer ID parameter consists of the "MS-AZR-" prefix, plus the Offer ID number. The default value is "MS-AZR-0003p" (Pay-As-You-Go offer).
+- *currency:* The currency in which the resource rates need to be provided. The default value is "USD".
+- *locale:* The culture in which the resource metadata needs to be localized. The default value is "en-US".
+- *regionInfo:* The 2 letter ISO code where the offer was purchased. The default value is "US".
+- *maxBudget:* Your budget for this node source related Azure resources. Will be used to compute your global cost in % budget. The default value is 50.
+
 The next four parameters are optional, and apply to advanced Azure endpoint configurations only.
 
 - *authenticationEndpoint:* Azure Authentication endpoint.
