@@ -660,7 +660,7 @@ The next parameters of the Azure Billing Configuration section, allow you to con
 - *currency:* The currency in which the resource rates need to be provided. The default value is "USD".
 - *locale:* The culture in which the resource metadata needs to be localized. The default value is "en-US".
 - *regionInfo:* The 2 letter ISO code where the offer was purchased. The default value is "US".
-- *maxBudget:* Your budget for this node source related Azure resources. Will be used to compute your global cost in % budget. The default value is 50.
+- *maxBudget:* Your budget max for the Azure resources cost related to the node source. Also used to compute your global cost in % of your budget. The default value is 50.
 
 The next four parameters are optional, and apply to advanced Azure endpoint configurations only.
 
