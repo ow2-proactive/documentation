@@ -187,6 +187,13 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>, <<_pre_post_clean, clean>>
 | -
 
+| *Node Source*. The nodesourcename of the node which executes the current task.
+| variables.get( "PA_NODE_SOURCE" )
+| $variables_PA_NODE_SOURCE
+| ${PA_NODE_SOURCE}
+| <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>, <<_pre_post_clean, clean>>
+| -
+
 | *Node Host (Selection Script)*. The hostname of the node which executes the selection script. See <<_selection>>.
 | selected = (nodehost == "mymachine")
 | -
