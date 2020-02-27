@@ -652,7 +652,7 @@ The following fields are available to configure your Azure infrastructure.
 - *domain:* Corresponds to the Azure _domain_, _tenant ID_, or _directory ID_ of your Active Directory.
 - *subscriptionId:* The _ID_ of your Azure subscription.
 
-The next parameters of the Azure Billing Configuration section, allow you to configure the automatic cloud cost estimator. It is done by considering all the Azure resources related to your reservation (virtual machines, disks,..). This mechanism relies on the Azure Resource Usage and RateCard APIs (https://docs.microsoft.com/en-us/azure/cost-management-billing/manage/usage-rate-card-overview).
+The following fields are the optional parameters of the Azure Billing Configuration section. The aim of this section is to configure the automatic cloud cost estimator. It is done by considering all the Azure resources related to your reservation (virtual machines, disks,..). This mechanism relies on the Azure Resource Usage and RateCard APIs (https://docs.microsoft.com/en-us/azure/cost-management-billing/manage/usage-rate-card-overview).
 
 - *resourceUsageRefreshFreqInMin:* Periodical resource usage retrieving delay in min. The default value is 30.
 - *rateCardRefreshFreqInMin:* Periodical rate card retrieving delay in min. The default value is 30.
