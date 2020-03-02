@@ -33,14 +33,32 @@ Scheduler Web Interface:: ProActive component that provides a web interface to t
 [[_glossary_workflow_studio]]
 Workflow Studio:: ProActive component that provides a web interface for designing <<_glossary_workflow,*Workflows*>>.
 
+[[_glossary_job_analytics]]
+Job Analytics:: ProActive component that provides an overview of executed workflows along with their input variables and results.
+
+[[_glossary_notification_service]]
+Notification Service:: ProActive component that allows a user or a group of users to subscribe to different types of alerts (web, email and sms) on certain events/incidents.
+
+[[_glossary_cloud_automation_service]]
+Cloud Automation Service:: ProActive component that allows a user to easily manage any On-Demand Services (PaaS, IaaS and MaaS) with full Life-Cycle Management (create, deploy, pause, resume and terminate).
+
 [[_glossary_catalog]]
 Catalog:: ProActive component that provides storage and versioning of <<_glossary_workflow,*Workflows*>> and other ProActive Objects through a REST API. It is also possible to query the Catalog for specific <<_glossary_workflow,*Workflows*>>.
 
+[[_glossary_cloud_watch]]
+Cloud Watch:: ProActive component that monitors a system, according to predefined set of rules, detects complex events and then triggers user-specified actions.
+
+[[_glossary_scheduling_api]]
+Scheduling API:: ProActive component that offers a GraphQL endpoint for getting information about a ProActive Scheduler instance.
+
+[[_glossary_connector_iaas]]
+Connector IaaS:: ProActive component that enables to do CRUD operations on different infrastructures on public or private Cloud (AWS EC2, Openstack, VMWare, Docker, etc).
+
 [[_glossary_job_planner]]
-Job Planner:: A ProActive component providing advanced scheduling options for <<_glossary_workflow,*Workflows*>>.
+Job Planner:: ProActive component providing advanced scheduling options for <<_glossary_workflow,*Workflows*>>.
 
 [[_glossary_job_planner_portal]] 
-Job Planner Portal:: A ProActive portal to manage the <<_glossary_job_planner,*Job Planner*>> service.
+Job Planner Portal:: ProActive portal to manage the <<_glossary_job_planner,*Job Planner*>> service.
 
 [[_glossary_workflow_bucket]]
 Bucket:: ProActive notion used with the <<_glossary_catalog, *Catalog*>> to refer to a specific collection of ProActive Objects and in particular ProActive Workflows.
