@@ -52,7 +52,7 @@ Cloud Watch:: ProActive component that monitors a system, according to predefine
 Scheduling API:: ProActive component that offers a GraphQL endpoint for getting information about a ProActive Scheduler instance.
 
 [[_glossary_connector_iaas]]
-Connector IaaS:: ProActive component that enables to do CRUD operations on different infrastructures on public or private Cloud (AWS EC2, Openstack, VMWare, Docker, etc).
+Connector IaaS:: ProActive component that enables to do CRUD operations on different infrastructures on public or private Cloud (AWS EC2, Openstack, VMWare, Kubernetes, etc).
 
 [[_glossary_job_planner]]
 Job Planner:: ProActive component providing advanced scheduling options for <<_glossary_workflow,*Workflows*>>.
