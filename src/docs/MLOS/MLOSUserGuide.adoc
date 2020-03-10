@@ -349,7 +349,7 @@ Once a ML MaaS instance is up and running, it could be used for:
 
 - *AI Model Deployment or Update*: the user has to provide a valid specific AI Model identifier in order to deploy the model of his/her choice.
 
-- *Call of Predictions*: when a specific AI model is running, the user can request predictions for a specific payload. This latter has to be converted into json data in order to get prediction's values.
+- *Call of Predictions*: when a specific AI model is running, the user can request predictions for a specific payload. This latter has to be converted into json data in order to get prediction values.
 
 - *Deploy a New Specific AI Model*: the running generic AI model can be used to deploy a new specific AI model.
 
@@ -542,7 +542,7 @@ Execute the Workflow and set the different workflow's variables as follows:
 | The base path to access the deployment endpoint.
 | String (default="/api/deploy")
 | `MODEL_URL`
-| A valid URL specified by the user referencing to the model that needs to be deployed.
+| A valid URL specified by the user referencing the model that needs to be deployed.
 | URL
 |===
 
