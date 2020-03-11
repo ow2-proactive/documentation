@@ -24,6 +24,20 @@ include::../Glossary.adoc[]
 First, https://www.activeeon.com/community-downloads[Download^] ProActive Scheduler and *unzip* the archive. The extracted folder will be referenced as `PROACTIVE_HOME` in the rest of the documentation.
 The archive contains all required dependencies with no extra prerequisites. ProActive Scheduler can be started in two different ways. Either as a java process or as a system service.
 
+=== Minimum requirements
+
+The minimal hardware requirements for the ProActive server is 4 Cores and 8 GB RAM.
+
+ProActive server is compatible with any 64 bits Linux, Windows or Mac operating system. The server process uses at minimum 4 GB of RAM.
+
+ProActive Nodes are compatible with any Linux, Windows or Mac systems (both 64 bits and 32 bits versions). ProActive Nodes can also run on some Unix systems (such as Solaris, HP-UX), by installing and using a Java Runtime Environment compatible with these systems.
+
+Sizing the ProActive server correctly depends on the number of jobs and tasks executed and submitted per day, the number of nodes connected to the server and the number of concurrent users.
+
+A medium-sized ProActive Scheduler installation uses 12 cores, 24 GB RAM. Large setups use 24 cores and 100 GB RAM.
+
+Additionally, using local ProActive Nodes (deployed directly inside the ProActive server) or having other services running on the same machine as the server can impact the sizing.
+
 === Start ProActive as a Java process
 
 The first way to start a ProActive Scheduler is by running the `proactive-server` script. To do so, you can use the following command with no extra configuration.
@@ -169,15 +183,6 @@ Do you want to start the scheduler service now? [Y/n]  y
 If a problem occurs, check output in /var/log/proactive/scheduler
 ----
 
-
-
-=== Minimum requirements
-
-The size of a ProActive server is based on the number of jobs and tasks executed and submitted per day. It is also based on the number of nodes connected to the server.
-
-The minimal requirements for the server is 4 Cores and 8 GB. An average ProActive Scheduler installation uses 12 cores, 24 GB RAM. Large setups use 24 cores and 100 GB RAM.
-
-Additionally, using local ProActive Nodes (deployed directly inside the ProActive server) will impact the sizing. As these nodes will execute tasks which can consume CPU and RAM, machine resources will be shared between the ProActive Server and the Local Nodes.
 
 === Scheduler Life-Cycle Management
 
