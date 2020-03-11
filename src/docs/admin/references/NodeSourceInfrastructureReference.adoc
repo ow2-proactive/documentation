@@ -1065,3 +1065,31 @@ It can use the following patterns: +
 
  * *maxDeploymentFailure:* number of attempts when starting a ProActive Node on the cluster using the nsSubmitCommand, after all attempts failed, the ProActive Node will be declared as `Lost`.
 
+ * *singleConnectionUserName:* user name for single SSH connection configuration. Single SSH connection credentials can be used when setting impersonation method to _sudo_ or _none_. It must be used also when enabling the native scheduler metrics acquisition (see below).
+
+ * *singleConnectionPassword:* password for single SSH connection configuration. Single SSH connection credentials can be used when setting impersonation method to _sudo_ or _none_. It must be used also when enabling the native scheduler metrics acquisition (see below).
+
+ * *singleConnectionPrivateKey:* private key for single SSH connection configuration. Single SSH connection credentials can be used when setting impersonation method to _sudo_ or _none_. It must be used also when enabling the native scheduler metrics acquisition (see below).
+
+ * *impersonationCommand:* command to use when impersonation method is _sudo_.  The following patterns can be used: +
++
+[cols=2*]
+|===
+
+|`%COMMAND%` |contains the command to impersonate.
+
+|`%PA_USERNAME%` |contains the current ProActive Scheduler user.
+
+|===
+
+ * *nativeSchedulerMetricsCommandFile:* Native scheduler metrics are displayed on the Resource Manager portal when selecting the node source. In order to enable metrics display, the single SSH connection settings and the two metrics parameters must be defined. `nativeSchedulerMetricsCommandFile` contains a list of commands which will gather metrics. The file structure is as follows:
+    ** each metric must be a single line command
+    ** each command must be preceded by a comment line `#` containing the category and metric title separated by `|`.
++ Example:
++
+[source,bash]
+----
+# PBS Metrics | Jobs
+qstat
+----
+ * *nativeSchedulerMetricsPeriod:* Refresh period in seconds of native scheduler metrics. In order to enable metrics display, a value greater than zero must be defined. Default to `-1` (disabled)
