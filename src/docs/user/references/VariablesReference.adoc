@@ -145,11 +145,18 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | all scripts
 | -
 
-| *Task Success*. A variable accessible only from the clean script. It is a boolean value which is _true_ if the task succeeded and _false_ if the task failed.
+| *Task Success*. A variable accessible from a clean script, a flow script or a direct child task. It is a boolean value which is _true_ if the task succeeded and _false_ if the task failed.
 | variables.get( "PA_TASK_SUCCESS" )
 | $variables_PA_TASK_SUCCESS
 | -
-| <<_pre_post_clean, clean>>
+| <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
+| -
+
+| *Exit Value*. A variable accessible from a clean script, a flow script or a direct child task. It is an integer value which contains the exit value of the task, if and only if the task contains a bash, shell, cmd, or vb script. If the task contains several of these scripts, the one executed last will prevail.
+| variables.get( "EXIT_VALUE" )
+| $variables_EXIT_VALUE
+| -
+| <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
 | -
 
 | *Node URL*. The URL of the node which executes the current task.

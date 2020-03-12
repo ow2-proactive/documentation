@@ -21,17 +21,34 @@ include::../Glossary.adoc[]
 [[_run_the_proactive_scheduler]]
 == Get Started
 
-https://www.activeeon.com/community-downloads[Download^] ProActive Scheduler and *unzip* the archive.
+First, https://www.activeeon.com/community-downloads[Download^] ProActive Scheduler and *unzip* the archive. The extracted folder will be referenced as `PROACTIVE_HOME` in the rest of the documentation.
+The archive contains all required dependencies with no extra prerequisites. ProActive Scheduler can be started in two different ways. Either as a java process or as a system service.
 
-The extracted folder will be referenced as `PROACTIVE_HOME` in the rest of the documentation.
-The archive contains all required dependencies.
+=== Minimum requirements
 
-ProActive Scheduler is ready to be started with no extra configuration.
+The minimal hardware requirements for the ProActive server is 4 Cores and 8 GB RAM.
+
+ProActive server is compatible with any 64 bits Linux, Windows or Mac operating system. The server process uses at minimum 4 GB of RAM.
+
+ProActive Nodes are compatible with any Linux, Windows or Mac systems (both 64 bits and 32 bits versions). ProActive Nodes can also run on some Unix systems (such as Solaris, HP-UX), by installing and using a Java Runtime Environment compatible with these systems.
+
+Sizing the ProActive server correctly depends on the number of jobs and tasks executed and submitted per day, the number of nodes connected to the server and the number of concurrent users.
+
+A medium-sized ProActive Scheduler installation uses 12 cores, 24 GB RAM. Large setups use 24 cores and 100 GB RAM.
+
+Additionally, using local ProActive Nodes (deployed directly inside the ProActive server) or having other services running on the same machine as the server can impact the sizing.
+
+=== Start ProActive as a Java process
+
+The first way to start a ProActive Scheduler is by running the `proactive-server` script. To do so, you can use the following command with no extra configuration.
 
 [source]
 ----
-$ PROACTIVE_HOME/bin/proactive-server
+$PROACTIVE_HOME/bin/proactive-server
 ----
+
+NOTE: It is possible to start the server with a specific number of nodes by adding the *-ln* parameter. For example, PROACTIVE_HOME/bin/proactive-server -ln 1 will start the proactive server with a single node.
+In case this parameter is not specified, the number of nodes corresponds to the number of cores of the machine where ProActive server is installed.
 
 [source]
 ----
@@ -40,39 +57,132 @@ Starting the scheduler...
 Starting the resource manager...
 The resource manager with 4 local nodes created on pnp://localhost:41303/
 The scheduler created on pnp://localhost:41303/
-Starting the web applications...
+The web application /automation-dashboard created on http://localhost:8080/automation-dashboard
+The web application /studio created on http://localhost:8080/studio
+The web application /job-analytics created on http://localhost:8080/job-analytics
+The web application /notification-service created on http://localhost:8080/notification-service
+The web application /cloud-automation-service created on http://localhost:8080/cloud-automation-service
+The web application /catalog created on http://localhost:8080/catalog
+The web application /proactive-cloud-watch created on http://localhost:8080/proactive-cloud-watch
 The web application /scheduler created on http://localhost:8080/scheduler
+The web application /scheduling-api created on http://localhost:8080/scheduling-api
+The web application /connector-iaas created on http://localhost:8080/connector-iaas
 The web application /rm created on http://localhost:8080/rm
 The web application /rest created on http://localhost:8080/rest
-The web application /studio created on http://localhost:8080/studio
-The web application /catalog created on http://localhost:8080/catalog
+The web application /job-planner created on http://localhost:8080/job-planner
 *** Get started at http://localhost:8080 ***
 ----
 
-The following ProActive Scheduler components are started:
+The following ProActive Scheduler components and services are started:
 
 * <<_glossary_resource_manager,*Resource Manager*>>
 * 4 local <<_glossary_proactive_node,*ProActive Nodes*>>
 * <<_glossary_scheduler,*Scheduler*>>
-* <<_glossary_rest_api,*REST API*>>
-* <<_glossary_rm_web_interface,*Resource Manager Web Interface*>>
-* <<_glossary_scheduler_web_interface,*Scheduler Web Interface*>>
+* <<_glossary_automation_dashboard,*Automation Dashboard*>>
 * <<_glossary_workflow_studio,*Workflow Studio*>>
+* <<_glossary_job_analytics,*Job Analytics*>>
+* <<_glossary_notification_service,*Notification Service*>>
+* <<_glossary_cloud_automation_service,*Cloud Automation Service*>>
 * <<_glossary_catalog,*Catalog*>>
+* <<_glossary_cloud_watch,*Cloud Watch*>>
+* <<_glossary_scheduler_web_interface,*Scheduler Web Interface*>>
+* <<_glossary_scheduling_api,*Scheduling Api*>>
+* <<_glossary_connector_iaas,*Connector IaaS*>>
+* <<_glossary_rm_web_interface,*Resource Manager Web Interface*>>
+* <<_glossary_rest_api,*REST API*>>
+* <<_glossary_job_planner,*Job Planner*>>
 
 The URLs of the Scheduler, Resource Manager, REST API and Web Interfaces are displayed in the output.
 
-*Default credentials: admin/admin*
+=== Install and start ProActive as a system service
+
+The second way to start a ProActive Scheduler is to install it as a system service. Depending on your operating system, the installation of ProActive can be done as follows.
+
+==== How to install ProActive on Windows
+
+Under Windows, it is possible to use the https://nssm.cc/‎[nssm^] service manager tool to manage a running script as a service. You can configure nssm to absolve all responsibility for restarting it and let Windows take care of recovery actions.
+In our case, you need to provide to nssm the Path to this script `$PROACTIVE_HOME/bin/proactive-server.bat` to start ProActive as a service.
+
+==== How to install ProActive on Linux
+
+Under Linux, the user has to run the `install.sh` script located under `$PROACTIVE_HOME/tools` folder as *root* and follow the installations steps provided in an interactive mode.
+Generally, it is recommended to keep the default configuration (internal account, protocol used, port , etc) unless you would like to setup a particular one.
+
+[source]
+----
+sudo $PROACTIVE_HOME/tools/install.sh
+Directory where to install the scheduler: /opt/proactive
+Name of the user starting the ProActive service: proactive
+Group of the user starting the ProActive service: proactive
+ProActive use internal system accounts which should be modified in a production environment.
+Do you want to regenerate the internal accounts ? [Y/n] n
+ProActive can integrate with Linux PAM (Pluggable Authentication Modules) to authenticate users of the linux system.
+Warning: this will add the proactive account to the linux "shadow" group
+Do you want to set PAM integration for ProActive scheduler? [y/N]  n
+Protocol to use for accessing Web apps deployed by the proactive server: [http/https] http
+Port to use for accessing Web apps deployed by the proactive server: 8080
+Number of ProActive nodes to start on the server machine: 4
+The ProActive server can automatically remove from its database old jobs. This feature also remove the associated job logs from the file system.
+Do you want to enable automatic job/node history removal? [Y/n]  y
+Remove history older than (in days) [30]: 30
+Here are the network interfaces available on your machine and the interface which will be automatically selected by ProActive:
+Available interfaces:
+Eligible addresses:
+/xxx.xxx.xxx.xxx
+/127.0.0.1
+
+Elected address : /xxx.xxx.xxx.xxx
+Elected address :
+Do you want to change the network interface used by the ProActive server? [y/N]  n
+Start the proactive-scheduler service at machine startup? [Y/n]  y
+Restrict the access to the ProActive installation folder to user proactive? [y/N]  n
+Restrict the access to the configuration files containing sensitive information to user proactive? [Y/n]  y
+Do you want to start the scheduler service now? [Y/n]  y
+If a problem occurs, check output in /var/log/proactive/scheduler
+----
+
+Once the server is up, ProActive Web Portals are available at http://localhost:8080/. The user can access to any of the four portals using the default credentials: *admin/admin*
 
 Your ProActive Scheduler is ready to execute <<_glossary_job,*Jobs*>>!
 
-=== Minimum requirements
+==== How to upgrade ProActive on Linux
+Before you upgrade to a new version of ProActive (ex 10.0), you first need to back up the configuration and data that you want to restore (DB, workflows, etc) from the old ProActive installation (ex 8.4). Basically, you have to back up the content of the following folders:
 
-The size of a ProActive server is based on the number of jobs and tasks executed and submitted per day. It is also based on the number of nodes connected to the server.
+*  `$PROACTIVE_HOME/data` which contains all databases (scheduler, catalog, rm) and workflows of the different users.
+*  `$PROACTIVE_HOME/config` which contains configuration files required to setup the server initial settings, define the network properties, manage the authentication, internal accounts, access permissions, etc.
 
-The minimal requirements for the server is 4 Cores and 8 GB. An average ProActive Scheduler installation uses 12 cores, 24 GB RAM. Large setups use 24 cores and 100 GB RAM.
+To upgrade ProActive, the user has to run the `install.sh` script located under `$PROACTIVE_HOME/tools` folder as *root* and follow the installations steps provided in an interactive mode.
+It is important to mention that the user has to choose the same directory as the old version where to make the ProActive Scheduler installation. This will enable the detection of the existing installation and then copying addons, data files and the configuration changes from the previous installation to the new one.
+In some cases, this operation can induce some conflicts that can be solved easily using Git tools.
 
-Additionally, using local ProActive Nodes (deployed directly inside the ProActive server) will impact the sizing. As these nodes will execute tasks which can consume CPU and RAM, machine resources will be shared between the ProActive Server and the Local Nodes.
+[source]
+----
+sudo $PROACTIVE_HOME/tools/install.sh
+This will install the ProActive scheduler 10.1.0-SNAPSHOT as a service.
+Once the installer is started, it must process until the end otherwise the installation may be corrupted.
+Do you want to continue? [Y/n]  y
+Directory where to install the scheduler: /opt/proactive
+Previous installation was owned by user proactive with group proactive
+Detected an existing ProActive Scheduler installation at /opt/proactive/8.4
+Copying addons and data files from the previous installation...
+Do you want to port all configuration changes to the new version (do not do this from a version prior to 8.4.0 before executing the patch)? [Y/n]  y
+Porting configuration into new installation...
+[master 61aaa19] Commit all changes before switching from 8.4 to 10.1
+ 4 files changed, 8 insertions(+), 8 deletions(-)
+warning: no common commits
+Depuis /opt/proactive/8.4/
+ * [nouvelle branche] master     -> old-version/master
+
+Cherry-picking all changes to new installation
+Here is the list of JAR files in the new installation 'addons' folder.
+If there are duplicates, you need to manually remove outdated versions.
+Restrict the access to the ProActive installation folder to user proactive? [y/N]  n
+Restrict the access to the configuration files containing sensitive information to user proactive? [Y/n]  y
+Resource Manager credentials are used by remote ProActive Agents to register to the scheduler.
+Do you want to start the scheduler service now? [Y/n]  y
+If a problem occurs, check output in /var/log/proactive/scheduler
+----
+
 
 === Scheduler Life-Cycle Management
 
@@ -83,7 +193,7 @@ Under the Admin menu from the scheduler portal, the following administrator acti
 * Freeze the scheduler: Every running tasks run to completion, but the running jobs wait for the scheduler to resume. The scheduler can be stopped, resumed or killed.
 * Resume the scheduler: If the scheduler is Paused or Frozen.
 * Pause the scheduler: Every running jobs run to completion. The scheduler can be stopped, resumed or killed.
-* Kill the scheduler: Similar to Ctrl-C. No interation can be done anymore.
+* Kill the scheduler: Similar to Ctrl-C. No interaction can be done anymore.
 * Shutdown the scheduler: Every running tasks run to completion before terminating the scheduler.
 
 == ProActive Scheduler configuration
