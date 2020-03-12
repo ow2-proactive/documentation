@@ -718,7 +718,7 @@ The Azure Scale Set Infrastructure offers a wide range of possibilities to confi
 . You have in your VMs everything you need to execute your jobs.
 . You can control your expenses by defining size and limits of your VMs.
 
-The following fields are available to configure your Azure Scale Set infrastructure.
+The available configuration parameters are:
 
 - *azureCredentialFile:* Use the provided file selection tool to supply a file with your Azure Credentials. These credentials correspond to those generated with the Service Principal as mentioned in the Pre-Requisites sub-section. The file should be a four-line text document in a `.ini` like format, and must include the following elements:
 +
@@ -738,28 +738,10 @@ Where:
 +
 You can opt to place this file in `$PROACTIVE_HOME/config/authentication/azure.creds` so that it will available and automatically loaded in case you want to have multiple Azure node sources.
 
-- *externalStorageAccount:* Optional parameter. Use it if you want to define a specific location of your ProActive node.jar worker; leave blank otherwise. If provided, the format should be: _{storageAccount}:{sas_key_token}[:has_node.jar]_.
-
-The following fields are the optional parameters of the Azure Billing Configuration section. The aim of this section is to configure the automatic cloud cost estimator. It is done by considering all the Azure resources related to your reservation (virtual machines, disks,..). This mechanism relies on the Azure Resource Usage and RateCard APIs (https://docs.microsoft.com/en-us/azure/cost-management-billing/manage/usage-rate-card-overview).
-
-- *resourceUsageRefreshFreqInMin:* Periodical resource usage retrieving delay in min. The default value is 30.
-- *rateCardRefreshFreqInMin:* Periodical rate card retrieving delay in min. The default value is 30.
-- *offerId:* The Offer ID parameter consists of the "MS-AZR-" prefix, plus the Offer ID number. The default value is "MS-AZR-0003p" (Pay-As-You-Go offer).
-- *currency:* The currency in which the resource rates need to be provided. The default value is "USD".
-- *locale:* The culture in which the resource metadata needs to be localized. The default value is "en-US".
-- *regionInfo:* The 2 letter ISO code where the offer was purchased. The default value is "US".
-- *maxBudget:* Your max budget for the Azure resources related to the node source. Also used to compute your global cost in % of your budget. The default value is 50.
-
-The next parameters are related to the deployment configuration.
-
 - *maxVms:* Define the maximum number of VMs to be deployed by the scale set at any time. The number cannot exceed 100. The default value is _100_, so you might want to adjust this value according to your budget and expected processing peaks.
-- *nodesPerVm:* Define the number of ProActive worker nodes to be deployed per VM. As a guideline, you might want to allocate one node per VM core, but you can set the number to better match your processing requirements. Default value is _2_.
-- *osType:* A choice between _linux_ and _windows_. Default value is _linux_.
-- *cleaningDelay:* Periodical cleaning delay, expressed in _seconds_. Every _X_ seconds the Resource Manager will remove from the Scale Set any VM that has been identified as idle. Default value is _60_. Note that setting a very short interval implies more frequent communication between the Resource Manager and Azure, which might impact on performance or responsiveness.
-
-The following parameters are available to configure the Azure VMs.
-
+- *maxNodesPerVm:* Define the number of ProActive worker nodes to be deployed per VM. As a guideline, you might want to allocate one node per VM core, but you can set the number to better match your processing requirements. Default value is _2_.
 - *machineType:* Define the type of Azure VM that you want to use for your Scale Set. You can use any size from Azure's Standard Tier, provided you have enough quota and budget to launch them. The default value is _Standard_D1_v2_, you should provide a valid type using a similar syntax (case insensitive). Azure provides an extensive list of VM sizes for https://docs.microsoft.com/en-us/azure/virtual-machines/linux/sizes[Linux] and https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes[Windows] VMs. If you want to know the available sizes for a specific region or subscription you can use https://docs.microsoft.com/en-us/cli/azure/vm?view=azure-cli-latest#az-vm-list-sizes[Azure CLI command] `az vm list-sizes -l {your location}`.
+- *osType:* A choice between _linux_ and _windows_. Default value is _linux_.
 - *Image:* There are four possible ways to specify the source image for your Scale Set VMs: _known images_, Azure Marketplace, Shared Image Gallery and Custom images. We describe each of them below.
 * *Syntax summary*
 ** Known image: `MY_KNOWN_IMAGE`
@@ -804,19 +786,11 @@ The non-default subscription must be accessible with your Azure Credentials prov
  In case the parameter is set, several conditions have to be met:
  ** the deployment Scale Set template (to be specified in *armTemplateUrl*) should contain only a creation of next Azure resources inside Resource Group: the Scale Set and the Storage Account (no Azure Load Balancer, IP address, etc.)
  ** the target Azure Virtual Network should be provided by the user in the *targetNetwork* parameter.
-
-The next fields are related to the node configuration.
-
 - *rmUrl:* Optional parameter. Provide your server's URL or public IP (e.g. try.activeeon.com). If left unset, the default Resource Manager URL will be fetched from the system properties.
 - *rmCredentials:* Optional parameter. Provide credentials to connect to the Resource Manager. If left blank, the credentials of the logged user will be used.
 - *deploymentTimeout:* Delay before the Resource Manager can declare a deploying node as lost. To be set in _minutes_. You can set it to a reasonable time after which you expect the node to be running or marked as lost otherwise (e.g. _10_ minutes). Default value is _120_.
-- *nodePreCommand:* Optional parameter. This multi-line field can be used to provide specific commands to execute right before launching the ProActive's node.jar application. The main difference with the previous user custom script is that _nodePreCommand_ will be run as _the same_ user as node.jar. This field is thus useful for operations that require matching users, e.g. mounting a shared volume in Windows or creating non-root paths/files in Linux. Please note the OS-specific conditions for these commands:
-* *_Linux:_* The commands will be appended as `ExecStartPre` lines to a _.service_ file. Therefore, commands should include their full path, e.g. `mkdir` should be written as `/bin/mkdir` or `chown` as `/bin/chown`.
-* *_Windows:_* The commands will be included in a _.bat_ batch file and must therefore be DOS-compatible. As a guideline, here is an unofficial https://www.robvanderwoude.com/batchcommands.php[list of DOS commands] and a http://steve-jansen.github.io/guides/windows-batch-scripting/part-1-getting-started.html[scripting tutorial].
-- *jvmParameters:* Add JVM parameters to configure your ProActive node, use the format _-Dproperty=value_. The default values allow for a correct deployment of the node. You can add your own parameters but be aware that removing the current values might cause the deployment to fail. A non-exhaustive list of node-related JVM parameters can be found in your configuration file `$PROACTIVE_HOME/config/network/node.ini`
-
-The following parameters are related to the startup scripts.
-
+- *cleaningDelay:* Periodical cleaning delay, expressed in _seconds_. Every _X_ seconds the Resource Manager will remove from the Scale Set any VM that has been identified as idle. Default value is _60_. Note that setting a very short interval implies more frequent communication between the Resource Manager and Azure, which might impact on performance or responsiveness.
+- *externalStorageAccount:* Optional parameter. Use it if you want to define a specific location of your ProActive node.jar worker; leave blank otherwise. If provided, the format should be: _{storageAccount}:{sas_key_token}[:has_node.jar]_.
 - *linuxInternalCustomStartupScriptUrl:* If you are using Linux, provide a URL of a valid Linux bash script to configure your nodes. Otherwise, the parameter can be left empty.  We strongly recommend to use one of our default scripts listed below. You are free to copy the script and add custom steps, but be aware that any modification to the default script might cause the deployment to fail. Our startup scripts cover the minimum requirements to start ProActive; additional script engines like R can be installed through a _userCustomStartupScriptUrl_, where you can also add your custom configuration steps. +
 +
 Sample scripts (might require some customization for specific versions or OS):
@@ -848,6 +822,10 @@ https://gist.githubusercontent.com/activeeon-bot/94cc622e7640832682f172e23256cd3
 ====
 Note that this user custom script will be run as root/admin user.
 ====
+- *nodePreCommand:* Optional parameter. This multi-line field can be used to provide specific commands to execute right before launching the ProActive's node.jar application. The main difference with the previous user custom script is that _nodePreCommand_ will be run as _the same_ user as node.jar. This field is thus useful for operations that require matching users, e.g. mounting a shared volume in Windows or creating non-root paths/files in Linux. Please note the OS-specific conditions for these commands:
+* *_Linux:_* The commands will be appended as `ExecStartPre` lines to a _.service_ file. Therefore, commands should include their full path, e.g. `mkdir` should be written as `/bin/mkdir` or `chown` as `/bin/chown`.
+* *_Windows:_* The commands will be included in a _.bat_ batch file and must therefore be DOS-compatible. As a guideline, here is an unofficial https://www.robvanderwoude.com/batchcommands.php[list of DOS commands] and a http://steve-jansen.github.io/guides/windows-batch-scripting/part-1-getting-started.html[scripting tutorial].
+- *jvmParameters:* Add JVM parameters to configure your ProActive node, use the format _-Dproperty=value_. The default values allow for a correct deployment of the node. You can add your own parameters but be aware that removing the current values might cause the deployment to fail. A non-exhaustive list of node-related JVM parameters can be found in your configuration file `$PROACTIVE_HOME/config/network/node.ini`
 - *armTemplateUrl:* Optional parameter, for advanced configuration only. This parameter is intended for users familiar with https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-authoring-templates[Azure Resource Management templates] willing to provide a custom resource configuration file. You should input a URL with a valid _.json_ ARM template. If set, this file will override https://gist.github.com/activeeon-bot/0ae94e182edfa6099314ad023d2d7bc4[ProActive's default ARM file].
 
 The following fields are the optional parameters of the Azure Billing Configuration section. The aim of this section is to configure the automatic cloud cost estimator. It is done by considering all the Azure resources related to your reservation (virtual machines, disks,..). This mechanism relies on the Azure Resource Usage and RateCard APIs (https://docs.microsoft.com/en-us/azure/cost-management-billing/manage/usage-rate-card-overview).
