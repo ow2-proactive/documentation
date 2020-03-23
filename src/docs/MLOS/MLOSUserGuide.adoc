@@ -4346,7 +4346,7 @@ image::Fetch_Satellite_Images.png[align=center]
 |===
 | *Variable name* | *Description* | *Type*
 | `HOST_SITES`
-| Defines an utility to search and download satellite images.
+| Defines a host site to search and download satellite images.
 | List [Peps, Copernicus, All] (default=Peps)
 | `OUTPUT_PATH`
 | Specifies the path where the data should be downloaded.
@@ -4354,7 +4354,10 @@ image::Fetch_Satellite_Images.png[align=center]
 |===
 
 
-NOTE: Please access link:https://peps.cnes.fr/rocket/#/register[Peps] and link:https://scihub.copernicus.eu/dhus/#/self-registration[Copernicus] website to create a new user account.
+
+NOTE: Please click https://peps.cnes.fr/rocket/#/register[here^] to create a new user account to acesss Peps webisite.
+
+NOTE: Please click https://scihub.copernicus.eu/dhus/#/self-registration[here^] to create a new user account to acesss Copernicus webisite.
 
 ==== Fetch_Satellite_Images_From_PEPS
 
