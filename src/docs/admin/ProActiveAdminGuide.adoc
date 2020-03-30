@@ -993,7 +993,7 @@ image::config_editor_general.png[align=center, width=612, height=306]
 In the general tab, the user can specify:
 
 * The *ProActive Scheduler* location.
-* The *JRE* location (the Java Runtime Environment is provided with the agent archive under this path `C:\Program Files\ProActive Agent\schedworker\jre`).
+* The *JRE* location (the Java Runtime Environment is provided with the agent archive under this path `%programfiles(x86)%\ProActive Agent\schedworker\jre`).
 * The *numbers of Runtimes and Nodes* (the number of spawned processes and the number of ProActive Nodes per process).
 * The *numbers of workers* (the number of ProActive Nodes allocated in the Compute Host)
 * The *JVM options*. Note that if the parameter contains `${rank}`, it will be dynamically replaced by the ProActive Node rank starting from 0.
@@ -1010,7 +1010,9 @@ image::config_editor_connection.png[align=center, width=612, height=306]
 In the 'Connection' tab, the user can select between three types of connections:
 
 * *Local Registration* - creates a local ProActive node and registers (advertises) it in a local RMI registry. The node name is optional.
-* *Resource Manager Registration* - creates a local ProActive node and registers it in the specified Resource Manager. The mandatory Resource Manager's URL must comply with the following format: *protocol://host:port/* (In case of the PAMR protocol, the host is an integer assigned by the PAMR router. (0 for the router itself)). The node name and the node source name are optional. Since the Resource Manager requires authentication, the user specifies the file that contains the credential. If no file is specified the default one located in `%USERPROFILE%\.proactive\security` folder is used.
+* *Resource Manager Registration* - creates a local ProActive node and registers it in the specified Resource Manager. The mandatory Resource Manager's URL must comply with the following format: *protocol://host:port/*.
+In case of the PAMR protocol, the URL is of the form pamr://resource_manager_id, which is by default pamr://0 (default value of the resource manager id). The PAMR router host and port are provided using JVM properties.
+The node name and the node source name are optional. Since the Resource Manager requires authentication, the user specifies the file that contains the credential. If no file is specified the default one located in `%USERPROFILE%\.proactive\security` folder is used.
 * *Custom* - the user specifies his own java starter class and the arguments to be given to the main method. The java starter class must be in the classpath when the ProActive Node is started.
 
 Finally, clicking on the "Planning" tab, the window will look like this:
