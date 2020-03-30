@@ -993,14 +993,14 @@ image::config_editor_general.png[align=center, width=612, height=306]
 In the general tab, the user can specify:
 
 * The *ProActive Scheduler* location.
-* The *JRE* location (usually something like `C:\Program Files\ProActive Agent\schedworker\jre`).
+* The *JRE* location (the Java Runtime Environment is provided with the agent archive under this path `C:\Program Files\ProActive Agent\schedworker\jre`).
 * The *numbers of Runtimes and Nodes* (the number of spawned processes and the number of ProActive Nodes per process).
 * The *numbers of workers* (the number of ProActive Nodes allocated in the Compute Host)
 * The *JVM options*. Note that if the parameter contains `${rank}`, it will be dynamically replaced by the ProActive Node rank starting from 0.
 * The *On Runtime Exit* script. A script executed after a ProActive Node exits. This can be useful to perform additional cleaning operation. Note that the script receives as parameter the PID of the ProActive Node.
 * The user can set a *memory limit* that will prevent the spawned processes to exceed a specified amount of RAM. If a spawned process or its child process requires more memory, it will be killed as well as its child processes. Note that this limit is disabled by default (0 means no limit) and a ProActive Node will require at least 128 MBytes.
 * It is possible to list all available *network interfaces* by clicking on the "Refresh" button and add the selected network interface name as a value of the `proactive.net.interface` property by clicking on "Use" button. See the ProActive documentation for further information.
-* The user can specify the *protocol* (PNP or PAMR) to be used by the ProActive Node for incoming communications. In case the selected protocol is PAMR, the user has to add `-Dproactive.pamr.router.address` JVM property to specify the router address which corresponds generally to the server hostname.
+* The user can specify the *protocol* (PNP or PAMR) to be used by the ProActive Node for incoming communications. If the selected protocol is PAMR, then the user has to add `-Dproactive.pamr.router.address` JVM property.
 * To ensure that a unique port is used by a ProActive Node, the initial port value will be incremented for each node process and given as value of the `-Dproactive.SELECTED_PROTOCOL.port` JVM property. If the port chosen for a node is already used, it is incremented until an available port number is found.
 
 Clicking on the 'Connection' tab, the window will look like this:
@@ -1010,7 +1010,7 @@ image::config_editor_connection.png[align=center, width=612, height=306]
 In the 'Connection' tab, the user can select between three types of connections:
 
 * *Local Registration* - creates a local ProActive node and registers (advertises) it in a local RMI registry. The node name is optional.
-* *Resource Manager Registration* - creates a local ProActive node and registers it in the specified Resource Manager. The mandatory Resource Manager's URL must be like *protocol://host:port/* (For PAMR protocol, no need to specify the host in case the router address is provided as a JVM property). The node name and the node source name are optional. Since the Resource Manager requires authentication, the user specifies the file that contains the credential. If no file is specified the default one located in `%USERPROFILE%\.proactive\security` folder is used.
+* *Resource Manager Registration* - creates a local ProActive node and registers it in the specified Resource Manager. The mandatory Resource Manager's URL must comply with the following format: *protocol://host:port/* (In case of the PAMR protocol, the host is an integer assigned by the PAMR router. (0 for the router itself)). The node name and the node source name are optional. Since the Resource Manager requires authentication, the user specifies the file that contains the credential. If no file is specified the default one located in `%USERPROFILE%\.proactive\security` folder is used.
 * *Custom* - the user specifies his own java starter class and the arguments to be given to the main method. The java starter class must be in the classpath when the ProActive Node is started.
 
 Finally, clicking on the "Planning" tab, the window will look like this:
