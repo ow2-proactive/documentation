@@ -43,7 +43,7 @@ Notification Service:: ProActive component that allows a user or a group of user
 Cloud Automation Service:: ProActive component that allows a user to easily manage any On-Demand Services (PaaS, IaaS and MaaS) with full Life-Cycle Management (create, deploy, pause, resume and terminate).
 
 [[_glossary_catalog]]
-Catalog:: ProActive component that provides storage and versioning of <<_glossary_workflow,*Workflows*>> and other ProActive Objects. It is also possible to query the Catalog for specific <<_glossary_workflow,*Workflows*>> through a REST API.
+Catalog:: ProActive component that provides storage and versioning of <<_glossary_workflow,*Workflows*>> and other ProActive Objects. It is also possible to query the Catalog for specific <<_glossary_workflow,*Workflows*>> through a REST API and also with Graphql API.
 
 [[_glossary_cloud_watch]]
 Cloud Watch:: ProActive component that monitors a system, according to predefined set of rules, detects complex events and then triggers user-specified actions.
