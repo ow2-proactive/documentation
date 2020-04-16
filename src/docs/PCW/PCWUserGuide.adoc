@@ -7,7 +7,7 @@ include::../all-doc-links.adoc[]
 
 == Main concepts of PCW
 
-*ProActive Cloud Watch (PCW)* monitors a system, and according to some rules, detects complex events, and triggers actions when configured events are fired. +
+*ProActive Cloud Watch (PCW)* monitors a system to detect complex events, and triggers actions when activated rules are fired. +
 PCW is configured with *rules* to define the metrics to monitor, actions to be performed, and conditions to be met to trigger them. +
 
 ProActive Cloud Watch is organized as a Catalog of rules (which can be activated or deactivated) that will automatically trigger user-specified actions if defined conditions are fulfilled. +
