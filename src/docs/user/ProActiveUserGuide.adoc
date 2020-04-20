@@ -2210,7 +2210,8 @@ println "Test rmapi.isActive() " + rmapi.isActive()
 rmapi.disconnect();
 ----
 
-The complete API description can be found in the link:../rest[Resource Manager Rest Interface].
+The complete API description can be found in the link:../javadoc/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html[documentation] of `RMRestInterface` Java interface.
+The `sessionid` argument has to be ignored when using the `rmapi` script binding.
 
 NOTE: The `rmapi` <<_glossary_script_bindings,script binding>> can also be used in <<_glossary_additional_task_scripts,additional scripts>> defined inside a <<_glossary_task,ProActive Task>>.
 To know in which scripts `rmapi` is available, study the <<_variables_quick_reference,Script Bindings Reference>>.
