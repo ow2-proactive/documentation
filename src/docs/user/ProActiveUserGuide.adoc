@@ -1906,6 +1906,16 @@ Every bucket is identified by a unique bucket name. The bucket naming should mat
 
 * A bucket name must start with a lowercase letter and cannot terminate with a dash.
 
+=== Object naming requirements
+
+Each Catalog object is identified by a unique name. The object naming should respect the following rules:
+
+* Empty values are not allowed.
+
+* Must not be any trailing whitespace at the beginning or/and at the end.
+
+* Accept all characters except forward slash and comma ('/', ',').
+
 === Object versioning
 
 The Catalog provides versioning of objects. You can list all the revisions of a particular object using the HTTP request:
@@ -1988,6 +1998,14 @@ image::upload-catalog-objects.png[align=left]
 
 WARNING: In case of uploading an archive, all the objects in the zip must have the same Kind and Content Type.
 
+==== Create a zip archive with Catalog objects
+When a user creates an archive in order to upload a set of Catalog objects, hidden files should be excluded from this archive.
+
+TIP: *Create a zip archive with Catalog objects in Mac OS.*
+First, go to the folder with the objects that you want to archive.
+Then, you can execute the following command to archive the files without the `.DS_Store` and `__MACOSX` files:
+
+    zip -r ArchiveForCatalog.zip . -x "*.DS_Store" -x "__MACOSX"
 
 ==== Object Versioning in Catalog Portal
 The HEAD of a Catalog object corresponds to the last commit and it is displayed on the portal.
