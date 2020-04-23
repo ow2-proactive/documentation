@@ -1999,7 +1999,7 @@ image::upload-catalog-objects.png[align=left]
 WARNING: In case of uploading an archive, all the objects in the zip must have the same Kind and Content Type.
 
 ==== Create a zip archive with Catalog objects
-When the user creates a zip archive for uploading objects to Catalog, the hidden files should be excluded from the archive.
+When a user creates an archive in order to upload a set of Catalog objects, hidden files should be excluded from this archive.
 
 TIP: *Create a zip archive with Catalog objects in Mac OS.*
 First, go to the folder with the objects that you want to archive.
