@@ -11,7 +11,7 @@ We begin by presenting FTP and SFTP connectors then, URL connector.
 The FTP and SFTP file connector workflows consists of two tasks:
 
 * Import_from_FTP/SFTP_Server: Downloads files or folders recursively from an FTP/SFTP server to the data space.
-* Export_to_FTP/SFTP_Serve: Uploads files or folders recursively from the data space (global or user space) to an FTP/SFTP server.
+* Export_to_FTP/SFTP_Server: Uploads files or folders recursively from the data space (global or user space) to an FTP/SFTP server.
 
 *Variables:*
 
@@ -102,60 +102,57 @@ then we show how to use pooled connection to SQL databases across multiple task 
 The data connectors allow to import and export data from and to Relational DataBase Management Systems (RDBMS).
 Currently, we have connectors for MySQL, Oracle, PostgreSQL, Greenplum and SQL Server.
 
-All SQL connector workflows are composed of two tasks: an import task and an export task.
+All SQL connector workflows are composed of two tasks:
+
+* Import_from_<Database>: Import data from an SQL database server to be processed in the same workflow or just to be stored as a csv file in the data space.
+* Export_to_<Database>: Export data from the data space (global or user space) to an SQL database server.
+
 
 *Variables:*
 
 All SQL connectors share the same list of variables. Consequently, we describe them in the following table using a unique notation.
-`<RDBMS_NAME>` can take one of the following values: {`POSTGRES`, `GPDB`, `ORACLE`, `SQL_SERVER`, `MYSQL`}
 
 .SQL Connector variables
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
-| `<RDBMS_NAME>_HOST`
+| `HOST`
 | Label or the IP address of the server hosting the database.
-| Workflow
+| Workflow, both Tasks
 | Yes
 | String
 | `localhost`
-| `<RDBMS_NAME>_PORT`
+| `PORT`
 | Listening port.
-| Workflow
+| Workflow, both Tasks
 | No
 | Integer
 | e.g. 5432, 1521
-| `<RDBMS_NAME>_USER`
+| `USER`
 | Username to use for connecting to the database.
-| Workflow
+| Workflow, both Tasks
 | Yes
 | String
 |
-| `<RDBMS_NAME>_DATABASE`
+| `DATABASE`
 | Database name.
-| Workflow
+| Workflow, both Tasks
 | Yes
 | String
 | e.g. MY_DATABASE
-| `<RDBMS_NAME>_QUERY`
+| `QUERY`
 | Requires an SQL query or a table name to fetch data from.
 | Import Task
 | Yes
 | String
 | e.g. ```SELECT * FROM ...```
-| `LABEL`
-| If the imported data is labeled for machine learning, a label attribute can be specified using this variable.
-| Import Task
-| No
-| String
-| e.g. class
-| `<RDBMS_NAME>_OUTPUT_FILE`
+| `OUTPUT_FILE`
 | Relative path in the data space used to save the results in a CSV file.
 | Import Task
 | No
 | String
 | e.g. `path/to/my/output.csv`
-| `<RDBMS_NAME>_OUTPUT_TYPE`
+| `OUTPUT_TYPE`
 | Task result output type (`HTML` or `CSV`).
 If set to `HTML`, it allows to preview the results in Scheduler Portal in HTML format.
 | Import Task
@@ -164,7 +161,7 @@ If set to `HTML`, it allows to preview the results in Scheduler Portal in HTML f
 | Values: `{CSV, HTML}`.
 
 Default: `CSV`
-| `<RDBMS_NAME>_TABLE`
+| `TABLE`
 | The table to insert data into.
 | Export Task
 | Yes
@@ -193,24 +190,15 @@ Default: `CSV`
 | String
 | e.g. `path/to/data.csv` or
 http://link/to/my/data/csv
-| `<RDBMS_NAME>_RMDB_DRIVER`
-| The driver to connect to the database.
-| Import Task
-Export Task
-| Yes
-| String
-| e.g. cx_oracle, psycopg2
 |===
 
 *How to use this task:*
 
 When you drag & drop an SQL connector, two tasks will be appended to your workflow: an import task and an export task. Each task can be used as a separate component in an ETL pipeline; thus, you can keep one of them depending on your needs and remove the other or you can use them both.
 
-This task uses the driver given in `RMDB_DRIVER` to connect to the database. To use another driver, make sure you have it properly installed before (e.g. using `pip install <RMDBS_DRIVER>`).
-
 The task requires the following third-party credential:
 
-{key: `<mysql|postgres|sqlserver|oracle|gpdb>://<<RDBMS_NAME>_USER>@<<RDBMS_NAME>_HOST>:<<RDBMS_NAME>_PORT>`, value: `<RDBMS_NAME>_PASSWORD`}.
+{key: `<mysql|postgresql|sqlserver|oracle|greenplum>://<<USER>@<<HOST>:<<PORT>`, value: `<RDBMS_NAME>_PASSWORD`}.
 
 _e.g._ +
 |===
@@ -229,7 +217,7 @@ This is a one-time action and will ensure that your credentials are securely enc
 In the import mode, the output containing the imported data takes one or many of the following forms:
 
 * in a _CSV_ format to saved to:
- ** the `<RDBMS_NAME>_OUTPUT_FILE` in the data space if specified by the user
+ ** the `OUTPUT_FILE` in the data space if specified by the user
  ** _and_ to the `result` variable to make is previewable in the scheduler portal and to make it accessible for the next tasks.
 * in a _JSON_ format using the variable `DATAFRAME_JSON`.
 
@@ -324,7 +312,12 @@ In case the password is required, you have to add the following third-party cred
 
 === NoSQL
 The NoSQL connectors allow to import data from NoSQL Databases.
-Currently, we have connectors for MongoDB and Cassandra.
+Currently, we have connectors for MongoDB, Cassandra and Elasticsearch.
+All NoSQL connector workflows are composed of two tasks:
+
+* Import_from_<Database>: Import data from a NoSQL database server to be processed in the same workflow or just to be stored as a csv file in the data space.
+* Export_to_<Database>: Export data from the data space (global or user space) to a NoSQL database server.
+
 
 ==== MongoDB
 
@@ -564,7 +557,7 @@ In the import mode, the output containing the imported data takes the form of a 
 
 === Cloud
 
-Cloud data connectors allow to interact with cloud storage services. Currently we provide support for Amazon S3, Azure Blob Storage and Azure Data Lake.
+Cloud data connectors allow to interact with cloud storage services. Currently we provide support for Amazon S3, Azure Blob Storage, Azure Data Lake and Snowflake.
 
 ==== Amazon S3
 
@@ -753,6 +746,104 @@ or `folder`
 *How to use these tasks:*
 
 Azure Blob Storage connector tasks require your azure storage account and account key to be set as a third-party credential (`key:value` pairs) where {key: STORAGE_ACCOUNT, value: ACCOUNT_KEY}; this is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+
+
+
+==== Snowflake
+
+The Snowflake data connector allows to import and export structured data as well as semi-structured data (JSON, Avro, XML) data from and to a Snowflake cloud Data Warehouse.
+The Snowflake connector workflow is composed of two tasks: an import task and an export task.
+
+*Variables:*
+
+.Snowflake Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
+| `USER`
+| Username to use for connecting to the data warehouse.
+| Workflow, both Tasks
+| Yes
+| String
+|e.g. MY_USERNAME
+| `ACCOUNT`
+| Name of your account (provided by Snowflake).
+| Workflow, both Tasks
+| Yes
+| String
+| e.g. xy12345.east-us-2.azure
+| `WAREHOUSE`
+| Warehouse name.
+| Workflow, both Tasks
+| Yes
+| Strings
+|e.g. MY_WAREHOUSE
+| `DATABASE`
+| Database name.
+| Workflow, both Tasks
+| Yes
+| String
+| e.g. MY_DATABASE
+| `SCHEMA`
+| Name of the default schema to use for the database. After login, you can use USE SCHEMA to change the schema.
+| Workflow, both Tasks
+| Yes
+| String
+| e.g. PUBLIC
+| `ROLE`
+| Name of the default role to use. After login, you can use USE ROLE to change the role.
+| Workflow, both Tasks
+| Yes
+| String
+| e.g. SYSYADMIN
+| `PROTOCOL`
+| Protocol used for the connection.
+| Workflow, both Tasks
+| Yes
+| String
+| Default: `https`
+| `QUERY`
+| Requires an SQL query or a table name to fetch data from.
+| Import Task
+| Yes
+| String
+| e.g. ```SELECT * FROM ...```
+| `OUTPUT_FILE`
+| Relative path in the data space used to save the results in a CSV file.
+| Import Task
+| No
+| String
+| e.g. `path/to/my/output.csv`
+| `OUTPUT_TYPE`
+| Task result output type (`HTML` or `CSV`).
+If set to `HTML`, it allows to preview the results in Scheduler Portal in HTML format.
+| Import Task
+| No
+| String
+| Values: `{CSV, HTML}`.
+
+Default: `CSV`
+| `TABLE`
+| The table to insert data into.
+| Export Task
+| Yes
+| String
+| e.g. MY_TABLE
+| `INPUT_FILE`
+| It can be a relative path in the dataspace of a csv file containing the data to import.
+| Export Task
+| Yes
+| String
+| e.g. `path/to/data.csv`
+|===
+
+*How to use these tasks:*
+
+When you drag & drop a Snowflake connector, two tasks will be appended to your workflow: an import task and an export task. Each task can be used as a separate component in an ETL pipeline; thus, you can keep one of them depending on your needs and remove the other or you can use them both.
+
+Each task requires the following third-party credential:
+
+{key: `<snowflake>://<<USER>@<<ACCOUNT>:<<WAREHOUSE>`, value: `SNOWFLAKE_PASSWORD`}.
 
 
 === ERP
