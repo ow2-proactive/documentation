@@ -751,7 +751,7 @@ Azure Blob Storage connector tasks require your azure storage account and accoun
 
 ==== Snowflake
 
-The Snowflake data connector allows to import and export structured data as well as semi-structured data (JSON, Avro, XML) data from and to a Snowflake cloud account.
+The Snowflake data connector allows to import and export structured data as well as semi-structured data (JSON, Avro, XML) data from and to a Snowflake cloud Data Warehouse.
 The Snowflake connector workflow is composed of two tasks: an import task and an export task.
 
 *Variables:*
@@ -761,11 +761,11 @@ The Snowflake connector workflow is composed of two tasks: an import task and an
 |===
 | *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
 | `USER`
-| Username to use for connecting to the database.
+| Username to use for connecting to the data warehouse.
 | Workflow, both Tasks
 | Yes
 | String
-|
+|e.g. MY_USERNAME
 | `ACCOUNT`
 | Name of your account (provided by Snowflake).
 | Workflow, both Tasks
@@ -785,7 +785,7 @@ The Snowflake connector workflow is composed of two tasks: an import task and an
 | String
 | e.g. MY_DATABASE
 | `SCHEMA`
-| Name of the default schema to use for the database. After login, you can use USE SCHEMA to change the schema..
+| Name of the default schema to use for the database. After login, you can use USE SCHEMA to change the schema.
 | Workflow, both Tasks
 | Yes
 | String
