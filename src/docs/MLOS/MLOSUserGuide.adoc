@@ -1848,24 +1848,34 @@ The following workflow presents an example of a workflow built using pre-built A
 
 *Custom_Sentiment_Analysis:* is a mashup that searches for news related to a given search term using Azure Bing News API then performs a sentiment analysis using a custom deep learning based pretrained model.
 
-=== Custom AI Workflows - Pytorch library
-
-The following workflows present examples of workflows built using custom AI tasks available on the `deep-learning` bucket. Such tasks enable you to train and test your own AI models by a simple drag and drop of custom AI task.
+=== Training Custom AI Workflows - Pytorch library
+This section presents custom AI workflows using tasks available on the `deep-learning` bucket. Such tasks enable you to train your own AI models by a simple drag and drop of custom AI task.
 
 *IMDB_Sentiment_Analysis:* trains a model for opinions identification and categorization expressed in a piece of text, especially in order to determine the opinion of IMDB users regarding specific movies [positive or negative].
 NOTE: Instead of training a model from scratch, you can use a pre-trained sentiment analysis model which is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/basic_sentiment_analysis.zip[link^].
 
-*Image_Classification:* uses a pre-trained deep neural network to classify ants and bees images. The pre-trained model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_resnet18.zip[link^].
-
 *Language_Detection:* involves building an RNN model from a lot of text data of respective languages and then identifying the test data (text) among the trained models.
+
+*Train_Image_Classification:* trains a model to classify ants and bees images. 
+
+*Train_Image_Segmentation:* trains a segmentation model using SegNet network on http://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]. 
+
+*Train_Image_Object_Detection:* trains objects using YOLOv3 model on COCO dataset proposed by Microsoft Research. 
+
+*Deep_Model_Explainability:* explains a VGG16 model using GradientExplainer.
+
+
+=== Prediction Custom AI Workflows - Pytorch library
+
+This section presents custom AI workflows using tasks available on the `deep-learning` bucket. Such tasks enable you to test your own AI models by a simple drag and drop of custom AI task.
+
+*Image_Segmentation:* predicts a segmentation model using SegNet network on http://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]. The pre-trained image segmentation model which is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_segnet.zip[link^]
 
 *Fake_Celebrity_Faces_Generation:* generates a wild diversity of fake faces using a GAN model that was trained based on thousands of real celebrity photos. The pre-trained GAN model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/Epoch+018.pt[link^]
 
 *Image_Segmentation:* predicts a segmentation model using SegNet network on http://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]. The pre-trained image segmentation model which is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_segnet.zip[link^]
 
-*Deep_Model_Explainability:* explains a VGG16 model using GradientExplainer.
-
-*Image_Object_Detection:* detects objects using a pre-trained YOLO v3 model on COCO dataset proposed by Microsoft Research. The pre-trained model is available on this link.
+*Image_Object_Detection:* detects objects using a pre-trained YOLOv3 model on COCO dataset proposed by Microsoft Research. The pre-trained model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/yolo3_coco.zip[link^]
 
 WARNING: It is recommended to use an enabled-GPU node to run the deep learning tasks.
 
