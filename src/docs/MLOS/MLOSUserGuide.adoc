@@ -1848,24 +1848,34 @@ The following workflow presents an example of a workflow built using pre-built A
 
 *Custom_Sentiment_Analysis:* is a mashup that searches for news related to a given search term using Azure Bing News API then performs a sentiment analysis using a custom deep learning based pretrained model.
 
-=== Custom AI Workflows - Pytorch library
-
-The following workflows present examples of workflows built using custom AI tasks available on the `deep-learning` bucket. Such tasks enable you to train and test your own AI models by a simple drag and drop of custom AI task.
+=== Training Custom AI Workflows - Pytorch library
+This section presents custom AI workflows using tasks available on the `deep-learning` bucket. Such tasks enable you to train your own AI models by a simple drag and drop of custom AI task.
 
 *IMDB_Sentiment_Analysis:* trains a model for opinions identification and categorization expressed in a piece of text, especially in order to determine the opinion of IMDB users regarding specific movies [positive or negative].
 NOTE: Instead of training a model from scratch, you can use a pre-trained sentiment analysis model which is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/basic_sentiment_analysis.zip[link^].
 
-*Image_Classification:* uses a pre-trained deep neural network to classify ants and bees images. The pre-trained model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_resnet18.zip[link^].
-
 *Language_Detection:* involves building an RNN model from a lot of text data of respective languages and then identifying the test data (text) among the trained models.
+
+*Train_Image_Classification:* trains a model to classify ants and bees images. 
+
+*Train_Image_Segmentation:* trains a segmentation model using SegNet network on http://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]. 
+
+*Train_Image_Object_Detection:* trains objects using YOLOv3 model on COCO dataset proposed by Microsoft Research. 
+
+*Deep_Model_Explainability:* explains a VGG16 model using GradientExplainer.
+
+
+=== Prediction Custom AI Workflows - Pytorch library
+
+This section presents custom AI workflows using tasks available on the `deep-learning` bucket. Such tasks enable you to test your own AI models by a simple drag and drop of custom AI task.
+
+*Image_Segmentation:* predicts a segmentation model using SegNet network on http://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]. The pre-trained image segmentation model which is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_segnet.zip[link^]
 
 *Fake_Celebrity_Faces_Generation:* generates a wild diversity of fake faces using a GAN model that was trained based on thousands of real celebrity photos. The pre-trained GAN model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/Epoch+018.pt[link^]
 
 *Image_Segmentation:* predicts a segmentation model using SegNet network on http://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]. The pre-trained image segmentation model which is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_segnet.zip[link^]
 
-*Deep_Model_Explainability:* explains a VGG16 model using GradientExplainer.
-
-*Image_Object_Detection:* detects objects using a pre-trained YOLO v3 model on COCO dataset proposed by Microsoft Research. The pre-trained model is available on this link.
+*Image_Object_Detection:* detects objects using a pre-trained YOLOv3 model on COCO dataset proposed by Microsoft Research. The pre-trained model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/yolo3_coco.zip[link^]
 
 WARNING: It is recommended to use an enabled-GPU node to run the deep learning tasks.
 
@@ -4329,4 +4339,121 @@ video::bQpwS2nMAZY[youtube, width=700, height=400 start=0, position=center]
 *Visdom_Real_time_Digit_Classification:* shows an example of realtime plotting using the Visdom server for training a convolutional neural network (CNN) for MNIST digit classification.
 
 A demo video of these workflows is available in https://www.youtube.com/user/ActiveEonCompany[ActiveEon Youtube Channel^].
+
+=== Satellite Imagery Bucket
+
+The `satellite-imagery` bucket contains some tasks that enable you to search, download and retrieve the metadata of Sentinel satellite images from the https://peps.cnes.fr/rocket/#/home[PEPS website^] and https://scihub.copernicus.eu/[Copernicus Open Access Hub^].
+
+==== Fetch_Images_From_Satellite_Platforms
+It allows to download the metadata and images from the Copernicus and PEPS platforms or both simultaneously.
+
+image::Fetch_Satellite_Images.png[align=center]
+
+*Task Variables:*
+
+.Fetch_Images_From_Satellite_Platforms variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `HOST_SITES`
+| Defines a host site to search and download satellite images.
+| List [Peps, Copernicus, All] (default=Peps)
+| `OUTPUT_PATH`
+| Specifies the path where the data should be downloaded.
+| String
+|===
+
+
+
+NOTE: Please click https://peps.cnes.fr/rocket/#/register[here^] to create a new user account from Peps website.
+
+NOTE: Please click https://scihub.copernicus.eu/dhus/#/self-registration[here^] to create a new user account from Copernicus website.
+
+==== Fetch_Satellite_Images_From_PEPS
+
+*Task Overview:* Load and return a PEPS dataset including a `metadata folder` with metadata files and `images folder` containing satellite images.
+
+*Task Variables:*
+
+.Fetch_Satellite_Images_From_PEPS variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `LOCATION`
+|  Defines a town name.
+| String (default=Indonesia)
+| `PLATFORM_NAME`
+| Specifies an instrument on a Sentinel satellite.
+| List [S1, S2, S2ST, S3] (default=S2)
+| `PRODUCT_TYPE`
+|  Limits the search to a Sentinel product type.
+|  List [GRD, SLC, OCN (for S1) or S2MSI1C S2MSI2A S2MSI2Ap (for S2)] (default=S2MSI1C)
+| `SENSOR_MODE`
+| Specifies the search to a Sentinel sensor mode.
+| List [EW, IW , SM, WV (for S1) or INS-NOBS, INS-RAW (for S3)] (default=INS-NOBS)
+| `START_DATE`
+| Determines a start date of the query in the format YYYYMMDD.
+| String
+| `END_DATE`
+| Define an end date of the query in the format YYYYMMDD.
+| String
+| `TILE`
+| Limits the search to a tile number.
+| String
+| `LATITUDE`
+| Determines the search to a latitude in decimal degrees.
+|  Float
+| `LONGITUDE`
+|  Limits the search to a longitude in decimal degrees.
+|  Float
+| `OUTPUT_PATH`
+|  Specifies the path where the data should be downloaded.
+|  String
+|===
+
+WARNING: Please add third party credentials (USER_NAME_PEPS and USER_PASS_PEPS) in the `Scheduling & Orchestration interface -> Manage Third-Party Credentials` to connect to PEPS.
+
+NOTE: More information about the source of this task can be found https://github.com/olivierhagolle/maja_peps[here^].
+
+==== Fetch_Satellite_Images_From_Copernicus
+
+*Task Overview:* Load and return a Copernicus dataset including a `metadata folder` with metadata files and `images folder` containing satellite images according to the resolution & image band selected by user.
+
+
+*Task Variables:*
+
+.Fetch_Satellite_Images_From_Copernicus variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `PLATFORM_NAME`
+|  Specifies an instrument on a Sentinel satellite.
+| String [Sentinel-1, Sentinel-2, Sentinel-3, Sentinel-4, Sentinel-5,  Sentinel-5, Precursor, Sentinel-6](default=Sentinel-2)
+| `FOOTPRINT`
+| Defines a geojson file with footprints of the query result.
+| String
+| `START_DATE`
+| Determines a start date of the query in the format YYYYMMDD.
+| String
+| `END_DATE`
+| Defines an end date of the query in the format YYYYMMDD.
+| String
+| `USE_START_AND_END_DATE`
+|  If True, it uses the date defined in the START_DATE and START_DATE fields, otherwise it uses the dates defined in th .geojson file.
+|  Boolean (default=True)
+| `SPATIAL_RESOLUTION`
+| Defines granule dimensions for each resolution band.
+|  List [10m, 20m, 60m] (default=10m)
+| `IMAGE_BAND`
+|  Determines from 13 spectral bands spanning from the Visible and Near Infra-Red (VNIR) to the Short Wave Infra-Red (SWIR).
+|  List [All, B01, B02, B03, B04, B05, B06, B07, B08, B8A, B09, B10, B11, B12, TCI] (default=All)
+| `OUTPUT_PATH`
+| Specifies the path where the data should be downloaded.
+| String
+|===
+
+WARNING: Please add third party credentials (USER_NAME_COP and USER_PASS_COP) in the `Scheduling & Orchestration interface -> Manage Third-Party Credentials` to connect to Copernicus.
+
+NOTE: More information about the source of this task can be found https://pypi.org/project/sentinelsat/[here^].
+
 include::../common-footer.adoc[]

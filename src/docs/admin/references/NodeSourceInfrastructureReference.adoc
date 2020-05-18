@@ -652,16 +652,6 @@ The following fields are available to configure your Azure infrastructure.
 - *domain:* Corresponds to the Azure _domain_, _tenant ID_, or _directory ID_ of your Active Directory.
 - *subscriptionId:* The _ID_ of your Azure subscription.
 
-The following fields are the optional parameters of the Azure Billing Configuration section. The aim of this section is to configure the automatic cloud cost estimator. It is done by considering all the Azure resources related to your reservation (virtual machines, disks,..). This mechanism relies on the Azure Resource Usage and RateCard APIs (https://docs.microsoft.com/en-us/azure/cost-management-billing/manage/usage-rate-card-overview).
-
-- *resourceUsageRefreshFreqInMin:* Periodical resource usage retrieving delay in min. The default value is 30.
-- *rateCardRefreshFreqInMin:* Periodical rate card retrieving delay in min. The default value is 30.
-- *offerId:* The Offer ID parameter consists of the "MS-AZR-" prefix, plus the Offer ID number. The default value is "MS-AZR-0003p" (Pay-As-You-Go offer).
-- *currency:* The currency in which the resource rates need to be provided. The default value is "USD".
-- *locale:* The culture in which the resource metadata needs to be localized. The default value is "en-US".
-- *regionInfo:* The 2 letter ISO code where the offer was purchased. The default value is "US".
-- *maxBudget:* Your max budget for the Azure resources related to the node source. Also used to compute your global cost in % of your budget. The default value is 50.
-
 The next four parameters are optional, and apply to advanced Azure endpoint configurations only.
 
 - *authenticationEndpoint:* Azure Authentication endpoint.
@@ -687,6 +677,16 @@ The next four parameters are optional, and apply to advanced Azure endpoint conf
 - *privateNetworkCIDR:* An optional network Classless Inter-Domain Routing to allocate the new VMs within the private network. The default value is _10.0.0.0/24_.
 - *staticPublicIP:* A boolean flag to determine whether the public IPs of the infrastructure's VMs should be static. The default value is _true_.
 - *additionalProperties:* Additional JVM properties to configure your ProActive node. The default values allow to handle both PNP and PAMR protocols. You can add your own properties but be aware that removing the current values might cause the deployment to fail.
+
+The following fields are the optional parameters of the Azure Billing Configuration section. The aim of this section is to configure the automatic cloud cost estimator. It is done by considering all the Azure resources related to your reservation (virtual machines, disks,..). This mechanism relies on the Azure Resource Usage and RateCard APIs (https://docs.microsoft.com/en-us/azure/cost-management-billing/manage/usage-rate-card-overview).
+
+- *resourceUsageRefreshFreqInMin:* Periodical resource usage retrieving delay in min. The default value is 30.
+- *rateCardRefreshFreqInMin:* Periodical rate card retrieving delay in min. The default value is 30.
+- *offerId:* The Offer ID parameter consists of the "MS-AZR-" prefix, plus the Offer ID number. The default value is "MS-AZR-0003p" (Pay-As-You-Go offer).
+- *currency:* The currency in which the resource rates need to be provided. The default value is "USD".
+- *locale:* The culture in which the resource metadata needs to be localized. The default value is "en-US".
+- *regionInfo:* The 2 letter ISO code where the offer was purchased. The default value is "US".
+- *maxBudget:* Your max budget for the Azure resources related to the node source. Also used to compute your global cost in % of your budget. The default value is 50.
 
 The Azure infrastructure offers a simple interface to easily create ProActive nodes on Azure. If your project requires a dynamic and customizable set of Azure VMs, you can opt for an <<_azure_scale_set_infrastructure>>.
 
@@ -823,6 +823,16 @@ Note that this user custom script will be run as root/admin user.
 * *_Windows:_* The commands will be included in a _.bat_ batch file and must therefore be DOS-compatible. As a guideline, here is an unofficial https://www.robvanderwoude.com/batchcommands.php[list of DOS commands] and a http://steve-jansen.github.io/guides/windows-batch-scripting/part-1-getting-started.html[scripting tutorial].
 - *jvmParameters:* Add JVM parameters to configure your ProActive node, use the format _-Dproperty=value_. The default values allow for a correct deployment of the node. You can add your own parameters but be aware that removing the current values might cause the deployment to fail. A non-exhaustive list of node-related JVM parameters can be found in your configuration file `$PROACTIVE_HOME/config/network/node.ini`
 - *armTemplateUrl:* Optional parameter, for advanced configuration only. This parameter is intended for users familiar with https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-authoring-templates[Azure Resource Management templates] willing to provide a custom resource configuration file. You should input a URL with a valid _.json_ ARM template. If set, this file will override https://gist.github.com/activeeon-bot/0ae94e182edfa6099314ad023d2d7bc4[ProActive's default ARM file].
+
+The following fields are the optional parameters of the Azure Billing Configuration section. The aim of this section is to configure the automatic cloud cost estimator. It is done by considering all the Azure resources related to your reservation (virtual machines, disks,..). This mechanism relies on the Azure Resource Usage and RateCard APIs (https://docs.microsoft.com/en-us/azure/cost-management-billing/manage/usage-rate-card-overview).
+
+- *resourceUsageRefreshFreqInMin:* Periodical resource usage retrieving delay in min. The default value is 30.
+- *rateCardRefreshFreqInMin:* Periodical rate card retrieving delay in min. The default value is 30.
+- *offerId:* The Offer ID parameter consists of the "MS-AZR-" prefix, plus the Offer ID number. The default value is "MS-AZR-0003p" (Pay-As-You-Go offer).
+- *currency:* The currency in which the resource rates need to be provided. The default value is "USD".
+- *locale:* The culture in which the resource metadata needs to be localized. The default value is "en-US".
+- *regionInfo:* The 2 letter ISO code where the offer was purchased. The default value is "US".
+- *maxBudget:* Your max budget for the Azure resources related to the node source. Also used to compute your global cost in % of your budget. The default value is 50.
 
 As you can see, these parameters provide a lot of flexibility to configure your infrastructure. When creating your Azure Scale Set node source, the infrastructure should be coupled with a Dynamic Policy. This Policy will additionally define scalability parameters such as limits on the number of deployed nodes or the minimum idle time before a node can be deleted (to optimize node utilization).
 
