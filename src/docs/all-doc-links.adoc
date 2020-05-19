@@ -42,7 +42,8 @@
 <div class="paragraph">
 <h3 id="_all_doc_api_doc"><a class="anchor" href="#_all_doc_api_doc"></a><a class="link" href="#_all_doc_api_doc">API documentation</a></h3>
 <p><strong>
-<a class="restUrl" href="https://try.activeeon.com/rest" target="_blank">Scheduler REST API</a>  
+<a class="restUrl" href="/rest" target="_blank">Scheduler REST API</a>&nbsp;&nbsp;&nbsp;
+<a class="schedulerGraphQLUrl" href="/scheduling-api/v1/graphiql" target="_blank">Scheduler GraphQL API</a> 
 <a href="../user/ProActiveUserGuide.html#_scheduler_command_line">Scheduler CLI</a>  
 <a href="../javadoc/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html">Scheduler Java</a>  
 <a href="../javadoc/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html">Workflow Creation Java</a>  
