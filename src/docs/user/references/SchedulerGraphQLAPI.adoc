@@ -1,0 +1,382 @@
+
+====  Scheduler GraphQL API portal
+
+ProActive Scheduler GraphQL API portal can be accessed in your environment using the following link:
+
+++++
+<a class="schedulerGraphQLUrl" href="/scheduling-api/v1/graphiql" target="_blank">Scheduler GraphQL API</a> 
+++++
+
+In general, the GraphiQL interface can be opened at `http://your-server:8080/scheduling-api/v1/graphiql` or `https://your-server:8443/scheduling-api/v1/graphiql` when the scheduler server is configured in _https_ mode.
+
+In order to use it, you must be first connected to one of the ProActive portals. If you are not currently connected or if your session has expired, you will receive a `MissingSessionIdException` when trying to run queries.
+
+This portal allows to run GraphQL queries against the scheduler database, to find jobs according to various filters.
+Queries are read-only, you cannot use this portal to perform stateful operations (e.g job submission, job removal, etc).
+
+The GraphiQL interface is displayed as the following:
+
+image::SchedGraphqlMain.png[align="center"]
+
+You can explore the `Docs` section to see detailed information about all GraphQL nodes, filters and attributes:
+
+image::SchedGraphqlDocs.png[align="center"]
+
+===== GraphQL Basic Usage
+
+The left panel allows to write queries. You can start by entering the query _{ jobs }_, this query will be automatically expanded to match the correct syntax:
+
+[source,graphql]
+----
+{jobs {
+  edges {
+    node {
+      id
+    }
+  }
+}}
+----
+Executing this query will return a json result such as:
+
+[source,json]
+----
+{
+  "data": {
+    "jobs": {
+      "edges": [
+        {
+          "node": {
+            "id": "1"
+          }
+        },
+        {
+          "node": {
+            "id": "2"
+          }
+        },
+        {
+          "node": {
+            "id": "3"
+          }
+        }
+      ]
+    }
+  }
+}
+----
+In this basic example, only the job ids are displayed, it is of course possible to display more information:
+
+[source,graphql]
+----
+{
+  jobs {
+    edges {
+      node {
+        id
+        name
+        owner
+        submittedTime
+        status
+      }
+    }
+  }
+}
+----
+Will return something similar to:
+[source,json]
+----
+{
+  "data": {
+    "jobs": {
+      "edges": [
+        {
+          "node": {
+            "id": "1",
+            "name": "script_groovy",
+            "owner": "admin",
+            "submittedTime": 1589799002016,
+            "status": "FINISHED"
+          }
+        },
+        {
+          "node": {
+            "id": "2",
+            "name": "script_groovy",
+            "owner": "admin",
+            "submittedTime": 1589799356783,
+            "status": "FINISHED"
+          }
+        },
+        {
+          "node": {
+            "id": "3",
+            "name": "Script_Cmd",
+            "owner": "admin",
+            "submittedTime": 1589810586677,
+            "status": "FINISHED"
+          }
+        }
+      ]
+    }
+  }
+}
+----
+
+===== GraphQL Pagination
+GraphQL results are *paginated*, a request can use one of the following attributes to control pagination:
+
+ * `last`(integer) : displays the specified last number of results.
+ * `first`(integer) : displays the specified first number of results.
+ * `before` (cursor) : displays results before the specified cursor
+ * `after` (cursor) : displays results after the specified cursor
+
+The following requests uses `last` to display the 5 most recent jobs, and displays all pages information.
+
+[source,graphql]
+----
+{
+  jobs(last: 5) {
+    edges {
+      node {
+        id
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+  }
+}
+----
+It returns something similar to:
+[source,json]
+----
+{
+  "data": {
+    "jobs": {
+      "edges": [
+        {
+          "node": {
+            "id": "11"
+          },
+          "cursor": "Z3JhcGhxbC1jdXJzb3IxMQ=="
+        },
+        {
+          "node": {
+            "id": "12"
+          },
+          "cursor": "Z3JhcGhxbC1jdXJzb3IxMg=="
+        },
+        {
+          "node": {
+            "id": "13"
+          },
+          "cursor": "Z3JhcGhxbC1jdXJzb3IxMw=="
+        },
+        {
+          "node": {
+            "id": "14"
+          },
+          "cursor": "Z3JhcGhxbC1jdXJzb3IxNA=="
+        },
+        {
+          "node": {
+            "id": "15"
+          },
+          "cursor": "Z3JhcGhxbC1jdXJzb3IxNQ=="
+        }
+      ],
+      "pageInfo": {
+        "hasNextPage": false,
+        "hasPreviousPage": true,
+        "startCursor": "Z3JhcGhxbC1jdXJzb3IxMQ==",
+        "endCursor": "Z3JhcGhxbC1jdXJzb3IxNQ=="
+      }
+    }
+  }
+}
+----
+To display the previous page, the following request is used:
+[source,graphql]
+----
+{
+  jobs(last: 5, before: "Z3JhcGhxbC1jdXJzb3IxMQ==") {
+    edges {
+      node {
+        id
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+  }
+}
+----
+Which returns a result such as:
+[source,json]
+----
+{
+  "data": {
+    "jobs": {
+      "edges": [
+        {
+          "node": {
+            "id": "6"
+          },
+          "cursor": "Z3JhcGhxbC1jdXJzb3I2"
+        },
+        {
+          "node": {
+            "id": "7"
+          },
+          "cursor": "Z3JhcGhxbC1jdXJzb3I3"
+        },
+        {
+          "node": {
+            "id": "8"
+          },
+          "cursor": "Z3JhcGhxbC1jdXJzb3I4"
+        },
+        {
+          "node": {
+            "id": "9"
+          },
+          "cursor": "Z3JhcGhxbC1jdXJzb3I5"
+        },
+        {
+          "node": {
+            "id": "10"
+          },
+          "cursor": "Z3JhcGhxbC1jdXJzb3IxMA=="
+        }
+      ],
+      "pageInfo": {
+        "hasNextPage": true,
+        "hasPreviousPage": true,
+        "startCursor": "Z3JhcGhxbC1jdXJzb3I2",
+        "endCursor": "Z3JhcGhxbC1jdXJzb3IxMA=="
+      }
+    }
+  }
+}
+----
+
+===== GraphQL Filters
+GraphQL API allows to select jobs according to various *filters*. The following example filters jobs according to a given name:
+[source,graphql]
+----
+{
+  jobs(filter: {name: "*Python"}) {
+    edges {
+      node {
+        id name
+      }
+    }
+  }
+}
+----
+The wildcard "\*Python" selects all jobs ending with "Python". The special character `*` can be used at the beginning or at the end of the expression (or both). It cannot be used in the middle.
+
+Here are the results of this GraphQL query:
+[source,json]
+----
+{
+  "data": {
+    "jobs": {
+      "edges": [
+        {
+          "node": {
+            "id": "8",
+            "name": "Script_Python"
+          }
+        },
+        {
+          "node": {
+            "id": "9",
+            "name": "Script_Python"
+          }
+        },
+        {
+          "node": {
+            "id": "10",
+            "name": "Script_Python"
+          }
+        },
+        {
+          "node": {
+            "id": "11",
+            "name": "Script_Python"
+          }
+        }
+      ]
+    }
+  }
+}
+----
+The complete list of filters is available in the GraphQL `Docs` section.
+
+====  Scheduler GraphQL REST API
+
+After testing queries in the GraphQL Portal, you can use the scheduling-api REST interface to run these queries from any REST client.
+
+Few aspects are to be considered when running graphql queries from a REST client:
+
+ * The url of the GraphQL REST API is different: `http://your-server:8080/scheduling-api/v1/graphql` (_graphql_ instead of graphiql).
+ * The REST request method must be `POST` and its `Content-Type` be `application/json`.
+ * It requires in the header section, a `sessionid` retrieved from a login to the ProActive scheduler REST API.
+ * The query itself is given as a string value of the `"query"` attribute inside the json body content. This value must be *escaped* to be a valid json. You can use, for example, online tools such as `https://codebeautify.org/json-escape-unescape` to escape the query as a json string.
+
+Here is an example of executing a GraphQL REST query using curl.
+
+ * First, we acquire a sessionid by login to the scheduler REST API:
++
+[source,sh]
+----
+sessionid=$(curl -d "username=mylogin&password=mypassword" http://try.activeeon.com:8080/rest/scheduler/login)
+----
+
+ * Second, we use a json escape tool to produce the query parameter.
++
+[source,graphql]
+----
+{
+  jobs {
+    edges {
+      node {
+        id
+        name
+      }
+    }
+  }
+}
+----
+Converts into:
+`{\r\n  jobs {\r\n    edges {\r\n      node {\r\n        id\r\n        name\r\n      }\r\n    }\r\n  }\r\n}`
+
+ * Third, we write the json body.
++
+[source,json]
+----
+{"query":"{\r\n  jobs {\r\n    edges {\r\n      node {\r\n        id\r\n        name\r\n      }\r\n    }\r\n  }\r\n}"}
+----
+ * Finally, we execute the query using `curl`:
++
+[source,sh]
+----
+ curl -H "sessionid:$sessionid" -H "Content-Type:application/json" --request POST --data '{"query":"{\r\n  jobs {\r\n    edges {\r\n      node {\r\n        id\r\n        name\r\n      }\r\n    }\r\n  }\r\n}"}' http://try.activeeon.com:8080/scheduling-api/v1/graphql
+----
+
+ * We receive the following json answer to our request:
++
+[source,json]
+----
+{"data":{"jobs":{"edges":[{"node":{"id":"14","name":"script_groovy"}},{"node":{"id":"66","name":"Script_Python"}},{"node":{"id":"67","name":"Script_Python"}},{"node":{"id":"68","name":"Script_Python"}},{"node":{"id":"69","name":"Script_Python"}},{"node":{"id":"70","name":"Script_Python"}},{"node":{"id":"71","name":"script_groovy"}},{"node":{"id":"72","name":"script_groovy"}},{"node":{"id":"73","name":"script_groovy"}},{"node":{"id":"74","name":"script_groovy"}},{"node":{"id":"75","name":"script_groovy"}}]}}}
+----
+

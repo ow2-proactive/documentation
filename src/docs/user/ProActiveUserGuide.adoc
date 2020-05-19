@@ -2628,6 +2628,9 @@ include::./references/VariablesReference.adoc[]
 === Topology Types
 include::./references/TopologyTypes.adoc[]
 
+=== Scheduler GraphQL API
+include::./references/SchedulerGraphQLAPI.adoc[]
+
 [[_scheduler_command_line]]
 === Command Line
 include::../CLI.adoc[]
