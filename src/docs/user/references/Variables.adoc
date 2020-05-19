@@ -135,6 +135,9 @@ Examples: PA:JSON will accept {"name": "John", "city":"New York"} and empty valu
 * *PA:NOT_EMPTY_STRING* : variable must be provided with a non-empty string value.
 * *PA:HIDDEN* : variable which allows the user to securely enter its value (i.e., each character is shown as an asterisk, so that it cannot be read.) while submitting the workflow.
 * *PA:CREDENTIAL* : variable whose value is a key of the <<_third_party_credentials, ProActive Scheduler Third-Party Credentials>> (which are stored on the server side in encrypted form). The variable allows the user to access a credential through `credentials.get(variables.get("MY_CRED_KEY"))` instead of in plain-text in the workflow definition.
+* *PA:GLOBAL_FILE* : variable whose value is the relative path of a file in the <<_global_and_user_spaces, Global Data Space>>.
+* *PA:USER_FILE* : variable whose value is the relative path of a file in the <<_global_and_user_spaces, User Data Space>>.
+
 
 ====== Spring Expression Language Model
 
