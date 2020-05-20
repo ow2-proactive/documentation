@@ -7,18 +7,20 @@ ProActive Scheduler GraphQL API portal can be accessed in your environment using
 <a class="schedulerGraphQLUrl" href="/scheduling-api/v1/graphiql" target="_blank">Scheduler GraphQL API</a> 
 ++++
 
-In general the GraphiQL interface can be reached with `http://your-server:8080/scheduling-api/v1/graphiql`
+In general, the GraphiQL interface can be opened at `http://your-server:8080/scheduling-api/v1/graphiql` or `https://your-server:8443/scheduling-api/v1/graphiql` when the scheduler server is configured in _https_ mode.
 
 In order to use it, you must be first connected to one of the ProActive portals. If you are not currently connected or if your session has expired, you will receive a `MissingSessionIdException` when trying to run queries.
 
-This portal allows to test and run GraphQL queries against the scheduler database, to find jobs according to various filters.
-GraphQL queries are read-only, you cannot use this portal to perform stateful operations, such as submitting a job, deleting a job, etc.
+This portal allows to run GraphQL queries against the scheduler database, to find jobs according to various filters.
+Queries are read-only, you cannot use this portal to perform stateful operations (e.g job submission, job removal, etc).
 
 The GraphiQL interface is displayed as the following:
 
 image::SchedGraphqlMain.png[align="center"]
 
-You can explore the `Docs` section to see detailed information about all graphql nodes, filters and attributes.
+You can explore the `Docs` section to see detailed information about all GraphQL nodes, filters and attributes:
+
+image::SchedGraphqlDocs.png[align="center"]
 
 ===== GraphQL Basic Usage
 
@@ -121,14 +123,14 @@ Will return something similar to:
 ----
 
 ===== GraphQL Pagination
-GraphQL results are *paginated*, a request can use either of the following attributes to control pagination:
+GraphQL results are *paginated*, a request can use one of the following attributes to control pagination:
 
  * `last`(integer) : displays the specified last number of results.
  * `first`(integer) : displays the specified first number of results.
  * `before` (cursor) : displays results before the specified cursor
  * `after` (cursor) : displays results after the specified cursor
 
-The following requests uses `last`to display the 5 most recent jobs, and displays all pages information.
+The following requests uses `last` to display the 5 most recent jobs, and displays all pages information.
 
 [source,graphql]
 ----
@@ -267,7 +269,7 @@ Which returns a result such as:
 ----
 
 ===== GraphQL Filters
-Graphql allows to select jobs according to various *filters*. The following example filters job according to their name:
+GraphQL API allows to select jobs according to various *filters*. The following example filters jobs according to a given name:
 [source,graphql]
 ----
 {
@@ -280,7 +282,7 @@ Graphql allows to select jobs according to various *filters*. The following exam
   }
 }
 ----
-The wildcard "\*Python" selects all jobs ending by "Python". The special character `*` can be used at the beginning or at the end of the expression (or both). It cannot be used in the middle.
+The wildcard "\*Python" selects all jobs ending with "Python". The special character `*` can be used at the beginning or at the end of the expression (or both). It cannot be used in the middle.
 
 Here are the results of this GraphQL query:
 [source,json]
@@ -324,12 +326,12 @@ The complete list of filters is available in the GraphQL `Docs` section.
 
 After testing queries in the GraphQL Portal, you can use the scheduling-api REST interface to run these queries from any REST client.
 
-There are a few aspects to consider when running graphql queries from a REST client:
+Few aspects are to be considered when running graphql queries from a REST client:
 
- * The url of the graphql REST api is different: `http://your-server:8080/scheduling-api/v1/graphql` (_graphql_ instead of graphiql)
- * The REST request method is `POST`, its `Content-Type` is `application/json`
+ * The url of the GraphQL REST API is different: `http://your-server:8080/scheduling-api/v1/graphql` (_graphql_ instead of graphiql).
+ * The REST request method must be `POST` and its `Content-Type` be `application/json`.
  * It requires in the header section, a `sessionid` retrieved from a login to the ProActive scheduler REST API.
- * The query itself is given as a string value of the `"query"` attribute inside the json body content. This value must be *escaped* to be a valid json. You can use, for example, online tools to escape the query as a json string.
+ * The query itself is given as a string value of the `"query"` attribute inside the json body content. This value must be *escaped* to be a valid json. You can use, for example, online tools such as `https://codebeautify.org/json-escape-unescape` to escape the query as a json string.
 
 Here is an example of executing a GraphQL REST query using curl.
 
@@ -340,7 +342,7 @@ Here is an example of executing a GraphQL REST query using curl.
 sessionid=$(curl -d "username=mylogin&password=mypassword" http://try.activeeon.com:8080/rest/scheduler/login)
 ----
 
- * Second we use an online json escape tool to produce the query parameter.
+ * Second, we use a json escape tool to produce the query parameter.
 +
 [source,graphql]
 ----
