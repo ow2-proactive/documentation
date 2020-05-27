@@ -325,6 +325,8 @@ The following workflows represent some machine learning and deep learning algori
 
 *Multiple SVM Models:* train multiple types of SVMs models that can be optimized using AutoML.
 
+*Text_Generation:* train a simple Long Short-Term Memory (LSTM) to learn sequences of characters from 'The Alchemist' book. It's a novel by Brazilian author Paulo Coelho that was first published in 1988.
+
 === Objective Function Examples
 
 The following workflows represent some mathematical functions that can be optimized by the AutoML tuners.
@@ -1651,7 +1653,7 @@ NOTE: Instead of training a model from scratch, a pre-trained sentiment analysis
 
 *Train_Image_Object_Detection:* trains objects using YOLOv3 model on COCO dataset proposed by Microsoft Research. 
 
-*Deep_Model_Explainability:* explains a deep learning model using GradientExplainer.
+*Deep_Model_Explainability:* explains a ResNet-18 model using GradientExplainer.
 
 *Search_Train_Image_Classification:* queries images from a search engine (Bing or DuckDuckGo) and trains a model to classify them.
 
@@ -1659,15 +1661,15 @@ NOTE: Instead of training a model from scratch, a pre-trained sentiment analysis
 
 This section presents custom AI workflows using tasks available on the `deep-learning` bucket. Such tasks enable you to test your own AI models by a simple drag and drop of custom AI task.
 
-*Image_Classification:* predicts a classification model using ResNet_18 network on https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/ants_vs_bees.zip[Ants_vs_Bees Dataset^]. The pre-trained image classification model which is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_resnet18.zip[link^].
+*Image_Classification:* predicts a classification model using ResNet_18 network on https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/ants_vs_bees.zip[Ants_vs_Bees Dataset^]. The pre-trained image classification model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_resnet18.zip[link^].
 
 *Fake_Celebrity_Faces_Generation:* generates a wild diversity of fake faces using a GAN model that was trained based on thousands of real celebrity photos. The pre-trained GAN model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/Epoch+018.pt[link^].
 
-*Image_Segmentation:* predicts a segmentation model using SegNet network on http://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]. The pre-trained image segmentation model which is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_segnet.zip[link^].
+*Image_Segmentation:* predicts a segmentation model using SegNet network on http://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]. The pre-trained image segmentation model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_segnet.zip[link^].
 
 *Image_Object_Detection:* detects objects using a pre-trained YOLOv3 model on COCO dataset proposed by Microsoft Research. The pre-trained model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/yolo3_coco.zip[link^].
 
-*Search_Classify_Images:* queries images into search engine (Bing or DuckDuckGo) and predicts a model to classify rocket_vs_plane images. The pre-trained image classiffication model which is available on this https://activeeon-public.s3.eu-west-2.amazonaws.com/models/search_image_model.zip[link^].
+*Search_Classify_Images:* queries images into search engine (Bing or DuckDuckGo) and predicts a model to classify rocket_vs_plane images. The pre-trained image classiffication model is available on this https://activeeon-public.s3.eu-west-2.amazonaws.com/models/search_image_model.zip[link^].
 
 WARNING: It is recommended to use an enabled-GPU node to run the deep learning tasks.
 
@@ -4083,6 +4085,7 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 
 NOTE: Shap uses GradientExplainer to explain a deep learning model. More information about this library can be found https://shap.readthedocs.io/en/latest/index.html?highlight=hap_values#shap.DeepExplainer.shap_values[here^] or on GitHub repository https://github.com/slundberg/shap[here^].
 
+NOTE: This task requires too much memory. You may receive an error message if you don't have enough memory (RAM).
 
 === Data Visualization Bucket
 *Visdom Bucket* integrates generic tasks that can be easily used to broadcast visualizations of the analytic results provided by ML tasks. These visualization are created, organized, and shared using https://github.com/facebookresearch/visdom[Visdom^], a flexible tool proposed by Facebook Research.
@@ -4186,7 +4189,7 @@ image::Fetch_Satellite_Images.png[align=center]
 |===
 | *Variable name* | *Description* | *Type*
 | `SEARCH_ENGINE`
-| Defines a host site to search and download satellite images.
+| Defines an engine to search and download satellite images.
 | List [Peps, Copernicus, All] (default=Peps)
 | `OUTPUT_PATH`
 | Specifies the path where the data should be downloaded.
