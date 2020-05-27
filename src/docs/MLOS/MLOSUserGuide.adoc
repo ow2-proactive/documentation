@@ -4085,6 +4085,7 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 
 NOTE: Shap uses GradientExplainer to explain a deep learning model. More information about this library can be found https://shap.readthedocs.io/en/latest/index.html?highlight=hap_values#shap.DeepExplainer.shap_values[here^] or on GitHub repository https://github.com/slundberg/shap[here^].
 
+NOTE: This task requires too much memory. You may receive an error message if you don't have enough memory (RAM).
 
 === Data Visualization Bucket
 *Visdom Bucket* integrates generic tasks that can be easily used to broadcast visualizations of the analytic results provided by ML tasks. These visualization are created, organized, and shared using https://github.com/facebookresearch/visdom[Visdom^], a flexible tool proposed by Facebook Research.
