@@ -308,15 +308,15 @@ line tools>>. For advanced users we also expose REST and JAVA APIs.
 TIP: During the submission, you will be able to edit <<_workflow_variables>>, so you can effectively use
 them to parameterize workflow execution and use workflows as <<_templating,templates>>.
 
-[[_statuses]]
-==== Job & Task statuses
+[[_status]]
+==== Job & Task status
 
-During their execution, jobs go through different statuses.
-The screenshot below shows Pending and Current Jobs statuses summary as seen in Workflow Automation portal.
+During their execution, jobs go through different status.
+The screenshot below shows Pending and Current Jobs status summary as seen in Workflow Automation portal.
 
 image::current_job_states.png[align="center", width=350]
 
-.Job Statuses for Pending and Current Jobs
+.Job Status for Pending and Current Jobs
 [cols="17%,17%,66%", options="header"]
 |===
 | Status | Name | Description
@@ -328,11 +328,11 @@ image::current_job_states.png[align="center", width=350]
 
 |===
 
-The screenshot below shows Past Jobs statuses summary as seen in Workflow Automation portal.
+The screenshot below shows Past Jobs status summary as seen in Workflow Automation portal.
 
 image::past_job_states.png[align="center", width=350, title-align="center"]
 
-.Job Statuses for Past Jobs
+.Job Status for Past Jobs
 [cols="17%,17%,66%", options="header"]
 |===
 | Status | Name | Description
@@ -346,9 +346,9 @@ There is no more executionOnFailure left for a task.
 |===
 
 
-Similarly to jobs, during their execution, tasks go through different statuses.
+Similarly to jobs, during their execution, tasks go through different status.
 
-.Task Statuses
+.Task Status
 [cols="17%,17%,66%", options="header"]
 |===
 | Status | Name | Description |

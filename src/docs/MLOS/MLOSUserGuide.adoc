@@ -743,7 +743,7 @@ The job search panel allows to select multi-value filters for the following job 
 
 - _Workflow Name(s)_: Jobs can be filtered by workflow name. Selecting/Typing one or more workflow names is provided by a built-in `auto-complete` feature that helps you search for workflows or buckets from the link:../user/ProActiveUserGuide.html#_catalog_portal[ProActive Catalog.]
 - _Project Name(s)_: You can also filter by one or more project names. You just have to specify the project names for the jobs you would like to analyze.
-- _Job Status(es)_: You can specify the state of jobs you are looking for. The possible job statuses are: `Pending`, `Running`, `Stalled`, `Paused`, `In_Error`, `Finished`, `Canceled`, `Failed`, and `Killed`. For more information about job statuses, check the documentation link:../user/ProActiveUserGuide.html#_statuses[here.] Multiple values are accepted as well.
+- _Job Status_: You can specify the state of jobs you are looking for. The possible job statuses are: `Pending`, `Running`, `Stalled`, `Paused`, `In_Error`, `Finished`, `Canceled`, `Failed`, and `Killed`. For more information about job statuses, check the documentation link:../user/ProActiveUserGuide.html#_status[here.] Multiple values are accepted as well.
 - _User(s)_: This filter allows to either select only the jobs of the connected/current user or to specify a list of users that have executed the jobs. By default, the toggle filter is activated to select only the user jobs.
 - _Submission Time_: From the dropdown list, users can select a submission time frame (e.g., yesterday, last week, this month, etc.), or choose custom dates.
 - _Variables and results_: It is possible to choose whether to display or not the workflow's variables and results. When deactivated, the charts related to variables and results evolution/correlation will not be displayed in the dashboard.
@@ -759,7 +759,7 @@ image::JA-search.png[align=center]
 As shown in the screenshot below, Job Analytics Portal provides a summary of the most important job execution metrics. For instance, the dashboard shows:
 
 - A first panel that displays the number of total jobs that correspond to the search query. It also shows the ratio of successful jobs over the total number, and the number of jobs that are in progress and not yet finished. Please note that the number of in-progress jobs corresponds to the moment when the search query is executed and it is not automatically refreshed.
-- A second summary panel that displays the number of jobs with issues. We distinguish two types of issues: jobs that are finished but have encountered issues during their execution and interrupted jobs that did not finish their execution and were stopped due to diverse causes, such as insufficient resources, manual interruption, etc. Interrupted jobs include four statuses: `In-Error`, `Failed`, `Canceled`, and `Killed`.
+- A second summary panel that displays the number of jobs with issues. We distinguish two types of issues: jobs that are finished but have encountered issues during their execution and interrupted jobs that did not finish their execution and were stopped due to diverse causes, such as insufficient resources, manual interruption, etc. Interrupted jobs include four status: `In-Error`, `Failed`, `Canceled`, and `Killed`.
 - The last metric gives an overview of the average duration of the selected jobs.
 
 image::JA-metrics.png[align=center]
