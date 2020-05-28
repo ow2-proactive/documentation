@@ -308,18 +308,18 @@ line tools>>. For advanced users we also expose REST and JAVA APIs.
 TIP: During the submission, you will be able to edit <<_workflow_variables>>, so you can effectively use
 them to parameterize workflow execution and use workflows as <<_templating,templates>>.
 
-[[_states]]
-==== Job & Task states
+[[_status]]
+==== Job & Task status
 
-During their execution, jobs go through different states.
-The screenshot below shows Pending and Current Jobs states summary as seen in Workflow Automation portal.
+During their execution, jobs go through different status.
+The screenshot below shows Pending and Current Jobs status summary as seen in Workflow Automation portal.
 
 image::current_job_states.png[align="center", width=350]
 
-.Job States for Pending and Current Jobs
+.Job Status for Pending and Current Jobs
 [cols="17%,17%,66%", options="header"]
 |===
-| State | Name | Description
+| Status | Name | Description
 | `PENDING` | Pending | The job is waiting to be scheduled. None of its tasks have been Running so far.
 | `RUNNING` | Running | The job is running. At least one of its task has been scheduled.
 | `STALLED` | Stalled | The job has been launched but no task is currently running.
@@ -328,14 +328,14 @@ image::current_job_states.png[align="center", width=350]
 
 |===
 
-The screenshot below shows Past Jobs states summary as seen in Workflow Automation portal.
+The screenshot below shows Past Jobs status summary as seen in Workflow Automation portal.
 
 image::past_job_states.png[align="center", width=350, title-align="center"]
 
-.Job States for Past Jobs
+.Job Status for Past Jobs
 [cols="17%,17%,66%", options="header"]
 |===
-| State | Name | Description
+| Status | Name | Description
 | `FINISHED` | Finished | The job is finished. Tasks are finished or faulty.
 | `CANCELED` | Cancelled | The job has been canceled because of an exception.
 This status is used when an exception is thrown by the user code of a task and when the user has asked to cancel the job on exception.
@@ -346,12 +346,12 @@ There is no more executionOnFailure left for a task.
 |===
 
 
-Similarly to jobs, during their execution, tasks go through different states.
+Similarly to jobs, during their execution, tasks go through different status.
 
-.Task States
+.Task Status
 [cols="17%,17%,66%", options="header"]
 |===
-| State | Name | Description |
+| Status | Name | Description |
  `ABORTED` | Aborted | The task has been aborted by an exception on an other task while the task is running. (job is cancelOnError=true).
  Can be also in this status if the job is killed while the concerned task was running. |
  `FAILED` | Resource down | The task is failed
@@ -409,7 +409,7 @@ To view the standard output or error logs associated with a job, select a job fr
 Click on _Streaming Output_ checkbox to auto-fetch logs for running tasks of the entire Job. The logs panel will be updated as soon as new log lines will be printed by this job. +
 You cannot select a specific Task in the streaming mode. If you activate streaming while some Tasks are already finished, you will get the logs of those Tasks as well. +
 Click on _Finished Tasks Output_ button to retrieve logs for already finished tasks. For all the finished Tasks within the Job, or for the selected Task. +
-The command does work when Job is still in Running state, as well as when Job is Finished. +
+The command does work when Job is still in Running status, as well as when Job is Finished. +
 Logs are limited to 1024 lines. Should your job logs be longer, you can select the _Full logs (download)_ option from the drop down list.
 
 - `Task standard output/error logs`: +
@@ -1531,7 +1531,7 @@ If automatic restarts does not fix errors, the Scheduler applies one of the foll
 
 * *Ignore error and continue Job execution* - each *In-Error* Task inside the Job transits to *Faulty* and its successor Tasks are executed.
 
-* *Only suspend dependencies of In-Error Tasks* - successor Tasks of each *In-Error* Task are *Pending* until errors are fixed. The Job is in *In-Error* state.
+* *Only suspend dependencies of In-Error Tasks* - successor Tasks of each *In-Error* Task are *Pending* until errors are fixed. The Job is in *In-Error* status.
                                                The user can restart *In-Error* Tasks as many times as he wishes.
 
 
@@ -1608,7 +1608,7 @@ You can find a complete example running a simple task every minutes in this link
  However the user can specify a start time for the first iteration using `START_AT` <<_generic_information,generic information>>.
  Its value should be https://en.wikipedia.org/wiki/ISO_8601[ISO 8601^] compliant.
 
-* Each iteration yields one or more task results and the user can query the job state and task states to
+* Each iteration yields one or more task results and the user can query the job status and task status to
 retrieve information of each iteration.
 
 * It is assumed that execution time of each iteration is less that time gap specified by the cron expression.
@@ -1619,7 +1619,7 @@ retrieve information of each iteration.
 * If the execution of the task defining the loop (where the <controlFlow> block is defined) fails,
  the cron execution is terminated.
 
-* ProActive Scheduler executes any cron task indefinitely. Therefore the state of ProActive Job will remain
+* ProActive Scheduler executes any cron task indefinitely. Therefore the status of ProActive Job will remain
  `RUNNING` unless the cron task execution terminates either by the user (for instance by killing the job
   or the task) or due an error in the task execution.
 
@@ -2282,7 +2282,7 @@ Task synchronization is traditionally handled by the ProActive Scheduler through
 
 In some cases, *static task dependencies* are not enough to synchronize tasks execution.
 
-This is the case when a task depends on the state of another task executed in a different branch of a workflow, a sibling task or even another job/workflow.
+This is the case when a task depends on the status of another task executed in a different branch of a workflow, a sibling task or even another job/workflow.
 
 For example, let's suppose workflow _A_ contains a single task _A_1_ starting an apache server. Task _A_1_ starts the server and remains alive while the server is up.
 When workflow _A_ is killed, task _A_1_ stops the Apache server.
