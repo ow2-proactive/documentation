@@ -107,6 +107,7 @@ All SQL connector workflows are composed of two tasks:
 * Import_from_<Database>: Import data from an SQL database server to be processed in the same workflow or just to be stored as a csv file in the data space.
 * Export_to_<Database>: Export data from the data space (global or user space) to an SQL database server.
 
+where Database ∈ {MySQL, Oracle, PostgreSQL, Greenplum and SQL Server}
 
 *Variables:*
 
@@ -751,8 +752,12 @@ Azure Blob Storage connector tasks require your azure storage account and accoun
 
 ==== Snowflake
 
-The Snowflake data connector allows to import and export structured data as well as semi-structured data (JSON, Avro, XML) from and to a Snowflake cloud Data Warehouse.
-The Snowflake connector workflow is composed of two tasks: an import task and an export task.
+The Snowflake data connector allows to import and export structured as well as semi-structured data (JSON, Avro, XML) from and to a Snowflake cloud Data Warehouse.
+The Snowflake connector workflow is composed of two tasks:
+
+Import_from_Snowflake: Import data from a Snowflake cloud Data Warehouse to be processed in the same workflow or just to be stored as a csv file in the data space.
+
+Export_to_Snowflake: Export data from the data space (global or user space) to a Snowflake cloud Data Warehouse.
 
 *Variables:*
 
