@@ -1608,7 +1608,7 @@ You can find a complete example running a simple task every minutes in this link
  However the user can specify a start time for the first iteration using `START_AT` <<_generic_information,generic information>>.
  Its value should be https://en.wikipedia.org/wiki/ISO_8601[ISO 8601^] compliant.
 
-* Each iteration yields one or more task results and the user can query the job status and task statuses to
+* Each iteration yields one or more task results and the user can query the job status and task status to
 retrieve information of each iteration.
 
 * It is assumed that execution time of each iteration is less that time gap specified by the cron expression.
