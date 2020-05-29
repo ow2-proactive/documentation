@@ -40,6 +40,8 @@ NOTE: Please note that users are free to define their own custom States (e.g. RU
 Endpoints::
 Endpoints are a list of (Key,Value) defined in the Variables e.g. [(Swarm, <smarmendpoint>), (HDFS, <hdfs-endpoint>), (Spark, <spark-endpoint>)]. The endpoint URL should contain the protocol, e.g. www.activeeon.com will not work, but https://www.activeeon.com will.
 
+NOTE: To run multiple PCA services that share an endpoint, the same ENDPOINT_ID value should be given to all of the PCA services that, when started, require this variable.
+
 [[_definition_Service_Name_Infrastructure_Name]]
 Service_Name, Infrastructure_Name::
 Service_Name, Infrastructure_Name are Service specific. If a Service wants/needs them, they can be stored in the data associated to the service to give a name to the service, to identify the infrastructure where the Service Instance will be deployed.
