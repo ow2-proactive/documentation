@@ -772,9 +772,9 @@ You can opt to place this file in `$PROACTIVE_HOME/config/authentication/azure.c
 * *_Shared Image Gallery:_* The prefix `gallery#` allows you to use images from an existing Azure https://docs.microsoft.com/en-us/azure/virtual-machines/linux/shared-image-galleries[Shared Image Gallery]. Append the name of your Resource Group, your Gallery and your Image as `resourceGroup:gallery:image`. Optionally, you can specify a version too (`:version`); if no version is given, the latest image version will be used by ProActive. For example: +
 `gallery#proactive-rg:activeeon-gallery:my-image` +
 `gallery#myRG:myGallery:myImage:1.0`
-** *_Shared Image Gallery from non-default subscription_* It is possible to use images from an existing Azure https://docs.microsoft.com/en-us/azure/virtual-machines/linux/shared-image-galleries[Shared Image Gallery] from the specific (different from default) subscription. +
-The non-default subscription should be accessible with your Azure Credentials provided in the *azureCredentialFile* configuration. +
-In case of retrieving an image from the specific subscription, the prefix `sub#` should be added and the _subscriptionId_ should be provided in the next format: `gallery#sub#subsriptionId:resourceGroup:gallery:image[:version]`
+** *_Shared Image Gallery from non-default subscription_* You can use images from an existing Azure https://docs.microsoft.com/en-us/azure/virtual-machines/linux/shared-image-galleries[Shared Image Gallery] by manually specifying the subscription. +
+The prefix `sub#` should be added and the _subscriptionId_ should be provided in the next format: `gallery#sub#subsriptionId:resourceGroup:gallery:image[:version]`  +
+The non-default subscription must be accessible with your Azure Credentials provided in the *azureCredentialFile* configuration.
 * *_Custom Image:_* ProActive allows you to use a https://docs.microsoft.com/en-us/azure/virtual-machines/linux/tutorial-custom-images[custom image] to create Scale Sets. Use the prefix `custom#` followed by the resource group and the custom image name. For example: +
 `custom#proactive-rg:custom-ubuntu`
 
