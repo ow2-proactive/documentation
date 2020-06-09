@@ -4074,7 +4074,7 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | Choose some images to explain.
 | List (default=1, 4, 6, 12)
 | `FEATURE_LAYER`
-| Choose a layer the explain
+| Choose the layer to explain.
 | String (default=features[7] for a VGG16 model). For example, you can use features[0] for AlexNet, layer1[0].conv1 for ResNet, etc.
 | `RANKED_OUTPUTS`
 | Explain many of the top model outputs determined by output rank order.
