@@ -4071,8 +4071,8 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | Number of samples on which to explain the model's output.
 | Integer (default=2)
 | `IMG_LIST`
-| Choice two images to explain.
-| Integer (default=1)
+| Choice some images to explain.
+| List (default=1, 4, 6, 12)
 | `FEATURE_LAYER`
 | Choice the layer to explain
 | String (default=features[7] for a VGG16 model). For example, you can use features[0] for AlexNet, layer1[0].conv1 for ResNet, etc.
