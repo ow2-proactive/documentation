@@ -851,7 +851,7 @@ resultMetadata.put("mymetadata", "myvalue")
 println(results[0].getMetadata());
 ----
 
-It is up to the user code to decide the metadata semantics. However, some specific metadata can have a meaning when downloading or previewing results from the *Scheduler portal*
+It is the user code which specifies the metadata semantics. However, some specific metadata can have a meaning when downloading or previewing results from the *Scheduler portal*
 
 - *file.name:* the name of the file, including the extension, which will be used when storing the result in binary format.
 +
@@ -891,7 +891,7 @@ NOTE: The specific result metadata described above can also be set using <<_gene
 
 Job Results are composed of two elements: *Result List* and *Result Map*.
 Each task can contribute to both.
-Once the job is finished, you can download/visualize Job Results from the Scheduler portal as shown in screenshot below.
+Once the job is finished, the user can download/visualize Job Results from the Scheduler portal as shown in screenshot below.
 The label in *Result List* corresponds to the task name that generated the value.
 
 

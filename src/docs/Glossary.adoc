@@ -37,7 +37,7 @@ Workflow Studio:: ProActive component that provides a web interface for designin
 Job Analytics:: ProActive component that provides an overview of executed workflows along with their input variables and results.
 
 [[_glossary_notification_service]]
-Notification Service:: ProActive component that allows a user or a group of users to subscribe to different types of notifications (web, email, sms or third-party notification tool) when certain event(s) (In-Error, Finished, etc) occur during jobs execution.
+Notification Service:: ProActive component that allows a user or a group of users to subscribe to different types of notifications (web, email, sms or a third-party notification) when certain event(s) occur (e.g., job In-Error state, job in Finished state, scheduler in Paused state, etc.).
 
 
 [[_glossary_cloud_automation_service]]

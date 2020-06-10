@@ -9,7 +9,7 @@ Generic information semantics differ from <<_job_variables>> semantics in the fo
 * Generic information are used in general internally by the scheduler, for example to provide information to the scheduling loop on how to handle the task. An example of such generic information is the _START_AT_ info used inside <<_cron_tasks>>.
 * Generic information can use in their definition job/task variables patterns, pattern replacements can be done at execution time when using task generic information.
 
-Example of generic information definition:
+Example of a generic information definition:
 
 For example:
 [source, xml]
@@ -25,7 +25,7 @@ For example:
 =====  Icon management variables
 
 There are specific variables that are dedicated to icon management.
-The icon for Job level is specified inside Workflow Generic Information -`workflow.icon`. The task related icon is described inside Task Generic Information `task.icon`.
+The icon of a workflow is specified inside Workflow Generic Information using the keyword `workflow.icon`.
+The icon of a task is specified inside Task Generic Information using the keyword `task.icon`.
 
-Job and task icons should be related to their specific nature.
-These variables are used in the ProActive portals for correct visualization of workflows with icons.
+These generic information are used in ProActive portals for proper visualization of workflow and task icons
