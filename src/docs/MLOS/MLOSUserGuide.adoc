@@ -82,7 +82,8 @@ image::manage_canvas.gif[100000,2000]
 
 To upload data into the Workflow, you need to use a dataset stored in a CSV file.
 
-A. Once your dataset has been converted to *CSV* format, upload it into a cloud storage service for example https://aws.amazon.com/s3‎[Amazon S3^]. For this tutorial, we will use Boston house prices dataset available on this link:
+A. Once dataset has been converted to *CSV* format, upload it into a cloud storage service for example https://aws.amazon.com/s3[Amazon S3^].
+For this tutorial, we will use Boston house prices dataset available on this link:
 https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/boston-houses-prices.csv
 
 B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the ProActive Workflow Studio.
@@ -1459,19 +1460,19 @@ image::direct_submit_and_see_from_jupyter.png[Directly in Jupyter: Submit, See y
 To show the resource manager portal related to the host you are connected to, just run:
 
 ```python
-#%show_resource_manager([height=HEIGHT_VALUE, width=WIDTH_VALUE])
+#%show_resource_manager([host=YOUR_HOST], [height=HEIGHT_VALUE], [width=WIDTH_VALUE])
 ```
 
 For the related scheduling portal:
 
 ```python
-#%show_scheduling_portal([height=HEIGHT_VALUE, width=WIDTH_VALUE])
+#%show_scheduling_portal([host=YOUR_HOST], [height=HEIGHT_VALUE], [width=WIDTH_VALUE])
 ```
 
 And, for the related workflow automation:
 
 ```python
-#%show_workflow_automation([height=HEIGHT_VALUE, width=WIDTH_VALUE])
+#%show_workflow_automation([host=YOUR_HOST], [height=HEIGHT_VALUE], [width=WIDTH_VALUE])
 ```
 
 NOTE: The parameters `height` and `width` allow the user to adjust the size of the window inside the notebook.
