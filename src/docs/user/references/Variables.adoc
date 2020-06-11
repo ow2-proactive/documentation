@@ -182,40 +182,6 @@ PA:SPEL( (variables['var'] = T(javax.xml.parsers.DocumentBuilderFactory).newInst
 Note that the SpEL expression must always return a boolean value, this is why in this last expression we use the `instanceof` keyword to not return a string value.
 
 
-
-===== Generic Information
-
-In addition to variables, another key/value structure can be accessed inside a script: *_Generic Information_*.
-
-Generic information semantics differ from <<_job_variables>> semantics in the following way:
-
- * Generic information can be accessed inside a script, but cannot be modified.
- * Generic information can be defined at *job level* or at *task level*. If the same generic information is defined at job level and at task level, the latter value takes precedence inside the task scope.
- * Generic information cannot be used directly inside the workflow with the syntax ${} (See  <<_job_variables>>).
- * Generic information are used in general internally by the scheduler, for example to provide information to the scheduling loop on how to handle the task. An example of such generic information is the _START_AT_ info used inside <<_cron_tasks>>.
- * Generic information can use in their definition job/task variables patterns, pattern replacements can be done at execution time when using task generic information.
-
-Example of generic information definition:
-
-For example:
-[source, xml]
-----
-<task ... >
-    <genericInformation>
-        <info name="ginfo" value="${test}"/>
-    </genericInformation>
-    ...
-</task>
-----
-
-=====  Icon management variables
-
-There are specific variables that are dedicated to icon management.
-The icon for Job level is specified inside Workflow Generic Information -`workflow.icon`. The task related icon is described inside Task Generic Information `task.icon`.
-
-Job and task icons should be related to their specific nature.
-These variables are used in the ProActive portals for correct visualization of workflows with icons.
-
 [[_dynamic_variables]]
 
 ==== Dynamic Variables
