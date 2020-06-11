@@ -1496,25 +1496,12 @@ set *runAsMe=true* in the task.
 TIP: You can now use <<_third_party_credentials,third party credentials>> to store the SSH key with the special entry named *SSH_PRIVATE_KEY*.
 
 [[_multi_node_task]]
-=== Reserve more than one node for a task
+=== Reserve more than one node for a task execution
 
-To create a <<_mpi_application,multi-nodes>> task execution often used for MPI applications you need to add a *parallel environment*
-to the task. Parallel environment describes how many nodes are needed for a task as well as where these nodes should be
-located. For example if you'd like to run 4 processes in parallel it a scope of one task you should specify it in your task
-
-[source, xml]
-----
-<parallel numberOfNodes="4"/>
-----
-
-NOTE: For instance if 4 nodes are running on a given note (often because the host has 4 cores), then
-a multi-nodes task that requires 4 nodes might select the 4 workers on this host.
-
-==== Defining a Topology for Multi-Nodes Tasks
-
-In addition to the number of ProActive Nodes you can specify the *nodes network topology*, e.g
+To create a <<_mpi_application,multi-nodes>> execution (often used for MPI applications), you need to add a *parallel environment*
+to the task definition. Parallel environment describes how many nodes are needed for a task execution as well as where these nodes should be
+located. Thus, in addition to the number of ProActive Nodes, you can specify the *nodes network topology*, e.g
 the set of nodes within some latency threshold, nodes on the same host and many more.
-
 
 Here is the list of topologies we support:
 
@@ -1525,6 +1512,20 @@ Here is the list of topologies we support:
 * *Single Host Exclusive* - the set of nodes of a single host exclusively. The host with selected nodes will be reserved for the user.
 * *Multiple Hosts Exclusive* - the set of nodes filled in multiple hosts. Hosts with selected nodes will be reserved for the user.
 * *Different Hosts Exclusive* - the set of nodes each from a different host. All hosts with selected nodes will be reserved for the user.
+
+For instance, if a user wants to run 4 processes in parallel inside the scope of one task and in the same compute host, then she/he should specify that in the *Multi-Nodes Execution* section as shown in the following screenshot.
+
+image::multi-nodes-execution.png[align=center, width=320, height=192]
+
+In the Job xml schema, the multi-nodes execution is available at the parallel tag
+[source, xml]
+----
+<parallel numberOfNodes="4">
+        <topology>
+          <singleHostExclusive/>
+        </topology>
+</parallel>
+----
 
 === Handling failures
 
@@ -1725,7 +1726,7 @@ The `SubmitJobNoWait` or `SubmitJobAndWait` templates behavior is different in t
 
 === Control and Validation
 
-In order to better control your workflows, two ProActive Studio templates *Web Validation* and *Email Validation* are provided under the *Manuals* menu. These templates aim at validating part of your workflows manually.
+In order to better control your workflows, two ProActive Studio templates *Web Validation* and *Email Validation* are provided under the *Manuals* menu. These templates aim at the validating part of your workflows manually.
 It allows to suspend the execution of the validation task dependencies and set the job as *Paused*. You can put your validation description message under the *MESSAGE* variable in *Web Validation* template, and under *notification_message* variable in *Email Validation* template. Three options are provided, the *Yes* option indicates that you want
 to validate the workflow and continue the execution of the rest tasks; the *Maybe* option means that you do not know what to do for the moment; the *No* option denotes that you do not want to validate the workflow, and the remaining of the workflow will be paused.
 
