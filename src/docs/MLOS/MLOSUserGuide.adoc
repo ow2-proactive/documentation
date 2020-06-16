@@ -65,16 +65,13 @@ A. Open +++<a class="studioUrl" href="/studio" target="_blank">ProActive Workflo
 
 B. Create a new workflow.
 
-C. Fill the Workflow `General Parameters`.
+C. Change palette preset to `Machine Learning`.
 
-D. Click on `Catalog` menu then `Set Bucket as Main Catalog Menu` and select `machine-learning` bucket.
-This can also be achieved by adding `/templates/machine-learning` at the end of the URL of the proActive workflow studio.
-
-E. Click on `Catalog` menu then `Add Bucket as Extra Catalog Menu` and select `data-visualization` bucket.
+D. Click on `machine-learning` catalog and pin it open, and same for the `data-visualization` catalog.
 
 F. Organize your canvas.
 
-NOTE: Set Bucket as Main Catalog Menu allows the user to change the bucket used to get workflows from the Catalog in the studio. By selecting a bucket, the user can change the content of the main Catalog menu (named as the current bucket) to get workflows from another bucket as templates.
+NOTE: Change palette preset allows the user to visualise different set of catalogs in the studio. 
 
 image::manage_canvas.gif[100000,2000]
 
