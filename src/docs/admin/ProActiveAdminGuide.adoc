@@ -2250,6 +2250,9 @@ For more information, see https://github.com/ow2-proactive/scheduling/blob/maste
 === Catalog
 include::./Catalog.adoc[]
 
+=== Notification service
+include::./references/NotificationServiceReference.adoc[]
+
 [[_script_engines]]
 == Configure script engines
 
