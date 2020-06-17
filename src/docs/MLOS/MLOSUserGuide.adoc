@@ -1445,6 +1445,8 @@ Finally, the  `#%print_job_output()` pragma allows to print all job outputs, by 
 #%print_job_output([job_id=JOB_ID], [job_name=JOB_NAME])
 ```
 
+NOTE: If neither `job_name` nor the `job_id` are provided, the last submitted job is selected by default.
+
 === Display and use ActiveEon Portals directly in Jupyter
 
 Finally, to have the hand on more parameters and features, the user should use ActiveEon Studio portals.
