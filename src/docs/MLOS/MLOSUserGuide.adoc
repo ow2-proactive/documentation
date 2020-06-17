@@ -1534,11 +1534,13 @@ A. Open +++<a class="studioUrl" href="/studio" target="_blank">[ProActive Workfl
 
 B. Create a new workflow.
 
-C. Click on `Catalog` menu then `Add Bucket as Extra Catalog Menu` and select `machine-learning-workflows` bucket.
+C. Change palette preset to `Machine Learning`.
 
-D. Open this added extra catalog menu and drag and drop the workflow example of your choice.
+D. Click on `machine-learning` catalog and pin it open.
 
-E. Execute the chosen workflow, track its progress and preview its results.
+E. Drag and drop the workflow example of your choice.
+
+F. Execute the chosen workflow, track its progress and preview its results.
 
 More details about these workflows are available in this in link:https://www.activeeon.com/resources/automated-machine-learning-activeeon.pdf[ActiveEon's Machine Learning Documentation]
 
