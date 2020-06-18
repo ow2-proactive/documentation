@@ -120,7 +120,7 @@ println "Reading the notification message: " + MESSAGE
 
 In the following table is specified if fields have a value regarding the notification type
 
-.Bindings passed to script (Y = yes , N = No)
+.Bindings passed to script (Y = Yes , N = No)
 [cols="<,^,^,^,^"]
 |=====
 | *Field name* | *Job* | *Task* | *Scheduler* | *Job planner*
@@ -165,11 +165,6 @@ In the following table is specified if fields have a value regarding the notific
 | Y
 | Y
 | JOB_OWNER
-| Y
-| Y
-| N
-| Y
-| BUCKET_NAME
 | Y
 | Y
 | N
