@@ -69,7 +69,7 @@ C. Change palette preset to `Machine Learning`.
 
 D. Click on `machine-learning` catalog and pin it open, and same for the `data-visualization` catalog.
 
-F. Organize your canvas.
+E. Organize your canvas.
 
 NOTE: Change palette preset allows the user to visualise different set of catalogs in the studio. 
 
@@ -249,7 +249,7 @@ In the following, we briefly describe the different tuners proposed by the Multi
     - *MOCMAES search* is a multi-objective algorithm optimizing multiple tradeoffs simultaneously.
       To do that, MOCMAES employs a number of CMAES algorithms.
 
-===== Multi_Tuners_AutoML_V1
+==== Multi_Tuners_AutoML_V1
 
 *Workflow Overview:* generates at first the chosen values of hyperparameters for each trial. Then, it executes the different trials in parallel. Finally, it plots the different results using Visdom.
 
@@ -265,7 +265,7 @@ In the following, we briefly describe the different tuners proposed by the Multi
 |===
 
 image::MLOS-AutoML-V1.png[align=center]
-===== Multi_Tuners_AutoML_V2
+==== Multi_Tuners_AutoML_V2
 
 *Workflow Overview:* considers two execution pipelines (parallel and sequential).
 For all the tuning algorithms except the Bayesian one, the parallel pipeline is executed similar as `Multi_Tuners_AutoML_V1`. For the Bayesian algorithm, the sequential one is executed. This pipeline both generates the hyperparameters' values, and executes the associated trials sequentially.
@@ -284,7 +284,7 @@ The results can be visualized using Visdom.
 
 image::MLOS-AutoML-V2.png[align=center]
 
-===== Multi_Tuners_AutoML_V3
+==== Multi_Tuners_AutoML_V3
 *Workflow Overview:* is similar to `Multi_Tuners_AutoML_V2`. However, this version uses `Tensorboard` to visualize the different results.
 
 *Specific variables:*
