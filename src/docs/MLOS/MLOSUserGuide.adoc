@@ -65,16 +65,13 @@ A. Open +++<a class="studioUrl" href="/studio" target="_blank">ProActive Workflo
 
 B. Create a new workflow.
 
-C. Fill the Workflow `General Parameters`.
+C. Change palette preset to `Machine Learning`.
 
-D. Click on `Catalog` menu then `Set Bucket as Main Catalog Menu` and select `machine-learning` bucket.
-This can also be achieved by adding `/templates/machine-learning` at the end of the URL of the proActive workflow studio.
-
-E. Click on `Catalog` menu then `Add Bucket as Extra Catalog Menu` and select `data-visualization` bucket.
+D. Click on `machine-learning` catalog and pin it open, and same for the `data-visualization` catalog.
 
 F. Organize your canvas.
 
-NOTE: Set Bucket as Main Catalog Menu allows the user to change the bucket used to get workflows from the Catalog in the studio. By selecting a bucket, the user can change the content of the main Catalog menu (named as the current bucket) to get workflows from another bucket as templates.
+NOTE: Change palette preset allows the user to visualise different set of catalogs in the studio. 
 
 image::manage_canvas.gif[100000,2000]
 
@@ -82,7 +79,8 @@ image::manage_canvas.gif[100000,2000]
 
 To upload data into the Workflow, you need to use a dataset stored in a CSV file.
 
-A. Once your dataset has been converted to *CSV* format, upload it into a cloud storage service for example https://aws.amazon.com/s3‎[Amazon S3^]. For this tutorial, we will use Boston house prices dataset available on this link:
+A. Once dataset has been converted to *CSV* format, upload it into a cloud storage service for example https://aws.amazon.com/s3[Amazon S3^].
+For this tutorial, we will use Boston house prices dataset available on this link:
 https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/boston-houses-prices.csv
 
 B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the ProActive Workflow Studio.
@@ -333,21 +331,21 @@ The following workflows represent some mathematical functions that can be optimi
 
 *Himmelblau_Function:* is a multi-modal function, used to test the performance of optimization algorithms.
 
-== Machine Learning Model as a Service (ML MaaS)
+== Machine Learning as a Service (MLaaS)
 
 Once a predictive model is built, tested and validated, you can easily use it in real world production pipelines by deploying it as a REST Web Service.
 This will be particularly useful for engineering or business teams that want to take advantage of this model.
 
-The life cycle of any ML MaaS instance (i.e., from starting the generic service instance, deploying an AI specific model to pausing or deleting the instance) can be managed in three different ways in MLOS :
+The life cycle of any MLaaS instance (i.e., from starting the generic service instance, deploying an AI specific model to pausing or deleting the instance) can be managed in three different ways in MLOS :
 
 - Using the *Studio Portal* and more specifically the bucket *model-as-a-service* where specific generic tasks are provided to process all the possible actions (i.e., Model_Service_Start, Deploy_AI_Model, Call_Prediction_Service, Model_Service_Actions[Finish/Pause/Resume]).
 These tasks can be easily integrated to your AI pipelines/workflows as you can see in this <<Deployment Pipeline Example>>.
-- Using the *Cloud Automation Portal* by executing the different actions associated to ML MaaS (i.e., Model_Service, Deploy_AI_Model, Finish_Model_Service, Pause_Model_Service, Resume_Model_Service)
-- Using the *Swagger UI* which is accessible once the ML MaaS instance is up and running.
+- Using the *Cloud Automation Portal* by executing the different actions associated to MLaaS (i.e., Model_Service, Deploy_AI_Model, Finish_Model_Service, Pause_Model_Service, Resume_Model_Service)
+- Using the *Swagger UI* which is accessible once the MLaaS instance is up and running.
 
-The management of the life cycle of ML MaaS will be detailed in the next sub-sections.
+The management of the life cycle of MLaaS will be detailed in the next sub-sections.
 
-Once a ML MaaS instance is up and running, it could be used for:
+Once a MLaaS instance is up and running, it could be used for:
 
 - *AI Model Deployment or Update*: the user has to provide a valid specific AI Model identifier in order to deploy the model of his/her choice.
 
@@ -355,7 +353,7 @@ Once a ML MaaS instance is up and running, it could be used for:
 
 - *Deploy a New Specific AI Model*: the running generic AI model can be used to deploy a new specific AI model.
 
-Using ML MaaS, you can easily deploy and use any machine learning model as a REST Web Service on a physical or a virtual compute host on which there is an available Proactive Node. Going through the Proactive Scheduler,
+Using MLaaS, you can easily deploy and use any machine learning model as a REST Web Service on a physical or a virtual compute host on which there is an available Proactive Node. Going through the Proactive Scheduler,
 you can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and eventually, deploy a Model-Service on that specific node.
 
 The following deployment steps are similar wherever you need to deploy and use your model:
@@ -380,7 +378,7 @@ Search for `Model_Service` in Services Workflows List.
 
 Set the following variables:
 
-[#table_maas]
+[#table_mlaas]
 .Model_Service variables
 [cols="2,5,2"]
 |===
@@ -531,7 +529,7 @@ Execute the Workflow and set the different workflow's variables as follows:
 | *Variable name* | *Description* | *Type*
 3+^|*Workflow variables*
 | `SERVICE_TOKEN`
-| A valid token generated by the MaaS Service for user authentication.
+| A valid token generated by the MLaaS Service for user authentication.
 | String
 | `DOCKER_ENABLED`
 |  If True, the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
@@ -588,7 +586,7 @@ Execute the Workflow and set the different workflow's variables as follows:
 | *Variable name* | *Description* | *Type*
 3+^|*Workflow variables*
 | `SERVICE_TOKEN`
-| A valid token generated by the MaaS Service for user authentication.
+| A valid token generated by the MLaaS Service for user authentication.
 | String
 | `DOCKER_ENABLED`
 |  If True, the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
@@ -610,7 +608,7 @@ Execute the Workflow and set the different workflow's variables as follows:
 
 === Delete/Finish the Service
 
-There are two ways to delete a ML MaaS instance using MLOS:
+There are two ways to delete a MLaaS instance using MLOS:
 
 -  <<Via Cloud Automation Portal>>
 -  <<Via Studio Portal>>
@@ -1447,6 +1445,8 @@ Finally, the  `#%print_job_output()` pragma allows to print all job outputs, by 
 #%print_job_output([job_id=JOB_ID], [job_name=JOB_NAME])
 ```
 
+NOTE: If neither `job_name` nor the `job_id` are provided, the last submitted job is selected by default.
+
 === Display and use ActiveEon Portals directly in Jupyter
 
 Finally, to have the hand on more parameters and features, the user should use ActiveEon Studio portals.
@@ -1459,19 +1459,19 @@ image::direct_submit_and_see_from_jupyter.png[Directly in Jupyter: Submit, See y
 To show the resource manager portal related to the host you are connected to, just run:
 
 ```python
-#%show_resource_manager([height=HEIGHT_VALUE, width=WIDTH_VALUE])
+#%show_resource_manager([host=YOUR_HOST], [height=HEIGHT_VALUE], [width=WIDTH_VALUE])
 ```
 
 For the related scheduling portal:
 
 ```python
-#%show_scheduling_portal([height=HEIGHT_VALUE, width=WIDTH_VALUE])
+#%show_scheduling_portal([host=YOUR_HOST], [height=HEIGHT_VALUE], [width=WIDTH_VALUE])
 ```
 
 And, for the related workflow automation:
 
 ```python
-#%show_workflow_automation([height=HEIGHT_VALUE, width=WIDTH_VALUE])
+#%show_workflow_automation([host=YOUR_HOST], [height=HEIGHT_VALUE], [width=WIDTH_VALUE])
 ```
 
 NOTE: The parameters `height` and `width` allow the user to adjust the size of the window inside the notebook.
@@ -1534,11 +1534,13 @@ A. Open +++<a class="studioUrl" href="/studio" target="_blank">[ProActive Workfl
 
 B. Create a new workflow.
 
-C. Click on `Catalog` menu then `Add Bucket as Extra Catalog Menu` and select `machine-learning-workflows` bucket.
+C. Change palette preset to `Machine Learning`.
 
-D. Open this added extra catalog menu and drag and drop the workflow example of your choice.
+D. Click on `machine-learning` catalog and pin it open.
 
-E. Execute the chosen workflow, track its progress and preview its results.
+E. Drag and drop the workflow example of your choice.
+
+F. Execute the chosen workflow, track its progress and preview its results.
 
 More details about these workflows are available in this in link:https://www.activeeon.com/resources/automated-machine-learning-activeeon.pdf[ActiveEon's Machine Learning Documentation]
 
@@ -4071,10 +4073,10 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | Number of samples on which to explain the model's output.
 | Integer (default=2)
 | `IMG_LIST`
-| Choice two images to explain.
-| Integer (default=1)
+| Choose some images to explain.
+| List (default=1, 4, 6, 12)
 | `FEATURE_LAYER`
-| Choice the layer to explain
+| Choose a layer to explain.
 | String (default=features[7] for a VGG16 model). For example, you can use features[0] for AlexNet, layer1[0].conv1 for ResNet, etc.
 | `RANKED_OUTPUTS`
 | Explain many of the top model outputs determined by output rank order.
