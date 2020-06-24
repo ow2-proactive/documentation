@@ -10,20 +10,23 @@ Can be defined:
 ----
 # This cron expression determines the housekeeping call frequency.
 # Default value is 10 minutes: this will invoke the housekeeping mechanism
-# to remove every notifications which are set to be removed and has their scheduled time for removal reached.
+# to remove every notifications whose scheduled removal time is up.
 notifications.housekeeping.cronexpression=*/10 * * * *
 ----
 
 - The life span of the notifications in seconds:
 ----
 # Automatic remove notification delay (in seconds).
-# The time which notifications will be stored in the database
+# The time at which notifications will be stored in the database
 # Set this time to 0 if you don't want the notifications to be removed.
 # Default value is 604800 seconds = 1 week
 notifications.housekeeping.removedelay=604800
 ----
+
+[[_notification_methods]]
 ==== Notification methods
 
+[[_email_notification_method]]
 ===== Email
 
 Email notification method uses SMTP protocol to send emails, thus the notification
@@ -35,7 +38,7 @@ By default Transport Layer Security is active, change to false to deactivate it:
 ----
 mail.smtp.starttls.enable=true
 ----
-So is the authentication to the STMP server.
+Authentication to the SMTP server is enabled by default.
 ----
 mail.smtp.auth=true
 ----
@@ -58,12 +61,12 @@ mail.smtp.host=
 
 The email used to broadcast the emails is defined in the application.properties file,
 go to <<Housekeeping>> to see where it is located.
-It is the email that will appear in the "From" field of the sent emails
+The email will be displayed in the "From" field of the sent emails
 ----
 notification.email.from=
 ----
 
-[[_notification_third_party]]
+[[_third_party_notification_method]]
 ===== Third party
 
 ====== Configuration
@@ -81,7 +84,9 @@ Or a URL
 notification.script.url=
 ----
 
-Note that to the URL will be processed if the path is empty
+Note that to the URL property will be used by the <<_glossary_notification_service,*Notification Service*>> only if the path is not provided.
+Otherwise URL property is ignored.
+It means that the path property will always have the upper hand to indicated the location of the script to execute.
 
 An optional parameter can be provided to specify the engine to be used to execute the script
 if not provided the extension of the file will determine the appropriate engine to use
@@ -91,8 +96,8 @@ if not provided the extension of the file will determine the appropriate engine 
 notification.script.engine=bash
 ----
 
-Finally multiple script execution can be enable to execute the script for each user
-that has an active subscription for an event and has Third party notification method activated.
+Finally multiple sequential script execution can be enabled.
+Users must have an active subscription for an event and the Third party notification method activated.
 It is set to false by default.
 
 For example if 5 users are subscribed to the Scheduler Frozen event with the Third party notification
@@ -108,17 +113,20 @@ notification.script.multiple.execution=false
 
 ====== Reading notification data
 
-Notification data is passed as bindings to the script, therefore you can access it simply by reading
-the corresponding field.
-In some cases some fields might be null, for instance there is no BUCKET_NAME, PROJECT_NAME, WORKFLOW_NAME
-for Scheduler events.
+Some relevant notification data is automatically passed to the script as bindings when executed.
+It is simply needed to read the field as you would do with any other field in the used language.
+
+In some cases fields might not have a value as it is not relevant.
+For instance BUCKET_NAME, PROJECT_NAME, WORKFLOW_NAME are null for Scheduler events
+as they don't depend on job execution.
 
 Example in groovy:
 ----
 println "Reading the notification message: " + MESSAGE
 ----
 
-In the following table is specified if fields have a value regarding the notification type
+In the following table are specified all available fields that can be read in the script
+and if they have a value depending on the event origin.
 
 .Bindings passed to script (Y = Yes , N = No)
 [cols="<,^,^,^,^"]

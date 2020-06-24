@@ -10,26 +10,36 @@ image::notifications-view.png[align="center"]
 
 ==== Principle
 
-In order to be notified of events a user must have an active <<_glossary_notification_subscription,*Subscription*>> with an associated active notification method.
-It is possible to be notified via the <<_glossary_notification_portal,*Notification Portal*>>, email
-or <<_glossary_notification_third_party,*Third party*>> which is the execution of a script provided by the user.
+A notification <<_glossary_notification_subscription,*Subscription*>> consists in a set of events selected by a user for a particular service,
+a type of workflows or a specific workflow.
 
-All these notification methods can be used simultaneously in the same <<_glossary_notification_subscription,*Subscription*>>.
+Event reception is configurable and allows portal notifications, email sending and custom script execution.
+
+A user creating a subscription will need to:
+
+- Select one of the subscription types
+- Select one or more events from a predefined list that user will be notified of.
+- Activate one or more notification methods.
 
 ==== Subscription types
 
-There are three types of <<_glossary_notification_subscription,*Subscriptions*>>:
+There are two types of <<_glossary_notification_subscription,*Subscriptions*>>:
 
-- Scheduler subscription: To be notified when the <<_glossary_proactive_scheduler ,*Scheduler*>> changes its state
-- Job planner subscription: Currently this subscription can be activated with only one event type "All events"
+- Service subscriptions such as the Scheduler subscription to be notified when the <<_glossary_proactive_scheduler ,*Scheduler*>> changes its state
+or the Job planner subscription which can be activated with only one event type "All events"
 that corresponds to different issues the <<_glossary_job_planner,*Job Planner*>> may encounter.
 Check out the <<_job_planner_notifications,Job Planner Notifications>> to look at the full list of events.
 - Job subscriptions: To be notified of events that may occur during <<_glossary_workflow,*Workflow*>> executions.
 
-By default each user has a Scheduler and a Job Planner subscription. To start receiving notifications it is ony required
-to choose notification methods, event types and activate the <<_glossary_notification_subscription,*Subscription*>>.
+Service subscriptions are unique for each service. They can be enabled or disabled for each particular service.
 
-On the other hand Job subscriptions have to be created in order to receive notifications.
+Job Subscriptions can be multiple, one can create various subscriptions for various kind of workflow types.
+
+By default each user has a Scheduler and a Job Planner subscription.
+To start receiving notifications, users only needs to choose notification methods,
+event types and activate the <<_glossary_notification_subscription,*Subscription*>>.
+
+On the other hand, Job subscriptions must be defined and created to receive Job notifications.
 To create a job subscription, go to the <<_glossary_notification_portal,*Notification Portal*>>,
 job subscriptions tab and click on the _+_ button
 
@@ -39,14 +49,14 @@ Then fill and select the mandatory fields and click on _Save_
 
 image::job-subscription-creation.png[align="center"]
 
-At least one of the fields of <<_glossary_workflow,*Workflow*>> data must be provided to create the subscription, that means it
+At least one field of <<_glossary_workflow,*Workflow*>> data must be provided to create the subscription, that means it
 is not possible to create a job subscription that will listen for all jobs submitted to the Scheduler.
 
 Two scenarios are possible:
 
-- If is provided only a bucket name, then the user will be notified for all <<_glossary_workflow,*Workflows*>> of the bucket
-- Otherwise there has to be an exact match between the bucket name, project name and workflow name of the subscription
-and the bucket name, project name, workflow name of the workflow you wish to be notified of.
+- If a bucket name is only set, then the user will be notified for all <<_glossary_workflow,*Workflows*>> of the bucket
+- Otherwise, the bucket name, project name and workflow name of the workflow you wish to be notified of
+must exactly match with the bucket name, project name and workflow name of the subscription.
 
 The process is the same for Scheduler and Job_planner subscriptions without the
 need to provide <<_glossary_workflow,*Workflow*>> data. Select notification methods,
@@ -56,14 +66,24 @@ To modify a subscription simply click on it and do your adjustments.
 
 ==== Notification methods
 
-The user must activate at least one notification method to be able to activate a subscription. It defines how the user is notified .
-There are three notification methods available.
+To define the way to be notified, the user must activate at least one notification method.
+It is mandatory to activate at least one to be able to activate a subscription.
 
-- "Portal": The notification will be displayed in the <<_glossary_notification_portal,*Notification Portal*>>
-- "Email": The notification will be sent by email.
-- "Third-party": To trigger a script execution, please refer to link:../admin/ProActiveAdminGuide.html#_notification_third_party[Third paty] for more details
+There are three notification methods available
 
-=== Notifications
+- "Portal": The notification will be displayed in the <<_glossary_notification_portal,*Notification Portal*>>.
+
+- "Email": The notification will be sent by email using SMTP protocol hence SMTP server related data
+needs to be provided in order for the notification service to connect to the server and use it.
+Go to the link:../admin/ProActiveAdminGuide.html#_email_notification_method[Email notification method]
+section in the Admin guide to look at configuration.
+
+- "Third-party": To trigger a script execution. It also requires configuration to specify the location of the script,
+or optional options such as multiple script execution.
+Go to the link:../admin/ProActiveAdminGuide.html#_third_party_notification_method[Third party notification method]
+section in the Admin guide to look at the full configuration.
+
+=== Event types
 
 .Job notifications
 [cols="2,2,2,5,5"]
@@ -107,7 +127,7 @@ There are three notification methods available.
 | `JOB_SUBMITTED`
 | Submitted
 | INFO
-| The has been submitted to the scheduler
+| The job has been submitted to the scheduler
 | The job is submitted to the scheduler
 | `JOB_FINISHED_WITH_ERRORS`
 | Finished with issues
