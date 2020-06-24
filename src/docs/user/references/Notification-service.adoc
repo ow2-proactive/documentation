@@ -19,64 +19,76 @@ A user creating a subscription will need to:
 
 - Select one of the subscription types
 - Select one or more events from a predefined list that user will be notified of.
-- Activate one or more notification methods.
+- Activate one or more <<_glossary_notification_methods,*Notification Methods*>>.
 
 ==== Subscription types
 
 There are two types of <<_glossary_notification_subscription,*Subscriptions*>>:
 
-- Service subscriptions such as the Scheduler subscription to be notified when the <<_glossary_proactive_scheduler ,*Scheduler*>> changes its state
-or the Job planner subscription which can be activated with only one event type "All events"
-that corresponds to different issues the <<_glossary_job_planner,*Job Planner*>> may encounter.
-Check out the <<_job_planner_notifications,Job Planner Notifications>> to look at the full list of events.
-- Job subscriptions: To be notified of events that may occur during <<_glossary_workflow,*Workflow*>> executions.
+- Service subscriptions.
+- Job subscriptions.
 
-Service subscriptions are unique for each service. They can be enabled or disabled for each particular service.
+===== Service subscriptions
 
-Job Subscriptions can be multiple, one can create various subscriptions for various kind of workflow types.
+Service subscriptions are unique for each service they are associated to and created by default for every user.
+It enables to subscribe to events that may occur on a particular service like the <<_glossary_proactive_scheduler,*ProActive Scheduler*>>
+or the <<_glossary_job_planner,*Job Planner*>>.
 
-By default each user has a Scheduler and a Job Planner subscription.
-To start receiving notifications, users only needs to choose notification methods,
-event types and activate the <<_glossary_notification_subscription,*Subscription*>>.
+Service subscriptions are deactivated by default, to start receiving notifications users only needs to:
 
-On the other hand, Job subscriptions must be defined and created to receive Job notifications.
-To create a job subscription, go to the <<_glossary_notification_portal,*Notification Portal*>>,
-job subscriptions tab and click on the _+_ button
+- Activate one or more <<_glossary_notification_methods,*Notification Methods*>>.
+- Select desired events
+- Activate the <<_glossary_notification_subscription,*Subscription*>>.
 
-image::job-subscription-creation-button.png[align="center"]
+[title="Example with scheduler subscription"]
+image::scheduler-subscription.png[align="center"]
 
-Then fill and select the mandatory fields and click on _Save_
+To modify a service subscription simply click on it and do your adjustments. The subscription is automatically saved.
 
-image::job-subscription-creation.png[align="center"]
+===== Job subscriptions
+
+Job subscriptions must be defined and created in order to receive notifications.
+Users can have multiple job subscriptions with different granularity on the workflows they are associated to.
 
 At least one field of <<_glossary_workflow,*Workflow*>> data must be provided to create the subscription, that means it
 is not possible to create a job subscription that will listen for all jobs submitted to the Scheduler.
 
-Two scenarios are possible:
+[title="Workflow data to create a job subscription]
+image::job-subscription-workflow-data.png[align="center"]
 
-- If a bucket name is only set, then the user will be notified for all <<_glossary_workflow,*Workflows*>> of the bucket
-- Otherwise, the bucket name, project name and workflow name of the workflow you wish to be notified of
-must exactly match with the bucket name, project name and workflow name of the subscription.
+Two scenarios are possible when creating a job subscription:
 
-The process is the same for Scheduler and Job_planner subscriptions without the
-need to provide <<_glossary_workflow,*Workflow*>> data. Select notification methods,
-events and create the <<_glossary_notification_subscription,*Subscription*>>.
+- If a bucket name only is set, then the user will be notified for all <<_glossary_workflow,*Workflows*>> of the specified bucket.
+- Otherwise there has to be an exact match between the bucket name, project name and workflow name of the workflow you wish to be notified of
+and the associated subscription.
 
-To modify a subscription simply click on it and do your adjustments.
+To create a job subscription, go to the <<_glossary_notification_portal,*Notification Portal*>>,
+job subscriptions tab and click on the _+_ button
+
+[title="_+_ button to create a job subscription"]
+image::job-subscription-creation-button.png[align="center"]
+
+Then fill and select the mandatory fields and click on _Save_
+
+[title="Job subscription creation"]
+image::job-subscription-creation.png[align="center"]
+
+The _Submitted by_ switch may be activated to be notified of events for job submitted only by the user who created the subscription.
+
+To modify a job subscription simply click on it, do your adjustments and save it.
 
 ==== Notification methods
 
-To define the way to be notified, the user must activate at least one notification method.
-It is mandatory to activate at least one to be able to activate a subscription.
+To define the way to be notified, a user must select at least one notification method.
+It is mandatory to have at least one active notification method in order to create or update a subscription.
 
 There are three notification methods available
 
 - "Portal": The notification will be displayed in the <<_glossary_notification_portal,*Notification Portal*>>.
 
-- "Email": The notification will be sent by email using SMTP protocol hence SMTP server related data
-needs to be provided in order for the notification service to connect to the server and use it.
-Go to the link:../admin/ProActiveAdminGuide.html#_email_notification_method[Email notification method]
-section in the Admin guide to look at configuration.
+- "Email": The notification will be sent by email
+I order to use this method, the SMTP settings must be defined in the dedicated configuration file, inside the ProActive server.
+Please refer to the corresponding link:../admin/ProActiveAdminGuide.html#_email_notification_method[Email notification configuration] section in the administration guide.
 
 - "Third-party": To trigger a script execution. It also requires configuration to specify the location of the script,
 or optional options such as multiple script execution.

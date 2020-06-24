@@ -29,10 +29,10 @@ notifications.housekeeping.removedelay=604800
 [[_email_notification_method]]
 ===== Email
 
-Email notification method uses SMTP protocol to send emails, thus the notification
-service needs to have knowledge and connect to a SMTP server to use it.
-Relevant data is specified in the properties file located
-* `PROACTIVE_HOME/dist/war/notification-service/WEB-INF/classes/email.properties`
+The Email notification method uses the Simple Mail Transfer Protocol to send emails.
+The notification service requires a valid SMTP configuration in order to send emails.
+These settings are specified in the properties file located at:
+ `PROACTIVE_HOME/dist/war/notification-service/WEB-INF/classes/email.properties`
 
 By default Transport Layer Security is active, change to false to deactivate it:
 ----
@@ -84,9 +84,9 @@ Or a URL
 notification.script.url=
 ----
 
-Note that to the URL property will be used by the <<_glossary_notification_service,*Notification Service*>> only if the path is not provided.
-Otherwise URL property is ignored.
-It means that the path property will always have the upper hand to indicated the location of the script to execute.
+WARNING: Note that to the `notification.script.url=` property will be used by the <<_glossary_notification_service,*Notification Service*>>
+only if the `notification.script.path=` property is not provided. If provided the `notification.script.url=` property is ignored.
+It means that the `notification.script.path=` property will always have the upper hand to indicated the location of the script to execute.
 
 An optional parameter can be provided to specify the engine to be used to execute the script
 if not provided the extension of the file will determine the appropriate engine to use
@@ -128,7 +128,7 @@ println "Reading the notification message: " + MESSAGE
 In the following table are specified all available fields that can be read in the script
 and if they have a value depending on the event origin.
 
-.Bindings passed to script (Y = Yes , N = No)
+.Binding holds a value regarding event type (Y = Yes , N = No)
 [cols="<,^,^,^,^"]
 |=====
 | *Field name* | *Job* | *Task* | *Scheduler* | *Job planner*
