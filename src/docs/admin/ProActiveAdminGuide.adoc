@@ -346,7 +346,7 @@ For example:
 
 TIP: If you plan to use another DB version, it is important to get the corresponding database driver version and set up the right dialect version
 
-Moreover, it also important to notice that the Scheduler and 3 microservices (*scheduling-api*, *job-planner*, and *proactive-cloud-watch*) have to point to the same scheduler database since they use that one.
+Moreover, it is also important to notice that the Scheduler and 3 microservices (*scheduling-api*, *job-planner*, and *proactive-cloud-watch*) have to point to the same scheduler database since they use that one.
 
 [[_backup]]
 === Configure automated backup
