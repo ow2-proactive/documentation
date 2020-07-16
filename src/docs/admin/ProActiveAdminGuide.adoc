@@ -264,6 +264,7 @@ For *HSQLDB*, the following five properties must be configured:
 hibernate.connection.driver_class=org.hsqldb.jdbc.JDBCDriver
 
 #DB_NAME could be scheduler, rm, or one of the microservices names
+#9001 is the defaut DB port of the embedded PA database
 hibernate.connection.url=jdbc:hsqldb:hsql://localhost:9001/DB_NAME
 
 hibernate.dialect=org.hibernate.dialect.HSQLDialect
@@ -338,14 +339,14 @@ Moreover, it is mandatory to put the proper database driver in *PROACTIVE_HOME/a
 
 For example:
 
-* For HSQLDB, the drive is already embedded in *PROACTIVE_HOME/addons*
-* For MySQL 8.0, you have to get mysql-connector-java-8.0.19.zip driver an place it in *PROACTIVE_HOME/addons*
-* For Postgres 12.2, you have to get postgresql-42.2.11.jar driver.
-* For Oracle 12.2, you have to get ojdbc8-19.3.0.0.jar driver.
+* For HSQLDB 2.4, the drive `hsqldb-2.4.1.jar` is already embedded in *PROACTIVE_HOME/addons*
+* For MySQL 8.0, you have to get `mysql-connector-java-8.0.19.zip` driver an place it in *PROACTIVE_HOME/addons*
+* For Postgres 12.2, you have to get `postgresql-42.2.11.jar` driver.
+* For Oracle 12.2, you have to get `ojdbc8-19.3.0.0.jar` driver.
 
 TIP: If you plan to use another DB version, it is important to get the corresponding database driver version and set up the right dialect version
 
-Moreover, it also important to notice that the Scheduler, and 3 microservices (*scheduling-api*, *job-planner*, and *proactive-cloud-watch*) have to point to the same scheduler database since they use that one.
+Moreover, it also important to notice that the Scheduler and 3 microservices (*scheduling-api*, *job-planner*, and *proactive-cloud-watch*) have to point to the same scheduler database since they use that one.
 
 [[_backup]]
 === Configure automated backup
