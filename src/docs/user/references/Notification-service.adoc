@@ -86,8 +86,8 @@ There are three notification methods available
 
 - "Portal": The notification will be displayed in the <<_glossary_notification_portal,*Notification Portal*>>.
 
-- "Email": The notification will be sent by email
-I order to use this method, the SMTP settings must be defined in the dedicated configuration file, inside the ProActive server.
+- "Email": The notification will be sent by email.
+In order to use this method, the SMTP settings must be defined in the dedicated configuration file, inside the ProActive server.
 Please refer to the corresponding link:../admin/ProActiveAdminGuide.html#_email_notification_method[Email notification configuration] section in the administration guide.
 
 - "Third-party": To trigger a script execution. It also requires configuration to specify the location of the script,

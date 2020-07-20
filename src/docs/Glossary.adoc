@@ -48,7 +48,7 @@ Notification Subscription::
 Object of the <<_glossary_notification_service,*Notification Service*>> used to manage and configure notification reception.
 
 [[_glossary_notification_third_party]]
-Notification Subscription::
+Third Party Notification::
 Notification method of the <<_glossary_notification_service,*Notification Service*>> that executes a script when a notification is triggered.
 
 [[_glossary_notification_methods]]

@@ -2,19 +2,18 @@
 
 Notifications in the notification service have a global life span defined in the
 application.properties located in * `PROACTIVE_HOME/dist/war/notification-service/WEB-INF/classes/application.properties`
-Passed that time, they will be removed from the database.
+Past that time, they will be removed from the database.
 
-Can be defined:
+Two parameters with default values may be updated:
 
-- The call frequency of the housekeeping defined by a CRON expression:
+1- The call frequency of the housekeeping defined by a CRON expression:
 ----
 # This cron expression determines the housekeeping call frequency.
 # Default value is 10 minutes: this will invoke the housekeeping mechanism
 # to remove every notifications whose scheduled removal time is up.
 notifications.housekeeping.cronexpression=*/10 * * * *
 ----
-
-- The life span of the notifications in seconds:
+2- The life span of the notifications in seconds:
 ----
 # Automatic remove notification delay (in seconds).
 # The time at which notifications will be stored in the database
@@ -59,9 +58,10 @@ The host of the SMTP server
 mail.smtp.host=
 ----
 
-The email used to broadcast the emails is defined in the application.properties file,
-go to <<Housekeeping>> to see where it is located.
-The email will be displayed in the "From" field of the sent emails
+A single email address is used by the notification service to broadcast emails.
+It is defined in the application.properties file located at
+`PROACTIVE_HOME/dist/war/notification-service/WEB-INF/classes/email.properties`
+and is the email that will be displayed in the "From" field of the sent emails.
 ----
 notification.email.from=
 ----
@@ -71,7 +71,7 @@ notification.email.from=
 
 ====== Configuration
 
-The Third party notification method executes a script when an event occurs.
+The <<_glossary_notification_third_party,*Third Party Notification*>> method executes a script when an event occurs.
 Location of the script is specified either via a path, relative to the Scheduler or absolute.
 
 ----
@@ -96,14 +96,14 @@ if not provided the extension of the file will determine the appropriate engine 
 notification.script.engine=bash
 ----
 
-Finally multiple sequential script execution can be enabled.
+Finally, multiple sequential script execution can be enabled.
 Users must have an active subscription for an event and the Third party notification method activated.
 It is set to false by default.
 
 For example if 5 users are subscribed to the Scheduler Frozen event with the Third party notification
 method active and multiple execution enabled, then each time the  <<_glossary_proactive_scheduler,*ProActive Scheduler*>> freezes
 the script will be executed one time per notified user so in this example 5 times.
-If it is set to false only one execution will be performed regardless of how many users are notified.
+If it is set to false, only one execution will be performed regardless of how many users are notified.
 
 ----
 #if false execute the script one time per event even if there are several subscribers
