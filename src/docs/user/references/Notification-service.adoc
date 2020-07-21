@@ -1,0 +1,269 @@
+=== Overview
+
+The <<_glossary_notification_portal,*Notification Portal*>> allows users to subscribe, be notified and react when different
+types of events occur during <<_glossary_job,*Job*>> execution, on the state of the <<_glossary_proactive_scheduler,*ProActive Scheduler*>> or when
+automating and scheduling jobs with the <<_glossary_job_planner,*Job Planner*>>.
+
+image::notifications-view.png[align="center"]
+
+=== Subscriptions
+
+==== Principle
+
+A notification <<_glossary_notification_subscription,*Subscription*>> consists in a set of events selected by a user for a particular service,
+a type of workflows or a specific workflow.
+
+Event reception is configurable and allows portal notifications, email sending and custom script execution.
+
+A user creating a subscription will need to:
+
+- Select one of the subscription types
+- Select one or more events from a predefined list that user will be notified of.
+- Activate one or more <<_glossary_notification_methods,*Notification Methods*>>.
+
+==== Subscription types
+
+There are two types of <<_glossary_notification_subscription,*Subscriptions*>>:
+
+- Service subscriptions.
+- Job subscriptions.
+
+===== Service subscriptions
+
+Service subscriptions are unique for each service they are associated to and created by default for every user.
+It enables to subscribe to events that may occur on a particular service like the <<_glossary_proactive_scheduler,*ProActive Scheduler*>>
+or the <<_glossary_job_planner,*Job Planner*>>.
+
+Service subscriptions are deactivated by default, to start receiving notifications users only needs to:
+
+- Activate one or more <<_glossary_notification_methods,*Notification Methods*>>.
+- Select desired events
+- Activate the <<_glossary_notification_subscription,*Subscription*>>.
+
+[title="Example with scheduler subscription"]
+image::scheduler-subscription.png[align="center"]
+
+To modify a service subscription simply click on it and do your adjustments. The subscription is automatically saved.
+
+===== Job subscriptions
+
+Job subscriptions must be defined and created in order to receive notifications.
+Users can have multiple job subscriptions with different granularity on the workflows they are associated to.
+
+At least one field of <<_glossary_workflow,*Workflow*>> data must be provided to create the subscription, that means it
+is not possible to create a job subscription that will listen for all jobs submitted to the Scheduler.
+
+[title="Workflow data to create a job subscription]
+image::job-subscription-workflow-data.png[align="center"]
+
+Two scenarios are possible when creating a job subscription:
+
+- If a bucket name only is set, then the user will be notified for all <<_glossary_workflow,*Workflows*>> of the specified bucket.
+- Otherwise there has to be an exact match between the bucket name, project name and workflow name of the workflow you wish to be notified of
+and the associated subscription.
+
+To create a job subscription, go to the <<_glossary_notification_portal,*Notification Portal*>>,
+job subscriptions tab and click on the _+_ button
+
+[title="_+_ button to create a job subscription"]
+image::job-subscription-creation-button.png[align="center"]
+
+Then fill and select the mandatory fields and click on _Save_
+
+[title="Job subscription creation"]
+image::job-subscription-creation.png[align="center"]
+
+The _Submitted by_ switch may be activated to be notified of events for job submitted only by the user who created the subscription.
+
+To modify a job subscription simply click on it, do your adjustments and save it.
+
+==== Notification methods
+
+To define the way to be notified, a user must select at least one notification method.
+It is mandatory to have at least one active notification method in order to create or update a subscription.
+
+There are three notification methods available
+
+- "Portal": The notification will be displayed in the <<_glossary_notification_portal,*Notification Portal*>>.
+
+- "Email": The notification will be sent by email.
+In order to use this method, the SMTP settings must be defined in the dedicated configuration file, inside the ProActive server.
+Please refer to the corresponding link:../admin/ProActiveAdminGuide.html#_email_notification_method[Email notification configuration] section in the administration guide.
+
+- "Third-party": To trigger a script execution. It also requires configuration to specify the location of the script,
+or optional options such as multiple script execution.
+Go to the link:../admin/ProActiveAdminGuide.html#_third_party_notification_method[Third party notification method]
+section in the Admin guide to look at the full configuration.
+
+=== Event types
+
+.Job notifications
+[cols="2,2,2,5,5"]
+|===
+| *Type* | *Readable name* | *Severity* | *Message* | *Description*
+| `JOB_RUNNING_TO_FINISHED`
+| Job finished
+| INFO
+| The job is finished
+| The job was running and is now finished
+| `JOB_PENDING_TO_RUNNING`
+| Job running
+| INFO
+| The job is running
+| The job was pending and is now running
+| `JOB_IN_ERROR`
+| In-error
+| ERROR
+| A task in the job encountered an error, the error handling is set to suspend in error task dependencies and set the job In-error
+| The job is in-error
+| `JOB_PAUSED`
+| Paused
+| WARNING
+| The job was running and has been paused
+| The job is paused
+| `JOB_REMOVE_FINISHED`
+| Removed
+| INFO
+| The job has been removed from the scheduler
+| The job is removed
+| `JOB_RESTARTED_FROM_ERROR`
+| Restarted
+| INFO
+| The job was in error and the user has restarted it
+| The job is restarted after being in-error for a while
+| `JOB_RESUMED`
+| Resumed
+| INFO
+| The job was paused and has been resumed
+| The job is resumed
+| `JOB_SUBMITTED`
+| Submitted
+| INFO
+| The job has been submitted to the scheduler
+| The job is submitted to the scheduler
+| `JOB_FINISHED_WITH_ERRORS`
+| Finished with issues
+| ERROR
+| A task in the job encountered an error, the error handling is set to ignore it and continue job execution
+| The job has finished with errors
+|===
+
+.Task notifications
+[cols="2,2,2,5,5"]
+|===
+| *Type* | *Readable name* | *Severity* | *Message* | *Description*
+| `TASK_IN_ERROR`
+| Task In_Error
+| ERROR
+| A task in the job encountered an error and has been set In-Error
+| A task in the job is In-Error
+| `TASK_WAITING_FOR_RESTART`
+| Task waiting on error
+| INFO
+| A task in the job is waiting for a new execution attempt after being in error, faulty or failed.
+| A task in the job is waiting for restart after an error
+| `TASK_RUNNING_TO_FINISHED`
+| Task finished
+| INFO
+| A task in the job is finished
+| A task in the job is finished
+| `TASK_IN_ERROR_TO_FINISHED`
+| In-Error Task finished
+| INFO
+| A task in the job was in error and is now finished
+| An In-Error task in the job is finished
+| `TASK_PENDING_TO_RUNNING`
+| Task running
+| INFO
+| A task in the job was pending and is now running
+| A task in the job is running
+| `TASK_SKIPPED`
+| Task skipped
+| INFO
+| The task was not executed, it was the non-selected branch of an IF/ELSE control flow action.
+| A task in the job is skipped
+| `TASK_REPLICATED`
+| Task replicated
+| INFO
+| A task in the job is replicated
+| A task in the job is replicated
+| `TASK_FINISHED_WITH_ERRORS`
+| Task finished with errors
+| ERROR
+| A task with no execution attempts left is faulty, failed or in error.
+| A task has finished with the an error status
+|===
+
+.Scheduler notifications
+[cols="2,2,2,5,5"]
+|===
+| *Type* | *Readable name* | *Severity* | *Message* | *Description*
+| `PAUSED`
+| Paused
+| WARNING
+| A user has paused the scheduler, all running jobs run to completion but jobs wont be submitted
+| The Scheduler is paused, all running jobs run to completion
+| `DB_DOWN`
+| Database down
+| CRITICAL
+| The Schedulers database is down
+| The Schedulers database is down
+| `KILLED`
+| Killed
+| WARNING
+| A user has killed the Scheduler, ProActive server needs to be restarted
+| The Scheduler is killed! The process of the scheduler's executable is killed. No interaction can be done anymore.
+| `RESUMED`
+| Resumed
+| INFO
+| The scheduler was paused or frozen and has been resumed
+| The Scheduler is resumed! Jobs can be submitted again
+| `STOPPED`
+| Stopped
+| WARNING
+| The scheduler has been stopped
+| The Scheduler is stopped! Jobs cannot be submitted anymore. Already running jobs run to completion, but not pending jobs.
+| `FROZEN`
+| Frozen
+| WARNING
+| The scheduler has been stopped
+| The Scheduler is frozen! All running tasks run to completion, but running jobs wait for the scheduler to resume.
+| `SHUTTING_DOWN`
+| Shutting down
+| WARNING
+| The scheduler has been shutdown
+| The Scheduler is shutting down... The scheduler is shutting down itself.
+| `STARTED`
+| Started
+| INFO
+| The scheduler has started
+| The Scheduler is started! Jobs can be submitted.
+|===
+
+[[_job_planner_notifications]]
+.Job Planner notifications (with example values)
+[cols="5,5"]
+|===
+|*Message* | *Description*
+| The calendar in the bucket was not take into account due to an exception
+| An error has occurred while fetching planned calendars and their associations
+| Changing the status of the association to : FAILED
+| A <<_glossary_catalog, *Catalog*>> resource is not found, the association changes to FAILED status
+| Job-planner was unable to submit the workflow from the bucket to the scheduler
+| <<_glossary_job_planner,*Job Planner*>> was unable to submit job to scheduler
+| Association 7 submission planned at vendredi 12 juin 2020 14 h 05 CEST is postponed because job 145 is on-going
+| A submission has been postponed
+| Association 8 submission planned at vendredi 12 juin 2020 14 h 05 is canceled because job 148 is on-going
+| A submission has been canceled
+| The workflow Variables_Propagation in the bucket basic-examples planned the vendredi 12 juin 2020 16 h 45 CEST
+was postponed and executed the vendredi 12 juin 2020 16 h 05 CEST
+| A planned workflow execution that has been postponed is now executing
+| <<_glossary_job_planner,*Job Planner*>> has detected that an execution for a workflow has been missed.
+As it is configured, Job-planner will submit an unplanned execution now at vendredi 12 juin 2020 18 h 15 CEST
+| The workflow execution time is before the current time that means we missed an execution and it is
+configured to submit a new execution
+| The workflow Variables_Propagation in the bucket basic-examples was not executed at vendredi 12 juin 2020 19 h 15 CEST
+| The workflow execution time is before the current time that means we missed an execution and it is not
+configured to postpone the execution
+|===
+
