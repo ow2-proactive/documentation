@@ -1267,7 +1267,7 @@ The fork environment can be activated through one of these four executions modes
 -  link:../admin/AdminTutorials.html#_run_as_me[Run as me] mode,
 - Fork mode with docker.
 
-image::fork-environment.png[align=center]
+image::fork-environment.png[align=center, width=512, height=256]
 
 
 By default, all workflow tasks are executed in a standard fork mode, that is, executed in a forked JVM separated from the ProActive Node's JVM.

@@ -137,6 +137,8 @@ Examples: PA:JSON will accept {"name": "John", "city":"New York"} and empty valu
 * *PA:CREDENTIAL* : variable whose value is a key of the <<_third_party_credentials, ProActive Scheduler Third-Party Credentials>> (which are stored on the server side in encrypted form). The variable allows the user to access a credential through `credentials.get(variables.get("MY_CRED_KEY"))` instead of in plain-text in the workflow definition. At workflow submission, the scheduler server verifies that the key exists in the 3rd party credentials of the user.
 * *PA:GLOBAL_FILE* : variable whose value is the relative path of a file in the <<_global_and_user_spaces, Global Data Space>>. At workflow submission, the scheduler server verifies that the file exists in the global dataspace.
 * *PA:USER_FILE* : variable whose value is the relative path of a file in the <<_global_and_user_spaces, User Data Space>>. At workflow submission, the scheduler server verifies that the file exists in the user dataspace.
+* *PA:GLOBAL_FOLDER* : variable whose value is the relative path of a folder in the <<_global_and_user_spaces, Global Data Space>>. At workflow submission, the scheduler server verifies that the folder exists in the global dataspace. Note, the variable value should not end with a slash to avoid the problem of duplicate slash in its usage.
+* *PA:USER_FOLDER* : variable whose value is the relative path of a folder in the <<_global_and_user_spaces, User Data Space>>. At workflow submission, the scheduler server verifies that the folder exists in the user dataspace. Note, the variable value should not end with a slash to avoid the problem of duplicate slash in its usage.
 
 
 ====== Spring Expression Language Model
@@ -180,6 +182,14 @@ PA:SPEL( (variables['var'] = T(javax.xml.parsers.DocumentBuilderFactory).newInst
 +
 
 Note that the SpEL expression must always return a boolean value, this is why in this last expression we use the `instanceof` keyword to not return a string value.
+
+
+====== Optional Variable
+To define an optional variable, the workflow designer can simply add `?` at the end of the `model` attribute, such as `PA:INTEGER?`. 
+When submitting the workflow, it will be allowed to not provide a value for the optional variables. 
+The validation will only fail when the user fills in an invalid value.
+For example, a variable "MY_OPTIONAL_INTEGER" defined as the model "PA:INTEGER?" will accept an empty string as the variable value, but it will refuse "1.4".
+All the avaiable model syntaxes except PA:NOT_EMPTY_STRING support to be defined as optional.
 
 
 [[_dynamic_variables]]
