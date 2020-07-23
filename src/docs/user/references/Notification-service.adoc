@@ -4,6 +4,7 @@ The <<_glossary_notification_portal,*Notification Portal*>> allows users to subs
 types of events occur during <<_glossary_job,*Job*>> execution, on the state of the <<_glossary_proactive_scheduler,*ProActive Scheduler*>> or when
 automating and scheduling jobs with the <<_glossary_job_planner,*Job Planner*>>.
 
+[title="Notifications view"]
 image::notifications-view.png[align="center"]
 
 === Subscriptions
@@ -53,7 +54,7 @@ Users can have multiple job subscriptions with different granularity on the work
 At least one field of <<_glossary_workflow,*Workflow*>> data must be provided to create the subscription, that means it
 is not possible to create a job subscription that will listen for all jobs submitted to the Scheduler.
 
-[title="Workflow data to create a job subscription]
+[title="Workflow data to create a job subscription"]
 image::job-subscription-workflow-data.png[align="center"]
 
 Two scenarios are possible when creating a job subscription:
@@ -65,7 +66,7 @@ and the associated subscription.
 To create a job subscription, go to the <<_glossary_notification_portal,*Notification Portal*>>,
 job subscriptions tab and click on the _+_ button
 
-[title="_+_ button to create a job subscription"]
+[title="Button to create a job subscription"]
 image::job-subscription-creation-button.png[align="center"]
 
 Then fill and select the mandatory fields and click on _Save_
