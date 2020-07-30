@@ -1327,7 +1327,7 @@ The default Docker fork environment script contains the following groovy code:
 import org.ow2.proactive.utils.OperatingSystem;
 import org.ow2.proactive.utils.OperatingSystemFamily;
 
-containerName = "java"
+dockerImageName = "java"
 cmd = []
 cmd.add("docker")
 cmd.add("run")
@@ -1393,7 +1393,7 @@ if (isWindows) {
         sigar.close()
     }
 }
-cmd.add(containerName)
+cmd.add(dockerImageName)
 
 forkEnvironment.setPreJavaCommand(cmd)
 
