@@ -954,7 +954,7 @@ print('Hello world')
 General usage:
 
 ```python
-#%task(name=TASK_NAME, [language=SCRIPT_LANGUAGE], [dep=[TASK_NAME1,TASK_NAME2,...]], [generic_info=[(KEY1,VAL1), (KEY2,VALUE2),...]], [variables=[(VAR1,VAL1), (VAR2,VALUE2),...]], [export=[VAR_NAME1,VAR_NAME2,...]], [import=[VAR_NAME1,VAR_NAME2,...]], [path=IMPLEMENTATION_FILE_PATH])\n'
+#%task(name=TASK_NAME, [language=SCRIPT_LANGUAGE], [dep=[TASK_NAME1,TASK_NAME2,...]], [generic_info=[(KEY1,VAL1), (KEY2,VALUE2),...]], [export=[VAR_NAME1,VAR_NAME2,...]], [import=[VAR_NAME1,VAR_NAME2,...]], [path=IMPLEMENTATION_FILE_PATH])\n'
 ```
 
 Users can also provide more information about the task using the pragma's options. In the following, we give more
@@ -993,17 +993,6 @@ One of the most important notions in workflows is the dependencies between tasks
 
 ```python
 #%task(name=myTask,dep=[parentTask1,parentTask2])
-print('Hello world')
-```
-
-===== Variables
-
-To specify https://doc.activeeon.com/latest/user/ProActiveUserGuide.html#_task_variables[task variables],
-you should provide the `variables` parameter. Its value should be a list of tuples `(key,value)` that corresponds to
-the names and adequate values of the corresponding task variables. Example:
-
-```python
-#%task(name=myTask, variables=[(var1,value1),(var2,value2)])
 print('Hello world')
 ```
 
@@ -1306,11 +1295,14 @@ To delete a task from the workflow, the user should run the pragma `#%delete_tas
 
 ==== Create a job
 
-To create a job, specify job variables and/or job generic information, use the `#%job()` pragma:
+To create a job, use the `#%job()` pragma:
 
 ```python
-#%job(name=JOB_NAME, [generic_info=[(KEY1,VAL1), (KEY2,VALUE2),...]], [variables=[(VAR1,VAL1), (VAR2,VALUE2),...]])
+#%job(name=JOB_NAME)
 ```
+
+If the job has already been created, the call of this pragma would just rename the already created job by the new
+provided name.
 
 NOTE: It is not necessary to create and assign a name explicitly to the job. If not done by the user, this step is
 implicitly performed when the job is submitted (check section <<Submit your job to the scheduler>> for more
