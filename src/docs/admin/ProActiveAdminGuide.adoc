@@ -2248,7 +2248,6 @@ For more information, see https://github.com/ow2-proactive/scheduling/blob/maste
 
 [[_catalog]]
 === Catalog
-
 include::./Catalog.adoc[]
 
 [[_script_engines]]
@@ -2526,25 +2525,19 @@ This mechanism has two phases:
 . Once a job is finished, it sets its scheduled time for removal (the job expiration date)
 . Actual cleaning of expired jobs from the scheduler and/or the database will be periodically triggered and performed in a bulk operation
 
-You can configure housekeeping with the following parameters located in <<Scheduler Properties,the scheduler config file>>:
+Please note that housekeeping mechanism is not applied to the jobs
+which were already in the database when housekeeping was switched on.
 
- * `pa.scheduler.core.automaticremovejobdelay` : delay in seconds after job termination to remove the job.
- * `pa.scheduler.core.removejobdelay` : instead of using job termination time to initiate the delay, use the result retrieval time (for example, when a user opens the job results in the scheduler portal).
-
-TIP: Additionnally, you can configure a remove delay for individual job execution using thee `REMOVE_DELAY` <<../user/ProActiveUserGuide.adoc#_remove_delay,generic information>>.
-
-If the `pa.scheduler.core.automaticremovejobdelay` setting is set to `0` (the default), the Housekeeping mechanism is *disabled* (no occurrence of housekeeping).
-
-IMPORTANT: Please note that the housekeeping mechanism is not applied to the jobs
-which were already in the database before housekeeping was switched on.
-Similarly, a modification of the `automaticremovejobdelay` or `removejobdelay` settings will not be retroactively applied to already finished jobs.
+The following parameters are accessible in <<Scheduler Properties,the scheduler config file>>.
+One can edit the `pa.scheduler.core.automaticremovejobdelay` parameter to set the delay before
+marking a job to be removed.
+The `pa.scheduler.core.removejobdelay` parameter can be used in the case where the delay should only
+start once the job result has been accessed.
 
 The housekeeping mechanism is periodically triggered through the cron
 expression `pa.scheduler.core.automaticremovejobcronexpression`.
-As the boolean `pa.scheduler.job.removeFromDataBase` property is set to `true` by default,
-a query is executed in the scheduler database to remove all jobs that qualify for the bulk removal.
-
-IMPORTANT: The support of `pa.scheduler.job.removeFromDataBase=false` has been discontinued in ProActive Scheduler version `10.1.0`.
+As the `pa.scheduler.job.removeFromDataBase` property is set to `true` by default,
+a query is executed in-base to remove all jobs that qualify for the bulk removal.
 
 ==== Database impact on job submission performance
 

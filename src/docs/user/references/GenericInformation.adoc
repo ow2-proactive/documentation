@@ -4,7 +4,7 @@ In addition to variables, another key/value structure can be accessed inside a s
 Generic information semantics differ from <<_job_variables>> semantics in the following way:
 
 * Generic information can be accessed inside a script, but cannot be modified.
-* Generic information can be defined at *job-level* or at *task-level*. If the same generic information is defined both at job-level and at task-level, the latter value takes precedence inside the task scope.
+* Generic information can be defined at *job level* or at *task level*. If the same generic information is defined at job level and at task level, the latter value takes precedence inside the task scope.
 * Generic information cannot be used directly inside the workflow with the syntax ${} (See  <<_job_variables>>).
 * Generic information are used in general internally by the scheduler, for example to provide information to the scheduling loop on how to handle the task. An example of such generic information is the _START_AT_ info used inside <<_cron_tasks>>.
 * Generic information can use in their definition job/task variables patterns, pattern replacements can be done at execution time when using task generic information.
@@ -22,68 +22,10 @@ For example:
 </task>
 ----
 
-Several examples of Generic Information are presented below:
+=====  Icon management variables
 
-==== START_AT
-
-The `START_AT` Generic Information can be used to delay a job or task execution at a specified date/time.
-Its value should be https://en.wikipedia.org/wiki/ISO_8601[ISO 8601^] compliant. See <<_cron_tasks>> for more details.
-
-Examples:
-
- * `START_AT = "2020-06-20T18:00:00"` will delay the job execution until 20th June 2020 at 6pm GMT.
- * `START_AT = "2020-06-20T18:00:00+02:00"` will delay the job execution until 20th June 2020 at 6pm GMT+02:00.
-
-`START_AT` can be defined at *job-level* (delay the execution of the whole job) or at  *task-level* (delay the execution of a single task).
-
-
-==== REMOVE_DELAY
-
-The `REMOVE_DELAY` Generic Information can be used to control when a job is removed from the scheduler database after its termination.
-
-The <<../admin/ProActiveAdminGuide.adoc#_housekeeping,housekeeping mechanism>> must be configured to allow usage of `REMOVE_DELAY`.
-
-`REMOVE_DELAY` overrides the global `pa.scheduler.core.automaticremovejobdelay` setting for a particular job.
-It allows a job to be removed either *before* or *after* the delay configured globally on the server.
-
-The general format of the `REMOVE_DELAY` generic information is `VVd XXh YYm ZZs`, where VV contain days, XX hours, YY minutes and ZZ seconds.
-
-The format allows flexible combinations of the elements:
-
- * `12d 1h 10m` : 12 days, 1 hour and 10 minutes.
- * `26h` : 26 hours.
- * `120m 12s` : 120 minutes and 12 seconds.
-
-`REMOVE_DELAY` can be defined at *job-level* only.
-
-==== NS and NS_BATCH
-
-`NS` (short for *Native Scheduler*) and `NS_BATCH` are Generic Information used to deploy workflow tasks inside a *Native Scheduler infrastructure*.
-
-See <<../admin/ProActiveAdminGuide.adoc#_execute_tasks_on_a_native_scheduler_node_source,Execute Tasks on a Native Scheduler Node Source>> for more information.
-
-`NS` and `NS_BATCH` can be defined at *job-level* (applies to all tasks of a workflow) or at  *task-level* (applies to a single task).
-
-==== NODESOURCENAME
-
-`NODESOURCENAME` is used to deploy workflow tasks in a Node Source controlled by a *Dynamic Policy*.
-
-See <<../admin/ProActiveAdminGuide.adoc#_dynamic_policy,Dynamic Policy>> for more information.
-
-`NODESOURCENAME` can be defined at *job-level* (applies to all tasks of a workflow) or at  *task-level* (applies to a single task).
-
-==== Documentation
-
-The `Documentation` generic information allows to associate an html documentation with a workflow.
-Its value must contain an URL pointing to the workflow documentation.
-
-`Documentation` can be defined at *job-level* only.
-
-==== Icon Management
-
-There are specific generic information that are dedicated to icon management.
-The icon of a workflow is specified inside the *job-level* Generic Information using the keyword `workflow.icon`.
-The icon of a task is specified inside  *task-level* Generic Information using the keyword `task.icon`.
+There are specific variables that are dedicated to icon management.
+The icon of a workflow is specified inside Workflow Generic Information using the keyword `workflow.icon`.
+The icon of a task is specified inside Task Generic Information using the keyword `task.icon`.
 
 These generic information are used in ProActive portals for proper visualization of workflow and task icons
-
