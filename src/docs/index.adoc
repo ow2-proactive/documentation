@@ -9,7 +9,7 @@
 === ProActive Workflows & Scheduling (PWS)
 
 * link:user/ProActiveUserGuide.html[*PWS User Guide*] (Workflows, Workload automation, Jobs, Tasks, Catalog, Resource Management, Big Data/ETL, …​)
-* *PWS Modules*
+* link:JobPlanner/JobPlannerUserGuide.html#_all_documentation_links[*PWS Modules*]
 ** link:JobPlanner/JobPlannerUserGuide.html[*Job Planner*] (Time-based Scheduling)
 ** link:PCW/PCWUserGuide.html[*Cloud Watch*] (Event-based Scheduling)
 ** link:PCA/PCAUserGuide.html[*Cloud Automation*] (PaaS On-Demand, Service deployment and management)
@@ -20,7 +20,7 @@
 * link:MLOS/MLOSUserGuide.html[*MLOS User Guide*] (​a complete Data Science and Machine Learning Platform)
 
 === API documentation
-&emsp; link:rest/[*Scheduler REST*] &emsp; link:user/ProActiveUserGuide.html#_scheduler_graphql_api[*Scheduler GraphQL API*] &emsp; link:user/ProActiveUserGuide.html#_scheduler_command_line[*Scheduler CLI*] &emsp; link:javadoc/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html[*Scheduler Java*] &emsp; link:javadoc/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html[*Workflow Creation Java*] &emsp; https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client[*Python Client*]
+&emsp; link:rest/[*Scheduler REST*] &emsp; link:user/ProActiveUserGuide.html#_scheduler_graphql_api[*Scheduler GraphQL*] &emsp; link:user/ProActiveUserGuide.html#_scheduler_command_line[*Scheduler CLI*] &emsp; link:javadoc/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html[*Scheduler Java*] &emsp; link:javadoc/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html[*Workflow Creation Java*] &emsp; https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client[*Python Client*] &emsp; link:MLOS/MLOSUserGuide.html#_proactive_jupyter_kernel[*Jupyter Kernel*]
 
 == Links
 
