@@ -10,7 +10,7 @@
 <p><h4 id="_all_doc_pws_user_guide" style="display:inline;font-size:1em""><a href="../user/ProActiveUserGuide.html#_all_doc_pws_user_guide">PWS User Guide</a></h4>
 &nbsp;(Workflows, Workload automation, Jobs, Tasks, Catalog, Resource Management, Big Data/ETL, …​)</p>
 </li>
-<li><p><h4 id="all_doc_pws_modules" style="display:inline;font-size:1em""><a href="#all_doc_pws_modules">PWS Modules</a></h4></p>
+<li><p><h4 id="all_doc_pws_modules" style="display:inline;font-size:1em"">PWS Modules</h4></p>
 
 <ul>
 <li><p><h5 id="_all_doc_jp_user_guide" style="display:inline;font-size:1em""><a href="../JobPlanner/JobPlannerUserGuide.html#_all_doc_jp_user_guide">Job Planner</a></h5>
@@ -42,7 +42,7 @@
 <div class="paragraph">
 <h3 id="_all_doc_api_doc"><a class="anchor" href="#_all_doc_api_doc"></a><a class="link" href="#_all_doc_api_doc">API documentation</a></h3>
 <p><strong>
-<a class="restUrl" href="/rest" target="_blank">Scheduler REST API</a>&nbsp;&nbsp;&nbsp;
+<a class="restUrl" href="/rest" target="_blank">Scheduler REST</a>&nbsp;&nbsp;&nbsp;
 <a href="../user/ProActiveUserGuide.html#_scheduler_graphql_api">Scheduler GraphQL</a>  
 <a href="../user/ProActiveUserGuide.html#_scheduler_command_line">Scheduler CLI</a>  
 <a href="../javadoc/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html">Scheduler Java</a>  
