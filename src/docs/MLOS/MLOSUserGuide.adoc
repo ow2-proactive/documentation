@@ -1142,7 +1142,7 @@ Example:
 
 ```python
 #%fork_env(name=TASK_NAME)
-containerName = 'activeeon/dlm3'
+dockerImageName = 'activeeon/dlm3'
 dockerRunCommand =  'docker run '
 dockerParameters = '--rm '
 paHomeHost = variables.get("PA_SCHEDULER_HOME")
@@ -1152,7 +1152,7 @@ workspaceHost = localspace
 workspaceContainer = localspace
 workspaceVolume = '-v '+localspace +':'+localspace+' '
 containerWorkingDirectory = '-w '+workspaceContainer+' '
-preJavaHomeCmd = dockerRunCommand + dockerParameters + proActiveHomeVolume + workspaceVolume + containerWorkingDirectory + containerName
+preJavaHomeCmd = dockerRunCommand + dockerParameters + proActiveHomeVolume + workspaceVolume + containerWorkingDirectory + dockerImageName
 ```
 
 Or, you can provide the task name and the path of a _.py_ file containing the fork environment code:
