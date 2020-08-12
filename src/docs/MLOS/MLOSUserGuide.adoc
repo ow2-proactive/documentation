@@ -356,8 +356,9 @@ Once a MLaaS instance is up and running, it could be used for:
 Using MLaaS, you can easily deploy and use any machine learning model as a REST Web Service on a physical or a virtual compute host on which there is an available Proactive Node. Going through the Proactive Scheduler,
 you can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and eventually, deploy a Model-Service on that specific node.
 
-In the following subsections, we will illustrate the life cycle of MLaaS instance starting from the generic service instance,
-to deploying a specific model to pausing or deleting the instance and how these can be managed via three different ways in MLOS:
+In the following subsections, we will illustrate the life cycle of a MLaaS instance, from starting the generic service instance,
+deploying a specific model, pausing it, to deleting the instance. We will also talk about how the life cycle of a MLaaS instance
+can be managed via three different ways in MLOS:
 
 . <<Via Studio Portal>>
 . <<Via Cloud Automation Portal>>
@@ -407,7 +408,7 @@ Execute the workflow by setting the different workflow's variables as described 
 
 ==== Deploy a Specific AI Model
 
-You can also deploy a specific AI model directly from the the link:https://try.activeeon.com/Studio[Studio Portal].
+You can also deploy a specific AI model directly from the link:https://try.activeeon.com/Studio[Studio Portal].
 
 Drag and drop the `Deploy_AI_Model` task from the MLaaS bucket.
 
