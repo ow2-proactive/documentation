@@ -1,0 +1,41 @@
+Most cloud node source infrastructures allows the user to customize the VM startup script. 
+Usually, this script is expected to download and install the Java Runtime Environment, then download and launch ProActive node.jar, if not already provided by the VM image.
+The script can use the following arguments: 
+
+- `%nodeJarUrl%`: the value of the infrastructure parameter `nodeJarURL`, it specifies the full URL path for downloading _node.jar_ file.
+- `%protocol%`: the network protocol (pnp or pamr) to be used by the ProActive Node for incoming communications.
+- `%jythonPath%`: the path of jython library on the AWS instances. Its default value is `/tmp/node/lib/jython-standalone-2.7.0.jar/Lib`. 
+- `%rmHostname%`: the value of the infrastructure parameter `rmHostname`, it specifies the hostname or the public IP address of the Resource Manager.
+- `%instanceIdNodeProperty%`: it specifies the infrastructure use which property to identify the instance. It cloud be `instanceId` or `instanceTag`.
+- `%instanceId%`: the instance identification value corresponding `%instanceIdNodeProperty%`.
+- `%rmUrl%`: the URL to access the Resource Manager from the nodes.  
+- `%nodeSourceName%`: the name of the node source. 
+- `%nodeNamingOption%`: the Java command option specifying the node naming provided by the infrastructure. It's expected to be added in the Java command of starting node.jar.
+- `%credentials%`: the credential of the Proactive Node required for Resource Manager authentication.
+- `%numberOfNodesPerInstance%`: the value of the infrastructure parameter `numberOfNodesPerInstance`, it specifies how much nodes should be run on each instance.
+- `%additionalProperties%`: the value of the infrastructure parameter `additionalProperties`, it's supposed to be added in the Java command of starting node.jar
+
+These arguments will be interpreted by cloud node source Infrastructure later to replace these arguments by its effective value before the script execution.
+
+Here is an example startup script for Linux OS images which installed wget (e.g., Debian, Ubuntu):
+
+	mkdir -p /tmp/node && cd /tmp/node
+	if ! type -p jre/bin/java; then wget -nv -N https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u131-linux-x64.tar.gz; tar -xf jre-8u131-linux-x64.tar.gz; mv jre1.8.0_131/ jre; fi
+	wget -nv %nodeJarUrl%
+	nohup jre/bin/java -jar node.jar -Dproactive.communication.protocol=%protocol% -Dpython.path=%jythonPath% -Dproactive.pamr.router.address=%rmHostname% -D%instanceIdNodeProperty%=%instanceId% -r %rmUrl% -s %nodeSourceName% %nodeNamingOption% -v %credentials% -w %numberOfNodesPerInstance% %additionalProperties% &
+
+An example startup script for Linux OS images which installed curl instead of wget (e.g., CentOS, RHEL):
+
+	mkdir -p /tmp/node && cd /tmp/node 
+	if ! type -p jre/bin/java; then curl -sL https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u131-linux-x64.tar.gz --output jre.tar.gz; tar -xf jre.tar.gz; mv jre1.8.0_131/ jre; fi
+	curl -sL %nodeJarUrl% --output node.jar
+	nohup jre/bin/java -jar node.jar -Dproactive.communication.protocol=%protocol% -Dpython.path=%jythonPath% -Dproactive.pamr.router.address=%rmHostname% -D%instanceIdNodeProperty%=%instanceId% -r %rmUrl% -s %nodeSourceName% %nodeNamingOption% -v %credentials% -w %numberOfNodesPerInstance% %additionalProperties% &
+
+An example startup script for Windows OS images:
+
+	$download=New-Object System.Net.WebClient;
+	$download.DownloadFile('http://javadl.oracle.com/webapps/download/AutoDL?BundleId=238729_478a62b7d4e34b78b671c754eaaf38ab', 'c:\jreInstall.exe');
+	$procInstall=Start-Process -FilePath 'c:\jreInstall.exe' -ArgumentList '/s REBOOT=ReallySuppress INSTALLDIR=c:\jre' -Wait -PassThru;
+	$procInstall.waitForExit();
+	$download.DownloadFile('%nodeJarUrl%', 'c:\node.jar');
+	Start-Process -NoNewWindow 'c:\jre\bin\java' -ArgumentList '-jar', 'c:\node.jar', '-Dproactive.communication.protocol=%protocol%', '-Dproactive.pamr.router.address=%rmHostname%', '-D%instanceIdNodeProperty%=%instanceId%', '-r', '%rmUrl%', '-s', '%nodeSourceName%', '-v', '%credentials%', '-w', '%numberOfNodesPerInstance%', '%additionalProperties%'

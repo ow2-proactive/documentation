@@ -230,6 +230,7 @@ TIP: If all the nodes of an AWS instance are removed, the instance will be termi
 -   *image*: Defines which VM image (AMI) will be used to create the AWS instances.
         The value to provide is the AWS region together with the unique AMI ID, for example: `eu-west-1/ami-bff32ccc`.
         This is an optional property. When no image is specified by the user, the default value `eu-west-3/ami-03bca18cb3dc173c9` is used.
+        Currently only Linux images is supported for the EC2 infrastructure. Please use <<_aws_autoscaling_infrastructure>> for Windows image.
         Make sure the image is from a supported region (listed in the section <<_pre_requisites,Pre-Requisites>>) and using Linux operating system.
         More information about finding a Linux AMI ID is available on https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html[AWS EC2 guide for finding an AMI].
 
@@ -283,10 +284,20 @@ me=propertyvalue`). This is an optional property.
 
 -   *nodeTimeout*: The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost.
 
+-   *startupScript*: VM startup script to launch the ProActive nodes. 
+        Usually, this script is expected to download and install the Java Runtime Environment, then download and launch ProActive node.jar, if not already provided by the VM image.
+        The script can use <<_cloud_infrastructure_startup_script,some arguments>>. For example, it can use `%nodeJarUrl%` to represent the full URL path for downloading the _node.jar_ file. These arguments will be interpreted by EC2 Infrastructure later.
+        This is an optional property. If left blank, the script is automatically generated for the Linux OS. Here is the default value of startupScript:
+
+            mkdir -p /tmp/node && cd /tmp/node
+            if ! type -p jre/bin/java; then wget -nv -N https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u131-linux-x64.tar.gz; tar -xf jre-8u131-linux-x64.tar.gz; mv jre1.8.0_131/ jre; fi
+            wget -nv %nodeJarUrl%
+            nohup jre/bin/java -jar node.jar -Dproactive.communication.protocol=%protocol% -Dpython.path=%jythonPath% -Dproactive.pamr.router.address=%rmHostname% -D%instanceIdNodeProperty%=%instanceId% -r %rmUrl% -s %nodeSourceName% %nodeNamingOption% -v %credentials% -w %numberOfNodesPerInstance% %additionalProperties% &
+
 Using this configuration, you can start a ProActive Resource Manager and Scheduler using the */bin/proactive-server* script.
 An AWS EC2 NodeSource can now be added using the *Create Node Source* panel in the Resource Manager Portal or the command line interface:
 
-    $ PROACTIVE_HOME/bin/proactive-client --createns ec2 -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.AWSEC2Infrastructure awsKey awsSecretKey numberOfInstances numberOfNodesPerInstance image vmUsername vmKeyPairName vmPrivateKey ram cores securityGroupIds subnetId rmHostname connectorIaasURL nodeJarURL additionalProperties nodeTimeout
+    $ PROACTIVE_HOME/bin/proactive-client --createns ec2 -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.AWSEC2Infrastructure awsKey awsSecretKey numberOfInstances numberOfNodesPerInstance image vmUsername vmKeyPairName vmPrivateKey ram cores securityGroupIds subnetId rmHostname connectorIaasURL nodeJarURL additionalProperties nodeTimeout startupScript
 
 As AWS is a paying service, when the ProActive server is stopped normally (without removing the created infrastructure), all the created AWS instances will be terminated. When the ProActive server is restarted, these instances will be re-configured as per the previous settings.
 
@@ -480,12 +491,23 @@ Other properties for the node deployment in the *Create OpenStack Node Source* a
     	    	
     -   *additionalProperties:* Additional Java command properties to be added when starting each ProActive node JVM in OpenStack instances (e.g. \"-Dpropertyname=propertyvalue\").
     
+    -   *nodesInitDelay:* Estimated startup time (expressed in millisecond) of the nodes, including the startup time of VMs. After this timeout expired, the node will be considered as lost.
+
+    -   *startupScript:* VM startup script to launch the ProActive nodes. 
+        Usually, this script is expected to download and install the Java Runtime Environment, then download and launch ProActive node.jar, if not already provided by the VM image.
+        The script can use <<_cloud_infrastructure_startup_script,some arguments>>. For example, it can use `%nodeJarUrl%` to represent the full URL path for downloading the _node.jar_ file. These arguments will be interpreted by Openstack Infrastructure later.
+        This is an optional property. If left blank, the script is automatically generated for the Linux OS. Here is the default value of startupScript:
+
+            mkdir -p /tmp/node && cd /tmp/node
+            if ! type -p jre/bin/java; then wget -nv -N https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u131-linux-x64.tar.gz; tar -xf jre-8u131-linux-x64.tar.gz; mv jre1.8.0_131/ jre; fi
+            wget -nv %nodeJarUrl%
+            nohup jre/bin/java -jar node.jar -Dproactive.communication.protocol=%protocol% -Dpython.path=%jythonPath% -Dproactive.pamr.router.address=%rmHostname% -D%instanceIdNodeProperty%=%instanceId% -r %rmUrl% -s %nodeSourceName% %nodeNamingOption% -v %credentials% -w %numberOfNodesPerInstance% %additionalProperties% &
 
 Using this configuration, you can start a Resource Manager and a
 Scheduler using the */bin/proactive-server* script. An OpenStack NodeSource can
 now be added using the *Create Node Source* panel in the Resource Manager or the command line interface:
 
-    $ PROACTIVE_HOME/bin/proactive-client --createns openstack -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.OpenStackInfrastructure username password endpoint rmHostname connectorIaasURL image flavor publicKeyName numberOfInstances numberOfNodesPerInstance downloadCommand additionalProperties
+    $ PROACTIVE_HOME/bin/proactive-client --createns openstack -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.OpenStackInfrastructure username password endpoint rmHostname connectorIaasURL image flavor publicKeyName numberOfInstances numberOfNodesPerInstance downloadCommand additionalProperties nodesInitDelay startupScript
 
 
 WARNING: When ProActive server is stopped (without removing the created infrastructure), OpenStack instances will not be terminated. And when ProActive server is restarted, the infrastrucutre will be re-configured as per the previous settings. If the instances were deleted at the OpenStack Cloud side, they will be re-created and re-configured.
@@ -615,11 +637,20 @@ TIP: If all the nodes of a GoogleComputeEngine instance are removed, the instanc
         The URL needs to be accessible from the GoogleComputeEngine server.
 -   *additionalProperties*: Additional Java command properties to be added when starting each ProActive node JVM in GoogleComputeEngine instances (e.g. "-Dpropertyname=propertyvalue").
 -   *nodeTimeout*: The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost.
+-   *startupScript:* VM startup script to launch the ProActive nodes. 
+        Usually, this script is expected to download and install the Java Runtime Environment, then download and launch ProActive node.jar, if not already provided by the VM image.
+        The script can use <<_cloud_infrastructure_startup_script,some arguments>>. For example, it can use `%nodeJarUrl%` to represent the full URL path for downloading the _node.jar_ file. These arguments will be interpreted by GCE Infrastructure later.
+        This is an optional property. If left blank, the script is automatically generated for the Linux OS. Here is the default value of startupScript:
+
+            mkdir -p /tmp/node && cd /tmp/node
+            if ! type -p jre/bin/java; then wget -nv -N https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u131-linux-x64.tar.gz; tar -xf jre-8u131-linux-x64.tar.gz; mv jre1.8.0_131/ jre; fi
+            wget -nv %nodeJarUrl%
+            nohup jre/bin/java -jar node.jar -Dproactive.communication.protocol=%protocol% -Dpython.path=%jythonPath% -Dproactive.pamr.router.address=%rmHostname% -D%instanceIdNodeProperty%=%instanceId% -r %rmUrl% -s %nodeSourceName% %nodeNamingOption% -v %credentials% -w %numberOfNodesPerInstance% %additionalProperties% &
 
 Using this configuration, you can start a Resource Manager and a Scheduler using the */bin/proactive-server* script.
 A GoogleComputeEngine NodeSource can now be added using the *Create Node Source* panel in the Resource Manager or the command line interface:
 
-    $ PROACTIVE_HOME/bin/proactive-client --createns googlecomputeengine -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.GCEInfrastructure gceCredential totalNumberOfInstances numberOfNodesPerInstance vmUsername vmPublicKey vmPrivateKey image region ram cores rmHostname connectorIaasURL nodeJarURL additionalProperties nodeTimeout
+    $ PROACTIVE_HOME/bin/proactive-client --createns googlecomputeengine -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.GCEInfrastructure gceCredential totalNumberOfInstances numberOfNodesPerInstance vmUsername vmPublicKey vmPrivateKey image region ram cores rmHostname connectorIaasURL nodeJarURL additionalProperties nodeTimeout startupScript
 
 WARNING: When ProActive server is stopped, GoogleComputeEngine instances will be automatically deleted. And when ProActive server is restarted, the infrastructure will be recovered as per the previous settings. The required GoogleComputeEngine instances will be re-created and re-configured.
 
@@ -663,8 +694,8 @@ The next four parameters are optional, and apply to advanced Azure endpoint conf
 
 - *rmHttpUrl:* Here you should provide your server's URL or public IP (e.g. try.activeeon.com). A default value will be generated from the system properties but you might need to modify it according to your network configuration so that it is accessible from your Azure nodes.
 - *connectorIaasUrl:* The URL of your _Connector IaaS_ service. A default value will be generated as well (e.g. +http://try.activeeon.com:8080/connector-iaas+).
-- *image:* The name or id of your custom Linux image. The image should be located within the provided subscription and accessible to the service principal. It should also be located in the Azure region that you define in your configuration (see *region* parameter below).
-- *imageOSType:* The default value is _linux_. Currently, only Linux is supported as OS.
+- *image:* The name or id of your custom image. The image should be located within the provided subscription and accessible to the service principal. It should also be located in the Azure region that you define in your configuration (see *region* parameter below).
+- *imageOSType:* Image OS type (A choice between _linux_ and _windows_). The default value is _linux_.
 - *vmSizeType:* The size of the VMs to be deployed. The default value is _Standard_D1_v2_. Azure provides an extensive list of https://docs.microsoft.com/en-us/azure/virtual-machines/linux/sizes[Linux VM sizes]. If you want to know the available sizes for a specific region or subscription you can use https://docs.microsoft.com/en-us/cli/azure/vm?view=azure-cli-latest#az-vm-list-sizes[Azure CLI command] `az vm list-sizes -l {your location}`.
 - *vmUsername:* Provide a user name for the VM.
 - *vmPassword:* Provide a password for your VM. Here is a guideline for https://docs.microsoft.com/en-us/azure/virtual-machines/linux/faq#what-are-the-password-requirements-when-creating-a-vm[Linux passwords on Azure].
@@ -677,6 +708,23 @@ The next four parameters are optional, and apply to advanced Azure endpoint conf
 - *privateNetworkCIDR:* An optional network Classless Inter-Domain Routing to allocate the new VMs within the private network. The default value is _10.0.0.0/24_.
 - *staticPublicIP:* A boolean flag to determine whether the public IPs of the infrastructure's VMs should be static. The default value is _true_.
 - *additionalProperties:* Additional JVM properties to configure your ProActive node. The default values allow to handle both PNP and PAMR protocols. You can add your own properties but be aware that removing the current values might cause the deployment to fail.
+- *linuxStartupScript:* Linux VM startup script to launch the ProActive nodes. 
+    Usually, this script is expected to download and install the Java Runtime Environment, then download and launch ProActive node.jar, if not already provided by the VM image.
+    The script can use <<_cloud_infrastructure_startup_script,some arguments>>. For example, it can use `%nodeJarUrl%` to represent the full URL path for downloading the _node.jar_ file. These arguments will be interpreted by Azure Infrastructure later.
+    This is an optional property. If left blank, the script is automatically generated. Here is the default value of linuxStartupScript:
+
+        mkdir -p /tmp/node && cd /tmp/node
+        if ! type -p jre/bin/java; then wget -nv -N https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u131-linux-x64.tar.gz; tar -xf jre-8u131-linux-x64.tar.gz; mv jre1.8.0_131/ jre; fi
+        wget -nv %nodeJarUrl%
+        nohup jre/bin/java -jar node.jar -Dproactive.communication.protocol=%protocol% -Dpython.path=%jythonPath% -Dproactive.pamr.router.address=%rmHostname% -D%instanceIdNodeProperty%=%instanceId% -r %rmUrl% -s %nodeSourceName% %nodeNamingOption% -v %credentials% -w %numberOfNodesPerInstance% %additionalProperties% &
+
+- *windowsStartupScript:* Powershell script to be run during Windows VM startup for launching the ProActive nodes.
+    This is an optional property. If left blank, the script is automatically generated. Here is the default value of windowsStartupScript:
+
+        mkdir -p /tmp/node && cd /tmp/node
+        if ! type -p jre/bin/java; then wget -nv -N https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u131-linux-x64.tar.gz; tar -xf jre-8u131-linux-x64.tar.gz; mv jre1.8.0_131/ jre; fi
+        wget -nv %nodeJarUrl%
+        nohup jre/bin/java -jar node.jar -Dproactive.communication.protocol=%protocol% -Dpython.path=%jythonPath% -Dproactive.pamr.router.address=%rmHostname% -D%instanceIdNodeProperty%=%instanceId% -r %rmUrl% -s %nodeSourceName% %nodeNamingOption% -v %credentials% -w %numberOfNodesPerInstance% %additionalProperties% &
 
 The following fields are the optional parameters of the Azure Billing Configuration section. The aim of this section is to configure the automatic cloud cost estimator. It is done by considering all the Azure resources related to your reservation (virtual machines, disks,..). This mechanism relies on the Azure Resource Usage and RateCard APIs (https://docs.microsoft.com/en-us/azure/cost-management-billing/manage/usage-rate-card-overview).
 
