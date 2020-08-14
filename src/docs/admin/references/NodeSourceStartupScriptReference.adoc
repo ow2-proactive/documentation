@@ -1,12 +1,12 @@
 Most cloud node source infrastructures allows the user to customize the VM startup script. 
-Usually, this script is expected to download and install the Java Runtime Environment, then download and launch ProActive node.jar, if not already provided by the VM image.
+To run the ProActive nodes, this script is also expected to download and install the Java Runtime Environment, then download and and execute ProActive node.jar, if they are not already provided by the VM image.
 The script can use the following arguments: 
 
 - `%nodeJarUrl%`: the value of the infrastructure parameter `nodeJarURL`, it specifies the full URL path for downloading _node.jar_ file.
 - `%protocol%`: the network protocol (pnp or pamr) to be used by the ProActive Node for incoming communications.
 - `%jythonPath%`: the path of jython library on the AWS instances. Its default value is `/tmp/node/lib/jython-standalone-2.7.0.jar/Lib`. 
-- `%rmHostname%`: the value of the infrastructure parameter `rmHostname`, it specifies the hostname or the public IP address of the Resource Manager.
-- `%instanceIdNodeProperty%`: it specifies the infrastructure use which property to identify the instance. It cloud be `instanceId` or `instanceTag`.
+- `%rmHostname%`: the value of the infrastructure parameter `rmHostname`, it specifies the hostname or refers an IP address of the Resource Manager which is accessible from deployed nodes.
+- `%instanceIdNodeProperty%`: it specifies the infrastructure use which property to identify the instance. It could be `instanceId` or `instanceTag`.
 - `%instanceId%`: the instance identification value corresponding `%instanceIdNodeProperty%`.
 - `%rmUrl%`: the URL to access the Resource Manager from the nodes.  
 - `%nodeSourceName%`: the name of the node source. 
