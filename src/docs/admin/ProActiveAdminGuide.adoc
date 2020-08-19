@@ -2888,4 +2888,8 @@ include::./references/SchedulerPortalReference.adoc[]
 [[_resource_manager_command_line]]
 === Command Line
 include::../CLI.adoc[]
+
+[[_cloud_infrastructure_startup_script]]
+=== Cloud Node Source Infrastructure Startup Script
+include::./references/NodeSourceStartupScriptReference.adoc[]
 include::../common-footer.adoc[]
