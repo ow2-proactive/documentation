@@ -666,11 +666,15 @@ To access the Audit and Traceability page, click on the endpoint under the Endpo
 In this page, you are able to check the different values of the model variables.
 You can also track the traceability information of the token during several date/time(s) as shown in the below image.
 
-image::traceability.png[align=center]
+image::traceability1.png[align=center]
+
+It is possible to visualize the model predictions by clicking on the first link in the top of the page.
+This link will take you to a *Predictions Preview* page that lists the set of predictions corresponding to the input dataset.
+
 
 === Via Swagger UI
 
-To access the Swagger UI go to http://try.activeeon.com:port/api/ui/
+To access the Swagger UI, click on the second link in the top of the Traceability & Audit page.
 
 Through this Swagger UI, you are now able to:
 
