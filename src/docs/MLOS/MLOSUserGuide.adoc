@@ -178,26 +178,39 @@ The `auto-ml-optimization` bucket contains the Multi_Tuners_AutoML workflow that
 It is an estimator that minimizes the posterior expected value of a loss function.
 This bucket also comes with a set of workflows' examples that demonstrates how we can optimize mathematical functions, MLOS workflows and machine/deep learning algorithms from scripts using AutoML tuners.
 
-=== AutoML Variants
+=== Multi_Tuners_Auto_ML
 
-All Multi_Tuners_AutoML variants propose six algorithms for hyperparameters' optimization. The choice of the sampling/search strategy depends strongly on the tackled problem.
-Three variants of AutoML are proposed. Each variant comes with specific pipelines (parallel or sequential) and visualization tools (Visdom or Tensorboard) as described in the subsections below (<<Multi_Tuners_AutoML_V1>>, <<Multi_Tuners_AutoML_V2>>, <<Multi_Tuners_AutoML_V3>>).
+Multi_Tuners_Auto_ML propose six algorithms for hyperparameters' optimization. The choice of the
+sampling/search strategy depends strongly on the tackled problem.
+Multi_Tuners_Auto_ML comes with specific pipelines (parallel or sequential) and visualization tools
+(Visdom or Tensorboard) as described in the subsections below.
 
-*Common variables:*
+*Variables:*
 
-.Multi_Tuners_AutoML_Variants_Common Variables
+.Multi_Tuners_Auto_ML Variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
+
+| `NS`
+| Specifies the Node Source where the processing will take place. In ProActive, SLURM is used as a Node Source.
+| String [default=empty]
+| `NS_BATCH`
+| Specifies the type of the Node Source to be used. It can be either CPU or GPU. In ProActive,
+    GPU resources are used for the SLURM Node Source.
+| String [default=empty]
+| `NODE_ACCESS_TOKEN`
+| The token ID with which the Node Source can be accessed.
+| String [default=empty]
+| `NODE_SOURCE_NAME`
+| The name of the Node Source.
+| String [default=empty]
 | `TUNING_ALGORITHM`
 | Specifies the tuner algorithm that will be used for hyperparameters optimization.
-| List(Bayes, Grid, Random, QuasiRandom, CMAES, MOCMAES) default=Bayes
+| List(Bayes, Grid, Random, QuasiRandom, CMAES, MOCMAES) [default=Bayes]
 | `WORKFLOW_TO_OPTIMIZE`
 | Specifies the path of the workflow that we need to optimize.
 | String [default=auto-ml-optimization/Himmelblau_Function]
-| `SEARCH_SPACE`
-|  Specifies the representation of the search space which has to be defined using dictionaries.
-| JSON format (see search space representation below)
 | `MAX_ITERATIONS`
 |  Specifies the number of maximum iterations.
 | Int (default=2)
@@ -207,8 +220,39 @@ Three variants of AutoML are proposed. Each variant comes with specific pipeline
 | `DOCKER_ENABLED`
 |  If True, the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
+| `VISDOM_ENABLED`
+| If True, the user can visualize the data using the Visdom web interface.
+| Boolean (default=False)
+| `VISDOM_PROXYFIED`
+| If True, requests to Visdom are sent to a proxy server before being sent to the destination server.
+| Boolean (default=False)
+| `VISDOM_ENABLE_LOGIN`
+| If True, the user will be asked to insert a username and password to access the Visdom web interface.
+| Boolean (default=False)
+| `VISDOM_USERNAME`
+| The username used to access the Visdom web interface.
+| String [default=empty]
+| `VISDOM_PASSWORD`
+| The password used to access the Visdom web interface.
+| String [default=empty]
+| `VISDOM_INSTANCE_NAME`
+| Specifies the name to be provided to the Visdom instance.
+| String [default=visdom-server]
+| `TENSORBOARD_ENABLED`
+| If True, the user can visualize the data using the Tensorboard web interface.
+| Boolean (default=False)
+| `TENSORBOARD_INSTANCE_NAME`
+| Specifies the name to be provided to the Tensorboard instance.
+| String [default=tensorboard-server]
+| `TENSORBOARD_LOG_PATH`
+| Specifies the path where the Tensorboard execution log can be found.
+| String [default=/shared/$TENSORBOARD_INSTANCE_NAME]
+| `TENSORBOARD_DOCKER_LOG_PATH`
+| Specifies the path where the execution log of the tensorboard docker image can be found.
+| String [default=/graphs/$TENSORBOARD_INSTANCE_NAME]
 |===
 
+image::AutoML_Full.png[1000,700,align=center]
 *How to define the search space:*
 
 This subsection describes common building blocks to define a search space:
@@ -249,87 +293,188 @@ In the following, we briefly describe the different tuners proposed by the Multi
     - *MOCMAES search* is a multi-objective algorithm optimizing multiple tradeoffs simultaneously.
       To do that, MOCMAES employs a number of CMAES algorithms.
 
-==== Multi_Tuners_AutoML_V1
 
-*Workflow Overview:* generates at first the chosen values of hyperparameters for each trial. Then, it executes the different trials in parallel. Finally, it plots the different results using Visdom.
-
-*Specific variables:*
-
-.Multi_Tuners_AutoML_V1 specific variables
-[cols="2,5,2"]
-|===
-| *Variable name* | *Description* | *Type*
-| `VISDOM_ENABLED`
-|  If True, the results will be plotted in real time in the Visdom dashboard.
-| Boolean (default=True)
-|===
-
-image::MLOS-AutoML-V1.png[align=center]
-==== Multi_Tuners_AutoML_V2
-
-*Workflow Overview:* considers two execution pipelines (parallel and sequential).
-For all the tuning algorithms except the Bayesian one, the parallel pipeline is executed similar as `Multi_Tuners_AutoML_V1`. For the Bayesian algorithm, the sequential one is executed. This pipeline both generates the hyperparameters' values, and executes the associated trials sequentially.
-The results can be visualized using Visdom.
-
-*Specific variables:*
-
-.Multi_Tuners_AutoML_V2 specific variables
-[cols="2,5,2"]
-|===
-| *Variable name* | *Description* | *Type*
-| `VISDOM_ENABLED`
-|  If True, the results will be plotted in real time in the Visdom dashboard.
-| Boolean (default=True)
-|===
-
-image::MLOS-AutoML-V2.png[align=center]
-
-==== Multi_Tuners_AutoML_V3
-*Workflow Overview:* is similar to `Multi_Tuners_AutoML_V2`. However, this version uses `Tensorboard` to visualize the different results.
-
-*Specific variables:*
-
-.Multi_Tuners_AutoML_V3 specific variables
-[cols="2,5,2"]
-|===
-| *Variable name* | *Description* | *Type*
-| `MOUNT_LOG_PATH`
-|  The path of the shared folder in which the Tensorboard logs will be saved.
-| String (default=/shared/$INSTANCE_NAME)
-| `DOCKER_LOG_PATH`
-|  The path of the folder in which the Tensorboard logs will be saved in the docker container.
-| String (default=/graphs/$INSTANCE_NAME)
-| `INSTANCE_NAME`
-|  The instance name of the Tensorboard server that is/will be launched.
-| String (default=tensorboard-server)
-| `TENSORBOARD_ENABLED`
-|  If True, the results will be plotted in real time in the Tensorboard dashboard.
-| Boolean (default=True)
-|===
-
-image::MLOS-AutoML-V3.png[align=center]
 
 === Objective ML Examples
 
-The following workflows represent some machine learning and deep learning algorithms that can be optimized:
+The following workflows represent some machine learning and deep learning algorithms that can be optimized.
+These workflows have several common variables as in Multi_Tuners_Auto_ML. Some of the workflows are characterized
+by few additional variables.
 
-*Diabetics Detection Using Logistic Regression:* train a logistic regression model using MLOS machine learning generic tasks in order to detect diabetics.
+
 
 *CIFAR10 CNN:* train a simple deep CNN on the CIFAR10 images dataset using the Keras library.
 
+.CIFAR10 CNN Variables
+[cols="2,5,5"]
+|===
+| *Variable name* | *Description* | *Type*
+
+| `CONTAINER_PLATFORM`
+| Specifies the platform of the container that packages up the code and all its dependencies for running the application.
+| List(docker, podman, singularity) [default=docker]
+| `CONTAINER_GPU_ENABLED`
+| If True, containers will run based on images containing libraries that are compatible with GPU.
+| Boolean [default=True]
+| `CONTAINER_IMAGE`
+| Specifies the path of the file that contains the executable code for running the process in an isolated manner.
+| List(docker://activeeon/dlm3, docker://activeeon/cuda, docker://activeeon/cuda2, docker://activeeon/rapidsai,
+docker://activeeon/tensorflow:latest, docker://activeeon/tensorflow:latest-gpu) [default=empty]
+| `NUM_EPOCHS`
+| The number of times that model training is repeated for minimizing the error.
+| Integer [default=3]
+| `INPUT_VARIABLES`
+| A set of specific variables (usecase-related) that are used in the model training process.
+| JSON format [default={"OPTIMIZER": "Adam","LEARNING_RATE": 0.0001, "BATCH_SIZE": 32, "WEIGHT_DECAY": 0.0005}]
+| `SEARCH_SPACE`
+| Specifies the representation of the search space which has to be defined using dictionaries.
+| JSON format [default={"OPTIMIZER": choice(["Adam", "SGD", "RMSprop"]),"LEARNING_RATE": choice([0.0001, 0.00025]), "BATCH_SIZE": choice([32, 64]), "WEIGHT_DECAY": choice([0.0005, 0.005])}]
+| `INSTANCE_NAME`
+| Specifies the name to be provided for the instance.
+| String [default=tensorboard-server]
+| `DOCKER_LOG_PATH`
+| The path for the file containing the execution log of the docker image.
+| String [default=/graphs/$INSTANCE_NAME]
+| `MOUNT_LOG_PATH`
+| The path of the file in which the mount points can be monitored.
+| String [default=/shared/$INSTANCE_NAME]
+|===
+
 *CIFAR100 CNN:* train a simple deep CNN on the CIFAR100 images dataset using the Keras library.
+
+.CIFAR100 CNN Variables
+[cols="2,5,5"]
+|===
+| *Variable name* | *Description* | *Type*
+
+
+| `INPUT_VARIABLES`
+| A set of specific variables that are used in the model training process.
+| JSON format [default={"OPTIMIZER": "Adam","LEARNING_RATE": 0.0001, "BATCH_SIZE": 64, "WEIGHT_DECAY": 0.0005}]
+
+|===
+
+*Diabetics Detection Using Logistic Regression:* train a logistic regression model using MLOS machine learning generic tasks in order to detect diabetics.
+
+
+.Diabetics Detection Using Logistic Regression Variables
+[cols="2,5,5"]
+|===
+| *Variable name* | *Description* | *Type*
+
+
+| `DOCKER_ENABLED`
+| If True, the scripts of the workflows will be executed using docker containers.
+| Boolean [default=True]
+| `DOCKER_GPU_ENABLED`
+| If True, containers will run based on docker images containing libraries that are compatible with GPU.
+| Boolean [default=False]
+| `DOCKER_IMAGE`
+| The location of the docker image file, that is used to execute code in a Docker container.
+| List(activeeon/dlm3, activeeon/cuda) [default=empty]
+| `INPUT_VARIABLES`
+| A set of specific variables (usecase-related) that are used in the model training process.
+| JSON format [default={"MAX_ITERATIONS": 10, "SOLVER": "liblinear", "PENALTY": "l1"}]
+| `SEARCH_SPACE`
+| Specifies the representation of the search space which has to be defined using dictionaries.
+| JSON format [default={"MAX_ITERATIONS": choice([5,10,15]), "SOLVER": choice(["liblinear","saga"]), "PENALTY": choice(["l1", "l2"])}]
+
+|===
 
 *Image Object Detection:* train a YOLO model on the coco dataset using MLOS deep learning generic tasks.
 
+
+.Image Object Detection Variables
+[cols="2,5,5"]
+|===
+| *Variable name* | *Description* | *Type*
+
+
+| `INPUT_VARIABLES`
+| A set of specific variables (usecase-related) that are used in the model training process.
+| JSON format [default={{"LEARNING_RATE" : 0.0025, "CONF_THRESHOLD" : 0.1, "NMS_THRESHOLD" : 0.35, "MOMENTUM" : 0.09, "WEIGHT_DECAY" : 0.005}]
+| `SEARCH_SPACE`
+| Specifies the representation of the search space which has to be defined using dictionaries.
+| JSON format default[{"LEARNING_RATE": choice([0.0001, 0.00025]), "CONF_THRESHOLD": choice([0.1, 0.5]), "NMS_THRESHOLD": choice([0.35, 0.45]), "MOMENTUM": choice([0.0009, 0.009]), "WEIGHT_DECAY": choice([0.0005, 0.005])}]
+
+|===
+
 *Multiple SVM Models:* train multiple types of SVMs models that can be optimized using AutoML.
 
+.Multiple SVM Models Variables
+[cols="2,5,5"]
+|===
+| *Variable name* | *Description* | *Type*
+
+| `SEARCH_SPACE`
+| Specifies the representation of the search space which has to be defined using dictionaries.
+| JSON format [default={"algo" : "SVC", "kernel" : "rbf", "C" : 0.2, "gamma" : 0.1}]
+| `INPUT_VARIABLES`
+| A set of specific variables (usecase-related) that are used in the model training process.
+| JSON format [default=[{"algo" : "SVC", "kernel" : "rbf",               "C" : log(low=-2, high=10, base=10),               "gamma" : log(low=-9, high=3, base=10)},          {"algo" : "SVC", "kernel" : "poly",               "C" : log(low=-2, high=10, base=10),               "gamma" : log(low=-9, high=3, base=10),               "degree" : quantized_uniform(low=1, high=5, step=1),               "coef0" : uniform(low=-1, high=1)},          {"algo" : "LinearSVC",               "C" : log(low=-2, high=10, base=10)}]]
+|===
+
 *Text_Generation:* train a simple Long Short-Term Memory (LSTM) to learn sequences of characters from 'The Alchemist' book. It's a novel by Brazilian author Paulo Coelho that was first published in 1988.
+
+.Text_Generation Variables
+[cols="2,5,5"]
+|===
+| *Variable name* | *Description* | *Type*
+
+| `DOCKER_GPU_ENABLED`
+| If True, containers will run based on docker images containing libraries that are compatible with GPU.
+| Boolean [default=True]
+| `INPUT_VARIABLES`
+| A set of specific variables (usecase-related) that are used in the model training process.
+| JSON format [default=empty]
+| `SEARCH_SPACE`
+| Specifies the representation of the search space which has to be defined using dictionaries.
+| JSON format [default={"OPTIMIZER": choice(["Adam", "RMSprop"]), "EPOCHS": choice([2000, 2030]), "MAXLEN": choice([40, 90, 100, 200, 400]), "UNIT": choice([256, 600, 700]), "DROPOUT": choice([0.004, 0.4])}]
+
+|===
 
 === Objective Function Examples
 
 The following workflows represent some mathematical functions that can be optimized by the AutoML tuners.
 
 *Himmelblau_Function:* is a multi-modal function, used to test the performance of optimization algorithms.
+
+.Himmelblau_Function Variables
+[cols="2,5,5"]
+|===
+| *Variable name* | *Description* | *Type*
+
+| `SEARCH_SPACE`
+| Specifies the representation of the search space which has to be defined using dictionaries.
+| JSON format [default={'x': uniform(-6, 6), 'y': uniform(-6, 6)}]
+| `INPUT_VARIABLES`
+| A set of specific variables (usecase-related) that are used in the model training process.
+| JSON format [default={"x": 3.5976705887960527, "y": -1.8471754188451843}]
+|===
+
+=== Templates
+
+The following workflows represent python templates that can be optimized by the AutoML tuners.
+
+*Python_Task:* is a simple python task template that can be used for AutoML.
+
+.Python_Task Variables
+[cols="2,5,5"]
+|===
+| *Variable name* | *Description* | *Type*
+
+| `TOKEN`
+| Specifies an ID that is used to access the deployed python task.
+| JSON format [default={"_token_id": 0}]
+| `SEARCH_SPACE`
+| Specifies the representation of the search space which has to be defined using dictionaries.
+| JSON format [default={"OPTIMIZER": choice(["Adam", "SGD", "RMSprop"])}]
+| `INPUT_VARIABLES`
+| A set of specific variables (usecase-related) that are used in the model training process.
+| JSON format [default={"OPTIMIZER": "Adam"}]
+|===
+
+
 
 == Machine Learning as a Service (MLaaS)
 
@@ -340,7 +485,7 @@ The life cycle of any MLaaS instance (i.e., from starting the generic service in
 
 - Using the *Studio Portal* and more specifically the bucket *model-as-a-service* where specific generic tasks are provided to process all the possible actions (i.e., Model_Service_Start, Deploy_AI_Model, Call_Prediction_Service, Model_Service_Actions[Finish/Pause/Resume]).
 These tasks can be easily integrated to your AI pipelines/workflows as you can see in this <<Deployment Pipeline Example>>.
-- Using the *Cloud Automation Portal* by executing the different actions associated to MLaaS (i.e., Model_Service, Deploy_AI_Model, Finish_Model_Service, Pause_Model_Service, Resume_Model_Service)
+- Using the *Cloud Automation Portal* by executing the different actions associated to MLaaS (i.e. Deploy_Model_Service, Update_Model_Service, Pause_Model_Service, Resume_Model_Service, Finish_Model_Service.)
 - Using the *Swagger UI* which is accessible once the MLaaS instance is up and running.
 
 The management of the life cycle of MLaaS will be detailed in the next sub-sections.
@@ -626,7 +771,7 @@ Set the Following variables:
 | A valid URL specified by the user referencing to the model that needs to be deployed.
 | URL (default= https://activeeon-public.s3.eu-west-2.amazonaws.com/models/model.pkl)
 | `MODEL_METADATA`
-| A vector of numerical data that describes the data. This metadata is used for the purpose of detecting drifts.
+| This variable contains some statistical features such as the mean and the standard deviation extracted from the training data used to build the model that should be deployed. This metadata is used for the purpose of detecting drifts.
 | Numerical vector (default= [[5.8216666667,3.0658333333,3.695,1.1766666667],[0.8128364419,0.4385797999,1.7614380107,0.7581194484]])
 | `USER_NAME`
 | A valid user name having the needed privileges to execute this action.
