@@ -177,6 +177,9 @@ image::execute.gif[100000,2000]
 The `auto-ml-optimization` bucket contains the Multi_Tuners_AutoML workflow that can be easily used to find the operating parameters for any system whose performance can be measured as a function of adjustable parameters.
 It is an estimator that minimizes the posterior expected value of a loss function.
 This bucket also comes with a set of workflows' examples that demonstrates how we can optimize mathematical functions, MLOS workflows and machine/deep learning algorithms from scripts using AutoML tuners.
+In the following subsections, several tables represent the main variables that characterize the AutoML workflows.
+In addition to the variables mentioned below, there is a set of generic variables that are common between all workflows
+which can be found in the subsection <<AI Workflows Common Variables>>.
 
 === Multi_Tuners_Auto_ML
 
@@ -184,27 +187,12 @@ Multi_Tuners_Auto_ML propose six algorithms for hyperparameters' optimization. T
 sampling/search strategy depends strongly on the tackled problem.
 Multi_Tuners_Auto_ML comes with specific pipelines (parallel or sequential) and visualization tools
 (Visdom or Tensorboard) as described in the subsections below.
-
 *Variables:*
 
 .Multi_Tuners_Auto_ML Variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-
-| `NS`
-| Specifies the Node Source where the processing will take place. In ProActive, SLURM is used as a Node Source.
-| String [default=empty]
-| `NS_BATCH`
-| Specifies the type of the Node Source to be used. It can be either CPU or GPU. In ProActive,
-    GPU resources are used for the SLURM Node Source.
-| String [default=empty]
-| `NODE_ACCESS_TOKEN`
-| The token ID with which the Node Source can be accessed.
-| String [default=empty]
-| `NODE_SOURCE_NAME`
-| The name of the Node Source.
-| String [default=empty]
 | `TUNING_ALGORITHM`
 | Specifies the tuner algorithm that will be used for hyperparameters optimization.
 | List(Bayes, Grid, Random, QuasiRandom, CMAES, MOCMAES) [default=Bayes]
@@ -217,9 +205,6 @@ Multi_Tuners_Auto_ML comes with specific pipelines (parallel or sequential) and 
 | `PARALLEL_SAMPLES_PER_LOOP`
 |  Specifies the number of samples per iteration.
 | Int (default=2)
-| `DOCKER_ENABLED`
-|  If True, the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
 | `VISDOM_ENABLED`
 | If True, the user can visualize the data using the Visdom web interface.
 | Boolean (default=False)
@@ -309,17 +294,6 @@ by few additional variables.
 [cols="2,5,5"]
 |===
 | *Variable name* | *Description* | *Type*
-
-| `CONTAINER_PLATFORM`
-| Specifies the platform of the container that packages up the code and all its dependencies for running the application.
-| List(docker, podman, singularity) [default=docker]
-| `CONTAINER_GPU_ENABLED`
-| If True, containers will run based on images containing libraries that are compatible with GPU.
-| Boolean [default=True]
-| `CONTAINER_IMAGE`
-| Specifies the name of the Docker image that will be used to run the different workflow tasks.
-| List(docker://activeeon/dlm3, docker://activeeon/cuda, docker://activeeon/cuda2, docker://activeeon/rapidsai,
-docker://activeeon/tensorflow:latest, docker://activeeon/tensorflow:latest-gpu) [default=empty]
 | `NUM_EPOCHS`
 | The number of times data is passed forward and backward through the training algorithm.
 | Integer [default=3]
@@ -332,12 +306,12 @@ docker://activeeon/tensorflow:latest, docker://activeeon/tensorflow:latest-gpu) 
 | `INSTANCE_NAME`
 | Specifies the name to be provided for the instance.
 | String [default=tensorboard-server]
-| `DOCKER_LOG_PATH`
+| `CONTAINER_LOG_PATH`
 | Specifies the path where the docker logs are created and stored on the docker container.
 | String [default=/graphs/$INSTANCE_NAME]
-| `MOUNT_LOG_PATH`
-| Specifies the path where the mount logs are created and stored on the host.
-| String [default=/shared/$INSTANCE_NAME]
+| `CONTAINER_ROOTLESS_ENABLED`
+| If True, the user will be able to run the workflow in a rootless mode.
+| [default=True]
 |===
 
 The following workflows have common variables with the above illustred workflows.
@@ -402,6 +376,10 @@ can be managed via three different ways in MLOS:
 . <<Via Cloud Automation Portal>>
 . <<Via Swagger UI>>
 
+In the description below, multiple tables represent the main variables that characterize the MLaaS workflows.
+In addition to the variables mentioned below, there is a set of generic variables that are common between all workflows
+which can be found in the subsection <<AI Workflows Common Variables>>.
+
 === Via Studio Portal
 ==== Start a Generic Service Instance
 
@@ -439,9 +417,6 @@ Execute the workflow by setting the different workflow's variables as described 
 | `INSTANCE_NAME`
 | The name of the service that will be deployed.
 | String (default="model-server-${PA_JOB_ID}")
-| `DOCKER_IMAGE`
-| The Docker image that contains all the dependencies and libraries needed by the model specific AI model to be deployed.
-| String (default=link:https://hub.docker.com/r/activeeon/model_as_a_service/[activeeon/model_as_a_service])
 |===
 
 ==== Deploy a Specific AI Model
@@ -472,9 +447,6 @@ Execute the workflow and set the different workflow's variables as follows:
 | `SERVICE_TOKEN`
 | A valid token generated by the MLaaS Service for user authentication.
 | String (default=Empty).
-| `DOCKER_ENABLED`
-|  If True, the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/model_as_a_service/[activeeon/model_as_a_service] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True).
 3+^|*Task variables*
 | `DEPLOY_MODEL_ENDPOINT`
 | A URL endpoint defined by the user where the AI Model was deployed
@@ -518,9 +490,6 @@ Execute the Workflow and set the different workflow's variables as follows:
 | `SERVICE_TOKEN`
 | A valid token generated by the MLaaS Service for user authentication.
 | String (default=Empty)
-| `DOCKER_ENABLED`
-|  If True, the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/model_as_a_service/[activeeon/model_as_a_service] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
 3+^|*Task variables*
 | `PREDICT_MODEL_ENDPOINT`
 | The endpoint of the started service.
@@ -567,9 +536,6 @@ Execute the Workflow and set the different workflow's variables as follows:
 | `SERVICE_TOKEN`
 | A valid token generated by the MLaaS Service for user authentication.
 | String (default=Empty)
-| `DOCKER_ENABLED`
-|  If True, the workflow will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
 3+^|*Task variables*
 | `ACTION`
 | The action that will be processed regarding the service status.
@@ -599,9 +565,6 @@ Set the following variables:
 | `PROXYFIED`
 | True if a proxy is needed to protect the access to this model-service endpoint.
 | Boolean (default=False)
-| `DOCKER_IMAGE`
-| The Docker image that contains all the dependencies and libraries needed by the model specific AI model to be deployed.
-| String (default="activeeon/model_as_a_service")
 | `HTTPS_ENABLED`
 | True if the protocol https is needed for the defined model-service.
 | Boolean (default=False)
@@ -1813,11 +1776,10 @@ most of the available AI workflows in MLOS associated to their descriptions.
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-
-| `NS`
+| `NATIVE_SCHEDULER`
 | Specifies the Node Source where the processing will take place. In ProActive, SLURM is used as a Node Source.
 | String [default=empty]
-| `NS_BATCH`
+| `NATIVE_SCHEDULER_PARAMS`
 | Specifies the type of the Node Source to be used. It can be either CPU or GPU. In ProActive,
 GPU resources are used for the SLURM Node Source.
 | String [default=empty]
@@ -1837,6 +1799,9 @@ GPU resources are used for the SLURM Node Source.
 | Specifies the name of the Docker image that will be used to run the different workflow tasks.
 | List(docker://activeeon/dlm3, docker://activeeon/cuda, docker://activeeon/cuda2, docker://activeeon/rapidsai,
 docker://activeeon/tensorflow:latest, docker://activeeon/tensorflow:latest-gpu) [default=empty]
+| `PROPAGATE_CONTAINER_PLATFORM`
+| If True, the selected container platform (docker, singularity, etc..) will propagate to the workflow that should be optimized.
+| [default=True]
 |===
 === ML Bucket
 
@@ -1865,12 +1830,6 @@ NOTE: All ML tasks were implemented using https://scikit-learn.org/stable/[Sciki
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -1904,12 +1863,6 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -1939,12 +1892,6 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -1962,12 +1909,6 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -1991,12 +1932,6 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2025,12 +1960,6 @@ image::csv_file_organisation.png[align="center"]
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2052,12 +1981,6 @@ default: https://s3.eu-west-2.amazonaws.com/activeeon-public/models/pima-indians
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2081,12 +2004,6 @@ default: https://s3.eu-west-2.amazonaws.com/activeeon-public/models/pima-indians
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
-| Boolean (default=True)
 | `LOG_FILE`
 | Put the URL of the raw log file that you need to parse.
 | String
@@ -2129,13 +2046,7 @@ image::pattern_file.png[align="center"]
 .Append_Data_Task variables
 [cols="2,5,2"]
 |===
-| *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
+| *Variable name* | *Description* | *Type
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2152,12 +2063,6 @@ image::pattern_file.png[align="center"]
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2184,12 +2089,6 @@ NOTE: More details about the source code of this task can be found https://panda
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2211,12 +2110,6 @@ NOTE: More details about the source code of this task can be found https://sciki
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2237,12 +2130,6 @@ NOTE: More details about the source code of this task can be found https://panda
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2263,12 +2150,6 @@ NOTE: More details about the source code of this task can be found https://panda
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2289,12 +2170,6 @@ NOTE: More details about the source code of this task can be found https://panda
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2321,12 +2196,6 @@ NOTE: More details about the source code of this task can be found https://sciki
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2350,12 +2219,6 @@ NOTE: More details about the source code of this task can be found https://sciki
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2375,12 +2238,6 @@ NOTE: More details about the source code of this task can be found https://sciki
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2407,12 +2264,6 @@ NOTE: More details about the source code of this task can be found https://panda
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2436,12 +2287,6 @@ NOTE: More details about the source code of this task can be found https://docs.
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2471,12 +2316,6 @@ NOTE: More details about the source code of this task can be found https://tsfre
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2521,12 +2360,6 @@ N.B: separate the different variables with a comma ','
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If True, This task code will be executed.
 | Boolean (default=True)
@@ -2558,12 +2391,6 @@ NOTE: More information about this task can be found https://epistasislab.github.
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If True, This task code will be executed.
 | Boolean (default=True)
@@ -2602,12 +2429,6 @@ NOTE: More information about this task can be found https://epistasislab.github.
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If True, This task code will be executed.
 | Boolean (default=True)
@@ -2639,12 +2460,6 @@ NOTE: More information about this task can be found https://epistasislab.github.
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If True, This task code will be executed.
 | Boolean (default=True)
@@ -2680,12 +2495,6 @@ NOTE: More information about this task can be found https://automl.github.io/aut
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2707,12 +2516,6 @@ NOTE: More information about this task can be found https://scikit-learn.org/sta
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2747,12 +2550,6 @@ NOTE: More information about the source code of this task can be found https://s
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2783,12 +2580,6 @@ NOTE: More information about the source of this task can be found https://scikit
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2826,12 +2617,6 @@ NOTE: More information about the source of this task can be found https://scikit
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2857,12 +2642,6 @@ NOTE: More information about the source of this task can be found https://scikit
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2896,12 +2675,6 @@ NOTE: More information about the source of this task can be found https://scikit
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2929,12 +2702,6 @@ NOTE: More information about the source of this task can be found https://scikit
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -2966,12 +2733,6 @@ NOTE: More information about the source of this task can be found https://scikit
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -3003,12 +2764,6 @@ NOTE: More information about the source of this task can be found https://scikit
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -3040,12 +2795,6 @@ NOTE: More information about the source of this task can be found https://scikit
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -3080,12 +2829,6 @@ NOTE: More information about the source of this task can be found https://scikit
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -3119,12 +2862,6 @@ NOTE: More information about the source of this task can be found https://scikit
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -3158,12 +2895,6 @@ NOTE: More information about the source of this task can be found https://scikit
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -3198,12 +2929,6 @@ NOTE: More information about the source of this task can be found https://scikit
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -3238,9 +2963,6 @@ NOTE: More information about the source of this task can be found https://scikit
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -3272,9 +2994,6 @@ NOTE: More information about the source of this task can be found https://scikit
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -3297,12 +3016,6 @@ NOTE: More information about the source of this task can be found https://scikit
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-| `DOCKER_IMAGE`
-| Specifies the docker image that will be used to execute the task.
-| String [default="activeeon/dlm3"]
 | `TASK_ENABLED`
 | If False, the will be ignored, it will not be executed.
 | Boolean (default=True)
@@ -3374,9 +3087,6 @@ NOTE: In these links, you can find an example of the organization of the folders
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
 | `DATA_URL`
 | URL pointing to the zip folder containing the needed data.
 | String
@@ -3410,9 +3120,6 @@ NOTE: In these links, you can find an example of the organization of the folders
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
 | `MODEL_TYPE`
 | Choose the type of your model. There are two possible types: PyTorch or ONNX.
 |  List [PyTorch or ONNX]
@@ -3437,9 +3144,6 @@ NOTE: Not all deep networks support the ONNX model yet. You can download ONNX mo
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
 | `MODEL_URL`
 | URL pointing to the zip folder containing the needed model.
 | String
@@ -3459,9 +3163,6 @@ NOTE: Not all deep networks support the ONNX model yet. You can download ONNX mo
 | *Variable name* | *Description* | *Type*
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
-| Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
 | `DATASET_URL`
 | URL pointing to the zip folder containing the needed data.
@@ -3509,9 +3210,6 @@ NOTE: Torchtext were used to preprocess and load the text input. More informatio
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
 | `OUTPUT_FILE`
 | Converts the prediction results to HTML or CSV file.
 | List (default='HTML')
@@ -3530,9 +3228,6 @@ NOTE: Torchtext were used to preprocess and load the text input. More informatio
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
 |===
 
 
@@ -3550,9 +3245,6 @@ NOTE: Torchtext were used to preprocess and load the text input. More informatio
 | *Variable name* | *Description* | *Type*
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
-| Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
 | `DATA_FOLDER`
 | Specifies the path where the data should be downloaded.
@@ -3591,9 +3283,6 @@ NOTE: Torchtext were used to preprocess and load the text input. More informatio
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
 | `USE_PRETRAINED_MODEL`
 | Parameter to use a pre-trained model for training. If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
 | Boolean (default=True)
@@ -3616,9 +3305,6 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
 | `USE_PRETRAINED_MODEL`
 | Parameter to use a pre-trained model for training. If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
 | Boolean (default=True)
@@ -3638,9 +3324,6 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | *Variable name* | *Description* | *Type*
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
-| Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
 | `USE_PRETRAINED_MODEL`
 | Parameter to use a pre-trained model for training. If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
@@ -3662,9 +3345,6 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
 | `USE_PRETRAINED_MODEL`
 | Parameter to use a pre-trained model for training. If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
 | Boolean (default=True)
@@ -3684,9 +3364,6 @@ NOTE: PyTorch were used to build the model architecture based on https://github.
 | *Variable name* | *Description* | *Type*
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
-| Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
 | `IM_SIZE`
 | Insert (width, height) of the images as a tuple with 2 elements.
@@ -3709,9 +3386,6 @@ NOTE: PyTorch were used to build the model architecture based on https://github.
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
 | `IM_SIZE`
 | Insert (width, height) of the images as a tuple with 2 elements.
 | Integer (default=(64, 64))
@@ -3732,9 +3406,6 @@ NOTE: PyTorch were used to build the model architecture based on https://github.
 | *Variable name* | *Description* | *Type*
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
-| Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
 | `IM_SIZE`
 | Insert (width, height) of the images as a tuple with 2 elements.
@@ -3760,9 +3431,6 @@ NOTE: PyTorch were used to build the model architecture based on https://github.
 | *Variable name* | *Description* | *Type*
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
-| Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
 | `START_ITERATION`
 | Initial iteration.
@@ -3825,9 +3493,6 @@ NOTE: PyTorch were used to build the model architecture based on https://github.
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
 | `LEARNING_RATE`
 | Initial learning rate
 | Float (default= 0.0005) Range in [0, 1].
@@ -3873,9 +3538,6 @@ NOTE: The default parameters of the YOLO network were set for the COCO dataset (
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
 | `EMBEDDING_DIM`
 | The dimension of the vectors that will be used to map words in some languages.
 | Integer (default=50)
@@ -3904,9 +3566,6 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
 | `EMBEDDING_DIM`
 | The dimension of the vectors that will be used to map words in some languages.
 | Integer (default=50)
@@ -3934,9 +3593,6 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | *Variable name* | *Description* | *Type*
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
-| Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
 | `EMBEDDING_DIM`
 | The dimension of the vectors that will be used to map words in some languages.
@@ -3968,9 +3624,6 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
 | `NUM_EPOCHS`
 | Number of times all of the training vectors are used once to update the weights.
 | Integer (default=1)
@@ -4001,10 +3654,6 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-
 | `LEARNING_RATE`
 | Determines how quickly or how slowly you want to update the parameters.
 | Float (default=0.001)
@@ -4043,9 +3692,6 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
 | `NUM_EPOCHS`
 | Number of times all of the training vectors are used once to update the weights.
 | Integer (default=1)
@@ -4075,9 +3721,6 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
 | `NUM_EPOCHS`
 | Number of times all of the training vectors are used once to update the weights.
 | Integer (default=1)
@@ -4101,9 +3744,6 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | *Variable name* | *Description* | *Type*
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
-| Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
 | `BATCH_SIZE`
 | Batch size to be used.
@@ -4129,10 +3769,6 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
-
 | `LOSS_FUNCTION`
 | Choose the function that will be used to compute the loss. Different options are available (Adam,RMS, SGD, Adagrad, Adadelta).
 | List (default=NLLLoss)
@@ -4150,9 +3786,6 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | *Variable name* | *Description* | *Type*
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
-| Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
 | `BATCH_SIZE`
 | Batch size to be used.
@@ -4179,9 +3812,6 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
-| Boolean (default=True)
 | `BATCH_SIZE`
 | Batch size to be used.
 | Integer (default=1)
@@ -4205,9 +3835,6 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | *Variable name* | *Description* | *Type*
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
-| Boolean (default=True)
-| `DOCKER_ENABLED`
-| If True, the task will be executed on a Docker container. link:https://hub.docker.com/r/activeeon/dlm3/[activeeon/dlm3] image is used by default. If False, the required libraries should be installed in the different nodes that will be used.
 | Boolean (default=True)
 | `IMG_SAMPLES`
 | Number of samples on which to explain the model's output.
