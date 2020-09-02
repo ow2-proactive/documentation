@@ -235,6 +235,9 @@ Multi_Tuners_Auto_ML comes with specific pipelines (parallel or sequential) and 
 | `TENSORBOARD_DOCKER_LOG_PATH`
 | Specifies the path where Tensorboard logs are created and stored on the docker container.
 | String [default=/graphs/$TENSORBOARD_INSTANCE_NAME]
+| `PROPAGATE_CONTAINER_PLATFORM`
+| If True, the selected container platform (docker, singularity, etc..) will propagate to the workflow that should be optimized.
+| [default=True]
 |===
 
 image::AutoML_Full.png[1000,700,align=center]
@@ -1799,9 +1802,6 @@ GPU resources are used for the SLURM Node Source.
 | Specifies the name of the Docker image that will be used to run the different workflow tasks.
 | List(docker://activeeon/dlm3, docker://activeeon/cuda, docker://activeeon/cuda2, docker://activeeon/rapidsai,
 docker://activeeon/tensorflow:latest, docker://activeeon/tensorflow:latest-gpu) [default=empty]
-| `PROPAGATE_CONTAINER_PLATFORM`
-| If True, the selected container platform (docker, singularity, etc..) will propagate to the workflow that should be optimized.
-| [default=True]
 |===
 === ML Bucket
 
