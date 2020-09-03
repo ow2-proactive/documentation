@@ -1,5 +1,5 @@
 :docinfo:
-:toc: 
+:toc:
 :toc-title: PWS Admin Guide
 = ProActive Workflows & Scheduling -- Admin Guide
 include::../common-settings.adoc[]
@@ -252,25 +252,82 @@ into
 
 === Database configuration
 
-Scheduler, Resource Mananger, and some microservices require to have direct access to the database.
-Thus, they must each have a correct database configuration.
+Scheduler, Resource Mananger, and some microservices (*catalog*, *cloud-automation-service*, *notification-service*) require to have direct access to the database.
+Thus, they must each have a correct configuration for each supported database (HSQLDB, Postgres, MySQL, Oracle).
 
 To configure Scheduler or Resource Mananger, one have to modify *PROACTIVE_HOME/config/scheduler/database.properties*
-and *PROACTIVE_HOME/config/rm/database.properties* respectively.
+and *PROACTIVE_HOME/config/rm/database.properties* respectively. For microservices, you have also to modify files in: *PROACTIVE_HOME/config/MICROSERVICE-NAME/database.properties*.
 
-The following five properties must be configured:
+For *HSQLDB*, the following five properties must be configured:
+[source]
+----
+hibernate.connection.driver_class=org.hsqldb.jdbc.JDBCDriver
 
-* `hibernate.connection.driver_class`
-* `hibernate.connection.url`
-* `hibernate.dialect`
-* `hibernate.connection.username`
-* `hibernate.connection.password`
+#DB_NAME could be scheduler, rm, or one of the microservices names
+#9001 is the defaut DB port of the embedded PA database
+hibernate.connection.url=jdbc:hsqldb:hsql://localhost:9001/DB_NAME
 
-TIP: There are useful templates for different databases in *PROACTVE_HOME/config/scheduler/templates/* and *PROACTVE_HOME/config/rm/templates/*.
+hibernate.dialect=org.hibernate.dialect.HSQLDialect
+
+# Username and password
+hibernate.connection.username=username
+hibernate.connection.password=password
+----
+
+For *Postgres 12.2*, the following template must be configured:
+[source]
+----
+hibernate.connection.driver_class=org.postgresql.Driver
+
+#DB_NAME could be scheduler, rm, or one of the microservices names
+#PORT should correspond to your DB port
+hibernate.connection.url=jdbc:postgresql://localhost:PORT/DB_NAME
+
+#PostgreSQLDialect is recommended for Postgres 12.2 version
+hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+
+# Username and password
+hibernate.connection.username=username
+hibernate.connection.password=password
+----
+
+For *MySQL 8.0*, the following template must be configured:
+[source]
+----
+hibernate.connection.driver_class=com.mysql.jdbc.Driver
+
+#DB_NAME could be scheduler, rm, or one of the microservices names
+#PORT should correspond to your DB port
+hibernate.connection.url=jdbc:mysql://localhost:PORT/DB_NAME
+
+#MySQL5InnoDBDialect is recommended for MySQL 8.0 version
+hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+
+# Username and password
+hibernate.connection.username=username
+hibernate.connection.password=password
+----
+
+For *Oracle 12.2*, the following template must be configured:
+[source]
+----
+hibernate.connection.driver_class=oracle.jdbc.driver.OracleDriver
+
+#DB_NAME could be scheduler, rm, or one of the microservices names
+#PORT should correspond to your DB port
+hibernate.connection.url=jdbc:oracle:thin:@localhost:PORT:DB_NAME
+
+#Oracle12cDialect is recommended for Oracle 12.2 version
+hibernate.dialect=org.hibernate.dialect.Oracle12cDialect
+
+# Username and password
+hibernate.connection.username=username
+hibernate.connection.password=password
+----
 
 The *job-planner*, *catalog*, *scheduling-api*, *cloud-automation-service*, *notification-service* and *proactive-cloud-watch* microservices must contain a database configuration.
-For each microservice, a microservice configuration file can be found in: *PROACTIVE_HOME/dist/war/MICROSERVICE-NAME/WEB-INF/classes/application.properties*.
-In their *application.properties* file, you need to set the following five properties:
+For each microservice, a configuration file can be found in: *PROACTIVE_HOME/dist/war/MICROSERVICE-NAME/WEB-INF/classes/application.properties*.
+In their *application.properties* file, you need to set the following five properties for the target database as configured just above:
 
 * `spring.datasource.url`
 * `spring.datasource.username`
@@ -278,10 +335,18 @@ In their *application.properties* file, you need to set the following five prope
 * `spring.datasource.driverClassName`
 * `spring.jpa.database-platform`
 
-Moreover, it is mandatory to put the proper database driver in *PROACTIVE_HOME/addons* folder, e.g. if you want to use MySQL 5.7 database,
-then you have to download the database driver and put it at: *PROACTIVE_HOME/addons/mysql-connector-java-8.0.11.jar*.
+Moreover, it is mandatory to put the proper database driver in *PROACTIVE_HOME/addons* folder.
 
-Scheduler, and 3 microservices (*scheduling-api*, *job-planner*, and *proactive-cloud-watch*) have to point to the same database.
+For example:
+
+* For HSQLDB 2.4, the drive `hsqldb-2.4.1.jar` is already embedded in *PROACTIVE_HOME/addons*
+* For MySQL 8.0, you have to get `mysql-connector-java-8.0.19.zip` driver an place it in *PROACTIVE_HOME/addons*
+* For Postgres 12.2, you have to get `postgresql-42.2.11.jar` driver.
+* For Oracle 12.2, you have to get `ojdbc8-19.3.0.0.jar` driver.
+
+TIP: If you plan to use another DB version, it is important to get the corresponding database driver version and set up the right dialect version
+
+Moreover, it is also important to notice that the Scheduler and 3 microservices (*scheduling-api*, *job-planner*, and *proactive-cloud-watch*) have to point to the same scheduler database since they use that one.
 
 [[_backup]]
 === Configure automated backup
@@ -382,6 +447,8 @@ The default accounts in `login.cfg` file correspond to the following passwords, 
 admin:admin
 user:pwd
 demo:demo
+citizen-ds:proactive
+expert-ds:proactive
 guest:pwd
 test:pwd
 radmin:pwd
@@ -403,6 +470,8 @@ admin:scheduleradmins
 admin:rmcoreadmins
 demo:scheduleradmins
 demo:rmcoreadmins
+citizen-ds:citizen-ds
+expert-ds:expert-ds
 guest:guests
 nsadmin:nsadmins
 provider:providers
@@ -2251,6 +2320,9 @@ For more information, see https://github.com/ow2-proactive/scheduling/blob/maste
 
 include::./Catalog.adoc[]
 
+=== Notification service
+include::./references/NotificationServiceReference.adoc[]
+
 [[_script_engines]]
 == Configure script engines
 
@@ -2816,4 +2888,8 @@ include::./references/SchedulerPortalReference.adoc[]
 [[_resource_manager_command_line]]
 === Command Line
 include::../CLI.adoc[]
+
+[[_cloud_infrastructure_startup_script]]
+=== Cloud Node Source Infrastructure Startup Script
+include::./references/NodeSourceStartupScriptReference.adoc[]
 include::../common-footer.adoc[]

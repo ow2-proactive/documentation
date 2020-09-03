@@ -1327,7 +1327,7 @@ The default Docker fork environment script contains the following groovy code:
 import org.ow2.proactive.utils.OperatingSystem;
 import org.ow2.proactive.utils.OperatingSystemFamily;
 
-containerName = "java"
+dockerImageName = "java"
 cmd = []
 cmd.add("docker")
 cmd.add("run")
@@ -1393,7 +1393,7 @@ if (isWindows) {
         sigar.close()
     }
 }
-cmd.add(containerName)
+cmd.add(dockerImageName)
 
 forkEnvironment.setPreJavaCommand(cmd)
 
@@ -2024,6 +2024,10 @@ It is possible to restore any previous commit to the HEAD position by clicking t
 
 image::revisions-catalog.png[align=center]
 
+== Notification-service
+
+include::./references/Notification-service.adoc[]
+
 == Third-party credentials
 
 === Overview
@@ -2634,6 +2638,7 @@ include::./references/VariablesReference.adoc[]
 === Topology Types
 include::./references/TopologyTypes.adoc[]
 
+[[_scheduler_graphql_api]]
 === Scheduler GraphQL API
 include::./references/SchedulerGraphQLAPI.adoc[]
 

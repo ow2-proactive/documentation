@@ -1,0 +1,195 @@
+==== Housekeeping
+
+Notifications in the notification service have a global life span defined in the
+application.properties located in * `PROACTIVE_HOME/dist/war/notification-service/WEB-INF/classes/application.properties`
+Past that time, they will be removed from the database.
+
+Two parameters with default values may be updated:
+
+1- The call frequency of the housekeeping defined by a CRON expression:
+----
+# This cron expression determines the housekeeping call frequency.
+# Default value is 10 minutes: this will invoke the housekeeping mechanism
+# to remove every notifications whose scheduled removal time is up.
+notifications.housekeeping.cronexpression=*/10 * * * *
+----
+2- The life span of the notifications in seconds:
+----
+# Automatic remove notification delay (in seconds).
+# The time at which notifications will be stored in the database
+# Set this time to 0 if you don't want the notifications to be removed.
+# Default value is 604800 seconds = 1 week
+notifications.housekeeping.removedelay=604800
+----
+
+[[_notification_methods]]
+==== Notification methods
+
+[[_email_notification_method]]
+===== Email
+
+The Email notification method uses the Simple Mail Transfer Protocol to send emails.
+The notification service requires a valid SMTP configuration in order to send emails.
+These settings are specified in the properties file located at:
+ `PROACTIVE_HOME/dist/war/notification-service/WEB-INF/classes/email.properties`
+
+By default Transport Layer Security is active, change to false to deactivate it:
+----
+mail.smtp.starttls.enable=true
+----
+Authentication to the SMTP server is enabled by default.
+----
+mail.smtp.auth=true
+----
+
+Provide the server port used to connect
+----
+mail.smtp.port=
+----
+
+The credentials used to connect
+----
+mail.smtp.username=
+mail.smtp.password=
+----
+
+The host of the SMTP server
+----
+mail.smtp.host=
+----
+
+A single email address is used by the notification service to broadcast emails.
+It is defined in the application.properties file located at
+`PROACTIVE_HOME/dist/war/notification-service/WEB-INF/classes/email.properties`
+and is the email that will be displayed in the "From" field of the sent emails.
+----
+notification.email.from=
+----
+
+[[_third_party_notification_method]]
+===== Third party
+
+====== Configuration
+
+The <<_glossary_notification_third_party,*Third Party Notification*>> method executes a script when an event occurs.
+Location of the script is specified either via a path, relative to the Scheduler or absolute.
+
+----
+notification.script.path=dist/war/notification-service/WEB-INF/classes/exampleScript.sh
+----
+
+Or a URL
+
+----
+notification.script.url=
+----
+
+WARNING: Note that to the `notification.script.url=` property will be used by the <<_glossary_notification_service,*Notification Service*>>
+only if the `notification.script.path=` property is not provided. If provided the `notification.script.url=` property is ignored.
+It means that the `notification.script.path=` property will always have the upper hand to indicated the location of the script to execute.
+
+An optional parameter can be provided to specify the engine to be used to execute the script
+if not provided the extension of the file will determine the appropriate engine to use
+
+----
+#optional parameter for specifying Script Engine
+notification.script.engine=bash
+----
+
+Finally, multiple sequential script execution can be enabled.
+Users must have an active subscription for an event and the Third party notification method activated.
+It is set to false by default.
+
+For example if 5 users are subscribed to the Scheduler Frozen event with the Third party notification
+method active and multiple execution enabled, then each time the  <<_glossary_proactive_scheduler,*ProActive Scheduler*>> freezes
+the script will be executed one time per notified user so in this example 5 times.
+If it is set to false, only one execution will be performed regardless of how many users are notified.
+
+----
+#if false execute the script one time per event even if there are several subscribers
+#if true execute the script for each subscribers for each event
+notification.script.multiple.execution=false
+----
+
+====== Reading notification data
+
+Some relevant notification data is automatically passed to the script as bindings when executed.
+It is simply needed to read the field as you would do with any other field in the used language.
+
+In some cases fields might not have a value as it is not relevant.
+For instance BUCKET_NAME, PROJECT_NAME, WORKFLOW_NAME are null for Scheduler events
+as they don't depend on job execution.
+
+Example in groovy:
+----
+println "Reading the notification message: " + MESSAGE
+----
+
+In the following table are specified all available fields that can be read in the script
+and if they have a value depending on the event origin.
+
+.Binding holds a value regarding event type (Y = Yes , N = No)
+[cols="<,^,^,^,^"]
+|=====
+| *Field name* | *Job* | *Task* | *Scheduler* | *Job planner*
+| USER_NAME
+| Y
+| Y
+| Y
+| Y
+| EVENT_TYPE
+| Y
+| Y
+| Y
+| Y
+| JOB_ID
+| Y
+| Y
+| N
+| Y
+| TASK_ID
+| N
+| Y
+| N
+| N
+| TASK_NAME
+| N
+| Y
+| N
+| N
+| CREATED_BY
+| Y
+| Y
+| Y
+| Y
+| MESSAGE
+| Y
+| Y
+| Y
+| Y
+| CREATION_DATE
+| Y
+| Y
+| Y
+| Y
+| JOB_OWNER
+| Y
+| Y
+| N
+| Y
+| BUCKET_NAME
+| Y
+| Y
+| N
+| Y
+| PROJECT_NAME
+| Y
+| Y
+| N
+| Y
+| WORKFLOW_NAME
+| Y
+| Y
+| N
+| Y
+|=====
