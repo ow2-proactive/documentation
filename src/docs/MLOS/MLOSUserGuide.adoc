@@ -187,12 +187,27 @@ Multi_Tuners_Auto_ML propose six algorithms for hyperparameters' optimization. T
 sampling/search strategy depends strongly on the tackled problem.
 Multi_Tuners_Auto_ML comes with specific pipelines (parallel or sequential) and visualization tools
 (Visdom or Tensorboard) as described in the subsections below.
+
 *Variables:*
 
 .Multi_Tuners_Auto_ML Variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
+
+| `NS`
+| Specifies the Node Source where the processing will take place. In ProActive, SLURM is used as a Node Source.
+| String [default=empty]
+| `NS_BATCH`
+| Specifies the type of the Node Source to be used. It can be either CPU or GPU. In ProActive,
+    GPU resources are used for the SLURM Node Source.
+| String [default=empty]
+| `NODE_ACCESS_TOKEN`
+| The token ID with which the Node Source can be accessed.
+| String [default=empty]
+| `NODE_SOURCE_NAME`
+| The name of the Node Source.
+| String [default=empty]
 | `TUNING_ALGORITHM`
 | Specifies the tuner algorithm that will be used for hyperparameters optimization.
 | List(Bayes, Grid, Random, QuasiRandom, CMAES, MOCMAES) [default=Bayes]
@@ -285,6 +300,7 @@ In the following, we briefly describe the different tuners proposed by the Multi
 
 === Objective ML Examples
 
+
 The following workflows represent some machine learning and deep learning algorithms that can be optimized.
 These workflows have several common variables as in Multi_Tuners_Auto_ML. Some of the workflows are characterized
 by few additional variables.
@@ -297,6 +313,16 @@ by few additional variables.
 [cols="2,5,5"]
 |===
 | *Variable name* | *Description* | *Type*
+| `CONTAINER_PLATFORM`
+| Specifies the platform of the container that packages up the code and all its dependencies for running the application.
+| List(docker, podman, singularity) [default=docker]
+| `CONTAINER_GPU_ENABLED`
+| If True, containers will run based on images containing libraries that are compatible with GPU.
+| Boolean [default=True]
+| `CONTAINER_IMAGE`
+| Specifies the name of the Docker image that will be used to run the different workflow tasks.
+| List(docker://activeeon/dlm3, docker://activeeon/cuda, docker://activeeon/cuda2, docker://activeeon/rapidsai,
+docker://activeeon/tensorflow:latest, docker://activeeon/tensorflow:latest-gpu) [default=empty]
 | `NUM_EPOCHS`
 | The number of times data is passed forward and backward through the training algorithm.
 | Integer [default=3]
@@ -1783,8 +1809,7 @@ most of the available AI workflows in MLOS associated to their descriptions.
 | Specifies the Node Source where the processing will take place. In ProActive, SLURM is used as a Node Source.
 | String [default=empty]
 | `NATIVE_SCHEDULER_PARAMS`
-| Specifies the type of the Node Source to be used. It can be either CPU or GPU. In ProActive,
-GPU resources are used for the SLURM Node Source.
+| Specifies the type of the Node Source to be used. It can be either CPU or GPU. In ProActive, GPU resources are used for the SLURM Node Source.
 | String [default=empty]
 | `NODE_ACCESS_TOKEN`
 | The token ID with which the Node Source can be accessed.
