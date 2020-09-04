@@ -56,13 +56,38 @@ The format allows flexible combinations of the elements:
 
 `REMOVE_DELAY` can be defined at *job-level* only.
 
-==== NS and NS_BATCH
+==== DISABLE_PTK
 
-`NS` (short for *Native Scheduler*) and `NS_BATCH` are Generic Information used to deploy workflow tasks inside a *Native Scheduler infrastructure*.
+The `DISABLE_PTK` Generic Information can be used to prevent the *Process Tree Killer* from running after a task execution.
+
+Disabling the Process Tree Killer is mostly useful when a task requires to start a backgroud process which must remain alive after the task terminates.
+
+Simply define a `DISABLE_PTK=true` generic information on any given task to prevent the Process Tree Killer from running.
+
+More information is available in the link:../admin/ProActiveAdminGuide.html#_task_termination_behavior[Task Termination Behavior] section.
+
+`DISABLE_PTK` can be defined at *task-level* only.
+
+==== PRE_SCRIPT_AS_FILE
+
+The `PRE_SCRIPT_AS_FILE` Generic Information can be used to store a task pre-script into a file and skip its execution.
+It can be used for example to embed inside a workflow a data file or a file written in a script language not supported by ProActive tasks and delegate its execution to a command-line interpreter.
+
+More information is available in the <<_save_script>> section.
+
+`PRE_SCRIPT_AS_FILE` can be defined at *task-level* only.
+
+==== Native Scheduler
+
+`NS` (short for *Native Scheduler*), `NS_BATCH` and `NS_PRE` are Generic Information used to deploy and configure workflow tasks inside a *Native Scheduler infrastructure*.
+
+ * `NS` : execute a task associated with this generic information inside a ProActive Node Source interacting with a native scheduler. The value of this generic information must be equal to the node source name. Example: `NS=Slurm`.
+ * `NS_BATCH` : allows to provide additional parameters to the native scheduler. Example: `NS_BATCH=-q queue1 -lnodes=2:ppn=2`.
+ * `NS_PRE`: allows to provide a single line command which will be executed before the ProActive Node on the cluster. Example: `NS_PRE=module load mpi/gcc/openmpi-1.6.4`.
 
 See <<../admin/ProActiveAdminGuide.adoc#_execute_tasks_on_a_native_scheduler_node_source,Execute Tasks on a Native Scheduler Node Source>> for more information.
 
-`NS` and `NS_BATCH` can be defined at *job-level* (applies to all tasks of a workflow) or at  *task-level* (applies to a single task).
+`NS`, `NS_BATCH` and `NS_PRE` can be defined at *job-level* (applies to all tasks of a workflow) or at *task-level* (applies to a single task).
 
 ==== NODESOURCENAME
 

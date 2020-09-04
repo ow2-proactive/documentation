@@ -1490,6 +1490,9 @@ println "Hello World"
 </task>
 ```
 
+Finally, the `NS_PRE` generic information can be used to enter a single line command which will be executed in the cluster just before
+the ProActive node starts. It can be used for example to load linux modules required by the task execution.
+
 ===== Native Scheduler Node Life Cycle
 
 As soon as tasks containing the `NS` generic information are pending, the target Native Scheduler node source will try to deploy ProActive Nodes to execute them.
