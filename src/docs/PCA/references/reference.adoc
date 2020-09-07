@@ -12,7 +12,12 @@ This service allows to deploy through ProActive Cloud Automation (PCA) Portal a 
 | Service instance name
 | Yes
 | String
-| `mongodb-server`
+| `cassandra-server`
+| `ENDPOINT_ID`
+| Id of the service endpoint
+| Yes
+| String
+| `cassandra-endpoint`
 |`ENV_VARS`
 | List of the environment variables. Each environment variable should be preceded by -e.
 | No
@@ -34,6 +39,11 @@ It serves as a generic template that can be used to create and start any docker 
 [cols="2,5,2,2,2"]
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
+| `ENDPOINT_ID`
+| Id of the service endpoint
+| Yes
+| String
+| `docker-endpoint`
 | `DOCKER_IMAGE`
 | Docker image name. It can include a tag as well.
 | Yes
@@ -77,10 +87,87 @@ The service is started using the following variable.
 | Yes
 | String
 | `elasticsearch-server`
+| `ENDPOINT_ID`
+| Id of the service endpoint
+| Yes
+| String
+| `elasticsearch-endpoint`
 |===
 
 NOTE: More details about the variable description can be found https://hub.docker.com/_/elasticsearch/[here^].
 
+=== Jupyterlab
+
+This service allows to deploy through ProActive Cloud Automation (PCA) Portal an instance of JupyterLab server (https://jupyterlab.readthedocs.io/en/stable/).
+The service is started using the following variable.
+
+*Variables:*
+
+.Jupyterlab PCA service variables
+[cols="2,5,2,2,2"]
+|===
+| *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
+| `INSTANCE_NAME`
+| Service instance name
+| Yes
+| String
+| `jupyterlab-server-$PA_JOB_ID`
+| `ENDPOINT_ID`
+| Id of the service endpoint
+| Yes
+| String
+| `jupyterlab-endpoint-$PA_JOB_ID`
+| `PROXYFIED`
+| Allows access to the endpoint through Cloud Automation Http(s) Proxy
+| Yes
+| Boolean
+| `false`
+| `HTTPS_ENABLED`
+| Start JupyterLab in https mode (generates a self-signed certificate or use `fullchain.pem` and `privkey.pem` if present in the ProActive Global Space).
+| Yes
+| Boolean
+| `false`
+| `SERVICE_PORT`
+| Controls the port used to start the JupyterLab server. `-1` for random port allocation. The port range will be chosen either from `$PA_SCHEDULER_HOME/config/pca_services_port_range` or `/proc/sys/net/ipv4/ip_local_port_range`
+| Yes
+| Integer
+| `-1`
+| `JUPYTERLAB_TOKEN`
+| Protects the JupyterLab service with token access. This variable must not be empty if the `PROXYFIED=true` mode is used.
+| No
+| String
+| `/shared/$INSTANCE_NAME`
+| `ENGINE`
+| Container engine
+| Yes
+| Choice(docker,singularity)
+| `docker`
+| `DOCKER_IMAGE`
+| Docker image used to start JupyterLab
+| Yes
+| String
+| `activeeon/tensorboard`
+| `SINGULARITY_IMAGE_PATH`
+| Location of the singularity image on the node file system (this path will be used to either store the singularity image or the image will be directly used if the file is present)
+| Yes
+| String
+| `/tmp/tensorboard.sif`
+| `BUILD_IMAGE_IF_NOT_EXISTS`
+| Pull and build the singularity image if the sif file is not present
+| Yes
+| Boolean
+| `true`
+| `NATIVE_SCHEDULER`
+| Name of the Native Scheduler node source to use (if the service must be deployed inside a cluster such as SLURM, LSF, etc)
+| No
+| String
+| `Slurm`
+| `NATIVE_SCHEDULER_PARAMS`
+| Parameters given to the native scheduler (Slurm, LSF, etc) while requesting a ProActive node used to deploy the PCA service.
+| No
+| String
+| `--gpus=1`
+|===
 
 === Kafka
 
@@ -90,21 +177,26 @@ The service is started using the following variables.
 
 *Variables:*
 
-.PostgreSQL PCA service variables
+.Kafka PCA service variables
 [cols="2,5,2,2,2"]
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
-| `instance_name`
+| `INSTANCE_NAME`
 | Service instance name
 | Yes
 | String
 | `kafka-server-1`
-|`zookeeper_instance_name`
+| `ENDPOINT_ID`
+| Id of the service endpoint
+| Yes
+| String
+| `kafka-endpoint`
+|`ZOOKEEPER_INSTANCE_NAME`
 | Name of the Zookeeper instance that coordinates the storm deployment.
 | Yes
 | String
 | `zookeeper-server-1`
-|`zookeeper_service_id`
+|`ZOOKEEPER_SERVICE_ID`
 | Zookeeper service identifier needed to start this service if it does not already exist.
 | Yes
 | String
@@ -114,6 +206,80 @@ The service is started using the following variables.
 NOTE: More details about the variable description can be found https://hub.docker.com/_/kafka/[here^].
 
 
+=== MongoDB
+
+This service allows to deploy through ProActive Cloud Automation (PCA) Portal a MongoDB Database server. The service can be started using the following variables.
+
+*Variables:*
+
+.MongoDB PCA service variables
+[cols="2,5,2,2,2"]
+|===
+| *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
+| `INSTANCE_NAME`
+| Service instance name
+| Yes
+| String
+| `mongodb-server-$PA_JOB_ID`
+| `ENDPOINT_ID`
+| Id of the service endpoint
+| Yes
+| String
+| `mongodb-endpoint-$PA_JOB_ID`
+|`USER`
+| Username for the root user
+| No
+| String
+| e.g. `my_user`
+|`PASSWORD`
+| Password for the root user
+| No
+| String
+| e.g. `my_password`
+| `SERVICE_PORT`
+| Controls the port used to start the JupyterLab server. `-1` for random port allocation. The port range will be chosen either from `$PA_SCHEDULER_HOME/config/pca_services_port_range` or `/proc/sys/net/ipv4/ip_local_port_range`
+| Yes
+| Integer
+| `-1`
+| `ENGINE`
+| Container engine
+| Yes
+| Choice(docker,singularity)
+| `docker`
+| `DOCKER_IMAGE`
+| Docker image used to start MongoDB
+| Yes
+| String
+| `activeeon/mongo`
+| `SINGULARITY_IMAGE_PATH`
+| Location of the singularity image on the node file system (this path will be used to either store the singularity image or the image will be directly used if the file is present)
+| Yes
+| String
+| `/tmp/mongo_db.sif`
+| `BUILD_IMAGE_IF_NOT_EXISTS`
+| Pull and build the singularity image if the sif file is not present
+| Yes
+| Boolean
+| `true`
+| `MOUNT_DB_PATH`
+| When using singularity, this folder will be used to store the database data
+| Yes
+| String
+| `/tmp/mongodb-server-$PA_JOB_ID`
+| `NATIVE_SCHEDULER`
+| Name of the Native Scheduler node source to use (if the service must be deployed inside a cluster such as SLURM, LSF, etc)
+| No
+| String
+| `Slurm`
+| `NATIVE_SCHEDULER_PARAMS`
+| Parameters given to the native scheduler (Slurm, LSF, etc) while requesting a ProActive node used to deploy the PCA service.
+| No
+| String
+| `--gpus=1`
+|===
+
+NOTE: Note that the `USER` and `PASSWORD` variables are used in junction. They should be either both entered or both blank.
+More details about the variable description can be found https://hub.docker.com/_/mongo/[here^].
 
 === MySQL
 
@@ -130,6 +296,11 @@ This service allows to deploy through ProActive Cloud Automation (PCA) Portal a 
 | Yes
 | String
 | `mysql-server`
+| `ENDPOINT_ID`
+| Id of the service endpoint
+| Yes
+| String
+| `mysql-endpoint`
 | `DATABASE`
 | Name of a database to be created on start
 | No
@@ -151,37 +322,6 @@ NOTE: Note that the `USER` and `PASSWORD` variables are used in junction. They s
 In addition, if `DATABASE` is assigned a value, then the defined `USER` will be granted superuser access (corresponding to GRANT ALL) to this database.
 More details about the variable description can be found https://hub.docker.com/_/mysql/[here^].
 
-
-=== MongoDB
-
-This service allows to deploy through ProActive Cloud Automation (PCA) Portal a MongoDB Database server. The service can be started using the following variables.
-
-*Variables:*
-
-.MongoDB PCA service variables
-[cols="2,5,2,2,2"]
-|===
-| *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
-| `INSTANCE_NAME`
-| Service instance name
-| Yes
-| String
-| `mongodb-server`
-|`USER`
-| Username for the root user
-| No
-| String
-| e.g. `my_user`
-|`PASSWORD`
-| Password for the root user
-| No
-| String
-| e.g. `my_password`
-|===
-
-NOTE: Note that the `USER` and `PASSWORD` variables are used in junction. They should be either both entered or both blank.
-More details about the variable description can be found https://hub.docker.com/_/mongo/[here^].
-
 === PostgreSQL
 
 This service allows to deploy through ProActive Cloud Automation (PCA) Portal a PostgreSQL Database server. The service can be started using the following variables.
@@ -196,7 +336,12 @@ This service allows to deploy through ProActive Cloud Automation (PCA) Portal a 
 | Service instance name
 | Yes
 | String
-| `mysql-server`
+| `postgres-server`
+| `ENDPOINT_ID`
+| Id of the service endpoint
+| Yes
+| String
+| `postgresql-endpoint`
 | `DATABASE`
 | Name of a database to be created on start
 | No
@@ -223,26 +368,31 @@ The service is started using the following variables.
 
 *Variables:*
 
-.PostgreSQL PCA service variables
+.Storm PCA service variables
 [cols="2,5,2,2,2"]
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
-| `instance_name`
+| `INSTANCE_NAME`
 | Service instance name
 | Yes
 | String
-| `storm-server-1`
-| `number_of_supervisors`
+| `storm-cluster-1`
+| `ENDPOINT_ID`
+| Id of the service endpoint
+| Yes
+| String
+| `storm-gui`
+| `NUMBER_OF_SUPERVISORS`
 | Number of worker nodes
 | Yes
 | Integer
 | `2`
-|`zookeeper_instance_name`
+|`ZOOKEEPER_INSTANCE_NAME`
 | Name of the Zookeeper instance that coordinates the storm deployment.
 | Yes
 | String
 | `zookeeper-server-1`
-|`zookeeper_service_id`
+|`ZOOKEEPER_SERVICE_ID`
 | Zookeeper service identifier needed to start this service if it does not already exist.
 | Yes
 | String
@@ -250,6 +400,74 @@ The service is started using the following variables.
 |===
 
 NOTE: More details about the variable description can be found https://hub.docker.com/_/storm/[here^].
+
+=== Tensorboard
+
+This service allows to deploy through ProActive Cloud Automation (PCA) Portal an instance of Tensorboard server (https://www.tensorflow.org/tensorboard).
+The service is started using the following variable.
+
+*Variables:*
+
+.Tensorboard PCA service variables
+[cols="2,5,2,2,2"]
+|===
+| *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
+| `INSTANCE_NAME`
+| Service instance name
+| Yes
+| String
+| `tensorboard-server-$PA_JOB_ID`
+| `ENDPOINT_ID`
+| Id of the service endpoint
+| Yes
+| String
+| `tensorboard-gui-$PA_JOB_ID`
+| `PROXYFIED`
+| Allows access to the endpoint through Cloud Automation Http(s) Proxy
+| Yes
+| Boolean
+| `false`
+| `SERVICE_PORT`
+| Controls the port used to start the Tensorboard server. `-1` for random port allocation. The port range will be chosen either from `$PA_SCHEDULER_HOME/config/pca_services_port_range` or `/proc/sys/net/ipv4/ip_local_port_range`
+| Yes
+| Integer
+| `-1`
+| `MOUNT_LOG_PATH`
+| Path on the ProActive node file system used to store Tensorboard data
+| Yes
+| String
+| `/shared/$INSTANCE_NAME`
+| `ENGINE`
+| Container engine
+| Yes
+| Choice(docker,singularity)
+| `docker`
+| `DOCKER_IMAGE`
+| Docker image used to start Tensorboard
+| Yes
+| String
+| `activeeon/tensorboard`
+| `SINGULARITY_IMAGE_PATH`
+| Location of the singularity image on the node file system (this path will be used to either store the singularity image or the image will be directly used if the file is present)
+| Yes
+| String
+| `/tmp/tensorboard.sif`
+| `BUILD_IMAGE_IF_NOT_EXISTS`
+| Pull and build the singularity image if the sif file is not present
+| Yes
+| Boolean
+| `true`
+| `NATIVE_SCHEDULER`
+| Name of the Native Scheduler node source to use (if the service must be deployed inside a cluster such as SLURM, LSF, etc)
+| No
+| String
+| `Slurm`
+| `NATIVE_SCHEDULER_PARAMS`
+| Parameters given to the native scheduler (Slurm, LSF, etc) while requesting a ProActive node used to deploy the PCA service.
+| No
+| String
+| `--gpus=1`
+|===
 
 
 === Visdom
@@ -259,17 +477,76 @@ The service is started using the following variable.
 
 *Variables:*
 
-.Elasticsearch PCA service variables
+.Visdom PCA service variables
 [cols="2,5,2,2,2"]
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
-| `instance_name`
+| `INSTANCE_NAME`
 | Service instance name
 | Yes
 | String
-| `visdom-server-1`
+| `visdom-server-$PA_JOB_ID`
+| `ENDPOINT_ID`
+| Id of the service endpoint
+| Yes
+| String
+| `visdom-gui-$PA_JOB_ID`
+| `PROXYFIED`
+| Allows access to the endpoint through Cloud Automation Http(s) Proxy
+| Yes
+| Boolean
+| `false`
+| `SERVICE_PORT`
+| Controls the port used to start the Visdom server. `-1` for random port allocation. The port range will be chosen either from `$PA_SCHEDULER_HOME/config/pca_services_port_range` or `/proc/sys/net/ipv4/ip_local_port_range`
+| Yes
+| Integer
+| `-1`
+| `VISDOM_ENABLE_LOGIN`
+| Enable Visdom authentication
+| Yes
+| Boolean
+| `false`
+| `VISDOM_USERNAME`
+| Optional username used to authenticate with Visdom
+| No
+| String
+| `admin`
+| `VISDOM_PASSWORD`
+| Optional password used to authenticate with Visdom
+| No
+| String
+| `some_password`
+| `ENGINE`
+| Container engine
+| Yes
+| Choice(docker,singularity)
+| `docker`
+| `DOCKER_IMAGE`
+| Docker image used to start Visdom
+| Yes
+| String
+| `activeeon/visdom_server`
+| `SINGULARITY_IMAGE_PATH`
+| Location of the singularity image on the node file system (this path will be used to either store the singularity image or the image will be directly used if the file is present)
+| Yes
+| String
+| `/tmp/visdom_server.sif`
+| `BUILD_IMAGE_IF_NOT_EXISTS`
+| Pull and build the singularity image if the sif file is not present
+| Yes
+| Boolean
+| `true`
+| `NATIVE_SCHEDULER`
+| Name of the Native Scheduler node source to use (if the service must be deployed inside a cluster such as SLURM, LSF, etc)
+| No
+| String
+| `Slurm`
+| `NATIVE_SCHEDULER_PARAMS`
+| Parameters given to the native scheduler (Slurm, LSF, etc) while requesting a ProActive node used to deploy the PCA service.
+| No
+| String
+| `--gpus=1`
 |===
-
 
 
 === Zookeeper
@@ -279,15 +556,20 @@ The service is started using the following variable.
 
 *Variables:*
 
-.Elasticsearch PCA service variables
+.Zookeeper PCA service variables
 [cols="2,5,2,2,2"]
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
-| `instance_name`
+| `INSTANCE_NAME`
 | Service instance name
 | Yes
 | String
 | `zookeeper-server-1`
+| `ENDPOINT_ID`
+| Id of the service endpoint
+| Yes
+| String
+| `zookeeper-endpoint`
 |===
 
 NOTE: More details about the variable description can be found https://hub.docker.com/_/zookeeper/[here^].

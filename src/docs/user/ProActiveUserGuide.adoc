@@ -1292,6 +1292,13 @@ forkEnvironment.setWorkingDir("/data/folder")
 forkEnvironment.setJavaHome("/usr/java/default")
 ```
 
+==== Environment cleanup
+
+After a task is executed, an internal mechanism called the *Process Tree Killer* ensures that all children processes started by the task are automatically terminated.
+This mechanism is explained in details in the link:../admin/ProActiveAdminGuide.html#_task_termination_behavior[Task Termination Behavior] section.
+
+The *Process Tree Killer* mechanism can be disabled using the <<_disabled_ptk,DISABLE_PTK>> generic information.
+
 ==== Docker fork execution environment
 A Docker fork execution environment is a specific usage of the fork environment mechanism.
 In that case, the ProActive Node's JVM starts a docker container which will run the forked JVM described above.
@@ -1462,9 +1469,14 @@ This approach has some limitations though:
 
 ===== Save the pre-script in a file and skip its execution
 
-Instead of executing the pre-script, we also provide to save the pre-script in a file and skip the execution. To do so, a Generic Information is required for the desired task, with the key
-"PRE_SCRIPT_AS_FILE", and the path of the file that you want to save your pre-script as its value. The path should contain a file name. It can be an absolute path, then the file will be stored in this absolute path. It can
- also be a relative path, then the file will be stored in the link:../user/ProActiveUserGuide.html#_local_space[Local Space]. If you don't give a specific extension in the path, the extension will be automatically assigned to the corresponding one of the language selected for this pre-script.
+Instead of executing a task pre-script, we also provide a way to save the pre-script into a file and skip its execution.
+To do so, a Generic Information is required for the desired task, with the key
+`PRE_SCRIPT_AS_FILE`, and the path of the file that you want to save your pre-script as its value.
+
+The path should contain a file name. If it is an absolute path, then the file will be stored in this absolute path.
+If is is a relative path, then the file will be stored in the link:../user/ProActiveUserGuide.html#_local_space[Local Space].
+
+If you don't give a specific extension in the path, the extension will be automatically assigned to the corresponding one of the language selected for this pre-script.
 
 
 === Run computation with your system account
