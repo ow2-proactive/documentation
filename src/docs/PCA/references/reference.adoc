@@ -550,6 +550,9 @@ The service is started using the following variable.
 
 === Model_Service
 This service allows to deploy through ProActive Cloud Automation (PCA) Portal an instance of Model_Service.
+
+NOTE: More details about the related actions of this service can be found in the link:/doc/MLOS/MLOSUserGuide.html#_via_cloud_automation_portal[MLOS Doc].
+
 The service is started using the following variable.
 
 *Variables:*
@@ -649,9 +652,6 @@ The service is started using the following variable.
 | String
 | `--gpus=1`
 |===
-
-NOTE: More details about the related actions of this service can be found ../doc/MLOS/MLOSUserGuide.html#_via_cloud_automation_portal[here^].
-
 
 === Zookeeper
 
