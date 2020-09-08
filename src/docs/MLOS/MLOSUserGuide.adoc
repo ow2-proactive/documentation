@@ -1792,19 +1792,19 @@ most of the available AI workflows in MLOS associated to their descriptions.
 | Parameters given to the native scheduler (SLURM, LSF, etc) while requesting a ProActive node used to deploy the PCA service.
 | String [default=empty]
 | `NODE_ACCESS_TOKEN`
-| The token ID with which the Node Source can be accessed.
+| If not empty, the workflow tasks will be run only on nodes which contains the specified token.
 | String [default=empty]
 | `NODE_SOURCE_NAME`
-| The name of the Node Source.
+| If not empty, the workflow tasks will be run only on nodes belonging to the specified node source.
 | String [default=empty]
 | `CONTAINER_PLATFORM`
-| Specifies the platform of the container that packages up the code and all its dependencies for running the application.
-| List(docker, podman, singularity) [default=docker]
+| Specifies the container platform to be used for executing the workflow tasks.
+| List(no-container, docker, podman, singularity) [default=docker]
 | `CONTAINER_GPU_ENABLED`
-| If True, containers will run based on images containing libraries that are compatible with GPU.
+| If True, it will activate the use of GPU on the selected container platform.
 | Boolean [default=True]
 | `CONTAINER_IMAGE`
-| Specifies the name of the Docker image that will be used to run the different workflow tasks.
+| Specifies the name of the container image that will be used to run the workflow tasks.
 | List(docker://activeeon/dlm3, docker://activeeon/cuda, docker://activeeon/cuda2, docker://activeeon/rapidsai,
 docker://activeeon/tensorflow:latest, docker://activeeon/tensorflow:latest-gpu) [default=empty]
 |===
