@@ -555,7 +555,7 @@ Set the following variables:
 |===
 | *Variable name* | *Description* | *Type*
 | `BUILD_IMAGE_IF_NOT_EXISTS`
-| Pull and build the singularity image if the Singularity Image File (SIF) file is not present.
+| Pull and build the singularity image if the Singularity Image File (SIF) file is not available.
 | Boolean (default=False)
 | `DEBUG_ENABLED`
 | If True, the user will be able to examine the stream of output results of each task.
