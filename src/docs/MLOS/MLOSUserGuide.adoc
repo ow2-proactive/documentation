@@ -359,7 +359,6 @@ These tasks can be easily integrated to your AI pipelines/workflows as you can s
 - Using the *Cloud Automation Portal* by executing the different actions associated to MLaaS (i.e. Deploy_Model_Service, Update_Model_Service, Pause_Model_Service, Resume_Model_Service, Finish_Model_Service.)
 - Using the *Swagger UI* which is accessible once the MLaaS instance is up and running.
 
-The management of the life cycle of MLaaS will be detailed in the next sub-sections.
 
 Once a MLaaS instance is up and running, it could be used for:
 
@@ -383,11 +382,12 @@ can be managed via three different ways in MLOS:
 In the description below, multiple tables represent the main variables that characterize the MLaaS workflows.
 In addition to the variables mentioned below, there is a set of generic variables that are common between all workflows
 which can be found in the subsection <<AI Workflows Common Variables>>.
+The management of the life cycle of MLaaS will be detailed in the next sub-sections.
 
 === Via Studio Portal
 ==== Start a Generic Service Instance
 
-Open the link:https://try.activeeon.com/Studio[Studio Portal].
+Open the link:https://try.activeeon.com/studio[Studio Portal].
 
 Create a new workflow.
 
@@ -449,7 +449,7 @@ Execute the workflow by setting the different workflow's variables as described 
 
 ==== Deploy a Specific AI Model
 
-You can also deploy a specific AI model directly from the link:https://try.activeeon.com/Studio[Studio Portal].
+You can also deploy a specific AI model directly from the link:https://try.activeeon.com/studio[Studio Portal].
 
 Drag and drop the `Deploy_AI_Model` task from the MLaaS bucket.
 
@@ -484,7 +484,7 @@ Execute the workflow and set the different workflow's variables as follows:
 
 ==== Call the Service for Predicition
 
-Once the model is deployed, you can also call the service for prediction directly from the link:https://try.activeeon.com/Studio[Studio Portal].
+Once the model is deployed, you can also call the service for prediction directly from the link:https://try.activeeon.com/studio[Studio Portal].
 
 Drag and drop the `Call_Prediction_Service` task from the MlaaS bucket.
 
@@ -521,7 +521,7 @@ Execute the Workflow and set the different workflow's variables as follows:
 
 ==== Delete/Finish the Service
 
-You can also delete the service instance using the link:https://try.activeeon.com/Studio[Studio Portal].
+You can also delete the service instance using the link:https://try.activeeon.com/studio[Studio Portal].
 
 Drag and drop the `Model_Service_Actions` task from the MLaaS bucket.
 
@@ -555,7 +555,7 @@ Set the following variables:
 |===
 | *Variable name* | *Description* | *Type*
 | `BUILD_IMAGE_IF_NOT_EXISTS`
-| Pull and build the singularity image if the sif file is not present.
+| Pull and build the singularity image if the Singularity Image File (SIF) file is not present.
 | Boolean (default=False)
 | `DEBUG_ENABLED`
 | If True, the user will be able to examine the stream of output results of each task.
