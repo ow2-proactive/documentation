@@ -330,7 +330,7 @@ The following workflows have common variables with the above illustred workflows
 
 *Image_Object_Detection:* trains a YOLO model on the coco dataset using MLOS deep learning generic tasks.
 
-*Iris_Classification:* trains multiple types of SVMs models on the Iris flower dataset.
+*Iris_Classification:* trains multiple types of SVM models on the Iris flower dataset.
 
 *Text_Generation:* trains a simple Long Short-Term Memory (LSTM) to learn sequences of characters from 'The Alchemist' book. It's a novel by Brazilian author Paulo Coelho that was first published in 1988.
 
