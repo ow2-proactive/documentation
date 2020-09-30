@@ -296,7 +296,7 @@ The following workflows represent some machine learning and deep learning algori
 These workflows have several common variables as in Multi_Tuners_Auto_ML. Some of the workflows are characterized
 by few additional variables.
 
-*CIFAR_10_Image_Classification:* train a simple deep CNN on the CIFAR10 images dataset using the Keras library.
+*CIFAR_10_Image_Classification:* trains a simple deep CNN on the CIFAR10 images dataset using the Keras library.
 
 .CIFAR_10_Image_Classification Variables
 [cols="2,5,5"]
@@ -1804,7 +1804,7 @@ most of the available AI workflows in MLOS associated to their descriptions.
 |===
 | *Variable name* | *Description* | *Type*
 | `NATIVE_SCHEDULER`
-| Name of the Native Scheduler node source to use when the workflowtasks must be deployed inside a cluster such as SLURM, LSF, etc.
+| Name of the Native Scheduler node source to use when the workflow tasks must be deployed inside a cluster such as SLURM, LSF, etc.
 | String (default=empty)
 | `NATIVE_SCHEDULER_PARAMS`
 | Parameters given to the native scheduler (SLURM, LSF, etc) while requesting a ProActive node used to deploy the workflow tasks.
@@ -1854,7 +1854,7 @@ NOTE: All ML tasks were implemented using https://scikit-learn.org/stable/[Sciki
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LIMIT_OUTPUT_VIEW`
 |  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
@@ -1887,7 +1887,7 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LIMIT_OUTPUT_VIEW`
 |  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
@@ -1916,7 +1916,7 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 |===
 
@@ -1933,7 +1933,7 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `OUTPUT_FILE`
 | Converts the prediction results to HTML, HYPER and CSV file.
@@ -1956,7 +1956,7 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LIMIT_OUTPUT_VIEW`
 |  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
@@ -1984,7 +1984,7 @@ image::csv_file_organisation.png[align="center"]
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `MODEL_URL`
 | Type the URL to load your trained model.
@@ -2005,7 +2005,7 @@ default: https://s3.eu-west-2.amazonaws.com/activeeon-public/models/pima-indians
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LIMIT_OUTPUT_VIEW`
 |  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
@@ -2071,7 +2071,7 @@ image::pattern_file.png[align="center"]
 |===
 | *Variable name* | *Description* | *Type
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 |===
 
@@ -2087,7 +2087,7 @@ image::pattern_file.png[align="center"]
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `COLUMNS_NAME`
 | The list of columns that need to be dropped. Columns names should be separated by a comma.
@@ -2113,7 +2113,7 @@ NOTE: More details about the source code of this task can be found https://panda
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 
 | `COLUMNS_NAME`
@@ -2134,7 +2134,7 @@ NOTE: More details about the source code of this task can be found https://sciki
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `FILL_MAP`
 | Refers to the value to use to fill holes (e.g., 0).
@@ -2154,7 +2154,7 @@ NOTE: More details about the source code of this task can be found https://panda
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `COLUMNS_NAME`
 | The list of columns to restrict to. Columns names should be separated by a comma.
@@ -2174,7 +2174,7 @@ NOTE: More details about the source code of this task can be found https://panda
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `REF_COLUMN`
 | The list of columns to restrict to. Columns names should be separated by a comma.
@@ -2194,7 +2194,7 @@ NOTE: More details about the source code of this task can be found https://panda
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `SCALER_NAME`
 | The list of columns to restrict to. Columns names should be separated by a comma.
@@ -2220,7 +2220,7 @@ NOTE: More details about the source code of this task can be found https://sciki
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 
 | `TRAIN_SIZE`
@@ -2243,7 +2243,7 @@ NOTE: More details about the source code of this task can be found https://sciki
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `COLUMNS_NAME`
 | The list of columns that will be renamed. Column names should be separated by a comma.
@@ -2262,7 +2262,7 @@ NOTE: More details about the source code of this task can be found https://sciki
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `QUERY`
 | The query string to evaluate.
@@ -2288,7 +2288,7 @@ NOTE: More details about the source code of this task can be found https://panda
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `GLOBAL_MODEL_TYPE`
 | The model that will be used to summarize data.
@@ -2311,7 +2311,7 @@ NOTE: More details about the source code of this task can be found https://docs.
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `TIME_COLULN`
 | The column that contains the values of the time series
@@ -2340,7 +2340,7 @@ NOTE: More details about the source code of this task can be found https://tsfre
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `SESSION_COLUMN`
 | The ID of the entity that you need to represent (to group by).
@@ -2519,7 +2519,7 @@ NOTE: More information about this task can be found https://automl.github.io/aut
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the gaussian naive bayes algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html[here^].
@@ -2540,7 +2540,7 @@ NOTE: More information about this task can be found https://scikit-learn.org/sta
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the logistic regression algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html[here^].
@@ -2574,7 +2574,7 @@ NOTE: More information about the source code of this task can be found https://s
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the support vector machines algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html[here^].
@@ -2604,7 +2604,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the bayesian ridge regression algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html[here^].
@@ -2641,7 +2641,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the linear regression algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html[here^].
@@ -2666,7 +2666,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the support vector regression algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html[here^].
@@ -2699,7 +2699,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the isolation forest algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html[here^].
@@ -2726,7 +2726,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the one class algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.svm.OneClassSVM.html[here^].
@@ -2757,7 +2757,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the Kmeans algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
@@ -2788,7 +2788,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the Mean Shift algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.cluster.MeanShift.html[here^].
@@ -2819,7 +2819,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the AdaBoost algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
@@ -2853,7 +2853,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the CatBoost algorithm. Check the list of parameters https://github.com/catboost[here^].
@@ -2886,7 +2886,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the Gradient Boosting algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingClassifier.html[here^].
@@ -2919,7 +2919,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the Random Forest algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html[here^].
@@ -2953,7 +2953,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the XGBoost algorithm. Check the list of parameters https://xgboost.readthedocs.io/en/latest/python/python_api.html[here^].
@@ -2987,7 +2987,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LABEL_COLUMN`
 | Enter the column label name.
@@ -3018,7 +3018,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LABEL_COLUMN`
 | Enter the column label name.
@@ -3040,7 +3040,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LABEL_COLUMN`
 | Enter the column label name.
@@ -3902,7 +3902,7 @@ It provides a large set of plots that can be organized programmatically or throu
 | The id of the Visdom service.
 | String (default="Visdom")
 | `INSTANCE_NAME`
-| The instance name of the server to use to broadcast visualization
+| The instance name of the server to be used to broadcast the visualization.
 | String (default="visdom-server")
 | `PROXIFIED`
 | It takes by default the value of  `VISDOM_PROXYFIED` workflow variable.
@@ -3912,7 +3912,7 @@ It provides a large set of plots that can be organized programmatically or throu
 | Container engine.
 | String (default="$CONTAINER_PLATFORM")
 | `NATIVE_SCHEDULER`
-| Name of the Native Scheduler node source to use when the workflowtasks must be deployed inside a cluster such as SLURM, LSF, etc.
+| Name of the Native Scheduler node source to use when the workflow tasks must be deployed inside a cluster such as SLURM, LSF, etc.
 | String (default=empty)
 | `NATIVE_SCHEDULER_PARAMS`
 | Parameters given to the native scheduler (SLURM, LSF, etc) while requesting a ProActive node used to deploy the workflow tasks.
@@ -3935,7 +3935,7 @@ WARNING: If two workflows use the same service instance names, then, their gener
 | The service instance ID.
 | String (default=Empty)
 | `INSTANCE_NAME`
-| The instance name of the server to use to broadcast visualization
+| The instance nameof the server to be used to broadcast the visualization.
 | String
 | `ACTION`
 | The action that will be processed regarding the service status.
@@ -3944,13 +3944,13 @@ WARNING: If two workflows use the same service instance names, then, their gener
 
 ===== Visdom_Visualize_Results
 
-*Task Overview:* plot the different results obtained by a predictive model using Visdom
+*Task Overview:* Plot the different results obtained by a predictive model using Visdom
 
 *Task Variables:*
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-|If False, the will be ignored, it will not be executed.
+|If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `TARGETED_CLASS`
 | The targeted class that you need to track
@@ -3986,13 +3986,13 @@ video::bQpwS2nMAZY[youtube, width=700, height=400 start=0, position=center]
 
 *Visdom_Real_time_Digit_Classification:* shows an example of realtime plotting using the Visdom server for training a convolutional neural network (CNN) for MNIST digit classification.
 
-*Check_Visdom_Support:* checks if the user wants (or not) start the Visdom service.
+*Check_Visdom_Support:* checks if the user wants (or not) to start the Visdom service.
 
 A demo video of these workflows is available in https://www.youtube.com/user/ActiveEonCompany[ActiveEon Youtube Channel^].
 
 ==== Tensorboard
 
-It provides  the visualization and tooling needed for machine learning experimentation, such as tracking and visualizing metrics such as loss and accuracy, visualizing the model graph (ops and layers), viewing histograms of weights, biases, or other tensors as they change over time, projecting embeddings to a lower dimensional space, displaying images, text, and audio data and others.
+It provides  the visualization and tooling needed for machine learning experimentation such as tracking, and visualizing metrics such as loss and accuracy, visualizing the model graph (ops and layers), viewing histograms of weights, biases, or other tensors as they change over time, projecting embeddings to a lower dimensional space, displaying images, text, and audio data and others.
 
 ===== Tensorboard_Service_Start
 
@@ -4008,7 +4008,7 @@ It provides  the visualization and tooling needed for machine learning experimen
 | The id of the TensorBoard service.
 | String (default="Tensorboard")
 | `INSTANCE_NAME`
-| The instance name of the server to use to broadcast visualization
+| The instance name of the server to be used to broadcast the visualization.
 | String
 | `MOUNT_LOG_PATH`
 | Specifies the path where Tensorboard logs are created and stored on the host.
@@ -4021,7 +4021,7 @@ It provides  the visualization and tooling needed for machine learning experimen
 | String (default="$TENSORBOARD_PROXYFIED")
 (default=empty)
 | `NATIVE_SCHEDULER`
-| Name of the Native Scheduler node source to use when the workflowtasks must be deployed inside a cluster such as SLURM, LSF, etc.
+| Name of the Native Scheduler node source to use when the workflow tasks must be deployed inside a cluster such as SLURM, LSF, etc.
 | String (default=empty)
 | `NATIVE_SCHEDULER_PARAMS`
 | Parameters given to the native scheduler (SLURM, LSF, etc) while requesting a ProActive node used to deploy the workflow tasks.
@@ -4045,7 +4045,7 @@ It provides  the visualization and tooling needed for machine learning experimen
 | The service instance ID.
 | String (default=Empty)
 | `INSTANCE_NAME`
-| The instance name of the server to use to broadcast visualization
+| The instance name of the server to be used to broadcast the visualization.
 | String
 | `ACTION`
 | The action that will be processed regarding the service status.
@@ -4056,11 +4056,11 @@ It provides  the visualization and tooling needed for machine learning experimen
 
 The following workflows present some examples using TensorBoard service to visualize the results obtained while training and testing some predictive models.
 
-*Tensorboard_Realtime_CIFAR10_Training:* shows an example of real-time using Tensorboard for training a CNN using CIFAR10 database.
+*Tensorboard_Realtime_CIFAR10_Training:* shows an example of real-time graph using TensorBoard for training a CNN using CIFAR10 database.
 
-*Tensorboard_Plots_Example:* shows an example exposing the different plots available in Tensorboard.
+*Tensorboard_Plots_Example:* shows an example exposing the different plots available in TensorBoard.
 
-*Check_Tensorboard_Support:* checks if the user wants (or not) start the Tensorboard service.
+*Check_Tensorboard_Support:* checks if the user wants (or not) to start the TensorBoard service.
 
 
 === Satellite Imagery Bucket
