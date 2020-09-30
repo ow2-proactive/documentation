@@ -1758,11 +1758,11 @@ This section presents custom AI workflows using tasks available on the `deep-lea
 
 The following workflows represent python templates that can be used to implement a generic machine learning task.
 
-*Horovod_Job:* is a template to implement a native Horovod task with multi-gpu support.
+*Horovod_Job:* is a template to implement a Horovod task with multi-gpu support.
 
-*Horovod_Job_Slurm:* is a template to implement a native Horovod task using SLURM scheduler with multi-gpu support.
+*Horovod_Job_Slurm:* is a template to implement a Horovod task using a native SLURM scheduler with multi-gpu support.
 
-*Horovod_Job_Docker:* is a template to implement a Horovod task using Docker with multi-gpu support.
+*Horovod_Job_Docker:* is a template to implement a Horovod task using a Docker container with multi-gpu support.
 
 *TensorFlow_Task:* is a simple TensorFlow task template.
 
