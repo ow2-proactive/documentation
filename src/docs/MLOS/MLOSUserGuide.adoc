@@ -196,10 +196,10 @@ Multi_Tuners_Auto_ML comes with specific pipelines (parallel or sequential) and 
 | *Variable name* | *Description* | *Type*
 | `TUNING_ALGORITHM`
 | Specifies the tuner algorithm that will be used for hyperparameters optimization.
-| List(Bayes, Grid, Random, QuasiRandom, CMAES, MOCMAES) [default=Bayes]
+| List [Bayes, Grid, Random, QuasiRandom, CMAES, MOCMAES] (default=Bayes)
 | `WORKFLOW_TO_OPTIMIZE`
 | Specifies the catalog path of the workflow that we need to optimize.
-| String [default=auto-ml-optimization/Himmelblau_Function]
+| String (default=auto-ml-optimization/Himmelblau_Function)
 | `MAX_ITERATIONS`
 |  Specifies the number of maximum iterations.
 | Int (default=2)
@@ -217,28 +217,28 @@ Multi_Tuners_Auto_ML comes with specific pipelines (parallel or sequential) and 
 | Boolean (default=False)
 | `VISDOM_USERNAME`
 | The username used to access the Visdom web interface.
-| String [default=empty]
+| String (default=empty)
 | `VISDOM_PASSWORD`
 | The password used to access the Visdom web interface.
-| String [default=empty]
+| String (default=empty)
 | `VISDOM_INSTANCE_NAME`
 | Specifies the name of the container that will run Visdom.
-| String [default=visdom-server]
+| String (default=visdom-server)
 | `TENSORBOARD_ENABLED`
 | If True, the user can visualize the data using the Tensorboard web interface.
 | Boolean (default=False)
 | `TENSORBOARD_INSTANCE_NAME`
 | Specifies the name of the container that will run Tensorboard.
-| String [default=tensorboard-server]
+| String (default=tensorboard-server)
 | `TENSORBOARD_LOG_PATH`
 | Specifies the path where Tensorboard logs are created and stored on the host.
-| String [default=/shared/$TENSORBOARD_INSTANCE_NAME]
+| String (default=/shared/$TENSORBOARD_INSTANCE_NAME)
 | `TENSORBOARD_DOCKER_LOG_PATH`
 | Specifies the path where Tensorboard logs are created and stored on the docker container.
-| String [default=/graphs/$TENSORBOARD_INSTANCE_NAME]
+| String (default=/graphs/$TENSORBOARD_INSTANCE_NAME)
 | `PROPAGATE_CONTAINER_PLATFORM`
 | If True, the selected container platform (docker, singularity, etc..) will propagate to the workflow that should be optimized.
-| [default=True]
+| (default=True)
 |===
 
 image::AutoML_Full.png[1000,700,align=center]
@@ -283,24 +283,28 @@ In the following, we briefly describe the different tuners proposed by the Multi
       To do that, MOCMAES employs a number of CMAES algorithms.
 
 
+=== Objective Functions
 
-=== Objective ML Examples
+The following workflows represent some mathematical functions that can be optimized by the AutoML tuners.
+
+*Himmelblau_Function:* is a multi-modal function, used to test the performance of optimization algorithms.
+
+
+=== Hyperparameter Optimization
 
 The following workflows represent some machine learning and deep learning algorithms that can be optimized.
 These workflows have several common variables as in Multi_Tuners_Auto_ML. Some of the workflows are characterized
 by few additional variables.
 
+*CIFAR_10_Image_Classification:* trains a simple deep CNN on the CIFAR10 images dataset using the Keras library.
 
-
-*CIFAR10 CNN:* train a simple deep CNN on the CIFAR10 images dataset using the Keras library.
-
-.CIFAR10 CNN Variables
+.CIFAR_10_Image_Classification Variables
 [cols="2,5,5"]
 |===
 | *Variable name* | *Description* | *Type*
 | `NUM_EPOCHS`
 | The number of times data is passed forward and backward through the training algorithm.
-| Integer [default=3]
+| Integer (default=3)
 | `INPUT_VARIABLES`
 | A set of specific variables (usecase-related) that are used in the model training process.
 | JSON format
@@ -309,43 +313,41 @@ by few additional variables.
 | JSON format
 | `INSTANCE_NAME`
 | Specifies the name to be provided for the instance.
-| String [default=tensorboard-server]
+| String (default=tensorboard-server)
 | `CONTAINER_LOG_PATH`
 | Specifies the path where the docker logs are created and stored on the docker container.
-| String [default=/graphs/$INSTANCE_NAME]
+| String (default=/graphs/$INSTANCE_NAME)
 | `CONTAINER_ROOTLESS_ENABLED`
 | If True, the user will be able to run the workflow in a rootless mode.
-| [default=True]
+| (default=True)
 |===
 
 The following workflows have common variables with the above illustred workflows.
 
-*CIFAR100 CNN:* train a simple deep CNN on the CIFAR100 images dataset using the Keras library.
+*CIFAR_100_Image_Classification:* trains a simple deep CNN on the CIFAR100 images dataset using the Keras library.
+
+*Diabetics_Detection:* trains a logistic regression model using MLOS machine learning generic tasks in order to detect diabetics.
+
+*Image_Object_Detection:* trains a YOLO model on the coco dataset using MLOS deep learning generic tasks.
+
+*Iris_Classification:* trains multiple types of SVM models on the Iris flower dataset.
+
+*Text_Generation:* trains a simple Long Short-Term Memory (LSTM) to learn sequences of characters from 'The Alchemist' book. It's a novel by Brazilian author Paulo Coelho that was first published in 1988.
 
 
-*Diabetics Detection Using Logistic Regression:* train a logistic regression model using MLOS machine learning generic tasks in order to detect diabetics.
+=== Neural Architecture Search
 
+The following workflows contain a search space containing a set of possible neural networks architectures that can be used by the AutoML tuners to automatically find the best combinations of  neural architectures within the search space.
 
-*Image Object Detection:* train a YOLO model on the coco dataset using MLOS deep learning generic tasks.
+*Handwritten_Digit_Classification:* train a simple deep CNN on the MNIST dataset using the Pytorch library.
 
-*Multiple SVM Models:* train multiple types of SVMs models that can be optimized using AutoML.
-
-*Text_Generation:* train a simple Long Short-Term Memory (LSTM) to learn sequences of characters from 'The Alchemist' book. It's a novel by Brazilian author Paulo Coelho that was first published in 1988.
-
-
-=== Objective Function Examples
-
-The following workflows represent some mathematical functions that can be optimized by the AutoML tuners.
-
-*Himmelblau_Function:* is a multi-modal function, used to test the performance of optimization algorithms.
 
 
 === Templates
 
-The following workflows represent python templates that can be optimized by the AutoML tuners.
+The following workflows represent python templates that can be used to implement a generic machine learning task.
 
-*Python_Task:* is a simple python task template that can be used for AutoML.
-
+*PyTorch_Task:* is a simple PyTorch task template.
 
 == Machine Learning as a Service (MLaaS)
 
@@ -534,7 +536,7 @@ Execute the Workflow and set the different workflow's variables as follows:
 3+^|*Task variables*
 | `ACTION`
 | The action that will be processed regarding the service status.
-| List (Pause_Model_Service, Resume_Model_Service, Finish_Model_Service) (default="Finish_Model_Service")
+| List [Pause_Model_Service, Resume_Model_Service, Finish_Model_Service] (default="Finish_Model_Service")
 | `INSTANCE_ID`
 | The service instance ID.
 | String (default=Empty)
@@ -1752,6 +1754,22 @@ This section presents custom AI workflows using tasks available on the `deep-lea
 
 *Search_Classify_Images:* queries images into search engine (Bing or DuckDuckGo) and predicts a model to classify rocket_vs_plane images. The pre-trained image classiffication model is available on this https://activeeon-public.s3.eu-west-2.amazonaws.com/models/search_image_model.zip[link^].
 
+=== Templates
+
+The following workflows represent python templates that can be used to implement a generic machine learning task.
+
+*Horovod_Job:* is a template to implement a Horovod task with multi-gpu support.
+
+*Horovod_Job_Slurm:* is a template to implement a Horovod task using a native SLURM scheduler with multi-gpu support.
+
+*Horovod_Job_Docker:* is a template to implement a Horovod task using a Docker container with multi-gpu support.
+
+*TensorFlow_Task:* is a simple TensorFlow task template.
+
+*Keras_Task:* is a simple Keras task template.
+
+*PyTorch_Task:* is a simple PyTorch task template.
+
 WARNING: It is recommended to use an enabled-GPU node to run the deep learning tasks.
 
 //=== Custom AI Workflows - Other libraries
@@ -1786,27 +1804,27 @@ most of the available AI workflows in MLOS associated to their descriptions.
 |===
 | *Variable name* | *Description* | *Type*
 | `NATIVE_SCHEDULER`
-| Name of the Native Scheduler node source to use when the workflowtasks must be deployed inside a cluster such as SLURM, LSF, etc.
-| String [default=empty]
+| Name of the Native Scheduler node source to use when the workflow tasks must be deployed inside a cluster such as SLURM, LSF, etc.
+| String (default=empty)
 | `NATIVE_SCHEDULER_PARAMS`
 | Parameters given to the native scheduler (SLURM, LSF, etc) while requesting a ProActive node used to deploy the workflow tasks.
-| String [default=empty]
+| String (default=empty)
 | `NODE_ACCESS_TOKEN`
 | If not empty, the workflow tasks will be run only on nodes that contains the specified token.
-| String [default=empty]
+| String (default=empty)
 | `NODE_SOURCE_NAME`
 | If not empty, the workflow tasks will be run only on nodes belonging to the specified node source.
-| String [default=empty]
+| String (default=empty)
 | `CONTAINER_PLATFORM`
 | Specifies the container platform to be used for executing the workflow tasks.
-| List(no-container, docker, podman, singularity) [default=docker]
+| List [no-container, docker, podman, singularity] (default=docker)
 | `CONTAINER_GPU_ENABLED`
 | If True, it will activate the use of GPU on the selected container platform.
-| Boolean [default=True]
+| Boolean (default=True)
 | `CONTAINER_IMAGE`
 | Specifies the name of the container image that will be used to run the workflow tasks.
-| List(docker://activeeon/dlm3, docker://activeeon/cuda, docker://activeeon/cuda2, docker://activeeon/rapidsai,
-docker://activeeon/tensorflow:latest, docker://activeeon/tensorflow:latest-gpu) [default=empty]
+| List [docker://activeeon/dlm3, docker://activeeon/cuda, docker://activeeon/cuda2, docker://activeeon/rapidsai,
+docker://activeeon/tensorflow:latest, docker://activeeon/tensorflow:latest-gpu] (default=empty)
 |===
 === ML Bucket
 
@@ -1836,7 +1854,7 @@ NOTE: All ML tasks were implemented using https://scikit-learn.org/stable/[Sciki
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LIMIT_OUTPUT_VIEW`
 |  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
@@ -1869,7 +1887,7 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LIMIT_OUTPUT_VIEW`
 |  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
@@ -1898,7 +1916,7 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 |===
 
@@ -1915,7 +1933,7 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `OUTPUT_FILE`
 | Converts the prediction results to HTML, HYPER and CSV file.
@@ -1938,7 +1956,7 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LIMIT_OUTPUT_VIEW`
 |  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
@@ -1966,7 +1984,7 @@ image::csv_file_organisation.png[align="center"]
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `MODEL_URL`
 | Type the URL to load your trained model.
@@ -1987,7 +2005,7 @@ default: https://s3.eu-west-2.amazonaws.com/activeeon-public/models/pima-indians
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LIMIT_OUTPUT_VIEW`
 |  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
@@ -2025,7 +2043,7 @@ default: https://s3.eu-west-2.amazonaws.com/activeeon-public/models/pima-indians
 
     C. *Variables*: String
         Specify the name of each variable included in the pattern.
-        N.B: Use the symbol ‘*’ for variables that you need to neglect. (e.g. in the example below the 5th
+        N.B: Use the symbol ‘*’ for variables that you need to neglect. (e.g., in the example below the 5th
         variable is neglected)
         N.B: All variables specified in each Regex expressions have to be mentioned in the column
         « Variables » in the right order (use ',' to separate the variable names).
@@ -2053,7 +2071,7 @@ image::pattern_file.png[align="center"]
 |===
 | *Variable name* | *Description* | *Type
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 |===
 
@@ -2069,7 +2087,7 @@ image::pattern_file.png[align="center"]
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `COLUMNS_NAME`
 | The list of columns that need to be dropped. Columns names should be separated by a comma.
@@ -2095,7 +2113,7 @@ NOTE: More details about the source code of this task can be found https://panda
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 
 | `COLUMNS_NAME`
@@ -2116,10 +2134,10 @@ NOTE: More details about the source code of this task can be found https://sciki
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `FILL_MAP`
-| Refers to the value to use to fill holes (e.g. 0).
+| Refers to the value to use to fill holes (e.g., 0).
 | Integer
 |===
 
@@ -2136,7 +2154,7 @@ NOTE: More details about the source code of this task can be found https://panda
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `COLUMNS_NAME`
 | The list of columns to restrict to. Columns names should be separated by a comma.
@@ -2156,7 +2174,7 @@ NOTE: More details about the source code of this task can be found https://panda
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `REF_COLUMN`
 | The list of columns to restrict to. Columns names should be separated by a comma.
@@ -2176,7 +2194,7 @@ NOTE: More details about the source code of this task can be found https://panda
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `SCALER_NAME`
 | The list of columns to restrict to. Columns names should be separated by a comma.
@@ -2202,7 +2220,7 @@ NOTE: More details about the source code of this task can be found https://sciki
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 
 | `TRAIN_SIZE`
@@ -2225,7 +2243,7 @@ NOTE: More details about the source code of this task can be found https://sciki
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `COLUMNS_NAME`
 | The list of columns that will be renamed. Column names should be separated by a comma.
@@ -2244,7 +2262,7 @@ NOTE: More details about the source code of this task can be found https://sciki
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `QUERY`
 | The query string to evaluate.
@@ -2270,7 +2288,7 @@ NOTE: More details about the source code of this task can be found https://panda
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `GLOBAL_MODEL_TYPE`
 | The model that will be used to summarize data.
@@ -2293,7 +2311,7 @@ NOTE: More details about the source code of this task can be found https://docs.
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `TIME_COLULN`
 | The column that contains the values of the time series
@@ -2303,7 +2321,7 @@ NOTE: More details about the source code of this task can be found https://docs.
 | String
 | `ALL_FEATURES`
 | False if you do not need to extract all the possible features extractable by the library TSFRESH.
-| Boolean [default = False]
+| Boolean (default = False)
 | `LIMIT_OUTPUT_VIEW`
 |  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
 | Int (default=-1) (-1 means preview all the rows)
@@ -2322,7 +2340,7 @@ NOTE: More details about the source code of this task can be found https://tsfre
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `SESSION_COLUMN`
 | The ID of the entity that you need to represent (to group by).
@@ -2410,7 +2428,7 @@ NOTE: More information about this task can be found https://epistasislab.github.
 | Boolean (default=True)
 | `RESAMPLING_STRATEGY`
 | Strategy to handle overfitting.
-| String [default='cv']
+| String (default='cv')
 | `FOLDS`
 | Number of folds fro cross-validation.
 | Integer (default=5)
@@ -2479,7 +2497,7 @@ NOTE: More information about this task can be found https://epistasislab.github.
 | Boolean (default=False)
 | `RESAMPLING_STRATEGY`
 | Strategy to handle overfitting.
-| String [default='cv']
+| String (default='cv')
 | `FOLDS`
 | Number of folds for cross-validation.
 | Integer (default=5)
@@ -2501,7 +2519,7 @@ NOTE: More information about this task can be found https://automl.github.io/aut
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the gaussian naive bayes algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html[here^].
@@ -2522,7 +2540,7 @@ NOTE: More information about this task can be found https://scikit-learn.org/sta
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the logistic regression algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html[here^].
@@ -2556,7 +2574,7 @@ NOTE: More information about the source code of this task can be found https://s
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the support vector machines algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html[here^].
@@ -2586,7 +2604,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the bayesian ridge regression algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html[here^].
@@ -2623,7 +2641,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the linear regression algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html[here^].
@@ -2648,7 +2666,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the support vector regression algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html[here^].
@@ -2681,7 +2699,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the isolation forest algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html[here^].
@@ -2708,7 +2726,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the one class algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.svm.OneClassSVM.html[here^].
@@ -2739,7 +2757,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the Kmeans algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
@@ -2770,7 +2788,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the Mean Shift algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.cluster.MeanShift.html[here^].
@@ -2801,7 +2819,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the AdaBoost algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
@@ -2835,7 +2853,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the CatBoost algorithm. Check the list of parameters https://github.com/catboost[here^].
@@ -2868,7 +2886,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the Gradient Boosting algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingClassifier.html[here^].
@@ -2901,7 +2919,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the Random Forest algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html[here^].
@@ -2935,7 +2953,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
 | Specifies the parameters' values of the XGBoost algorithm. Check the list of parameters https://xgboost.readthedocs.io/en/latest/python/python_api.html[here^].
@@ -2969,7 +2987,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LABEL_COLUMN`
 | Enter the column label name.
@@ -3000,7 +3018,7 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LABEL_COLUMN`
 | Enter the column label name.
@@ -3022,17 +3040,17 @@ NOTE: More information about the source of this task can be found https://scikit
 |===
 | *Variable name* | *Description* | *Type*
 | `TASK_ENABLED`
-| If False, the will be ignored, it will not be executed.
+| If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LABEL_COLUMN`
 | Enter the column label name.
 | String
 | `FEATURE_PARTIAL_PLOTS`
 | Partial Dependence Plots show how a feature affects predictions.
-| String [e.g distance_circularity, max_length_aspect_ratio, etc].
+| String [e.g., distance_circularity, max_length_aspect_ratio, etc].
 | `FEATURE_PARTIAL2D_PLOTS`
 | 2D Partial Dependence Plots show predictions for any combination of two features.
-| String [e.g distance_circularity, max_length_aspect_ratio].
+| String [e.g, distance_circularity, max_length_aspect_ratio].
 | `SHAP_ROW_SHOW`
 | Enter the row of data to show. The SHAP (https://github.com/slundberg/shap) values interpret the impact of having a certain value for a given feature in comparison to the prediction we'd make if that feature took some baseline value. Feature values causing increased predictions are in pink and  Feature values decreasing the prediction are in blue. The SHAP_ROW_SHOW The row of data to show
 | Integer
@@ -3189,10 +3207,10 @@ NOTE: Not all deep networks support the ONNX model yet. You can download ONNX mo
 | List (default=str.split)
 | `SENTENCE_SEPARATOR`
 | Split the text into separated paragraphs, separated lines, separated words. Choose your own separator.
-| String [default=\r]
+| String (default=\r)
 | `CHARSET`
 | Encode to be used to read the text.
-| String [default='utf-8']
+| String (default='utf-8')
 | `IS_LABELED_DATA`
 |  True if data is labeled.
 | Boolean (default=True)
@@ -3475,7 +3493,7 @@ NOTE: PyTorch were used to build the model architecture based on https://github.
 | Integer (default=21)
 | `LABEL_PATH`
 | The URL of the file containing the class names of the dataset.
-| String [default=(https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/voc.names)]
+| String (default=(https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/voc.names))
 | `USE_PRETRAINED_MODEL`
 | Parameter to use pre-trained model for training. If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
 | Boolean (default=True)
@@ -3521,7 +3539,7 @@ NOTE: PyTorch were used to build the model architecture based on https://github.
 | Float (default=0.45) Range in [0, 1].
 | `LABEL_PATH`
 | The URL of the file containing the class names of the dataset.
-| String [default=(https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/coco.names)]
+| String (default=(https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/coco.names))
 | `USE_PRETRAINED_MODEL`
 | Parameter to use pre-trained model for training. If True, the pre-trained model with the corresponding number of layers is loaded and used for training. Otherwise, the network is trained from scratch.
 | Boolean (default=True)
@@ -3862,13 +3880,13 @@ NOTE: Shap uses GradientExplainer to explain a deep learning model. More informa
 NOTE: This task requires too much memory. You may receive an error message if you don't have enough memory (RAM).
 
 === Data Visualization Bucket
-*Visdom Bucket* integrates generic tasks that can be easily used to broadcast visualizations of the analytic results provided by ML tasks. These visualization are created, organized, and shared using https://github.com/facebookresearch/visdom[Visdom^], a flexible tool proposed by Facebook Research.
 
-It provides a large set of plots that can be organized programmatically or through the UI. These plots can be used to create dashboards for both live and real-time data, inspect results of experiments, or debug experimental code.
-
-Visdom bucket provides a fast, easy and practice way to execute different workflows generating these diverse visualizations that are automatically cached by the Visdom Server.
+The data-visualization catalog integrates generic tasks that can be easily used to broadcast visualizations of the analytic results provided by AI tasks. It offers a large set of plots that can be organized programmatically or through the UI. These plots are used to create dashboards for both live and real-time data, inspect results of experiments, or debug experimental code.  The data-visualization catalog  provides a fast, easy and practical way to execute different workflows generating these diverse visualizations that are automatically cached by the
+TensorBoard and Visdom Server. However, other visualization libraries can be integrated as well.
 
 ==== Visdom
+
+It provides a large set of plots that can be organized programmatically or through the UI. These plots can be used to create dashboards for both live and real-time data, inspect results of experiments, or debug experimental code.
 
 ===== Visdom_Service_Start
 
@@ -3882,10 +3900,23 @@ Visdom bucket provides a fast, easy and practice way to execute different workfl
 | *Variable name* | *Description* | *Type*
 | `SERVICE_ID`
 | The id of the Visdom service.
-| String [default="Visdom"]
+| String (default="Visdom")
 | `INSTANCE_NAME`
-| The instance name of the server to use to broadcast visualization
-| String [default="visdom-server"]
+| The instance name of the server to be used to broadcast the visualization.
+| String (default="visdom-server")
+| `PROXIFIED`
+| It takes by default the value of  `VISDOM_PROXYFIED` workflow variable.
+| String (default="$VISDOM_PROXYFIED")
+(default=empty)
+| `ENGINE`
+| Container engine.
+| String (default="$CONTAINER_PLATFORM")
+| `NATIVE_SCHEDULER`
+| Name of the Native Scheduler node source to use when the workflow tasks must be deployed inside a cluster such as SLURM, LSF, etc.
+| String (default=empty)
+| `NATIVE_SCHEDULER_PARAMS`
+| Parameters given to the native scheduler (SLURM, LSF, etc) while requesting a ProActive node used to deploy the workflow tasks.
+| String (default=empty)
 |===
 
 WARNING: If two workflows use the same service instance names, then, their generated plots will be created on the same service instance.
@@ -3900,24 +3931,34 @@ WARNING: If two workflows use the same service instance names, then, their gener
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
+| `INSTANCE_ID`
+| The service instance ID.
+| String (default=Empty)
 | `INSTANCE_NAME`
-| The instance name of the server to use to broadcast visualization
-| String [default="visdom-server"]
-| `INSTANCE_ACTION`
-| Three possible actions: Pause_Visdom, Resume_Visdom and Finish_Visdom.
-| List (default="Finish_Visdom")
+| The instance nameof the server to be used to broadcast the visualization.
+| String
+| `ACTION`
+| The action that will be processed regarding the service status.
+| List [Pause_Visdom, Resume_Visdom and Finish_Visdom] (default="Finish_Visdom")
 |===
 
 ===== Visdom_Visualize_Results
 
-*Task Overview:* plot the different results obtained by a predictive model using Visdom
+*Task Overview:* Plot the different results obtained by a predictive model using Visdom
 
 *Task Variables:*
 |===
 | *Variable name* | *Description* | *Type*
+| `TASK_ENABLED`
+|If False, the task will be ignored, it will not be executed.
+| Boolean (default=True)
 | `TARGETED_CLASS`
 | The targeted class that you need to track
+| URL
 | String
+| `VISDOM_ENDPOINT`
+| The visdom endpoint to be used.
+| URL
 |===
 
 *Usage:* This task has to be connected to <<Visdom_Service_Start>>. The Visdom server should be up in order to be able to broadcast visualizations.
@@ -3945,7 +3986,82 @@ video::bQpwS2nMAZY[youtube, width=700, height=400 start=0, position=center]
 
 *Visdom_Real_time_Digit_Classification:* shows an example of realtime plotting using the Visdom server for training a convolutional neural network (CNN) for MNIST digit classification.
 
+*Check_Visdom_Support:* checks if the user wants (or not) to start the Visdom service.
+
 A demo video of these workflows is available in https://www.youtube.com/user/ActiveEonCompany[ActiveEon Youtube Channel^].
+
+==== Tensorboard
+
+It provides  the visualization and tooling needed for machine learning experimentation such as tracking, and visualizing metrics such as loss and accuracy, visualizing the model graph (ops and layers), viewing histograms of weights, biases, or other tensors as they change over time, projecting embeddings to a lower dimensional space, displaying images, text, and audio data and others.
+
+===== Tensorboard_Service_Start
+
+*Task Overview:* Start the TensorBoard server as a service.
+
+*Task Variables:*
+
+.Tensorboard_Service_Start variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `SERVICE_ID`
+| The id of the TensorBoard service.
+| String (default="Tensorboard")
+| `INSTANCE_NAME`
+| The instance name of the server to be used to broadcast the visualization.
+| String
+| `MOUNT_LOG_PATH`
+| Specifies the path where Tensorboard logs are created and stored on the host.
+| String (default=/shared/$TENSORBOARD_HOST_LOG_PATH)
+| `ENGINE`
+| Container engine.
+| String (default="$CONTAINER_PLATFORM")
+| `PROXIFIED`
+| It takes by default the value of  `TENSORBOARD_PROXYFIED` workflow variable.
+| String (default="$TENSORBOARD_PROXYFIED")
+(default=empty)
+| `NATIVE_SCHEDULER`
+| Name of the Native Scheduler node source to use when the workflow tasks must be deployed inside a cluster such as SLURM, LSF, etc.
+| String (default=empty)
+| `NATIVE_SCHEDULER_PARAMS`
+| Parameters given to the native scheduler (SLURM, LSF, etc) while requesting a ProActive node used to deploy the workflow tasks.
+| String (default=empty)
+| `CONTAINER_ROOTLESS_ENABLED`
+| If True, the user will be able to run the workflow in a rootless mode.
+| (default=False)
+|===
+
+===== Tensorboard_Service_Actions
+
+*Task Overview:* Manage the life-cycle of TensorBoard PCA service. It allows to trigger three possible actions: Pause_Tensorboard, Resume_Tensorboard and Finish_Tensorboard.
+
+*Task Variables:*
+
+.Tensorboard_Service_Actions_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `INSTANCE_ID`
+| The service instance ID.
+| String (default=Empty)
+| `INSTANCE_NAME`
+| The instance name of the server to be used to broadcast the visualization.
+| String
+| `ACTION`
+| The action that will be processed regarding the service status.
+| List [Pause_Tensorboard, Resume_Tensorboard and Finish_Tensorboard] (default="Finish_Tensorboard")
+|===
+
+==== Tensorboard Workflows
+
+The following workflows present some examples using TensorBoard service to visualize the results obtained while training and testing some predictive models.
+
+*Tensorboard_Realtime_CIFAR10_Training:* shows an example of real-time graph using TensorBoard for training a CNN using CIFAR10 database.
+
+*Tensorboard_Plots_Example:* shows an example exposing the different plots available in TensorBoard.
+
+*Check_Tensorboard_Support:* checks if the user wants (or not) to start the TensorBoard service.
+
 
 === Satellite Imagery Bucket
 
