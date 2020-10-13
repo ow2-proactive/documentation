@@ -31,6 +31,10 @@ The following table describes all availabe generic information:
 |delay a job or task execution at a specified date/time
 |job-level, task-level
 |2020-06-20T18:00:00+02:00
+|<<_node_access_token,NODE_ACCESS_TOKEN>>
+|execute task(s) on node(s) with token-based usage restriction
+|job-level, task-level
+|my_token
 |<<_email,EMAIL>>
 |send email to recipient(s) based on job state events
 |job-level
@@ -96,6 +100,16 @@ Examples:
  * `START_AT = "2020-06-20T18:00:00+02:00"` will delay the job execution until 20th June 2020 at 6pm GMT+02:00.
 
 `START_AT` can be defined at *job-level* (delay the execution of the whole job) or at  *task-level* (delay the execution of a single task).
+
+==== NODE_ACCESS_TOKEN
+
+The `NODE_ACCESS_TOKEN` Generic Information can be used to execute a task or all tasks of a workflow to specific nodes restricted by tokens.
+
+The value of `NODE_ACCESS_TOKEN` must contain the token value. Workflows or tasks with `NODE_ACCESS_TOKEN` enabled will run exclusively on nodes containing the token.
+
+See <<../admin/ProActiveAdminGuide.adoc#_policy_common_parameters,Node Source Policy Parameters>> for further information on node token restrictions.
+
+`NODE_ACCESS_TOKEN` can be defined at *job-level* (applies to all tasks of a workflow) or at  *task-level* (applies to a single task).
 
 ==== Email
 
