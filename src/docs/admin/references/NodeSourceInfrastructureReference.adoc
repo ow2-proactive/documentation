@@ -463,7 +463,7 @@ Properties needed for the deployment of instance are:
    
    -   *flavor:* Defines the size of the instance. The value to provide is the flavor name or the flavor Id. For more information see https://docs.openstack.org/openstack-ops/content/flavors.html[OpenStack flavors].
 
-   -   *networkId:*  Defines the identifier of the network to be attached to the instance. This value can be blanked to leave the selection to OpenStack.
+   -   *networkId:*  Defines the identifier of the network to be attached to the instance. This value can be blank to leave the selection to OpenStack.
     
    -   *publicKeyName:* Defines the name of the public key to use for a remote connection when the instance is created.
     
