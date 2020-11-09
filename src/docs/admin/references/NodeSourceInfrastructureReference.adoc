@@ -462,8 +462,10 @@ Properties needed for the deployment of instance are:
    -   *image:* Defines which image will be used to create the OpenStack instance. The value to provide is the unique image Id.
    
    -   *flavor:* Defines the size of the instance. The value to provide is the flavor name or the flavor Id. For more information see https://docs.openstack.org/openstack-ops/content/flavors.html[OpenStack flavors].
+
+   -   *networkId:*  Defines the identifier of the network to be attached to the instance. This value can be blank to leave the selection to OpenStack.
     
-    -   *publicKeyName:* Defines the name of the public key to use for a remote connection when the instance is created.
+   -   *publicKeyName:* Defines the name of the public key to use for a remote connection when the instance is created.
     
 +
 WARNING: In order to use publicKeyName, the key pair needs to be created and imported first on the OpenStack server. For more information see https://docs.openstack.org/python-openstackclient/pike/cli/command-objects/keypair.html[OpenStack key pair management].
