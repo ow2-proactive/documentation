@@ -47,6 +47,14 @@ The following table describes all availabe generic information:
 |once the job is terminated, this setting controls the delay after which the will be removed from the scheduler database
 |job-level
 |3d 12h
+|<<_earliest_deadline_first_policy,JOB_DDL>>
+|job deadline used in <<../user/ProActiveUserGuide.html#_earliest_deadline_first_edf_policy,Earliest Deadline First Scheduling Policy>>
+|job-level
+|+5:30:00
+|<<_earliest_deadline_first_policy,JOB_EXEC_TIME>>
+|job expected execution time used in <<../user/ProActiveUserGuide.html#_earliest_deadline_first_edf_policy,Earliest Deadline First Scheduling Policy>>
+|job-level
+|1:00:00
 |<<_disable_ptk,DISABLE_PTK>>
 |skip sub-process cleaning after the task is terminated
 |task-level
@@ -87,6 +95,78 @@ The following table describes all availabe generic information:
 |Add an icon to the task
 |task-level
 |http://my-server/my-icon.png
+|<<_result_metadata,content.type>>
+|Asseign a MIME content type to a byte array task result
+|task-level
+|image/png
+|<<_result_metadata,file.name>>
+|Asseign a file name to a byte array task result
+|task-level
+|image_balloon.png
+|<<_result_metadata,file.extension>>
+|Asseign a file extension to a byte array task result
+|task-level
+|.png
+|<<_python_command,PYTHON_COMMAND>>
+|Python command to use in <<../user/ProActiveUserGuide.adoc#_python,CPython script engine>>.
+|job-level, task-level
+|python3
+|<<_docker_compose_options,docker-compose-options>>
+|general parameters given to the docker-compose command in <<../user/ProActiveUserGuide.adoc#_docker_compose,Docker Compose script engine>>.
+|job-level, task-level
+|--verbose
+|<<_docker_compose_options,docker-compose-up-options>>
+|general parameters given to the docker-compose up command in <<../user/ProActiveUserGuide.adoc#_docker_compose,Docker Compose script engine>>.
+|job-level, task-level
+|--exit-code-from helloworld
+|<<_docker_compose_options,docker-compose-options-split-regex>>
+|declare a string to be used as options separator in <<../user/ProActiveUserGuide.adoc#_docker_compose,Docker Compose script engine>>.
+|job-level, task-level
+|!SPLIT!
+|<<_dockerfile_options,docker-actions>>
+|actions to perform in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|task-level
+|build,run
+|<<_dockerfile_options,docker-image-tag>>
+|tag identifying the docker image in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|task-level
+|my-image
+|<<_dockerfile_options,docker-container-tag>>
+|tag identifying the docker container in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|task-level
+|my-container
+|<<_dockerfile_options,docker-build-options>>
+|options given to the `docker build` command in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|job-level, task-level
+|--no-cache
+|<<_dockerfile_options,docker-run-options>>
+|options given to the `docker run` command in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|job-level, task-level
+|--detach
+|<<_dockerfile_options,docker-exec-command>>
+|command given to `docker exec`, if used in *docker-actions*. See <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|job-level, task-level
+|/bin/sh -c echo 'hello'
+|<<_dockerfile_options,docker-exec-options>>
+|options given to the `docker exec` command in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|job-level, task-level
+|-t -w /my/work/dir
+|<<_dockerfile_options,docker-stop-options>>
+|options given to the `docker stop` command in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|job-level, task-level
+|--time 20
+|<<_dockerfile_options,docker-rm-options>>
+|options given to the `docker rm` command in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|job-level, task-level
+|--volumes
+|<<_dockerfile_options,docker-rmi-options>>
+|options given to the `docker rmi` command in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|job-level, task-level
+|--force
+|<<_dockerfile_options,docker-file-options-split-regex>>
+|declare a string to be used as options separator in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|job-level, task-level
+|!SPLIT!
 |===
 
 ==== START_AT
@@ -142,6 +222,19 @@ The format allows flexible combinations of the elements:
  * `120m 12s` : 120 minutes and 12 seconds.
 
 `REMOVE_DELAY` can be defined at *job-level* only.
+
+==== Earliest Deadline First Policy
+
+The <<../user/ProActiveUserGuide.html#_earliest_deadline_first_edf_policy,Earliest Deadline First Policy>> is a <<../user/ProActiveUserGuide.html#_scheduling_policies,Scheduling Policy>> which can be enabled in the ProActive Scheduler server.
+
+When enabled, this policy uses the following generic information to determine jobs deadlines and expected duration:
+
+ * `JOB_DDL`: represents the job deadline in absolute (e.g. `2018-08-14T08:40:30+02:00`) or relative to submission (e.g. `+4:30`) format.
+ * `JOB_EXEC_TIME`: represents job expected execution time in the format HH:mm:ss, mm:ss or ss (e.g. `4:30`)
+
+See <<../user/ProActiveUserGuide.html#_earliest_deadline_first_edf_policy,Earliest Deadline First Policy>> for further information.
+
+`JOB_DDL` and `JOB_EXEC_TIME` can be defined at *job-level* only.
 
 ==== DISABLE_PTK
 
@@ -212,4 +305,58 @@ ProActive server stores by default workflow icons in `SCHEDULER_HOME/dist/war/au
 
 Example value with the default icon path: `/automation-dashboard/styles/patterns/img/wf-icons/postgresql.png`
 
+==== Result Metadata
 
+The following generic information can be used to assign result metadata to a workflow task.
+
+Can only be used if the task result content is an array of bytes.
+
+ * `content.type` : define the MIME type of the result.
+ * `file.name` : allows to store (Save as) the result from the scheduer or workflow-automation portals as a specific file name.
+ * `file.extension` : allows to store (Save as) the result from the scheduer or workflow-automation portals as a specific file extension with auto-generated file name.
+
+See <<../user/ProActiveUserGuide.adoc#_assigning_metadata_to_task_result,Assigning metadata to task result>> for further information.
+
+Result metadata generic information can be defined at *task-level* only.
+
+==== PYTHON_COMMAND
+
+When using <<../user/ProActiveUserGuide.adoc#_python,CPython>> tasks, the `PYTHON_COMMAND` generic information can be used to define the command starting the python interpreter.
+
+The interpreter is started by default using the `python` command, but this generic information can be defined to use for example `python3`.
+
+See <<../user/ProActiveUserGuide.adoc#_python,Python script language>> for further information.
+
+`PYTHON_COMMAND` generic information should be defined at *task-level* but can be defined at job-level to apply to all workflow tasks.
+
+==== Docker Compose options
+
+When using <<../user/ProActiveUserGuide.adoc#_docker_compose,Docker Compose>> tasks, the following generic information can be used to control options given to `docker-compose` commands:
+
+ * `docker-compose-options` : general parameters given to the docker-compose command.
+ * `docker-compose-up-options` : options given to the `docker-compose up` command.
+ * `docker-compose-options-split-regex` : declare a string to be used as options separator.
+
+See <<../user/ProActiveUserGuide.adoc#_docker_compose,Docker Compose script language>> for further information.
+
+The Docker Compose generic information should be defined at *task-level* but can be defined at job-level to apply to all workflow tasks.
+
+==== Dockerfile options
+
+When using <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile>> tasks, the following generic information can be used to control options given to `docker` commands:
+
+* `docker-actions` : actions to perform. A comma separated list of possible actions (build, run, exec, stop, rmi). Default is `build,run,stop,rmi`.
+* `docker-image-tag` : tag identifying the docker image. Default is `image_${PA_JOB_ID}t${PA_TASK_ID}`
+* `docker-container-tag` : tag identifying the docker container. Default is `container_${PA_JOB_ID}t${PA_TASK_ID}`
+* `docker-build-options` : options given to the `docker build` command.
+* `docker-run-options` : options given to the `docker run` command.
+* `docker-exec-command` : command given to `docker exec`, if used in `docker-actions`. If the command contains spaces, `docker-file-options-split-regex` should be used to split command parameters.
+* `docker-exec-options` : options given to the `docker exec` command. Default is `-t` (which should always be included).
+* `docker-stop-options` : options given to the `docker stop` command.
+* `docker-rm-options` : options given to the `docker rm` command.
+* `docker-rmi-options` : options given to the `docker rmi` command.
+* `docker-file-options-split-regex` : declare a string to be used as options separator, instead of the `space` character.
+
+See <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script language>> for further information.
+
+The Dockerfile generic information should be defined at *task-level*. Some (docker-file-options-split-regex, or command options) may be defined at *job-level* to apply to all tasks of the workflow.

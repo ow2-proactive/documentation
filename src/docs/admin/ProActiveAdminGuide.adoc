@@ -94,6 +94,12 @@ The following ProActive Scheduler components and services are started:
 
 The URLs of the Scheduler, Resource Manager, REST API and Web Interfaces are displayed in the output.
 
+The ProActive server can also be started in a specific state by using the command line options `--stopped`, `--paused` or `--frozen`.
+
+When one of these options is used, the scheduler will start in the provided state, which can be changed afterwards using the ProActive Scheduler Portal.
+
+See <<_scheduler_life_cycle_management>> for an explanation of the different scheduler states.
+
 === Install and start ProActive as a system service
 
 The second way to start a ProActive Scheduler is to install it as a system service. Depending on your operating system, the installation of ProActive can be done as follows.

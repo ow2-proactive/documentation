@@ -1297,7 +1297,7 @@ forkEnvironment.setJavaHome("/usr/java/default")
 After a task is executed, an internal mechanism called the *Process Tree Killer* ensures that all children processes started by the task are automatically terminated.
 This mechanism is explained in details in the link:../admin/ProActiveAdminGuide.html#_task_termination_behavior[Task Termination Behavior] section.
 
-The *Process Tree Killer* mechanism can be disabled using the <<_disabled_ptk,DISABLE_PTK>> generic information.
+The *Process Tree Killer* mechanism can be disabled using the <<../user/ProActiveUserGuide.html#_disabled_ptk,DISABLE_PTK>> generic information.
 
 ==== Docker fork execution environment
 A Docker fork execution environment is a specific usage of the fork environment mechanism.
