@@ -254,7 +254,7 @@ print("Hello World")
 A `jython` script engine execution runs in the same Java process as the Task execution. A `cpython` script engine execution runs inside a separate python process.
 
 === R
-ProActive R script engine is based on the link:https://www.rforge.net/JRI/[Java R Interface].
+ProActive R script engine is based on the link:https://github.com/s-u/rJava[Java R Interface].
 In order to use the R script engine inside a ProActive Node (container which executes a workflow Task), the following prerequisites are needed:
 
  * A R distribution must be installed.
@@ -488,7 +488,7 @@ key *docker-compose-options-split-regex*. If you supply e.g. "!SPLIT!" as value,
 
 The Dockerfile engine allows to define a docker image using the Dockerfile syntax, build this image and run a container instance from it.
 Once the execution is done, the container is stopped and the built image is deleted.
-The build, start, stop and, remove actions can be parametrized through advanced command line options which will be detailed later.
+The build, start, stop and, remove actions can be parametrized through advanced command line options which are detailed in the <<_docker_actions>> section.
 
 The execution of a Dockerfile task requires the installation of Docker engine on the host machine of the ProActive Node. Please refer to the official Docker documentation to see how to install https://docs.docker.com/engine/installation/[Docker^].
 
@@ -515,9 +515,13 @@ The created image default tag is `image_${PA_JOB_ID}t${PA_TASK_ID}` and the defa
 
 The default sequence of docker commands (*build*, *run*, *stop*, *rm*, *rmi*) can be modified to use the docker script engine in different configurations such as multiple workflow tasks.
 
-For example, an image could be built in a first task, and the same image can be reused in other tasks (and removed eventually in a terminating task).
+For example, an image could be built in a first task, and the same image can be reused in other tasks (and removed eventually in a terminating task):
 
-Another example would be to build an image and start a container in a first task, and then reuse this container in a different task.
+image::DockerFile_Reuse_Image.png[align="center"]
+
+Another example would be to build an image and start a container in a first task, and then reuse this container in a different task:
+
+image::DockerFile_Reuse_Container.png[align="center"]
 
 These different modes are configured using the `docker-actions` <<../user/ProActiveUserGuide.html#_generic_information,Generic Information>>.
 
@@ -569,7 +573,7 @@ TIP: use the *detached* mode uption to run a container and share this running co
 ===== Docker exec
 The `docker exec` command can be executed optionnally if included in <<_docker_actions>>.
 
-The Dockerfile task allows to set parameters to the `docker exec` command with regard to the docker-exec CLI https://docs.docker.com/engine/reference/exec/[reference].
+The Dockerfile task allows to set parameters to the `docker exec` command with regard to the docker-exec CLI https://docs.docker.com/engine/reference/commandline/exec/[reference].
 ----
 docker exec [OPTIONS] CONTAINER COMMAND [ARG...]
 ----

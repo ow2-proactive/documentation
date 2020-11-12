@@ -50,8 +50,7 @@ $PROACTIVE_HOME/bin/proactive-server
 NOTE: It is possible to start the server with a specific number of nodes by adding the *-ln* parameter. For example, PROACTIVE_HOME/bin/proactive-server -ln 1 will start the proactive server with a single node.
 In case this parameter is not specified, the number of nodes corresponds to the number of cores of the machine where ProActive server is installed.
 
-[source]
-----
+....
 The router created on localhost:33647
 Starting the scheduler...
 Starting the resource manager...
@@ -71,7 +70,7 @@ The web application /rm created on http://localhost:8080/rm
 The web application /rest created on http://localhost:8080/rest
 The web application /job-planner created on http://localhost:8080/job-planner
 *** Get started at http://localhost:8080 ***
-----
+....
 
 The following ProActive Scheduler components and services are started:
 
@@ -96,7 +95,7 @@ The URLs of the Scheduler, Resource Manager, REST API and Web Interfaces are dis
 
 The ProActive server can also be started in a specific state by using the command line options `--stopped`, `--paused` or `--frozen`.
 
-When one of these options is used, the scheduler will start in the provided state, which can be changed afterwards using the ProActive Scheduler Portal.
+When one of these options is used, the scheduler will start in the provided state, which can be changed afterwards using the ProActive Scheduler portal.
 
 See <<_scheduler_life_cycle_management>> for an explanation of the different scheduler states.
 
@@ -114,9 +113,8 @@ In our case, you need to provide to nssm the Path to this script `$PROACTIVE_HOM
 Under Linux, the user has to run the `install.sh` script located under `$PROACTIVE_HOME/tools` folder as *root* and follow the installations steps provided in an interactive mode.
 Generally, it is recommended to keep the default configuration (internal account, protocol used, port , etc) unless you would like to setup a particular one.
 
-[source]
-----
-sudo $PROACTIVE_HOME/tools/install.sh
+....
+$ sudo $PROACTIVE_HOME/tools/install.sh
 Directory where to install the scheduler: /opt/proactive
 Name of the user starting the ProActive service: proactive
 Group of the user starting the ProActive service: proactive
@@ -145,9 +143,9 @@ Restrict the access to the ProActive installation folder to user proactive? [y/N
 Restrict the access to the configuration files containing sensitive information to user proactive? [Y/n]  y
 Do you want to start the scheduler service now? [Y/n]  y
 If a problem occurs, check output in /var/log/proactive/scheduler
-----
+....
 
-Once the server is up, ProActive Web Portals are available at http://localhost:8080/. The user can access to any of the four portals using the default credentials: *admin/admin*
+Once the server is up, ProActive Web Portals are available at `\http://localhost:8080/`. The user can access to any of the four portals using the default credentials: *admin/admin*
 
 Your ProActive Scheduler is ready to execute <<_glossary_job,*Jobs*>>!
 
@@ -161,9 +159,8 @@ To upgrade ProActive, the user has to run the `install.sh` script located under 
 It is important to mention that the user has to choose the same directory as the old version where to make the ProActive Scheduler installation. This will enable the detection of the existing installation and then copying addons, data files and the configuration changes from the previous installation to the new one.
 In some cases, this operation can induce some conflicts that can be solved easily using Git tools.
 
-[source]
-----
-sudo $PROACTIVE_HOME/tools/install.sh
+....
+$ sudo $PROACTIVE_HOME/tools/install.sh
 This will install the ProActive scheduler 10.1.0-SNAPSHOT as a service.
 Once the installer is started, it must process until the end otherwise the installation may be corrupted.
 Do you want to continue? [Y/n]  y
@@ -187,7 +184,7 @@ Restrict the access to the configuration files containing sensitive information 
 Resource Manager credentials are used by remote ProActive Agents to register to the scheduler.
 Do you want to start the scheduler service now? [Y/n]  y
 If a problem occurs, check output in /var/log/proactive/scheduler
-----
+....
 
 
 === Scheduler Life-Cycle Management
@@ -835,8 +832,7 @@ $ PROACTIVE_HOME/bin/proactive-node -r pnp://SCHEDULER_ADDRESS:64738
 where `-r` option is used to specify the URL of the <<_glossary_resource_manager,*Resource Manager*>>.
 You can find this URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler>> (the Resource Manager URL).
 For example, in case of the following sample output of the ProActive server command:
-[source]
-----
+....
 The router created on localhost:33647
 Starting the scheduler...
 Starting the resource manager...
@@ -856,7 +852,7 @@ The web application /rm created on http://localhost:8080/rm
 The web application /rest created on http://localhost:8080/rest
 The web application /job-planner created on http://localhost:8080/job-planner
 *** Get started at http://localhost:8080 **
-----
+....
 You should use `pnp://localhost:41303/` as the Resource Manager URL.
 
 TIP: You can also use *discovery* to let the ProActive Node find the URL to connect to on its own.
@@ -872,7 +868,7 @@ or start multiple nodes from the same process using the `-w` command line option
 It is also possible to launch a ProActive Node without copying the ProActive Server release to the Compute Host:
 
 * Open a browser on the Compute Host.
-* Navigate to the Resource Manager Web Interface. You can find the URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler>> (the Resource Manager web application URL, e.g., `http://localhost:8080/rm`).
+* Navigate to the Resource Manager Web Interface. You can find the URL in the output of the <<_run_the_proactive_scheduler,ProActive Scheduler>> (the Resource Manager web application URL, e.g., `\http://localhost:8080/rm`).
 * Use default demo/demo account to access the Resource Manager Web Interface.
 * Click on 'Portal->Launch' to download *node.jar*.
 * Click on 'Portal->Create Credentials' and download your credential file.
@@ -1201,7 +1197,7 @@ The second way of deploying ProActive Nodes is to create <<_glossary_node_source
 ProActive Resource Manager provides three ways to create a Node Source:
 
 * Use the *Resource Manager Web Interface* ('Add Node Source' menu).
-* Use the https://try.activeeon.com/rest/doc/[REST API]
+* Use the https://try.activeeon.com/doc/rest/[REST API]
 * Use the <<_resource_manager_command_line>>
 
 Whichever the way you use to create a node source, ultimately you just need to choose a <<_node_source_infrastructures,*Node Source Infrastructure*>>
@@ -2127,7 +2123,7 @@ applications can be found in `PROACTIVE_HOME/dist/war`.
 TIP: To configure Web applications, for instance the HTTP port to use, edit the `PROACTIVE_HOME/config/web/settings.ini` file.
 
 Web applications are deployed on the host using the HTTP port 8080 by default. The local part of the URL is based on the WAR files found in `PROACTIVE_HOME/dist/war`.
-For instance, the Scheduler web portal is available at http://localhost:8080/scheduler.
+For instance, the Scheduler web portal is available at `\http://localhost:8080/scheduler`.
 
 === Enable HTTPS
 

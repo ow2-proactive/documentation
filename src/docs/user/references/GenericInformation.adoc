@@ -82,19 +82,19 @@ The following table describes all availabe generic information:
 |<<_documentation,Documentation>>
 |Add a documentation link to the workflow
 |job-level
-|http://my-server/my-doc.html
+|\http://my-server/my-doc.html
 |<<_documentation,task.documentation>>
 |Add a documentation link to the task
 |task-level
-|http://my-server/my-doc.html
+|\http://my-server/my-doc.html
 |<<_icon_management,workflow.icon>>
 |Add an icon to the workflow
 |job-level
-|http://my-server/my-icon.png
+|\http://my-server/my-icon.png
 |<<_icon_management,task.icon>>
 |Add an icon to the task
 |task-level
-|http://my-server/my-icon.png
+|\http://my-server/my-icon.png
 |<<_result_metadata,content.type>>
 |Asseign a MIME content type to a byte array task result
 |task-level
