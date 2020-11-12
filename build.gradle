@@ -1,4 +1,5 @@
 import com.github.jk1.license.render.*
+import org.aim42.htmlsanitycheck.check.*
 
 buildscript {
     repositories {
@@ -16,6 +17,7 @@ buildscript {
 	classpath 'com.github.jk1:gradle-license-report:1.7'
     }
 }
+
 
 apply plugin: 'de.undercouch.download'
 apply plugin: 'java'
@@ -56,8 +58,15 @@ asciidoctorj {
 htmlSanityCheck {
     sourceDir = new File( "$buildDir/asciidoc/html5" )
 
+    sourceDocuments = fileTree(sourceDir) {
+        include "**/*.html"
+        exclude "user/schedulerjob.html"
+    }
+
     // where to put results of sanityChecks...
     checkingResultsDir = new File( "$buildDir/report/htmlchecks" )
+
+    checkerClasses = [BrokenCrossReferencesChecker, BrokenHttpLinksChecker, DuplicateIdChecker, ImageMapChecker, MissingAltInImageTagsChecker, MissingImageFilesChecker]
 
     // fail build on errors?
     failOnErrors = false
