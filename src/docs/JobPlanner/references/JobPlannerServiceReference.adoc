@@ -125,6 +125,7 @@ image::calendar_definition_inclusions_exclusions.png[align="center"]
 
 Based on the above configuration, the following JSON object will be stored in the <<_glossary_catalog, *Catalog*>>.
 
+[source, json]
 ----
 {
   "description": "Every Week Day at 9:00 AM including holidays (except Christmas and Easter holidays)",
