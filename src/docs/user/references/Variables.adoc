@@ -260,6 +260,46 @@ Here is the list of ProActive system variables:
 | The username of the ProActive user who has submitted the job.
 | String
 
+| `PA_SCHEDULER_REST_URL`
+| The URL of scheduler REST api.
+| String
+
+| `PA_SCHEDULER_REST_PUBLIC_URL`
+| The URL of scheduler REST public api if the setting pa.scheduler.rest.public.url is defined in `PROACTIVE_HOME/config/scheduler/settings.ini`.
+| String
+
+| `PA_CATALOG_REST_URL`
+| The URL of catalog REST api.
+| String
+
+| `PA_CATALOG_REST_PUBLIC_URL`
+| The URL of catalog REST public api if the setting pa.catalog.rest.public.url is defined in `PROACTIVE_HOME/config/scheduler/settings.ini`.
+| String
+
+| `PA_CLOUD_AUTOMATION_REST_URL`
+| The URL of cloud automation REST api.
+| String
+
+| `PA_CLOUD_AUTOMATION_REST_PUBLIC_URL`
+| The URL of cloud automation REST public api if the setting pa.cloud-automation.rest.public.url is defined in `PROACTIVE_HOME/config/scheduler/settings.ini`.
+| String
+
+| `PA_JOB_PLANNER_REST_URL`
+| The URL of job planner REST api.
+| String
+
+| `PA_JOB_PLANNER_REST_PUBLIC_URL`
+| The URL of job planner REST public api if the setting pa.job-planner.rest.public.url is defined in `PROACTIVE_HOME/config/scheduler/settings.ini`.
+| String
+
+| `PA_NOTIFICATION_SERVICE_REST_URL`
+| The URL of notification service REST api.
+| String
+
+| `PA_NOTIFICATION_SERVICE_REST_PUBLIC_URL`
+| The URL of notification service REST public api if the setting pa.notification-service.rest.public.url is defined in `PROACTIVE_HOME/config/scheduler/settings.ini`.
+| String
+
 |===
 
 They can be used inside the workflow with the pattern syntax, for example:
