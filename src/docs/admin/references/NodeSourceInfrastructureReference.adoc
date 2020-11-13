@@ -892,6 +892,81 @@ The following fields are the optional parameters of the Azure Billing Configurat
 
 As you can see, these parameters provide a lot of flexibility to configure your infrastructure. When creating your Azure Scale Set node source, the infrastructure should be coupled with a Dynamic Policy. This Policy will additionally define scalability parameters such as limits on the number of deployed nodes or the minimum idle time before a node can be deleted (to optimize node utilization).
 
+
+
+==== Kubernetes Infrastructure
+
+*Full name:* `org.ow2.proactive.resourcemanager.nodesource.infrastructure.KubernetesInfrastructure`
+
+The Kubernetes allows to deploy ProActive Nodes on a https://kubernetes.io/[Kubernetes cluster]. This infrastructure aims at creating kubernetes pods containing ProActive Nodes. Each ProActive Node pod will connect and register inside the ProActive Resource Manager.
+
+Interactions between the ProActive Resource Manager and the Kubernetes cluster is based on the Kubernetes Java SDK. Accordingly, it is not mandatory to install the Kubernetes command line on the ProActive server machine.
+
+===== Pre-Requisites
+
+- A Kubernetes cluster must be *accessible* from the ProActive server.
+- A *Kubernetes configuration file* with server url, credentials and other appropriate settings.
+- A *Docker image* which contains *Java Runtime Environment version 8* (earlier and later versions are currently not supported). This image will be used to start ProActive Nodes.
+- ProActive server started with the <<../admin/ProActiveAdminGuide.html#_proactive_message_routing,ProActive Message Routing>> protocol.
+
+===== Infrastructure Configuration
+
+- *kubeConfigFile:*  Use the provided file selection tool to supply a file with your Kubernetes configuration and credentials.
++
+Example configuration file:
+[source,yaml]
+----
+apiVersion: v1
+clusters:
+- cluster:
+    server: https://192.168.99.102:8443
+    certificate-authority-data: LS0tLS1CRUdJTiBDRV...
+  name: minikube
+contexts:
+- context:
+    cluster: minikube
+    user: minikube
+  name: minikube
+current-context: minikube
+kind: Config
+preferences: {}
+users:
+- name: minikube
+  user:
+    client-certificate-data: LS0tLS1CRUdJTiBDRV...
+    client-key-data: LS0tLS1CRUdJTiBSU0E...
+----
+It is advised to embed credentials and certificates in the configuation file, instead of pointing to files on the local file system.
+
+- *nodeJarDownloadCommand:* command which will be executed inside the pod to download *ProActive libraries*. Thanks to this command, ProActive libraries are downloaded when the pod starts and prior installation of the libraries inside the Docker image is not required.
+This command needs to download using the http(s) protocol the `node.jar`from the ProActive Resource Manager server.
++
+Example:
+....
+wget -P /opt/proactive/ http://192.168.99.1:8080/rest/node.jar
+....
+
+- *rmCredentials:* path to a file which contains the credentials of an administrator user which will own the node source.
+- *scale:* Number of pods (ProActive Nodes) to create. This parameter is used when the <<../admin/ProActiveAdminGuide.html#_node_source_policies,Node Source Policy>> is not a <<../admin/ProActiveAdminGuide.html#_dynamic_policy,Dynamic Policy>>.
+- *javaNodeJarCommand:* command used to start the ProActive Node. The default value needs to be modified according to the location of the java command.
++
+Example:
+....
+java -jar /opt/proactive/node.jar
+....
+
+ - *jvmProperties:* Java options appended to the command used to start the node on the remote host. As the <<../admin/ProActiveAdminGuide.html#_proactive_message_routing,ProActive Message Routing>> is required by the Kubernetes Infrastructure, PAMR properties must be defined.
++
+Example:
+....
+-Dproactive.communication.protocol=pamr -Dproactive.useIPaddress=true -Dproactive.pamr.router.address=192.168.99.1
+....
+
+ - *kubernetesNamespace:* (Optional) Kubernetes namespace if different from _default_ namespace.
+ - *nodeTimeout:* (Optional) The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost. Default value is 10 minutes.
+ - *cleaningDelaySeconds:* (Optional) Cleaning delay, in seconds until cleaning service starts. Default value is 120 seconds.
+- *cleaningFrequencySeconds:* (Optional) Cleaning frequency, Kubernetes node cleaning is done every x seconds. Default value is 30 seconds.
+
 ==== Load Sharing Facility (LSF) Infrastructure
 
 *Full name:* `org.ow2.proactive.resourcemanager.nodesource.infrastructure.LSFInfrastructure`
