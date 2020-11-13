@@ -144,7 +144,7 @@ B. Connect the first <<Predict_Model>> Task to the <<Train_Model>> Task that is 
 
 C. Connect the second <<Predict_Model>> Task to the <<Train_Model>> Task that is connected to <<Linear_Regression>> Task.
 
-D. Connect the second <<Predict_Model>> Task to the <<Split_Data>> Task
+D. Connect both <<Predict_Model>> Tasks to the <<Split_Data>> Task.
 
 E. Find the <<Preview_Results>> Task in the ML bucket and drag and drop it twice into the canvas.
 
@@ -395,7 +395,7 @@ Create a new workflow.
 
 Add the `model_as_a_service` bucket by clicking in the `View` menu field > `Add Bucket Menu to the Palette` > `model_as_a_service`..
 
-Drag and drop the `Start_Model_Service` task from the bucket.
+Drag and drop the `Model_Service_Start` task from the bucket.
 
 Execute the workflow by setting the different workflow's variables as described in the Table below.
 
@@ -758,6 +758,11 @@ It is possible to edit this script to make it more customized to your model. The
 * Format of the model expected by the deployment and the prediction functions (e.g., pickle, joblib, etc.)
 * Format of the incoming data (e.g., JSON, Array, Matrix, etc.)
 * Data format expected by the model (e.g., JSON, Array, Matrix, etc.)
+
+[NOTE]
+====
+The `model_as_a_service_resources` bucket can be found under the *Catalog* section in the *Automation Dashboard* portal.
+====
 
 *YAML_FILE file*:  The following YAML script refers to the ml_service-api.yml file stored in the catalog under the `model_as_a_service_resources` bucket.
 This script defines the OpenAPI specification describing the entire API built once a model_service is started.
