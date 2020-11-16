@@ -1,7 +1,8 @@
 ==== Housekeeping
 
 Notifications in the notification service have a global life span defined in the
-application.properties located in * `PROACTIVE_HOME/dist/war/notification-service/WEB-INF/classes/application.properties`
+application.properties located in
+[[application-properties]] * `PROACTIVE_HOME/dist/war/notification-service/WEB-INF/classes/application.properties`
 Past that time, they will be removed from the database.
 
 Two parameters with default values may be updated:
@@ -69,9 +70,12 @@ notification.email.from=
 [[_third_party_notification_method]]
 ===== Third party
 
+The <<_glossary_notification_third_party,*Third Party Notification*>> method executes a script when an event occurs.
+There can be a single script execution, regardless of how many users are notified, or <<multiple-execution, mutliple executions>>, which
+will trigger one execution for each notified user and inject the users parameter in the script.
+
 ====== Configuration
 
-The <<_glossary_notification_third_party,*Third Party Notification*>> method executes a script when an event occurs.
 Location of the script is specified either via a path, relative to the Scheduler or absolute.
 
 ----
@@ -96,9 +100,16 @@ if not provided the extension of the file will determine the appropriate engine 
 notification.script.engine=bash
 ----
 
+[[multiple-execution]]
 Finally, multiple sequential script execution can be enabled.
-Users must have an active subscription for an event and the Third party notification method activated.
-It is set to false by default.
+When activated, each notified user will trigger a script execution (instead of one execution per notification)
+with an additional array `args[]` accessible inside the script containing the user parameter defined in the Settings of the Subscriptions tab.
+To access the user parameter in the script, like <<Reading notification data, notification data>>, simply read the array.
+
+Example in groovy:
+----
+println "User parameter equals " + args[0];
+----
 
 For example if 5 users are subscribed to the Scheduler Frozen event with the Third party notification
 method active and multiple execution enabled, then each time the  <<_glossary_proactive_scheduler,*ProActive Scheduler*>> freezes
@@ -192,4 +203,38 @@ and if they have a value depending on the event origin.
 | Y
 | N
 | Y
+| args[] - see <<multiple-execution, mutliple script executions>>
+| Y
+| Y
+| Y
+| Y
 |=====
+
+===== User parameter confirmation
+
+Confirmation requests can be enabled for notification methods other than Portal in order to ask the
+user to confirm the parameter he provided (Email address, telephone number ...).
+
+For Email notification method the user won't be able to activate it in his subscriptions before
+the email is confirmed. However Third-party notification method parameter is not mandatory and users
+will still be able to activate the notification method but the user parameter field inside the script will
+be an empty String.
+
+To activate confirmation requests go to the same application.properties file located
+<<application-properties,*here*>> and set to true
+
+1- Email confirmation
+----
+# Activate or deactivate email confirmation request to be used as recipient for notifications
+mail.confirmation.enabled=
+----
+
+2- Third-party confirmation
+----
+# Activate or deactivate third-party confirmation request to be used as recipient for notifications
+third-party.confirmation.enabled=
+----
+
+Confirmation requests have a life span of 15 minutes. Once that delay is passed, expired pending confirmations
+are automatically removed by the housekeeping. Users will have to resend a new confirmation request in order the confirm
+the parameter.
