@@ -2403,7 +2403,7 @@ println "Unlocking Task B"
 synchronizationapi.put(variables.get("PA_JOB_ID"), "lock", false)
 ----
 
- * *Clean*: Delete the channel. This task simply deletes the channel used in this job. As there is no automatic mechanism to remove channels, it is necessary to delete them explicitly when they are not used anymore.
+ * *Clean*: Delete the channel. This task simply deletes the channel used in this job. As there is no automatic mechanism to remove channels, it is necessary to delete them explicitly when they are not used any more.
 +
 [source, groovy]
 ----
