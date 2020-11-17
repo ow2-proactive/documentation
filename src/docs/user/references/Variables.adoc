@@ -189,7 +189,7 @@ To define an optional variable, the workflow designer can simply add `?` at the 
 When submitting the workflow, it will be allowed to not provide a value for the optional variables. 
 The validation will only fail when the user fills in an invalid value.
 For example, a variable "MY_OPTIONAL_INTEGER" defined as the model "PA:INTEGER?" will accept an empty string as the variable value, but it will refuse "1.4".
-All the avaiable model syntaxes except PA:NOT_EMPTY_STRING support to be defined as optional.
+All the available model syntaxes except PA:NOT_EMPTY_STRING support to be defined as optional.
 
 
 [[_dynamic_variables]]
@@ -385,7 +385,7 @@ Below a XML schema that shows two tasks: *first* and *second*. Task *first* inse
 variable using `variables.put("inherited_var", "somevalue")`.
 Task *second* declares *inherited_var*
 but with *defaultvalue*, this value will be overwritten by the  *first* task, `variables.put("inherited_var", "somevalue")`.
-Defining a default value  might be useful if for some reason the *first* task fails before inserting the *inhereted_var*
+Defining a default value  might be useful if for some reason the *first* task fails before inserting the *inherited_var*
 on *variables* map. In this last case the `defaultvalue` remains unchanged.
 
 

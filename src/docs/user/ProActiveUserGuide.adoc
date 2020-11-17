@@ -181,7 +181,7 @@ result = "The Id of the current job is: " + jobId
 
 As we can see, the `variables` binding in provided automatically by the ProActive Scheduler before the script execution and it is used to compute a `result` binding as task output.
 
-Bindings are stored internally inside the ProActive Scheduler as *Java Objects*. Accordingly, a *conversion* may be performed when targetting (or when reading from) other languages.
+Bindings are stored internally inside the ProActive Scheduler as *Java Objects*. Accordingly, a *conversion* may be performed when targeting (or when reading from) other languages.
 
 For example, <<_generic_information,Generic Information>> or <<_variables,Workflow Variables>> are stored as Java objects implementing the link:https://docs.oracle.com/javase/8/docs/api/java/util/Map.html[Map interface].
 When creating the `variables` or `genericInformation` bindings prior to executing a Groovy, JRuby, Jython or Python script, the ProActive Scheduler will convert it to various types accepted by the target language.
@@ -591,7 +591,7 @@ image::studio-catalog-main-menu2.png[align=center]
 
 == Workflow concepts
 
-Workflows comes with constructs that help you distribute your computation. The tutorial
+Workflows come with constructs that help you distribute your computation. The tutorial
 https://try.activeeon.com/tutorials/adv.html[Advanced workflows^] is a nice introduction to workflows with
 ProActive.
 
@@ -668,7 +668,7 @@ image::flow_spec_duplicate.png[align=center]
     there is no block) cannot perform a *branching* or *replicate*
     action.
 
--   The target of a *replicate* action can not be tagged as *end block*.
+-   The target of a *replicate* action cannot be tagged as *end block*.
 
 - The current replication index (from to 0 to `runs`) can be accessed via the
 `PA_TASK_REPLICATION` <<_workflow_variables,variable>>.
@@ -715,7 +715,7 @@ image::flow_spec_if.png[align=center]
 -   A task can be target of only one *if* or *else* action. A
     *continuation* task can not merge two different *if* actions.
 
-TIP: If you are familiar with programming, you can see the branch as a if/then/else.
+TIP: If you are familiar with programming, you can see the branch as an if/then/else.
 
 === Loop
 
@@ -1696,7 +1696,7 @@ Scheduler can send email to the users when one of the above events is received.
 
 If a user wants to be notified by all these events, the "NOTIFICATION_EVENTS" Generic information should have "All" (not case sensitive) as its value.
 
-Notifications will only be sent for jobs whose generic information (workflow level) contains user's email address(es) under the "EMAIL" key, if multiple email addresses need to be used, they should be seperated by comma. Example:
+Notifications will only be sent for jobs whose generic information (workflow level) contains user's email address(es) under the "EMAIL" key, if multiple email addresses need to be used, they should be separated by comma. Example:
 
 [source, xml]
 ----
@@ -1867,7 +1867,7 @@ There are no transfer directives to transfer output files *from* the cache. Outp
 
 Files in the cache space are *automatically deleted* after a given period. The default invalidation period is two weeks, which means that files older than two weeks will be automatically deleted.
 
-In order to change this period, the ProActive Node must be started with the property *node.dataspace.cache.invalidation.period* (in miliseconds).
+In order to change this period, the ProActive Node must be started with the property *node.dataspace.cache.invalidation.period* (in milliseconds).
 
 The property *node.dataspace.cachedir* can also be used to control the cache location on the node.
 
@@ -2046,17 +2046,17 @@ include::./references/Notification-service.adoc[]
 
 Tasks executed by <<_glossary_proactive_scheduler,*ProActive
 Scheduler*>> might need to use a password or another kind of
-credentials to acces third-party services or applications. For example
+credentials to access third-party services or applications. For example
 a user might wish to pass his MySQL password to Native Task which runs
 a `mysql` command to dump a database.
 
-In such cases it is often desireable to store the credentials
+In such cases it is often desirable to store the credentials
 separately from the <<_glossary_workflow,*Workflow*>>
 definition. *ProActive Scheduler* provides such facility.
 
 Third-party credentials in *ProActive Scheduler* are user-defined
 key-value pairs of strings stored on the server side in encrypted
-form. The credentals are accessible in the tasks executed by the user
+form. The credentials are accessible in the tasks executed by the user
 via API (Script and Java Tasks) or variable substitution (arguments of
 Native Tasks and parameters of Java Tasks).
 
@@ -2141,7 +2141,7 @@ credential:
 ==== In a Native Task
 
 Finally, a credential can be passed to a <<_glossary_task_executable_native,Native Task>> via
-argumens. Note that, as with Java Task parameters, the `$credentials_`
+arguments. Note that, as with Java Task parameters, the `$credentials_`
 prefix is necessary. In the example below, `/bin/echo` will be called
 with the value corresponding to the key `MY_MYSQL_PASSWORD` (if the
 key is not present, no replacement occurs):
@@ -2313,9 +2313,9 @@ A task _B_1_ of another workflow _B_ wants to interact with this server.
 
 *Problem:* task _B_1_ does not know if the apache server is up and how to contact it.
 
-Using *Task Synchonization API*, task _A_1_ can advertise the server URL to the Synchronization Service.
+Using *Task Synchronization API*, task _A_1_ can advertise the server URL to the Synchronization Service.
 
-Task _B_1_ can use Task Synchonization API to wait until the apache server is advertised, it can also perform the necessary operations and advertise task _A_1_ that the operation is complete and the apache server can be terminated.
+Task _B_1_ can use Task Synchronization API to wait until the apache server is advertised, it can also perform the necessary operations and advertise task _A_1_ that the operation is complete and the apache server can be terminated.
 
 As we can see, Task Synchronization API can be used for two-ways synchronization.
 
@@ -2403,7 +2403,7 @@ println "Unlocking Task B"
 synchronizationapi.put(variables.get("PA_JOB_ID"), "lock", false)
 ----
 
- * *Clean*: Delete the channel. This task simply deletes the channel used in this job. As there is no automatic mechanism to remove channels, it is necessary to delete them explicitely when they are not used any more.
+ * *Clean*: Delete the channel. This task simply deletes the channel used in this job. As there is no automatic mechanism to remove channels, it is necessary to delete them explicitly when they are not used any more.
 +
 [source, groovy]
 ----
