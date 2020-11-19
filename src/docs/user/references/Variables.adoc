@@ -141,10 +141,10 @@ Examples: PA:JSON will accept {"name": "John", "city":"New York"} and empty valu
 * *PA:USER_FOLDER* : variable whose value is the relative path of a folder in the <<_global_and_user_spaces, User Data Space>>. At workflow submission, the scheduler server verifies that the folder exists in the user dataspace. Note, the variable value should not end with a slash to avoid the problem of duplicate slash in its usage.
 
 ===== Variable Substitution
+Models can use the value of other variables in their definition. +
+For example: +
+The model PA:LIST($var1,$var2,$var3) uses the value of the 3 variables var1, var2 and var3 to build the list of acceptable entries.
 
-Let's distinguish between the name of a variable and its value. If `variable_name` is the name of a variable, then `$variable_name` or `$variable_name?` is a reference to its value.
-
-In our case, variable model can be referenced by another variable value, for example using a variable B as the PA:MODEL of a variable A.
 
 
 ====== Spring Expression Language Model
