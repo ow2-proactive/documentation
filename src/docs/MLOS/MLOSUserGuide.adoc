@@ -309,7 +309,7 @@ by few additional variables.
 | A set of specific variables (usecase-related) that are used in the model training process.
 | JSON format
 | `SEARCH_SPACE`
-| Specifies the representation of the search space which has to be defined using dictionaries or enter the path of a file json stored in the catalog.
+| Specifies the representation of the search space which has to be defined using dictionaries or enter the path of a json file stored in the catalog.
 | JSON format
 | `INSTANCE_NAME`
 | Specifies the name to be provided for the instance.
