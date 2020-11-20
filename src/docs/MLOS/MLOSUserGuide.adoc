@@ -309,7 +309,7 @@ by few additional variables.
 | A set of specific variables (usecase-related) that are used in the model training process.
 | JSON format
 | `SEARCH_SPACE`
-| Specifies the representation of the search space which has to be defined using dictionaries.
+| Specifies the representation of the search space which has to be defined using dictionaries or by entering the path of a json file stored in the catalog.
 | JSON format
 | `INSTANCE_NAME`
 | Specifies the name to be provided for the instance.
@@ -347,7 +347,7 @@ The following workflows contain a search space containing a set of possible neur
 
 The following workflows represent python templates that can be used to implement a generic machine learning task.
 
-*PyTorch_Task:* is a simple PyTorch task template.
+*Python_Task:* is a simple PyTorch task template.
 
 == Machine Learning as a Service (MLaaS)
 
