@@ -59,6 +59,10 @@ The following table describes all availabe generic information:
 |skip sub-process cleaning after the task is terminated
 |task-level
 |true
+|<<_walltime,WALLTIME>>
+|maximum execution time of a task
+|job-level, task-level
+|10:00
 |<<_pre_script_as_file,PRE_SCRIPT_AS_FILE>>
 |skip pre-script execution and store its content as a file
 |task-level
@@ -247,6 +251,27 @@ Simply define a `DISABLE_PTK=true` generic information on any given task to prev
 More information is available in the link:../admin/ProActiveAdminGuide.html#_task_termination_behavior[Task Termination Behavior] section.
 
 `DISABLE_PTK` can be defined at *task-level* only.
+
+==== WALLTIME
+
+The `WALLTIME` Generic Information can be used to enforce a *maximum execution time* for a task, or all tasks of a workflow.
+
+The general format of the walltime attribute is `[hh:mm:ss]`, where h is hour, m is minute and s is second.
+The format still allows for more flexibility. We can define the walltime simply as `5` which corresponds to
+5 seconds, `10` is 10 seconds, `4:10` is 4 minutes and 10 seconds, and so on.
+
+[NOTE]
+====
+When used at job-level, the configured walltime will not be applied to the workflow globally but to each individual task of the workflow.
+
+For example, if the walltime is configured at job-level to be ten minutes, each task of the workflow can run no more than ten minutes, but the workflow itself has no time limitation.
+====
+
+As the walltime can also be configured directly in the workflow (xml attribute) or globally on the scheduler server (scheduler property), an order of priority applies.
+
+More information is available in the link:../user/ProActiveUserGuide.html#_maximum_execution_time_for_a_task[Maximum execution time for a task] section.
+
+`WALLTIME` can be defined at *job-level* or *task-level*.
 
 ==== PRE_SCRIPT_AS_FILE
 
