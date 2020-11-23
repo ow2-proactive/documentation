@@ -1561,14 +1561,50 @@ If automatic restarts does not fix errors, the Scheduler applies one of the foll
 
 ==== Maximum execution time for a task
 
-A `timeout` (also known as `walltime`) can be set at the task's level to stop a task's execution when the timeout is reached.
-The general format of the walltime attribute is `[hh:mm:ss]`, where h is hour, m is minute and s is second.
+A `timeout` (also known as *_walltime_*) can be set at the task's level to stop a task's execution when the timeout is reached.
+
+This timeout is defined as an attribute of the task element, for example:
+[source, xml]
+----
+<task name="Task_Walltime"
+    fork="true"
+    walltime="12:00">
+...
+</task>
+----
+
+The general format of the `walltime` attribute is `[hh:mm:ss]`, where h is hour, m is minute and s is second.
 The format still allows for more flexibility. We can define the walltime simply as `5` which corresponds to
 5 seconds, `10` is 10 seconds, `4:10` is 4 minutes and 10 seconds, and so on.
 
-The walltime mechanism is started
-just before a task is launched. If a task does finish before its walltime, the mechanism is canceled. Otherwise,
-the task is terminated. Note that the tasks are terminated without any prior notice.
+The walltime mechanism is started just before a task is launched.
+If a task does finish before its walltime, the mechanism is canceled. Otherwise, the task is terminated.
+Note that the tasks are terminated without any prior notice.
+
+The walltime can also be configured using the `WALLTIME` <<_generic_information>>. The syntax of this generic information is similar to the task `walltime` attribute.
+The interest of using a generic information rather than a task attribute is that the `WALLTIME` generic information, if defined at job-level, can be applied to all tasks of a workflow.
+
+[NOTE]
+====
+When used at job-level, the configured walltime will not be applied to the workflow globally but to each individual task of the workflow.
+
+For example, if the walltime is configured at job-level to be ten minutes, each task of the workflow can run no more than ten minutes, but the workflow itself has no time limitation.
+====
+
+Finally, an administrator can configure the walltime globally at the scheduler server level. To do so, in `PROACTIVE_HOME/config/scheduler/settings.ini`, the property `pa.scheduler.task.walltime` must be defined with a global walltime.
+
+For example, to define a global walltime of one hour:
+....
+pa.scheduler.task.walltime=1:00:00
+....
+
+As the walltime can be configured in multiple ways, an order or priority applies to the various configuration (from highest to lowest priority):
+
+. Walltime configured as a task attribute
+. Walltime configured as generic information
+. Walltime configured globally at the scheduler-level.
+
+This order of priority ensures that a user can easily override a larger scope configuration.
 
 === Cron Workflows
 The *ProActive Scheduler* allows to schedule <<_glossary_workflow,*Workflows*>> with the <<_glossary_job_planner,*Job Planner*>>.
