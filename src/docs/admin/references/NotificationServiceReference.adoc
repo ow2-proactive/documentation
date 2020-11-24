@@ -213,27 +213,25 @@ and if they have a value depending on the event origin.
 ===== User parameter confirmation
 
 Confirmation requests can be enabled for notification methods other than Portal in order to ask the
-user to confirm the parameter he provided (Email address, telephone number ...).
+user to confirm the parameter he provided (Email address, phone number, etc).
 
 For Email notification method the user won't be able to activate it in his subscriptions before
-the email is confirmed. However Third-party notification method parameter is not mandatory and users
-will still be able to activate the notification method but the user parameter field inside the script will
-be an empty String.
+the email is confirmed. However, Third-party notification method parameter is not mandatory and users
+will still be able to activate the notification method before confirming it but the field that holds the parameter
+inside the script will be empty.
 
 To activate confirmation requests go to the same application.properties file located
-<<application-properties,*here*>> and set to true
-
-1- Email confirmation
+<<application-properties,*here*>> and set to true the properties:
 ----
 # Activate or deactivate email confirmation request to be used as recipient for notifications
 mail.confirmation.enabled=
 ----
-
-2- Third-party confirmation
+For email confirmation, and
 ----
 # Activate or deactivate third-party confirmation request to be used as recipient for notifications
 third-party.confirmation.enabled=
 ----
+For third party confirmations.
 
 Confirmation requests have a life span of 15 minutes. Once that delay is passed, expired pending confirmations
 are automatically removed by the housekeeping. Users will have to resend a new confirmation request in order the confirm
