@@ -23,11 +23,39 @@ notifications.housekeeping.cronexpression=*/10 * * * *
 notifications.housekeeping.removedelay=604800
 ----
 
-[[_notification_methods]]
-==== Notification methods
+==== User parameter confirmation
+
+Confirmation requests can be enabled for notification methods other than Portal in order to ask the
+user to confirm the parameter he provided (Email address, phone number, etc).
+
+For Email notification method the user won't be able to activate it in his subscriptions before
+the email is confirmed. However, Third-party notification method parameter is not mandatory and users
+will still be able to activate the notification method before confirming it but the field that holds the parameter
+inside the script will be empty.
+
+To activate confirmation requests go to the same application.properties file located
+<<application-properties,*here*>> and set to true the properties:
+
+* For Email confirmation
+
+----
+# Activate or deactivate email confirmation request to be used as recipient for notifications
+mail.confirmation.enabled=
+----
+
+* For Third-party confirmation
+
+----
+# Activate or deactivate third-party confirmation request to be used as recipient for notifications
+third-party.confirmation.enabled=
+----
+
+Confirmation requests have a life span of 15 minutes. Once that delay is passed, expired pending confirmations
+are automatically removed by the housekeeping. Users will have to resend a new confirmation request in order to confirm
+the parameter.
 
 [[_email_notification_method]]
-===== Email
+==== Email notification method configuration
 
 The Email notification method uses the Simple Mail Transfer Protocol to send emails.
 The notification service requires a valid SMTP configuration in order to send emails.
@@ -68,21 +96,21 @@ notification.email.from=
 ----
 
 [[_third_party_notification_method]]
-===== Third party
+==== Third party notification method configuration
 
 The <<_glossary_notification_third_party,*Third Party Notification*>> method executes a script when an event occurs.
-There can be a single script execution, regardless of how many users are notified, or <<multiple-execution, mutliple executions>>, which
-will trigger one execution for each notified user and inject the users parameter in the script.
+There can be a single script execution, regardless of how many users are notified, or <<multiple-executions-mode, mutliple executions>>.
 
-====== Configuration
+===== Script location
+There are two ways to specify the location of the script.
 
-Location of the script is specified either via a path, relative to the Scheduler or absolute.
+* Using path: relative to the Scheduler or absolute
 
 ----
 notification.script.path=dist/war/notification-service/WEB-INF/classes/exampleScript.sh
 ----
 
-Or a URL
+* Or a URL
 
 ----
 notification.script.url=
@@ -92,6 +120,8 @@ WARNING: Note that to the `notification.script.url=` property will be used by th
 only if the `notification.script.path=` property is not provided. If provided the `notification.script.url=` property is ignored.
 It means that the `notification.script.path=` property will always have the upper hand to indicated the location of the script to execute.
 
+===== Script engine
+
 An optional parameter can be provided to specify the engine to be used to execute the script
 if not provided the extension of the file will determine the appropriate engine to use
 
@@ -100,21 +130,16 @@ if not provided the extension of the file will determine the appropriate engine 
 notification.script.engine=bash
 ----
 
-[[multiple-execution]]
-Finally, multiple sequential script execution can be enabled.
-When activated, each notified user will trigger a script execution (instead of one execution per notification)
-with an additional array `args[]` accessible inside the script containing the user parameter defined in the Settings of the Subscriptions tab.
-To access the user parameter in the script, like <<Reading notification data, notification data>>, simply read the array.
+[[execution-mode]]
+===== Execution modes
+====== Single execution mode
 
-Example in groovy:
-----
-println "User parameter equals " + args[0];
-----
+By default Third party notification method is configured in single execution mode.
+In single execution mode, only one script execution will occur for a given notification
+regardless of how many users are notified.
 
 For example if 5 users are subscribed to the Scheduler Frozen event with the Third party notification
-method active and multiple execution enabled, then each time the  <<_glossary_proactive_scheduler,*ProActive Scheduler*>> freezes
-the script will be executed one time per notified user so in this example 5 times.
-If it is set to false, only one execution will be performed regardless of how many users are notified.
+method active then only one script execution will take place.
 
 ----
 #if false execute the script one time per event even if there are several subscribers
@@ -122,19 +147,55 @@ If it is set to false, only one execution will be performed regardless of how ma
 notification.script.multiple.execution=false
 ----
 
-====== Reading notification data
+[[multiple-executions-mode]]
+====== Multiple executions mode
+
+To enable the multiple execution mode and access every notified users parameter inside the script simply change to property to true.
+This execution mode will trigger one execution for each notified user and, for each execution,
+inject the user parameter in the script as an additional <<third-party-binding,Script binding>>.
+
+For example if 5 users are subscribed to the Scheduler Frozen event with the Third party notification
+method active and multiple execution enabled, then each time the  <<_glossary_proactive_scheduler,*ProActive Scheduler*>> freezes
+the script will be executed one time per notified user so in this example 5 times.
+
+===== Script bindings
+
+[[notification-bindings]]
+====== Notification bindings
 
 Some relevant notification data is automatically passed to the script as bindings when executed.
 It is simply needed to read the field as you would do with any other field in the used language.
 
-In some cases fields might not have a value as it is not relevant.
-For instance BUCKET_NAME, PROJECT_NAME, WORKFLOW_NAME are null for Scheduler events
+In some cases bindings might not have a value as it is not relevant.
+For instance BUCKET_NAME, PROJECT_NAME, WORKFLOW_NAME are empty for Scheduler events
 as they don't depend on job execution.
 
 Example in groovy:
 ----
 println "Reading the notification message: " + MESSAGE
 ----
+
+Those bindings are passed to the script regardless of the selected <<execution-mode, execution mode>>
+
+[[third-party-binding]]
+====== Third-party user parameter binding
+
+When <<multiple-executions-mode,multiple execution mode>> is activated, the user which is notified can add
+an additional argument to the script. This additional parameter will be used inside the script as a new
+binding named `args[]`.
+To access the user parameter in the script, like for <<notification-bindings,notification bindings>>, simply read the array.
+
+Example in groovy:
+----
+println "User parameter equals: " + args[0];
+----
+
+The image below shows where a user may provide a parameter in the notification-portal.
+
+[title="Third-party user parameter input"]
+image::notification-third-party-input.png[align="center"]
+
+====== Table of bindings
 
 In the following table are specified all available fields that can be read in the script
 and if they have a value depending on the event origin.
@@ -203,36 +264,9 @@ and if they have a value depending on the event origin.
 | Y
 | N
 | Y
-| args[] - see <<multiple-execution, mutliple script executions>>
+| args[] - see <<multiple-executions-mode, multiple executions mode>>
 | Y
 | Y
 | Y
 | Y
 |=====
-
-===== User parameter confirmation
-
-Confirmation requests can be enabled for notification methods other than Portal in order to ask the
-user to confirm the parameter he provided (Email address, phone number, etc).
-
-For Email notification method the user won't be able to activate it in his subscriptions before
-the email is confirmed. However, Third-party notification method parameter is not mandatory and users
-will still be able to activate the notification method before confirming it but the field that holds the parameter
-inside the script will be empty.
-
-To activate confirmation requests go to the same application.properties file located
-<<application-properties,*here*>> and set to true the properties:
-----
-# Activate or deactivate email confirmation request to be used as recipient for notifications
-mail.confirmation.enabled=
-----
-For email confirmation, and
-----
-# Activate or deactivate third-party confirmation request to be used as recipient for notifications
-third-party.confirmation.enabled=
-----
-For third party confirmations.
-
-Confirmation requests have a life span of 15 minutes. Once that delay is passed, expired pending confirmations
-are automatically removed by the housekeeping. Users will have to resend a new confirmation request in order the confirm
-the parameter.
