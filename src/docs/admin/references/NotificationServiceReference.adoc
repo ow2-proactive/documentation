@@ -28,12 +28,12 @@ notifications.housekeeping.removedelay=604800
 Confirmation requests can be enabled for notification methods other than Portal in order to ask the
 user to confirm the parameter he provided (Email address, phone number, etc).
 
-For Email notification method the user won't be able to activate it in his subscriptions before
+For Email notification method, the user won't be able to activate it in his subscriptions before
 the email is confirmed. However, Third-party notification method parameter is not mandatory and users
 will still be able to activate the notification method before confirming it but the field that holds the parameter
 inside the script will be empty.
 
-To activate confirmation requests go to the same application.properties file located
+To activate confirmation requests, go to the same application.properties file located
 <<application-properties,*here*>> and set to true the properties:
 
 * For Email confirmation
@@ -150,13 +150,13 @@ notification.script.multiple.execution=false
 [[multiple-executions-mode]]
 ====== Multiple executions mode
 
-To enable the multiple execution mode and access every notified users parameter inside the script simply change to property to true.
+To enable the multiple execution mode and access every notified users parameter inside the script, simply change to property to true.
 This execution mode will trigger one execution for each notified user and, for each execution,
 inject the user parameter in the script as an additional <<third-party-binding,Script binding>>.
 
-For example if 5 users are subscribed to the Scheduler Frozen event with the Third party notification
+For example, if 5 users are subscribed to the Scheduler Frozen event with the Third party notification
 method active and multiple execution enabled, then each time the  <<_glossary_proactive_scheduler,*ProActive Scheduler*>> freezes
-the script will be executed one time per notified user so in this example 5 times.
+the script will be executed one time per notified user so, in this example 5 times.
 
 ===== Script bindings
 
@@ -166,7 +166,7 @@ the script will be executed one time per notified user so in this example 5 time
 Some relevant notification data is automatically passed to the script as bindings when executed.
 It is simply needed to read the field as you would do with any other field in the used language.
 
-In some cases bindings might not have a value as it is not relevant.
+In some cases, bindings might not have a value as it is not relevant.
 For instance BUCKET_NAME, PROJECT_NAME, WORKFLOW_NAME are empty for Scheduler events
 as they don't depend on job execution.
 
@@ -181,7 +181,7 @@ Those bindings are passed to the script regardless of the selected <<execution-m
 ====== Third-party user parameter binding
 
 When <<multiple-executions-mode,multiple execution mode>> is activated, the user which is notified can add
-an additional argument to the script. This additional parameter will be used inside the script as a new
+an additional argument to the script. This letter parameter will be used inside the script as a new
 binding named `args[]`.
 To access the user parameter in the script, like for <<notification-bindings,notification bindings>>, simply read the array.
 

@@ -100,9 +100,9 @@ section in the Admin guide to look at the full configuration.
 
 An administrator can activate confirmation request for notification methods other than portal.
 In such case, after providing the notification method parameter (Email, Third-party parameter, Telephone)
-an input field will appear below the parameter asking for a confirmation code.
-It is also possible from there to resend a confirmation code in case it hasn't been received
-or if it has exceeded his 15 minutes life span and is now expired.
+, an input field will appear below the parameter asking for a confirmation code.
+It is also possible to resend from there a confirmation code in case it hasn't been received
+, or if it has exceeded its 15 minutes life span and is now expired.
 
 [title="Code confirmation request"]
 image::confirmation-request.png[align="center"]
