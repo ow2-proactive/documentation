@@ -96,6 +96,26 @@ or optional options such as multiple script execution.
 Go to the link:../admin/ProActiveAdminGuide.html#_third_party_notification_method[Third party notification method]
 section in the Admin guide to look at the full configuration.
 
+===== Notification Method confirmation
+
+An administrator can activate confirmation request for notification methods other than portal.
+In such case, after providing the notification method parameter (Email, Third-party parameter, Telephone)
+, an input field will appear below the parameter asking for a confirmation code.
+It is also possible to resend from there a confirmation code in case it hasn't been received
+, or if it has exceeded its 15 minutes life span and is now expired.
+
+[title="Code confirmation request"]
+image::confirmation-request.png[align="center"]
+
+- "Email": An email will be sent to the provided address with the confirmation code in the body.
+- "Third-party": An execution will occur with the confirmation code in the accessible MESSAGE script field.
+
+For notification methods which parameters are mandatory (ie: Email), the user may go to his subscriptions
+and activate the notification method to start receiving notification by this mean once the parameter is confirmed.
+
+If a notification method parameter is deleted or changed and reused in the future, then a new confirmation
+request will be triggered.
+
 === Event types
 
 .Job notifications
