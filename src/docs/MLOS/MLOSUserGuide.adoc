@@ -4170,7 +4170,7 @@ NOTE: More information about the source of this task can be found https://github
 | Defines an end date of the query in the format YYYYMMDD.
 | String
 | `USE_START_AND_END_DATE`
-|  If True, it uses the date defined in the START_DATE and START_DATE fields, otherwise it download all scenes published in the last 24 hours.
+|  If True, it uses the date defined in the START_DATE and START_DATE fields, otherwise it downloads all scenes that are published in the last 24 hours.
 |  Boolean (default=True)
 | `SPATIAL_RESOLUTION`
 | Defines granule dimensions for each resolution band.
