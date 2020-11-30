@@ -941,9 +941,11 @@ It is advised to embed credentials and certificates in the configuation file, in
 - *nodeJarDownloadCommand:* command which will be executed inside the pod to download *ProActive libraries*. Thanks to this command, ProActive libraries are downloaded when the pod starts and prior installation of the libraries inside the Docker image is not required.
 This command needs to download using the http(s) protocol the `node.jar`from the ProActive Resource Manager server.
 +
-Example:
+Examples:
 ....
 wget -P /opt/proactive/ http://192.168.99.1:8080/rest/node.jar
+
+wget -P /opt/proactive/ --no-check-certificate https://192.168.99.1:8443/rest/node.jar
 ....
 
 - *rmCredentials:* path to a file which contains the credentials of an administrator user which will own the node source.
@@ -963,9 +965,10 @@ Example:
 ....
 
  - *kubernetesNamespace:* (Optional) Kubernetes namespace if different from _default_ namespace.
+ - *image:* Docker image used to deploy ProActive Nodes. This image must contain a Java Runtime Environment. Example: java:8-jre
  - *nodeTimeout:* (Optional) The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost. Default value is 10 minutes.
  - *cleaningDelaySeconds:* (Optional) Cleaning delay, in seconds until cleaning service starts. Default value is 120 seconds.
-- *cleaningFrequencySeconds:* (Optional) Cleaning frequency, Kubernetes node cleaning is done every x seconds. Default value is 30 seconds.
+ - *cleaningFrequencySeconds:* (Optional) Cleaning frequency, Kubernetes node cleaning is done every x seconds. Default value is 30 seconds.
 
 ==== Load Sharing Facility (LSF) Infrastructure
 
