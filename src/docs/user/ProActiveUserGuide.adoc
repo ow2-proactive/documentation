@@ -1174,7 +1174,7 @@ Refer to <<_topology_types>> for more details.
 === Example: Install specific software tools and libraries before launching tasks
 
 Some workflow tasks require the prior installation of specific software tools and libraries
-that are necessary to properly execute these tasks. ProActive solution offers two methods to enable the installation of such tools and libraries:
+that are necessary to properly execute these tasks. ProActive offers two methods to enable the installation of such tools and libraries:
 
 1. By using software containers encapsulating the required libraries and tools.
 ProActive enables then the execution of computational tasks in containers such as Docker, Podman or Singularity containers.
