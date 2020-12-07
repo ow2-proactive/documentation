@@ -309,7 +309,7 @@ by few additional variables.
 | A set of specific variables (usecase-related) that are used in the model training process.
 | JSON format
 | `SEARCH_SPACE`
-| Specifies the representation of the search space which has to be defined using dictionaries.
+| Specifies the representation of the search space which has to be defined using dictionaries or by entering the path of a json file stored in the catalog.
 | JSON format
 | `INSTANCE_NAME`
 | Specifies the name to be provided for the instance.
@@ -347,7 +347,7 @@ The following workflows contain a search space containing a set of possible neur
 
 The following workflows represent python templates that can be used to implement a generic machine learning task.
 
-*PyTorch_Task:* is a simple PyTorch task template.
+*Python_Task:* is a simple PyTorch task template.
 
 == Machine Learning as a Service (MLaaS)
 
@@ -4085,7 +4085,7 @@ image::Fetch_Satellite_Images.png[align=center]
 | *Variable name* | *Description* | *Type*
 | `SEARCH_ENGINE`
 | Defines an engine to search and download satellite images.
-| List [Peps, Copernicus, All] (default=Peps)
+| List [Peps, Copernicus, All] (default=Copernicus)
 | `OUTPUT_PATH`
 | Specifies the path where the data should be downloaded.
 | String
@@ -4160,6 +4160,9 @@ NOTE: More information about the source of this task can be found https://github
 | `FOOTPRINT`
 | Defines a geojson file with footprints of the query result.
 | String
+| `PRODUCT_TYPE`
+|  Limits the search to a Sentinel product type.
+|  List [GRD, SLC, OCN (for S1) or S2MSI1C S2MSI2A S2MSI2Ap (for S2)] (default=S2MSI1C)
 | `START_DATE`
 | Determines a start date of the query in the format YYYYMMDD.
 | String
@@ -4167,7 +4170,7 @@ NOTE: More information about the source of this task can be found https://github
 | Defines an end date of the query in the format YYYYMMDD.
 | String
 | `USE_START_AND_END_DATE`
-|  If True, it uses the date defined in the START_DATE and START_DATE fields, otherwise it uses the dates defined in th .geojson file.
+|  If True, it uses the date defined in the START_DATE and START_DATE fields, otherwise it downloads all scenes that were published in the last 24 hours.
 |  Boolean (default=True)
 | `SPATIAL_RESOLUTION`
 | Defines granule dimensions for each resolution band.

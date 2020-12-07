@@ -1171,6 +1171,20 @@ To achieve the best performance for MPI applications, nodes can be selected taki
 close to each other as possible to obtain better network performance or nodes on different hosts to split the I/O load.
 Refer to <<_topology_types>> for more details.
 
+=== Example: Install specific software tools and libraries before launching tasks
+
+Some workflow tasks require the prior installation of specific software tools and libraries
+that are necessary to properly execute these tasks. ProActive offers two methods to enable the installation of such tools and libraries:
+
+1. By using software containers encapsulating the required libraries and tools.
+ProActive enables then the execution of computational tasks in containers such as Docker, Podman or Singularity containers.
+See Section <<_fork_environment, Fork environment>> for more details about executing tasks inside software containers.
+2. By using pre-scripts, i.e., scripts that are executed just before the considered computational task, and on the same compute resource.
+Such pre-scripts implement the instructions for installing and configuring the required tools and libraries. ProActive solution allows writing pre-scripts in various languages.
+These include languages ​​for operating systems (shell, batch, powershell, etc.), scripting languages ​​(groovy, javascript, etc.) and programming languages (python, java, etc.).
+See Section <<_pre_post_clean, Pre, Post & Clean Scripts>> for more details about pre-scripts.
+
+
 == Workflow Execution Control
 
 *ProActive Scheduler* supports portable script execution through the *JSR-223* Java
@@ -1561,14 +1575,50 @@ If automatic restarts does not fix errors, the Scheduler applies one of the foll
 
 ==== Maximum execution time for a task
 
-A `timeout` (also known as `walltime`) can be set at the task's level to stop a task's execution when the timeout is reached.
-The general format of the walltime attribute is `[hh:mm:ss]`, where h is hour, m is minute and s is second.
+A `timeout` (also known as *_walltime_*) can be set at the task's level to stop a task's execution when the timeout is reached.
+
+This timeout is defined as an attribute of the task element, for example:
+[source, xml]
+----
+<task name="Task_Walltime"
+    fork="true"
+    walltime="12:00">
+...
+</task>
+----
+
+The general format of the `walltime` attribute is `[hh:mm:ss]`, where h is hour, m is minute and s is second.
 The format still allows for more flexibility. We can define the walltime simply as `5` which corresponds to
 5 seconds, `10` is 10 seconds, `4:10` is 4 minutes and 10 seconds, and so on.
 
-The walltime mechanism is started
-just before a task is launched. If a task does finish before its walltime, the mechanism is canceled. Otherwise,
-the task is terminated. Note that the tasks are terminated without any prior notice.
+The walltime mechanism is started just before a task is launched.
+If a task does finish before its walltime, the mechanism is canceled. Otherwise, the task is terminated.
+Note that the tasks are terminated without any prior notice.
+
+The walltime can also be configured using the `WALLTIME` <<_generic_information>>. The syntax of this generic information is similar to the task `walltime` attribute.
+The interest of using a generic information rather than a task attribute is that the `WALLTIME` generic information, if defined at job-level, can be applied to all tasks of a workflow.
+
+[NOTE]
+====
+When used at job-level, the configured walltime will not be applied to the workflow globally but to each individual task of the workflow.
+
+For example, if the walltime is configured at job-level to be ten minutes, each task of the workflow can run no more than ten minutes, but the workflow itself has no time limitation.
+====
+
+Finally, an administrator can configure the walltime globally at the scheduler server level. To do so, in `PROACTIVE_HOME/config/scheduler/settings.ini`, the property `pa.scheduler.task.walltime` must be defined with a global walltime.
+
+For example, to define a global walltime of one hour:
+....
+pa.scheduler.task.walltime=1:00:00
+....
+
+As the walltime can be configured in multiple ways, an order or priority applies to the various configuration (from highest to lowest priority):
+
+. Walltime configured as a task attribute
+. Walltime configured as generic information
+. Walltime configured globally at the scheduler-level.
+
+This order of priority ensures that a user can easily override a larger scope configuration.
 
 === Cron Workflows
 The *ProActive Scheduler* allows to schedule <<_glossary_workflow,*Workflows*>> with the <<_glossary_job_planner,*Job Planner*>>.

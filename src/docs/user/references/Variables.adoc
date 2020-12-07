@@ -140,7 +140,7 @@ Examples: PA:JSON will accept {"name": "John", "city":"New York"} and empty valu
 * *PA:GLOBAL_FOLDER* : variable whose value is the relative path of a folder in the <<_global_and_user_spaces, Global Data Space>>. At workflow submission, the scheduler server verifies that the folder exists in the global dataspace. Note, the variable value should not end with a slash to avoid the problem of duplicate slash in its usage.
 * *PA:USER_FOLDER* : variable whose value is the relative path of a folder in the <<_global_and_user_spaces, User Data Space>>. At workflow submission, the scheduler server verifies that the folder exists in the user dataspace. Note, the variable value should not end with a slash to avoid the problem of duplicate slash in its usage.
 
-===== Variable Substitution
+====== Variable Substitution
 Models can use the value of other variables in their definition. +
 To define a variable substitution, the workflow designer can simply add `$` at the beginning of another variable name. +
  +
@@ -148,57 +148,73 @@ When submitting the workflow, it will be allowed to update the models dynamicall
 
 For example: If we have two variables `A` and `B` with models `PA:LIST(PA:GLOBAL_FILE, PA:INTEGER)` and `$A`, then `$A` will be either `PA:GLOBAL_FILE` or `PA:INTEGER`
 
+====== Optional Variable
+To define an *optional variable*, the workflow designer can simply add `?` at the end of the `model` attribute, such as `PA:INTEGER?`.
 
+When submitting the workflow, it will be allowed to not provide a value for the optional variables.
+The validation will only fail when the user fills in an invalid value.
+
+For example, a variable `MY_OPTIONAL_INTEGER` defined as the model `PA:INTEGER?` will accept an empty string as the variable value, but it will refuse `1.4`.
+
+All the available model syntaxes, except `PA:NOT_EMPTY_STRING` support to be defined as *optional*.
 
 ====== Spring Expression Language Model
 
-The PA:SPEL(expr) model allows to define expressions able to validate a variable value or not. Additionally, this model can be used to validate multiple variable values or to dynamically update other variables.
+The `PA:SPEL(expr)` model allows to define expressions able to validate a variable value or not. Additionally, this model can be used to validate multiple variable values or to dynamically update other variables.
 The syntax of the SpEL expression is defined by the https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[Spring Expression Language reference]. +
+
 For security concerns, we apply a restriction on the authorized class types. Besides the commonly used data types (Boolean, String, Long, Double, etc.), we authorize the use of *ImmutableSet*, *ImmutableMap*, *ImmutableList*, *Math*, *Date* types, *JSONParser* and *ObjectMapper* for `JSON` type and *DocumentBuilderFactory* for `XML` type.
 
 In order to interact with variables, the expression has access to the following properties:
 
-* *#value*: this property will contain the value of the current variable defined by the user.
-* *variables['variable_name']*: this property array contains all the variables of the same context (for example of the same task for a task variable).
+* `#value`: this property will contain the value of the current variable defined by the user.
+* `variables['variable_name']`: this property array contains all the variable values of the same context (for example of the same task for a task variable).
+* `models['variable_name']`: this property array contains all the variable models of the same context (for example of the same task for a task variables).
+* `valid`: can be set to `true` or `false` to validate or invalidate a variable.
+* `temp`: can be set to a temporary object used in the SPEL expression.
+* `tempMap`: an empty Hash Map structure which can be populated and used in the SPEL expression.
 
-The SpEL expression must return a *boolean value*, `true` if the value is correct, `false` otherwise, returning another type will raise an error.
+The expression has also access to the following functions (in addition to the functions available by default in the SPEL language):
+
+* `t(expression)`: evaluate the expression and return `true`.
+* `f(expression)`: evaluate the expression and return `false`.
+* `s(expression)`: evaluate the expression and return an empty string.
+
+The SpEL expression must either:
+
+* return a *boolean value*, `true` if the value is correct, `false` otherwise.
+* set the *valid* property to `true` or `false`.
+
+Any other behavior will raise an error.
 
 * *Example of SpEL simple validations:* +
 +
-PA:SPEL(#value == 'abc') : will accept the value if it's the 'abc' string +
-PA:SPEL(T(Integer).parseInt(#value) > 10) : will accept the value if it's an integer greater than 10. +
+`PA:SPEL(#value == 'abc')` : will accept the value if it's the 'abc' string +
+`PA:SPEL(T(Integer).parseInt(#value) > 10)` : will accept the value if it's an integer greater than 10. +
 +
 Note that #value always contains a string and must be converted to other types if needed. +
 +
 * *Example of SpEL multiple validations:* +
 +
-PA:SPEL(variables['var1'] + variables['var2'] == 'abcdef') : will be accepted if the string concatenation of variable var1 and var2 is 'abcdef'. +
-PA:SPEL(T(Integer).parseInt(variables['var1']) + T(Integer).parseInt(variables['var2']) < 100) : will be accepted if the sum of variables var1 and var2 are smaller than 100. +
+`PA:SPEL(variables['var1'] + variables['var2'] == 'abcdef')` : will be accepted if the string concatenation of variable var1 and var2 is 'abcdef'. +
+`PA:SPEL(T(Integer).parseInt(variables['var1']) + T(Integer).parseInt(variables['var2']) < 100)` : will be accepted if the sum of variables var1 and var2 are smaller than 100. +
 +
 * *Example of SpEL variable inference:* +
 +
-PA:SPEL( variables['var2'] == '' ? (variables['var2'] = variables['var1']) instanceof T(String) : true ) : if the variable var2 is empty, it will use the value of variable var1 instead. +
+`PA:SPEL( variables['var2'] == '' ? t(variables['var2'] = variables['var1']) : true )` : if the variable var2 is empty, it will use the value of variable var1 instead. +
 +
 +
 * *Example of SpEL variable using ObjectMapper type:* +
 +
-PA:SPEL( (variables['var1'] = new org.codehaus.jackson.map.ObjectMapper().readTree('{"abc": "def"}').get('abc').getTextValue()) instanceof T(String) ): will assign the value 'def' to the variable var1. +
+`PA:SPEL( t(variables['var1'] = new org.codehaus.jackson.map.ObjectMapper().readTree('{"abc": "def"}').get('abc').getTextValue()) )` : will assign the value 'def' to the variable var1. +
 +
 +
 * *Example of SpEL variable using DocumentBuilderFactory type:* +
 +
-PA:SPEL( (variables['var'] = T(javax.xml.parsers.DocumentBuilderFactory).newInstance().newDocumentBuilder().parse(new org.xml.sax.InputSource(new java.io.StringReader('<employee id="101"><name>toto</name><title>tata</title></employee>'))).getElementsByTagName('name').item(0).getTextContent()) instanceof T(String) ): will assign the value 'toto' to the variable var1. +
+`PA:SPEL( t(variables['var'] = T(javax.xml.parsers.DocumentBuilderFactory).newInstance().newDocumentBuilder().parse(new org.xml.sax.InputSource(new java.io.StringReader('<employee id="101"><name>toto</name><title>tata</title></employee>'))).getElementsByTagName('name').item(0).getTextContent()) )`: will assign the value 'toto' to the variable var1. +
 +
 
-Note that the SpEL expression must always return a boolean value, this is why in this last expression we use the `instanceof` keyword to not return a string value.
-
-
-====== Optional Variable
-To define an optional variable, the workflow designer can simply add `?` at the end of the `model` attribute, such as `PA:INTEGER?`. 
-When submitting the workflow, it will be allowed to not provide a value for the optional variables. 
-The validation will only fail when the user fills in an invalid value.
-For example, a variable "MY_OPTIONAL_INTEGER" defined as the model "PA:INTEGER?" will accept an empty string as the variable value, but it will refuse "1.4".
-All the available model syntaxes except PA:NOT_EMPTY_STRING support to be defined as optional.
+NOTE: the SpEL expression must return a boolean value, this is why in the above expressions we use the `t(expression)` function to perform affectations and return a boolean `true` value.
 
 
 [[_dynamic_variables]]
