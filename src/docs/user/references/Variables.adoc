@@ -142,8 +142,11 @@ Examples: PA:JSON will accept {"name": "John", "city":"New York"} and empty valu
 
 ===== Variable Substitution
 Models can use the value of other variables in their definition. +
-For example: +
-The model `PA:LIST($var1,$var2,$var3)` uses the value of the 3 variables `var1`, `var2` and `var3` to build the list of acceptable entries.
+To define a variable substitution, the workflow designer can simply add `$` at the beginning of another variable name. +
+ +
+When submitting the workflow, it will be allowed to update the models dynamically by changing the value of reference variable.  +
+
+For example: If we have two variables `A` and `B` with models `PA:LIST(PA:GLOBAL_FILE, PA:INTEGER)` and `$A`, then `$A` will be either `PA:GLOBAL_FILE` or `PA:INTEGER`
 
 
 
