@@ -146,7 +146,10 @@ To define a variable substitution, the workflow designer can simply use a variab
  +
 When submitting the workflow, the user will have the ability to update the models dynamically by changing the value of reference variable.  +
 
-For example: If we have two variables `A` and `B` with models `PA:LIST(PA:GLOBAL_FILE, PA:INTEGER)` and `$A`, then `$A` represents the value that the variable `A` will have in runtime. Thus, it will be either `PA:GLOBAL_FILE` or `PA:INTEGER`
+For example: If we have: +
+`variable1` has as a model `PA:LIST(PA:GLOBAL_FILE, PA:INTEGER)` +
+`variable2` has as a model `$variable1` +
+Then the model of `variable2` is the value that the variable `variable1` will have in runtime. Thus, it will be either `PA:GLOBAL_FILE` or `PA:INTEGER`
 
 ====== Optional Variable
 To define an *optional variable*, the workflow designer can simply add `?` at the end of the `model` attribute, such as `PA:INTEGER?`.
