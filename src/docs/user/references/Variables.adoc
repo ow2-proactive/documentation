@@ -141,15 +141,19 @@ Examples: PA:JSON will accept {"name": "John", "city":"New York"} and empty valu
 * *PA:USER_FOLDER* : variable whose value is the relative path of a folder in the <<_global_and_user_spaces, User Data Space>>. At workflow submission, the scheduler server verifies that the folder exists in the user dataspace. Note, the variable value should not end with a slash to avoid the problem of duplicate slash in its usage.
 
 ====== Variable Substitution
-Models can use the value of other variables in their definition. +
-To define a variable substitution, the workflow designer can simply use a variable name proceeded by the character `$`. +
- +
-When submitting the workflow, the user will have the ability to update the models dynamically by changing the value of reference variable.  +
 
-For example: If we have: +
-`variable1` has as a model `PA:LIST(PA:GLOBAL_FILE, PA:INTEGER)` +
-`variable2` has as a model `$variable1` +
-Then the model of `variable2` is the value that the variable `variable1` will have in runtime. Thus, it will be either `PA:GLOBAL_FILE` or `PA:INTEGER`
+Variable Model (Type) using a type defined dynamically in another Variable +
+
+A Variable can use as its type a model that is defined in another variable. +
+
+To use such possibility, the workflow designer can simply use in the Model definition of another specific variable name proceeded by the character `$`.
+
+When submitting the workflow, the user will have the ability to select the model dynamically by changing the value of the referenced variable. And then will be able to select the value of the first variable according to the selected type. +
+
+For example, if we have: +
+`variable1` has as its model `PA:LIST(PA:GLOBAL_FILE, PA:INTEGER)` +
+`variable2` has as its model `$variable1` +
+Then the model of `variable2` is the value that the variable `variable1` will have in runtime. Thus, it will be either `PA:GLOBAL_FILE` or `PA:INTEGER`.
 
 ====== Optional Variable
 To define an *optional variable*, the workflow designer can simply add `?` at the end of the `model` attribute, such as `PA:INTEGER?`.
