@@ -140,9 +140,7 @@ Examples: PA:JSON will accept {"name": "John", "city":"New York"} and empty valu
 * *PA:GLOBAL_FOLDER* : variable whose value is the relative path of a folder in the <<_global_and_user_spaces, Global Data Space>>. At workflow submission, the scheduler server verifies that the folder exists in the global dataspace. Note, the variable value should not end with a slash to avoid the problem of duplicate slash in its usage.
 * *PA:USER_FOLDER* : variable whose value is the relative path of a folder in the <<_global_and_user_spaces, User Data Space>>. At workflow submission, the scheduler server verifies that the folder exists in the user dataspace. Note, the variable value should not end with a slash to avoid the problem of duplicate slash in its usage.
 
-====== Variable Substitution
-
-Variable Model (Type) using a type defined dynamically in another Variable +
+====== Variable Model (Type) using a type defined dynamically in another Variable +
 
 A Variable can use as its type a model that is defined in another variable. +
 
