@@ -1952,7 +1952,7 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 
 ===== Import_Data
 
-*Task Overview:* Load data from external sources.
+*Task Overview:* Load data from external sources and predict its features types if enabled.
 
 *Task Variables:*
 
@@ -1972,6 +1972,9 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 | `FILE_DELIMITER`
 | Delimiter to use.
 | String
+| `DATA_TYPE_IDENTIFICATION`
+| If True, the types of the dataset features will be predicted (as numerical or categorical).
+| Boolean (default=False)
 |===
 
 NOTE: Your CSV file should be in a table format. See the example below.
