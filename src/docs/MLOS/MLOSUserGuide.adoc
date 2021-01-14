@@ -1973,7 +1973,7 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 | Delimiter to use.
 | String
 | `DATA_TYPE_IDENTIFICATION`
-| If True, the types of the dataset features will be predicted.
+| If True, the types of the dataset features will be predicted (as numerical or categorical).
 | Boolean (default=False)
 |===
 
