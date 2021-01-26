@@ -810,14 +810,12 @@ Therefore, it is important that the model is able to adapt to these changes.
 In machine learning, data drift is the modification of the model input data (relative to the
 training data) that leads to a degradation of the model performance.
 Monitoring data drifts allows to detect
-these model performance problems and try to adapt to them as in the figure below. It is in this context that we were interested in the
-integration of data drift detection in the Machine Learning as a Service module of
-ProActive.
+these model performance problems and try to adapt to them as in the figure below. To deal with this problem, we have integrated a data drift detection mechanism in the Machine Learning as a Service module of ProActive.
 
 image::drift.png[align=center]
 
-To cope with this, we tackled the discovery of data drifts at a fine level of granularity.
-We have developed a DDD functionality that not only allows us to discover that a drift
+This mechanism enables the discovery of data drifts at a fine level of granularity.
+We have developed a DDD mechanism that not only allows us to discover that a drift
 has occurred, but also to indicate the exact location of the drift in the input dataset.
 It can specify on which attributes or characteristics and more precisely on which lines
 the drift occurred.
