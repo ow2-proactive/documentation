@@ -938,37 +938,40 @@ users:
 ----
 It is advised to embed credentials and certificates in the configuation file, instead of pointing to files on the local file system.
 
-- *nodeJarDownloadCommand:* command which will be executed inside the pod to download *ProActive libraries*. Thanks to this command, ProActive libraries are downloaded when the pod starts and prior installation of the libraries inside the Docker image is not required.
-This command needs to download using the http(s) protocol the `node.jar`from the ProActive Resource Manager server.
-+
-Examples:
-....
-wget -P /opt/proactive/ http://192.168.99.1:8080/rest/node.jar
+- *kubernetesNamespace:* (Optional) Kubernetes namespace if different from _default_ namespace.
 
-wget -P /opt/proactive/ --no-check-certificate https://192.168.99.1:8443/rest/node.jar
-....
+- *cleaningDelaySeconds:* (Optional) Cleaning delay, in seconds until cleaning service starts. Default value is 120 seconds.
 
-- *rmCredentials:* path to a file which contains the credentials of an administrator user which will own the node source.
+- *cleaningFrequencySeconds:* (Optional) Cleaning frequency, Kubernetes node cleaning is done every x seconds. Default value is 30 seconds.
+
 - *scale:* Number of pods (ProActive Nodes) to create. This parameter is used when the <<../admin/ProActiveAdminGuide.html#_node_source_policies,Node Source Policy>> is not a <<../admin/ProActiveAdminGuide.html#_dynamic_policy,Dynamic Policy>>.
-- *javaNodeJarCommand:* command used to start the ProActive Node. The default value needs to be modified according to the location of the java command.
-+
-Example:
-....
-java -jar /opt/proactive/node.jar
-....
 
- - *jvmProperties:* Java options appended to the command used to start the node on the remote host. As the <<../admin/ProActiveAdminGuide.html#_proactive_message_routing,ProActive Message Routing>> is required by the Kubernetes Infrastructure, PAMR properties must be defined.
+- *image:* Docker image used to deploy ProActive Nodes. Example: java:8-jre
+
+- *rmHostname:* The hostname or the public IP address of the host operating the Resource Manager. This address needs to be accessible from the Kubernetes server. For example, `try.activeeon.com`.
+
+- *nodeJarURL:* The full URL path of the node.jar to download the ProActive node.jar on each new created pod. The URL needs to be accessible from the Kubernetes pods. For example, `try.activeeon.com/rest/node.jar`.
+
+- *jvmProperties:* Java options appended to the command used to start the node on the remote host. As the <<../admin/ProActiveAdminGuide.html#_proactive_message_routing,ProActive Message Routing>> is required by the Kubernetes Infrastructure, PAMR properties must be defined.
 +
 Example:
 ....
 -Dproactive.communication.protocol=pamr -Dproactive.useIPaddress=true -Dproactive.pamr.router.address=192.168.99.1
 ....
 
- - *kubernetesNamespace:* (Optional) Kubernetes namespace if different from _default_ namespace.
- - *image:* Docker image used to deploy ProActive Nodes. This image must contain a Java Runtime Environment. Example: java:8-jre
- - *nodeTimeout:* (Optional) The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost. Default value is 10 minutes.
- - *cleaningDelaySeconds:* (Optional) Cleaning delay, in seconds until cleaning service starts. Default value is 120 seconds.
- - *cleaningFrequencySeconds:* (Optional) Cleaning frequency, Kubernetes node cleaning is done every x seconds. Default value is 30 seconds.
+- *startupScript:* VM startup script to launch the ProActive nodes. To run the ProActive nodes, this script is also expected to download and install the Java Runtime Environment if it is not already installed in the specified image, then download and and execute ProActive node.jar. The script can use <<_cloud_infrastructure_startup_script,some arguments>>. For example, it can use `%nodeJarUrl%` to represent the full URL path for downloading the _node.jar_ file. These arguments will be interpreted by Kubernetes Infrastructure later. This is an optional property. If left blank, a default script is automatically generated for the Linux OS.
++
+Default startupScript:
+....
+mkdir -p /tmp/node && cd /tmp/node
+if ! command -v wget; then apt-get update; apt-get -y install wget; fi
+wget -nv --no-check-certificate %nodeJarUrl%
+if ! command -v java; then wget -nv -N https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u131-linux-x64.tar.gz; tar -xf jre-8u131-linux-x64.tar.gz; export PATH=/tmp/node/jre1.8.0_131/bin/:$PATH; fi
+java -jar node.jar -Dproactive.communication.protocol=%protocol% -Dpython.path=%jythonPath% -Dproactive.pamr.router.address=%rmHostname% -D%instanceIdNodeProperty%=%instanceId% -r %rmUrl% -s %nodeSourceName% %nodeNamingOption% -v %credentials% -w %numberOfNodesPerInstance% %additionalProperties%
+....
+
+- *nodeTimeout:* (Optional) The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost. Default value is 10 minutes.
+ 
 
 ==== Load Sharing Facility (LSF) Infrastructure
 
