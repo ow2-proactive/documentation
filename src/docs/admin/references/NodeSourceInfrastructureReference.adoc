@@ -946,7 +946,7 @@ It is advised to embed credentials and certificates in the configuation file, in
 
 - *scale:* Number of pods (ProActive Nodes) to create. This parameter is used when the <<../admin/ProActiveAdminGuide.html#_node_source_policies,Node Source Policy>> is not a <<../admin/ProActiveAdminGuide.html#_dynamic_policy,Dynamic Policy>>.
 
-- *image:* Docker image used to deploy ProActive Nodes. Example: java:8-jre
+- *image:* (Optional) Docker image used to deploy ProActive Nodes. When it is not set, its default value `java:8-jre` is used.
 
 - *rmHostname:* The hostname or the public IP address of the host operating the Resource Manager. This address needs to be accessible from the Kubernetes server. For example, `try.activeeon.com`.
 
@@ -956,7 +956,7 @@ It is advised to embed credentials and certificates in the configuation file, in
 +
 Example:
 ....
--Dproactive.communication.protocol=pamr -Dproactive.useIPaddress=true -Dproactive.pamr.router.address=192.168.99.1
+-Dproactive.communication.protocol=pamr -Dproactive.useIPaddress=true -Dproactive.pamr.router.address=try.activeeon.com
 ....
 
 - *startupScript:* VM startup script to launch the ProActive nodes. To run the ProActive nodes, this script is also expected to download and install the Java Runtime Environment if it is not already installed in the specified image, then download and and execute ProActive node.jar. The script can use <<_cloud_infrastructure_startup_script,some arguments>>. For example, it can use `%nodeJarUrl%` to represent the full URL path for downloading the _node.jar_ file. These arguments will be interpreted by Kubernetes Infrastructure later. This is an optional property. If left blank, a default script is automatically generated for the Linux OS.
@@ -970,7 +970,7 @@ if ! command -v java; then wget -nv -N https://s3.amazonaws.com/ci-materials/Lat
 java -jar node.jar -Dproactive.communication.protocol=%protocol% -Dpython.path=%jythonPath% -Dproactive.pamr.router.address=%rmHostname% -D%instanceIdNodeProperty%=%instanceId% -r %rmUrl% -s %nodeSourceName% %nodeNamingOption% -v %credentials% -w %numberOfNodesPerInstance% %additionalProperties%
 ....
 
-- *nodeTimeout:* (Optional) The estimated startup time of the nodes (expressed in millisecond). After this timeout expired, the node will be considered as lost. Default value is 10 minutes.
+- *nodeTimeout:* (Optional) The estimated startup time of the nodes (expressed in millisecond). After this timeout, the node will be considered as lost. Default value is 10 minutes.
  
 
 ==== Load Sharing Facility (LSF) Infrastructure
