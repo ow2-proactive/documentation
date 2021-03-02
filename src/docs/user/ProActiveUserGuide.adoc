@@ -1171,6 +1171,20 @@ To achieve the best performance for MPI applications, nodes can be selected taki
 close to each other as possible to obtain better network performance or nodes on different hosts to split the I/O load.
 Refer to <<_topology_types>> for more details.
 
+=== Example: Install specific software tools and libraries before launching tasks
+
+Some workflow tasks require the prior installation of specific software tools and libraries
+that are necessary to properly execute these tasks. ProActive offers two methods to enable the installation of such tools and libraries:
+
+1. By using software containers encapsulating the required libraries and tools.
+ProActive enables then the execution of computational tasks in containers such as Docker, Podman or Singularity containers.
+See Section <<_fork_environment, Fork environment>> for more details about executing tasks inside software containers.
+2. By using pre-scripts, i.e., scripts that are executed just before the considered computational task, and on the same compute resource.
+Such pre-scripts implement the instructions for installing and configuring the required tools and libraries. ProActive solution allows writing pre-scripts in various languages.
+These include languages ​​for operating systems (shell, batch, powershell, etc.), scripting languages ​​(groovy, javascript, etc.) and programming languages (python, java, etc.).
+See Section <<_pre_post_clean, Pre, Post & Clean Scripts>> for more details about pre-scripts.
+
+
 == Workflow Execution Control
 
 *ProActive Scheduler* supports portable script execution through the *JSR-223* Java
