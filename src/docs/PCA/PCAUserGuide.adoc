@@ -1,11 +1,11 @@
 :docinfo:
 :toc: 
-:toc-title: PCA User Guide
-= ProActive Cloud Automation (PCA)
+:toc-title: PSA User Guide
+= ProActive Service Automation (PSA)
 include::../common-settings.adoc[]
 include::../all-doc-links.adoc[]
 
-== Main principles of PCA
+== Main principles of PSA
 
 include::references/Overview.adoc[]
 
@@ -17,7 +17,7 @@ include::references/Definition.adoc[]
 
 include::references/Standard_Transitions.adoc[]
 
-== PCA Portal
+== PSA Portal
 
 === Overall View
 
@@ -32,7 +32,7 @@ include::references/Detailed_view.adoc[]
 include::references/UsageExample.adoc[]
 
 == Reference
-In this section, we provide a quick reference about how to configure and start some PCA services from our Catalog.
+In this section, we provide a quick reference about how to configure and start some PSA services from our Catalog.
 
 include::references/reference.adoc[]
 include::../common-footer.adoc[]
