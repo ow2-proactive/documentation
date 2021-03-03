@@ -657,7 +657,7 @@ image::flow_spec_duplicate.png[align=center]
 
 -   The target must have the initiator as only dependency: the action is
     performed when the initiator task terminates. If the target has an
-    other pending task as dependency, the behaviour cannot be specified.
+    other pending task as dependency, the behavior cannot be specified.
 
 -   There should always be a merge task after the target of a replicate:
     if the target is not a start block, it should have at least one
@@ -2589,7 +2589,7 @@ Here is the output of the Example 3 workflow:
 
 We can see that no more than two replicated tasks enter the critical section at the same time, and that releasing slots allows new tasks to enter the critical section.
 
-The Complete Workflow example can be downloaded link:examples/CriticalSection.xml[here].
+The complete Workflow example can be downloaded link:examples/CriticalSection.xml[here].
 
 CAUTION: Implementing the Critical Section example using <<_selection,selection scripts>> rather than explicit wait methods is more *complex*.
 The reason behind is that selection scripts are meant to be *stateless*.
@@ -2610,6 +2610,72 @@ Task Synchronization API can be used for multiple dynamic synchronization patter
  * *Producer / Consumer*
 
 A complete example of Producer / Consumer, _ServiceDeployerConsumer_ can be downloaded link:examples/ServiceDeployerConsumer.xml[here].
+
+[[_task_signal_api]]
+=== Signal API
+
+The *Signal API* is a high-level API that enables users to interact with running jobs via signals (we also call them actions).
+That is, it allows a job to expose specific actions (e.g., soft stop, scale up, scale down) that can triggered by users from the *Workflow Execution portal*.
+
+More specifically, the Signal API allows a workflow to:
+
+  . expose signals, i.e., display them in the Workflow Execution portal (e.g., display the `soft_stop` signal)
+
+  . wait to receive these signals, or check for their reception regularly, and
+
+  . execute the corresponding behavior (defined in the workflow) at the signal reception.
+
+The Signal API uses the synchronization API to provide a *persistent key-value channel* to store job signals.
+It uses a single channel (called *PA_SIGNALS_CHANNEL*) to store the signals of all jobs. The signal channel contains an entry per job.
+The key of each entry is the job id, whereas the value of the entry is the set of signals used by the considered job.
+Job signals are organized in a link:https://docs.oracle.com/javase/8/docs/api/java/util/Set.html[Java Set] structure,
+which means that a signal appears only once in the set, even if it is sent many times.
+
+As already mentioned, the Signal API is based on the synchronization API. However, these APIs are intended for different purposes.
+The Synchronization API is used to exchange information (e.g., messages) between tasks and between jobs, whereas the
+Signal API is useful to exchange signals between a job and users (via the Workflow Execution portal or the REST API), it cannot be used to send signals from a job to another.
+
+==== Usage
+*Task Signal API* is a *Java API* defined by the following link:../javadoc/org/ow2/proactive/scheduler/signal/SignalApi.html[API documentation].
+
+The Signal API is available inside ProActive Tasks through the `signalapi` <<_glossary_script_bindings,script binding>>.
+
+It is easy to use and offers a set of basic operations on signals, summarized as follows:
+
+  - Ready for signal(s): declares that the current job is ready to receive and handle one or more signals.
+
+  - Send signal(s): adds one or more signals to the set of signals of the current job.
+
+  - Check for signal(s) reception: verifies whether one or more signals exist among the set of job signals.
+
+  - Wait for signal(s): blocking instruction that waits until one signal (among those given as input) is added to the set of job signals.
+
+  - Remove signal(s): removes one or more signals from the set of job signals.
+
+In addition to the above operations available within ProActive Tasks, users and third-party systems can send signals
+to a specific job via link:/rest/#1218178377[ProActive Signals REST endpoint].
+
+==== Examples
+Two buckets in ProActive *Catalog* contain workflow examples and templates, which illustrate the usage of the Signal API, namely:
+
+* The *Signal* bucket contains many workflow examples that explain all signal operations.
+These workflows use a set of predefined groovy scripts stored in the same bucket.
+
+* The *Controls* bucket contains two workflow templates, viz.,:
+
+  - _Check_For_Signals_: a control pattern that executes a loop until one ore more signals given as input are received.
+
+  - _Wait_For_Signals_: a blocking control pattern that blocks the task execution waiting for the reception of one or more signals given as input.
+
+==== Conclusion
+The Signal API allows users to interact with jobs during their execution, thus enabling to impact and change jobs' behaviors at run-time.
+Many use cases can be fulfilled using this API. For instance:
+
+  - _Softly stopping a job_: when the stop signal is received, the job executes some code that properly finish this job.
+
+  - _Scaling up and down resources_: a job that deploys resources (e.g., compute resources, workers/agents, etc)
+  can scale up and down these resources by receiving the corresponding signals from users (via the Workflow Execution portal),
+  or from third-party systems (via the Signals REST endpoint).
 
 == Scheduling policies
 
