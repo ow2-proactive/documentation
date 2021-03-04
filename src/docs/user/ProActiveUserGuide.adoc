@@ -24,7 +24,7 @@ your environment (default credentials: admin/admin) or just use our demo platfor
 - +++Submit workflows, monitor their execution and retrieve the tasks results using <a class="schedulerUrl" href="/scheduler" target="_blank">ProActive Scheduler Portal</a>+++
 - +++Add resources and monitor them using <a class="rmUrl" href="/rm" target="_blank">ProActive Resource Manager Portal</a>+++
 - +++Version and share various objects using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/catalog-portal" target="_blank">ProActive Catalog Portal</a>+++
-- +++Provide an end-user workflow submission interface using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/workflow-automation" target="_blank">Workflow Automation Portal</a>+++
+- +++Provide an end-user workflow submission interface using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/workflow-automation" target="_blank">Workflow Execution Portal</a>+++
 - +++Generate metrics of multiple job executions using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/job-analytics" target="_blank">Job Analytics Portal</a>+++
 - +++Plan workflow executions over time using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/job-planner-execution-planning" target="_blank">Job Planner Portal</a>+++
 - +++Add services using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/cloud-automation" target="_blank">Cloud Automation Portal</a>+++
@@ -657,7 +657,7 @@ image::flow_spec_duplicate.png[align=center]
 
 -   The target must have the initiator as only dependency: the action is
     performed when the initiator task terminates. If the target has an
-    other pending task as dependency, the behaviour cannot be specified.
+    other pending task as dependency, the behavior cannot be specified.
 
 -   There should always be a merge task after the target of a replicate:
     if the target is not a start block, it should have at least one
@@ -2591,7 +2591,7 @@ Here is the output of the Example 3 workflow:
 
 We can see that no more than two replicated tasks enter the critical section at the same time, and that releasing slots allows new tasks to enter the critical section.
 
-The Complete Workflow example can be downloaded link:examples/CriticalSection.xml[here].
+The complete Workflow example can be downloaded link:examples/CriticalSection.xml[here].
 
 CAUTION: Implementing the Critical Section example using <<_selection,selection scripts>> rather than explicit wait methods is more *complex*.
 The reason behind is that selection scripts are meant to be *stateless*.
@@ -2612,6 +2612,106 @@ Task Synchronization API can be used for multiple dynamic synchronization patter
  * *Producer / Consumer*
 
 A complete example of Producer / Consumer, _ServiceDeployerConsumer_ can be downloaded link:examples/ServiceDeployerConsumer.xml[here].
+
+[[_task_signal_api]]
+=== Signal API
+
+The *Signal API* is a high-level API that enables users to interact with running jobs via signals (we also call them actions).
+That is, it allows a job to expose specific signals (e.g., `soft_stop` to properly finish a job) that can be triggered by users from the *Workflow Execution portal*.
+
+At a high-level view, the Signal API allows jobs and users to exchange signals using a communication channel provided by the <<_task_synchronization_api,synchronization API>>.
+The typical usage scenario of the Signal API is the following:
+
+  . A job declares to be ready to handle one or more signals. The signals are then displayed in the Workflow Execution portal (e.g., display the `soft_stop` signal).
+
+  . The job waits to receive these signals, or check for their reception regularly.
+
+  . A user clicks on the signal displayed in the Workflow Execution portal (e.g., click on the `soft_stop` signal), which sends this signal to the job.
+
+  . At the signal reception, the job executes the corresponding behavior (defined in the workflow).
+
+As already mentioned, the Signal API uses the <<_task_synchronization_api,synchronization API>> to store jobs' signals, with respect to the following specifications:
+
+ * It uses a single persistent channel (called *PA_SIGNALS_CHANNEL*) to store the signals of all jobs. The signal channel contains an entry per job.
+
+ * Job signals are automatically removed when the job execution finishes (i.e., the job is in the status Finished, Cancelled, Failed or Killed).
+
+The Signal API is based on the <<_task_synchronization_api,synchronization API>>. However, these APIs are intended for different purposes.
+The Synchronization API is used to exchange information (e.g., messages) between tasks and between jobs, whereas the
+Signal API is useful to exchange signals between a job and users (via the Workflow Execution portal or the REST API), it cannot be used to send signals from one job to another.
+
+==== Usage
+*Task Signal API* is a *Java API* defined by the following link:../javadoc/org/ow2/proactive/scheduler/signal/SignalApi.html[API documentation].
+
+The Signal API is available inside ProActive Tasks through the *signalapi* <<_glossary_script_bindings,script binding>>.
+
+It is easy to use, and offers a set of basic operations on signals summarized as follows:
+
+ * *readyForSignal*: declares that the current job is ready to receive and handle one or more signals.
+   This operation constructs new signals (by adding the prefix `ready_` to the input signals), then adds them to job signals.
+   For example, if a job declares ready for the signal `soft_stop`, the signal `ready_soft_stop` is added to the set of job signals.
+   Additionally, if the input signal (e.g., `soft_stop`) already exists among the job signals (which means that it has been sent and handled previously),
+    the operation ready for signal automatically removes it, thus the job is ready again to receive and handle the same signal.
+
+ * *sendSignal*, *sendManySignals*: adds one or more signals given as input to the current job signals.
+   This operation removes the corresponding ready signals if they already exist. For instance, sending `soft_stop` removes the signal
+   `ready_soft_stop` if it already exists among the job signals.
+
+ * *checkForSignals*: verifies whether one or more signals exist among the set of job signals.
+
+ * *waitFor*, *waitForAny*: blocking instruction that waits until one signal (among those given as input) is added to the set of job signals.
+
+ * *removeSignal*, *removeManySignals*: removes one or more signals from the set of job signals.
+
+ * *getJobSignals*: returns the current job signals.
+
+In addition to the above operations available within ProActive Tasks, users and third-party systems can send signals
+to a specific job via link:/rest/#1218178377[ProActive Signals REST endpoint].
+
+==== Examples
+Two menus in ProActive *Studio* contain workflow examples and templates, which illustrate the usage of the Signal API, namely:
+
+* The *Signal* menu contains many workflow examples that use all signal operations.
+These workflows use a set of predefined groovy scripts stored in the same bucket. Additionally, we give below an example of a groovy code that uses some Signal API operations.
+
+[source, groovy]
+----
+//Declare that the current job is ready to receive and handle the 'soft_stop' signal
+signalapi.readyForSignal("soft_stop")
+
+//Display current job signals
+println("Job signals "+ signalapi.getJobSignals())
+
+//Wait util the 'soft_stop' signal is sent (via the Workflow Execution portal or REST API)
+signalapi.waitFor("soft_stop")
+
+//Remove the 'soft_stop' signal from the set of job signals
+signalapi.removeSignal("soft_stop")
+----
+
+* The *Controls* template menu contains two workflow templates, viz.,:
+
+  . _Check_For_Signals_: a control pattern that executes a loop until one ore more signals given as input are received.
+
+  . _Wait_For_Signals_: a blocking control pattern that blocks the task execution waiting for the reception of one or more signals given as input.
+
+Concerning the usage of the link:/rest/#1218178377[Signals REST endpoint], below we provide an example using curl that shows how to send a signal to a specific job:
+[source,shell,subs="verbatim,quotes"]
+----
+curl -X POST -H "sessionid:$sessionid"
+http://try.activeeon.com:8080/rest/scheduler/job/`job_id`/signals?signal="*soft_stop*"
+----
+==== Conclusion
+The Signal API allows users to interact with jobs during their execution, thus enabling to impact and change jobs' behaviors at runtime.
+Many use cases can be fulfilled using this API. For instance:
+
+ * _Softly stopping a job_: when the stop signal is received, the job executes some code that properly finish this job.
+
+ * _Stop or continue job execution based on the user decision_: a job suspends its execution waiting for the user to send a signal, either stop or continue.
+
+ * _Scaling up and down resources on user demand_: a job that deploys resources (e.g., compute resources, workers/agents, etc)
+  can scale up and down these resources when receiving the corresponding signals from users (via the Workflow Execution portal),
+  or from third-party systems (via the Signals REST endpoint).
 
 == Scheduling policies
 
