@@ -351,6 +351,143 @@ TIP: If you plan to use another DB version, it is important to get the correspon
 
 Moreover, it is also important to notice that the Scheduler and 3 microservices (*scheduling-api*, *job-planner*, and *proactive-cloud-watch*) have to point to the same scheduler database since they use that one.
 
+=== Data Spaces configuration
+
+link:../user/ProActiveUserGuide.html#_data_spaces[ProActive Data Spaces] is an integrated file-transfer mechanism used by ProActive workflows.
+
+Data Spaces are used to transfer files between the server and <<_glossary_proactive_node,ProActive Nodes>> during workflows tasks execution.
+
+ProActive Data Spaces implementation is based on link:https://commons.apache.org/proper/commons-vfs/[Apache VFS].
+
+The ProActive server defines and starts automatically the following data spaces:
+
+ * A *Global Space* where anyone can read/write files.
+ * An *User Space* which is a personal user data storage.
+
+Global or User Spaces can be configured individually to use one of the following Data Space protocols.
+
+==== ProActive protocol
+
+This is the *default* protocol used by the Global and User Spaces. The ProActive Data Space protocol is able to transfer files either by:
+
+ * a direct copy operation on the file system
+ * a network copy operation through the currently configured <<_available_network_protocols,ProActive Network Protocol>>
+
+Accordingly, a ProActive Node connected to the ProActive server and sharing the same file system (e.g. NFS) will be able to transfer files directly through the file system.
+A ProActive Node connected to the server from a different environment (virtual machine, cloud instance, docker container, etc) will also be able to transfer files to/from the server thanks to the ProActive Data Space protocol.
+
+The ProActive Data Space protocol will use the network protocol configured for the ProActive server (see <<_network_properties>>).
+
+In order to configure the data spaces paths on the ProActive server, you can set the following properties in the `PROACTIVE_HOME/config/scheduler/settings.ini` file:
+
+....
+pa.scheduler.dataspace.defaultglobal.localpath=/path/to/global/space
+pa.scheduler.dataspace.defaultuser.localpath=/path/to/user/space/root
+....
+
+The user space will use the path defined in `pa.scheduler.dataspace.defaultuser.localpath` as its root and create sub-folders according to each user login name.
+
+When these properties are not configured, global and user spaces default locations are:
+
+ * Global Space : `PROACTIVE_HOME/data/defaultglobal`
+ * User Space : `PROACTIVE_HOME/data/defaultuser`
+
+==== SFTP protocol
+
+The SFTP protocol can be used instead of the ProActive protocol to deploy the User or Global spaces.
+
+ProActive User Space mapped using SFTP has the following benefits:
+
+ * It allows to map each User Space to the *HOME directory* of the user on the SFTP server.
+ * It allows *file impersonation* : a file copied to the User Space will belong to the user system account and not to the ProActive server account.
+
+It has the following constraints and limitations:
+
+ * Every user's credentials of the ProActive server must match system users credentials inside the SFTP server. This is typically achieved by enabling LDAP or PAM authentication on the ProActive server (see <<_user_authentication>>).
+ * Every file transfer will use the SFTP protocol when it's configured. Note that SFTP protocol will be less efficient than the ProActive protocol when transferring files on the local file system.
+
+The SFTP protocol can also be used for the Global Space, but in that case, all file transfers will be accomplished by a single system account.
+
+In order to configure the SFTP protocol for the User Space, the following properties in the `PROACTIVE_HOME/config/scheduler/settings.ini` file must be defined:
+
+....
+pa.scheduler.dataspace.defaultuser.url=sftp://your-server
+pa.scheduler.dataspace.defaultuser.impersonation=true
+....
+The user spaces will always be mapped to each user HOME directory on the SFTP server. In order to have more flexible mappings, consider using the <<_vsftp_protocol>>.
+
+In order to configure the SFTP protocol for the Global Space, the following property must be set:
+
+....
+pa.scheduler.dataspace.defaultglobal.url=sftp://username:password@your-server/path
+....
+
+==== VSFTP protocol
+
+The VSFTP protocol is a proprietary extension inside ProActive of the SFTP protocol.
+It complements the SFTP protocol by adding the ability to configure SFTP root directories with a set of predefined environment variables.
+
+By default, only the `HOME` environment variable is included. Other environment variables can be added using the java property `proactive.vfsprovider.vsftp.var_names`.
+
+Each environment variable must represent a directory path inside the SFTP server. Each variable must contain a value for all users of the SFTP server.
+
+For example, suppose that `proactive.vfsprovider.vsftp.var_names=HOME,WORK,SCRATCH` and that these environment variables are resolved for `user1` as follows:
+
+....
+HOME=/home/user1
+WORK=/work
+SCRATCH=/scratch/user1
+....
+
+The VSFTP protocol will then be able to resolve inside the SFTP server the following urls:
+
+....
+vsftp://your-server/$HOME/file1 => /home/user1/file1
+vsftp://your-server/$WORK/file2 => /work/file2
+vsftp://your-server/$SCRATCH/file3 => /scratch/user1/file3
+....
+
+Additionally, when listing the contents of the server root directory, it will return a list corresponding to the configured variables:
+
+....
+LIST vsftp://your-server/ => [$HOME, $WORK, $SCRATCH]
+....
+
+`proactive.vfsprovider.vsftp.var_names` thus defines the different folder roots of the SFTP protocol for all users.
+
+In order to configure the VSFTP protocol for the User Space, the following properties in the `PROACTIVE_HOME/config/scheduler/settings.ini` file must be defined:
+
+....
+pa.scheduler.dataspace.defaultuser.url=vsftp://your-server
+pa.scheduler.dataspace.defaultuser.impersonation=true
+....
+
+Additionally, the following Java properties must be added to the ProActive server and all ProActive Nodes connected to the server:
+
+ * `proactive.vfsprovider.vsftp.var_names` : a comma-separated list of environment variables which will be used as vsftp root folders for all users. Default value `HOME`.
+ * `proactive.vfsprovider.vsftp.var_command` (optional) : the configured command will be executed as the current user inside the SFTP server to retrieve the environment variable(s) value (s).
+Depending on how the environment variable is defined on the SFTP server (.bashrc, .profile or .ssh/environment files), it is necessary to adapt the command to make sure the appropriate environment script is sourced.
+The property uses the %VAR% pattern which will be replaced dynamically by the variable name. Default value is `echo $%VAR%`. Example definition `proactive.vfsprovider.vsftp.var_command='source $HOME/.bashrc & echo $%VAR%'`.
+
+In order to add the above properties to the ProActive server and local Nodes, you can edit the following files and include these properties:
+
+ * `PROACTIVE_HOME/config/network/server.ini`
+ * `PROACTIVE_HOME/config/network/node.ini`
+
+In order to add these properties to remote ProActive Nodes, the procedure will depend on the deployment strategy:
+
+ * Nodes started manually: you can add these properties in the command line. For example, `./proactive-node -Dproactive.vfsprovider.vsftp.var_names=HOME,WORK (...)`.
+ * Nodes started using ProActive Linux Agents: the agent configuration file `/opt/proactive-agent/config.xml` needs to be edited to include the properties in the `<jvmParameters>` section.
+For example:
+```xml
+        <jvmParameters>
+            <param>-Dproactive.useIPaddress=true</param>
+            <param>-Dproactive.vfsprovider.vsftp.var_names=HOME,WORK</param>
+        </jvmParameters>
+```
+ * Nodes started using the ProActive Windows Agents: using the Windows Agent GUI, the properties must be added in the *JVM option* section. See <<_configure_agents_on_windows>>.
+ * Nodes started using ProActive Resource Manager <<_glossary_node_source_infrastructure, Infrastructures>>: the properties needs to be added in the corresponding infrastructure parameter which allows to define java properties. See <<_node_source_infrastructures>> for further details.
+
 [[_backup]]
 === Configure automated backup
 
