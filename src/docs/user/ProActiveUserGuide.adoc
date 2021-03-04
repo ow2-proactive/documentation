@@ -2699,7 +2699,7 @@ curl -X POST -H "sessionid:$sessionid"
 http://try.activeeon.com:8080/rest/scheduler/job/`job_id`/signals?signal="*soft_stop*"
 ----
 ==== Conclusion
-The Signal API allows users to interact with jobs during their execution, thus enabling to impact and change jobs' behaviors at run-time.
+The Signal API allows users to interact with jobs during their execution, thus enabling to impact and change jobs' behaviors at runtime.
 Many use cases can be fulfilled using this API. For instance:
 
   - _Softly stopping a job_: when the stop signal is received, the job executes some code that properly finish this job.
