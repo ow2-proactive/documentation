@@ -2620,24 +2620,23 @@ That is, it allows a job to expose specific signals (e.g., `soft_stop` to proper
 At a high-level view, the Signal API allows jobs and users to exchange signals using a communication channel provided by the <<_task_synchronization_api,synchronization API>>.
 The typical usage scenario of the Signal API is the following:
 
-  . A job declares to be ready to handle one or more signals. The signals are then displayed in the Workflow Execution portal (e.g., display the `soft_stop` signal)
+  . A job declares to be ready to handle one or more signals. The signals are then displayed in the Workflow Execution portal (e.g., display the `soft_stop` signal).
 
-  . The job waits to receive these signals, or check for their reception regularly,
+  . The job waits to receive these signals, or check for their reception regularly.
 
-  . A user clicks on the signal displayed in the Workflow Execution portal (e.g., click on the `soft_stop` signal), which sends this signal to the job,
+  . A user clicks on the signal displayed in the Workflow Execution portal (e.g., click on the `soft_stop` signal), which sends this signal to the job.
 
   . At the signal reception, the job executes the corresponding behavior (defined in the workflow).
 
-As already mentioned, the Signal API uses the <<_task_synchronization_api,synchronization API>> to provide a *persistent key-value channel* to store job signals.
-It uses a single channel (called *PA_SIGNALS_CHANNEL*) to store the signals of all jobs. The signal channel contains an entry per job.
-The key of each entry is the job id, whereas the value of the entry is the set of signals used by the considered job.
-Job signals are organized in a link:https://docs.oracle.com/javase/8/docs/api/java/util/Set.html[Java Set] structure,
-which means that a signal appears only once in the set, even if it is sent many times.
-All job signals are automatically removed when the job execution finishes (i.e., the job is in the status Finished, Cancelled, Failed or Killed).
+As already mentioned, the Signal API uses the <<_task_synchronization_api,synchronization API>> to store jobs' signals, with respect to the following specifications:
+
+ * It uses a single persistent channel (called *PA_SIGNALS_CHANNEL*) to store the signals of all jobs. The signal channel contains an entry per job.
+
+ * Job signals are automatically removed when the job execution finishes (i.e., the job is in the status Finished, Cancelled, Failed or Killed).
 
 The Signal API is based on the <<_task_synchronization_api,synchronization API>>. However, these APIs are intended for different purposes.
 The Synchronization API is used to exchange information (e.g., messages) between tasks and between jobs, whereas the
-Signal API is useful to exchange signals between a job and users (via the Workflow Execution portal or the REST API), it cannot be used to send signals from a job to another.
+Signal API is useful to exchange signals between a job and users (via the Workflow Execution portal or the REST API), it cannot be used to send signals from one job to another.
 
 ==== Usage
 *Task Signal API* is a *Java API* defined by the following link:../javadoc/org/ow2/proactive/scheduler/signal/SignalApi.html[API documentation].
@@ -2646,30 +2645,32 @@ The Signal API is available inside ProActive Tasks through the *signalapi* <<_gl
 
 It is easy to use, and offers a set of basic operations on signals summarized as follows:
 
-  - Ready for signal(s): declares that the current job is ready to receive and handle one or more signals.
+ * *readyForSignal*: declares that the current job is ready to receive and handle one or more signals.
    This operation constructs new signals (by adding the prefix `ready_` to the input signals), then adds them to job signals.
    For example, if a job declares ready for the signal `soft_stop`, the signal `ready_soft_stop` is added to the set of job signals.
    Additionally, if the input signal (e.g., `soft_stop`) already exists among the job signals (which means that it has been sent and handled previously),
     the operation ready for signal automatically removes it, thus the job is ready again to receive and handle the same signal.
 
-  - Send signal(s): adds one or more signals given as input to the current job signals.
+ * *sendSignal*, *sendManySignals*: adds one or more signals given as input to the current job signals.
    This operation removes the corresponding ready signals if they already exist. For instance, sending `soft_stop` removes the signal
    `ready_soft_stop` if it already exists among the job signals.
 
-  - Check for signal(s) reception: verifies whether one or more signals exist among the set of job signals.
+ * *checkForSignals*: verifies whether one or more signals exist among the set of job signals.
 
-  - Wait for signal(s): blocking instruction that waits until one signal (among those given as input) is added to the set of job signals.
+ * *waitFor*, *waitForAny*: blocking instruction that waits until one signal (among those given as input) is added to the set of job signals.
 
-  - Remove signal(s): removes one or more signals from the set of job signals.
+ * *removeSignal*, *removeManySignals*: removes one or more signals from the set of job signals.
+
+ * *getJobSignals*: returns the current job signals.
 
 In addition to the above operations available within ProActive Tasks, users and third-party systems can send signals
 to a specific job via link:/rest/#1218178377[ProActive Signals REST endpoint].
 
 ==== Examples
-Two buckets in ProActive *Catalog* contain workflow examples and templates, which illustrate the usage of the Signal API, namely:
+Two menus in ProActive *Studio* contain workflow examples and templates, which illustrate the usage of the Signal API, namely:
 
-* The *Signal* bucket contains many workflow examples that use all signal operations.
-These workflows use a set of predefined groovy scripts stored in the same bucket. Additionally, below we give an example of a groovy code that uses some Signal API operations.
+* The *Signal* menu contains many workflow examples that use all signal operations.
+These workflows use a set of predefined groovy scripts stored in the same bucket. Additionally, we give below an example of a groovy code that uses some Signal API operations.
 
 [source, groovy]
 ----
@@ -2686,11 +2687,11 @@ signalapi.waitFor("soft_stop")
 signalapi.removeSignal("soft_stop")
 ----
 
-* The *Controls* bucket contains two workflow templates, viz.,:
+* The *Controls* template menu contains two workflow templates, viz.,:
 
-  - _Check_For_Signals_: a control pattern that executes a loop until one ore more signals given as input are received.
+  . _Check_For_Signals_: a control pattern that executes a loop until one ore more signals given as input are received.
 
-  - _Wait_For_Signals_: a blocking control pattern that blocks the task execution waiting for the reception of one or more signals given as input.
+  . _Wait_For_Signals_: a blocking control pattern that blocks the task execution waiting for the reception of one or more signals given as input.
 
 Concerning the usage of the link:/rest/#1218178377[Signals REST endpoint], below we provide an example using curl that shows how to send a signal to a specific job:
 [source,shell,subs="verbatim,quotes"]
@@ -2702,9 +2703,11 @@ http://try.activeeon.com:8080/rest/scheduler/job/`job_id`/signals?signal="*soft_
 The Signal API allows users to interact with jobs during their execution, thus enabling to impact and change jobs' behaviors at runtime.
 Many use cases can be fulfilled using this API. For instance:
 
-  - _Softly stopping a job_: when the stop signal is received, the job executes some code that properly finish this job.
+ * _Softly stopping a job_: when the stop signal is received, the job executes some code that properly finish this job.
 
-  - _Scaling up and down resources on the user demand_: a job that deploys resources (e.g., compute resources, workers/agents, etc)
+ * _Stop or continue job execution based on the user decision_: a job suspends its execution waiting for the user to send a signal, either stop or continue.
+
+ * _Scaling up and down resources on user demand_: a job that deploys resources (e.g., compute resources, workers/agents, etc)
   can scale up and down these resources when receiving the corresponding signals from users (via the Workflow Execution portal),
   or from third-party systems (via the Signals REST endpoint).
 
