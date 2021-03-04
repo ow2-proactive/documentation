@@ -1,39 +1,39 @@
 :docinfo:
 :toc: 
-:toc-title: PCW User Guide
-= ProActive Cloud Watch (PCW)
+:toc-title: PEO User Guide
+= ProActive Event Orchestration (PEO)
 include::../common-settings.adoc[]
 include::../all-doc-links.adoc[]
 
-== Main concepts of PCW
+== Main concepts of PEO
 
-*ProActive Cloud Watch (PCW)* monitors a system to detect complex events, and triggers actions when activated rules are fired. +
-PCW is configured with *rules* to define the metrics to monitor, actions to be performed, and conditions to be met to trigger them. +
+*ProActive Event Orchestration (PEO)* monitors a system to detect complex events, and triggers actions when activated rules are fired. +
+PEO is configured with *rules* to define the metrics to monitor, actions to be performed, and conditions to be met to trigger them. +
 
-ProActive Cloud Watch is organized as a Catalog of rules (which can be activated or deactivated) that will automatically trigger user-specified actions if defined conditions are fulfilled. +
-For example, PCW is able to monitor some computing resources (ProActive Nodes) and deploy new resources (scale up) when the monitored resources are overloaded. Another use case is to notify users with alerts about some deteriorated resources. +
-In general PCW allows to trigger any action by submitting a workflow to the ProActive Scheduler.
+ProActive Event Orchestration is organized as a Catalog of rules (which can be activated or deactivated) that will automatically trigger user-specified actions if defined conditions are fulfilled. +
+For example, PEO is able to monitor some computing resources (ProActive Nodes) and deploy new resources (scale up) when the monitored resources are overloaded. Another use case is to notify users with alerts about some deteriorated resources. +
+In general PEO allows to trigger any action by submitting a workflow to the ProActive Scheduler.
 
 *Definitions:*
 
 Rule:: - defines a monitoring behavior, triggering actions according to some predefined conditions. Rules generally use a template for certain monitoring use cases, configurable using specific variables.
-Rule Instance:: - instantiated rule with concrete set of variables. One rule can have several rule Instances with different variable values. The rule instance can be activated/deactivated. PCW service will monitor metrics defined inside the rule only for activated instances.
+Rule Instance:: - instantiated rule with concrete set of variables. One rule can have several rule Instances with different variable values. The rule instance can be activated/deactivated. Proactive Cloud Watch service will monitor metrics defined inside the rule only for activated instances.
 image::PCW-General-overview.jpg[align=center]
-The diagram above illustrates the general overview of PCW functionality.
+The diagram above illustrates the general overview of PEO functionality.
 
-[[_pcw_monitoring]]
+[[_peo_monitoring]]
 === Monitoring
 
-There are several types of metrics that can be monitored by PCW. ProActive Cloud Watch implements a polling mechanism to collect the monitoring metrics. A delay can also be added to resume monitoring after an action has been triggered only after a certain time. This feature is very useful in case of scale up/down use cases and helps to avoid triggering extra actions until the new resource is deployed/undeployed. +
-The design of PCW allows to add new types of monitoring metrics.
+There are several types of metrics that can be monitored by PEO. ProActive Event Orchestration implements a polling mechanism to collect the monitoring metrics. A delay can also be added to resume monitoring after an action has been triggered only after a certain time. This feature is very useful in case of scale up/down use cases and helps to avoid triggering extra actions until the new resource is deployed/undeployed. +
+The design of PEO allows to add new types of monitoring metrics.
 
-[[_pcw_monitoring_physical_metrics]]
+[[_peo_monitoring_physical_metrics]]
 ==== Monitoring physical metrics
 ProActive provides a way to monitor system metrics of virtual and physical machines (Nodes) deployed by ProActive Resource Manager. +
 Thanks to the JMX protocol, ProActive Nodes can expose many system metrics from the underlying operating system (disk, RAM, CPU usage, network activity, etc...).
 ProActive Nodes use the  https://github.com/hyperic/sigar[Sigar^] library to collect physical metrics. +
 
-ProActive Cloud watch can monitor any ProActive Node with JMX URL to access the following metrics:
+ProActive Event Orchesration can monitor any ProActive Node with JMX URL to access the following metrics:
 
 * System memory, swap, CPU, load average, uptime, logins.
 * Per-process memory, CPU, credential info, state, arguments, environment, open files.
@@ -41,47 +41,47 @@ ProActive Cloud watch can monitor any ProActive Node with JMX URL to access the 
 * Network interface detection, configuration information and metrics.
 * Network route and connection tables.
 
-[[_pcw_monitoring_host_accessibility]]
+[[_peo_monitoring_host_accessibility]]
 ==== Monitoring host accessibility
-Another type of monitoring available in PCW is to check host accessibility. The implementation of this metric follows the `ping` host approach. With the help of this metric a user can easily check if a host is up or down and automatically trigger an action.
+Another type of monitoring available in PEO is to check host accessibility. The implementation of this metric follows the `ping` host approach. With the help of this metric a user can easily check if a host is up or down and automatically trigger an action.
 
 === Processing mechanism
 The core of rule processing is managed by the https://www.drools.org/[Drools Engine^] for performance processing of collected metrics. It features powerful mechanisms for complex event processing. The advanced Drools algorithm helps fast detection of fulfilling the conditions and triggering actions.
 
-[[_pcw_rule_action]]
+[[_peo_rule_action]]
 === Rule’s action
-According to the concepts of PCW, the action will be triggered when specified condition is met. +
+According to the concepts of PEO, the action will be triggered when specified condition is met. +
 In order to make an action flexible to any user needs, the rule’s action is firing a job inside scheduler. A user just need to specify which workflow from Catalog will be fired as rule’s action. +
 For example, one can design an action workflow that sends a notification (alert) whenever a metric reaches a critical value. +
 For scalability use cases, the Cloud Automation service can be started as a rule's action that will deploy the new resources.
 
-== PCW portal -  Using existing rules
+== PEO portal -  Using existing rules
 
-In the Automation Dashboard portal, the Cloud Watch view allows users to activate and parametrize a predefined set of rules and also to create new ones.
+In the Automation Dashboard portal, the Event Orchestration view allows users to activate and parametrize a predefined set of rules and also to create new ones.
 
-The next screenshot illustrates PCW portal.
+The next screenshot illustrates PEO portal.
 
 image::automation-dashboard-cloud-watch.PNG[align=center]
 
 The portal is divided into several sections:
 
-1.  In the `Rules` panel a user can find the set of predefined PCW rules ready to be activated.
+1.  In the `Rules` panel a user can find the set of predefined PEO rules ready to be activated.
 2. `Activated Rule Instances` panel shows all rule instances after being activated with certain variables.
 3. `Rule - Fired Jobs` table provides information about triggered jobs inside Scheduling as actions of activated rules.
 4. `Removed Rule Instances` panel gives the list of all rule instances that were removed from the list of activated rules.
 
-In order to better understand the usage of PCW portal, let’s take an example of using existing PCW rules provided by the ProActive distribution.
+In order to better understand the usage of PEO portal, let’s take an example of using existing PEO rules provided by the ProActive distribution.
 
 === Activating a rule
 
-Here is an example that illustrates a simple use case of PCW portal.
+Here is an example that illustrates a simple use case of PEO portal.
 
 The next screenshot shows how to activate a rule, when a user selects a certain rule from the list of `Rules`.
 
 image::PCW-rule-activation.PNG[align=center]
 
 A user can change the default values. +
-A user should <<_pcw_obtaining_url, *Obtain a JMX node url*>> and paste it in the _nodeUrlVar_ variable. +
+A user should <<_peo_obtaining_url, *Obtain a JMX node url*>> and paste it in the _nodeUrlVar_ variable. +
 After modifying the variables a user can *Check* (validate) the rule or directly *Activate* it.
 
 === Using rule variables
@@ -106,23 +106,23 @@ This behaviour is demonstrated in the next screenshot.
 
 image::PCW-activated-with-removed.PNG[align=center]
 
-[[_pcw_obtaining_url]]
+[[_peo_obtaining_url]]
 === Obtaining JMX node URLs
 ProActive Resource Manager portal provides access to monitoring capabilities. During the activation of a rule, a user should enter as rule parameter a JMX endpoint corresponding to the monitored resource (for example a ProActive Node). +
-In order to get this information from a Node, a user can go to the *RM portal*, click on the right button of a Node which should be monitored and click `Copy JMX Endpoint`. Then, he can come back to *Cloud Watch* portal and paste the JMX URL in the corresponding field.
+In order to get this information from a Node, a user can go to the *RM portal*, click on the right button of a Node which should be monitored and click `Copy JMX Endpoint`. Then, he can come back to *Event Orchestration* portal and paste the JMX URL in the corresponding field.
 
 image::RM-copy-jmx-ur.PNG[align=center]
 
-== Create new Cloud Watch rules
+== Create new Event Orchestration rules
 
-ProActive Cloud Watch portal allows to customize the predefined Catalog of rules and also to create new rules from scratch. +
+ProActive Event Orchestration portal allows to customize the predefined Catalog of rules and also to create new rules from scratch. +
 The provided rules in ProActive Catalog are a good starting point to design more complex scenarios.
 
 === Rule’s structure explanation
 The rule definition consists of the following main parts:
 
 1. *Variables definition*. A user can add variables according to its needs. All variables will be replaced with their values inside the rule implementation using the following pattern: #variableName
-2. *Definition of polling metrics*. Polling metrics are specific parameters which depends on the polling class implementation. Polling parameters can reuse the rule variables. The collecting metrics are usually the physical metrics explained in the section <<_pcw_monitoring_physical_metrics, Monitoring physical metrics>> provided by JMX endpoint, like CPU, Memory, etc.
+2. *Definition of polling metrics*. Polling metrics are specific parameters which depends on the polling class implementation. Polling parameters can reuse the rule variables. The collecting metrics are usually the physical metrics explained in the section <<_peo_monitoring_physical_metrics, Monitoring physical metrics>> provided by JMX endpoint, like CPU, Memory, etc.
 3. *Definition of Drool’s rule*. In this part we use Drools standardized language to describe a triggering condition and an action.
 
 +
@@ -203,7 +203,7 @@ A user can define his own set of rule variables as it has a simple key-value str
 
 === Monitoring part
 
-As explained in the document section <<_pcw_monitoring, Monitoring>>, PCW service can monitor 2 types of metrics: <<_pcw_monitoring_physical_metrics, Monitoring physical metrics>> and <<_pcw_monitoring_host_accessibility, Monitoring host accessibility>>.
+As explained in the document section <<_peo_monitoring, Monitoring>>, Proactive Cloud Watch service can monitor 2 types of metrics: <<_peo_monitoring_physical_metrics, Monitoring physical metrics>> and <<_peo_monitoring_host_accessibility, Monitoring host accessibility>>.
 Each monitoring type has an implementation of a Polling class. The polling parameters depends on the chosen implementation of a Polling class. We will provide below examples of polling parameters for each monitoring type.
 
 ==== Polling parameters for Monitoring physical metrics
@@ -246,7 +246,7 @@ The other type of monitoring is checking the host accessibility. The example of 
 The polling class name for monitoring host accessibility is *Ping*. The _nodeUrl_ parameter’s value defines the hostname or IP that should be monitored. The polling and calm periods specify the frequency of checking the provided hostname.
 
 === Rule’s condition and action
-As said in <<_pcw_rule_action, Rule’s action>> section, we will specify rule’s condition and action in Drools language. +
+As said in <<_peo_rule_action, Rule’s action>> section, we will specify rule’s condition and action in Drools language. +
 The possible actions are:
 
 1.  submit workflow to ProActive Scheduler
@@ -333,7 +333,7 @@ With ProActive distribution there are provided examples for monitoring with _sli
 
 Even if the design of the xml rule looks complex, choosing Drools syntax gives a huge flexibility to express user requirements.
 
-=== Display a created rule in Cloud Watch portal
+=== Display a created rule in Event Orchestration portal
 
 Once the rule is defined, it should be saved in Catalog with the specific kind *Rule*. Please check out the link:../user/ProActiveUserGuide.html#_catalog_portal[*Catalog documentation section*] for more information about saving objects in Catalog.
 

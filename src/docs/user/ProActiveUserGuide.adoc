@@ -27,8 +27,8 @@ your environment (default credentials: admin/admin) or just use our demo platfor
 - +++Provide an end-user workflow submission interface using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/workflow-automation" target="_blank">Workflow Execution Portal</a>+++
 - +++Generate metrics of multiple job executions using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/job-analytics" target="_blank">Job Analytics Portal</a>+++
 - +++Plan workflow executions over time using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/job-planner-execution-planning" target="_blank">Job Planner Portal</a>+++
-- +++Add services using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/cloud-automation" target="_blank">Cloud Automation Portal</a>+++
-- +++Perform event based scheduling using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/cloud-watch" target="_blank">Cloud Watch Portal</a>+++
+- +++Add services using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/service-automation" target="_blank">Service Automation Portal</a>+++
+- +++Perform event based scheduling using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/event-orchestration" target="_blank">Event Orchestration Portal</a>+++
 - +++Control manual workflows validation steps using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/notification-portal" target="_blank">Notification Portal</a>+++
 
 We also provide a +++<a class="restUrl" href="/rest" target="_blank">REST API</a>.+++ and <<../user/ProActiveUserGuide.adoc#_scheduler_command_line,command line interfaces>> for advanced users.
