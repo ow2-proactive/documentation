@@ -1819,6 +1819,8 @@ By default, these spaces are linked to folders in the *data* directory of the Pr
 
 But it can be changed in `PROACTIVE_HOME/config/scheduler/settings.ini`.
 
+See link:../admin/ProActiveAdminGuide.html#_data_spaces_configuration[Data Spaces configuration] for further details on how to configure the Global and User spaces.
+
 === Local Space
 
 The *Local Space* is a Node Data Space created dynamically when a Task is executed.

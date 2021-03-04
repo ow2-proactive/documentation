@@ -31,6 +31,10 @@ The following table describes all availabe generic information:
 |delay a job or task execution at a specified date/time
 |job-level, task-level
 |2020-06-20T18:00:00+02:00
+|<<_parent_job_id,PARENT_JOB_ID>>
+|contains the id of the parent job (if the current job has been submitted from another workflow)
+|job-level
+|24
 |<<_node_access_token,NODE_ACCESS_TOKEN>>
 |execute task(s) on node(s) with token-based usage restriction
 |job-level, task-level
@@ -184,6 +188,13 @@ Examples:
  * `START_AT = "2020-06-20T18:00:00+02:00"` will delay the job execution until 20th June 2020 at 6pm GMT+02:00.
 
 `START_AT` can be defined at *job-level* (delay the execution of the whole job) or at  *task-level* (delay the execution of a single task).
+
+==== PARENT_JOB_ID
+
+The `PARENT_JOB_ID` Generic Information is set automatically by ProActive when the current job has been submitted from another workflow using the <<../user/ProActiveUserGuide.adoc#_scheduler_api,Scheduler API>>.
+It contains the id of the parent job which submitted the current job.
+
+`PARENT_JOB_ID` is defined at *job-level*
 
 ==== NODE_ACCESS_TOKEN
 
