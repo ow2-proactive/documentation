@@ -2705,7 +2705,7 @@ Many use cases can be fulfilled using this API. For instance:
   - _Softly stopping a job_: when the stop signal is received, the job executes some code that properly finish this job.
 
   - _Scaling up and down resources on the user demand_: a job that deploys resources (e.g., compute resources, workers/agents, etc)
-  can scale up and down these resources by receiving the corresponding signals from users (via the Workflow Execution portal),
+  can scale up and down these resources when receiving the corresponding signals from users (via the Workflow Execution portal),
   or from third-party systems (via the Signals REST endpoint).
 
 == Scheduling policies
