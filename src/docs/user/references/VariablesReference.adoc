@@ -362,6 +362,13 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | all scripts
 | bash, cmd, perl, php, R, powershell, vbscript
 
+| *Signal API*. Signal API variable is a https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/signal/SignalApi.html[SignalApi java object] that allows to manage job signals using its underlying <<_task_signal_api,API>>.
+| signalapi.sendSignal("stop")
+| -
+| -
+| all scripts
+| bash, cmd, perl, php, R, powershell, vbscript
+
 |===
 
 ==== Variables maps

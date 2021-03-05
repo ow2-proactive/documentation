@@ -2666,7 +2666,7 @@ It is easy to use, and offers a set of basic operations on signals summarized as
  * *getJobSignals*: returns the current job signals.
 
 In addition to the above operations available within ProActive Tasks, users and third-party systems can send signals
-to a specific job via link:/rest/#1218178377[ProActive Signals REST endpoint].
+to a specific job via link:/doc/rest/#1218178377[ProActive Signals REST endpoint].
 
 ==== Examples
 Two menus in ProActive *Studio* contain workflow examples and templates, which illustrate the usage of the Signal API, namely:
@@ -2695,7 +2695,7 @@ signalapi.removeSignal("soft_stop")
 
   . _Wait_For_Signals_: a blocking control pattern that blocks the task execution waiting for the reception of one or more signals given as input.
 
-Concerning the usage of the link:/rest/#1218178377[Signals REST endpoint], below we provide an example using curl that shows how to send a signal to a specific job:
+Concerning the usage of the link:/doc/rest/#1218178377[Signals REST endpoint], below we provide an example using curl that shows how to send a signal to a specific job:
 [source,shell,subs="verbatim,quotes"]
 ----
 curl -X POST -H "sessionid:$sessionid"
