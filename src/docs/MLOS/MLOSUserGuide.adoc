@@ -872,13 +872,14 @@ As we have mentioned earlier in this documentation, a model can be deployed usin
 Automation Dashboard Portal. Once the service is launched, the model can be deployed by
 choosing *Deploy_Model_Service* action. Before the deployment, the user can specify the url of the
 baseline_data using the *BASELINE_DATA_URL* attribute that appears in the popup window of
- *Deploy_Model_Service* action.
+ *Deploy_Model_Service* action. In case you need to change the baseline data, it can be updated using the *BASELINE_DATA_URL*
+attribute of the *Update_MaaS_ML* action of MaaS_ML.
 
 Once the model is deployed via the Cloud Automation portal,
-The Swagger user interface can be opened, offering different api's
+the Swagger user interface can be opened via the MaaS_ML instance endpoint, offering different api's
 to help the user manage the drift detection function. This
-function has been particularly integrated in the two api's; the deployment api
-and the prediction api. In the */deploy()* api, a user can choose the model
+function has been particularly integrated in the three api's: the deployment api,
+the prediction api and the update api. In the */deploy()* api, a user can choose the model
 (using *model_file* attribute)
 and its associated baseline data (using *baseline_data* attribute)
 to be deployed. In the */predict()* api, the user specifies the
@@ -886,7 +887,9 @@ drift detection method and the input data to be predicted. Using the baseline da
 specified drift detector method, our algorithm can detect in which attributes and particularly
 which
 rows the drift took place in the input data. The results are shown in *Response Body*
-of the */predict()* api and in the *Traceability and Audit* page.
+of the */predict()* api and in the *Traceability and Audit* page. In the */update*
+api, the user is able to update the baseline data deployed with the model using the *baseline_data*
+attribute.
 
 == Job Analytics
 
