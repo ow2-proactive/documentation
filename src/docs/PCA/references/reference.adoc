@@ -1,10 +1,10 @@
 === Cassandra
 
-This service allows to deploy through ProActive Cloud Automation (PCA) Portal a Cassandra Database server. The service can be started using the following variables.
+This service allows to deploy through ProActive Service Automation (PSA) Portal a Cassandra Database server. The service can be started using the following variables.
 
 *Variables:*
 
-.Cassandra PCA service variables
+.Cassandra PSA service variables
 [cols="2,5,2,2,2"]
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
@@ -27,15 +27,45 @@ This service allows to deploy through ProActive Cloud Automation (PCA) Portal a 
 
 NOTE: More details about the variable description can be found https://hub.docker.com/_/cassandra/[here^].
 
+=== COCO Annotator
+This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of COCO Annotator server. The service can be started using the following variables.
+
+*Variables:*
+
+.COCO_Annotator variables
+[cols="2,5,2,2,2"]
+|===
+| *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
+| `ENDPOINT_ID`
+| The endpoint_id that will be used if `PROXYFIED` is set to True.
+| Yes
+| String
+| `coco_annotator-gui`
+| `HTTPS_ENABLED`
+| True if the protocol https is needed to start the COCO Annotator service.
+| Yes
+| Boolean
+| true
+| `INSTANCE_NAME`
+| The name of the service that will be deployed.
+| Yes
+| String
+| `coco-annotator`
+| `PROXYFIED`
+| True if a proxy is needed to protect the access to the service endpoint.
+| Yes
+| Boolean
+| false
+|===
 
 === Docker
 
-This service allows to deploy through ProActive Cloud Automation (PCA) Portal any docker image.
+This service allows to deploy through ProActive Service Automation (PSA) Portal any docker image.
 It serves as a generic template that can be used to create and start any docker image ON DEMAND simply by providing the following variables.
 
 *Variables:*
 
-.Docker PCA service variables
+.Docker PSA service variables
 [cols="2,5,2,2,2"]
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
@@ -73,12 +103,12 @@ It serves as a generic template that can be used to create and start any docker 
 
 === Elasticsearch
 
-This service allows to deploy through ProActive Cloud Automation (PCA) Portal a Elasticsearch Database server.
-The service is started using the following variable.
+This service allows to deploy through ProActive Service Automation (PSA) Portal a Elasticsearch Database server.
+The service is started using the following variables.
 
 *Variables:*
 
-.Elasticsearch PCA service variables
+.Elasticsearch PSA service variables
 [cols="2,5,2,2,2"]
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
@@ -98,12 +128,12 @@ NOTE: More details about the variable description can be found https://hub.docke
 
 === Jupyterlab
 
-This service allows to deploy through ProActive Cloud Automation (PCA) Portal an instance of JupyterLab server (https://jupyterlab.readthedocs.io/en/stable/).
-The service is started using the following variable.
+This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of JupyterLab server (https://jupyterlab.readthedocs.io/en/stable/).
+The service is started using the following variables.
 
 *Variables:*
 
-.Jupyterlab PCA service variables
+.Jupyterlab PSA service variables
 [cols="2,5,2,2,2"]
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
@@ -112,13 +142,18 @@ The service is started using the following variable.
 | Yes
 | String
 | `jupyterlab-server-$PA_JOB_ID`
+| `JUPYTERLAB_PASSWORD`
+| Protects the JupyterLab service with a password.
+| No
+| String
+| `Empty`
 | `ENDPOINT_ID`
 | Id of the service endpoint
 | Yes
 | String
 | `jupyterlab-endpoint-$PA_JOB_ID`
 | `PROXYFIED`
-| Allows access to the endpoint through Cloud Automation Http(s) Proxy
+| Allows access to the endpoint through Service Automation Http(s) Proxy
 | Yes
 | Boolean
 | `false`
@@ -132,26 +167,16 @@ The service is started using the following variable.
 | Yes
 | Integer
 | `-1`
-| `JUPYTERLAB_TOKEN`
-| Protects the JupyterLab service with token access. This variable must not be empty if the `PROXYFIED=true` mode is used.
-| No
-| String
-| `/shared/$INSTANCE_NAME`
 | `ENGINE`
 | Container engine
 | Yes
 | Choice(docker,singularity)
 | `docker`
-| `DOCKER_IMAGE`
-| Docker image used to start JupyterLab
-| Yes
-| String
-| `activeeon/tensorboard`
 | `SINGULARITY_IMAGE_PATH`
 | Location of the singularity image on the node file system (this path will be used to either store the singularity image or the image will be directly used if the file is present)
 | Yes
 | String
-| `/tmp/tensorboard.sif`
+| `/tmp/jupyterlab.sif`
 | `BUILD_IMAGE_IF_NOT_EXISTS`
 | Pull and build the singularity image if the sif file is not present
 | Yes
@@ -161,23 +186,23 @@ The service is started using the following variable.
 | Name of the Native Scheduler node source to use (if the service must be deployed inside a cluster such as SLURM, LSF, etc)
 | No
 | String
-| `Slurm`
+| `Empty`
 | `NATIVE_SCHEDULER_PARAMS`
-| Parameters given to the native scheduler (Slurm, LSF, etc) while requesting a ProActive node used to deploy the PCA service.
+| Parameters given to the native scheduler (Slurm, LSF, etc) while requesting a ProActive node used to deploy the PSA service.
 | No
 | String
-| `--gpus=1`
+| `Empty`
 |===
 
 === Kafka
 
-This service allows to deploy through ProActive Cloud Automation (PCA) Portal an instance of Apache Kafka publish/subscribe system (https://kafka.apache.org/).
+This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of Apache Kafka publish/subscribe system (https://kafka.apache.org/).
 The deployed instance consists in a single publish/subscribe broker that is based on Apache Zookeeper coordination server.
 The service is started using the following variables.
 
 *Variables:*
 
-.Kafka PCA service variables
+.Kafka PSA service variables
 [cols="2,5,2,2,2"]
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
@@ -208,11 +233,11 @@ NOTE: More details about the variable description can be found https://hub.docke
 
 === MongoDB
 
-This service allows to deploy through ProActive Cloud Automation (PCA) Portal a MongoDB Database server. The service can be started using the following variables.
+This service allows to deploy through ProActive Service Automation (PSA) Portal a MongoDB Database server. The service can be started using the following variables.
 
 *Variables:*
 
-.MongoDB PCA service variables
+.MongoDB PSA service variables
 [cols="2,5,2,2,2"]
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
@@ -272,7 +297,7 @@ This service allows to deploy through ProActive Cloud Automation (PCA) Portal a 
 | String
 | `Slurm`
 | `NATIVE_SCHEDULER_PARAMS`
-| Parameters given to the native scheduler (Slurm, LSF, etc) while requesting a ProActive node used to deploy the PCA service.
+| Parameters given to the native scheduler (Slurm, LSF, etc) while requesting a ProActive node used to deploy the PSA service.
 | No
 | String
 | `--gpus=1`
@@ -283,11 +308,11 @@ More details about the variable description can be found https://hub.docker.com/
 
 === MySQL
 
-This service allows to deploy through ProActive Cloud Automation (PCA) Portal a MySQL Database server. The service can be started using the following variables.
+This service allows to deploy through ProActive Service Automation (PSA) Portal a MySQL Database server. The service can be started using the following variables.
 
 *Variables:*
 
-.MySQL PCA service variables
+.MySQL PSA service variables
 [cols="2,5,2,2,2"]
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
@@ -322,13 +347,44 @@ NOTE: Note that the `USER` and `PASSWORD` variables are used in junction. They s
 In addition, if `DATABASE` is assigned a value, then the defined `USER` will be granted superuser access (corresponding to GRANT ALL) to this database.
 More details about the variable description can be found https://hub.docker.com/_/mysql/[here^].
 
-=== PostgreSQL
-
-This service allows to deploy through ProActive Cloud Automation (PCA) Portal a PostgreSQL Database server. The service can be started using the following variables.
+=== OpenRefine
+This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of OpenRefine server. The service can be started using the following variables.
 
 *Variables:*
 
-.PostgreSQL PCA service variables
+.OpenRefine PSA service variables
+[cols="2,5,2,2,2"]
+|===
+| *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
+| `ENDPOINT_ID`
+| The endpoint_id that will be used if `PROXYFIED` is set to True.
+| Yes
+| String
+| `openrefine-gui`
+| `HTTPS_ENABLED`
+| True if the protocol https is needed to start OpenRefine.
+| Yes
+| Boolean
+| true
+| `INSTANCE_NAME`
+| The name of the service that will be deployed.
+| Yes
+| String
+| `openrefine`
+| `PROXYFIED`
+| True if a proxy is needed to protect the access to the service endpoint.
+| Yes
+| Boolean
+| false
+|===
+
+=== PostgreSQL
+
+This service allows to deploy through ProActive Service Automation (PSA) Portal a PostgreSQL Database server. The service can be started using the following variables.
+
+*Variables:*
+
+.PostgreSQL PSA service variables
 [cols="2,5,2,2,2"]
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
@@ -363,12 +419,12 @@ NOTE: More details about the variable description can be found https://hub.docke
 
 === Storm
 
-This service allows to deploy through ProActive Cloud Automation (PCA) Portal a cluster of Apache Storm stream processing system (http://storm.apache.org).
+This service allows to deploy through ProActive Service Automation (PSA) Portal a cluster of Apache Storm stream processing system (http://storm.apache.org).
 The service is started using the following variables.
 
 *Variables:*
 
-.Storm PCA service variables
+.Storm PSA service variables
 [cols="2,5,2,2,2"]
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
@@ -403,12 +459,12 @@ NOTE: More details about the variable description can be found https://hub.docke
 
 === Tensorboard
 
-This service allows to deploy through ProActive Cloud Automation (PCA) Portal an instance of Tensorboard server (https://www.tensorflow.org/tensorboard).
-The service is started using the following variable.
+This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of Tensorboard server (https://www.tensorflow.org/tensorboard).
+The service is started using the following variables.
 
 *Variables:*
 
-.Tensorboard PCA service variables
+.Tensorboard PSA service variables
 [cols="2,5,2,2,2"]
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
@@ -423,7 +479,7 @@ The service is started using the following variable.
 | String
 | `tensorboard-gui-$PA_JOB_ID`
 | `PROXYFIED`
-| Allows access to the endpoint through Cloud Automation Http(s) Proxy
+| Allows access to the endpoint through Service Automation Http(s) Proxy
 | Yes
 | Boolean
 | `false`
@@ -463,7 +519,7 @@ The service is started using the following variable.
 | String
 | `Slurm`
 | `NATIVE_SCHEDULER_PARAMS`
-| Parameters given to the native scheduler (Slurm, LSF, etc) while requesting a ProActive node used to deploy the PCA service.
+| Parameters given to the native scheduler (Slurm, LSF, etc) while requesting a ProActive node used to deploy the PSA service.
 | No
 | String
 | `--gpus=1`
@@ -472,12 +528,12 @@ The service is started using the following variable.
 
 === Visdom
 
-This service allows to deploy through ProActive Cloud Automation (PCA) Portal an instance of Visdom server (https://github.com/facebookresearch/visdom).
-The service is started using the following variable.
+This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of Visdom server (https://github.com/facebookresearch/visdom).
+The service is started using the following variables.
 
 *Variables:*
 
-.Visdom PCA service variables
+.Visdom PSA service variables
 [cols="2,5,2,2,2"]
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
@@ -492,7 +548,7 @@ The service is started using the following variable.
 | String
 | `visdom-gui-$PA_JOB_ID`
 | `PROXYFIED`
-| Allows access to the endpoint through Cloud Automation Http(s) Proxy
+| Allows access to the endpoint through Service Automation Http(s) Proxy
 | Yes
 | Boolean
 | `false`
@@ -542,22 +598,22 @@ The service is started using the following variable.
 | String
 | `Slurm`
 | `NATIVE_SCHEDULER_PARAMS`
-| Parameters given to the native scheduler (Slurm, LSF, etc) while requesting a ProActive node used to deploy the PCA service.
+| Parameters given to the native scheduler (Slurm, LSF, etc) while requesting a ProActive node used to deploy the PSA service.
 | No
 | String
 | `--gpus=1`
 |===
 
-=== Model_Service
-This service allows to deploy through ProActive Cloud Automation (PCA) Portal an instance of Model_Service.
+=== Model as a Service for Machine Learning
+This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of MaaS_ML .
 
-NOTE: More details about the related actions of this service can be found in the link:/doc/MLOS/MLOSUserGuide.html#_via_cloud_automation_portal[MLOS Doc].
+NOTE: More details about the related actions of this service can be found in the link:/doc/MLOS/MLOSUserGuide.html#_via_service_automation_portal[PML Doc].
 
-The service is started using the following variable.
+The service is started using the following variables.
 
 *Variables:*
 
-.Model_Service PCA service variables
+.MaaS_ML PSA service variables
 [cols="2,5,2,2,2"]
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
@@ -575,7 +631,7 @@ The service is started using the following variable.
 | Specifies the name of the Docker image that will be used to run the different workflow tasks.
 | Yes
 | String
-| `activeeon/model_as_a_service`
+| `activeeon/maas_ml`
 | `DRIFT_ENABLED`
 | True if a detector is needed to check for drifts in the input datasets compared to the training datasets.
 | Yes
@@ -590,7 +646,7 @@ The service is started using the following variable.
 | The endpoint_id that will be used if `PROXYFIED` is set to True.
 | Yes
 | String
-| `maas-gui-$PA_JOB_ID`
+| `maas-ml-gui-$PA_JOB_ID`
 | `ENGINE`
 | Container engine.
 | Yes
@@ -605,7 +661,7 @@ The service is started using the following variable.
 | The name of the service that will be deployed.
 | Yes
 | String
-| `model-server-$PA_JOB_ID`
+| `maas-ml-$PA_JOB_ID`
 | `NODE_NAME`
 | The name of the node where the service will be deployed. If empty, the service will be deployed on an available node selected randomly.
 | No
@@ -622,7 +678,7 @@ The service is started using the following variable.
 | String
 | `ml_service`
 | `SERVICE_PORT`
-| Controls the port used to start the Model Service from the Cloud Automation Portal. -1 for random port allocation.
+| Controls the port used to start the Model Service from the Service Automation Portal. -1 for random port allocation.
 | Yes
 | Integer
 | `-1`
@@ -630,7 +686,7 @@ The service is started using the following variable.
 | Location of the singularity image on the node file system (this path will be used to either store the singularity image or the image will be directly used if the file is present).
 | Yes
 | String
-| `/tmp/model_service.sif`
+| `/tmp/maas_ml.sif`
 | `TRACE_ENABLED`
 | True if the user wants to keep a trace on the different changes occurring in the service.
 | Yes
@@ -647,20 +703,126 @@ The service is started using the following variable.
 | String
 | `Slurm`
 | `NATIVE_SCHEDULER_PARAMS`
-| Parameters given to the native scheduler (Slurm, LSF, etc) while requesting a ProActive node used to deploy the PCA service.
+| Parameters given to the native scheduler (Slurm, LSF, etc) while requesting a ProActive node used to deploy the PSA service.
 | No
 | String
 | `--gpus=1`
 |===
 
-=== Zookeeper
 
-This service allows to deploy through ProActive Cloud Automation (PCA) Portal an instance of Apache Zookeeper coordination server (https://zookeeper.apache.org/). The deployed instance consists in a single Zookeeper broker.
-The service is started using the following variable.
+=== Model as a Service for Deep Learning
+This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of MaaS_DL .
+
+NOTE: More details about the related actions of this service can be found in the link:/doc/MLOS/MLOSUserGuide.html#_via_service_automation_portal[PML Doc].
+
+The service is started using the following variables.
 
 *Variables:*
 
-.Zookeeper PCA service variables
+.MaaS_DL PSA service variables
+[cols="2,5,2,2,2"]
+|===
+| *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
+| `BUILD_IMAGE_IF_NOT_EXISTS`
+| Pull and build the singularity image if the Singularity Image File (SIF) file is not available.
+| Yes
+| Boolean
+| `true`
+| `DEBUG_ENABLED`
+| If True, the user will be able to examine the stream of output results of each task.
+| Yes
+| Boolean
+| `true`
+| `DOCKER_IMAGE`
+| Specifies the name of the Docker image that will be used to run the different workflow tasks.
+| Yes
+| String
+| `activeeon/maas_dl`
+| `ENDPOINT_ID`
+| The endpoint_id that will be used if `PROXYFIED` is set to True.
+| Yes
+| String
+| `maas_dl-gui`
+| `ENGINE`
+| Container engine.
+| Yes
+| List
+| `docker`
+| `HTTPS_ENABLED`
+| True if the protocol https is needed for the defined model-service.
+| Yes
+| Boolean
+| `false`
+| `INSTANCE_NAME`
+| The name of the service that will be deployed.
+| Yes
+| String
+| `maas_dl`
+| `MODEL_BASE_PATH`
+|Location of the model on the node file system (this path will be used to store the model).
+| Yes
+|String
+| `/tmp`
+| `MODELS_DEPLOYMENT_REFRESH`
+|The amount of seconds to periodically poll for updated versions of the model configuration file.
+| Yes
+|Integer
+| `30`
+| `NATIVE_SCHEDULER`
+|Name of the Native Scheduler node source to use when the workflow tasks must be deployed inside a cluster such as SLURM, LSF, etc.
+| No
+|String
+| `Empty`
+| `NATIVE_SCHEDULER_PARAMS`
+|Parameters given to the native scheduler (SLURM, LSF, etc) while requesting a ProActive node used to deploy the workflow tasks.
+| No
+|String
+| `Empty`
+| `NODE_NAME`
+| The name of the node where the service will be deployed. If empty, the service will be deployed on an available node selected randomly.
+| No
+| String
+| `Empty`
+| `PROXYFIED`
+| True if a proxy is needed to protect the access to this model-service endpoint.
+| Yes
+| Boolean
+| `false`
+| `PYTHON_ENTRYPOINT`
+| This entry script starts the service and defines the different functions to deploy the model, scores the prediction requests based on the deployed model, and returns the results. This script is specific to your model. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about this file can be found in the <<_customize_the_service>> section.
+| Yes
+| String
+| `dl_service`
+| `SERVICE_PORT`
+| Controls the port used to start the Model Service from the Service Automation Portal. -1 for random port allocation.
+| Yes
+| Integer
+| `-1`
+| `SINGULARITY_IMAGE_PATH`
+| Location of the singularity image on the node file system (this path will be used to either store the singularity image or the image will be directly used if the file is present).
+| Yes
+| String
+| `/tmp/maas_dl.sif`
+| `TRACE_ENABLED`
+| True if the user wants to keep a trace on the different changes occurring in the service.
+| Yes
+| Boolean
+| `true`
+| `YAML_FILE`
+| A YAML file that describes the OpenAPI Specification ver. 2 (known as Swagger Spec) of the service. This file should be stored in the catalog under the `model_as_service_resources` bucket. More information about the structure of this file can be found in the section <<_customize_the_service>>.
+| Yes
+| String
+| `dl_service-api`
+|===
+
+=== Zookeeper
+
+This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of Apache Zookeeper coordination server (https://zookeeper.apache.org/). The deployed instance consists in a single Zookeeper broker.
+The service is started using the following variables.
+
+*Variables:*
+
+.Zookeeper PSA service variables
 [cols="2,5,2,2,2"]
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
