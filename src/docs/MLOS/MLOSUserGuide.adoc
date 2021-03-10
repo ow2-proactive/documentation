@@ -815,8 +815,8 @@ The data evolves over time and can therefore cause degradations affecting the
 intrinsic characteristics and behavior of the learning model.
 Data drift is one of the main reasons why the accuracy of the model degrades over time.
 Therefore, it is important that the model is able to adapt to these changes.
-Monitoring data drifts allows to detect these model performance problems and try to adapt
-to them as in the figure below. To deal with this problem, we have integrated a data drift
+Monitoring data drifts allows to detect the model performance drops (as in the figure below) to take 
+actions accordingly. To deal with this problem, we have integrated a data drift
 detection mechanism in the Machine Learning as a Service module of ProActive.
 
 image::drift.png[align=center]
@@ -4709,4 +4709,3 @@ WARNING: Please add third party credentials (USER_NAME_COP and USER_PASS_COP) in
 NOTE: More information about the source of this task can be found https://pypi.org/project/sentinelsat/[here^].
 
 include::../common-footer.adoc[]
-            
