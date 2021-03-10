@@ -815,10 +815,9 @@ The data evolves over time and can therefore cause degradations affecting the
 intrinsic characteristics and behavior of the learning model.
 Data drift is one of the main reasons why the accuracy of the model degrades over time.
 Therefore, it is important that the model is able to adapt to these changes.
-In machine learning, data drift is the modification of the model input data (relative to the
-training data) that leads to a degradation of the model performance.
-Monitoring data drifts allows to detect
-these model performance problems and try to adapt to them as in the figure below. To deal with this problem, we have integrated a data drift detection mechanism in the Model as a Service for Machine Learning module of ProActive.
+Monitoring data drifts allows to detect the model performance drops (as in the figure below) to take 
+actions accordingly. To deal with this problem, we have integrated a data drift
+detection mechanism in the Machine Learning as a Service module of ProActive.
 
 image::drift.png[align=center]
 
@@ -833,7 +832,7 @@ This allows the user to better manage the drift and to act accordingly.
 In fact, the input data set is monitored using different methods of data drift
 detection in which the user is free to choose the one that best suits his needs.
 Currently, we use three well-known methods for this purpose: HDDM, Page Hinkley and ADWIN.
-This list is likely to be expanded to include other drift detection methods.
+This list is likely to be expanded in the future to include other drift detection methods.
 To detect drift in a new dataset, it is necessary to compare it to the old training
 dataset on which the model was trained. Thus, any detected drift indicates that the
 model is not the best predictor and that new training on the new dataset should take place.
@@ -842,59 +841,63 @@ As the DDD function is part of the MaaS_ML module,
 it can also be launched from different Proactive portals.
 
 ==== Via Proactive Studio Portal
-The data drift detection function is added to the tasks and workflows of the bucket
-*model_as_a_service*. This function is directly linked to the deployment of the model
-in MaaS_ML (where the user deploys the model, its metadata and a part of the
-old training data set to be used for drift detection in the new input data set),
+The data drift detection mechanism is added to the tasks and workflows of the bucket
+*model_as_a_service*. This mechanism is directly linked to the deployment of the model
+in MaaS_ML (where the user deploys the model and a part of the
+old training dataset to be used for drift detection in the new input data set),
 and to the call of the prediction service in MaaS_ML (where the drift detector is chosen
-and the detection process is implemented using the chosen detector).
+and the detection process is started using the chosen detector).
 
-In the workflow named *IRIS_Deploy_Predict_Flower_Classifier_Model* found in the
-*model_as_a_service* bucket in the Proactive Studio Portal, the task
-*Deploy_ML_Model* and *Call_Prediction_Endpoint* have been mainly modified to include the DDD
-features.
+The workflow *IRIS_Deploy_Predict_Flower_Classifier_Model*, found in the
+*model_as_a_service* bucket in the Proactive Studio Portal, shows an example of pipeline using the generic tasks
+*Deploy_ML_Model* and *Call_Prediction_Service* including the DDD mechanism.
 
 In particular, in the *Deploy_ML_Model* task, the user is asked to enter
 *DRIFT_DETECTION_WINDOW_SIZE* which is a task variable specifying the size of the data
 to be extracted from the old training dataset (the dataset on which the model was initially
 trained). For example, if the user chooses a value = 50 for this variable, the algorithm will
-randomly choose 50 lines from the old training dataset. This subset of data
-(we call it *baseline data*) will be deployed
- accompanied to the deployed model to be used in the data drift
-detection process that will be enacted in the *Call_Prediction_Endpoint*.
+randomly choose 50 lines from the old training dataset. This subset of data (we call it *baseline data*) 
+will be saved in the service in order to be used afterward for the data drift detection process 
+which will be enacted in the *Call_Prediction_Service*.
 
-In the *Call_Prediction_Endpoint*, the user is asked to choose the data drift
+In the *Call_Prediction_Service*, the user is asked to choose the data drift
 detector to be used in the drift detection process. This can be chosen using the task
 variable *DATA_DRIFT_DETECTOR* in which the user can choose one of HDDM, Page Hinkley
 or ADWIN as a drift detector. The algorithm here concatenates the deployed baseline_data
 to the new input (to be predicted) dataset. The chosen drift detector then will
-use the concatenated data to extract the rows where the drift took place in the new data.
+use the concatenated data to extract the rows and columns where the drift took place in the new data.
 These drift detection algorithms are enhanced in Proactive to be able to detect the attributes
-where the drift occurred.
+where the drift occurred (the columns).
 
 The obtained predictions and drifts can be viewed in the resulting output of the
 Proactive Scheduler Portal.
 
 ==== Via Automation Dashboard Portal and the Swagger User Interface :
-As we have mentioned earlier in this documentation, a model can be deployed using the *MaaS_ML* service in the
-Automation Dashboard Portal. Once the service is launched, the model can be deployed by
-choosing *Deploy_ML_Model* action. Before the deployment, the user can specify the url of the
-baseline_data using the *BASELINE_DATA_URL* attribute that appears in the popup window of
- *Deploy_ML_Model* action.
+As we have mentioned earlier in this documentation, a model can be deployed using the *MaaS_ML* in the
+*Service_Automation* of the Automation Dashboard Portal. To enable the data drift detection process, the *DRIFT_ENABLED* variable
+should be set to True. Once the service is launched, the model can be deployed by
+choosing *Deploy_MaaS_ML* action. In the *Deploy_MaaS_ML* variables, the user can specify the url of the
+baseline_data using the *BASELINE_DATA_URL* variable that appears in the popup window of
+*Deploy_Model_Service* action. In case you need to change the baseline data, it can be updated using the *BASELINE_DATA_URL*
+variable of the *Update_MaaS_ML* action of MaaS_ML.
 
-Once the model is deployed via the Service Automation Portal,
-The Swagger user interface can be opened, offering different api's
-to help the user manage the drift detection function. This
-function has been particularly integrated in the two api's; the deployment api
-and the prediction api. In the */deploy()* api, a user can choose the model
-(using *model_file* attribute)
-and its associated baseline data (using *baseline_data* attribute)
-to be deployed. In the */predict()* api, the user specifies the
+Once the model is deployed via the Service Automation portal,
+the Swagger user interface can be opened via the MaaS_ML instance api, offering different endpoints
+to help the user manage the drift detection mechanism. This
+mechanism has been particularly integrated in the three endpoints: the deployment endpoint,
+the prediction endpoint and the update endpoint. In the */deploy()* endpoint, a user can choose the model
+(using *model_file* variable)
+and its associated baseline data (using *baseline_data* variable)
+to be deployed. In the */predict()* endpoint, the user specifies the
 drift detection method and the input data to be predicted. Using the baseline data and the
 specified drift detector method, our algorithm can detect in which attributes and particularly
-which
-rows the drift took place in the input data. The results are shown in *Response Body*
-of the */predict()* api and in the *Traceability and Audit* page.
+which rows the drift took place in the input data. The results are shown in *Response Body*
+of the */predict()* endpoint and in the *Traceability and Audit* page. In the */update*
+endpoint, the user is able to update the baseline data deployed with the model using the *baseline_data*
+variable.
+
+In case a data drift has occurred, a user will receive a notification using the Proactive
+*Notification* service in the Automation Dashboard.
 
 == Model as a Service for Deep Learning (MaaS_DL)
 MaaS_DL is a model deployment service for putting AI models to production. MaaS_DL comes with new capabilities, compared to MaaS_ML, enabling users to deploy deep learning models, to update the deployed models with an updated version and to easily rollback to any previous version(s).
@@ -4704,4 +4707,3 @@ WARNING: Please add third party credentials (USER_NAME_COP and USER_PASS_COP) in
 NOTE: More information about the source of this task can be found https://pypi.org/project/sentinelsat/[here^].
 
 include::../common-footer.adoc[]
-            
