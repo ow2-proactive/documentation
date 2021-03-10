@@ -841,8 +841,8 @@ As the DDD function is part of the MaaS_ML module,
 it can also be launched from different Proactive portals.
 
 ==== Via Proactive Studio Portal
-The data drift detection function is added to the tasks and workflows of the bucket
-*model_as_a_service*. This function is directly linked to the deployment of the model
+The data drift detection mechanism is added to the tasks and workflows of the bucket
+*model_as_a_service*. This mechanism is directly linked to the deployment of the model
 in MaaS_ML (where the user deploys the model and a part of the
 old training dataset to be used for drift detection in the new input data set),
 and to the call of the prediction service in MaaS_ML (where the drift detector is chosen
@@ -885,8 +885,8 @@ variable of the *Update_MaaS_ML* action of MaaS_ML.
 
 Once the model is deployed via the Cloud Automation portal,
 the Swagger user interface can be opened via the MaaS_ML instance api, offering different endpoints
-to help the user manage the drift detection function. This
-function has been particularly integrated in the three endpoints: the deployment endpoint,
+to help the user manage the drift detection mechanism. This
+mechanism has been particularly integrated in the three endpoints: the deployment endpoint,
 the prediction endpoint and the update endpoint. In the */deploy()* endpoint, a user can choose the model
 (using *model_file* variable)
 and its associated baseline data (using *baseline_data* variable)
