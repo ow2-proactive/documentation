@@ -355,14 +355,14 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
 | bash, cmd, perl, php, R, powershell, vbscript
 
-| *Synchronization API*. Synchronization API variable is a https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/synchronization/Synchronization.html[Synchronization java object] which can connect to the Synchronization Service and interact directly with its <<_task_synchronization_api,API>>.
+| *Synchronization API*. Synchronization API variable is a ../javadoc/org/ow2/proactive/scheduler/synchronization/Synchronization.html[Synchronization java object] which can connect to the Synchronization Service and interact directly with its <<_task_synchronization_api,API>>.
 | synchronizationapi.createChannel("channel1", false)
 | -
 | -
 | all scripts
 | bash, cmd, perl, php, R, powershell, vbscript
 
-| *Signal API*. Signal API variable is a https://www.activeeon.com/public_content/documentation/javadoc/dev/org/ow2/proactive/scheduler/signal/SignalApi.html[SignalApi java object] that allows to manage job signals using its underlying <<_task_signal_api,API>>.
+| *Signal API*. Signal API variable is a ../javadoc/org/ow2/proactive/scheduler/signal/SignalApi.html[SignalApi java object] that allows to manage job signals using its underlying <<_task_signal_api,API>>.
 | signalapi.sendSignal("stop")
 | -
 | -
