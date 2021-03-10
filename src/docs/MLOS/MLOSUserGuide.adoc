@@ -846,21 +846,19 @@ The data drift detection mechanism is added to the tasks and workflows of the bu
 in MaaS_ML (where the user deploys the model and a part of the
 old training dataset to be used for drift detection in the new input data set),
 and to the call of the prediction service in MaaS_ML (where the drift detector is chosen
-and the detection process is launched using the chosen detector).
+and the detection process is started using the chosen detector).
 
-In the workflow named *IRIS_Deploy_Predict_Flower_Classifier_Model* found in the
-*model_as_a_service* bucket in the Proactive Studio Portal, the task
-*Deploy_ML_Model* and *Call_Prediction_Service* have been mainly modified to include the DDD
-features.
+The workflow *IRIS_Deploy_Predict_Flower_Classifier_Model*, found in the
+*model_as_a_service* bucket in the Proactive Studio Portal, shows an example of pipeline using the generic tasks
+*Deploy_ML_Model* and *Call_Prediction_Service* including the DDD mechanism.
 
 In particular, in the *Deploy_ML_Model* task, the user is asked to enter
 *DRIFT_DETECTION_WINDOW_SIZE* which is a task variable specifying the size of the data
 to be extracted from the old training dataset (the dataset on which the model was initially
 trained). For example, if the user chooses a value = 50 for this variable, the algorithm will
-randomly choose 50 lines from the old training dataset. This subset of data
-(we call it *baseline data*) will be deployed
-accompanied to the deployed model to be used in the data drift
-detection process that will be enacted in the *Call_Prediction_Service*.
+randomly choose 50 lines from the old training dataset. This subset of data (we call it *baseline data*) 
+will be saved in the service in order to be used afterward for the data drift detection process 
+which will be enacted in the *Call_Prediction_Service*.
 
 In the *Call_Prediction_Service*, the user is asked to choose the data drift
 detector to be used in the drift detection process. This can be chosen using the task
@@ -876,14 +874,14 @@ Proactive Scheduler Portal.
 
 ==== Via Automation Dashboard Portal and the Swagger User Interface :
 As we have mentioned earlier in this documentation, a model can be deployed using the *MaaS_ML* in the
-*Service_Automation* of the Automation Dashboard Portal. To enable data drift detection process, the *DRIFT_ENABLED* variable
+*Service_Automation* of the Automation Dashboard Portal. To enable the data drift detection process, the *DRIFT_ENABLED* variable
 should be set to True. Once the service is launched, the model can be deployed by
 choosing *Deploy_MaaS_ML* action. In the *Deploy_MaaS_ML* variables, the user can specify the url of the
 baseline_data using the *BASELINE_DATA_URL* variable that appears in the popup window of
 *Deploy_Model_Service* action. In case you need to change the baseline data, it can be updated using the *BASELINE_DATA_URL*
 variable of the *Update_MaaS_ML* action of MaaS_ML.
 
-Once the model is deployed via the Cloud Automation portal,
+Once the model is deployed via the Service Automation portal,
 the Swagger user interface can be opened via the MaaS_ML instance api, offering different endpoints
 to help the user manage the drift detection mechanism. This
 mechanism has been particularly integrated in the three endpoints: the deployment endpoint,
