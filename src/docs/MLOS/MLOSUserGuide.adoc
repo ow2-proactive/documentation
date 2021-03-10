@@ -673,6 +673,7 @@ Check that the status correctly evolves to `AI_MODEL_DEPLOYED`.
 
 ==== Delete (Finish)/Update/Pause the Service
 
+
 You can delete the launched service instance directly from the Service Automation Portal:
 
 Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Service Automation Portal].
@@ -875,6 +876,7 @@ The obtained predictions and drifts can be viewed in the resulting output of the
 Proactive Scheduler Portal.
 
 ==== Via Automation Dashboard Portal and the Swagger User Interface :
+
 
 As we have mentioned earlier in this documentation, a model can be deployed using the *MaaS_ML* in the
 *Service_Automation* of the Automation Dashboard Portal. To enable the data drift detection process, the *DRIFT_ENABLED* variable

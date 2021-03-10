@@ -461,11 +461,7 @@ NOTE: More details about the variable description can be found https://hub.docke
 === Tensorboard
 
 This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of Tensorboard server (https://www.tensorflow.org/tensorboard).
-<<<<<<< HEAD:src/docs/PCA/references/reference.adoc
-The service is started using the following variables.
-=======
 The service is started using the following variable.
->>>>>>> applying renaming portals change to the documentation:src/docs/PSA/references/reference.adoc
 
 *Variables:*
 
@@ -534,11 +530,8 @@ The service is started using the following variable.
 === Visdom
 
 This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of Visdom server (https://github.com/facebookresearch/visdom).
-<<<<<<< HEAD:src/docs/PCA/references/reference.adoc
-The service is started using the following variables.
-=======
 The service is started using the following variable.
->>>>>>> applying renaming portals change to the documentation:src/docs/PSA/references/reference.adoc
+
 
 *Variables:*
 
@@ -613,27 +606,17 @@ The service is started using the following variable.
 | `--gpus=1`
 |===
 
-<<<<<<< HEAD:src/docs/PCA/references/reference.adoc
 === Model as a Service for Machine Learning
 This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of MaaS_ML .
 
 NOTE: More details about the related actions of this service can be found in the link:/doc/MLOS/MLOSUserGuide.html#_via_service_automation_portal[PML Doc].
-=======
-=== Model_Service
-This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of Model_Service.
-
-NOTE: More details about the related actions of this service can be found in the link:/doc/MLOS/MLOSUserGuide.html#_via_service_automation_portal[MLOS Doc].
->>>>>>> applying renaming portals change to the documentation:src/docs/PSA/references/reference.adoc
 
 The service is started using the following variables.
 
 *Variables:*
 
-<<<<<<< HEAD:src/docs/PCA/references/reference.adoc
 .MaaS_ML PSA service variables
-=======
-.Model_Service PSA service variables
->>>>>>> applying renaming portals change to the documentation:src/docs/PSA/references/reference.adoc
+
 [cols="2,5,2,2,2"]
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
@@ -838,11 +821,8 @@ The service is started using the following variables.
 === Zookeeper
 
 This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of Apache Zookeeper coordination server (https://zookeeper.apache.org/). The deployed instance consists in a single Zookeeper broker.
-<<<<<<< HEAD:src/docs/PCA/references/reference.adoc
-The service is started using the following variables.
-=======
 The service is started using the following variable.
->>>>>>> applying renaming portals change to the documentation:src/docs/PSA/references/reference.adoc
+
 
 *Variables:*
 
