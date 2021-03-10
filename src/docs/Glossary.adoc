@@ -85,7 +85,7 @@ Catalog Portal:: Web interface of the <<_glossary_catalog,*Catalog*>> component.
 Cloud Watch:: ProActive component that monitors a system, according to predefined set of rules, detects complex events and then triggers user-specified actions.
 
 [[_glossary_event_orchestration_portal]]
-Event Orchestration Portal::Web interface of the <<_glossary_event_orchestration,*Event Orchestration*>> component.
+Event Orchestration Portal::Web interface of the <<_glossary_cloud_watch,*Cloud Watch*>> component.
 
 [[_glossary_scheduling_api]]
 Scheduling API:: ProActive component that offers a GraphQL endpoint for getting information about a ProActive Scheduler instance.
