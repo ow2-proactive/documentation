@@ -34,7 +34,7 @@ Scheduler Web Interface:: ProActive component that provides a web interface to t
 Workflow Studio:: ProActive component that provides a web interface for designing <<_glossary_workflow,*Workflows*>>.
 
 [[_glossary_automation_dashboard]]
-Automation Dashboard:: Centralized interface for the following web portals: <<_glossary_workflow_automation_portal,*Workflow Automation*>>, <<_glossary_catalog_portal,*Catalog*>>, <<_glossary_analytics_portal,*Analytics*>>, <<_glossary_job_planner_portal,*Job Planner*>>, <<_glossary_cloud_automation_portal,*Cloud Automation*>>, <<_glossary_cloud_watch_portal,*Cloud Watch*>> and <<_glossary_notification_portal,*Notifications*>>.
+Automation Dashboard:: Centralized interface for the following web portals: <<_glossary_workflow_automation_portal,*Workflow Automation*>>, <<_glossary_catalog_portal,*Catalog*>>, <<_glossary_analytics_portal,*Analytics*>>, <<_glossary_job_planner_portal,*Job Planner*>>, <<_glossary_service_automation_portal,*Service Automation*>>, <<_glossary_event_orchestration_portal,*Event Orchestration*>> and <<_glossary_notification_portal,*Notifications*>>.
 
 [[_glossary_analytics]]
 Analytics::  ProActive component responsible to gather monitoring information for <<_glossary_job,*Jobs*>> and <<_glossary_proactive_node,*ProActive Nodes*>>
@@ -69,8 +69,8 @@ Notification Method:: Element of a <<_glossary_notification_subscription,*Notifi
 [[_glossary_cloud_automation_service]]
 Cloud Automation Service:: ProActive component that allows a user to easily manage any On-Demand Services (PaaS, IaaS and MaaS) with full Life-Cycle Management (create, deploy, pause, resume and terminate).
 
-[[_glossary_cloud_automation_portal]]
-Cloud Automation Portal:: Web interface of the <<_glossary_cloud_automation_service,*Cloud Automation service*>>.
+[[_glossary_service_automation_portal]]
+Service Automation Portal:: Web interface of the <<_glossary_cloud_automation_service,*Cloud Automation service*>>.
 
 [[_glossary_workflow_automation_portal]]
 Workflow Automation Portal:: Web interface which provides an end-user portal to submit workflows, monitor their activity and receive workflow results.
@@ -84,8 +84,8 @@ Catalog Portal:: Web interface of the <<_glossary_catalog,*Catalog*>> component.
 [[_glossary_cloud_watch]]
 Cloud Watch:: ProActive component that monitors a system, according to predefined set of rules, detects complex events and then triggers user-specified actions.
 
-[[_glossary_cloud_watch_portal]]
-Cloud Watch Portal::Web interface of the <<_glossary_cloud_watch,*Cloud Watch*>> component.
+[[_glossary_event_orchestration_portal]]
+Event Orchestration Portal::Web interface of the <<_glossary_cloud_watch,*Cloud Watch*>> component.
 
 [[_glossary_scheduling_api]]
 Scheduling API:: ProActive component that offers a GraphQL endpoint for getting information about a ProActive Scheduler instance.

@@ -104,7 +104,8 @@ It serves as a generic template that can be used to create and start any docker 
 === Elasticsearch
 
 This service allows to deploy through ProActive Service Automation (PSA) Portal a Elasticsearch Database server.
-The service is started using the following variables.
+The service is started using the following variabless.
+
 
 *Variables:*
 
@@ -460,7 +461,7 @@ NOTE: More details about the variable description can be found https://hub.docke
 === Tensorboard
 
 This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of Tensorboard server (https://www.tensorflow.org/tensorboard).
-The service is started using the following variables.
+The service is started using the following variable.
 
 *Variables:*
 
@@ -529,7 +530,8 @@ The service is started using the following variables.
 === Visdom
 
 This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of Visdom server (https://github.com/facebookresearch/visdom).
-The service is started using the following variables.
+The service is started using the following variable.
+
 
 *Variables:*
 
@@ -614,6 +616,7 @@ The service is started using the following variables.
 *Variables:*
 
 .MaaS_ML PSA service variables
+
 [cols="2,5,2,2,2"]
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
@@ -818,7 +821,8 @@ The service is started using the following variables.
 === Zookeeper
 
 This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of Apache Zookeeper coordination server (https://zookeeper.apache.org/). The deployed instance consists in a single Zookeeper broker.
-The service is started using the following variables.
+The service is started using the following variable.
+
 
 *Variables:*
 

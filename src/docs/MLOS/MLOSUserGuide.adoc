@@ -29,8 +29,8 @@ your environment (default credentials: admin/admin) or just use our demo platfor
 - +++Provide an end-user workflow submission interface using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/workflow-automation" target="_blank">Workflow Automation Portal</a>+++
 - +++Generate metrics of multiple job executions using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/job-analytics" target="_blank">Job Analytics Portal</a>+++
 - +++Plan workflow executions over time using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/job-planner-execution-planning" target="_blank">Job Planner Portal</a>+++
-- +++Add services using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/cloud-automation" target="_blank">Service Automation Portal</a>+++
-- +++Perform event based scheduling using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/cloud-watch" target="_blank">Event Orchestration Portal</a>+++
+- +++Add services using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/service-automation" target="_blank">Service Automation Portal</a>+++
+- +++Perform event based scheduling using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/event-orchestration" target="_blank">Event Orchestration Portal</a>+++
 - +++Control manual workflows validation steps using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/notification-portal" target="_blank">Notification Portal</a>+++
 
 We also provide a +++<a class="restUrl" href="/rest" target="_blank">REST API</a>+++ and <<../user/ProActiveUserGuide.adoc#_scheduler_command_line,command line interfaces>> for advanced users.
@@ -361,7 +361,6 @@ These tasks can be easily integrated to your AI pipelines/workflows as you can s
 - Using the *Service Automation Portal* by executing the different actions associated to MaaS_ML (i.e. Deploy_ML_Model, Pause_MaaS_ML, Update_MaaS_ML, Finish_MaaS_ML.)
 - Using the *Swagger UI* which is accessible once the MaaS_ML instance is up and running.
 
-
 Once a MaaS_ML instance is up and running, it could be used for:
 
 - *AI Model Deployment or Update*: the user has to provide a valid specific AI Model identifier in order to deploy the model of his/her choice.
@@ -565,7 +564,9 @@ Execute the Workflow and set the different workflow's variables as follows:
 === Via Service Automation Portal
 ==== Start a Generic Service Instance
 
-Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Service Automation Portal].
+
+Open the link:https://try.activeeon.com/automation-dashboard/#/portal/service-automation[Service Automation Portal].
+
 
 Search for `MaaS_ML` in Services Workflows List.
 
@@ -672,15 +673,17 @@ Check that the status correctly evolves to `AI_MODEL_DEPLOYED`.
 
 ==== Delete (Finish)/Update/Pause the Service
 
+
 You can delete the launched service instance directly from the Service Automation Portal:
 
 Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Service Automation Portal].
 
 Set the action `Finish` under Actions and click on `Execute Action`.
 
+
 image::MAAS_ML_Delete_Service.PNG[align=center]
 
-There are also other actions that can be executed from the Service Automation Portal which are:
+There are also two other actions that can be executed from the Service Automation Portal which are:
 
 - *Deploy_ML_Model*: This action will put the service instance into deployment.
 
@@ -873,6 +876,8 @@ The obtained predictions and drifts can be viewed in the resulting output of the
 Proactive Scheduler Portal.
 
 ==== Via Automation Dashboard Portal and the Swagger User Interface :
+
+
 As we have mentioned earlier in this documentation, a model can be deployed using the *MaaS_ML* in the
 *Service_Automation* of the Automation Dashboard Portal. To enable the data drift detection process, the *DRIFT_ENABLED* variable
 should be set to True. Once the service is launched, the model can be deployed by

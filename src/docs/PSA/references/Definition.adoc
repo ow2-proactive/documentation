@@ -23,7 +23,7 @@ There are three specific kinds of Actions:
 
 - *Activation:* to start a Service Instance (from the State VOID to a defined State)
 - *Finishing:* to stop a Service Instance (from a defined State to the State FINISHED)
-- *Killing:* PSA is trying to force a Service Instance to terminate (from a defined State to the State KILLED)
+- *Killing:* PSA is trying to force a Service Instance to terminate (from a defined State to the State KILLED) 
 
 [[_definition_States]]
 States::
