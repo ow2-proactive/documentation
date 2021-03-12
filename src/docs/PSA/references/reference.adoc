@@ -93,7 +93,7 @@ It serves as a generic template that can be used to create and start any docker 
 | options like environment variables, etc
 | No
 | String
-| e.g. `-e POSTGRES_USER=mlos -e POSTGRES_PASSWORD=proactive -e POSTGRES_DB=activeeon`
+| e.g. `-e POSTGRES_USER=pml -e POSTGRES_PASSWORD=proactive -e POSTGRES_DB=activeeon`
 |`DOCKER_COMMAND`
 | Password for the root user
 | No
@@ -609,7 +609,7 @@ The service is started using the following variable.
 === Model as a Service for Machine Learning
 This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of MaaS_ML .
 
-NOTE: More details about the related actions of this service can be found in the link:/doc/MLOS/MLOSUserGuide.html#_via_service_automation_portal[PML Doc].
+NOTE: More details about the related actions of this service can be found in the link:/doc/PML/PMLUserGuide.html#_via_service_automation_portal[PML Doc].
 
 The service is started using the following variables.
 
@@ -676,7 +676,7 @@ The service is started using the following variables.
 | Boolean
 | `false`
 | `PYTHON_ENTRYPOINT`
-| This entry script starts the service and defines the different functions to deploy the model, scores the prediction requests based on the deployed model, and returns the results. This script is specific to your model. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about this file can be found in the <<../MLOS/MLOSUserGuide.html#_customize_the_service>> section.
+| This entry script starts the service and defines the different functions to deploy the model, scores the prediction requests based on the deployed model, and returns the results. This script is specific to your model. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about this file can be found in the <<../PML/PMLUserGuide.html#_customize_the_service>> section.
 | Yes
 | String
 | `ml_service`
@@ -696,7 +696,7 @@ The service is started using the following variables.
 | Boolean
 | `true`
 | `YAML_FILE`
-| A YAML file that describes the OpenAPI Specification ver. 2 (known as Swagger Spec) of the service. This file should be stored in the catalog under the `model_as_service_resources` bucket. More information about the structure of this file can be found in the section <<<../MLOS/MLOSUserGuide.html#_customize_the_service>>.
+| A YAML file that describes the OpenAPI Specification ver. 2 (known as Swagger Spec) of the service. This file should be stored in the catalog under the `model_as_service_resources` bucket. More information about the structure of this file can be found in the section <<<../PML/PMLUserGuide.html#_customize_the_service>>.
 | Yes
 | String
 | `ml_service-api`
@@ -716,7 +716,7 @@ The service is started using the following variables.
 === Model as a Service for Deep Learning
 This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of MaaS_DL .
 
-NOTE: More details about the related actions of this service can be found in the link:/doc/MLOS/MLOSUserGuide.html#_via_service_automation_portal[PML Doc].
+NOTE: More details about the related actions of this service can be found in the link:/doc/PML/PMLUserGuide.html#_via_service_automation_portal[PML Doc].
 
 The service is started using the following variables.
 

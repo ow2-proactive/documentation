@@ -5,7 +5,7 @@
 image::architecture.png[align=center]
 
 On the top left there is the *Studio* interface which allows you to build Workflows.
-It can be interactively configured to address specific domains, for instance Finance, Big Data, IoT, Artificial Intelligence (AI). See for instance the Documentation of *Machine Learning Open Studio* link:../MLOS/MLOSUserGuide.html[here^], and try it online https://try.activeeon.com/studio/#workflows/templates/machine-learning[here^]. In the middle there is the *Scheduler* which enables an enterprise to orchestrate and automate Multi-users, Multi-application Jobs.
+It can be interactively configured to address specific domains, for instance Finance, Big Data, IoT, Artificial Intelligence (AI). See for instance the Documentation of *Machine Learning Open Studio* link:../PML/PMLUserGuide.html[here^], and try it online https://try.activeeon.com/studio/#workflows/templates/machine-learning[here^]. In the middle there is the *Scheduler* which enables an enterprise to orchestrate and automate Multi-users, Multi-application Jobs.
 Finally, at the bottom right is the *Resource manager* interface which manages and automates resource provisioning
 on any Public Cloud, on any virtualization software, on any container system, and on any Physical Machine of any OS.
 All the components you see come with fully Open and modern REST APIs. 
