@@ -421,7 +421,7 @@ NOTE: More details about the variable description can be found https://hub.docke
 
 === Greenplum
 
-This service allows to deploy through ProActive Service Automation (PSA) Portal a Greenplum Database server. The service can be started using the following variables.
+This service deploys through  <<_main_principles_of_psa,ProActive Service Automation>> (PSA) Portal a Greenplum Database server. The service takes as input the following variables.
 
 *Variables:*
 
