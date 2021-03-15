@@ -2672,7 +2672,7 @@ to a specific job via link:/doc/rest/#1218178377[ProActive Signals REST endpoint
 
 ===== Standard and simple use with predefined tasks in the Control template menu
 
-  . _Check_For_Signals_: a control pattern that executes a loop until one ore more signals given as input are received.
+  . _Check_For_Signals_: a control pattern that executes a loop until one ore more signals, given as input, are received.
 
   . _Wait_For_Signals_: a blocking control pattern that blocks the task execution waiting for the reception of one or more signals given as input.
 
