@@ -2618,6 +2618,7 @@ A complete example of Producer / Consumer, _ServiceDeployerConsumer_ can be down
 
 The *Signal API* is a high-level API that enables users to interact with running jobs via signals (we also call them actions).
 That is, it allows a job to expose specific signals (e.g., `soft_stop` to properly finish a job) that can be triggered by users from the *Workflow Execution portal*.
+You can try the <<_examples_2,examples>> below to better understand how it works.
 
 At a high-level view, the Signal API allows jobs and users to exchange signals using a communication channel provided by the <<_task_synchronization_api,synchronization API>>.
 The typical usage scenario of the Signal API is the following:
