@@ -418,6 +418,47 @@ This service allows to deploy through ProActive Service Automation (PSA) Portal 
 
 NOTE: More details about the variable description can be found https://hub.docker.com/_/postgres/[here^].
 
+
+=== Greenplum
+
+This service deploys through  <<_main_principles_of_psa,ProActive Service Automation>> (PSA) Portal a Greenplum Database server. The service takes as input the following variables.
+
+*Variables:*
+
+.Greenplum PSA service variables
+[cols="2,5,2,2,2"]
+|===
+| *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
+| `INSTANCE_NAME`
+| Service instance name
+| Yes
+| String
+| `greenplum-server`
+| `ENDPOINT_ID`
+| Id of the service endpoint
+| Yes
+| String
+| `greenplum-endpoint`
+| `DATABASE`
+| Name of a database to be created on start. Change it if you want a different database . Default "testdb" is used if left empty.
+| No
+| String
+| e.g. `my_db`
+|`USER`
+| Username for the SUPERUSER. Change it if you want a different username . Default "tester" is used if left empty.
+| No
+| String
+|  e.g. `my_user`
+|`PASSWORD`
+| Password for the SUPERUSER. change it if you want a different password . Default "pivotal" is used if left empty.
+| No
+| String
+| e.g. `my_password`
+|===
+
+NOTE: More details about the variable description can be found https://hub.docker.com/r/datagrip/greenplum[here^].
+
+
 === Storm
 
 This service allows to deploy through ProActive Service Automation (PSA) Portal a cluster of Apache Storm stream processing system (http://storm.apache.org).
