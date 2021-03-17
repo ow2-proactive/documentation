@@ -2623,7 +2623,7 @@ The *Signal API* is a high-level API that enables users to interact with running
 That is, it allows a job to expose specific signals (e.g., `soft_stop` to properly finish a job) that can be triggered by users from the *Workflow Execution portal*.
 You can try the <<_examples_2,examples>> below to better understand how it works.
 In summary and for simple use, just go to <<_proactive_studio, ProActive Studio>> and use the 2 predefined templates in the Controls menu: *Check_For_Signals* or *Wait_For_Signals*.
-Just fill up the Task Variable *SIGNALS*, and use those templates in your own workflow to be able to receive input from, for instance, the Workflow Execution portal.
+Fill up the Task Variable *SIGNALS*, and use those templates in your own workflow to be able to receive input from, for instance, the Workflow Execution portal.
 
 At a more detailed level and advanced use, the Signal API allows jobs and users to exchange signals using a communication channel provided by the <<_task_synchronization_api,synchronization API>>.
 The typical usage scenario of the Signal API is the following:
