@@ -2618,6 +2618,7 @@ A complete example of Producer / Consumer, _ServiceDeployerConsumer_ can be down
 
 The *Signal API* is a high-level API that enables users to interact with running jobs via signals (we also call them actions).
 That is, it allows a job to expose specific signals (e.g., `soft_stop` to properly finish a job) that can be triggered by users from the *Workflow Execution portal*.
+You can try the <<_examples_2,examples>> below to better understand how it works.
 
 At a high-level view, the Signal API allows jobs and users to exchange signals using a communication channel provided by the <<_task_synchronization_api,synchronization API>>.
 The typical usage scenario of the Signal API is the following:
@@ -2669,10 +2670,16 @@ In addition to the above operations available within ProActive Tasks, users and 
 to a specific job via link:/doc/rest/#1218178377[ProActive Signals REST endpoint].
 
 ==== Examples
-Two menus in ProActive *Studio* contain workflow examples and templates, which illustrate the usage of the Signal API, namely:
 
-* The *Signal* menu contains many workflow examples that use all signal operations.
-These workflows use a set of predefined groovy scripts stored in the same bucket. Additionally, we give below an example of a groovy code that uses some Signal API operations.
+===== Standard and simple use with predefined tasks in the Control template menu
+
+  . _Check_For_Signals_: a control pattern that executes a loop until one ore more signals, given as input, are received.
+
+  . _Wait_For_Signals_: a blocking control pattern that blocks the task execution waiting for the reception of one or more signals given as input.
+
+===== Advanced use with Signal templates
+
+The *Signal* menu contains many workflow examples that use all signal operations. Below, we give an example of a groovy code that uses some Signal API operations.
 
 [source, groovy]
 ----
@@ -2689,13 +2696,8 @@ signalapi.waitFor("soft_stop")
 signalapi.removeSignal("soft_stop")
 ----
 
-* The *Controls* template menu contains two workflow templates, viz.,:
-
-  . _Check_For_Signals_: a control pattern that executes a loop until one ore more signals given as input are received.
-
-  . _Wait_For_Signals_: a blocking control pattern that blocks the task execution waiting for the reception of one or more signals given as input.
-
-Concerning the usage of the link:/doc/rest/#1218178377[Signals REST endpoint], below we provide an example using curl that shows how to send a signal to a specific job:
+===== Usage of the Signals REST endpoint
+Below, we provide an example based on link:https://curl.se/[curl], which shows how to use the link:/doc/rest/#1218178377[Signals REST endpoint] for sending a signal to a specific job:
 [source,shell,subs="verbatim,quotes"]
 ----
 curl -X POST -H "sessionid:$sessionid"
