@@ -2212,7 +2212,7 @@ key is not present, no replacement occurs):
 ----
 
 [[_task_apis]]
-== Scheduler, Resource Manager, DataSpace, and Synchronization APIs
+== Scheduler, Resource Manager, DataSpace, Synchronization, and Signal APIs
 
 From a <<_glossary_task_executable_script,Script Task>>, several APIs are accessible via Java objects bound to dedicated <<_glossary_script_bindings,script bindings>>:
 
@@ -2351,6 +2351,9 @@ To know in which scripts these bindings are available, study the <<_variables_qu
 === Synchronization API
 
 This Synchronization API allows for both communication and synchronization between Tasks and between Jobs dynamically at execution. It is based on a Key-Value Store offering atomic operations. It enables to easily put into action all classical synchronization patterns: Critical Sections and Mutual Exclusion, Rendez-vous, Barriers, Producer/Consumer...
+
+To experience concrete use of the Synchronization API, just go to <<_proactive_studio, ProActive Studio>> and use the predefined templates in the Controls menu (e.g., *Key_Value*).
+Use those templates in your own workflow to see how it works. You can further try the <<_examples,examples>> below to better understand the usage of the Synchronization API.
 
 Task synchronization is traditionally handled by the ProActive Scheduler through <<Dependency, Task Dependencies>>, where dependent ProActive Tasks are started only after their parents Tasks completed.
 
@@ -2619,8 +2622,10 @@ A complete example of Producer / Consumer, _ServiceDeployerConsumer_ can be down
 The *Signal API* is a high-level API that enables users to interact with running jobs via signals (we also call them actions).
 That is, it allows a job to expose specific signals (e.g., `soft_stop` to properly finish a job) that can be triggered by users from the *Workflow Execution portal*.
 You can try the <<_examples_2,examples>> below to better understand how it works.
+In summary and for simple use, just go to <<_proactive_studio, ProActive Studio>> and use the 2 predefined templates in the Controls menu: *Check_For_Signals* or *Wait_For_Signals*.
+Fill up the Task Variable *SIGNALS*, and use those templates in your own workflow to be able to receive input from, for instance, the Workflow Execution portal.
 
-At a high-level view, the Signal API allows jobs and users to exchange signals using a communication channel provided by the <<_task_synchronization_api,synchronization API>>.
+At a more detailed level and advanced use, the Signal API allows jobs and users to exchange signals using a communication channel provided by the <<_task_synchronization_api,synchronization API>>.
 The typical usage scenario of the Signal API is the following:
 
   . A job declares to be ready to handle one or more signals. The signals are then displayed in the Workflow Execution portal (e.g., display the `soft_stop` signal).
