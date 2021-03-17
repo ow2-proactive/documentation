@@ -1330,7 +1330,7 @@ The screenshot below shows an overview of the Job Analytics Portal.
 
 [[_JA-overview]]
 image::JA-overview.png[align=center]
-Job Analytics is very useful to compare metrics and charts of workflows that have common variables and results. For example, a ML algorithm might take different variable values and produce multiple results. It would be interesting to analyze the correlation and evolution of algorithm results regarding the input variation (See also a similar example of link:../MLOS/MLOSUserGuide.html#_AutoML[AutoML]).
+Job Analytics is very useful to compare metrics and charts of workflows that have common variables and results. For example, a ML algorithm might take different variable values and produce multiple results. It would be interesting to analyze the correlation and evolution of algorithm results regarding the input variation (See also a similar example of link:../PML/PMLUserGuide.html#_AutoML[AutoML]).
 The following sections will show you some key features of the dashboard and how to use them for a better understanding of your job executions.
 
 [[_job_search]]
