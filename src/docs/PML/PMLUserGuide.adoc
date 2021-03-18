@@ -1313,9 +1313,9 @@ This example trains a Mnist model, starts a service instance where the trained m
 
 image::NEW_MAAS_DL_MNIST_Workflow_Example.PNG[align=center]
 
-== Job Analytics
+== Proactive Analytics
 
-The *ProActive Job Analytics* is a dashboard that provides an overview of executed workflows
+The *ProActive Analytics* is a dashboard that provides an overview of executed workflows
 along with their input variables and results.
 
 It offers several functionalities, including:
@@ -1325,18 +1325,13 @@ It offers several functionalities, including:
 - Charts to track variables and results evolution and correlation.
 - Export data in multiple formats for further use in analytics tools.
 
-
-The screenshot below shows an overview of the Job Analytics Portal.
-
-[[_JA-overview]]
-image::JA-overview.png[align=center]
-Job Analytics is very useful to compare metrics and charts of workflows that have common variables and results. For example, a ML algorithm might take different variable values and produce multiple results. It would be interesting to analyze the correlation and evolution of algorithm results regarding the input variation (See also a similar example of link:../PML/PMLUserGuide.html#_AutoML[AutoML]).
+Proactive Analytics is very useful to compare metrics and charts of workflows that have common variables and results. For example, a ML algorithm might take different variable values and produce multiple results. It would be interesting to analyze the correlation and evolution of algorithm results regarding the input variation (See also a similar example of link:../PML/PMLUserGuide.html#_AutoML[AutoML]).
 The following sections will show you some key features of the dashboard and how to use them for a better understanding of your job executions.
 
 [[_job_search]]
-=== Job Search
+=== Job Analytics
 
-Job Analytics Portal includes a search window that allows users to search for jobs based on specific criteria (see screenshot below).
+Job Analytics Page includes a search window that allows users to search for jobs based on specific criteria (see screenshot below).
 The job search panel allows to select multi-value filters for the following job parameters:
 
 - _Workflow Name(s)_: Jobs can be filtered by workflow name. Selecting/Typing one or more workflow names is provided by a built-in `auto-complete` feature that helps you search for workflows or buckets from the link:../user/ProActiveUserGuide.html#_catalog_portal[ProActive Catalog.]
@@ -1353,7 +1348,8 @@ Now you can hit the search button to request jobs from the scheduler database ac
 [[_JA-search-png]]
 image::JA-search.png[align=center]
 
-=== Execution Metrics
+==== Execution Metrics
+
 As shown in the screenshot below, Job Analytics Portal provides a summary of the most important job execution metrics. For instance, the dashboard shows:
 
 - A first panel that displays the number of total jobs that correspond to the search query. It also shows the ratio of successful jobs over the total number, and the number of jobs that are in progress and not yet finished. Please note that the number of in-progress jobs corresponds to the moment when the search query is executed and it is not automatically refreshed.
@@ -1362,7 +1358,7 @@ As shown in the screenshot below, Job Analytics Portal provides a summary of the
 
 image::JA-metrics.png[align=center]
 
-=== Job Charts
+==== Job Charts
 
 Job Analytics includes three types of charts:
 
@@ -1378,9 +1374,7 @@ image::JA-chart.png[align=center]
 
 All charts provide some advanced features such as "maximize" and "enlarge" to better visualize the results, and "move" to customize the dashboard layout (see top left side of charts). All of them provide the hovering feature as previously described and two types of charts to display: line and bar charts. Switching from one to the other can be activated through a toggle button located at the top right of the chart. Same for show/hide variables and results.
 
-
-=== Job Execution Table
-
+==== Job Execution Table
 
 The last element of the Job Analytics dashboard shows a summary table that contains all job executions returned by the search query. It includes the job ID, status, duration, submission time, variables, results, etc.
 The jobs table provides many features:
