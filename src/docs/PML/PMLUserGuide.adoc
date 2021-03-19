@@ -1056,7 +1056,7 @@ Execute the Workflow and set the different workflow's variables as follows:
 | The endpoint of the started service.
 | URL (default=Empty).
 | `UNDEPLOY_ENDPOINT`
-| The base path to access the deployment endpoint.
+| The base path to access the undeployment endpoint.
 | String (default="/api/undeploy_model")
 | `MODEL_NAME`
 | The name of the model to be undeployed.
