@@ -2198,7 +2198,7 @@ The following workflows are designed for in-memory execution.
 
 *In_Memory_Iris_Flowers_Classification:* classifies Iris flowers using the logistic regression algorithm. This workflow uses an external IPython Engine for in-memory execution.
 
-*Start_IPython_Cluster:* executes a IPython cluster.
+*Start_IPython_Cluster:* executes an IPython cluster to perform a parallel computation.
 
 === GPU Accelerated Workflows
 
@@ -2212,68 +2212,25 @@ The following workflows are designed to train machine learning models on GPU usi
 
 *Train_Regression_Model_On_GPU:* trains a machine learning model for data regression on GPU using NVIDIA RAPIDS.
 
-The following table identifies for each of the ML algorithms if it can be executed on GPU nodes or not.
+Please find in the table below the list of algorithms which have GPU support and that can be tested using the generic tasks in the `machine-learning` bucket.
 
-[cols="7,7,3"]
+[cols="12,9"]
 |===
-| *Section* | *Algorithm* | *GPU Enabled*
-| `5.1 AutoML`
-| `AutoSklearn_Classifier`
-| `No`
-|
-| `AutoSklearn_Regressor`
-| `No`
-|
-| `TPOT_Classifier`
-| `No`
-|
-| `TPOT_Regressor`
-| `No`
-| `5.2 ML Classification`
+| *Section* | *Algorithm*
+| `12.2.6 ML Classification`
 | `Support_Vector_Machines`
-| `Yes`
 |
 | `Logistic_Regression`
-| `Yes`
-|
-| `Gaussian_Naive_Bayes`
-| `No`
-| `5.3 ML Regression`
+| `12.2.7 ML Regression`
 | `Support_Vector_Regression`
-| `Yes`
 |
 | `Linear_Regression`
-| `Yes`
-|
-| `Bayesian_Ridge_Regression`
-| `No`
-| `5.4 ML Clustering`
+| `12.2.9 ML Clustering`
 | `K_Means`
-| `Yes`
-|
-| `Mean_Shift`
-| `No`
-| `5.5 ML Anomaly Detection`
-| `One_Class_SVM`
-| `No`
-|
-| `Isolation_Forest`
-| `No`
-| `5.6 ML Ensemble Learning`
+| `12.2.10 ML Ensemble Learning`
 | `XGBoost`
-| `Yes`
 |
 | `Random_Forest`
-| `Yes`
-|
-| `Gradient_Boosting`
-| `No`
-|
-| `AdaBoost`
-| `No`
-|
-| `CatBoost`
-| `No`
 |===
 
 == Deep Learning Workflows Examples
