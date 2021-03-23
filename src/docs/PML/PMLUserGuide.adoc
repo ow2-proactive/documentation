@@ -479,7 +479,7 @@ Execute the workflow and set the different workflow's variables as follows:
 | String (default=Empty).
 3+^|*Task variables*
 | `DEPLOY_MODEL_ENDPOINT`
-| A URL endpoint defined by the user where the AI Model was deployed
+| A URL endpoint defined by the user where the AI Model was deployed.
 | URL (default=Empty).
 | `API_EXTENSION`
 | The base path to access the deployment endpoint.
@@ -666,7 +666,7 @@ Set the Following variables:
 | This variable contains some statistical features such as the mean, and the standard deviation extracted from the training data used to build the model that should be deployed. This metadata is used for the purpose of detecting drifts.
 | Numerical vector (default= [[5.8216666667,3.0658333333,3.695,1.1766666667],[0.8128364419,0.4385797999,1.7614380107,0.7581194484]])
 | `USER_NAME`
-| A valid user name having the needed privileges to execute this action.
+| A valid username having the needed privileges to execute this action.
 | String (default="user")
 |===
 
@@ -762,7 +762,7 @@ image::MAS_Predict_Swagger.png[align=center]
 
 You can connect the different tasks in a single workflow to get the full pipeline from the model training step to the model deployment and consumption steps. Each task will propagate the acquired variables to its children tasks.
 The following workflow example is available on the `model_as_a_service` bucket under the name of `IRIS_Deploy_Flower_Classifier_Model`.
-This example trains an Iris Flower Classifier, starts a service instance where the trained model is deployed, and the input data is scored by consuming the endpoints exposed by the maas_ml service.
+This example trains an Iris Flower Classifier, starts a service instance where the trained model is deployed, and the input data is scored by consuming the endpoints exposed by the MaaS_ML service.
 
 image::NEW_MAAS_ML_IRIS_Workflow_Example.PNG[align=center]
 
