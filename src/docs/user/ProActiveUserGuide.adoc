@@ -2352,7 +2352,7 @@ To know in which scripts these bindings are available, study the <<_variables_qu
 
 This Synchronization API allows for both communication and synchronization between Tasks and between Jobs dynamically at execution. It is based on a Key-Value Store offering atomic operations. It enables to easily put into action all classical synchronization patterns: Critical Sections and Mutual Exclusion, Rendez-vous, Barriers, Producer/Consumer...
 
-To experience concrete use of the Synchronization API, just go to <<_proactive_studio, ProActive Studio>> and use the predefined templates in the Controls menu (e.g., *Key_Value*).
+In summary and for simple use, just go to <<_proactive_studio, ProActive Studio>> and use the predefined templates in the Controls menu (e.g., *Key_Value*).
 Use those templates in your own workflow to see how it works. You can further try the <<_examples,examples>> below to better understand the usage of the Synchronization API.
 
 Task synchronization is traditionally handled by the ProActive Scheduler through <<Dependency, Task Dependencies>>, where dependent ProActive Tasks are started only after their parents Tasks completed.
@@ -2622,6 +2622,7 @@ A complete example of Producer / Consumer, _ServiceDeployerConsumer_ can be down
 The *Signal API* is a high-level API that enables users to interact with running jobs via signals (we also call them actions).
 That is, it allows a job to expose specific signals (e.g., `soft_stop` to properly finish a job) that can be triggered by users from the *Workflow Execution portal*.
 You can try the <<_examples_2,examples>> below to better understand how it works.
+
 In summary and for simple use, just go to <<_proactive_studio, ProActive Studio>> and use the 2 predefined templates in the Controls menu: *Check_For_Signals* or *Wait_For_Signals*.
 Fill up the Task Variable *SIGNALS*, and use those templates in your own workflow to be able to receive input from, for instance, the Workflow Execution portal.
 

@@ -356,7 +356,7 @@ MaaS_ML is dedicated to make deployments of lightweight machine learning (ML) mo
 
 The life cycle of any MaaS_ML instance (i.e., from starting the generic service instance, deploying an AI specific model to pausing or deleting the instance) can be managed in three different ways in PML :
 
-- Using the *Studio Portal* and more specifically the bucket *model-as-a-service* where specific generic tasks are provided to process all the possible actions (i.e., MaaS_ML_Service_Start, Deploy_ML_Model, Call_Prediction_Endpoint, MaaS_ML_Actions[Finish/Pause/Resume]).
+- Using the *Studio Portal* and more specifically the bucket *model-as-a-service* where specific generic tasks are provided to process all the possible actions (i.e., MaaS_ML_Service_Start, MaaS_ML_Deploy_Model, MaaS_ML_Call_Prediction, MaaS_ML_Actions[Finish/Pause/Resume]).
 These tasks can be easily integrated to your AI pipelines/workflows as you can see in this <<Deployment Pipeline Example>>.
 - Using the *Service Automation Portal* by executing the different actions associated to MaaS_ML (i.e. Deploy_ML_Model, Pause_MaaS_ML, Update_MaaS_ML, Finish_MaaS_ML.)
 - Using the *Swagger UI* which is accessible once the MaaS_ML instance is up and running.
@@ -452,11 +452,11 @@ Execute the workflow by setting the different workflow's variables as described 
 
 You can also deploy a specific ML model directly from the link:https://try.activeeon.com/studio[Studio Portal].
 
-Drag and drop the `Deploy_ML_Model` task from the MaaS_ML bucket.
+Drag and drop the `MaaS_ML_Deploy_Model` task from the MaaS_ML bucket.
 
 Execute the workflow and set the different workflow's variables as follows:
 
-.Deploy_ML_Model variables
+.MaaS_ML_Deploy_Model variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -495,11 +495,11 @@ Execute the workflow and set the different workflow's variables as follows:
 
 Once the model is deployed, you can also call the service for prediction directly from the link:https://try.activeeon.com/studio[Studio Portal].
 
-Drag and drop the `Call_Prediction_Endpoint` task from the MaaS_ML bucket.
+Drag and drop the `MaaS_ML_Call_Prediction` task from the MaaS_ML bucket.
 
 Execute the Workflow and set the different workflow's variables as follows:
 
-.Call_Prediction_Endpoint variables
+.MaaS_ML_Call_Prediction variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -853,15 +853,15 @@ and the detection process is started using the chosen detector).
 
 The workflow *IRIS_Deploy_Predict_Flower_Classifier_Model*, found in the
 *model_as_a_service* bucket in the Proactive Studio Portal, shows an example of pipeline using the generic tasks
-*Deploy_ML_Model* and *Call_Prediction_Service* including the DDD mechanism.
+*MaaS_ML_Deploy_Model* and *MaaS_ML_Call_Prediction* including the DDD mechanism.
 
-In particular, in the *Deploy_ML_Model* task, the user is asked to enter
+In particular, in the *MaaS_ML_Deploy_Model* task, the user is asked to enter
 *DRIFT_DETECTION_WINDOW_SIZE* which is a task variable specifying the size of the data
 to be extracted from the old training dataset (the dataset on which the model was initially
 trained). For example, if the user chooses a value = 50 for this variable, the algorithm will
 randomly choose 50 lines from the old training dataset. This subset of data (we call it *baseline data*) 
 will be saved in the service in order to be used afterward for the data drift detection process 
-which will be enacted in the *Call_Prediction_Service*.
+which will be enacted in the *MaaS_ML_Call_Prediction*.
 
 In the *Call_Prediction_Service*, the user is asked to choose the data drift
 detector to be used in the drift detection process. This can be chosen using the task
@@ -911,7 +911,7 @@ It provides out-of-the-box integration with TensorFlow Serving TFX taking advant
 
 The life cycle of any MaaS_DL instance (i.e., from starting the generic service instance, deploying an AI specific model to pausing or deleting the instance) can be managed in three different ways in PML :
 
-- Using the *Studio Portal* and more specifically the bucket *model-as-a-service* where specific generic tasks are provided to process all the possible actions (i.e., MaaS_DL_Service_Start, Deploy_DL_Model, MaaS_DL_Actions[Finish/Pause/Resume], Undeploy_DL_Model).
+- Using the *Studio Portal* and more specifically the bucket *model-as-a-service* where specific generic tasks are provided to process all the possible actions (i.e., MaaS_DL_Service_Start, MaaS_DL_Deploy_Model, MaaS_DL_Actions[Finish/Pause/Resume], MaaS_DL_Undeploy_Model).
 These tasks can be easily integrated to your AI pipelines/workflows as you can see in this <<Deployment Pipeline Example>>.
 - Using the *Service Automation Portal* by executing the different actions associated to MaaS_DL (i.e. Deploy_DL_Model, Redeploy_DL_Model, Undeploy_DL_Model)
 - Using the *Swagger UI* which is accessible once the MaaS_DL instance is up and running.
@@ -997,11 +997,11 @@ Execute the workflow by setting the different workflow's variables as described 
 
 You can also deploy a specific DL model directly from the link:https://try.activeeon.com/studio[Studio Portal].
 
-Drag and drop the `Deploy_DL_Model` task from the MaaS_DL bucket.
+Drag and drop the `MaaS_DL_Deploy_Model` task from the MaaS_DL bucket.
 
 Execute the workflow and set the different workflow's variables as follows:
 
-.Deploy_DL_Model variables
+.MaaS_DL_Deploy_Model variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -1019,10 +1019,10 @@ Execute the workflow and set the different workflow's variables as follows:
 | A valid token generated by the MaaS_DL Service for user authentication.
 | String (default=Empty).
 3+^|*Task variables*
-| `DEPLOY_MODEL_ENDPOINT`
-| A URL endpoint defined by the user where the AI Model was deployed
+| `MaaS_DL_INSTANCE_ENDPOINT`
+| The endpoint of the started service.
 | URL (default=Empty).
-| `API_EXTENSION`
+| `DEPLOY_ENDPOINT`
 | The base path to access the deployment endpoint.
 | String (default="/api/deploy")
 | `MODEL_URL`
@@ -1034,9 +1034,6 @@ Execute the workflow and set the different workflow's variables as follows:
 | `SERVICE_TOKEN`
 | A valid token generated by the MaaS_DL Service for user authentication.
 | String (default=Empty).
-| `USER_NAME`
-| A valid user name having the needed privileges to execute this action.
-| String (default=Empty)
 | `APPEND`
 | If True, the model will be appended to the list of already deployed models.
 | Boolean (default=True).
@@ -1046,30 +1043,27 @@ Execute the workflow and set the different workflow's variables as follows:
 
 You can also undeploy a specific DL model directly from the link:https://try.activeeon.com/studio[Studio Portal].
 
-Drag and drop the `Undeploy_DL_Model` task from the MaaS_DL bucket.
+Drag and drop the `MaaS_DL_Undeploy_Model` task from the MaaS_DL bucket.
 
 Execute the Workflow and set the different workflow's variables as follows:
 
-.Undeploy_DL_Model variables
+.MaaS_DL_Undeploy_Model variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
 3+^|*Task variables*
-|`DEPLOY_MODEL_ENDPOINT`
-| A URL endpoint defined by the user where the AI Model was deployed
+|`MaaS_DL_INSTANCE_ENDPOINT`
+| The endpoint of the started service.
 | URL (default=Empty).
-| `API_EXTENSION`
-| The base path to access the deployment endpoint.
-| String (default="/api/deploy")
+| `UNDEPLOY_ENDPOINT`
+| The base path to access the undeployment endpoint.
+| String (default="/api/undeploy_model")
 | `MODEL_NAME`
 | The name of the model to be undeployed.
 | String (default=Empty )
 | `MODEL_VERSION`
 | The version number of the model that will be undeployed.
 | Integer (default=Empty )
-| `USER_NAME`
-| A valid user name having the needed privileges to execute this action.
-| String (default=Empty)
 |===
 
 ==== Delete/Finish the Service
@@ -2194,11 +2188,11 @@ The following workflows are designed to feature engineering and fusion.
 
 === In Memory Workflows
 
-The following workflows are designed for in-memory execution.
+The following workflows are designed for in-memory execution using IPython. IPython enables all types of parallel applications to be developed, executed, debugged, and monitored interactively. For more details, please visit the https://ipyparallel.readthedocs.io/en/latest/[ipyparallel website].
 
 *In_Memory_Iris_Flowers_Classification:* classifies Iris flowers using the logistic regression algorithm. This workflow uses an external IPython Engine for in-memory execution.
 
-*Start_IPython_Cluster:* executes a IPython cluster.
+*Start_IPython_Cluster:* starts an IPython parallel computing cluster.
 
 === GPU Accelerated Workflows
 
@@ -2212,68 +2206,25 @@ The following workflows are designed to train machine learning models on GPU usi
 
 *Train_Regression_Model_On_GPU:* trains a machine learning model for data regression on GPU using NVIDIA RAPIDS.
 
-The following table identifies for each of the ML algorithms if it can be executed on GPU nodes or not.
+Please find in the table below the list of algorithms which have GPU support and that can be tested using the generic tasks in the `machine-learning` bucket.
 
-[cols="7,7,3"]
+[cols="12,9"]
 |===
-| *Section* | *Algorithm* | *GPU Enabled*
-| `5.1 AutoML`
-| `AutoSklearn_Classifier`
-| `No`
-|
-| `AutoSklearn_Regressor`
-| `No`
-|
-| `TPOT_Classifier`
-| `No`
-|
-| `TPOT_Regressor`
-| `No`
+| *Category* | *Algorithm*
 | `5.2 ML Classification`
 | `Support_Vector_Machines`
-| `Yes`
 |
 | `Logistic_Regression`
-| `Yes`
-|
-| `Gaussian_Naive_Bayes`
-| `No`
 | `5.3 ML Regression`
 | `Support_Vector_Regression`
-| `Yes`
 |
 | `Linear_Regression`
-| `Yes`
-|
-| `Bayesian_Ridge_Regression`
-| `No`
 | `5.4 ML Clustering`
 | `K_Means`
-| `Yes`
-|
-| `Mean_Shift`
-| `No`
-| `5.5 ML Anomaly Detection`
-| `One_Class_SVM`
-| `No`
-|
-| `Isolation_Forest`
-| `No`
 | `5.6 ML Ensemble Learning`
 | `XGBoost`
-| `Yes`
 |
 | `Random_Forest`
-| `Yes`
-|
-| `Gradient_Boosting`
-| `No`
-|
-| `AdaBoost`
-| `No`
-|
-| `CatBoost`
-| `No`
 |===
 
 == Deep Learning Workflows Examples
