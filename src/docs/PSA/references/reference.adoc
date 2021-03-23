@@ -37,7 +37,7 @@ This service allows to deploy through ProActive Service Automation (PSA) Portal 
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
 | `ENDPOINT_ID`
-| The endpoint_id that will be used if `PROXYFIED` is set to True.
+| Id of the service endpoint.
 | Yes
 | String
 | `coco_annotator-gui`
@@ -45,17 +45,17 @@ This service allows to deploy through ProActive Service Automation (PSA) Portal 
 | True if the protocol https is needed to start the COCO Annotator service.
 | Yes
 | Boolean
-| true
+| `true`
 | `INSTANCE_NAME`
 | The name of the service that will be deployed.
 | Yes
 | String
 | `coco-annotator`
 | `PROXYFIED`
-| True if a proxy is needed to protect the access to the service endpoint.
+| True if a proxy is needed to protect the access to this model-service endpoint.
 | Yes
 | Boolean
-| false
+| `false`
 |===
 
 === Docker
@@ -358,7 +358,7 @@ This service allows to deploy through ProActive Service Automation (PSA) Portal 
 |===
 | *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
 | `ENDPOINT_ID`
-| The endpoint_id that will be used if `PROXYFIED` is set to True.
+| Id of the service endpoint.
 | Yes
 | String
 | `openrefine-gui`
@@ -373,10 +373,10 @@ This service allows to deploy through ProActive Service Automation (PSA) Portal 
 | String
 | `openrefine`
 | `PROXYFIED`
-| True if a proxy is needed to protect the access to the service endpoint.
+| True if a proxy is needed to protect the access to this model-service endpoint.
 | Yes
 | Boolean
-| false
+| `false`
 |===
 
 === PostgreSQL

@@ -8,6 +8,6 @@ Proactive Machine Learning platform provides a rich catalog of generic machine l
 PML workflows enable users to manage machine learning pipelines through the different phases of the development lifecycle and allow them to better control tasks parallelization, by running the tasks on resources matching constraints (Multi-CPU, GPU, FPGA, data locality, libraries, etc).
 
 
-image::ML-Open-Studio-ActiveEon.png[align=center]
+image::PML-Open-Studio-ActiveEon.PNG[align=center]
 
 The Proactive Machine Learning platform is an open source solution, and it can be tested online without installation on our try platforms https://try.activeeon.com/studio/#workflows/templates/machine-learning[here^].
