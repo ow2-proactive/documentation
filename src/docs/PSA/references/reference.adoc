@@ -28,7 +28,7 @@ This service allows to deploy through ProActive Service Automation (PSA) Portal 
 NOTE: More details about the variable description can be found https://hub.docker.com/_/cassandra/[here^].
 
 === COCO Annotator
-This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of COCO Annotator server. The service can be started using the following variables.
+This service allows the deployment of an instance of COCO Annotator server through ProActive Service Automation (PSA) Portal. The service can be started using the following variables.
 
 *Variables:*
 
@@ -349,7 +349,7 @@ In addition, if `DATABASE` is assigned a value, then the defined `USER` will be 
 More details about the variable description can be found https://hub.docker.com/_/mysql/[here^].
 
 === OpenRefine
-This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of OpenRefine server. The service can be started using the following variables.
+This service allows the deployment of an OpenRefine server instance through ProActive Service Automation (PSA) Portal. The service can be started using the following variables.
 
 *Variables:*
 
@@ -366,7 +366,7 @@ This service allows to deploy through ProActive Service Automation (PSA) Portal 
 | True if the protocol https is needed to start OpenRefine.
 | Yes
 | Boolean
-| true
+| `true`
 | `INSTANCE_NAME`
 | The name of the service that will be deployed.
 | Yes
@@ -648,7 +648,7 @@ The service is started using the following variable.
 |===
 
 === Model as a Service for Machine Learning
-This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of MaaS_ML .
+This service allows the deployment of an instance of MaaS_ML through ProActive Service Automation (PSA) Portal.
 
 NOTE: More details about the related actions of this service can be found in the link:/doc/PML/PMLUserGuide.html#_via_service_automation_portal[PML Doc].
 
@@ -755,7 +755,7 @@ The service is started using the following variables.
 
 
 === Model as a Service for Deep Learning
-This service allows to deploy through ProActive Service Automation (PSA) Portal an instance of MaaS_DL .
+This service allows the deployment of an instance of MaaS_DL through ProActive Service Automation (PSA) Portal.
 
 NOTE: More details about the related actions of this service can be found in the link:/doc/PML/PMLUserGuide.html#_via_service_automation_portal[PML Doc].
 
