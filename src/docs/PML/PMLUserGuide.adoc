@@ -1321,9 +1321,9 @@ It offers several functionalities, including:
 - Advanced search by name, user, date, state, etc.
 - Execution metrics summary about durations, encountered issues, etc.
 - Charts to track variables and results evolution and correlation.
-- Export data in multiple formats for further use in analytics tools.
+- Data exportation in multiple formats for further use in analytics tools.
 
-Proactive Analytics is very useful to compare metrics and charts of workflows that have common variables and results. For example, a ML algorithm might take different variable values and produce multiple results. It would be interesting to analyze the correlation and evolution of algorithm results regarding the input variation (See also a similar example of link:../PML/PMLUserGuide.html#_AutoML[AutoML]).
+Proactive Analytics is very useful to compare metrics and charts of workflows that have common variables and results. For example, a ML algorithm might take different variables values and produce multiple results. It would be interesting to analyze the correlation and evolution of the algorithm results regarding the input variation (See also a similar example of link:../PML/PMLUserGuide.html#_AutoML[AutoML]).
 The following sections will show you some key features of the dashboard and how to use them for a better understanding of your job executions.
 
 [[_job_search]]
