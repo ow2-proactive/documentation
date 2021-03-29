@@ -181,12 +181,16 @@ In the following subsections, several tables represent the main variables that c
 In addition to the variables mentioned below, there is a set of generic variables that are common between all workflows
 which can be found in the subsection <<AI Workflows Common Variables>>.
 
+image::AutoML_1.png[align=center]
+
 === Multi_Tuners_Auto_ML
 
-`Multi_Tuners_Auto_ML` workflow proposes six algorithms for hyperparameters' optimization. The choice of the
+`Multi_Tuners_Auto_ML` workflow proposes six algorithms for distributed hyperparameters' optimization. The choice of the
 sampling/search strategy depends strongly on the tackled problem.
 `Multi_Tuners_Auto_ML` workflow comes with specific pipelines (parallel or sequential) and visualization tools
 (https://github.com/fossasia/visdom[Visdom^] or https://www.tensorflow.org/tensorboard/[TensorBoard^]) as described in the subsections below.
+
+image::AutoML_2.png[align=center]
 
 *Variables:*
 
@@ -244,7 +248,7 @@ sampling/search strategy depends strongly on the tackled problem.
 | (default=True)
 |===
 
-image::AutoML_Full.png[880,845,align=center]
+image::AutoML_Full.png[align=center]
 *How to define the search space:*
 
 This subsection describes common building blocks to define a search space:
