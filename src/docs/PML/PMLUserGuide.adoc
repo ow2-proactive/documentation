@@ -282,12 +282,53 @@ In the following, we briefly describe the different tuners proposed by the `Mult
     - *Bayes search* models the search space using gaussian process regression, which allows an estimation of the loss function, and the uncertainty on that estimate at every point of the search space.
       Modeling the search space suffers from the curse of dimensionality, which makes this method more suitable when the number of dimensions is low.
 
-    - *CMAES search* is one of the most powerful black-box optimization algorithm.
+    - *CMAES search* (Covariance Matrix Adaptation Evolution Strategy) is one of the most powerful black-box optimization algorithm.
       However, it requires a significant number of model evaluation (in the order of 10 to 50 times the number of dimensions) to converge to an optimal solution.
       This search method is more suitable when the time required for a model evaluation is relatively low.
 
-    - *MOCMAES search* is a multi-objective algorithm optimizing multiple tradeoffs simultaneously.
+    - *MOCMAES search* (Multi-Objective Covariance Matrix Adaptation Evolution Strategy) is a multi-objective algorithm optimizing multiple tradeoffs simultaneously.
       To do that, MOCMAES employs a number of CMAES algorithms.
+
+Here is a table that resumes when to use each algorithm.
+|===
+| *Algorithm* | *Time* | *Dimensions* | *Continuity* | *Conditions* | *Multi-objective*
+| `Grid`
+| `Low`
+| `Low`
+| `Discrete`
+| `Yes`
+| `No`
+| `Random`
+| `High`
+| `High`
+| `Discrete`
+| `Yes`
+| `No`
+| `QuasiRandom`
+| `High`
+| `High`
+| `Mixed`
+| `Yes`
+| `No`
+| `Bayes`
+| `High`
+| `Medium`
+| `Mixed`
+| `Yes`
+| `No`
+| `CMAES`
+| `Low`
+| `Low`
+| `Mixed`
+| `No`
+| `No`
+| `MOCMAES`
+| `Low`
+| `Low`
+| `Mixed`
+| `No`
+| `Yes`
+|===
 
 
 === Objective Functions
