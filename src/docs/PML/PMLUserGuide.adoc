@@ -172,9 +172,9 @@ image::execute.gif[100000,2000]
 
 [[_AutoML]]
 
-== AutoML
+== Automated Machine Learning (AutoML)
 
-The `auto-ml-optimization` bucket contains the `Multi_Tuners_AutoML` workflow that can be easily used to find the operating parameters for any system whose performance can be measured as a function of adjustable parameters.
+The `auto-ml-optimization` bucket contains the `Distributed_Auto_ML` workflow that can be easily used to find the operating parameters for any system whose performance can be measured as a function of adjustable parameters.
 It is an estimator that minimizes the posterior expected value of a loss function.
 This bucket also comes with a set of workflows' examples that demonstrates how we can optimize mathematical functions, PML workflows and machine/deep learning algorithms from scripts using AutoML tuners.
 In the following subsections, several tables represent the main variables that characterize the AutoML workflows.
@@ -183,18 +183,18 @@ which can be found in the subsection <<AI Workflows Common Variables>>.
 
 image::AutoML_1.png[align=center]
 
-=== Multi_Tuners_Auto_ML
+=== Distributed AutoML
 
-`Multi_Tuners_Auto_ML` workflow proposes six algorithms for distributed hyperparameters' optimization. The choice of the
+The `Distributed_Auto_ML` workflow proposes six algorithms for distributed hyperparameters' optimization. The choice of the
 sampling/search strategy depends strongly on the tackled problem.
-`Multi_Tuners_Auto_ML` workflow comes with specific pipelines (parallel or sequential) and visualization tools
+`Distributed_Auto_ML` workflow comes with specific pipelines (parallel or sequential) and visualization tools
 (https://github.com/fossasia/visdom[Visdom^] or https://www.tensorflow.org/tensorboard/[TensorBoard^]) as described in the subsections below.
 
 image::AutoML_2.png[align=center]
 
 *Variables:*
 
-.Multi_Tuners_Auto_ML Variables
+.Distributed_Auto_ML Variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -204,6 +204,9 @@ image::AutoML_2.png[align=center]
 | `WORKFLOW_TO_OPTIMIZE`
 | Specifies the workflow path from the catalog that should be optimized.
 | String (default=auto-ml-optimization/Himmelblau_Function)
+| `NUMBER_OF_REPETITIONS`
+|  Specifies the number of hyperparameter sampling repetitions. Ensures every experiment is repeated a given number of times. It should be an integer number higher than one. Set `-1` to never see repetitions.
+| Int (default=-1)
 | `MAX_ITERATIONS`
 |  Specifies the number of maximum iterations. It should be an integer number higher than zero. Set `-1` for an infinite loop.
 | Int (default=2)
@@ -268,7 +271,7 @@ The choice of the tuner depends on the following aspects:
     - Type of variable.
     - The size of the search space.
 
-In the following, we briefly describe the different tuners proposed by the `Multi_Tuners_AutoML` workflow:
+In the following, we briefly describe the different tuners proposed by the `Distributed_Auto_ML` workflow:
 
     - *Grid sampling* applies when all variables are discrete, and the number of possibilities is low.
       A grid search is a naive approach that will simply try all possibilities making the search extremely long even for medium-sized problems.
@@ -342,7 +345,7 @@ image::Himmelblau_Function.png[448,336,align=center]
 === Hyperparameter Optimization
 
 The following workflows represent some machine learning and deep learning algorithms that can be optimized.
-These workflows have several common variables as in `Multi_Tuners_Auto_ML`. Some workflows are characterized
+These workflows have several common variables as in `Distributed_Auto_ML`. Some workflows are characterized
 by few additional variables.
 
 *CIFAR_10_Image_Classification:* trains a simple deep CNN on the CIFAR10 images dataset using the Keras library.
@@ -386,7 +389,7 @@ The following workflows have common variables with the above illustrated workflo
 
 === Neural Architecture Search
 
-The following workflows contain a search space containing a set of possible neural networks architectures that can be used by `Multi_Tuners_Auto_ML` to automatically find the best combinations of neural architectures within the search space.
+The following workflows contain a search space containing a set of possible neural networks architectures that can be used by `Distributed_Auto_ML` to automatically find the best combinations of neural architectures within the search space.
 
 *Handwritten_Digit_Classification:* train a simple deep CNN on the MNIST dataset using the PyTorch library.
 
@@ -396,9 +399,9 @@ The following workflows contain a search space containing a set of possible neur
 
 The following workflows represent python templates that can be used to implement a generic machine learning task.
 
-*Python_Task_Template_For_AutoML:* is a simple Python task template pre-configured to run with `Multi_Tuners_Auto_ML`.
+*Python_Task_Template_For_AutoML:* is a simple Python task template pre-configured to run with `Distributed_Auto_ML`.
 
-*R_Task_Template_For_AutoML:* is a simple R task template pre-configured to run with `Multi_Tuners_Auto_ML`.
+*R_Task_Template_For_AutoML:* is a simple R task template pre-configured to run with `Distributed_Auto_ML`.
 
 == Model as a Service for Machine Learning (MaaS_ML)
 
