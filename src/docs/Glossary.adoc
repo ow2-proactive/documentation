@@ -82,10 +82,10 @@ Catalog:: ProActive component that provides storage and versioning of <<_glossar
 Catalog Portal:: Web interface of the <<_glossary_catalog,*Catalog*>> component.
 
 [[_glossary_cloud_watch]]
-Workflow Execution:: ProActive component that monitors a system, according to predefined set of rules, detects complex events and then triggers user-specified actions.
+Event Orchestration:: ProActive component that monitors a system, according to predefined set of rules, detects complex events and then triggers user-specified actions.
 
 [[_glossary_event_orchestration_portal]]
-Event Orchestration Portal::Web interface of the <<_glossary_cloud_watch,*Workflow Execution*>> component.
+Event Orchestration Portal::Web interface of the <<_glossary_cloud_watch,*Event Orchestration*>> component.
 
 [[_glossary_scheduling_api]]
 Scheduling API:: ProActive component that offers a GraphQL endpoint for getting information about a ProActive Scheduler instance.
