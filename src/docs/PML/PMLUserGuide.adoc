@@ -26,7 +26,7 @@ your environment (default credentials: admin/admin) or just use our demo platfor
 - +++Submit workflows, monitor their execution and retrieve the tasks results using <a class="schedulerUrl" href="/scheduler" target="_blank">ProActive Scheduler Portal</a>+++
 - +++Add resources and monitor them using <a class="rmUrl" href="/rm" target="_blank">ProActive Resource Manager Portal</a>+++
 - +++Version and share various objects using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/catalog-portal" target="_blank">ProActive Catalog Portal</a>+++
-- +++Provide an end-user workflow submission interface using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/workflow-automation" target="_blank">Workflow Automation Portal</a>+++
+- +++Provide an end-user workflow submission interface using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/workflow-automation" target="_blank">Workflow Execution Portal</a>+++
 - +++Generate metrics of multiple job executions using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/job-analytics" target="_blank">Job Analytics Portal</a>+++
 - +++Plan workflow executions over time using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/job-planner-execution-planning" target="_blank">Job Planner Portal</a>+++
 - +++Add services using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/service-automation" target="_blank">Service Automation Portal</a>+++
@@ -83,7 +83,7 @@ A. Once dataset has been converted to *CSV* format, upload it into a cloud stora
 For this tutorial, we will use Boston house prices dataset available on this link:
 https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/boston-houses-prices.csv
 
-B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the Machine Learning Open Studio.
+B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the Proactive Machine Learning.
 
 C. Click on the task and click `General Parameters` in the left to change the default parameters of this task.
 
@@ -2054,7 +2054,7 @@ NOTE: If neither `job_name` nor the `job_id` are provided, the last submitted jo
 === Display and use ActiveEon Portals directly in Jupyter
 
 Finally, to have the hand on more parameters and features, the user should use ActiveEon Studio portals.
-The main ones are the _Resource Manager_, the _Scheduling Portal_ and the _Workflow Automation_.
+The main ones are the _Resource Manager_, the _Scheduling Portal_ and the _Workflow Execution_.
 
 The example below shows how the user can directly monitor his submitted job's execution in the scheduling portal:
 
@@ -2072,7 +2072,7 @@ For the related scheduling portal:
 #%show_scheduling_portal([host=YOUR_HOST], [height=HEIGHT_VALUE], [width=WIDTH_VALUE])
 ```
 
-And, for the related workflow automation:
+And, for the related workflow execution:
 
 ```python
 #%show_workflow_automation([host=YOUR_HOST], [height=HEIGHT_VALUE], [width=WIDTH_VALUE])
@@ -2134,7 +2134,7 @@ The PML provides a fast, easy and practical way to execute different workflows u
 
 To test these workflows, you need to add the *machine-Learning-workflows Bucket* as main catalog in the ProActive Studio.
 
-A. Open +++<a class="studioUrl" href="/studio" target="_blank">Machine Learning Open Studio</a>+++ home page.
+A. Open +++<a class="studioUrl" href="/studio" target="_blank">Proactive Machine Learning</a>+++ home page.
 
 B. Create a new workflow.
 
@@ -2243,7 +2243,7 @@ video::FwMPR87wzoo[youtube, width=700, height=400 start=0, position=center]
 
 You can test these workflows by following these steps:
 
-A. Open +++<a class="studioUrl" href="/studio" target="_blank">Machine Learning Open Studio</a>+++ home page.
+A. Open +++<a class="studioUrl" href="/studio" target="_blank">Proactive Machine Learning</a>+++ home page.
 
 B. Create a new workflow.
 

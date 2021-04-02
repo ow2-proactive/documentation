@@ -68,14 +68,14 @@ If nothing is displayed, it means the selected Calendar Definitions have no recu
 
 === GANTT Visualization of the Job Planning
 
-You can also use the Gantt chart ("Open Gantt" button at the top) to visualize the executions:
+You can also use the Gantt chart to visualize the executions:
 
 image::calendar_planning_gantt.png[align="center"]
 
 In addition to the Execution Planning panel, the Gantt chart allows you to see the past job history, the current one being executed, as well as the future ones, all in a comprehensive interactive view. In this view, you will easily see the potential difference between the `Planned Submission time` and the `Actual Start Time` of the Jobs. You will also get estimations of the `Finished Time`, taking into account the `Actual Start Time`.
 Moreover, you can visualize the Job that stayed PENDING for some time (in Yellow), as well as the Jobs that had issues and got KILLED, CANCELLED, or FAILED (in red).
 
-The planned jobs (in orange) are on the row just above the actual jobs so that you can easily compare what was planned and what actually executed. You can use the legend button for a better understanding of the colors.
+The planned jobs (in orange) are on the row just above the actual jobs so that you can easily compare what was planned and what actually executed. You can use the "open legend" button for a better understanding of the colors.
 
 image::calendar_planning_gantt_legend.png[align="center"]
 

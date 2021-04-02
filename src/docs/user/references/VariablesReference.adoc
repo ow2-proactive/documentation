@@ -222,7 +222,7 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | all scripts
 | -
 
-| *Cloud Automation Rest URL*. The REST url of the cloud automation service. The public REST url is also available (if the setting pa.cloud-automation.rest.public.url is defined in `PROACTIVE_HOME/config/scheduler/settings.ini`)
+| *Service Automation Rest URL*. The REST url of the service automation. The public REST url is also available (if the setting pa.cloud-automation.rest.public.url is defined in `PROACTIVE_HOME/config/scheduler/settings.ini`)
 | variables.get( "PA_CLOUD_AUTOMATION_REST_URL" ) or variables.get( "PA_CLOUD_AUTOMATION_REST_PUBLIC_URL" )
 | $variables_PA_CLOUD_AUTOMATION_REST_URL or $variables_PA_CLOUD_AUTOMATION_REST_PUBLIC_URL
 | ${PA_CLOUD_AUTOMATION_REST_URL} or ${PA_CLOUD_AUTOMATION_REST_PUBLIC_URL}
