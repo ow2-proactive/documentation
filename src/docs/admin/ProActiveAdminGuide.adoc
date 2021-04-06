@@ -2444,7 +2444,7 @@ sudo keytool -trustcacerts \
 
 === Enable VNC remote visualization in the browser
 
-The Rest API web application embeds a proxy to allow the remote display visualization of a ProActive Node running a given task
+The REST API web application embeds a proxy to allow the remote display visualization of a ProActive Node running a given task
 via a VNC server from the browser. To enable this feature, the scheduler has to be configured as follows:
 
 * configure the proxy: edit the `PROACTIVE_HOME/config/web/settings.ini` file and set `novnc.enabled` to true in order

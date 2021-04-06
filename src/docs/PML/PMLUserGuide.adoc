@@ -622,7 +622,7 @@ Set the following variables:
 | This entry script starts the service and defines the different functions to deploy the model, scores the prediction requests based on the deployed model, and returns the results. This script is specific to your model. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about this file can be found in the <<_customize_the_service>> section.
 | String (default="ml_service").
 | `SERVICE_PORT`
-| Controls the port used to start the Model Service from the Service Automation Portal. -1 for random port allocation.
+| Controls the port used to start the Model Service from Service Automation Portal. -1 for random port allocation.
 | Integer (default="-1").
 | `SINGULARITY_IMAGE_PATH`
 | Location of the singularity image on the node file system (this path will be used to either store the singularity image or the image will be directly used if the file is present).
@@ -682,7 +682,7 @@ Check that the status correctly evolves to `AI_MODEL_DEPLOYED`.
 ==== Delete (Finish)/Update/Pause the Service
 
 
-You can delete the launched service instance directly from the Service Automation Portal:
+You can delete the launched service instance directly from Service Automation Portal:
 
 Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Service Automation Portal].
 
@@ -691,7 +691,7 @@ Set the action `Finish` under Actions and click on `Execute Action`.
 
 image::MAAS_ML_Delete_Service.PNG[align=center]
 
-There are also two other actions that can be executed from the Service Automation Portal which are:
+There are also two other actions that can be executed from Service Automation Portal which are:
 
 - *Deploy_ML_Model*: This action will put the service instance into deployment.
 
@@ -894,7 +894,7 @@ baseline_data using the *BASELINE_DATA_URL* variable that appears in the popup w
 *Deploy_Model_Service* action. In case you need to change the baseline data, it can be updated using the *BASELINE_DATA_URL*
 variable of the *Update_MaaS_ML* action of MaaS_ML.
 
-Once the model is deployed via the Service Automation portal,
+Once the model is deployed via Service Automation portal,
 the Swagger user interface can be opened via the MaaS_ML instance api, offering different endpoints
 to help the user manage the drift detection mechanism. This
 mechanism has been particularly integrated into the following three endpoints:
@@ -1155,7 +1155,7 @@ Set the following variables:
 | This entry script starts the service and defines the different functions to deploy the model, scores the prediction requests based on the deployed model, and returns the results. This script is specific to your model. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about this file can be found in the <<_customize_the_service>> section.
 | String (default="dl_service").
 | `SERVICE_PORT`
-| Controls the port used to start the Model Service from the Service Automation Portal. -1 for random port allocation.
+| Controls the port used to start the Model Service from Service Automation Portal. -1 for random port allocation.
 | Integer (default="-1").
 | `SINGULARITY_IMAGE_PATH`
 | Location of the singularity image on the node file system (this path will be used to either store the singularity image or the image will be directly used if the file is present).
@@ -1233,7 +1233,7 @@ Click on `Execute Action` and follow the progress of the model deployment.
 
 ==== Delete (Finish)/Update/Pause the Service
 
-You can delete the launched service instance directly from the Service Automation Portal:
+You can delete the launched service instance directly from Service Automation Portal:
 
 Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Service Automation Portal].
 

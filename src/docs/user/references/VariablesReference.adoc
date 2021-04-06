@@ -208,35 +208,35 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | <<_selection, selection>>
 | -
 
-| *Scheduler Rest URL*. The REST url of the scheduler server. The public REST url is also available (if the setting pa.scheduler.rest.public.url is defined in `PROACTIVE_HOME/config/scheduler/settings.ini`)
+| *Scheduler REST URL*. The REST url of the scheduler server. The public REST url is also available (if the setting pa.scheduler.rest.public.url is defined in `PROACTIVE_HOME/config/scheduler/settings.ini`)
 | variables.get( "PA_SCHEDULER_REST_URL" ) or variables.get( "PA_SCHEDULER_REST_PUBLIC_URL" )
 | $variables_PA_SCHEDULER_REST_URL or $variables_PA_SCHEDULER_REST_PUBLIC_URL
 | ${PA_SCHEDULER_REST_URL} or ${PA_SCHEDULER_REST_PUBLIC_URL}
 | all scripts
 | -
 
-| *Catalog Rest URL*. The REST url of the catalog service. The public REST url is also available (if the setting pa.catalog.rest.public.url is defined in `PROACTIVE_HOME/config/scheduler/settings.ini`)
+| *Catalog REST URL*. The REST url of the catalog service. The public REST url is also available (if the setting pa.catalog.rest.public.url is defined in `PROACTIVE_HOME/config/scheduler/settings.ini`)
 | variables.get( "PA_CATALOG_REST_URL" ) or variables.get( "PA_CATALOG_REST_PUBLIC_URL" )
 | $variables_PA_CATALOG_REST_URL or $variables_PA_CATALOG_REST_PUBLIC_URL
 | ${PA_CATALOG_REST_URL} or ${PA_CATALOG_REST_PUBLIC_URL}
 | all scripts
 | -
 
-| *Service Automation Rest URL*. The REST url of the service automation. The public REST url is also available (if the setting pa.cloud-automation.rest.public.url is defined in `PROACTIVE_HOME/config/scheduler/settings.ini`)
+| *Service Automation REST URL*. The REST url of Service Automation. The public REST url is also available (if the setting pa.cloud-automation.rest.public.url is defined in `PROACTIVE_HOME/config/scheduler/settings.ini`)
 | variables.get( "PA_CLOUD_AUTOMATION_REST_URL" ) or variables.get( "PA_CLOUD_AUTOMATION_REST_PUBLIC_URL" )
 | $variables_PA_CLOUD_AUTOMATION_REST_URL or $variables_PA_CLOUD_AUTOMATION_REST_PUBLIC_URL
 | ${PA_CLOUD_AUTOMATION_REST_URL} or ${PA_CLOUD_AUTOMATION_REST_PUBLIC_URL}
 | all scripts
 | -
 
-| *Job Planner Rest URL*. The REST url of the job-planner service. The public REST url is also available (if the setting pa.job-planner.rest.public.url is defined in `PROACTIVE_HOME/config/scheduler/settings.ini`)
+| *Job Planner REST URL*. The REST url of the job-planner service. The public REST url is also available (if the setting pa.job-planner.rest.public.url is defined in `PROACTIVE_HOME/config/scheduler/settings.ini`)
 | variables.get( "PA_JOB_PLANNER_REST_URL" ) or variables.get( "PA_JOB_PLANNER_REST_PUBLIC_URL" )
 | $variables_PA_JOB_PLANNER_REST_URL or $variables_PA_JOB_PLANNER_REST_PUBLIC_URL
 | ${PA_JOB_PLANNER_REST_URL} or ${PA_JOB_PLANNER_REST_PUBLIC_URL}
 | all scripts
 | -
 
-| *Notification Service Rest URL*. The REST url of the notification service. The public REST url is also available (if the setting pa.notification-service.rest.public.url is defined in `PROACTIVE_HOME/config/scheduler/settings.ini`)
+| *Notification Service REST URL*. The REST url of the notification service. The public REST url is also available (if the setting pa.notification-service.rest.public.url is defined in `PROACTIVE_HOME/config/scheduler/settings.ini`)
 | variables.get( "PA_NOTIFICATION_SERVICE_REST_URL" ) or variables.get( "PA_NOTIFICATION_SERVICE_REST_PUBLIC_URL" )
 | $variables_PA_NOTIFICATION_SERVICE_REST_URL or $variables_PA_NOTIFICATION_SERVICE_REST_PUBLIC_URL
 | ${PA_NOTIFICATION_SERVICE_REST_URL} or ${PA_NOTIFICATION_SERVICE_REST_PUBLIC_URL}

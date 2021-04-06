@@ -53,7 +53,7 @@ The core of rule processing is managed by the https://www.drools.org/[Drools Eng
 According to the concepts of PEO, the action will be triggered when specified condition is met. +
 In order to make an action flexible to any user needs, the rule’s action is firing a job inside scheduler. A user just need to specify which workflow from Catalog will be fired as rule’s action. +
 For example, one can design an action workflow that sends a notification (alert) whenever a metric reaches a critical value. +
-For scalability use cases, the Service Automation can be started as a rule's action that will deploy the new resources.
+For scalability use cases, Service Automation can be started as a rule's action that will deploy the new resources.
 
 == PEO portal -  Using existing rules
 
