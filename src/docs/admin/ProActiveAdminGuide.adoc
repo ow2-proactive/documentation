@@ -81,9 +81,9 @@ The following ProActive Scheduler components and services are started:
 * <<_glossary_workflow_studio,*Workflow Studio*>>
 * <<_glossary_job_analytics,*Job Analytics*>>
 * <<_glossary_notification_service,*Notification Service*>>
-* <<_glossary_cloud_automation_service,*Cloud Automation Service*>>
+* <<_glossary_cloud_automation_service,*Service Automation*>>
 * <<_glossary_catalog,*Catalog*>>
-* <<_glossary_cloud_watch,*Cloud Watch*>>
+* <<_glossary_cloud_watch,*Event Orchestration*>>
 * <<_glossary_scheduler_web_interface,*Scheduler Web Interface*>>
 * <<_glossary_scheduling_api,*Scheduling Api*>>
 * <<_glossary_connector_iaas,*Connector IaaS*>>
@@ -2444,7 +2444,7 @@ sudo keytool -trustcacerts \
 
 === Enable VNC remote visualization in the browser
 
-The Rest API web application embeds a proxy to allow the remote display visualization of a ProActive Node running a given task
+The REST API web application embeds a proxy to allow the remote display visualization of a ProActive Node running a given task
 via a VNC server from the browser. To enable this feature, the scheduler has to be configured as follows:
 
 * configure the proxy: edit the `PROACTIVE_HOME/config/web/settings.ini` file and set `novnc.enabled` to true in order

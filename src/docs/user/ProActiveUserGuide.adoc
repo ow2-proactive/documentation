@@ -312,7 +312,7 @@ them to parameterize workflow execution and use workflows as <<_templating,templ
 ==== Job & Task status
 
 During their execution, jobs go through different status.
-The screenshot below shows Pending and Current Jobs status summary as seen in Workflow Automation portal.
+The screenshot below shows Pending and Current Jobs status summary as seen in Workflow Execution portal.
 
 image::current_job_states.png[align="center", width=350]
 
@@ -328,7 +328,7 @@ image::current_job_states.png[align="center", width=350]
 
 |===
 
-The screenshot below shows Past Jobs status summary as seen in Workflow Automation portal.
+The screenshot below shows Past Jobs status summary as seen in Workflow Execution portal.
 
 image::past_job_states.png[align="center", width=350, title-align="center"]
 
@@ -2001,7 +2001,7 @@ When an object revision is added to the catalog, depending on its type, it may b
 
 For example, from a <<_glossary_workflow,*ProActive Workflow*>>, the _workflow name_, _project_name_, _description_, _documentation_, _<<_generic_information>>_ and _<<_workflow_variables>>_ are extracted.
 
-These information are used in the various portals which interacts with the catalog such as the +++<a class="automationDashboardUrl" href="/automation-dashboard/#/portal/workflow-automation" target="_blank">Workflow Automation Portal</a>+++.
+These information are used in the various portals which interacts with the catalog such as the +++<a class="automationDashboardUrl" href="/automation-dashboard/#/portal/workflow-automation" target="_blank">Workflow Execution Portal</a>+++.
 
 === Retrieving and searching Objects
 

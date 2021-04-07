@@ -722,7 +722,7 @@ The service is started using the following variables.
 | String
 | `ml_service`
 | `SERVICE_PORT`
-| Controls the port used to start the Model Service from the Service Automation Portal. -1 for random port allocation.
+| Controls the port used to start the Model Service from Service Automation Portal. -1 for random port allocation.
 | Yes
 | Integer
 | `-1`
@@ -838,7 +838,7 @@ The service is started using the following variables.
 | String
 | `dl_service`
 | `SERVICE_PORT`
-| Controls the port used to start the Model Service from the Service Automation Portal. -1 for random port allocation.
+| Controls the port used to start the Model Service from Service Automation Portal. -1 for random port allocation.
 | Yes
 | Integer
 | `-1`

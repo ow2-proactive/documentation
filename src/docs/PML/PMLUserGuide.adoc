@@ -26,7 +26,7 @@ your environment (default credentials: admin/admin) or just use our demo platfor
 - +++Submit workflows, monitor their execution and retrieve the tasks results using <a class="schedulerUrl" href="/scheduler" target="_blank">ProActive Scheduler Portal</a>+++
 - +++Add resources and monitor them using <a class="rmUrl" href="/rm" target="_blank">ProActive Resource Manager Portal</a>+++
 - +++Version and share various objects using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/catalog-portal" target="_blank">ProActive Catalog Portal</a>+++
-- +++Provide an end-user workflow submission interface using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/workflow-automation" target="_blank">Workflow Automation Portal</a>+++
+- +++Provide an end-user workflow submission interface using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/workflow-automation" target="_blank">Workflow Execution Portal</a>+++
 - +++Generate metrics of multiple job executions using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/job-analytics" target="_blank">Job Analytics Portal</a>+++
 - +++Plan workflow executions over time using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/job-planner-execution-planning" target="_blank">Job Planner Portal</a>+++
 - +++Add services using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/service-automation" target="_blank">Service Automation Portal</a>+++
@@ -83,7 +83,7 @@ A. Once dataset has been converted to *CSV* format, upload it into a cloud stora
 For this tutorial, we will use Boston house prices dataset available on this link:
 https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/boston-houses-prices.csv
 
-B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the Machine Learning Open Studio.
+B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the Proactive Machine Learning.
 
 C. Click on the task and click `General Parameters` in the left to change the default parameters of this task.
 
@@ -668,7 +668,7 @@ Set the following variables:
 | This entry script starts the service and defines the different functions to deploy the model, scores the prediction requests based on the deployed model, and returns the results. This script is specific to your model. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about this file can be found in the <<_customize_the_service>> section.
 | String (default="ml_service").
 | `SERVICE_PORT`
-| Controls the port used to start the Model Service from the Service Automation Portal. -1 for random port allocation.
+| Controls the port used to start the Model Service from Service Automation Portal. -1 for random port allocation.
 | Integer (default="-1").
 | `SINGULARITY_IMAGE_PATH`
 | Location of the singularity image on the node file system (this path will be used to either store the singularity image or the image will be directly used if the file is present).
@@ -728,7 +728,7 @@ Check that the status correctly evolves to `AI_MODEL_DEPLOYED`.
 ==== Delete (Finish)/Update/Pause the Service
 
 
-You can delete the launched service instance directly from the Service Automation Portal:
+You can delete the launched service instance directly from Service Automation Portal:
 
 Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Service Automation Portal].
 
@@ -737,7 +737,7 @@ Set the action `Finish` under Actions and click on `Execute Action`.
 
 image::MAAS_ML_Delete_Service.PNG[align=center]
 
-There are also two other actions that can be executed from the Service Automation Portal which are:
+There are also two other actions that can be executed from Service Automation Portal which are:
 
 - *Deploy_ML_Model*: This action will put the service instance into deployment.
 
@@ -940,7 +940,7 @@ baseline_data using the *BASELINE_DATA_URL* variable that appears in the popup w
 *Deploy_Model_Service* action. In case you need to change the baseline data, it can be updated using the *BASELINE_DATA_URL*
 variable of the *Update_MaaS_ML* action of MaaS_ML.
 
-Once the model is deployed via the Service Automation portal,
+Once the model is deployed via Service Automation portal,
 the Swagger user interface can be opened via the MaaS_ML instance api, offering different endpoints
 to help the user manage the drift detection mechanism. This
 mechanism has been particularly integrated into the following three endpoints:
@@ -1201,7 +1201,7 @@ Set the following variables:
 | This entry script starts the service and defines the different functions to deploy the model, scores the prediction requests based on the deployed model, and returns the results. This script is specific to your model. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about this file can be found in the <<_customize_the_service>> section.
 | String (default="dl_service").
 | `SERVICE_PORT`
-| Controls the port used to start the Model Service from the Service Automation Portal. -1 for random port allocation.
+| Controls the port used to start the Model Service from Service Automation Portal. -1 for random port allocation.
 | Integer (default="-1").
 | `SINGULARITY_IMAGE_PATH`
 | Location of the singularity image on the node file system (this path will be used to either store the singularity image or the image will be directly used if the file is present).
@@ -1279,7 +1279,7 @@ Click on `Execute Action` and follow the progress of the model deployment.
 
 ==== Delete (Finish)/Update/Pause the Service
 
-You can delete the launched service instance directly from the Service Automation Portal:
+You can delete the launched service instance directly from Service Automation Portal:
 
 Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Service Automation Portal].
 
@@ -2100,7 +2100,7 @@ NOTE: If neither `job_name` nor the `job_id` are provided, the last submitted jo
 === Display and use ActiveEon Portals directly in Jupyter
 
 Finally, to have the hand on more parameters and features, the user should use ActiveEon Studio portals.
-The main ones are the _Resource Manager_, the _Scheduling Portal_ and the _Workflow Automation_.
+The main ones are the _Resource Manager_, the _Scheduling Portal_ and the _Workflow Execution_.
 
 The example below shows how the user can directly monitor his submitted job's execution in the scheduling portal:
 
@@ -2118,10 +2118,10 @@ For the related scheduling portal:
 #%show_scheduling_portal([host=YOUR_HOST], [height=HEIGHT_VALUE], [width=WIDTH_VALUE])
 ```
 
-And, for the related workflow automation:
+To monitor your jobs with Workflow Execution inside Jupyter, use:
 
 ```python
-#%show_workflow_automation([host=YOUR_HOST], [height=HEIGHT_VALUE], [width=WIDTH_VALUE])
+#%show_workflow_execution([host=YOUR_HOST], [height=HEIGHT_VALUE], [width=WIDTH_VALUE])
 ```
 
 NOTE: The parameters `height` and `width` allow the user to adjust the size of the window inside the notebook.
@@ -2180,7 +2180,7 @@ The PML provides a fast, easy and practical way to execute different workflows u
 
 To test these workflows, you need to add the *machine-Learning-workflows Bucket* as main catalog in the ProActive Studio.
 
-A. Open +++<a class="studioUrl" href="/studio" target="_blank">Machine Learning Open Studio</a>+++ home page.
+A. Open +++<a class="studioUrl" href="/studio" target="_blank">Proactive Machine Learning</a>+++ home page.
 
 B. Create a new workflow.
 
@@ -2289,7 +2289,7 @@ video::FwMPR87wzoo[youtube, width=700, height=400 start=0, position=center]
 
 You can test these workflows by following these steps:
 
-A. Open +++<a class="studioUrl" href="/studio" target="_blank">Machine Learning Open Studio</a>+++ home page.
+A. Open +++<a class="studioUrl" href="/studio" target="_blank">Proactive Machine Learning</a>+++ home page.
 
 B. Create a new workflow.
 

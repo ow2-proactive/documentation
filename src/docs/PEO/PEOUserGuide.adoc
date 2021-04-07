@@ -17,7 +17,7 @@ In general PEO allows to trigger any action by submitting a workflow to the ProA
 *Definitions:*
 
 Rule:: - defines a monitoring behavior, triggering actions according to some predefined conditions. Rules generally use a template for certain monitoring use cases, configurable using specific variables.
-Rule Instance:: - instantiated rule with concrete set of variables. One rule can have several rule Instances with different variable values. The rule instance can be activated/deactivated. Proactive Cloud Watch service will monitor metrics defined inside the rule only for activated instances.
+Rule Instance:: - instantiated rule with concrete set of variables. One rule can have several rule Instances with different variable values. The rule instance can be activated/deactivated. Proactive Event Orchestration service will monitor metrics defined inside the rule only for activated instances.
 image::PCW-General-overview.jpg[align=center]
 The diagram above illustrates the general overview of PEO functionality.
 
@@ -53,7 +53,7 @@ The core of rule processing is managed by the https://www.drools.org/[Drools Eng
 According to the concepts of PEO, the action will be triggered when specified condition is met. +
 In order to make an action flexible to any user needs, the rule’s action is firing a job inside scheduler. A user just need to specify which workflow from Catalog will be fired as rule’s action. +
 For example, one can design an action workflow that sends a notification (alert) whenever a metric reaches a critical value. +
-For scalability use cases, the Cloud Automation service can be started as a rule's action that will deploy the new resources.
+For scalability use cases, Service Automation can be started as a rule's action that will deploy the new resources.
 
 == PEO portal -  Using existing rules
 
@@ -203,7 +203,7 @@ A user can define his own set of rule variables as it has a simple key-value str
 
 === Monitoring part
 
-As explained in the document section <<_peo_monitoring, Monitoring>>, Proactive Cloud Watch service can monitor 2 types of metrics: <<_peo_monitoring_physical_metrics, Monitoring physical metrics>> and <<_peo_monitoring_host_accessibility, Monitoring host accessibility>>.
+As explained in the document section <<_peo_monitoring, Monitoring>>, Proactive Event Orchestration service can monitor 2 types of metrics: <<_peo_monitoring_physical_metrics, Monitoring physical metrics>> and <<_peo_monitoring_host_accessibility, Monitoring host accessibility>>.
 Each monitoring type has an implementation of a Polling class. The polling parameters depends on the chosen implementation of a Polling class. We will provide below examples of polling parameters for each monitoring type.
 
 ==== Polling parameters for Monitoring physical metrics
@@ -250,7 +250,7 @@ As said in <<_peo_rule_action, Rule’s action>> section, we will specify rule�
 The possible actions are:
 
 1.  submit workflow to ProActive Scheduler
-2.  start ProActive Cloud Automation service.
+2.  start ProActive Service Automation.
 
 Both examples are provided below.
 
@@ -291,9 +291,9 @@ The next part uses pure Drools syntax for specifying a rule condition and an act
 
 The `then` part is an actual action triggered when a condition is met. In the example, a workflow stored in ProActive Catalog will be submitted to ProActive Scheduler.
 
-==== Start ProActive Cloud Automation service as rule’s action
+==== Start ProActive Service Automation as rule’s action
 
-This section will show the described condition and action of a host accessibility monitoring example. The ProActive Cloud Automation service will be started as a rule’s action.
+This section will show the described condition and action of a host accessibility monitoring example. The ProActive Service Automation will be started as a rule’s action.
 
 [source,xml]
 -----------------
@@ -326,7 +326,7 @@ The provided host accessibility example will trigger an action when the specifie
 * the monitoring URL should be equal to specified host address
 * _upAndRunning_ metric should be false (the host is not accessible in this case)
 
-In `then` part of provided example you can observe how to start Cloud Automation service as rule’s action.
+In `then` part of provided example you can observe how to start Service Automation as rule’s action.
 
 Using standard Drools language for description of the condition gives a big advantage. It allows to specify complex use cases and benefit from Drools Engine processing. +
 With ProActive distribution there are provided examples for monitoring with _slicing time window_, for example: monitoring an average of memory usage for last 30 seconds. In the Drools language, we can specify such condition with slicing time window and triggering action.
