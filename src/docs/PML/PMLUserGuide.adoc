@@ -2118,10 +2118,10 @@ For the related scheduling portal:
 #%show_scheduling_portal([host=YOUR_HOST], [height=HEIGHT_VALUE], [width=WIDTH_VALUE])
 ```
 
-And, for the related workflow execution:
+To monitor your jobs with Workflow Execution inside Jupyter, use:
 
 ```python
-#%show_workflow_automation([host=YOUR_HOST], [height=HEIGHT_VALUE], [width=WIDTH_VALUE])
+#%show_workflow_execution([host=YOUR_HOST], [height=HEIGHT_VALUE], [width=WIDTH_VALUE])
 ```
 
 NOTE: The parameters `height` and `width` allow the user to adjust the size of the window inside the notebook.
