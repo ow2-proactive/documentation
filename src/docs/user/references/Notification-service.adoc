@@ -263,28 +263,57 @@ request will be triggered.
 
 [[_job_planner_notifications]]
 .Job Planner notifications (with example values)
-[cols="5,5"]
+[cols="2,2,2,5,5"]
 |===
-|*Message* | *Description*
-| The calendar in the bucket was not take into account due to an exception
-| An error has occurred while fetching planned calendars and their associations
+| *Type* | *Readable name* | *Severity* | *Message* | *Description*
+| `ASSOCIATION_FAILED`
+| Association failed
+| CRITICAL
 | Changing the status of the association to : FAILED
 | A <<_glossary_catalog, *Catalog*>> resource is not found, the association changes to FAILED status
-| Job-planner was unable to submit the workflow from the bucket to the scheduler
-| <<_glossary_job_planner,*Job Planner*>> was unable to submit job to scheduler
+| `ASSOCIATION_FAILED`
+| Association failed
+| ERROR
+| The association 45 had a failed execution, as it is configured, the association status is set to FAILED
+| An association's status has been updated to FAILED due to the previous execution having an error
+| `CANNOT_SUBMIT`
+| Cannot submit
+| ERROR
+| Job Planner was unable to submit the 12 juin 2020 14h15 the workflow Variable_Propagation in the bucket basic-examples from the association 12 to the scheduler
+| <<_glossary_job_planner,*Job Planner*>> was unable to submit the workflow from the bucket to the scheduler
+| `SUBMISSION_POSTPONED`
+| Submission postponed
+| WARNING
 | Association 7 submission planned at vendredi 12 juin 2020 14 h 05 CEST is postponed because job 145 is on-going
-| A submission has been postponed
+| A submission has been postponed because the previous execution is still under way
+| `SUBMISSION_CANCELED`
+| Submission canceled
+| WARNING
 | Association 8 submission planned at vendredi 12 juin 2020 14 h 05 is canceled because job 148 is on-going
-| A submission has been canceled
+| A submission has been canceled because the previous execution is still under way
+| `SUBMISSION_CANCELED`
+| Submission canceled
+| WARNING
+| The workflow Variables_Propagation in the bucket basic-examples was not executed at vendredi 12 juin 2020 19 h 15 CEST
+| The workflow execution time is before the current time that means we missed an execution and it is not
+configured to postpone the execution
+| `SUBMISSION_CANCELED`
+| Submission canceled
+| WARNING
+| The workflow Variables_Propagation in the bucket basic-examples from the association 2 was not submitted 5 times, skipping execution to the next association
+| Binded to the upper notification, it informs how many execution were missed
+| `DELAYED_SUBMISSION_EXECUTING`
+| Delayed submission executing
+| INFO
 | The workflow Variables_Propagation in the bucket basic-examples planned the vendredi 12 juin 2020 16 h 45 CEST
 was postponed and executed the vendredi 12 juin 2020 16 h 05 CEST
 | A planned workflow execution that has been postponed is now executing
+| `DELAYED_SUBMISSION_EXECUTING`
+| Delayed submission executing
+| INFO
 | <<_glossary_job_planner,*Job Planner*>> has detected that an execution for a workflow has been missed.
 As it is configured, Job-planner will submit an unplanned execution now at vendredi 12 juin 2020 18 h 15 CEST
 | The workflow execution time is before the current time that means we missed an execution and it is
 configured to submit a new execution
-| The workflow Variables_Propagation in the bucket basic-examples was not executed at vendredi 12 juin 2020 19 h 15 CEST
-| The workflow execution time is before the current time that means we missed an execution and it is not
-configured to postpone the execution
 |===
 
