@@ -105,7 +105,7 @@ The second way to start a ProActive Scheduler is to install it as a system servi
 
 ==== How to install ProActive on Windows
 
-Under Windows, it is possible to use the https://nssm.cc/‎[nssm^] service manager tool to manage a running script as a service. You can configure nssm to absolve all responsibility for restarting it and let Windows take care of recovery actions.
+Under Windows, it is possible to use the https://nssm.cc/[nssm^] service manager tool to manage a running script as a service. You can configure nssm to absolve all responsibility for restarting it and let Windows take care of recovery actions.
 In our case, you need to provide to nssm the Path to this script `$PROACTIVE_HOME/bin/proactive-server.bat` to start ProActive as a service.
 
 ==== How to install ProActive on Linux
