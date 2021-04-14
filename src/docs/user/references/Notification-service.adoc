@@ -41,8 +41,8 @@ Service subscriptions are deactivated by default, to start receiving notificatio
 - Select desired events
 - Activate the <<_glossary_notification_subscription,*Subscription*>>.
 
-[title="Example with scheduler subscription"]
-image::scheduler-subscription.png[align="center"]
+[title="Example with job planner subscription"]
+image::jobplanner-subscription.png[align="center"]
 
 To modify a service subscription simply click on it and do your adjustments. The subscription is automatically saved.
 
@@ -67,7 +67,7 @@ To create a job subscription, go to the <<_glossary_notification_portal,*Notific
 job subscriptions tab and click on the _+_ button
 
 [title="Button to create a job subscription"]
-image::job-subscription-creation-button.png[align="center"]
+image::job-subscriptions-summary.png[align="center"]
 
 Then fill and select the mandatory fields and click on _Save_
 
@@ -115,6 +115,71 @@ and activate the notification method to start receiving notification by this mea
 
 If a notification method parameter is deleted or changed and reused in the future, then a new confirmation
 request will be triggered.
+
+=== Channels
+
+==== Principle
+
+A notification <<_glossary_notification_channel, Channel>> is a centralized space in the <<_glossary_notification_portal, Notification Portal>>
+for groups of users to receive notifications created from a workflow using the Channel_Notification task.
+It consists of a unique name and a set of user groups authorized to subscribe to the channel.
+
+In order to receive channel notifications it is required to create one or more channels and update the channel
+<<_glossary_notification_subscription, Subscription>> to specify which channels we wish to be notified of.
+
+[title="Channel subscription"]
+image::channel-sub.png[align="center"]
+
+==== Rules
+
+- Unlike other notifications, channel notifications are retroactive. It means that when a user subscribes to a channel that already had notifications
+, they will appear to the user.
+- Channel notifications cannot be deleted, the link:../admin/ProActiveAdminGuide.html#_notification_housekeeping[Housekeeping]
+takes care of it once their life span is exceeded.
+- Notification service administrators can subscribe to any channels. Other users must be part of at least one of the authorized groups
+defined in the channel in order to subscribe to a channel, unless all groups are authorized.
+
+==== Channel Creation
+
+All users are able to create channels for any group. It is required to provide a unique channel name and a list of groups
+which will be able to subscribe to the channel.
+
+It can either be authorized for all groups, one or more groups of the current users, or any free input.
+
+[title="Channel creation"]
+image::create-channel.png[align="center"]
+
+==== Channel Management
+
+Channel management is where users can update channels by modifying a channel's name, add or remove authorized groups or delete it.
+
+A notification service administrator is able to update any channels, whether he is the creator of the channel or not.
+Other users can update only channels that they have created.
+
+To update a channel's name or authorized groups, simply make the update and click on the __Save__ button.
+
+To delete a channel, click on the __Bin__ icon on the left of the channel definition.
+
+[title="Channel creation"]
+image::channel-management.png[align="center"]
+
+==== Channel Notification
+
+In order to send a channel notification a user must append the Channel_Notification task to a <<_glossary_workflow, Workflow>>.
+
+The notification's message, severity and notified groups are configurable by the user.
+Simply update the following *Task variables* values to do so.
+
+[title="Channel_Notification task variables"]
+image::channel-notif-task-variables.png[align="center"]
+
+- *MESSAGE:* The message that will be displayed to the notified users. This variable is a free input
+and cannot be empty.
+- *SEVERITY:* Users can define the notification's severity by updating this variable. Available severities are
+INFO, WARNING, ERROR, CRITICAL. The default severity is INFO.
+- *CHANNELS:* A single channel or a comma separated list of channels that will be notified.
+By default, this value is set to "All". If the user executing the workflow is a notification-service administrator, it will notify all channels. Otherwise
+it notifies all channels available for the user to subscribe.
 
 === Event types
 
