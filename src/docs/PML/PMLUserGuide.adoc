@@ -3722,7 +3722,7 @@ image::object_detection.png[150,150]
 
 NOTE: You can use RGB images in JPG format (Images folder) and the annotations (Classes folder) in the XML format using Pascal VOC or COCO pattern.
 
-NOTE: In these links, you can find an example of the organization of the folders using https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/pascal_voc.zip[Pascal_VOC Dataset^] and https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/[COCO Dataset^].
+NOTE: In these links, you can find an example of the organization of the folders using https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/pascal_voc.zip[Pascal_VOC Dataset^] and https://activeeon-public.s3.eu-west-2.amazonaws.com/datasets/coco.zip[COCO Dataset^].
 
 *Task Variables:*
 
