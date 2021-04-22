@@ -199,7 +199,7 @@ When you drag & drop an SQL connector, two tasks will be appended to your workfl
 
 The task requires the following third-party credential:
 
-{key: `<mysql|postgresql|sqlserver|oracle|greenplum>://<<USER>@<<HOST>:<<PORT>`, value: `<RDBMS_NAME>_PASSWORD`}.
+{key: `<mysql|postgresql|sqlserver|oracle|greenplum>://<<USER>@<<HOST>:<<PORT>`, value: `PASSWORD`}.
 
 _e.g._ +
 |===
@@ -240,7 +240,7 @@ The variables listed in the following table exist for both SQL_Pooled_Connection
 | Workflow, Task
 | Yes
 | String
-| Values: `{PostgreSQL, MySQL, Greenplum, HSQLDB, Oracle}`
+| Values: `{postgresql, mysql, greenplum, sqlserver, oracle, hsqldb}`
 | `HOST`
 | Server host.
 | Workflow, Task
@@ -309,7 +309,7 @@ The scheduler should be configured in non-fork mode to execute tasks in a single
 
 Data connectors workflows may need to add some third-party dependencies to their classpath (notably, JDBC jar libraries), so they can be executed properly. Please refer to the Admin guide documentation to learn how to add link:../admin/ProActiveAdminGuide.html#__add_custom_third_party_libraries_to_proactive_server_and_nodes_classpath].
 
-In case the password is required, you have to add the following third-party credential: {key: `<mysql|postgresql|sqlserver|oracle|hsqldb:hsql>://<USERNAME>@<HOST>:<PORT>`, value: `<RDBMS_NAME>_PASSWORD`}. This is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User guide documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+In case the password is required, you have to add the following third-party credential: {key: `<mysql|postgresql|sqlserver|oracle|hsqldb:hsql>://<USERNAME>@<HOST>`, value: `PASSWORD`}. This is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User guide documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 === NoSQL
 The NoSQL connectors allow to import data from NoSQL Databases.

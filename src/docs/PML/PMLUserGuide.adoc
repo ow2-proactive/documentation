@@ -1,13 +1,13 @@
 :docinfo:
 :toc:
-:toc-title: MLOS User Guide
-= Machine Learning Open Studio
+:toc-title: PML User Guide
+= ProActive Machine Learning
 include::../common-settings.adoc[]
 include::../all-doc-links.adoc[]
 
 == Overview
 
-=== What is Machine Learning Open Studio (MLOS)?
+=== What is ProActive Machine Learning (PML)?
 
 include::references/Overview.adoc[]
 
@@ -26,11 +26,11 @@ your environment (default credentials: admin/admin) or just use our demo platfor
 - +++Submit workflows, monitor their execution and retrieve the tasks results using <a class="schedulerUrl" href="/scheduler" target="_blank">ProActive Scheduler Portal</a>+++
 - +++Add resources and monitor them using <a class="rmUrl" href="/rm" target="_blank">ProActive Resource Manager Portal</a>+++
 - +++Version and share various objects using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/catalog-portal" target="_blank">ProActive Catalog Portal</a>+++
-- +++Provide an end-user workflow submission interface using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/workflow-automation" target="_blank">Workflow Automation Portal</a>+++
+- +++Provide an end-user workflow submission interface using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/workflow-automation" target="_blank">Workflow Execution Portal</a>+++
 - +++Generate metrics of multiple job executions using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/job-analytics" target="_blank">Job Analytics Portal</a>+++
 - +++Plan workflow executions over time using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/job-planner-execution-planning" target="_blank">Job Planner Portal</a>+++
-- +++Add services using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/cloud-automation" target="_blank">Cloud Automation Portal</a>+++
-- +++Perform event based scheduling using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/cloud-watch" target="_blank">Cloud Watch Portal</a>+++
+- +++Add services using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/service-automation" target="_blank">Service Automation Portal</a>+++
+- +++Perform event based scheduling using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/event-orchestration" target="_blank">Event Orchestration Portal</a>+++
 - +++Control manual workflows validation steps using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/notification-portal" target="_blank">Notification Portal</a>+++
 
 We also provide a +++<a class="restUrl" href="/rest" target="_blank">REST API</a>+++ and <<../user/ProActiveUserGuide.adoc#_scheduler_command_line,command line interfaces>> for advanced users.
@@ -55,11 +55,11 @@ Suppose you need to predict houses prices based on this information (features) p
 - *LSTAT* % lower status of the population
 - *MDEV* Median value of owner-occupied homes in $1000' s
 
-Predicting houses prices is a complex problem, but we can simplify it a bit for this step by step example. We'll show you how you can easily create a predictive analytics solution using MLOS.
+Predicting houses prices is a complex problem, but we can simplify it a bit for this step-by-step example. We'll show you how you can easily create a predictive analytics solution using PML.
 
 === Manage the Canvas
 
-To use MLOS, you need to add the *Machine Learning Bucket* as main catalog in the ProActive Studio. This bucket contains a set of generic tasks that enables you to upload and prepare data, train a model and test it.
+To use PML, you need to add the *Machine Learning Bucket* as main catalog in the ProActive Studio. This bucket contains a set of generic tasks that enables you to upload and prepare data, train a model and test it.
 
 A. Open +++<a class="studioUrl" href="/studio" target="_blank">ProActive Workflow Studio</a>+++ home page.
 
@@ -83,7 +83,7 @@ A. Once dataset has been converted to *CSV* format, upload it into a cloud stora
 For this tutorial, we will use Boston house prices dataset available on this link:
 https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/boston-houses-prices.csv
 
-B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the ProActive Workflow Studio.
+B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the Proactive Machine Learning.
 
 C. Click on the task and click `General Parameters` in the left to change the default parameters of this task.
 
@@ -113,14 +113,14 @@ image::prepare_data.gif[100000,2000]
 
 === Train a Predictive Model
 
-Using MLOS, you can easily create different ML models in a single experiment and compare their results. This type of experimentation helps you find the best solution for your problem.
+Using PML, you can easily create different ML models in a single experiment and compare their results. This type of experimentation helps you find the best solution for your problem.
 You can also enrich the `machine-learning` bucket by adding new ML algorithms and publish or customize an existing task according to your requirements as the tasks are open source.
 
 NOTE: To change the code of a task click on it and click the `Task Implementation`. You can also add new variables to a specific task.
 
 In this step, we will create two different types of models and then compare their scores to decide which algorithm is most suitable to our problem. As the Boston dataset used for this example consists of predicting price of houses (continuous label). As such, we need to deal with a regression predictive problem.
 
-To solve this problem, we have to choose a regression algorithm to train the predictive model. To see the available regression algorithms available on the MLOS, see *ML Regression* Section in the *machine-learning* bucket.
+To solve this problem, we have to choose a regression algorithm to train the predictive model. To see the available regression algorithms available on the PML, see *ML Regression* Section in the *machine-learning* bucket.
 
 For this example, we will use <<Linear_Regression>> Task and <<Support_Vector_Regression>> Task.
 
@@ -152,7 +152,7 @@ F. Connect each <<Preview_Results>> Task with <<Predict_Model>>.
 
 image::test_the_predictive_model.png[100000,2000]
 
-NOTE: if you have a pickled file (.pkl) containing a predictive model that you have learned using another platform and you need to test it in the MLOS, you can load it using *Import_Model* Task.
+NOTE: if you have a pickled file (.pkl) containing a predictive model that you have learned using another platform, and you need to test it in the PML, you can load it using *Import_Model* Task.
 
 === Run the Experiment and Preview the Results
 
@@ -166,82 +166,95 @@ C. Click the Visualization tab and track the progress of your workflow execution
 
 D. Visualize the output logs by clicking on the output tab and check the streaming check box.
 
-E. Click the *Tasks* tab, select an *Preview_Results* task and click on the *Preview* tab, then click either on *Open in browser* to preview the results on your browser or on *Save as file* to download the results locally.
+E. Click the *Tasks* tab, select a *Preview_Results* task and click on the *Preview* tab, then click either on *Open in browser* to preview the results on your browser or on *Save as file* to download the results locally.
 
 image::execute.gif[100000,2000]
 
 [[_AutoML]]
 
-== AutoML
+== Automated Machine Learning (AutoML)
 
-The `auto-ml-optimization` bucket contains the Multi_Tuners_AutoML workflow that can be easily used to find the operating parameters for any system whose performance can be measured as a function of adjustable parameters.
+The `auto-ml-optimization` bucket contains the `Distributed_Auto_ML` workflow that can be easily used to find the operating parameters for any system whose performance can be measured as a function of adjustable parameters.
 It is an estimator that minimizes the posterior expected value of a loss function.
-This bucket also comes with a set of workflows' examples that demonstrates how we can optimize mathematical functions, MLOS workflows and machine/deep learning algorithms from scripts using AutoML tuners.
+This bucket also comes with a set of workflows' examples that demonstrates how we can optimize mathematical functions, PML workflows and machine/deep learning algorithms from scripts using AutoML tuners.
 In the following subsections, several tables represent the main variables that characterize the AutoML workflows.
 In addition to the variables mentioned below, there is a set of generic variables that are common between all workflows
 which can be found in the subsection <<AI Workflows Common Variables>>.
 
-=== Multi_Tuners_Auto_ML
+image::AutoML_1.png[align=center]
 
-Multi_Tuners_Auto_ML proposes six algorithms for hyperparameters' optimization. The choice of the
+=== Distributed AutoML
+
+The `Distributed_Auto_ML` workflow proposes six algorithms for distributed hyperparameters' optimization. The choice of the
 sampling/search strategy depends strongly on the tackled problem.
-Multi_Tuners_Auto_ML comes with specific pipelines (parallel or sequential) and visualization tools
-(Visdom or Tensorboard) as described in the subsections below.
+`Distributed_Auto_ML` workflow comes with specific pipelines (parallel or sequential) and visualization tools
+(https://github.com/fossasia/visdom[Visdom^] or https://www.tensorflow.org/tensorboard/[TensorBoard^]) as described in the subsections below.
+
+image::AutoML_2.png[align=center]
 
 *Variables:*
 
-.Multi_Tuners_Auto_ML Variables
+.Distributed_Auto_ML Variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
 | `TUNING_ALGORITHM`
-| Specifies the tuner algorithm that will be used for hyperparameters optimization.
-| List [Bayes, Grid, Random, QuasiRandom, CMAES, MOCMAES] (default=Bayes)
-| `WORKFLOW_TO_OPTIMIZE`
-| Specifies the catalog path of the workflow that we need to optimize.
-| String (default=auto-ml-optimization/Himmelblau_Function)
+| Specifies the tuner algorithm that will be used for hyperparameter optimization.
+| List [Bayes, Grid, Random, QuasiRandom, CMAES, MOCMAES] (default=Random)
 | `MAX_ITERATIONS`
-|  Specifies the number of maximum iterations.
+|  Specifies the number of maximum iterations. It should be an integer number higher than zero. Set `-1` for an infinite loop.
 | Int (default=2)
-| `PARALLEL_SAMPLES_PER_LOOP`
-|  Specifies the number of samples per iteration.
+| `PARALLEL_EXECUTIONS_PER_ITERATION`
+|  Specifies the number of parallel executions per iteration. It should be an integer number higher than zero.
 | Int (default=2)
+| `NUMBER_OF_REPETITIONS`
+|  Specifies the number of hyperparameter sampling repetitions. Ensures every experiment is repeated a given number of times. It should be an integer number higher than one. Set `-1` to never see repetitions.
+| Int (default=-1)
+| `PAUSE_AFTER_EVERY_ITERATIONS`
+|  If higher than zero, pause the workflow after every specified number of iterations. Set `-1` to disable.
+| Int (default=-1)
+| `TARGET_WORKFLOW`
+| Specifies the workflow path from the catalog that should be optimized.
+| String (default=auto-ml-optimization/Himmelblau_Function)
+| `TARGET_NATIVE_SCHEDULER`
+| Name of the native scheduler node source to use on the target workflow tasks when deployed inside a cluster such as SLURM, LSF, etc.
+| String (default=empty)
+| `TARGET_NATIVE_SCHEDULER_PARAMS`
+| Parameters given to the native scheduler (SLURM, LSF, etc) while requesting a ProActive node used to deploy the target workflow tasks.
+| String (default=empty)
+| `TARGET_NODE_ACCESS_TOKEN`
+| If not empty, the target workflow tasks will be run only on nodes that contains the specified token.
+| String (default=empty)
+| `TARGET_NODE_SOURCE_NAME`
+| If not empty, the target workflow tasks will be run only on nodes belonging to the specified node source.
+| String (default=empty)
+| `TARGET_CONTAINER_PLATFORM`
+| Specifies the container platform to be used for executing the target workflow tasks.
+| List [no-container, docker, podman, singularity] (default=empty)
+| `TARGET_CONTAINER_IMAGE`
+| Specifies the name of the container image that will be used to run the target workflow tasks.
+| List [docker://activeeon/dlm3, docker://activeeon/cuda, docker://activeeon/cuda2, docker://activeeon/rapidsai, docker://activeeon/nvidia:rapidsai, docker://activeeon/nvidia:pytorch, docker://activeeon/nvidia:tensorflow, docker://activeeon/tensorflow:latest, docker://activeeon/tensorflow:latest-gpu] (default=empty)
+| `TARGET_CONTAINER_GPU_ENABLED`
+| If True, it will activate the use of GPU for the target workflow tasks on the selected container platform.
+| Boolean (default=empty)
+| `TARGET_NVIDIA_RAPIDS_ENABLED`
+| If True, it will activate the use of NVIDIA RAPIDS for the target workflow tasks on the selected container platform.
+| Boolean (default=empty)
 | `VISDOM_ENABLED`
-| If True, the user can visualize the data using the Visdom web interface.
+| If True, the Visdom service is started allowing the user to visualize the hyperparameter optimization using the Visdom web interface.
 | Boolean (default=False)
 | `VISDOM_PROXYFIED`
 | If True, requests to Visdom are sent via a proxy server.
 | Boolean (default=False)
-| `VISDOM_ENABLE_LOGIN`
-| If True, the user will be asked to insert a username and password to access the Visdom web interface.
-| Boolean (default=False)
-| `VISDOM_USERNAME`
-| The username used to access the Visdom web interface.
-| String (default=empty)
-| `VISDOM_PASSWORD`
-| The password used to access the Visdom web interface.
-| String (default=empty)
-| `VISDOM_INSTANCE_NAME`
-| Specifies the name of the container that will run Visdom.
-| String (default=visdom-server)
 | `TENSORBOARD_ENABLED`
-| If True, the user can visualize the data using the Tensorboard web interface.
+| If True, the TensorBoard service is started allowing the user to visualize the hyperparameter optimization using the TensorBoard web interface.
 | Boolean (default=False)
-| `TENSORBOARD_INSTANCE_NAME`
-| Specifies the name of the container that will run Tensorboard.
-| String (default=tensorboard-server)
-| `TENSORBOARD_LOG_PATH`
-| Specifies the path where Tensorboard logs are created and stored on the host.
-| String (default=/shared/$TENSORBOARD_INSTANCE_NAME)
-| `TENSORBOARD_DOCKER_LOG_PATH`
-| Specifies the path where Tensorboard logs are created and stored on the docker container.
-| String (default=/graphs/$TENSORBOARD_INSTANCE_NAME)
-| `PROPAGATE_CONTAINER_PLATFORM`
-| If True, the selected container platform (docker, singularity, etc..) will propagate to the workflow that should be optimized.
-| (default=True)
+| `TENSORBOARD_PROXYFIED`
+| If True, requests to TensorBoard are sent via a proxy server.
+| Boolean (default=False)
 |===
 
-image::AutoML_Full.png[1000,700,align=center]
+image::AutoML_Full.png[align=center]
 *How to define the search space:*
 
 This subsection describes common building blocks to define a search space:
@@ -256,44 +269,80 @@ This subsection describes common building blocks to define a search space:
 
 The choice of the tuner depends on the following aspects:
 
-    - Time required to evalute the model.
+    - Time required to evaluate the model.
     - Number of hyperparameters to optimize.
     - Type of variable.
     - The size of the search space.
 
-In the following, we briefly describe the different tuners proposed by the Multi_Tuners_AutoML workflow:
+In the following, we briefly describe the different tuners proposed by the `Distributed_Auto_ML` workflow:
 
-    - *Grid sampling* applies when all variables are discrete and the number of possibilities is low.
-      A grid search is a naive approach that will simply try all possibilities making the search extremely long even for medium sized problems.
+    - *Grid sampling* applies when all variables are discrete, and the number of possibilities is low. A grid search is a naive approach that will simply try all possibilities making the search extremely long even for medium-sized problems.
 
-    - *Random sampling* is an alternative to grid search when the number of discrete parameters to optimize and the time required for each evaluation is high.
-      Random search picks the point randomly from the configuration space.
+    - *Random sampling* is an alternative to grid search when the number of discrete parameters to optimize, and the time required for each evaluation is high. Random search picks the point randomly from the configuration space.
 
-    - *QuasiRandom sampling* ensures a much more uniform exploration of the search space than traditional pseudo random.
-      Thus, quasi random sampling is preferable when not all variables are discrete, the number of dimensions is high and the time required to evaluate a solution is high.
+    - *QuasiRandom sampling* ensures a much more uniform exploration of the search space than traditional pseudo random. Thus, quasi random sampling is preferable when not all variables are discrete, the number of dimensions is high, and the time required to evaluate a solution is high.
 
-    - *Bayes search* models the search space using gaussian process regression, which allows to have an estimate of the loss function and the uncertainty on that estimate at every point of the search space.
-      Modeling the search space suffers from the curse of dimensionality, which makes this method more suitable when the number of dimensions is low.
+    - *Bayes search* models the search space using gaussian process regression, which allows an estimation of the loss function, and the uncertainty on that estimate at every point of the search space. Modeling the search space suffers from the curse of dimensionality, which makes this method more suitable when the number of dimensions is low.
 
-    - *CMAES search* is one of the most powerful black-box optimization algorithm.
-      However, it requires a significant number of model evaluation (in the order of 10 to 50 times the number of dimensions) to converge to an optimal solution.
-      This search method is more suitable when the time required for a model evaluation is relatively low.
+    - *CMAES search* (Covariance Matrix Adaptation Evolution Strategy) is one of the most powerful black-box optimization algorithm.
+      However, it requires a significant number of model evaluation (in the order of 10 to 50 times the number of dimensions) to converge to an optimal solution. This search method is more suitable when the time required for a model evaluation is relatively low.
 
-    - *MOCMAES search* is a multi-objective algorithm optimizing multiple tradeoffs simultaneously.
-      To do that, MOCMAES employs a number of CMAES algorithms.
+    - *MOCMAES search* (Multi-Objective Covariance Matrix Adaptation Evolution Strategy) is a multi-objective algorithm optimizing multiple tradeoffs simultaneously. To do that, MOCMAES employs a number of CMAES algorithms.
+
+Here is a table that resumes when to use each algorithm.
+|===
+| *Algorithm* | *Time* | *Dimensions* | *Continuity* | *Conditions* | *Multi-objective*
+| `Grid`
+| `Low`
+| `Low`
+| `Discrete`
+| `Yes`
+| `No`
+| `Random`
+| `High`
+| `High`
+| `Discrete`
+| `Yes`
+| `No`
+| `QuasiRandom`
+| `High`
+| `High`
+| `Mixed`
+| `Yes`
+| `No`
+| `Bayes`
+| `High`
+| `Medium`
+| `Mixed`
+| `Yes`
+| `No`
+| `CMAES`
+| `Low`
+| `Low`
+| `Mixed`
+| `No`
+| `No`
+| `MOCMAES`
+| `Low`
+| `Low`
+| `Mixed`
+| `No`
+| `Yes`
+|===
 
 
 === Objective Functions
 
-The following workflows represent some mathematical functions that can be optimized by the AutoML tuners.
+The following workflows represent some mathematical functions that can be optimized by the `Distributed_Auto_ML` tuners.
 
-*Himmelblau_Function:* is a multi-modal function, used to test the performance of optimization algorithms.
+*Himmelblau_Function:* is a multi-modal function containing four identical local minima. It's used to test the performance of optimization algorithms. For more info, please click https://en.wikipedia.org/wiki/Himmelblau%27s_function[here].
 
+image::Himmelblau_Function.png[448,336,align=center]
 
 === Hyperparameter Optimization
 
 The following workflows represent some machine learning and deep learning algorithms that can be optimized.
-These workflows have several common variables as in Multi_Tuners_Auto_ML. Some of the workflows are characterized
+These workflows have several common variables as in `Distributed_Auto_ML`. Some workflows are characterized
 by few additional variables.
 
 *CIFAR_10_Image_Classification:* trains a simple deep CNN on the CIFAR10 images dataset using the Keras library.
@@ -322,47 +371,54 @@ by few additional variables.
 | (default=True)
 |===
 
-The following workflows have common variables with the above illustred workflows.
+The following workflows have common variables with the above illustrated workflows.
+
+*CIFAR_10_Image_Classification:* trains a simple deep CNN on the CIFAR10 images dataset using the Keras library.
 
 *CIFAR_100_Image_Classification:* trains a simple deep CNN on the CIFAR100 images dataset using the Keras library.
 
-*Diabetics_Detection:* trains a logistic regression model using MLOS machine learning generic tasks in order to detect diabetics.
+*Image_Object_Detection:* trains a YOLO model on the coco dataset using PML deep learning generic tasks.
 
-*Image_Object_Detection:* trains a YOLO model on the coco dataset using MLOS deep learning generic tasks.
-
-*Iris_Classification:* trains multiple types of SVM models on the Iris flower dataset.
+*Digits_Classification:* python script illustrating an example of multiple machine learning models optimization.
 
 *Text_Generation:* trains a simple Long Short-Term Memory (LSTM) to learn sequences of characters from 'The Alchemist' book. It's a novel by Brazilian author Paulo Coelho that was first published in 1988.
 
 
 === Neural Architecture Search
 
-The following workflows contain a search space containing a set of possible neural networks architectures that can be used by the AutoML tuners to automatically find the best combinations of  neural architectures within the search space.
+The following workflows contain a search space containing a set of possible neural networks architectures that can be used by `Distributed_Auto_ML` to automatically find the best combinations of neural architectures within the search space.
 
-*Handwritten_Digit_Classification:* train a simple deep CNN on the MNIST dataset using the Pytorch library.
+*Handwritten_Digit_Classification:* trains a simple deep CNN on the MNIST dataset using the PyTorch library.
 
+
+=== Distributed Training
+
+The following workflows illustrate some examples of multi-node and multi-gpu distributed learning.
+
+*TensorFlow_Keras_Multi_Node_Multi_GPU:* is a TensorFlow + Keras workflow template for distributed training (multi-node multi-gpu) with AutoML support.
 
 
 === Templates
 
 The following workflows represent python templates that can be used to implement a generic machine learning task.
 
-*Python_Task:* is a simple PyTorch task template.
+*Python_Task_Template_For_AutoML:* is a simple Python task template pre-configured to run with `Distributed_Auto_ML`.
 
-== Machine Learning as a Service (MLaaS)
+*R_Task_Template_For_AutoML:* is a simple R task template pre-configured to run with `Distributed_Auto_ML`.
 
-Once a predictive model is built, tested and validated, you can easily use it in real world production pipelines by deploying it as a REST Web Service.
-This will be particularly useful for engineering or business teams that want to take advantage of this model.
+== Model as a Service for Machine Learning (MaaS_ML)
 
-The life cycle of any MLaaS instance (i.e., from starting the generic service instance, deploying an AI specific model to pausing or deleting the instance) can be managed in three different ways in MLOS :
+Once a predictive model is built, tested and validated, you can easily use it in real world production pipelines by deploying it as a REST Web Service via the MaaS_ML service.
+MaaS_ML is dedicated to make deployments of lightweight machine learning (ML) models simple, portable, and scalable, and to easily manage their lifetimes. This will be particularly useful for engineering or business teams that want to take advantage of this model.
 
-- Using the *Studio Portal* and more specifically the bucket *model-as-a-service* where specific generic tasks are provided to process all the possible actions (i.e., Model_Service_Start, Deploy_AI_Model, Call_Prediction_Service, Model_Service_Actions[Finish/Pause/Resume]).
+The life cycle of any MaaS_ML instance (i.e., from starting the generic service instance, deploying an AI specific model to pausing or deleting the instance) can be managed in three different ways in PML :
+
+- Using the *Studio Portal* and more specifically the bucket *model-as-a-service* where specific generic tasks are provided to process all the possible actions (i.e., MaaS_ML_Service_Start, MaaS_ML_Deploy_Model, MaaS_ML_Call_Prediction, MaaS_ML_Actions[Finish/Pause/Resume]).
 These tasks can be easily integrated to your AI pipelines/workflows as you can see in this <<Deployment Pipeline Example>>.
-- Using the *Cloud Automation Portal* by executing the different actions associated to MLaaS (i.e. Deploy_Model_Service, Update_Model_Service, Pause_Model_Service, Resume_Model_Service, Finish_Model_Service.)
-- Using the *Swagger UI* which is accessible once the MLaaS instance is up and running.
+- Using the *Service Automation Portal* by executing the different actions associated to MaaS_ML (i.e. Deploy_ML_Model, Pause_MaaS_ML, Update_MaaS_ML, Finish_MaaS_ML.)
+- Using the *Swagger UI* which is accessible once the MaaS_ML instance is up and running.
 
-
-Once a MLaaS instance is up and running, it could be used for:
+Once a MaaS_ML instance is up and running, it could be used for:
 
 - *AI Model Deployment or Update*: the user has to provide a valid specific AI Model identifier in order to deploy the model of his/her choice.
 
@@ -370,21 +426,21 @@ Once a MLaaS instance is up and running, it could be used for:
 
 - *Deploy a New Specific AI Model*: the running generic AI model can be used to deploy a new specific AI model.
 
-Using MLaaS, you can easily deploy and use any machine learning model as a REST Web Service on a physical or a virtual compute host on which there is an available Proactive Node. Going through the Proactive Scheduler,
+Using MaaS_ML, you can easily deploy and use any machine learning model as a REST Web Service on a physical or a virtual compute host on which there is an available Proactive Node. Going through the Proactive Scheduler,
 you can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and eventually, deploy a Model-Service on that specific node.
 
-In the following subsections, we will illustrate the life cycle of a MLaaS instance, from starting the generic service instance,
-deploying a specific model, pausing it, to deleting the instance. We will also talk about how the life cycle of a MLaaS instance
-can be managed via three different ways in MLOS:
+In the following subsections, we will illustrate the life cycle of a MaaS_ML instance, from starting the generic service instance,
+deploying a specific model, pausing it, to deleting the instance. We will also talk about how the life cycle of a MaaS_ML instance
+can be managed via three different ways in PML:
 
 . <<Via Studio Portal>>
-. <<Via Cloud Automation Portal>>
+. <<Via Service Automation Portal>>
 . <<Via Swagger UI>>
 
-In the description below, multiple tables represent the main variables that characterize the MLaaS workflows.
+In the description below, multiple tables represent the main variables that characterize the MaaS_ML workflows.
 In addition to the variables mentioned below, there is a set of generic variables that are common between all workflows
 which can be found in the subsection <<AI Workflows Common Variables>>.
-The management of the life cycle of MLaaS will be detailed in the next sub-sections.
+The management of the life cycle of MaaS_ML will be detailed in the next sub-sections.
 
 === Via Studio Portal
 ==== Start a Generic Service Instance
@@ -395,20 +451,20 @@ Create a new workflow.
 
 Add the `model_as_a_service` bucket by clicking in the `View` menu field > `Add Bucket Menu to the Palette` > `model_as_a_service`..
 
-Drag and drop the `Model_Service_Start` task from the bucket.
+Drag and drop the `MaaS_ML_Service_Start` task from the bucket.
 
 Execute the workflow by setting the different workflow's variables as described in the Table below.
 
-.Model_Service_Start variables
+.MaaS_ML_Service_Start variables
 [cols="2,5,2"]
 |===
 |*Variable name* | *Description* | *Type*
 3+^|*Workflow variables*
 | `MODEL_SERVICE_INSTANCE_NAME`
 | Service instance name.
-| String (default="model-server-${PA_JOB_ID}").
+| String (default="maas_ml-${PA_JOB_ID}").
 | `MODEL_SERVICE_PROXIFIED`
-| Allows access to the endpoint through an Http(s) Proxy.
+| Allows access to the endpoint through a HTTP(s) Proxy.
 | Boolean (default=False).
 | `MODEL_SERVICE_ENTRYPOINT`
 | This entry script starts the service and defines the different functions to deploy the model, scores the prediction requests based on the deployed model, and returns the results. This script is specific to your model. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about this file can be found in the <<_customize_the_service>> section.
@@ -425,10 +481,10 @@ Execute the workflow by setting the different workflow's variables as described 
 3+^|*Task variables*
 | `SERVICE_ID`
 | The name of the service. Please keep the default value for this variable.
-| String (default="Model_Service")
+| String (default="MaaS_ML")
 | `INSTANCE_NAME`
 | The name of the service that will be deployed.
-| String (default="model-server-${PA_JOB_ID}")
+| String (default="maas-ml-${PA_JOB_ID}")
 | `ENGINE`
 | Container engine.
 | String (default="$CONTAINER_PLATFORM")
@@ -449,15 +505,15 @@ Execute the workflow by setting the different workflow's variables as described 
 | String (default="$MODEL_SERVICE_NODE_NAME")
 |===
 
-==== Deploy a Specific AI Model
+==== Deploy a Specific ML Model
 
-You can also deploy a specific AI model directly from the link:https://try.activeeon.com/studio[Studio Portal].
+You can also deploy a specific ML model directly from the link:https://try.activeeon.com/studio[Studio Portal].
 
-Drag and drop the `Deploy_AI_Model` task from the MLaaS bucket.
+Drag and drop the `MaaS_ML_Deploy_Model` task from the MaaS_ML bucket.
 
 Execute the workflow and set the different workflow's variables as follows:
 
-.Deploy_AI_Model variables
+.MaaS_ML_Deploy_Model variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -472,11 +528,11 @@ Execute the workflow and set the different workflow's variables as follows:
 | Specifies the name of the image that will be used to run the different workflow tasks.
 | String (default=Empty).
 | `SERVICE_TOKEN`
-| A valid token generated by the MLaaS Service for user authentication.
+| A valid token generated by the MaaS_ML Service for user authentication.
 | String (default=Empty).
 3+^|*Task variables*
 | `DEPLOY_MODEL_ENDPOINT`
-| A URL endpoint defined by the user where the AI Model was deployed
+| A URL endpoint defined by the user where the AI Model was deployed.
 | URL (default=Empty).
 | `API_EXTENSION`
 | The base path to access the deployment endpoint.
@@ -485,19 +541,22 @@ Execute the workflow and set the different workflow's variables as follows:
 | A valid URL specified by the user referencing the model that needs to be deployed.
 | URL (default=  \https://activeeon-public.s3.eu-west-2.amazonaws.com/models[] )
 | `SERVICE_TOKEN`
-| A valid token generated by the MLaaS Service for user authentication.
+| A valid token generated by the MaaS_ML Service for user authentication.
 | String (default=Empty).
+| `DRIFT_DETECTION_WINDOW_SIZE`
+| The size of the data to be extracted from the old training dataset to be used as a baseline data for the drift detection.
+| Integer (default=50).
 |===
 
 ==== Call the Service for Predicition
 
 Once the model is deployed, you can also call the service for prediction directly from the link:https://try.activeeon.com/studio[Studio Portal].
 
-Drag and drop the `Call_Prediction_Service` task from the MlaaS bucket.
+Drag and drop the `MaaS_ML_Call_Prediction` task from the MaaS_ML bucket.
 
 Execute the Workflow and set the different workflow's variables as follows:
 
-.Call_Prediction_Service variables
+.MaaS_ML_Call_Prediction variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
@@ -512,14 +571,14 @@ Execute the Workflow and set the different workflow's variables as follows:
 | Specifies the name of the image that will be used to run the different workflow tasks.
 | String (default=Empty).
 | `SERVICE_TOKEN`
-| A valid token generated by the MLaaS Service for user authentication.
+| A valid token generated by the MaaS_ML Service for user authentication.
 | String (default=Empty).
 3+^|*Task variables*
 | `PREDICT_MODEL_ENDPOINT`
 | The endpoint of the started service.
-| URL
+| URL (default=Empty)
 | `SERVICE_TOKEN`
-| A valid token generated by the MLaaS Service for user authentication.
+| A valid token generated by the MaaS_ML Service for user authentication.
 | String (default=Empty).
 | `PREDICT_EXTENSION`
 | The base path to access the prediction endpoint.
@@ -530,61 +589,69 @@ Execute the Workflow and set the different workflow's variables as follows:
 | `LABEL_COLUMN`
 | Name of the label column. It needs to be set if data is labeled.
 | String (default=Empty)
+| `DATA_DRIFT_DETECTOR`
+| Name of the data drift detector to be used in the drift detection process.
+| List [HDDM, Page Hinkley, ADWIN] (default="HDDM")
 |===
 
 ==== Delete/Finish the Service
 
 You can also delete the service instance using the link:https://try.activeeon.com/studio[Studio Portal].
 
-Drag and drop the `Model_Service_Actions` task from the MLaaS bucket.
+Drag and drop the `MaaS_ML_Actions` task from the MaaS_ML bucket.
 
 Execute the Workflow and set the different workflow's variables as follows:
 
-.Model_Service_Actions variables
+.MaaS_ML_Actions variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
 3+^|*Task variables*
 | `ACTION`
 | The action that will be processed regarding the service status.
-| List [Pause_Model_Service, Resume_Model_Service, Finish_Model_Service] (default="Finish_Model_Service")
+| List [Pause_MaaS_ML, Resume_MaaS_ML, Finish_MaaS_ML] (default="Finish_MaaS_ML")
+| `INSTANCE_NAME`
+| The name of the service that the action will be processed on.
+| String (default="maas-ml-${PA_JOB_ID}")
 | `INSTANCE_ID`
 | The service instance ID.
 | String (default=Empty)
 |===
 
-=== Via Cloud Automation Portal
+=== Via Service Automation Portal
 ==== Start a Generic Service Instance
 
-Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Cloud Automation Portal].
 
-Search for `Model_Service` in Services Workflows List.
+Open the link:https://try.activeeon.com/automation-dashboard/#/portal/service-automation[Service Automation Portal].
+
+
+Search for `MaaS_ML` in Services Workflows List.
 
 Set the following variables:
 
-[#table_mlaas]
-.Model_Service variables
+[#table_MaaS_ML]
+.MaaS_ML variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
 | `BUILD_IMAGE_IF_NOT_EXISTS`
 | Pull and build the singularity image if the Singularity Image File (SIF) file is not available.
-| Boolean (default=False)
+| Boolean (default=True)
 | `DEBUG_ENABLED`
 | If True, the user will be able to examine the stream of output results of each task.
 | Boolean (default=True)
 | `DOCKER_IMAGE`
 | Specifies the name of the Docker image that will be used to run the different workflow tasks.
-| String (default="activeeon/model_as_a_service")
+| String (default="activeeon/maas_ml")
 | `DRIFT_ENABLED`
 | True if a detector is needed to check for drifts in the input datasets compared to the training datasets.
 | Boolean (default=True)
 | `DRIFT_THRESHOLD`
-| The level or point at which the data drift is detected and the user is notified.
+| The level or point at which the data drift is detected, and the user is notified.
 | Float (default=1.9)
 | `ENDPOINT_ID`
 | The endpoint_id that will be used if `PROXYFIED` is set to True.
-| String (default="maas-gui")
+| String (default="maas-ml-gui")
 | `ENGINE`
 | Container engine.
 | List (default="docker")
@@ -593,7 +660,7 @@ Set the following variables:
 | Boolean (default=False)
 | `INSTANCE_NAME`
 | The name of the service that will be deployed.
-| String (default="model-server")
+| String (default="maas-ml")
 | `NODE_NAME`
 | The name of the node where the service will be deployed. If empty, the service will be deployed on an available node selected randomly.
 | String (default=Empty)
@@ -604,11 +671,11 @@ Set the following variables:
 | This entry script starts the service and defines the different functions to deploy the model, scores the prediction requests based on the deployed model, and returns the results. This script is specific to your model. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about this file can be found in the <<_customize_the_service>> section.
 | String (default="ml_service").
 | `SERVICE_PORT`
-| Controls the port used to start the Model Service from the Cloud Automation Portal. -1 for random port allocation.
+| Controls the port used to start the Model Service from Service Automation Portal. -1 for random port allocation.
 | Integer (default="-1").
 | `SINGULARITY_IMAGE_PATH`
 | Location of the singularity image on the node file system (this path will be used to either store the singularity image or the image will be directly used if the file is present).
-| String (default="/tmp/model_service.sif")
+| String (default="/tmp/maas_ml.sif")
 | `TRACE_ENABLED`
 | True if the user wants to keep a trace on the different changes occurring in the service.
 | Boolean (default=True)
@@ -619,37 +686,40 @@ Set the following variables:
 
 Click on `Execute Action` and follow the progress of the service creation.
 
-image::NEW_MAS_Model_Servie_PCA.png[500,500,align=center]
+image::NEW_MAAS_ML_Service_PSA.PNG[500,500,align=center]
 
-==== Deploy a Specific AI Model
+==== Deploy a Specific ML Model
 
-Once the status of your generic model service is displayed as `RUNNING` on `Cloud Automation`, you can deploy your model by following the steps below :
+Once the status of your generic model service is displayed as `RUNNING` on `Service Automation`, you can deploy your model by following the steps below :
 
-Select and execute the `Deploy_Model_Action` from Actions to deploy your model.
+Select and execute the `Deploy_ML_Model` from Actions to deploy your model.
 
 Set the Following variables:
 
-.Deploy_AI_Model variables
+.Deploy_ML_Model variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
+| `BASELINE_DATA_URL`
+| URL of the dataset to be deployed and used in the data drift detection process.
+| URL (default= \https://activeeon-public.s3.eu-west-2.amazonaws.com/datasets/baseline_data.csv)
 | `DEVIATION_DETECTION`
-| If True, the data drift will be detected and the user will be notified about the drift.
+| If True, the data drift will be detected, and the user will be notified about the drift.
 | Boolean (default=True)
 | `DEVIATION_THRESHOLD`
-| It represents the data drift threshold, the level or point at which the data drift is detected and the user is notified.
+| It represents the data drift threshold, the level or point at which the data drift is detected, and the user is notified.
 | Float (default=1.9)
 | `LOGGING_PREDICTION`
-| If True, the predictions will be stored and the user will be able to preview them.
+| If True, the predictions will be stored, and the user will be able to preview them.
 | Boolean (default=True)
 | `MODEL_URL`
 | A valid URL specified by the user referencing to the model that needs to be deployed.
 | URL (default= \https://activeeon-public.s3.eu-west-2.amazonaws.com/models/model.pkl)
 | `MODEL_METADATA`
-| This variable contains some statistical features such as the mean and the standard deviation extracted from the training data used to build the model that should be deployed. This metadata is used for the purpose of detecting drifts.
+| This variable contains some statistical features such as the mean, and the standard deviation extracted from the training data used to build the model that should be deployed. This metadata is used for the purpose of detecting drifts.
 | Numerical vector (default= [[5.8216666667,3.0658333333,3.695,1.1766666667],[0.8128364419,0.4385797999,1.7614380107,0.7581194484]])
 | `USER_NAME`
-| A valid user name having the needed privileges to execute this action.
+| A valid username having the needed privileges to execute this action.
 | String (default="user")
 |===
 
@@ -660,28 +730,26 @@ Check that the status correctly evolves to `AI_MODEL_DEPLOYED`.
 
 ==== Delete (Finish)/Update/Pause the Service
 
-You can delete the launched service instance directly from the Cloud Automation portal:
 
-Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Cloud Automation Portal].
+You can delete the launched service instance directly from Service Automation Portal:
 
-Set the action `Finish_Service` under Actions and click on execute.
+Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Service Automation Portal].
 
-image::MAS_Delete_Service.png[align=center]
+Set the action `Finish` under Actions and click on `Execute Action`.
 
-There are also two other actions that can be executed from the Cloud Automation Portal which are:
 
-- *Deploy_Model_Service*: This action will put the service instance into deployment.
+image::MAAS_ML_Delete_Service.PNG[align=center]
 
-- *Update_Model_Service*: This action will update the deployed instance according to the updated variables.
+There are also two other actions that can be executed from Service Automation Portal which are:
 
-- *Resume_Model_Service*: This action will resume the paused service instance. (This no longer exists)
+- *Deploy_ML_Model*: This action will put the service instance into deployment.
 
-- *Pause_Model_Service*: This action will pause the service instance.
+- *Update_MaaS_ML*: This action will update the deployed instance according to the updated variables.
 
-- *Finish_Model_Service*: This action will finish and delete the service instance
+- *Pause_MaaS_ML*: This action will pause the service instance.
 
-When running the Model Service with Singularity as an Engine, *Pause_Model_Service* and
-*Resume_Model_Service* actions can not be executed.
+
+When running the Model Service with Singularity as an Engine, the *Pause_MaaS_ML* action can not be executed.
 
 ==== Audit and Traceability
 To access the Audit and Traceability page, click on the endpoint under the Endpoint list.
@@ -711,9 +779,9 @@ Through this Swagger UI, you are now able to:
 ** Remove deployed model
 ** Update the service parameter
 
-==== Deploy/Undeploy/Redeploy a Specific AI Model
+==== Deploy/Undeploy/Redeploy a Specific ML Model
 
-You can also deploy a specific AI model using the Swagger UI:
+You can also deploy a specific ML model using the Swagger UI:
 
 Open the Swagger UI.
 
@@ -737,7 +805,7 @@ Open the Swagger UI.
 
 Open the `get_token` operation and get an api_token by entering your username (default value is `user`).
 
-Open the `predict` operation and set the provided token and the data that you need to score.
+Open the `predict` operation and set the provided token, and the data that you need to score.
 
 image::MAS_Predict_Swagger.png[align=center]
 
@@ -746,10 +814,10 @@ image::MAS_Predict_Swagger.png[align=center]
 === Deployment Pipeline Example
 
 You can connect the different tasks in a single workflow to get the full pipeline from the model training step to the model deployment and consumption steps. Each task will propagate the acquired variables to its children tasks.
-The following workflow example is available on the `model_as_a_service` bucket under the name of `Deploy_And_Call_IRIS_Flower_Classifier_Model`.
-This example trains an Iris Flower Classifier, starts a service instance where the trained model is deployed and the input data is scored by consuming the endpoints exposed by the model_service.
+The following workflow example is available on the `model_as_a_service` bucket under the name of `IRIS_Deploy_Flower_Classifier_Model`.
+This example trains an Iris Flower Classifier, starts a service instance where the trained model is deployed, and the input data is scored by consuming the endpoints exposed by the MaaS_ML service.
 
-image::NEW_MAS_IRIS_Workflow_Example.png[align=center]
+image::NEW_MAAS_ML_IRIS_Workflow_Example.PNG[align=center]
 
 === Customize the Service
 
@@ -766,7 +834,7 @@ This script defines the different functions needed to deploy the model, score da
 It is possible to edit this script to make it more customized to your model. The entry script must take into consideration the:
 
 * List of users that are allowed to consume the service endpoints
-* Format of the model expected by the deployment and the prediction functions (e.g., pickle, joblib, etc.)
+* Format of the model expected by the deployment, and the prediction functions (e.g., pickle, joblib, etc.)
 * Format of the incoming data (e.g., JSON, Array, Matrix, etc.)
 * Data format expected by the model (e.g., JSON, Array, Matrix, etc.)
 
@@ -807,10 +875,9 @@ The data evolves over time and can therefore cause degradations affecting the
 intrinsic characteristics and behavior of the learning model.
 Data drift is one of the main reasons why the accuracy of the model degrades over time.
 Therefore, it is important that the model is able to adapt to these changes.
-In machine learning, data drift is the modification of the model input data (relative to the
-training data) that leads to a degradation of the model performance.
-Monitoring data drifts allows to detect
-these model performance problems and try to adapt to them as in the figure below. To deal with this problem, we have integrated a data drift detection mechanism in the Machine Learning as a Service module of ProActive.
+Monitoring data drifts allows detecting the model performance drops (as in the figure below) to take
+actions accordingly. To deal with this problem, we have integrated a data drift
+detection mechanism in the Machine Learning as a Service module of ProActive.
 
 image::drift.png[align=center]
 
@@ -825,72 +892,481 @@ This allows the user to better manage the drift and to act accordingly.
 In fact, the input data set is monitored using different methods of data drift
 detection in which the user is free to choose the one that best suits his needs.
 Currently, we use three well-known methods for this purpose: HDDM, Page Hinkley and ADWIN.
-This list is likely to be expanded to include other drift detection methods.
+This list is likely to be expanded in the future to include other drift detection methods.
 To detect drift in a new dataset, it is necessary to compare it to the old training
 dataset on which the model was trained. Thus, any detected drift indicates that the
 model is not the best predictor and that new training on the new dataset should take place.
 
-As the DDD function is part of the MLaaS module,
+As the DDD function is part of the MaaS_ML module,
 it can also be launched from different Proactive portals.
 
-==== Via Proactive Studio Portal
-The data drift detection function is added to the tasks and workflows of the bucket
-*model_as_a_service*. This function is directly linked to the deployment of the model
-in MLaaS (where the user deploys the model, its metadata and a part of the
-old training data set to be used for drift detection in the new input data set),
-and to the call of the prediction service in MLaaS (where the drift detector is chosen
-and the detection process is implemented using the chosen detector).
+==== Via Studio Portal
+The data drift detection mechanism is added to the tasks and workflows of the bucket
+*model_as_a_service*. This mechanism is directly linked to the deployment of the model
+in MaaS_ML (where the user deploys the model, and a part of the
+old training dataset to be used for drift detection in the new input data set),
+and to the call of the prediction service in MaaS_ML (where the drift detector is chosen,
+and the detection process is started using the chosen detector).
 
-In the workflow named *IRIS_Deploy_Predict_Flower_Classifier_Model* found in the
-*model_as_a_service* bucket in the Proactive Studio Portal, the task
-*Deploy_AI_Model* and *Call_Prediction_Service* have been mainly modified to include the DDD
-features.
+The workflow *IRIS_Deploy_Predict_Flower_Classifier_Model*, found in the
+*model_as_a_service* bucket in the Proactive Studio Portal, shows an example of pipeline using the generic tasks
+*MaaS_ML_Deploy_Model* and *MaaS_ML_Call_Prediction* including the DDD mechanism.
 
-In particular, in the *Deploy_AI_Model* task, the user is asked to enter
+In particular, in the *MaaS_ML_Deploy_Model* task, the user is asked to enter
 *DRIFT_DETECTION_WINDOW_SIZE* which is a task variable specifying the size of the data
 to be extracted from the old training dataset (the dataset on which the model was initially
 trained). For example, if the user chooses a value = 50 for this variable, the algorithm will
-randomly choose 50 lines from the old training dataset. This subset of data
-(we call it *baseline data*) will be deployed
- accompanied to the deployed model to be used in the data drift
-detection process that will be enacted in the *Call_Prediction_Service*.
+randomly choose 50 lines from the old training dataset. This subset of data (we call it *baseline data*) 
+will be saved in the service in order to be used afterward for the data drift detection process 
+which will be enacted in the *MaaS_ML_Call_Prediction*.
 
 In the *Call_Prediction_Service*, the user is asked to choose the data drift
-detector to be used in the drift detection process. This can be chosen using the task
+detector to be used in the drift detection process. This can be chosen by using the task
 variable *DATA_DRIFT_DETECTOR* in which the user can choose one of HDDM, Page Hinkley
 or ADWIN as a drift detector. The algorithm here concatenates the deployed baseline_data
 to the new input (to be predicted) dataset. The chosen drift detector then will
-use the concatenated data to extract the rows where the drift took place in the new data.
+use the concatenated data to extract the rows and columns where the drift took place in the new data.
 These drift detection algorithms are enhanced in Proactive to be able to detect the attributes
-where the drift occurred.
+where the drift occurred (the columns).
 
 The obtained predictions and drifts can be viewed in the resulting output of the
 Proactive Scheduler Portal.
 
-==== Via Automation Dashboard Portal and the Swagger User Interface :
-As we have mentioned earlier in this documentation, a model can be deployed using the *Model Service* in the
-Automation Dashboard Portal. Once the service is launched, the model can be deployed by
-choosing *Deploy_Model_Service* action. Before the deployment, the user can specify the url of the
-baseline_data using the *BASELINE_DATA_URL* attribute that appears in the popup window of
- *Deploy_Model_Service* action.
+==== Via Service Automation Portal and Swagger UI
 
-Once the model is deployed via the Cloud Automation portal,
-The Swagger user interface can be opened, offering different api's
-to help the user manage the drift detection function. This
-function has been particularly integrated in the two api's; the deployment api
-and the prediction api. In the */deploy()* api, a user can choose the model
-(using *model_file* attribute)
-and its associated baseline data (using *baseline_data* attribute)
-to be deployed. In the */predict()* api, the user specifies the
-drift detection method and the input data to be predicted. Using the baseline data and the
+
+As we have mentioned earlier in this documentation, a model can be deployed using the *MaaS_ML* in the
+*Service_Automation* of the Automation Dashboard Portal. To enable the data drift detection process, the *DRIFT_ENABLED* variable
+should be set to True. Once the service is launched, the model can be deployed by
+choosing *Deploy_MaaS_ML* action. In the *Deploy_MaaS_ML* variables, the user can specify the url of the
+baseline_data using the *BASELINE_DATA_URL* variable that appears in the popup window of
+*Deploy_Model_Service* action. In case you need to change the baseline data, it can be updated using the *BASELINE_DATA_URL*
+variable of the *Update_MaaS_ML* action of MaaS_ML.
+
+Once the model is deployed via Service Automation portal,
+the Swagger user interface can be opened via the MaaS_ML instance api, offering different endpoints
+to help the user manage the drift detection mechanism. This
+mechanism has been particularly integrated into the following three endpoints:
+
+- In the */deploy()* endpoint, a user can choose the model (using *model_file* variable) and its associated baseline data (using *baseline_data* variable)
+to be deployed.
+
+- In the */predict()* endpoint, the user specifies the drift detection method, and the input data to be predicted. Using the baseline data and the
 specified drift detector method, our algorithm can detect in which attributes and particularly
-which
-rows the drift took place in the input data. The results are shown in *Response Body*
-of the */predict()* api and in the *Traceability and Audit* page.
+which rows the drift took place in the input data. The results are shown in *Response Body*
+of the */predict()* endpoint and in the *Traceability and Audit* page.
 
-== Job Analytics
+- In the */update* endpoint, the user is able to update the baseline data deployed with the model using the *baseline_data*
+variable.
 
-The *ProActive Job Analytics* is a dashboard that provides an overview of executed workflows
+In case a data drift has occurred, a user will receive a notification using the Proactive
+*Notification* service in the Automation Dashboard.
+
+== Model as a Service for Deep Learning (MaaS_DL)
+MaaS_DL is a model deployment service for putting AI models to production. MaaS_DL comes with new capabilities, compared to MaaS_ML, enabling users to deploy deep learning models, to update the deployed models with an updated version and to easily rollback to any previous version(s).
+It provides out-of-the-box integration with TensorFlow Serving TFX taking advantage of its flexibility and high-performance serving system.
+
+The life cycle of any MaaS_DL instance (i.e., from starting the generic service instance, deploying an AI specific model to pausing or deleting the instance) can be managed in three different ways in PML :
+
+- Using the *Studio Portal* and more specifically the bucket *model-as-a-service* where specific generic tasks are provided to process all the possible actions (i.e., MaaS_DL_Service_Start, MaaS_DL_Deploy_Model, MaaS_DL_Actions[Finish/Pause/Resume], MaaS_DL_Undeploy_Model).
+These tasks can be easily integrated to your AI pipelines/workflows as you can see in this <<Deployment Pipeline Example>>.
+- Using the *Service Automation Portal* by executing the different actions associated to MaaS_DL (i.e. Deploy_DL_Model, Redeploy_DL_Model, Undeploy_DL_Model)
+- Using the *Swagger UI* which is accessible once the MaaS_DL instance is up and running.
+
+Using MaaS_DL, you can easily deploy and use any machine or deep learning model as a REST Web Service on a physical or a virtual compute host on which there is an available Proactive Node. Going through the Proactive Scheduler,
+you can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and eventually, deploy a Model-Service on that specific node.
+
+In the following subsections, we will illustrate the life cycle of a MaaS_DL instance, from starting the generic service instance,
+deploying a specific model, undeploying it, to deleting the instance. We will also talk about how the life cycle of a MaaS_DL instance
+can be managed via three different ways in PML:
+
+. <<Via Studio Portal>>
+. <<Via Service Automation Portal>>
+. <<Via Swagger UI>>
+
+In the description below, multiple tables represent the main variables that characterize the MaaS_DL workflows.
+In addition to the variables mentioned below, there is a set of generic variables that are common between all workflows
+which can be found in the subsection <<AI Workflows Common Variables>>.
+The management of the life cycle of MaaS_DL will be detailed in the next sub-sections.
+
+=== Via Studio Portal
+==== Start a Generic Service Instance
+Open the link:https://try.activeeon.com/studio[Studio Portal].
+
+Create a new workflow.
+
+Add the `model_as_a_service` bucket by clicking in the `View` menu field > `Add Bucket Menu to the Palette` > `model_as_a_service`.
+
+Drag and drop the `MaaS_DL_Service_Start` task from the bucket.
+
+Execute the workflow by setting the different workflow's variables as described in the Table below.
+
+.MaaS_DL_Service_Start variables
+[cols="2,5,2"]
+|===
+|*Variable name* | *Description* | *Type*
+3+^|*Workflow variables*
+| `MODEL_SERVICE_INSTANCE_NAME`
+| Service instance name.
+| String (default="maas_dl-${PA_JOB_ID}").
+| `MODEL_SERVICE_PROXIFIED`
+| Allows access to the endpoint through an Http(s) Proxy.
+| Boolean (default=False).
+| `MODEL_SERVICE_ENTRYPOINT`
+| This entry script starts the service and defines the different functions to deploy the model, scores the prediction requests based on the deployed model, and returns the results. This script is specific to your model. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about this file can be found in the <<_customize_the_service>> section.
+| String (default="dl_service").
+| `MODEL_SERVICE_YAML_FILE`
+| A YAML file that describes the OpenAPI Specification ver. 2 (known as Swagger Spec) of the service. This file should be stored in the catalog under the `model_as_service_resources` bucket. More information about the structure of this file can be found in the section <<_customize_the_service>>.
+| String (default="dl_service-api").
+| `MODEL_SERVICE_USER_NAME`
+| A valid user name having the needed privileges to execute this action.
+| String (default="user").
+| `MODEL_SERVICE_NODE_NAME`
+| The name of the node where the service will be deployed. If empty, the service will be deployed on an available node selected randomly.
+3+^|*Task variables*
+| `SERVICE_ID`
+| The name of the service. Please keep the default value for this variable.
+| String (default="MaaS_DL")
+| `INSTANCE_NAME`
+| The name of the service that will be deployed.
+| String (default="$MODEL_SERVICE_INSTANCE_NAME")
+| `ENGINE`
+| Container engine.
+| String (default="$CONTAINER_PLATFORM")
+| `PROXIFIED`
+| It takes by default the value of `MODEL_SERVICE_PROXYFIED` workflow variable.
+| String (default="$MODEL_SERVICE_PROXYFIED")
+| `PYTHON_ENTRYPOINT`
+| It takes by default the value of `MODEL_SERVICE_ENTRYPOINT` workflow variable.
+| String (default="$MODEL_SERVICE_ENTRYPOINT")
+| `YAML_FILE`
+| It takes by default the value of `MODEL_SERVICE_YAML_FILE` workflow variable.
+| String (default="$MODEL_SERVICE_YAML_FILE")
+| `USER_NAME`
+| It takes by default the value of `MODEL_SERVICE_USER_NAME` workflow variable.
+| String (default="$MODEL_SERVICE_USER_NAME")
+| `NODE_NAME`
+| It takes by default the value of `MODEL_SERVICE_NODE_NAME` workflow variable.
+| String (default="$MODEL_SERVICE_NODE_NAME")
+|===
+
+==== Deploy a Specific DL Model
+
+You can also deploy a specific DL model directly from the link:https://try.activeeon.com/studio[Studio Portal].
+
+Drag and drop the `MaaS_DL_Deploy_Model` task from the MaaS_DL bucket.
+
+Execute the workflow and set the different workflow's variables as follows:
+
+.MaaS_DL_Deploy_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+3+^|*Workflow variables*
+| `CONTAINER_PLATFORM`
+| Specifies the type of container platform to be used (no container, docker, singularity, or podman).
+| String (default=docker)
+| `CONTAINER_GPU_ENABLED`
+| If True, containers will run based on images containing libraries that are compatible with GPU.
+| Boolean (default=False)
+| `CONTAINER_IMAGE`
+| Specifies the name of the image that will be used to run the different workflow tasks.
+| String (default=Empty).
+| `SERVICE_TOKEN`
+| A valid token generated by the MaaS_DL Service for user authentication.
+| String (default=Empty).
+3+^|*Task variables*
+| `MaaS_DL_INSTANCE_ENDPOINT`
+| The endpoint of the started service.
+| URL (default=Empty).
+| `DEPLOY_ENDPOINT`
+| The base path to access the deployment endpoint.
+| String (default="/api/deploy")
+| `MODEL_URL`
+| A valid URL specified by the user referencing the model that needs to be deployed.
+| URL (default=Empty )
+| `MODEL_VERSION`
+| The version number of the model that will be deployed.
+| Integer (default=Empty )
+| `SERVICE_TOKEN`
+| A valid token generated by the MaaS_DL Service for user authentication.
+| String (default=Empty).
+| `APPEND`
+| If True, the model will be appended to the list of already deployed models.
+| Boolean (default=True).
+|===
+
+==== Undeploy a Specific DL Model
+
+You can also undeploy a specific DL model directly from the link:https://try.activeeon.com/studio[Studio Portal].
+
+Drag and drop the `MaaS_DL_Undeploy_Model` task from the MaaS_DL bucket.
+
+Execute the Workflow and set the different workflow's variables as follows:
+
+.MaaS_DL_Undeploy_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+3+^|*Task variables*
+|`MaaS_DL_INSTANCE_ENDPOINT`
+| The endpoint of the started service.
+| URL (default=Empty).
+| `UNDEPLOY_ENDPOINT`
+| The base path to access the undeployment endpoint.
+| String (default="/api/undeploy_model")
+| `MODEL_NAME`
+| The name of the model to be undeployed.
+| String (default=Empty )
+| `MODEL_VERSION`
+| The version number of the model that will be undeployed.
+| Integer (default=Empty )
+|===
+
+==== Delete/Finish the Service
+
+You can also delete the service instance using the link:https://try.activeeon.com/studio[Studio Portal].
+
+Drag and drop the `MaaS_DL_Actions` task from the MaaS_DL bucket.
+
+Execute the Workflow and set the different workflow's variables as follows:
+
+.MaaS_DL_Actions variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+3+^|*Task variables*
+| `ACTION`
+| The action that will be processed regarding the service status.
+| List [Pause_MaaS_DL, Resume_MaaS_DL, Finish_MaaS_DL] (default="Finish_MaaS_DL")
+| `INSTANCE_NAME`
+| The name of the service that the action will be processed on.
+| String (default="maas-dl-${PA_JOB_ID}")
+| `INSTANCE_ID`
+| The service instance ID.
+| String (default=Empty)
+|===
+
+=== Via Service Automation Portal
+==== Start a Generic Service Instance
+
+Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Service Automation Portal].
+
+Search for `MaaS_DL` in Services Workflows List.
+
+Set the following variables:
+
+[#table_MaaS_DL]
+.MaaS_DL variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `BUILD_IMAGE_IF_NOT_EXISTS`
+| Pull and build the singularity image if the Singularity Image File (SIF) file is not available.
+| Boolean (default=True)
+| `DEBUG_ENABLED`
+| If True, the user will be able to examine the stream of output results of each task.
+| Boolean (default=True)
+| `DOCKER_IMAGE`
+| Specifies the name of the Docker image that will be used to run the different workflow tasks.
+| String (default="activeeon/maas_dl")
+| `ENDPOINT_ID`
+| The endpoint_id that will be used if `PROXYFIED` is set to True.
+| String (default="maas_dl-gui")
+| `ENGINE`
+| Container engine.
+| List (default="docker")
+| `HTTPS_ENABLED`
+| True if the protocol https is needed for the defined model-service.
+| Boolean (default=False)
+| `INSTANCE_NAME`
+| The name of the service that will be deployed.
+| String (default="maas_dl")
+| `MODEL_BASE_PATH`
+|Location of the model on the node file system (this path will be used to store the model).
+|String (default="/tmp")
+| `MODELS_DEPLOYMENT_REFRESH`
+|The amount of seconds to periodically poll for updated versions of the model configuration file.
+|Integer (default = 30)
+| `NATIVE_SCHEDULER`
+|Name of the Native Scheduler node source to use when the workflow tasks must be deployed inside a cluster such as SLURM, LSF, etc.
+|String (default=Empty)
+| `NATIVE_SCHEDULER_PARAMS`
+|Parameters given to the native scheduler (SLURM, LSF, etc) while requesting a ProActive node used to deploy the workflow tasks.
+|String (default=Empty)
+| `NODE_NAME`
+| The name of the node where the service will be deployed. If empty, the service will be deployed on an available node selected randomly.
+| String (default=Empty)
+| `PROXYFIED`
+| True if a proxy is needed to protect the access to this model-service endpoint.
+| Boolean (default=False)
+| `PYTHON_ENTRYPOINT`
+| This entry script starts the service and defines the different functions to deploy the model, scores the prediction requests based on the deployed model, and returns the results. This script is specific to your model. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about this file can be found in the <<_customize_the_service>> section.
+| String (default="dl_service").
+| `SERVICE_PORT`
+| Controls the port used to start the Model Service from Service Automation Portal. -1 for random port allocation.
+| Integer (default="-1").
+| `SINGULARITY_IMAGE_PATH`
+| Location of the singularity image on the node file system (this path will be used to either store the singularity image or the image will be directly used if the file is present).
+| String (default="/tmp/maas_dl.sif")
+| `TRACE_ENABLED`
+| True if the user wants to keep a trace on the different changes occurring in the service.
+| Boolean (default=True)
+| `YAML_FILE`
+| A YAML file that describes the OpenAPI Specification ver. 2 (known as Swagger Spec) of the service. This file should be stored in the catalog under the `model_as_service_resources` bucket. More information about the structure of this file can be found in the section <<_customize_the_service>>.
+| String (default="dl_service-api").
+|===
+
+Click on `Execute Action` and follow the progress of the service creation.
+
+image::NEW_MAAS_DL_Service_PSA.PNG[500,500,align=center]
+
+==== Deploy a Specific DL Model
+
+Once the status of your generic model service is displayed as `RUNNING` on `Service Automation`, you can deploy your model by following the steps below :
+
+Select and execute the `Deploy_DL_Model` from Actions to deploy your model.
+
+Set the Following variables:
+
+.Deploy_DL_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `APPEND`
+| If True, the model will be appended to the list of already deployed models.
+| Boolean (default= True)
+| `MODEL_NAME`
+| The name of the model to be deployed.
+| String (default= "mnist_model")
+| `MODEL_URL`
+| A valid URL specified by the user referencing to the model that needs to be deployed.
+| URL (default= Empty)
+| `MODEL_VERSION`
+| The version number of the model that will be deployed.
+| Integer (default= 1)
+| `USER_NAME`
+| A valid user name having the needed privileges to execute this action.
+| String (default= "user")
+|===
+
+Click on `Execute Action` and follow the progress of the model deployment.
+
+==== Redeploy a Specific DL Model
+
+It is also possible to redeploy a specific DL model version that has been already deployed and saved at least once in this service instance by following the steps below :
+
+Select and execute the `Redeploy_DL_Model` from Actions to redeploy your model.
+
+Set the Following variables:
+
+.Redeploy_DL_Model variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `APPEND`
+| If True, the model will be appended to the list of already deployed models.
+| Boolean (default= True)
+| `MODEL_NAME`
+| The name of the model to be redeployed.
+| String (default= "mnist_model")
+| `MODEL_VERSION`
+| The version number of the model that will be redeployed.
+| Integer (default= 1)
+| `USER_NAME`
+| A valid user name having the needed privileges to execute this action.
+| String (default= "user")
+|===
+
+Click on `Execute Action` and follow the progress of the model deployment.
+
+==== Delete (Finish)/Update/Pause the Service
+
+You can delete the launched service instance directly from Service Automation Portal:
+
+Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Service Automation Portal].
+
+Set the action `Finish` under Actions and click on execute.
+
+image::MAAS_DL_Delete_Service.PNG[align=center]
+=== Via Swagger UI
+
+To access the Swagger UI, click on the second link in the top of the Traceability & Audit page.
+
+Through this Swagger UI, you are now able to:
+
+** Ask for an api_token
+** Deploy a model
+** List the deployed models
+** List the saved models in MODELS_PATH repository
+** Delete the saved models in MODELS_PATH repository
+** Make predictions
+** Redeploy a previous deployed model
+** Return the stored traceability information
+** Remove deployed model
+** Upload a new model config that will be used by Tensorflow model server
+** Return the model config used by the Tensorflow model server
+
+
+==== Deploy/Undeploy/Redeploy a Specific DL Model
+
+You can also deploy a specific DL model using the Swagger UI:
+
+Open the Swagger UI.
+
+Open the `get_token` operation and get an api_token by entering your username (default value is `user`).
+
+Open the `deploy` operation and set the provided token and upload the model that need to be deployed.
+
+image::NEW_MAAS_DL_Deploy_Swagger.PNG[align=center]
+
+Open `list_deployed_models` to return the list of all already deployed models.
+
+Open `list_saved_models` to return the list of saved models in MODELS_PATH repository.
+
+Open `redeploy` to redeploy a previously deployed model using its token.
+
+Open `undeploy` to remove a deployed model using its token.
+
+Open `clean_saved_models` to delete the list of saved models in MODELS_PATH repository.
+
+
+==== Call the Service for Predictions
+
+Once the model is deployed, you can call the service for predictions using the Swagger UI:
+
+Open the Swagger UI.
+
+Open the `get_token` operation and get an api_token by entering your username (default value is `user`).
+
+Open the `predict` operation and set the provided token and the data that you need to score.
+
+image::MAAS_DL_Predict_Swagger.PNG[align=center]
+
+==== Upload/Download Model Configuration
+
+Once the model is deployed, you can download and/or upload the model configuration file using the Swagger UI:
+Open the Swagger UI.
+
+Open the `get_token` operation and get an api_token by entering your username (default value is user).
+
+Open the `download_model_config` to return the model config used by the Tensorflow model server.
+
+Open the `upload_model_config` operation and set the provided token and the new model config file that will be used by Tensorflow model serve.
+
+image::MAAS_DL_model_config.PNG[align=center]
+
+=== Deployment Pipeline Example
+
+You can connect the different tasks in a single workflow to get the full pipeline from the model training step to the model deployment and consumption steps. Each task will propagate the acquired variables to its children tasks.
+The following workflow example is available on the `model_as_a_service` bucket under the name of `MNIST_Model_Training_and_Deployment`.
+This example trains a Mnist model, starts a service instance where the trained model is deployed as a service using the Maas_DL PSA service.
+
+image::NEW_MAAS_DL_MNIST_Workflow_Example.PNG[align=center]
+
+== Proactive Analytics
+
+The *ProActive Analytics* is a dashboard that provides an overview of executed workflows
 along with their input variables and results.
 
 It offers several functionalities, including:
@@ -898,21 +1374,16 @@ It offers several functionalities, including:
 - Advanced search by name, user, date, state, etc.
 - Execution metrics summary about durations, encountered issues, etc.
 - Charts to track variables and results evolution and correlation.
-- Export data in multiple formats for further use in analytics tools.
+- Data exportation in multiple formats for further use in analytics tools.
 
-
-The screenshot below shows an overview of the Job Analytics Portal.
-
-[[_JA-overview]]
-image::JA-overview.png[align=center]
-Job Analytics is very useful to compare metrics and charts of workflows that have common variables and results. For example, a ML algorithm might take different variable values and produce multiple results. It would be interesting to analyze the correlation and evolution of algorithm results regarding the input variation (See also a similar example of link:../MLOS/MLOSUserGuide.html#_AutoML[AutoML]).
+Proactive Analytics is very useful to compare metrics and charts of workflows that have common variables and results. For example, a ML algorithm might take different variables values and produce multiple results. It would be interesting to analyze the correlation and evolution of the algorithm results regarding the input variation (See also a similar example of link:../PML/PMLUserGuide.html#_AutoML[AutoML]).
 The following sections will show you some key features of the dashboard and how to use them for a better understanding of your job executions.
 
 [[_job_search]]
-=== Job Search
+=== Job Analytics
 
-Job Analytics Portal includes a search window that allows users to search for jobs based on specific criteria (see screenshot below).
-The job search panel allows to select multi-value filters for the following job parameters:
+Job Analytics Page includes a search window that allows users to search for jobs based on specific criteria (see screenshot below).
+The job search panel allows selecting multi-value filters for the following job parameters:
 
 - _Workflow Name(s)_: Jobs can be filtered by workflow name. Selecting/Typing one or more workflow names is provided by a built-in `auto-complete` feature that helps you search for workflows or buckets from the link:../user/ProActiveUserGuide.html#_catalog_portal[ProActive Catalog.]
 - _Project Name(s)_: You can also filter by one or more project names. You just have to specify the project names for the jobs you would like to analyze.
@@ -928,7 +1399,8 @@ Now you can hit the search button to request jobs from the scheduler database ac
 [[_JA-search-png]]
 image::JA-search.png[align=center]
 
-=== Execution Metrics
+==== Execution Metrics
+
 As shown in the screenshot below, Job Analytics Portal provides a summary of the most important job execution metrics. For instance, the dashboard shows:
 
 - A first panel that displays the number of total jobs that correspond to the search query. It also shows the ratio of successful jobs over the total number, and the number of jobs that are in progress and not yet finished. Please note that the number of in-progress jobs corresponds to the moment when the search query is executed and it is not automatically refreshed.
@@ -937,7 +1409,7 @@ As shown in the screenshot below, Job Analytics Portal provides a summary of the
 
 image::JA-metrics.png[align=center]
 
-=== Job Charts
+==== Job Charts
 
 Job Analytics includes three types of charts:
 
@@ -953,17 +1425,15 @@ image::JA-chart.png[align=center]
 
 All charts provide some advanced features such as "maximize" and "enlarge" to better visualize the results, and "move" to customize the dashboard layout (see top left side of charts). All of them provide the hovering feature as previously described and two types of charts to display: line and bar charts. Switching from one to the other can be activated through a toggle button located at the top right of the chart. Same for show/hide variables and results.
 
-
-=== Job Execution Table
-
+==== Job Execution Table
 
 The last element of the Job Analytics dashboard shows a summary table that contains all job executions returned by the search query. It includes the job ID, status, duration, submission time, variables, results, etc.
 The jobs table provides many features:
 
-- _Filtering_: users can specify filter values for every column. For instance, the picture below applies a filter on the duration where we filter only jobs that last more than 30s. For string values, we can apply string-related filters such as _Contains_. For dates, a calendar is displayed to help users select the right date. Please note that variables and results types are not automatically detected. Therefore users can choose either the _Contains_ filter or the _Greater than_ and _Less than_ filters.
+- _Filtering_: users can specify filter values for every column. For instance, the picture below applies a filter on the duration where we filter only jobs that last more than 30s. For string values, we can apply string-related filters such as _Contains_. For dates, a calendar is displayed to help users select the right date. Please note that variables and results types are not automatically detected. Therefore, users can choose either the _Contains_ filter or the _Greater than_ and _Less than_ filters.
 - _Sort, hide, pin left and right columns_: allows users to easily handle and display data with respect to their needs.
 - _Export the job data to CSV format_: enables users to exploit and process job data using other analytics tools such as R, Matlab, BI tools, ML APIs, etc.
-- _Clear and apply filters_: When filters are applied, the displayed data is updated. Therefore, we provide a button (see _apply filters to charts_ on the top left of the of the table screenshot) that allows to synchronize the charts with the filtered data in the table. Finally, it is possible to clear all filters. This will automatically deactivate the synchronization.
+- _Clear and apply filters_: When filters are applied, the displayed data is updated. Therefore, we provide a button (see _apply filters to charts_ on the top left of the of the table screenshot) that allows synchronizing the charts with the filtered data in the table. Finally, it is possible to clear all filters. This will automatically deactivate the synchronization.
 - _Link to scheduler jobs_: data in the job ID column is linked to the job executions in the scheduler. For example, if users want to access to the logs of a failing job, they can click on the corresponding job ID to be redirected to the job location in the Scheduling Portal.
 
 We note also that clicking on the issue types and charts described in the previous sections filters the table to show the corresponding jobs.
@@ -1414,8 +1884,8 @@ For a `loop` task, please use:
 
 ==== Replicate control
 
-The https://doc.activeeon.com/latest/user/ProActiveUserGuide.html#_replicate[replication] allows the execution of
-multiple tasks in parallel when only one task is defined, and the number of tasks to run could change.
+The https://doc.activeeon.com/latest/user/ProActiveUserGuide.html#_replicate[replication] allows executing multiple
+tasks in parallel when only one task is defined, and the number of tasks to run could change.
 
 Through the ProActive Jupyter Kernel, users can add replicate controls in two main ways, a generic and a straight
 forward way.
@@ -1622,7 +2092,7 @@ way:
 #%print_task_output([job_id=JOB_ID], [job_name=JOB_NAME], task_name=TASK_NAME)
 ```
 
-Finally, the  `#%print_job_output()` pragma allows to print all job outputs, by providing the job name or the job ID:
+Finally, the  `#%print_job_output()` pragma allows printing all job outputs, by providing the job name or the job ID:
 
 ```python
 #%print_job_output([job_id=JOB_ID], [job_name=JOB_NAME])
@@ -1633,7 +2103,7 @@ NOTE: If neither `job_name` nor the `job_id` are provided, the last submitted jo
 === Display and use ActiveEon Portals directly in Jupyter
 
 Finally, to have the hand on more parameters and features, the user should use ActiveEon Studio portals.
-The main ones are the _Resource Manager_, the _Scheduling Portal_ and the _Workflow Automation_.
+The main ones are the _Resource Manager_, the _Scheduling Portal_ and the _Workflow Execution_.
 
 The example below shows how the user can directly monitor his submitted job's execution in the scheduling portal:
 
@@ -1651,17 +2121,17 @@ For the related scheduling portal:
 #%show_scheduling_portal([host=YOUR_HOST], [height=HEIGHT_VALUE], [width=WIDTH_VALUE])
 ```
 
-And, for the related workflow automation:
+To monitor your jobs with Workflow Execution inside Jupyter, use:
 
 ```python
-#%show_workflow_automation([host=YOUR_HOST], [height=HEIGHT_VALUE], [width=WIDTH_VALUE])
+#%show_workflow_execution([host=YOUR_HOST], [height=HEIGHT_VALUE], [width=WIDTH_VALUE])
 ```
 
 NOTE: The parameters `height` and `width` allow the user to adjust the size of the window inside the notebook.
 
 == Customize the ML Bucket
 
-=== Create or Update a ML Task
+=== Create or Update an ML Task
 
 *Machine Learning Bucket* contains various open source tasks that can be easily used by a simple drag and drop.
 
@@ -1684,7 +2154,7 @@ NOTE: The use of docker containers is recommended as that way other tasks will n
 The `Catalog` menu provides the possibility for a user to publish newly created or/and update tasks inside *Machine Learning Bucket*, you need just to click on `Catalog` Menu then `Publish current Workflow to the Catalog`.
 Choose `machine-leaning` Bucket to store your newly added workflow on it.
 If the Task with the same name already exists in the 'machine-leaning' bucket, then, it will be updated.
-We recommend to submit Tasks with a commit message for easier differentiation between the different submitted versions.
+We recommend submitting Tasks with a commit message for easier differentiation between the different submitted versions.
 
 NOTE: More details available on link:../user/ProActiveUserGuide.html#_publish_current_workflow_to_the_catalog[ProActive User Guide^]
 
@@ -1709,11 +2179,11 @@ NOTE: The workflow represented in the above is available on the 'machine-learnin
 
 == ML Workflows Examples
 
-The MLOS provides a fast, easy and practical way to execute different workflows using the ML bucket. We present useful ML workflows for different applications in the following sub-sections.
+The PML provides a fast, easy and practical way to execute different workflows using the ML bucket. We present useful ML workflows for different applications in the following sub-sections.
 
 To test these workflows, you need to add the *machine-Learning-workflows Bucket* as main catalog in the ProActive Studio.
 
-A. Open +++<a class="studioUrl" href="/studio" target="_blank">[ProActive Workflow Studio</a>+++ home page.
+A. Open +++<a class="studioUrl" href="/studio" target="_blank">Proactive Machine Learning</a>+++ home page.
 
 B. Create a new workflow.
 
@@ -1738,8 +2208,6 @@ The following workflows present some ML basic examples. These workflows are buil
 *Vehicle_Type_Using_Model_Explainability:* predicts vehicle type based on silhouette measurements, and apply ELI5 and Kernel Explainer to understand the model’s global behavior or specific predictions.
 
 *Iris_Flowers_Classification_using_Logistic_Regression:* trains and tests a predictive model using logistic_regressive algorithm.
-
-*Movies_Recommendation:* create a movie recommendation engine using collaborative filtering algorithm.
 
 *Parallel_Classification_Model_Training:* trains three different classification models.
 
@@ -1773,22 +2241,58 @@ The following workflows are designed to feature engineering and fusion.
 
 *Data_Anomaly_Detection:* detects anomalies on energy consumption by customers.
 
-*Desjardins_DataCup_Feature_Engineering:* shows a data processing pipeline used for Desjardins Data Cup (https://datacup.ca/). The workflow exports the generated CSV file to the Amazon AWS S3.
-
-*Desjardins_DataCup_Model_Training:* shows a training step used for Desjardins Data Cup (https://datacup.ca/). The input data is the file generated by the feature engineering workflow.
-
 *Diabetics_Results_Visualization_Using_Tableau:* visualizes Diabetics Results Using Tableau.
 
+=== In Memory Workflows
+
+The following workflows are designed for in-memory execution using IPython. IPython enables all types of parallel applications to be developed, executed, debugged, and monitored interactively. For more details, please visit the https://ipyparallel.readthedocs.io/en/latest/[ipyparallel website].
+
+*In_Memory_Iris_Flowers_Classification:* classifies Iris flowers using the logistic regression algorithm. This workflow uses an external IPython Engine for in-memory execution.
+
+*Start_IPython_Cluster:* starts an IPython parallel computing cluster.
+
+=== GPU Accelerated Workflows
+
+The following workflows are designed to train machine learning models on GPU using NVIDIA RAPIDS. This reduces the training time from days to minutes.
+
+*Train_Classification_Model_On_GPU:* trains a machine learning model for data classification on GPU using NVIDIA RAPIDS.
+
+*Train_Multiple_Classification_Models_On_GPU:* trains multiple machine learning models for data classification on GPU using NVIDIA RAPIDS.
+
+*Train_Multiple_Regression_Models_On_GPU:* trains multiple machine learning models for data regression on GPU using NVIDIA RAPIDS.
+
+*Train_Regression_Model_On_GPU:* trains a machine learning model for data regression on GPU using NVIDIA RAPIDS.
+
+Please find in the table below the list of algorithms which have GPU support and that can be tested using the generic tasks in the `machine-learning` bucket.
+
+[cols="12,9"]
+|===
+| *Category* | *Algorithm*
+| `5.2 ML Classification`
+| `Support_Vector_Machines`
+|
+| `Logistic_Regression`
+| `5.3 ML Regression`
+| `Support_Vector_Regression`
+|
+| `Linear_Regression`
+| `5.4 ML Clustering`
+| `K_Means`
+| `5.6 ML Ensemble Learning`
+| `XGBoost`
+|
+| `Random_Forest`
+|===
 
 == Deep Learning Workflows Examples
 
-MLOS provides a fast, easy and practical way to execute deep learning workflows. In the following sub-sections, we present useful deep learning workflows for text and image classification and generation.
+PML provides a fast, easy and practical way to execute deep learning workflows. In the following sub-sections, we present useful deep learning workflows for text and image classification and generation.
 
 video::FwMPR87wzoo[youtube, width=700, height=400 start=0, position=center]
 
 You can test these workflows by following these steps:
 
-A. Open +++<a class="studioUrl" href="/studio" target="_blank">[ProActive Workflow Studio</a>+++ home page.
+A. Open +++<a class="studioUrl" href="/studio" target="_blank">Proactive Machine Learning</a>+++ home page.
 
 B. Create a new workflow.
 
@@ -1900,7 +2404,7 @@ WARNING: It is recommended to use an enabled-GPU node to run the deep learning t
 === AI Workflows Common Variables
 
 In the following table, you can find the variables that are common between
-most of the available AI workflows in MLOS associated to their descriptions.
+most of the available AI workflows in PML associated to their descriptions.
 
 [cols="2,5,2"]
 |===
@@ -1960,7 +2464,7 @@ NOTE: All ML tasks were implemented using https://scikit-learn.org/stable/[Sciki
 | Boolean (default=True)
 | `LIMIT_OUTPUT_VIEW`
 |  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
-| Int (default=-1) (-1 means preview all the rows)
+| Int (default=-1) (`-1` means preview all the rows)
 |===
 
 *Usage:*
@@ -1993,7 +2497,7 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 | Boolean (default=True)
 | `LIMIT_OUTPUT_VIEW`
 |  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
-| Int (default=-1) (-1 means preview all the rows)
+| Int (default=-1) (`-1` means preview all the rows)
 |===
 
 
@@ -2042,7 +2546,7 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 | String [CSV, JSON, HTML, TABLEAU]
 | `LIMIT_OUTPUT_VIEW`
 |  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
-| Int (default=-1) (-1 means preview all the rows)
+| Int (default=-1) (`-1` means preview all the rows)
 |===
 
 *Usage:* It should be used after the task <<Predict_Model>>.
@@ -2062,7 +2566,7 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 | Boolean (default=True)
 | `LIMIT_OUTPUT_VIEW`
 |  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
-| Int (default=-1) (-1 means preview all the rows)
+| Int (default=-1) (`-1` means preview all the rows)
 | `FILE_URL`
 | Enter you URL of the CSV file.
 | String
@@ -2114,7 +2618,7 @@ default: https://s3.eu-west-2.amazonaws.com/activeeon-public/models/pima-indians
 | Boolean (default=True)
 | `LIMIT_OUTPUT_VIEW`
 |  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
-| Int (default=-1) (-1 means preview all the rows)
+| Int (default=-1) (`-1` means preview all the rows)
 | `OUTPUT_FILE`
 | Converts the prediction results to HTML or CSV file.
 | String [CSV, JSON or HTML]
@@ -2250,7 +2754,7 @@ NOTE: More details about the source code of this task can be found https://panda
 
 ===== Filter_Columns
 
-*Task Overview:* Subset columns of a dataframe according to the specified list of coluumns in  the `COLUMNS_NAME` variable.
+*Task Overview:* Subset columns of a dataframe according to the specified list of columns in the `COLUMNS_NAME` variable.
 
 *Task Variables:*
 
@@ -2306,7 +2810,7 @@ NOTE: More details about the source code of this task can be found https://panda
 | List [RobustScaler, StandardScaler] (default=RobustScaler)
 | `LIMIT_OUTPUT_VIEW`
 |  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
-| Int (default=-1) (-1 means preview all the rows)
+| Int (default=-1) (`-1` means preview all the rows)
 | `COLUMNS_NAME`
 | The list of columns that will be scaled. Column names should be separated by a comma.
 | String
@@ -2372,8 +2876,8 @@ NOTE: More details about the source code of this task can be found https://sciki
 | `QUERY`
 | The query string to evaluate.
 | String
-| `FILTERED_FILE_OUPUT`
-|Refers to the extension of the file where the resulted filtered data will be saved..
+| `FILTERED_FILE_OUTPUT`
+|Refers to the extension of the file where the resulted filtered data will be saved.
 | String [CSV or HTML]
 
 |===
@@ -2407,7 +2911,7 @@ NOTE: More details about the source code of this task can be found https://docs.
 
 ===== Tsfresh_Features_Extraction
 
-*Task Overview:* Calculate a comprehensive number of time series features based on the library TSFRESH.
+*Task Overview:* Calculate a comprehensive number of time series features based on the library https://tsfresh.readthedocs.io/en/latest/[TSFRESH^].
 
 *Task Variables:*
 
@@ -2429,7 +2933,7 @@ NOTE: More details about the source code of this task can be found https://docs.
 | Boolean (default = False)
 | `LIMIT_OUTPUT_VIEW`
 |  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
-| Int (default=-1) (-1 means preview all the rows)
+| Int (default=-1) (`-1` means preview all the rows)
 |===
 
 NOTE: More details about the source code of this task can be found https://tsfresh.readthedocs.io/en/latest/text/list_of_features.html[here^].
@@ -2465,12 +2969,12 @@ NOTE: More details about the source code of this task can be found https://tsfre
   N.B: separate the different variables with a comma ','
 | String
 | `COUNT_VARIABLES`
-| Refers to the different variables that need to be considered to count their distinct content..
+| Refers to the different variables that need to be considered to count their distinct content.
 | String
 
 N.B: separate the different variables with a comma ','
 | `STATE_COUNT_FEATURES_VARIABLES`
-| True if you nedd to extract state and count features per session.
+| True if you need to extract state and count features per session.
 | Boolean [True or False]
 |===
 
@@ -2523,7 +3027,7 @@ NOTE: More information about this task can be found https://epistasislab.github.
 | If True, This task code will be executed.
 | Boolean (default=True)
 | `TASK_TIME`
-| Time limit in seconds for the search of appropriate models. .
+| Time limit in seconds for the search of appropriate models.
 | Integer (default=30)
 | `RUN_TIME`
 | Time limit for a single call to the ML model. Model fitting will be stopped if the ML algorithm runs over the time limit.
@@ -2535,7 +3039,7 @@ NOTE: More information about this task can be found https://epistasislab.github.
 | Strategy to handle overfitting.
 | String (default='cv')
 | `FOLDS`
-| Number of folds fro cross-validation.
+| Number of folds for cross-validation.
 | Integer (default=5)
 |===
 
@@ -2592,7 +3096,7 @@ NOTE: More information about this task can be found https://epistasislab.github.
 | If True, This task code will be executed.
 | Boolean (default=True)
 | `TASK_TIME`
-| Time limit in seconds for the search of appropriate models. .
+| Time limit in seconds for the search of appropriate models.
 | Integer (default=120)
 | `RUN_TIME`
 | Time limit for a single call to the ML model. Model fitting will be stopped if the ML algorithm runs over the time limit.
@@ -2853,7 +3357,7 @@ NOTE: More information about the source of this task can be found https://scikit
 
 ===== K_Means
 
-*Task Overview:* K-means clustering aims to partition n observations into k clusters in which each observation belongs to the cluster with the nearest mean, serving as a prototype of the cluster
+*Task Overview:* K-means clustering aims to partition `n` observations into `k` clusters in which each observation belongs to the cluster with the nearest mean, serving as a prototype of the cluster
 
 *Task Variables:*
 
@@ -2865,7 +3369,7 @@ NOTE: More information about the source of this task can be found https://scikit
 | If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `INPUT_VARIABLES`
-| Specifies the parameters' values of the Kmeans algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
+| Specifies the parameters' values of the K-means algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
 | JSON format
 //| `N_CLUSTERS`
 //| The number of clusters to form as well as the number of centroids to generate
@@ -3171,7 +3675,7 @@ It offers different options, you can customize it by adding new tasks or update 
 [NOTE]
 ====
 . All deep learning tasks were implemented using https://pytorch.org/[PyTorch library^].
-. It is recommended to use an enabled-GPU machine to run the deep learning tasks.
+. It is recommended to use an GPU enabled machine to run the deep learning tasks.
 ====
 
 ==== Input and Output
@@ -3308,7 +3812,7 @@ NOTE: Not all deep networks support the ONNX model yet. You can download ONNX mo
 | Use a subset of the data to train the model fastly.
 | Boolean (default=True)
 | `TOKENIZER`
-| Transform the text into tokens. Different options are available (str.split,moses,spacy,revtok,subword)
+| Transform the text into tokens. Different options are available (str.split, moses, spacy, revtok, subword)
 | List (default=str.split)
 | `SENTENCE_SEPARATOR`
 | Split the text into separated paragraphs, separated lines, separated words. Choose your own separator.
@@ -3416,7 +3920,7 @@ NOTE: Torchtext were used to preprocess and load the text input. More informatio
 | Boolean (default=True)
 |===
 
-NOTE: PyTorch were used to build the model architecture based on https://pytorch.org/docs/stable/torchvision/models.html[AlexNet^].
+NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/docs/stable/torchvision/models.html[AlexNet^].
 
 ===== DenseNet-161
 
@@ -3424,7 +3928,7 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 
 *Usage:* It should be connected to <<Train_Image_Classification_Model>>.
 
-NOTE: PyTorch were used to build the model architecture based on https://pytorch.org/docs/stable/torchvision/models.html[DenseNet-161^].
+NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/docs/stable/torchvision/models.html[DenseNet-161^].
 
 .DenseNet-161_Task variables
 [cols="2,5,2"]
@@ -3444,7 +3948,7 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 
 *Usage:* It should be connected to <<Train_Image_Classification_Model>>.
 
-NOTE: PyTorch were used to build the model architecture based on https://pytorch.org/docs/stable/torchvision/models.html[ResNet-18^].
+NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/docs/stable/torchvision/models.html[ResNet-18^].
 
 .ResNet-161_Task variables
 [cols="2,5,2"]
@@ -3464,7 +3968,7 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 
 *Usage:* It should be connected to <<Train_Image_Classification_Model>>.
 
-NOTE: PyTorch were used to build the model architecture based on https://pytorch.org/docs/stable/torchvision/models.html[VGG-16^].
+NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/docs/stable/torchvision/models.html[VGG-16^].
 
 .VGG-16_Task variables
 [cols="2,5,2"]
@@ -3484,7 +3988,7 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 
 *Usage:* It should be connected to <<Train_Image_Segmentation_Model>>.
 
-NOTE: PyTorch were used to build the model architecture based on https://github.com/bodokaiser/piwise[FCN^].
+NOTE: PyTorch is used to build the model architecture based on https://github.com/bodokaiser/piwise[FCN^].
 
 .FCN_Task variables
 [cols="2,5,2"]
@@ -3505,7 +4009,7 @@ NOTE: PyTorch were used to build the model architecture based on https://github.
 
 *Usage:* It should be connected to <<Train_Image_Segmentation_Model>>.
 
-NOTE: PyTorch were used to build the model architecture based on https://github.com/bodokaiser/piwise[SegNet^].
+NOTE: PyTorch is used to build the model architecture based on https://github.com/bodokaiser/piwise[SegNet^].
 
 .SegNet_Task variables
 [cols="2,5,2"]
@@ -3526,7 +4030,7 @@ NOTE: PyTorch were used to build the model architecture based on https://github.
 
 *Usage:* It should be connected to <<Train_Image_Segmentation_Model>>.
 
-NOTE: PyTorch were used to build the model architecture based on https://github.com/bodokaiser/piwise[UNet^].
+NOTE: PyTorch is used to build the model architecture based on https://github.com/bodokaiser/piwise[UNet^].
 
 .UNet_Task variables
 [cols="2,5,2"]
@@ -3551,7 +4055,7 @@ NOTE: PyTorch were used to build the model architecture based on https://github.
 
 *Usage:* It should be connected to <<Train_Image_Object_Detection_Model>>.
 
-NOTE: PyTorch were used to build the model architecture based on https://github.com/amdegroot/ssd.pytorch[SSD^].
+NOTE: PyTorch is used to build the model architecture based on https://github.com/amdegroot/ssd.pytorch[SSD^].
 
 .SSD_Task variables
 [cols="2,5,2"]
@@ -3612,7 +4116,7 @@ NOTE: The default parameters of the SSD network were set for the PASCAL VOC data
 
 *Usage:* It should be connected to <<Train_Image_Object_Detection_Model>>.
 
-NOTE: PyTorch were used to build the model architecture based on https://github.com/eriklindernoren/PyTorch-YOLOv3[YOLO^].
+NOTE: PyTorch is used to build the model architecture based on https://github.com/eriklindernoren/PyTorch-YOLOv3[YOLO^].
 
 .YOLO_Task variables
 [cols="2,5,2"]
@@ -3637,7 +4141,7 @@ NOTE: PyTorch were used to build the model architecture based on https://github.
 | Number of classes.
 | Integer (default=81)
 | `CONF_THRESHOLD`
-| This parameter shows how certain it is that the predicted bounding box actually encloses some object. This score doesn’t say anything about what kind of object is in the box, just if the shape of the box is any good.
+| This parameter shows how certain it is that the predicted bounding box actually encloses some object. This score does not say anything about what kind of object is in the box, just if the shape of the box is any good.
 | Float (default=0.5) Range in [0, 1].
 | `NMS_THRESHOLD`
 | This parameter will select only the most accurate (highest probability) one of the boxes.
@@ -3679,7 +4183,7 @@ NOTE: The default parameters of the YOLO network were set for the COCO dataset (
 
 *Usage:* It should be connected to <<Train_Text_Classification_Model>>.
 
-NOTE: PyTorch were used to build the model architecture based on https://pytorch.org/docs/master/nn.html#torch.nn.GRU[GRU^].
+NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/docs/master/nn.html#torch.nn.GRU[GRU^].
 
 ===== LSTM
 
@@ -3707,7 +4211,7 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 
 *HUsage:* It should be connected to <<Train_Text_Classification_Model>>.
 
-NOTE: PyTorch were used to build the model architecture based on https://pytorch.org/docs/master/nn.html#torch.nn.LSTM[LSTM^].
+NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/docs/master/nn.html#torch.nn.LSTM[LSTM^].
 
 ===== RNN
 
@@ -3735,7 +4239,7 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 
 *Usage:* It should be connected to <<Train_Text_Classification_Model>>.
 
-NOTE: PyTorch were used to build the model architecture based on https://pytorch.org/docs/master/nn.html#torch.nn.RNN[RNN^].
+NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/docs/master/nn.html#torch.nn.RNN[RNN^].
 
 ==== Train Model
 
@@ -3753,7 +4257,7 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
 | `NUM_EPOCHS`
-| Number of times all of the training vectors are used once to update the weights.
+| Number of times all the training vectors are used once to update the weights.
 | Integer (default=1)
 | `BATCH_SIZE`
 | Batch size to be used.
@@ -3792,7 +4296,7 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | Choose the function that will be used to compute the loss. Different options are available (Adam,RMS, SGD, Adagrad, Adadelta).
 | List (default=NLLLoss)
 | `EPOCHS`
-| Number of times all of the training vectors are used once to update the weights.
+| Number of times all the training vectors are used once to update the weights.
 | Integer (default=10)
 | `TRAINABLE`
 | True if you want to update the embedding vectors during the training process.
@@ -3821,13 +4325,13 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
 | `NUM_EPOCHS`
-| Number of times all of the training vectors are used once to update the weights.
+| Number of times all the training vectors are used once to update the weights.
 | Integer (default=1)
 | `BATCH_SIZE`
 | Batch size to be used.
 | Integer (default=1)
 | `NUM_WORKERS`
-| Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+| Number of subprocesses to use for data loading. `0` means that the data will be loaded in the main process.
 | Integer (default=1)
 | `SHUFFLE`
 | Set to True to have the data reshuffled at every epoch.
@@ -3850,13 +4354,13 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
 | `NUM_EPOCHS`
-| Number of times all of the training vectors are used once to update the weights.
+| Number of times all the training vectors are used once to update the weights.
 | Integer (default=1)
 | `BATCH_SIZE`
 | Batch size to be used.
 | Integer (default=1)
 | `NUM_WORKERS`
-| Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+| Number of subprocesses to use for data loading. `0` means that the data will be loaded in the main process.
 | Integer (default=1)
 |===
 
@@ -3877,11 +4381,11 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | Batch size to be used.
 | Integer (default=4)
 | `NUM_WORKERS`
-| Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+| Number of subprocesses to use for data loading. `0` means that the data will be loaded in the main process.
 | Integer (default=2)
 | `SHUFFLE`
 | Set to True to have the data reshuffled at every epoch.
-| Boolean (default=True)se for data loading. 0 means that the data will be loaded in the main process.
+| Boolean (default=True) for data loading. `False` means that the data will be loaded in the main process.
 |===
 
 *Usage:* It should be used after the tasks <<Train_Image_Classification_Model>> or <<Download_Model>>.
@@ -3898,7 +4402,7 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
 | `LOSS_FUNCTION`
-| Choose the function that will be used to compute the loss. Different options are available (Adam,RMS, SGD, Adagrad, Adadelta).
+| Choose the function that will be used to compute the loss.
 | List (default=NLLLoss)
 |===
 
@@ -3919,11 +4423,11 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | Batch size to be used.
 | Integer (default=4)
 | `NUM_WORKERS`
-| Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+| Number of subprocesses to use for data loading. `0` means that the data will be loaded in the main process.
 | Integer (default=2)
 | `SHUFFLE`
 | Set to True to have the data reshuffled at every epoch.
-| Boolean (default=True)se for data loading. 0 means that the data will be loaded in the main process.
+| Boolean (default=True)se for data loading. `False` means that the data will be loaded in the main process.
 |===
 
 *Usage:* It should be used after the tasks <<Train_Image_Classification_Model>> or <<Download_Model>>.
@@ -3944,11 +4448,11 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | Batch size to be used.
 | Integer (default=1)
 | `NUM_WORKERS`
-| Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+| Number of subprocesses to use for data loading. `0` means that the data will be loaded in the main process.
 | Integer (default=1)
 | `SHUFFLE`
 | Set to True to have the data reshuffled at every epoch.
-| Boolean (default=True)se for data loading. 0 means that the data will be loaded in the main process.
+| Boolean (default=True)se for data loading. `False` means that the data will be loaded in the main process.
 |===
 
 *Usage:* It should be used after the task <<Predict_Image_Object_Detection_Model>> or <<Download_Model>>.
@@ -3978,7 +4482,7 @@ NOTE: PyTorch were used to build the model architecture based on https://pytorch
 | Integer (default=4).
 |===
 
-*Usage:* It should be used after the the task <<Train_Image_Classification_Model>>.
+*Usage:* It should be used after the task <<Train_Image_Classification_Model>>.
 
 NOTE: Shap uses GradientExplainer to explain a deep learning model. More information about this library can be found https://shap.readthedocs.io/en/latest/index.html?highlight=hap_values#shap.DeepExplainer.shap_values[here^] or on GitHub repository https://github.com/slundberg/shap[here^].
 
@@ -3986,7 +4490,7 @@ NOTE: This task requires too much memory. You may receive an error message if yo
 
 === Data Visualization Bucket
 
-The data-visualization catalog integrates generic tasks that can be easily used to broadcast visualizations of the analytic results provided by AI tasks. It offers a large set of plots that can be organized programmatically or through the UI. These plots are used to create dashboards for both live and real-time data, inspect results of experiments, or debug experimental code.  The data-visualization catalog  provides a fast, easy and practical way to execute different workflows generating these diverse visualizations that are automatically cached by the
+The data-visualization catalog integrates generic tasks that can be easily used to broadcast visualizations of the analytic results provided by AI tasks. It offers a large set of plots that can be organized programmatically or through the UI. These plots are used to create dashboards for both live and real-time data, inspect results of experiments, or debug experimental code. The data-visualization catalog  provides a fast, easy and practical way to execute different workflows generating these diverse visualizations that are automatically cached by the
 TensorBoard and Visdom Server. However, other visualization libraries can be integrated as well.
 
 ==== Visdom
@@ -4028,7 +4532,7 @@ WARNING: If two workflows use the same service instance names, then, their gener
 
 ===== Visdom_Service_Actions
 
-*Task Overview:* Manage the life-cycle of Visdom PCA service. It allows to trigger three possible actions: Pause_Visdom, Resume_Visdom and Finish_Visdom.
+*Task Overview:* Manage the life-cycle of Visdom PSA service. It allows triggering three possible actions: Pause_Visdom, Resume_Visdom and Finish_Visdom.
 
 *Task Variables:*
 
@@ -4040,7 +4544,7 @@ WARNING: If two workflows use the same service instance names, then, their gener
 | The service instance ID.
 | String (default=Empty)
 | `INSTANCE_NAME`
-| The instance nameof the server to be used to broadcast the visualization.
+| The instance name of the server to be used to broadcast the visualization.
 | String
 | `ACTION`
 | The action that will be processed regarding the service status.
@@ -4049,7 +4553,7 @@ WARNING: If two workflows use the same service instance names, then, their gener
 
 ===== Visdom_Visualize_Results
 
-*Task Overview:* Plot the different results obtained by a predictive model using Visdom
+*Task Overview:* Plot the different results obtained by a predictive model using Visdom.
 
 *Task Variables:*
 |===
@@ -4062,7 +4566,7 @@ WARNING: If two workflows use the same service instance names, then, their gener
 | URL
 | String
 | `VISDOM_ENDPOINT`
-| The visdom endpoint to be used.
+| The Visdom endpoint to be used.
 | URL
 |===
 
@@ -4076,7 +4580,7 @@ WARNING: If two workflows use the same service instance names, then, their gener
 |===
 | *Variable name* | *Description* | *Type*
 | `VISDOM_ENDPOINT`
-| The visdom endpoint to be used.
+| The Visdom endpoint to be used.
 | URL
 |===
 
@@ -4095,11 +4599,11 @@ video::bQpwS2nMAZY[youtube, width=700, height=400 start=0, position=center]
 
 A demo video of these workflows is available in https://www.youtube.com/user/ActiveEonCompany[ActiveEon Youtube Channel^].
 
-==== Tensorboard
+==== TensorBoard
 
 It provides  the visualization and tooling needed for machine learning experimentation such as tracking, and visualizing metrics such as loss and accuracy, visualizing the model graph (ops and layers), viewing histograms of weights, biases, or other tensors as they change over time, projecting embeddings to a lower dimensional space, displaying images, text, and audio data and others.
 
-===== Tensorboard_Service_Start
+===== TensorBoard_Service_Start
 
 *Task Overview:* Start the TensorBoard server as a service.
 
@@ -4110,13 +4614,13 @@ It provides  the visualization and tooling needed for machine learning experimen
 |===
 | *Variable name* | *Description* | *Type*
 | `SERVICE_ID`
-| The id of the TensorBoard service.
+| The id of the Tensorboard service.
 | String (default="Tensorboard")
 | `INSTANCE_NAME`
 | The instance name of the server to be used to broadcast the visualization.
 | String
 | `MOUNT_LOG_PATH`
-| Specifies the path where Tensorboard logs are created and stored on the host.
+| Specifies the path where TensorBoard logs are created and stored on the host.
 | String (default=/shared/$TENSORBOARD_HOST_LOG_PATH)
 | `ENGINE`
 | Container engine.
@@ -4138,7 +4642,7 @@ It provides  the visualization and tooling needed for machine learning experimen
 
 ===== Tensorboard_Service_Actions
 
-*Task Overview:* Manage the life-cycle of TensorBoard PCA service. It allows to trigger three possible actions: Pause_Tensorboard, Resume_Tensorboard and Finish_Tensorboard.
+*Task Overview:* Manage the life-cycle of TensorBoard PSA service. It allows triggering three possible actions: Pause_Tensorboard, Resume_Tensorboard and Finish_Tensorboard.
 
 *Task Variables:*
 
@@ -4157,7 +4661,7 @@ It provides  the visualization and tooling needed for machine learning experimen
 | List [Pause_Tensorboard, Resume_Tensorboard and Finish_Tensorboard] (default="Finish_Tensorboard")
 |===
 
-==== Tensorboard Workflows
+==== TensorBoard Workflows
 
 The following workflows present some examples using TensorBoard service to visualize the results obtained while training and testing some predictive models.
 
@@ -4173,7 +4677,7 @@ The following workflows present some examples using TensorBoard service to visua
 The `satellite-imagery` bucket contains some tasks that enable you to search, download and retrieve the metadata of Sentinel satellite images from the https://peps.cnes.fr/rocket/#/home[PEPS website^] and https://scihub.copernicus.eu/[Copernicus Open Access Hub^].
 
 ==== Fetch_Images_From_Satellite_Platforms
-It allows to download the metadata and images from the Copernicus and PEPS platforms or both simultaneously.
+It allows downloading the metadata and images from the Copernicus and PEPS platforms or both simultaneously.
 
 image::Fetch_Satellite_Images.png[align=center]
 

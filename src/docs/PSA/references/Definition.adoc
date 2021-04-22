@@ -1,4 +1,4 @@
-The following terms are used as ProActive Cloud Automation (PCA) definitions and main concepts:
+The following terms are used as ProActive Service Automation (PSA) definitions and main concepts:
 
 [[_definition_Service]]
 Service::
@@ -23,16 +23,16 @@ There are three specific kinds of Actions:
 
 - *Activation:* to start a Service Instance (from the State VOID to a defined State)
 - *Finishing:* to stop a Service Instance (from a defined State to the State FINISHED)
-- *Killing:* PCA is trying to force a Service Instance to terminate (from a defined State to the State KILLED) 
+- *Killing:* PSA is trying to force a Service Instance to terminate (from a defined State to the State KILLED) 
 
 [[_definition_States]]
 States::
-The specific States that are pre-defined in ProActive Cloud Automation are VOID, FINISHED, ERROR, KILLED.
+The specific States that are pre-defined in ProActive Service Automation are VOID, FINISHED, ERROR, KILLED.
 
 - *VOID* Implicit State before a Service is activated
 - *FINISHED* Implicit State after a Service is terminated/no longer activated
 - *ERROR* Implicit State after something wrong happened
-- *KILLED* When PCA abnormally forces an Activated Service to terminate.
+- *KILLED* When PSA abnormally forces an Activated Service to terminate.
 
 NOTE: Please note that users are free to define their own custom States (e.g. RUNNING, SUSPENDED, ...)
 
@@ -40,7 +40,7 @@ NOTE: Please note that users are free to define their own custom States (e.g. RU
 Endpoints::
 Endpoints are a list of (Key,Value) defined in the Variables e.g. [(Swarm, <smarmendpoint>), (HDFS, <hdfs-endpoint>), (Spark, <spark-endpoint>)]. The endpoint URL should contain the protocol, e.g. www.activeeon.com will not work, but https://www.activeeon.com will.
 
-NOTE: To run multiple PCA services that share an endpoint, the same ENDPOINT_ID value should be given to all of the PCA services that, when started, require this variable.
+NOTE: To run multiple PSA services that share an endpoint, the same ENDPOINT_ID value should be given to all of the PSA services that, when started, require this variable.
 
 [[_definition_Service_Name_Infrastructure_Name]]
 Service_Name, Infrastructure_Name::

@@ -1,0 +1,13 @@
+*Proactive Machine Learning (PML)* is a complete DSML platform (Data Science and Machine Learning) including a ML Studio, AutoML, Data Science Orchestration and MLOps for the deployment,
+training, execution and scalability of artificial intelligence and machine learning models on
+any type of infrastructure. Created for data scientists and ML engineers, the solution is simple to use and accelerate the development and deployment of machine learning models.
+
+
+image::PML_overview.PNG[align=center]
+Proactive Machine Learning platform provides a rich catalog of generic machine learning tasks that can be connected together to build either basic or advanced machine learning workflows for various use cases such as: fraud detection, text analysis, online offer recommendations, prediction of equipment failures, facial expression analysis, etc.
+PML workflows enable users to manage machine learning pipelines through the different phases of the development lifecycle and allow them to better control tasks parallelization, by running the tasks on resources matching constraints (Multi-CPU, GPU, FPGA, data locality, libraries, etc).
+
+
+image::PML-Open-Studio-ActiveEon.PNG[align=center]
+
+The Proactive Machine Learning platform is an open source solution, and it can be tested online without installation on our try platforms https://try.activeeon.com/studio/#workflows/templates/machine-learning[here^].

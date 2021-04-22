@@ -20,14 +20,14 @@ These arguments will be interpreted by cloud node source Infrastructure later to
 Here is an example startup script for Linux OS images which installed wget (e.g., Debian, Ubuntu):
 
 	mkdir -p /tmp/node && cd /tmp/node
-	if ! type -p jre/bin/java; then wget -nv -N https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u131-linux-x64.tar.gz; tar -xf jre-8u131-linux-x64.tar.gz; mv jre1.8.0_131/ jre; fi
+	if ! type -p jre/bin/java; then wget -nv -N https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u281-linux-x64.tar.gz; tar -xf jre-8u281-linux-x64.tar.gz; mv jre1.8.0_281/ jre; fi
 	wget -nv %nodeJarUrl%
 	nohup jre/bin/java -jar node.jar -Dproactive.communication.protocol=%protocol% -Dpython.path=%jythonPath% -Dproactive.pamr.router.address=%rmHostname% -D%instanceIdNodeProperty%=%instanceId% -r %rmUrl% -s %nodeSourceName% %nodeNamingOption% -v %credentials% -w %numberOfNodesPerInstance% %additionalProperties% &
 
 An example startup script for Linux OS images which installed curl instead of wget (e.g., CentOS, RHEL):
 
 	mkdir -p /tmp/node && cd /tmp/node 
-	if ! type -p jre/bin/java; then curl -sL https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u131-linux-x64.tar.gz --output jre.tar.gz; tar -xf jre.tar.gz; mv jre1.8.0_131/ jre; fi
+	if ! type -p jre/bin/java; then curl -sL https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u281-linux-x64.tar.gz --output jre.tar.gz; tar -xf jre.tar.gz; mv jre1.8.0_281/ jre; fi
 	curl -sL %nodeJarUrl% --output node.jar
 	nohup jre/bin/java -jar node.jar -Dproactive.communication.protocol=%protocol% -Dpython.path=%jythonPath% -Dproactive.pamr.router.address=%rmHostname% -D%instanceIdNodeProperty%=%instanceId% -r %rmUrl% -s %nodeSourceName% %nodeNamingOption% -v %credentials% -w %numberOfNodesPerInstance% %additionalProperties% &
 
