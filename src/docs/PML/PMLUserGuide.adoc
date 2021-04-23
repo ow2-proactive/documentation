@@ -26,7 +26,7 @@ your environment (default credentials: admin/admin) or just use our demo platfor
 - +++Submit workflows, monitor their execution and retrieve the tasks results using <a class="schedulerUrl" href="/scheduler" target="_blank">ProActive Scheduler Portal</a>+++
 - +++Add resources and monitor them using <a class="rmUrl" href="/rm" target="_blank">ProActive Resource Manager Portal</a>+++
 - +++Version and share various objects using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/catalog-portal" target="_blank">ProActive Catalog Portal</a>+++
-- +++Provide an end-user workflow submission interface using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/workflow-automation" target="_blank">Workflow Automation Portal</a>+++
+- +++Provide an end-user workflow submission interface using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/workflow-automation" target="_blank">Workflow Execution Portal</a>+++
 - +++Generate metrics of multiple job executions using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/job-analytics" target="_blank">Job Analytics Portal</a>+++
 - +++Plan workflow executions over time using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/job-planner-execution-planning" target="_blank">Job Planner Portal</a>+++
 - +++Add services using <a class="automationDashboardUrl" href="/automation-dashboard/#/portal/service-automation" target="_blank">Service Automation Portal</a>+++
@@ -83,7 +83,7 @@ A. Once dataset has been converted to *CSV* format, upload it into a cloud stora
 For this tutorial, we will use Boston house prices dataset available on this link:
 https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/boston-houses-prices.csv
 
-B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the Machine Learning Open Studio.
+B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the Proactive Machine Learning.
 
 C. Click on the task and click `General Parameters` in the left to change the default parameters of this task.
 
@@ -172,79 +172,89 @@ image::execute.gif[100000,2000]
 
 [[_AutoML]]
 
-== AutoML
+== Automated Machine Learning (AutoML)
 
-The `auto-ml-optimization` bucket contains the `Multi_Tuners_AutoML` workflow that can be easily used to find the operating parameters for any system whose performance can be measured as a function of adjustable parameters.
+The `auto-ml-optimization` bucket contains the `Distributed_Auto_ML` workflow that can be easily used to find the operating parameters for any system whose performance can be measured as a function of adjustable parameters.
 It is an estimator that minimizes the posterior expected value of a loss function.
 This bucket also comes with a set of workflows' examples that demonstrates how we can optimize mathematical functions, PML workflows and machine/deep learning algorithms from scripts using AutoML tuners.
 In the following subsections, several tables represent the main variables that characterize the AutoML workflows.
 In addition to the variables mentioned below, there is a set of generic variables that are common between all workflows
 which can be found in the subsection <<AI Workflows Common Variables>>.
 
-=== Multi_Tuners_Auto_ML
+image::AutoML_1.png[align=center]
 
-`Multi_Tuners_Auto_ML` workflow proposes six algorithms for hyperparameters' optimization. The choice of the
+=== Distributed AutoML
+
+The `Distributed_Auto_ML` workflow proposes six algorithms for distributed hyperparameters' optimization. The choice of the
 sampling/search strategy depends strongly on the tackled problem.
-`Multi_Tuners_Auto_ML` workflow comes with specific pipelines (parallel or sequential) and visualization tools
+`Distributed_Auto_ML` workflow comes with specific pipelines (parallel or sequential) and visualization tools
 (https://github.com/fossasia/visdom[Visdom^] or https://www.tensorflow.org/tensorboard/[TensorBoard^]) as described in the subsections below.
+
+image::AutoML_2.png[align=center]
 
 *Variables:*
 
-.Multi_Tuners_Auto_ML Variables
+.Distributed_Auto_ML Variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
 | `TUNING_ALGORITHM`
 | Specifies the tuner algorithm that will be used for hyperparameter optimization.
 | List [Bayes, Grid, Random, QuasiRandom, CMAES, MOCMAES] (default=Random)
-| `WORKFLOW_TO_OPTIMIZE`
-| Specifies the workflow path from the catalog that should be optimized.
-| String (default=auto-ml-optimization/Himmelblau_Function)
 | `MAX_ITERATIONS`
 |  Specifies the number of maximum iterations. It should be an integer number higher than zero. Set `-1` for an infinite loop.
 | Int (default=2)
 | `PARALLEL_EXECUTIONS_PER_ITERATION`
 |  Specifies the number of parallel executions per iteration. It should be an integer number higher than zero.
 | Int (default=2)
+| `NUMBER_OF_REPETITIONS`
+|  Specifies the number of hyperparameter sampling repetitions. Ensures every experiment is repeated a given number of times. It should be an integer number higher than one. Set `-1` to never see repetitions.
+| Int (default=-1)
 | `PAUSE_AFTER_EVERY_ITERATIONS`
 |  If higher than zero, pause the workflow after every specified number of iterations. Set `-1` to disable.
 | Int (default=-1)
+| `TARGET_WORKFLOW`
+| Specifies the workflow path from the catalog that should be optimized.
+| String (default=auto-ml-optimization/Himmelblau_Function)
+| `TARGET_NATIVE_SCHEDULER`
+| Name of the native scheduler node source to use on the target workflow tasks when deployed inside a cluster such as SLURM, LSF, etc.
+| String (default=empty)
+| `TARGET_NATIVE_SCHEDULER_PARAMS`
+| Parameters given to the native scheduler (SLURM, LSF, etc) while requesting a ProActive node used to deploy the target workflow tasks.
+| String (default=empty)
+| `TARGET_NODE_ACCESS_TOKEN`
+| If not empty, the target workflow tasks will be run only on nodes that contains the specified token.
+| String (default=empty)
+| `TARGET_NODE_SOURCE_NAME`
+| If not empty, the target workflow tasks will be run only on nodes belonging to the specified node source.
+| String (default=empty)
+| `TARGET_CONTAINER_PLATFORM`
+| Specifies the container platform to be used for executing the target workflow tasks.
+| List [no-container, docker, podman, singularity] (default=empty)
+| `TARGET_CONTAINER_IMAGE`
+| Specifies the name of the container image that will be used to run the target workflow tasks.
+| List [docker://activeeon/dlm3, docker://activeeon/cuda, docker://activeeon/cuda2, docker://activeeon/rapidsai, docker://activeeon/nvidia:rapidsai, docker://activeeon/nvidia:pytorch, docker://activeeon/nvidia:tensorflow, docker://activeeon/tensorflow:latest, docker://activeeon/tensorflow:latest-gpu] (default=empty)
+| `TARGET_CONTAINER_GPU_ENABLED`
+| If True, it will activate the use of GPU for the target workflow tasks on the selected container platform.
+| Boolean (default=empty)
+| `TARGET_NVIDIA_RAPIDS_ENABLED`
+| If True, it will activate the use of NVIDIA RAPIDS for the target workflow tasks on the selected container platform.
+| Boolean (default=empty)
 | `VISDOM_ENABLED`
 | If True, the Visdom service is started allowing the user to visualize the hyperparameter optimization using the Visdom web interface.
 | Boolean (default=False)
 | `VISDOM_PROXYFIED`
 | If True, requests to Visdom are sent via a proxy server.
 | Boolean (default=False)
-| `VISDOM_ENABLE_LOGIN`
-| If True, the user will be asked to insert a username and password to access the Visdom web interface.
-| Boolean (default=False)
-| `VISDOM_USERNAME`
-| The username used to access the Visdom web interface.
-| String (default=empty)
-| `VISDOM_PASSWORD`
-| The password used to access the Visdom web interface.
-| String (default=empty)
-| `VISDOM_INSTANCE_NAME`
-| Specifies the name of the service instance that will run Visdom.
-| String (default=visdom-server-${PA_JOB_ID})
 | `TENSORBOARD_ENABLED`
 | If True, the TensorBoard service is started allowing the user to visualize the hyperparameter optimization using the TensorBoard web interface.
 | Boolean (default=False)
-| `TENSORBOARD_INSTANCE_NAME`
-| Specifies the name of the service instance that will run TensorBoard.
-| String (default=tensorboard-server-${PA_JOB_ID})
-| `TENSORBOARD_LOG_PATH`
-| Specifies the path where TensorBoard logs stored on the host.
-| String (default=/shared/$TENSORBOARD_INSTANCE_NAME)
-| `TENSORBOARD_DOCKER_LOG_PATH`
-| Specifies the path where TensorBoard logs are stored on the docker container.
-| String (default=/graphs/$TENSORBOARD_INSTANCE_NAME)
-| `PROPAGATE_CONTAINER_PLATFORM`
-| If True, the selected container platform (docker, singularity, ...) will propagate to the workflow that should be optimized.
-| (default=True)
+| `TENSORBOARD_PROXYFIED`
+| If True, requests to TensorBoard are sent via a proxy server.
+| Boolean (default=False)
 |===
 
-image::AutoML_Full.png[880,845,align=center]
+image::AutoML_Full.png[align=center]
 *How to define the search space:*
 
 This subsection describes common building blocks to define a search space:
@@ -264,31 +274,66 @@ The choice of the tuner depends on the following aspects:
     - Type of variable.
     - The size of the search space.
 
-In the following, we briefly describe the different tuners proposed by the `Multi_Tuners_AutoML` workflow:
+In the following, we briefly describe the different tuners proposed by the `Distributed_Auto_ML` workflow:
 
-    - *Grid sampling* applies when all variables are discrete, and the number of possibilities is low.
-      A grid search is a naive approach that will simply try all possibilities making the search extremely long even for medium-sized problems.
+    - *Grid sampling* applies when all variables are discrete, and the number of possibilities is low. A grid search is a naive approach that will simply try all possibilities making the search extremely long even for medium-sized problems.
 
-    - *Random sampling* is an alternative to grid search when the number of discrete parameters to optimize, and the time required for each evaluation is high.
-      Random search picks the point randomly from the configuration space.
+    - *Random sampling* is an alternative to grid search when the number of discrete parameters to optimize, and the time required for each evaluation is high. Random search picks the point randomly from the configuration space.
 
-    - *QuasiRandom sampling* ensures a much more uniform exploration of the search space than traditional pseudo random.
-      Thus, quasi random sampling is preferable when not all variables are discrete, the number of dimensions is high, and the time required to evaluate a solution is high.
+    - *QuasiRandom sampling* ensures a much more uniform exploration of the search space than traditional pseudo random. Thus, quasi random sampling is preferable when not all variables are discrete, the number of dimensions is high, and the time required to evaluate a solution is high.
 
-    - *Bayes search* models the search space using gaussian process regression, which allows an estimation of the loss function, and the uncertainty on that estimate at every point of the search space.
-      Modeling the search space suffers from the curse of dimensionality, which makes this method more suitable when the number of dimensions is low.
+    - *Bayes search* models the search space using gaussian process regression, which allows an estimation of the loss function, and the uncertainty on that estimate at every point of the search space. Modeling the search space suffers from the curse of dimensionality, which makes this method more suitable when the number of dimensions is low.
 
-    - *CMAES search* is one of the most powerful black-box optimization algorithm.
-      However, it requires a significant number of model evaluation (in the order of 10 to 50 times the number of dimensions) to converge to an optimal solution.
-      This search method is more suitable when the time required for a model evaluation is relatively low.
+    - *CMAES search* (Covariance Matrix Adaptation Evolution Strategy) is one of the most powerful black-box optimization algorithm.
+      However, it requires a significant number of model evaluation (in the order of 10 to 50 times the number of dimensions) to converge to an optimal solution. This search method is more suitable when the time required for a model evaluation is relatively low.
 
-    - *MOCMAES search* is a multi-objective algorithm optimizing multiple tradeoffs simultaneously.
-      To do that, MOCMAES employs a number of CMAES algorithms.
+    - *MOCMAES search* (Multi-Objective Covariance Matrix Adaptation Evolution Strategy) is a multi-objective algorithm optimizing multiple tradeoffs simultaneously. To do that, MOCMAES employs a number of CMAES algorithms.
+
+Here is a table that resumes when to use each algorithm.
+|===
+| *Algorithm* | *Time* | *Dimensions* | *Continuity* | *Conditions* | *Multi-objective*
+| `Grid`
+| `Low`
+| `Low`
+| `Discrete`
+| `Yes`
+| `No`
+| `Random`
+| `High`
+| `High`
+| `Discrete`
+| `Yes`
+| `No`
+| `QuasiRandom`
+| `High`
+| `High`
+| `Mixed`
+| `Yes`
+| `No`
+| `Bayes`
+| `High`
+| `Medium`
+| `Mixed`
+| `Yes`
+| `No`
+| `CMAES`
+| `Low`
+| `Low`
+| `Mixed`
+| `No`
+| `No`
+| `MOCMAES`
+| `Low`
+| `Low`
+| `Mixed`
+| `No`
+| `Yes`
+|===
 
 
 === Objective Functions
 
-The following workflows represent some mathematical functions that can be optimized by the AutoML tuners.
+The following workflows represent some mathematical functions that can be optimized by the `Distributed_Auto_ML` tuners.
 
 *Himmelblau_Function:* is a multi-modal function containing four identical local minima. It's used to test the performance of optimization algorithms. For more info, please click https://en.wikipedia.org/wiki/Himmelblau%27s_function[here].
 
@@ -297,7 +342,7 @@ image::Himmelblau_Function.png[448,336,align=center]
 === Hyperparameter Optimization
 
 The following workflows represent some machine learning and deep learning algorithms that can be optimized.
-These workflows have several common variables as in `Multi_Tuners_Auto_ML`. Some workflows are characterized
+These workflows have several common variables as in `Distributed_Auto_ML`. Some workflows are characterized
 by few additional variables.
 
 *CIFAR_10_Image_Classification:* trains a simple deep CNN on the CIFAR10 images dataset using the Keras library.
@@ -334,24 +379,32 @@ The following workflows have common variables with the above illustrated workflo
 
 *Image_Object_Detection:* trains a YOLO model on the coco dataset using PML deep learning generic tasks.
 
-*Iris_Classification:* trains multiple types of SVM models on the Iris flower dataset.
+*Digits_Classification:* python script illustrating an example of multiple machine learning models optimization.
 
 *Text_Generation:* trains a simple Long Short-Term Memory (LSTM) to learn sequences of characters from 'The Alchemist' book. It's a novel by Brazilian author Paulo Coelho that was first published in 1988.
 
 
 === Neural Architecture Search
 
-The following workflows contain a search space containing a set of possible neural networks architectures that can be used by the AutoML tuners to automatically find the best combinations of neural architectures within the search space.
+The following workflows contain a search space containing a set of possible neural networks architectures that can be used by `Distributed_Auto_ML` to automatically find the best combinations of neural architectures within the search space.
 
-*Handwritten_Digit_Classification:* train a simple deep CNN on the MNIST dataset using the PyTorch library.
+*Handwritten_Digit_Classification:* trains a simple deep CNN on the MNIST dataset using the PyTorch library.
 
+
+=== Distributed Training
+
+The following workflows illustrate some examples of multi-node and multi-gpu distributed learning.
+
+*TensorFlow_Keras_Multi_Node_Multi_GPU:* is a TensorFlow + Keras workflow template for distributed training (multi-node multi-gpu) with AutoML support.
 
 
 === Templates
 
 The following workflows represent python templates that can be used to implement a generic machine learning task.
 
-*Python_Task:* is a simple PyTorch task template.
+*Python_Task_Template_For_AutoML:* is a simple Python task template pre-configured to run with `Distributed_Auto_ML`.
+
+*R_Task_Template_For_AutoML:* is a simple R task template pre-configured to run with `Distributed_Auto_ML`.
 
 == Model as a Service for Machine Learning (MaaS_ML)
 
@@ -618,7 +671,7 @@ Set the following variables:
 | This entry script starts the service and defines the different functions to deploy the model, scores the prediction requests based on the deployed model, and returns the results. This script is specific to your model. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about this file can be found in the <<_customize_the_service>> section.
 | String (default="ml_service").
 | `SERVICE_PORT`
-| Controls the port used to start the Model Service from the Service Automation Portal. -1 for random port allocation.
+| Controls the port used to start the Model Service from Service Automation Portal. -1 for random port allocation.
 | Integer (default="-1").
 | `SINGULARITY_IMAGE_PATH`
 | Location of the singularity image on the node file system (this path will be used to either store the singularity image or the image will be directly used if the file is present).
@@ -678,7 +731,7 @@ Check that the status correctly evolves to `AI_MODEL_DEPLOYED`.
 ==== Delete (Finish)/Update/Pause the Service
 
 
-You can delete the launched service instance directly from the Service Automation Portal:
+You can delete the launched service instance directly from Service Automation Portal:
 
 Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Service Automation Portal].
 
@@ -687,7 +740,7 @@ Set the action `Finish` under Actions and click on `Execute Action`.
 
 image::MAAS_ML_Delete_Service.PNG[align=center]
 
-There are also two other actions that can be executed from the Service Automation Portal which are:
+There are also two other actions that can be executed from Service Automation Portal which are:
 
 - *Deploy_ML_Model*: This action will put the service instance into deployment.
 
@@ -890,7 +943,7 @@ baseline_data using the *BASELINE_DATA_URL* variable that appears in the popup w
 *Deploy_Model_Service* action. In case you need to change the baseline data, it can be updated using the *BASELINE_DATA_URL*
 variable of the *Update_MaaS_ML* action of MaaS_ML.
 
-Once the model is deployed via the Service Automation portal,
+Once the model is deployed via Service Automation portal,
 the Swagger user interface can be opened via the MaaS_ML instance api, offering different endpoints
 to help the user manage the drift detection mechanism. This
 mechanism has been particularly integrated into the following three endpoints:
@@ -1151,7 +1204,7 @@ Set the following variables:
 | This entry script starts the service and defines the different functions to deploy the model, scores the prediction requests based on the deployed model, and returns the results. This script is specific to your model. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about this file can be found in the <<_customize_the_service>> section.
 | String (default="dl_service").
 | `SERVICE_PORT`
-| Controls the port used to start the Model Service from the Service Automation Portal. -1 for random port allocation.
+| Controls the port used to start the Model Service from Service Automation Portal. -1 for random port allocation.
 | Integer (default="-1").
 | `SINGULARITY_IMAGE_PATH`
 | Location of the singularity image on the node file system (this path will be used to either store the singularity image or the image will be directly used if the file is present).
@@ -1229,7 +1282,7 @@ Click on `Execute Action` and follow the progress of the model deployment.
 
 ==== Delete (Finish)/Update/Pause the Service
 
-You can delete the launched service instance directly from the Service Automation Portal:
+You can delete the launched service instance directly from Service Automation Portal:
 
 Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Service Automation Portal].
 
@@ -1321,9 +1374,9 @@ It offers several functionalities, including:
 - Advanced search by name, user, date, state, etc.
 - Execution metrics summary about durations, encountered issues, etc.
 - Charts to track variables and results evolution and correlation.
-- Export data in multiple formats for further use in analytics tools.
+- Data exportation in multiple formats for further use in analytics tools.
 
-Proactive Analytics is very useful to compare metrics and charts of workflows that have common variables and results. For example, a ML algorithm might take different variable values and produce multiple results. It would be interesting to analyze the correlation and evolution of algorithm results regarding the input variation (See also a similar example of link:../PML/PMLUserGuide.html#_AutoML[AutoML]).
+Proactive Analytics is very useful to compare metrics and charts of workflows that have common variables and results. For example, a ML algorithm might take different variables values and produce multiple results. It would be interesting to analyze the correlation and evolution of the algorithm results regarding the input variation (See also a similar example of link:../PML/PMLUserGuide.html#_AutoML[AutoML]).
 The following sections will show you some key features of the dashboard and how to use them for a better understanding of your job executions.
 
 [[_job_search]]
@@ -2050,7 +2103,7 @@ NOTE: If neither `job_name` nor the `job_id` are provided, the last submitted jo
 === Display and use ActiveEon Portals directly in Jupyter
 
 Finally, to have the hand on more parameters and features, the user should use ActiveEon Studio portals.
-The main ones are the _Resource Manager_, the _Scheduling Portal_ and the _Workflow Automation_.
+The main ones are the _Resource Manager_, the _Scheduling Portal_ and the _Workflow Execution_.
 
 The example below shows how the user can directly monitor his submitted job's execution in the scheduling portal:
 
@@ -2068,10 +2121,10 @@ For the related scheduling portal:
 #%show_scheduling_portal([host=YOUR_HOST], [height=HEIGHT_VALUE], [width=WIDTH_VALUE])
 ```
 
-And, for the related workflow automation:
+To monitor your jobs with Workflow Execution inside Jupyter, use:
 
 ```python
-#%show_workflow_automation([host=YOUR_HOST], [height=HEIGHT_VALUE], [width=WIDTH_VALUE])
+#%show_workflow_execution([host=YOUR_HOST], [height=HEIGHT_VALUE], [width=WIDTH_VALUE])
 ```
 
 NOTE: The parameters `height` and `width` allow the user to adjust the size of the window inside the notebook.
@@ -2130,7 +2183,7 @@ The PML provides a fast, easy and practical way to execute different workflows u
 
 To test these workflows, you need to add the *machine-Learning-workflows Bucket* as main catalog in the ProActive Studio.
 
-A. Open +++<a class="studioUrl" href="/studio" target="_blank">Machine Learning Open Studio</a>+++ home page.
+A. Open +++<a class="studioUrl" href="/studio" target="_blank">Proactive Machine Learning</a>+++ home page.
 
 B. Create a new workflow.
 
@@ -2239,7 +2292,7 @@ video::FwMPR87wzoo[youtube, width=700, height=400 start=0, position=center]
 
 You can test these workflows by following these steps:
 
-A. Open +++<a class="studioUrl" href="/studio" target="_blank">Machine Learning Open Studio</a>+++ home page.
+A. Open +++<a class="studioUrl" href="/studio" target="_blank">Proactive Machine Learning</a>+++ home page.
 
 B. Create a new workflow.
 
@@ -3655,7 +3708,7 @@ image::object_detection.png[150,150]
 
 NOTE: You can use RGB images in JPG format (Images folder) and the annotations (Classes folder) in the XML format using Pascal VOC or COCO pattern.
 
-NOTE: In these links, you can find an example of the organization of the folders using https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/pascal_voc.zip[Pascal_VOC Dataset^] and https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/pascal_coco.zip[COCO Dataset^].
+NOTE: In these links, you can find an example of the organization of the folders using https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/pascal_voc.zip[Pascal_VOC Dataset^] and https://activeeon-public.s3.eu-west-2.amazonaws.com/datasets/coco.zip[COCO Dataset^].
 
 *Task Variables:*
 
