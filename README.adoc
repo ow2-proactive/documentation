@@ -9,7 +9,7 @@ Execute a normal build with gradle:
 Upon success open `index.html` to check your changes.
 
 ----
-firefox build/asciidoc/html5/index.html
+firefox build/asciidoc/index.html
 ----
 
 Do not forget to follow the naming and capitalization guidelines at the end of this README.

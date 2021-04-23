@@ -1005,46 +1005,63 @@ Execute the workflow by setting the different workflow's variables as described 
 [cols="2,5,2"]
 |===
 |*Variable name* | *Description* | *Type*
+
 3+^|*Workflow variables*
+
 | `MODEL_SERVICE_INSTANCE_NAME`
 | Service instance name.
 | String (default="maas_dl-${PA_JOB_ID}").
+
 | `MODEL_SERVICE_PROXIFIED`
 | Allows access to the endpoint through an Http(s) Proxy.
 | Boolean (default=False).
+
 | `MODEL_SERVICE_ENTRYPOINT`
 | This entry script starts the service and defines the different functions to deploy the model, scores the prediction requests based on the deployed model, and returns the results. This script is specific to your model. This file should be stored in the Catalog under the `model_as_service_resources` bucket. More information about this file can be found in the <<_customize_the_service>> section.
 | String (default="dl_service").
+
 | `MODEL_SERVICE_YAML_FILE`
 | A YAML file that describes the OpenAPI Specification ver. 2 (known as Swagger Spec) of the service. This file should be stored in the catalog under the `model_as_service_resources` bucket. More information about the structure of this file can be found in the section <<_customize_the_service>>.
 | String (default="dl_service-api").
+
 | `MODEL_SERVICE_USER_NAME`
 | A valid user name having the needed privileges to execute this action.
 | String (default="user").
+
 | `MODEL_SERVICE_NODE_NAME`
 | The name of the node where the service will be deployed. If empty, the service will be deployed on an available node selected randomly.
+|
+
 3+^|*Task variables*
+
 | `SERVICE_ID`
 | The name of the service. Please keep the default value for this variable.
 | String (default="MaaS_DL")
+
 | `INSTANCE_NAME`
 | The name of the service that will be deployed.
 | String (default="$MODEL_SERVICE_INSTANCE_NAME")
+
 | `ENGINE`
 | Container engine.
 | String (default="$CONTAINER_PLATFORM")
+
 | `PROXIFIED`
 | It takes by default the value of `MODEL_SERVICE_PROXYFIED` workflow variable.
 | String (default="$MODEL_SERVICE_PROXYFIED")
+
 | `PYTHON_ENTRYPOINT`
 | It takes by default the value of `MODEL_SERVICE_ENTRYPOINT` workflow variable.
 | String (default="$MODEL_SERVICE_ENTRYPOINT")
+
 | `YAML_FILE`
 | It takes by default the value of `MODEL_SERVICE_YAML_FILE` workflow variable.
 | String (default="$MODEL_SERVICE_YAML_FILE")
+
 | `USER_NAME`
 | It takes by default the value of `MODEL_SERVICE_USER_NAME` workflow variable.
 | String (default="$MODEL_SERVICE_USER_NAME")
+
 | `NODE_NAME`
 | It takes by default the value of `MODEL_SERVICE_NODE_NAME` workflow variable.
 | String (default="$MODEL_SERVICE_NODE_NAME")
@@ -2338,7 +2355,7 @@ NOTE: Instead of training a model from scratch, a pre-trained sentiment analysis
 
 *Train_Image_Classification:* trains a model to classify images from ants and bees. 
 
-*Train_Image_Segmentation:* trains a segmentation model using SegNet network on http://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]. 
+*Train_Image_Segmentation:* trains a segmentation model using SegNet network on https://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]. 
 
 *Train_Image_Object_Detection:* trains objects using YOLOv3 model on COCO dataset proposed by Microsoft Research. 
 
@@ -2354,7 +2371,7 @@ This section presents custom AI workflows using tasks available on the `deep-lea
 
 *Fake_Celebrity_Faces_Generation:* generates a wild diversity of fake faces using a GAN model that was trained based on thousands of real celebrity photos. The pre-trained GAN model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/Epoch+018.pt[link^].
 
-*Image_Segmentation:* predicts a segmentation model using SegNet network on http://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]. The pre-trained image segmentation model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_segnet.zip[link^].
+*Image_Segmentation:* predicts a segmentation model using SegNet network on https://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]. The pre-trained image segmentation model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_segnet.zip[link^].
 
 *Image_Object_Detection:* detects objects using a pre-trained YOLOv3 model on COCO dataset proposed by Microsoft Research. The pre-trained model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/yolo3_coco.zip[link^].
 
@@ -3702,7 +3719,7 @@ NOTE: You can use RGB images in JPG format (Images folder) and the groundtruth a
 
 NOTE: You can find an example of the organization of the folders at: https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/oxford.zip
 
-. _Object Detection Dataset:_ Two folders are demanded: the first folder should contain the RGB images in JPG format and another folder should contain its corresponding anotations in XML format using http://host.robots.ox.ac.uk/pascal/VOC/voc2012/index.html[PASCAL VOC^] format or TXT format using COCO format (http://cocodataset.org/#home). The RGB images and annotations should be organized as follows:
+. _Object Detection Dataset:_ Two folders are demanded: the first folder should contain the RGB images in JPG format and another folder should contain its corresponding anotations in XML format using http://host.robots.ox.ac.uk/pascal/VOC/voc2012/index.html[PASCAL VOC^] format or TXT format using COCO format (https://cocodataset.org/#home). The RGB images and annotations should be organized as follows:
 
 image::object_detection.png[150,150]
 
@@ -3920,7 +3937,7 @@ NOTE: Torchtext were used to preprocess and load the text input. More informatio
 | Boolean (default=True)
 |===
 
-NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/docs/stable/torchvision/models.html[AlexNet^].
+NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/vision/stable/models.html[AlexNet^].
 
 ===== DenseNet-161
 
@@ -3928,7 +3945,7 @@ NOTE: PyTorch is used to build the model architecture based on https://pytorch.o
 
 *Usage:* It should be connected to <<Train_Image_Classification_Model>>.
 
-NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/docs/stable/torchvision/models.html[DenseNet-161^].
+NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/vision/stable/models.html[DenseNet-161^].
 
 .DenseNet-161_Task variables
 [cols="2,5,2"]
@@ -3948,7 +3965,7 @@ NOTE: PyTorch is used to build the model architecture based on https://pytorch.o
 
 *Usage:* It should be connected to <<Train_Image_Classification_Model>>.
 
-NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/docs/stable/torchvision/models.html[ResNet-18^].
+NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/vision/stable/models.html[ResNet-18^].
 
 .ResNet-161_Task variables
 [cols="2,5,2"]
@@ -3968,7 +3985,7 @@ NOTE: PyTorch is used to build the model architecture based on https://pytorch.o
 
 *Usage:* It should be connected to <<Train_Image_Classification_Model>>.
 
-NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/docs/stable/torchvision/models.html[VGG-16^].
+NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/vision/stable/models.html[VGG-16^].
 
 .VGG-16_Task variables
 [cols="2,5,2"]
@@ -4154,7 +4171,7 @@ NOTE: PyTorch is used to build the model architecture based on https://github.co
 | Boolean (default=True)
 |===
 
-NOTE: The default parameters of the YOLO network were set for the COCO dataset (http://cocodataset.org/#home). If you'd like to use another dataset, you probably need to change the default parameters.
+NOTE: The default parameters of the YOLO network were set for the COCO dataset (https://cocodataset.org/#home). If you'd like to use another dataset, you probably need to change the default parameters.
 
 ==== Text Classification
 
