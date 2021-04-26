@@ -2066,6 +2066,8 @@ image::upload-catalog-objects.png[align=left]
 
 * *Content Type*: The Content Type is used to indicate the media type of the resource. New content Types can be added by clicking the `plus` button.
 
+* *Project Name*: The name of the project to which belongs the object. The project name can be provided for all objects except workflows. We assume that the project name is defined in the workflow XML file.
+
 WARNING: In case of uploading an archive, all the objects in the zip must have the same Kind and Content Type.
 
 ==== Create a zip archive with Catalog objects
