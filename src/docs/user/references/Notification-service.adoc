@@ -24,10 +24,11 @@ A user creating a subscription will need to:
 
 ==== Subscription types
 
-There are two types of <<_glossary_notification_subscription,*Subscriptions*>>:
+There are three types of <<_glossary_notification_subscription,*Subscriptions*>>:
 
 - Service subscriptions.
 - Job subscriptions.
+- Channel subscriptions.
 
 ===== Service subscriptions
 
@@ -78,6 +79,21 @@ The _Submitted by_ switch may be activated to be notified of events for job subm
 
 To modify a job subscription simply click on it, do your adjustments and save it.
 
+[[channels_subscription]]
+===== Channel subscriptions
+
+Like service subscriptions, channel subscriptions are unique to each user. It allows users to subscribe to channels created beforehand.
+A user that is a notification service administrator can subscribe to any channel. Otherwise either the channel is authorized
+for all user groups to subscribe or the user is part of at least one of the authorized groups of the channel.
+
+To visualize past notifications and start receiving new ones, a user must update his channel subscription
+by activating a notification method, selecting desired channels from the user's available channels list and finally activating the subscription.
+
+[title="Channel subscription"]
+image::channel-sub.png[align="center"]
+
+Go to the <<channels_section,*Channel section*>> to learn more about channels.
+
 ==== Notification methods
 
 To define the way to be notified, a user must select at least one notification method.
@@ -116,19 +132,17 @@ and activate the notification method to start receiving notification by this mea
 If a notification method parameter is deleted or changed and reused in the future, then a new confirmation
 request will be triggered.
 
+[[channels_section]]
 === Channels
 
 ==== Principle
 
-A notification <<_glossary_notification_channel, Channel>> is a centralized space in the <<_glossary_notification_portal, Notification Portal>>
+A notification service <<_glossary_notification_channel, Channel>> is a centralized space in the <<_glossary_notification_portal, Notification Portal>>
 for groups of users to receive notifications created from a workflow using the Channel_Notification task.
 It consists of a unique name and a set of user groups authorized to subscribe to the channel.
 
 In order to receive channel notifications it is required to create one or more channels and update the channel
-<<_glossary_notification_subscription, Subscription>> to specify which channels we wish to be notified of.
-
-[title="Channel subscription"]
-image::channel-sub.png[align="center"]
+<<channels_subscription,*Channel subscription*>> to specify which channels we wish to be notified of.
 
 ==== Rules
 
@@ -335,7 +349,7 @@ it notifies all channels available for the user to subscribe.
 | Association failed
 | CRITICAL
 | The server was unable to retrieve the resource Native_Task_Windows in the bucket basic-examples
-located https://{HOST}/catalog/buckets/basic-examples/resources/Native_Task_Windows/raw.
+located \https://{HOST}/catalog/buckets/basic-examples/resources/Native_Task_Windows/raw.
 Changing the status of the association 152 of the calendar every_minute to FAILED.
 | A <<_glossary_catalog, *Catalog*>> resource is not found, the association changes to FAILED status
 | `ASSOCIATION_FAILED`
