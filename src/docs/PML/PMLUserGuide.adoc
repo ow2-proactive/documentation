@@ -495,7 +495,7 @@ Execute the workflow by setting the different workflow's variables as described 
 | Container engine.
 | String (default="$CONTAINER_PLATFORM")
 | `GPU_ENABLED`
-| Configures the service to use the GPU and the library Nvidia Rapids.
+| If True, the service will be configured to use the GPU and the library Nvidia Rapids.
 | Boolean (default=False)
 | `PROXIFIED`
 | It takes by default the value of  `MODEL_SERVICE_PROXYFIED` workflow variable.
