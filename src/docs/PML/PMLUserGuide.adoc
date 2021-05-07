@@ -670,8 +670,8 @@ Set the following variables:
 | `ENGINE`
 | Container engine.
 | `GPU_ENABLED`
-| If True, the service will be configured to use the GPU and the library 
-Rapids.
+| If True, the service will be configured to use the GPU and the Nvidia 
+Rapids library.
 | Boolean (default=False)
 | List (default="docker")
 | `HTTPS_ENABLED`
