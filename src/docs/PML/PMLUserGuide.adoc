@@ -479,7 +479,7 @@ Execute the workflow by setting the different workflow's variables as described 
 | The name of the node where the service will be deployed. If empty, the service will be deployed on an available node selected randomly.
 | String (default=Empty)
 | `USE_NVIDIA_RAPIDS`
-| If True, the service will be configured to use the GPU and the library Nvidia Rapids.
+| If True, the service will be configured to use the GPU and the Nvidia Rapids library.
 | Boolean (default=False)
 | `DRIFT_ENABLED`
 | True if a detector is needed to check for drifts in the input datasets compared to the training datasets.
@@ -495,7 +495,7 @@ Execute the workflow by setting the different workflow's variables as described 
 | Container engine.
 | String (default="$CONTAINER_PLATFORM")
 | `GPU_ENABLED`
-| If True, the service will be configured to use the GPU and the library Nvidia Rapids.
+| If True, the service will be configured to use the GPU and the Nvidia Rapids library.
 | Boolean (default=False)
 | `PROXIFIED`
 | It takes by default the value of  `MODEL_SERVICE_PROXYFIED` workflow variable.
@@ -513,7 +513,7 @@ Execute the workflow by setting the different workflow's variables as described 
 | It takes by default the value of  `MODEL_SERVICE_NODE_NAME` workflow variable.
 | String (default="$MODEL_SERVICE_NODE_NAME")
 | `GPU_ENABLED`
-| If True, the service will be configured to use the GPU and the library Nvidia Rapids.
+| If True, the service will be configured to use the GPU and the Nvidia Rapids library.
 | Boolean (default=$USE_NVIDIA_RAPIDS)
 |===
 
@@ -670,7 +670,8 @@ Set the following variables:
 | `ENGINE`
 | Container engine.
 | `GPU_ENABLED`
-| If True, the service will be configured to use the GPU and the library Nvidia Rapids.
+| If True, the service will be configured to use the GPU and the library 
+Rapids.
 | Boolean (default=False)
 | List (default="docker")
 | `HTTPS_ENABLED`
