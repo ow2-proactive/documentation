@@ -289,7 +289,7 @@ In the following, we briefly describe the different tuners proposed by the `Dist
 
     - *MOCMAES search* (Multi-Objective Covariance Matrix Adaptation Evolution Strategy) is a multi-objective algorithm optimizing multiple tradeoffs simultaneously. To do that, MOCMAES employs a number of CMAES algorithms.
 
-Here is a table that resumes when to use each algorithm.
+Here is a table that summarizes when to use each algorithm.
 |===
 | *Algorithm* | *Time* | *Dimensions* | *Continuity* | *Conditions* | *Multi-objective*
 | `Grid`
@@ -478,6 +478,12 @@ Execute the workflow by setting the different workflow's variables as described 
 | `MODEL_SERVICE_NODE_NAME`
 | The name of the node where the service will be deployed. If empty, the service will be deployed on an available node selected randomly.
 | String (default=Empty)
+| `USE_NVIDIA_RAPIDS`
+| If True, the service will be configured to use the GPU and the Nvidia Rapids library.
+| Boolean (default=False)
+| `DRIFT_ENABLED`
+| True if a detector is needed to check for drifts in the input datasets compared to the training datasets.
+| Boolean (default=True)
 3+^|*Task variables*
 | `SERVICE_ID`
 | The name of the service. Please keep the default value for this variable.
@@ -488,6 +494,9 @@ Execute the workflow by setting the different workflow's variables as described 
 | `ENGINE`
 | Container engine.
 | String (default="$CONTAINER_PLATFORM")
+| `GPU_ENABLED`
+| If True, the service will be configured to use the GPU and the Nvidia Rapids library.
+| Boolean (default=False)
 | `PROXIFIED`
 | It takes by default the value of  `MODEL_SERVICE_PROXYFIED` workflow variable.
 | String (default="$MODEL_SERVICE_PROXYFIED")
@@ -503,6 +512,9 @@ Execute the workflow by setting the different workflow's variables as described 
 | `NODE_NAME`
 | It takes by default the value of  `MODEL_SERVICE_NODE_NAME` workflow variable.
 | String (default="$MODEL_SERVICE_NODE_NAME")
+| `GPU_ENABLED`
+| If True, the service will be configured to use the GPU and the Nvidia Rapids library.
+| Boolean (default=$USE_NVIDIA_RAPIDS)
 |===
 
 ==== Deploy a Specific ML Model
@@ -546,6 +558,9 @@ Execute the workflow and set the different workflow's variables as follows:
 | `DRIFT_DETECTION_WINDOW_SIZE`
 | The size of the data to be extracted from the old training dataset to be used as a baseline data for the drift detection.
 | Integer (default=50).
+| `LOG_PREDICTIONS`
+| If True, the predictions made by the model will be displayed in the traceability page.
+| Boolean (default=True).
 |===
 
 ==== Call the Service for Predicition
@@ -654,6 +669,10 @@ Set the following variables:
 | String (default="maas-ml-gui")
 | `ENGINE`
 | Container engine.
+| `GPU_ENABLED`
+| If True, the service will be configured to use the GPU and the Nvidia 
+Rapids library.
+| Boolean (default=False)
 | List (default="docker")
 | `HTTPS_ENABLED`
 | True if the protocol https is needed for the defined model-service.
