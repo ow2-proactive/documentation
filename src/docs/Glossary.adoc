@@ -66,6 +66,9 @@ Third Party Notification:: A <<_glossary_notification_methods,*Notification Meth
 [[_glossary_notification_methods]]
 Notification Method:: Element of a <<_glossary_notification_subscription,*Notification Subscription*>> which defines how a user is notified (portal, email, third-party, etc.).
 
+[[_glossary_notification_channel]]
+Notification Channel:: In the <<_glossary_notification_service,*Notification Service*>>, a channel is a notification container that can be notified and displays notifications to groups of users
+
 [[_glossary_cloud_automation_service]]
 Service Automation:: ProActive component that allows a user to easily manage any On-Demand Services (PaaS, IaaS and MaaS) with full Life-Cycle Management (create, deploy, pause, resume and terminate).
 

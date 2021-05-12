@@ -24,10 +24,11 @@ A user creating a subscription will need to:
 
 ==== Subscription types
 
-There are two types of <<_glossary_notification_subscription,*Subscriptions*>>:
+There are three types of <<_glossary_notification_subscription,*Subscriptions*>>:
 
 - Service subscriptions.
 - Job subscriptions.
+- Channel subscriptions.
 
 ===== Service subscriptions
 
@@ -41,8 +42,8 @@ Service subscriptions are deactivated by default, to start receiving notificatio
 - Select desired events
 - Activate the <<_glossary_notification_subscription,*Subscription*>>.
 
-[title="Example with scheduler subscription"]
-image::scheduler-subscription.png[align="center"]
+[title="Example with job planner subscription"]
+image::jobplanner-subscription.png[align="center"]
 
 To modify a service subscription simply click on it and do your adjustments. The subscription is automatically saved.
 
@@ -67,7 +68,7 @@ To create a job subscription, go to the <<_glossary_notification_portal,*Notific
 job subscriptions tab and click on the _+_ button
 
 [title="Button to create a job subscription"]
-image::job-subscription-creation-button.png[align="center"]
+image::job-subscriptions-summary.png[align="center"]
 
 Then fill and select the mandatory fields and click on _Save_
 
@@ -77,6 +78,27 @@ image::job-subscription-creation.png[align="center"]
 The _Submitted by_ switch may be activated to be notified of events for job submitted only by the user who created the subscription.
 
 To modify a job subscription simply click on it, do your adjustments and save it.
+
+[[channels_subscription]]
+===== Channel subscriptions
+
+Like service subscriptions, channel subscriptions are unique to each user. It allows users to subscribe to channels created beforehand.
+A user that is a notification service administrator can subscribe to any channel.
+Otherwise, a user can subscribe to:
+
+- A public channel (a channel authorized for all groups).
+- A channel whose group authorization matches one of the user groups.
+
+To visualize past notifications and start receiving new ones, a user must update his channel subscription with the following actions:
+
+- Activate a notification method for the channel subscription.
+- Select desired channels from the user's available channels list
+- Finally, activate the subscription.
+
+[title="Channel subscription"]
+image::channel-sub.png[align="center"]
+
+Go to the <<channels_section,*Channel section*>> to learn more about channels.
 
 ==== Notification methods
 
@@ -115,6 +137,71 @@ and activate the notification method to start receiving notification by this mea
 
 If a notification method parameter is deleted or changed and reused in the future, then a new confirmation
 request will be triggered.
+
+[[channels_section]]
+=== Channels
+
+==== Principle
+
+A notification service <<_glossary_notification_channel, Channel>> is a centralized space in the <<_glossary_notification_portal, Notification Portal>>
+for groups of users to receive notifications created from a workflow using the `Channel_Notification` task.
+It consists of a unique name and a set of user groups authorized to subscribe to the channel.
+
+In order to receive channel notifications, it is required to create one or more channels and update the
+<<channels_subscription,*Channel subscription*>> to specify which channels we wish to be notified of.
+
+==== Rules
+
+- Unlike other notifications, channel notifications are retroactive. It means that when a user subscribes to a channel that already had notifications
+, they will appear to the user.
+- Channel notifications cannot be deleted, the link:../admin/ProActiveAdminGuide.html#_notification_housekeeping[Housekeeping]
+takes care of it once their life span is exceeded.
+- Notification service administrators can subscribe to any channels. Other users must be part of at least one of the authorized groups
+defined in the channel in order to subscribe to a channel, unless all groups are authorized (public channels).
+
+==== Channel Creation
+
+All users are able to create channels for any group. It is required to provide a unique channel name and a list of groups
+which will be authorized to subscribe to the channel.
+
+It can either be authorized for all groups, a subset of the channel owner groups, or any free input.
+
+[title="Channel creation"]
+image::create-channel.png[align="center"]
+
+==== Channel Management
+
+Channel management is where users can update channels by modifying a channel's name, add or remove authorized groups or delete it.
+
+A notification service administrator is able to update any channels, whether he is the creator of the channel or not.
+Other users can update only channels that they have created.
+
+To update a channel's name or authorized groups, simply make the update and click on the __Save__ button.
+
+To delete a channel, click on the __Bin__ icon on the left of the channel definition.
+
+[title="Channel creation"]
+image::channel-management.png[align="center"]
+
+==== Channel Notification
+
+In order to send a channel notification, a user must append the `Channel_Notification` task to a <<_glossary_workflow, Workflow>>.
+
+The notification's message, severity and notified groups are configurable by the user in the `Channel_Notification`.
+Simply update the following *Task variables* values to do so.
+
+[title="Channel_Notification task variables"]
+image::channel-notif-task-variables.png[align="center"]
+
+- *MESSAGE:* The message that will be displayed to the notified users. This variable is a free input
+and cannot be empty.
+- *SEVERITY:* Users can define the notification's severity by updating this variable. Available severities are
+INFO, WARNING, ERROR, CRITICAL. The default severity is INFO.
+- *CHANNELS:* channels that will be notified. It can be a single channel, a comma separated list of channels, or the `All` keyword.
+
+`All` (default) means:
+- For a notification-service administrator, send a notification to all channels
+- For a standard user, send a notification to all authorized channels (the user belongs to an authorized group of these channels).
 
 === Event types
 
@@ -270,7 +357,7 @@ request will be triggered.
 | Association failed
 | CRITICAL
 | The server was unable to retrieve the resource Native_Task_Windows in the bucket basic-examples
-located https://{HOST}/catalog/buckets/basic-examples/resources/Native_Task_Windows/raw.
+located \https://{HOST}/catalog/buckets/basic-examples/resources/Native_Task_Windows/raw.
 Changing the status of the association 152 of the calendar every_minute to FAILED.
 | A <<_glossary_catalog, *Catalog*>> resource is not found, the association changes to FAILED status
 | `ASSOCIATION_FAILED`
