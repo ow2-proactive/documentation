@@ -204,3 +204,74 @@ Given an event, a predefined action will be applied on the workflow execution.
 If an inclusion or exclusion calendar is not retrievable, it is blocking the <<_glossary_workflow,*Workflow*>> submission.
 An inclusion or exclusion calendar can become not retrievable if it cannot be downloaded from its URL and the
 <<_glossary_job_planner,*Job Planner*>> cache doesn't hold a copy.
+
+== Notifications
+
+The <<_glossary_job_planner,*Job Planner*>> can send notifications to users when particular events occur. The <<_glossary_notification_service,*Notification service*>> documentation can be found link:../admin/ProActiveAdminGuide.html#_notification_service[here].
+
+To start receiving notifications from the <<_glossary_job_planner,*Job Planner*>>, you must:
+
+- Configure your Job planner <<_glossary_notification_subscription,*Subscription*>> as it is described in the link:../user/ProActiveUserGuide.html#_service_subscriptions[Service subscriptions documentation] of the <<_glossary_notification_service,*Notification service*>>.
+- Inside the Job planner subscription, select from available events the ones you wish to be notified of.
+Available Job planner events with their description and example values are detailed in the link:../user/ProActiveUserGuide.html#_job_planner_notifications[Job Planner event types] table.
+
+== Job Planner Configuration
+
+<<_glossary_job_planner,*Job Planner*>> provides features to specify actions it will take regarding different situations it can encounter when submitting <<_glossary_workflow,*Workflows*>> according to a <<_glossary_calendars_definition,*Calendar*>>.
+
+This configuration is done in the properties file located `PROACTIVE_HOME/dist/war/job-planner/WEB-INF/classes/application.properties`
+
+=== Planned execution(s) has been missed
+This configuration controls how the <<_glossary_job_planner,*Job Planner*>> reacts when it detects that execution(s)
+have been missed for a given association. For instance if the server is down for a period of time, the planned execution will not take place.
+Two properties are used to define how <<_glossary_job_planner,*Job Planner*>> reacts to this situation.
+----
+pa.on_skipped_execution.submit=true
+----
+True by default, this option tells the <<_glossary_job_planner,*Job Planner*>> to submit a new execution if it detects that previous executions have been missed.
+It is equivalent to say that the submission has been delayed and thus a *Delayed submission executing* notification will be triggered for all users subscribed to this event.
+If set to false, <<_glossary_job_planner,*Job Planner*>> will not submit a new execution.
+
+The second property defines the delay in milliseconds from a missed execution and the current time for which the <<_glossary_job_planner,*Job Planner*>> will submit a delayed execution.
+By default there is no delay. The <<_glossary_job_planner,*Job Planner*>> will submit an execution whatever the time span between the missed execution and the current time.
+---
+pa.on_skipped_execution.submit.windows=-1
+---
+
+=== A previous planned execution is still on going
+This feature enables to specify to the <<_glossary_job_planner,*Job Planner*>> what should be done
+when a planned execution must occur but the previous one is still executing.
+
+<<_glossary_job_planner,*Job Planner*>> can either cancel the submission (default). The workflow will be submitted at the next calendar occurrence.
+----
+pa.on_going_job.cancel_execution=true
+----
+In such case, a *Submission canceled* notification will be triggered to users subscribed to this event.
+
+Or postpone the execution:
+----
+#if postponed_execution is set to true it will replace the cancel execution feature
+pa.on_going_job.postponed_execution=false
+----
+By setting this property to true, <<_glossary_job_planner,*Job Planner*>> will postpone the execution immediately after the previous execution finishes instead of canceling it.
+In such case we can expect two notifications:
+
+- A *Submission postponed* notification to inform that an execution has been postponed.
+- A *Delayed submission executing* to inform that the previous delayed execution is now executing.
+
+=== Last finished planned job has issues
+This feature defines the behavior of the <<_glossary_job_planner,*Job Planner*>> when a previous execution for a planned workflow has errors.
+By default, it will continue to submit according to the calendar
+----
+pa.on_faulty_jobs_association.put_in_error=false
+----
+If set to true, the <<_glossary_job_planner_calendar_asssociation,*Calendar Association*>> with be set to FAILED and <<_glossary_job_planner,*Job Planner*>> will
+stop submitting until the user manually reactivates the association.
+
+In such case, an *Association failed* notification will be triggered to users subscribed to this event.
+
+=== Job planner could not retrieve a resource from the catalog
+If a workflow or a calendar cannot be retrieved by the <<_glossary_job_planner,*Job Planner*>> from the catalog, the association will be set to FAILED and will require
+manual reactivation for the submissions to restart.
+
+In such case, an *Association failed* notification will be triggered to users subscribed to this event.
