@@ -2222,15 +2222,17 @@ The following workflows present some ML basic examples. These workflows are buil
 
 *Diabetics_Detection_using_K_means:* trains and tests a clustering model using Mean_shift algorithm.
 
-*House_Price_Prediction_using_Linear_Regression:* trains and tests a regression model using Mean_shift algorithm.
-
 *Vehicle_Type_Using_Model_Explainability:* predicts vehicle type based on silhouette measurements, and apply ELI5 and Kernel Explainer to understand the model’s global behavior or specific predictions.
 
-*Iris_Flowers_Classification_using_Logistic_Regression:* trains and tests a predictive model using logistic_regressive algorithm.
+*Parallel_Regression_Model_Training:* trains three different regression models.
 
 *Parallel_Classification_Model_Training:* trains three different classification models.
 
-*Parallel_Regression_Model_Training:* trains three different regression models.
+*Nested_Cross_Validation:* trains a logistic regression model using a nested cross-validation strategies.
+
+*Iris_Flowers_Classification_using_Logistic_Regression:* trains and tests a predictive model using logistic_regressive algorithm.
+
+*House_Price_Prediction_using_Linear_Regression:* trains and tests a regression model using Mean_shift algorithm.
 
 === Basic AutoML
 The following workflows present some ML basic examples using AutoML generic tasks available in the `machine-learning` bucket.
