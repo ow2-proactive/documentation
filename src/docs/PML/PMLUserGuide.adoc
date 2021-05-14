@@ -4612,9 +4612,9 @@ The following workflows present some examples using Visdom service to visualize 
 
 video::bQpwS2nMAZY[youtube, width=700, height=400 start=0, position=center]
 
-*Visdom_Plot_Example:* returns numerous examples of plots covered by Visdom.
+*Visdom_Plots_Example:* returns numerous examples of plots covered by Visdom.
 
-*Visdom_Real_time_Digit_Classification:* shows an example of realtime plotting using the Visdom server for training a convolutional neural network (CNN) for MNIST digit classification.
+*Visdom_Realtime_Digit_Classification:* shows an example of realtime plotting using the Visdom server for training a convolutional neural network (CNN) for MNIST digit classification.
 
 *Check_Visdom_Support:* checks if the user wants (or not) to start the Visdom service.
 
