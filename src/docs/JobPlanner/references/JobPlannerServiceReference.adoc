@@ -211,18 +211,18 @@ The <<_glossary_job_planner,*Job Planner*>> can send notifications to users when
 
 To start receiving notifications from the <<_glossary_job_planner,*Job Planner*>>, you must:
 
-- Configure your Job planner <<_glossary_notification_subscription,*Subscription*>> as it is described in the link:../user/ProActiveUserGuide.html#_service_subscriptions[Service subscriptions documentation] of the <<_glossary_notification_service,*Notification service*>>.
+- Configure your Job planner's <<_glossary_notification_subscription,*Subscription*>> as it is described in link:../user/ProActiveUserGuide.html#_service_subscriptions[Service subscriptions documentation] of the <<_glossary_notification_service,*Notification service*>>.
 - Inside the Job planner subscription, select from available events the ones you wish to be notified of.
-Available Job planner events with their description and example values are detailed in the link:../user/ProActiveUserGuide.html#_job_planner_notifications[Job Planner event types] table.
+Available Job planner events with their description and example values are detailed in the table in link:../user/ProActiveUserGuide.html#_job_planner_notifications[Job Planner event types].
 
 == Job Planner Configuration
 
-<<_glossary_job_planner,*Job Planner*>> provides features to specify actions it will take regarding different situations it can encounter when submitting <<_glossary_workflow,*Workflows*>> according to a <<_glossary_calendars_definition,*Calendar*>>.
+<<_glossary_job_planner,*Job Planner*>> provides features to specify actions it will take regarding different situations that it can encounter when submitting <<_glossary_workflow,*Workflows*>> according to a <<_glossary_calendars_definition,*Calendar*>>.
 
 This configuration is done in the properties file located `PROACTIVE_HOME/dist/war/job-planner/WEB-INF/classes/application.properties`
 
 === Planned execution(s) has been missed
-This configuration controls how the <<_glossary_job_planner,*Job Planner*>> reacts when it detects that execution(s)
+This configuration controls how the <<_glossary_job_planner,*Job Planner*>> reacts when it detects that one or more executions
 have been missed for a given association. For instance if the server is down for a period of time, the planned execution will not take place.
 Two properties are used to define how <<_glossary_job_planner,*Job Planner*>> reacts to this situation.
 ----
@@ -234,9 +234,9 @@ If set to false, <<_glossary_job_planner,*Job Planner*>> will not submit a new e
 
 The second property defines the delay in milliseconds from a missed execution and the current time for which the <<_glossary_job_planner,*Job Planner*>> will submit a delayed execution.
 By default there is no delay. The <<_glossary_job_planner,*Job Planner*>> will submit an execution whatever the time span between the missed execution and the current time.
----
+----
 pa.on_skipped_execution.submit.windows=-1
----
+----
 
 === A previous planned execution is still on going
 This feature enables to specify to the <<_glossary_job_planner,*Job Planner*>> what should be done
@@ -265,7 +265,7 @@ By default, it will continue to submit according to the calendar
 ----
 pa.on_faulty_jobs_association.put_in_error=false
 ----
-If set to true, the <<_glossary_job_planner_calendar_asssociation,*Calendar Association*>> with be set to FAILED and <<_glossary_job_planner,*Job Planner*>> will
+If set to true, the <<_glossary_job_planner_calendar_asssociation,*Calendar Association*>> will be set to FAILED and <<_glossary_job_planner,*Job Planner*>> will
 stop submitting until the user manually reactivates the association.
 
 In such case, an *Association failed* notification will be triggered to users subscribed to this event.
