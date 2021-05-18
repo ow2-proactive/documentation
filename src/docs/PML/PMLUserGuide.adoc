@@ -830,11 +830,15 @@ image::MAS_Predict_Swagger.png[align=center]
 
 
 
-=== Deployment Pipeline Example
+=== Deployment Pipeline Examples
 
 You can connect the different tasks in a single workflow to get the full pipeline from the model training step to the model deployment and consumption steps. Each task will propagate the acquired variables to its children tasks.
-The following workflow example is available on the `model_as_a_service` bucket under the name of `IRIS_Deploy_Flower_Classifier_Model`.
-This example trains an Iris Flower Classifier, starts a service instance where the trained model is deployed, and the input data is scored by consuming the endpoints exposed by the MaaS_ML service.
+The following workflows are available on the `model_as_a_service` bucket:
+
+*Diabetics_Deploy_Predict_Classifier_Model:* trains a Diabetics Classifier based on a Random Forest Algorithm and then deploys this classifier in a MaaS_ML service instance.
+*IRIS_Deploy_Predict_Flower_Classifier_Model:* trains an Iris Flower Classifier, starts a service instance where the trained model is deployed, and the input data is scored by consuming the endpoints exposed by the MaaS_ML service. The figure below describes this workflow.
+*IRIS_Deploy_Flower_Classifier_Model:* trains an Iris Flower Classifier and deploys it in a new service instance. This instance is stopped when the user validates this action from the Notification portal.
+
 
 image::NEW_MAAS_ML_IRIS_Workflow_Example.PNG[align=center]
 
@@ -4584,7 +4588,6 @@ WARNING: If two workflows use the same service instance names, then, their gener
 | Boolean (default=True)
 | `TARGETED_CLASS`
 | The targeted class that you need to track
-| URL
 | String
 | `VISDOM_ENDPOINT`
 | The Visdom endpoint to be used.
