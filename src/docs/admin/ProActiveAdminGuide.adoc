@@ -1415,7 +1415,7 @@ Currently the following Cloud Platforms are supported:
 - <<_gce_infrastructure,Google Compute Engine>>
 - <<_azure_infrastructure,Microsoft Azure>>
 - <<_azure_scale_set_infrastructure,Microsoft Azure Scale Set>>
-- Kubernetes
+- <<_kubernetes_infrastructure,Kubernetes>>
 
 Unlike directly deploying on the compute servers, on the Cloud Platforms
 one or more virtual machines usually need to be deployed prior to launching a ProActive Node.
