@@ -4702,8 +4702,9 @@ The `satellite-imagery` bucket contains some tasks that enable you to search, do
 
 ==== Fetch_Images_From_Satellite_Platforms
 It allows downloading the metadata and images from the Copernicus and PEPS platforms or both simultaneously.
+A behavior diagram  of workflow is presented below:
 
-image::Fetch_Satellite_Images.png[align=center]
+image::ciar_diagram.png[align=center]
 
 *Task Variables:*
 
@@ -4714,8 +4715,23 @@ image::Fetch_Satellite_Images.png[align=center]
 | `SEARCH_ENGINE`
 | Defines an engine to search and download satellite images.
 | List [Peps, Copernicus, All] (default=Copernicus)
+| `IMPORT_FROM`
+| Downloads files or folders to the data space.
+| String (default=PA:GLOBAL_FILE)
+| `TIME_TO_RETRIEVE_IN_SECONDS`
+| Defines time in second to request an offline product from the Long Term Archive (LTA) in the Copernicus Open Access Hub’s.
+| Int (default=900 seconds)
+| `TIME_TO_CHECK_ONLINE_IN_SECONDS`
+| Defines time in second to check if a product is online.
+| Int (default=1800 seconds)
+| `WALLTIME`
+|  Determines the maximum execution time of a task
+| Time  (default=24:00:00)
 | `OUTPUT_PATH`
 | Specifies the path where the data should be downloaded.
+| String
+| `REQUIRED_LICENSES`
+| Determines the policy used by the ProActive Scheduler to determine how Jobs and Tasks are scheduled.
 | String
 |===
 
@@ -4725,6 +4741,7 @@ NOTE: Please click https://peps.cnes.fr/rocket/#/register[here^] to create a new
 
 NOTE: Please click https://scihub.copernicus.eu/dhus/#/self-registration[here^] to create a new user account from Copernicus website.
 
+WARNING: PNote que as variaveis `TIME_TO_RETRIEVE_IN_SECONDS`, `TIME_TO_CHECK_ONLINE_IN_SECONDS` and `WALLTIME` are valid only for the Copernicus platform.
 ==== Fetch_Satellite_Images_From_PEPS
 
 *Task Overview:* Load and return a PEPS dataset including a `metadata folder` with metadata files and `images folder` containing satellite images.
