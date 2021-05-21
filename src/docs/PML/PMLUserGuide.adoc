@@ -4741,7 +4741,7 @@ NOTE: Please click https://peps.cnes.fr/rocket/#/register[here^] to create a new
 
 NOTE: Please click https://scihub.copernicus.eu/dhus/#/self-registration[here^] to create a new user account from Copernicus website.
 
-WARNING: PNote que as variaveis `TIME_TO_RETRIEVE_IN_SECONDS`, `TIME_TO_CHECK_ONLINE_IN_SECONDS` and `WALLTIME` are valid only for the Copernicus platform.
+WARNING: Note que as variaveis `TIME_TO_RETRIEVE_IN_SECONDS`, `TIME_TO_CHECK_ONLINE_IN_SECONDS` and `WALLTIME` are valid only for the Copernicus platform.
 ==== Fetch_Satellite_Images_From_PEPS
 
 *Task Overview:* Load and return a PEPS dataset including a `metadata folder` with metadata files and `images folder` containing satellite images.
