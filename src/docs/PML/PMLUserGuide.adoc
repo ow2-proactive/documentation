@@ -4732,13 +4732,13 @@ image::ciar_diagram.png[700,700,align=center]
 | Inserts a file path/name.
 = | String
 | `TIME_TO_RETRIEVE_IN_SECONDS`
-| Defines time in second to request an offline product from the Long Term Archive (LTA) in the Copernicus Open Access Hub’s.
+| Defines time in seconds to request an offline product from the Long Term Archive (LTA) in the Copernicus Open Access Hub’s.
 | Int (default=900 seconds)
 | `TIME_TO_CHECK_ONLINE_IN_SECONDS`
-| Defines time in second to check if a product is online.
+| Defines time in seconds to check if a product is online.
 | Int (default=1800 seconds)
 | `WALLTIME`
-|  Defines the maximum execution time of a task
+| Defines the maximum execution time of a task.
 | Time  (default=24:00:00)
 | `OUTPUT_PATH`
 | Specifies the path where the data should be downloaded.
@@ -4754,7 +4754,7 @@ NOTE: Please click https://peps.cnes.fr/rocket/#/register[here^] to create a new
 
 NOTE: Please click https://scihub.copernicus.eu/dhus/#/self-registration[here^] to create a new user account from Copernicus website.
 
-WARNING: Note que as variaveis `TIME_TO_RETRIEVE_IN_SECONDS`, `TIME_TO_CHECK_ONLINE_IN_SECONDS` and `WALLTIME` are only valid for the Copernicus platform. In addition, it is necessary to define a policy used by the ProActive Scheduler. In this case, only two tasks must be executed simultaneously.
+WARNING: Note that the variables `TIME_TO_RETRIEVE_IN_SECONDS`, `TIME_TO_CHECK_ONLINE_IN_SECONDS` and `WALLTIME` are only valid for the Copernicus platform. In addition, it is necessary to define a policy used by the ProActive Scheduler. In this case, only two tasks must be executed simultaneously.
 
 ==== Fetch_Satellite_Images_From_PEPS
 
