@@ -2589,15 +2589,21 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 | `TASK_ENABLED`
 | If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
-| `LIMIT_OUTPUT_VIEW`
-|  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
-| Int (default=-1) (`-1` means preview all the rows)
-| `FILE_URL`
-| Enter you URL of the CSV file.
+| `IMPORT_FROM`
+| Selects the type of data source.
+| List [PA:URL,PA:URI,PA:USER_FILE,PA:GLOBAL_FILE] (default=PA:URL)
+| `FILE_PATH`
+| Inserts a file path/name.
 | String
 | `FILE_DELIMITER`
-| Delimiter to use.
+| Defines a delimiter to use.
+| String (default=;)
+| `LABEL_COLUMN`
+| Enters the column label name.
 | String
+| `LIMIT_OUTPUT_VIEW`
+|  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
+| Int (-1 means preview all the rows)
 | `DATA_TYPE_IDENTIFICATION`
 | If True, the types of the dataset features will be predicted (as numerical or categorical).
 | Boolean (default=False)
@@ -3459,7 +3465,7 @@ NOTE: More information about the source of this task can be found https://scikit
 | Specifies the parameters' values of the AdaBoost algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
 | JSON format
 | `TYPE`
-| Enter the type of algorithm. There are two possible: classification or regression.
+| Enters the type of algorithm. There are two possible: classification or regression.
 | List [Classification or Regression]
 //| `N_CLUSTERS`
 //| The number of clusters to form as well as the number of centroids to generate
@@ -3493,7 +3499,7 @@ NOTE: More information about the source of this task can be found https://scikit
 | Specifies the parameters' values of the CatBoost algorithm. Check the list of parameters https://github.com/catboost[here^].
 | JSON format
 | `TYPE`
-| Enter the type of algorithm. There are two possible: classification or regression.
+| Enters the type of algorithm. There are two possible: classification or regression.
 | List [Classification or Regression]
 //| `N_CLUSTERS`
 //| The number of clusters to form as well as the number of centroids to generate
@@ -3526,7 +3532,7 @@ NOTE: More information about the source of this task can be found https://scikit
 | Specifies the parameters' values of the Gradient Boosting algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingClassifier.html[here^].
 | JSON format
 | `TYPE`
-| Enter the type of algorithm. There are two possible: classification or regression.
+| Enters the type of algorithm. There are two possible: classification or regression.
 | List [Classification or Regression]
 //| `N_CLUSTERS`
 //| The number of clusters to form as well as the number of centroids to generate
@@ -3559,7 +3565,7 @@ NOTE: More information about the source of this task can be found https://scikit
 | Specifies the parameters' values of the Random Forest algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html[here^].
 | JSON format
 | `TYPE`
-| Enter the type of algorithm. There are two possible: classification or regression.
+| Enters the type of algorithm. There are two possible: classification or regression.
 | List [Classification or Regression]
 //| `N_CLUSTERS`
 //| The number of clusters to form as well as the number of centroids to generate
@@ -3593,7 +3599,7 @@ NOTE: More information about the source of this task can be found https://scikit
 | Specifies the parameters' values of the XGBoost algorithm. Check the list of parameters https://xgboost.readthedocs.io/en/latest/python/python_api.html[here^].
 | JSON format
 | `TYPE`
-| Enter the type of algorithm. There are two possible: classification or regression.
+| Enters the type of algorithm. There are two possible: classification or regression.
 | List [Classification or Regression]
 //| `N_CLUSTERS`
 //| The number of clusters to form as well as the number of centroids to generate
@@ -3624,10 +3630,10 @@ NOTE: More information about the source of this task can be found https://scikit
 | If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LABEL_COLUMN`
-| Enter the column label name.
+| Enters the column label name.
 | String
 | `USE_NVIDIA_RAPIDS`
-| Enable NVIDIA RAPIDS support.
+| Enables NVIDIA RAPIDS support.
 | Boolean (default=False)
 |===
 
@@ -3655,10 +3661,10 @@ NOTE: More information about the source of this task can be found https://scikit
 | If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LABEL_COLUMN`
-| Enter the column label name.
+| Enters the column label name.
 | String
 | `USE_NVIDIA_RAPIDS`
-| Enable NVIDIA RAPIDS support.
+| Enables NVIDIA RAPIDS support.
 | Boolean (default=False)
 |===
 
@@ -3677,7 +3683,7 @@ NOTE: More information about the source of this task can be found https://scikit
 | If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LABEL_COLUMN`
-| Enter the column label name.
+| Enters the column label name.
 | String
 | `FEATURE_PARTIAL_PLOTS`
 | Partial Dependence Plots show how a feature affects predictions.
@@ -3686,7 +3692,7 @@ NOTE: More information about the source of this task can be found https://scikit
 | 2D Partial Dependence Plots show predictions for any combination of two features.
 | String [e.g, distance_circularity, max_length_aspect_ratio].
 | `SHAP_ROW_SHOW`
-| Enter the row of data to show. The SHAP (https://github.com/slundberg/shap) values interpret the impact of having a certain value for a given feature in comparison to the prediction we'd make if that feature took some baseline value. Feature values causing increased predictions are in pink and  Feature values decreasing the prediction are in blue. The SHAP_ROW_SHOW The row of data to show
+| Defines the row of data to show. The SHAP (https://github.com/slundberg/shap) values interpret the impact of having a certain value for a given feature in comparison to the prediction we'd make if that feature took some baseline value. Feature values causing increased predictions are in pink and  Feature values decreasing the prediction are in blue. The SHAP_ROW_SHOW The row of data to show
 | Integer
 |===
 
@@ -4704,7 +4710,7 @@ The `satellite-imagery` bucket contains some tasks that enable you to search, do
 It allows downloading the metadata and images from the Copernicus and PEPS platforms or both simultaneously.
 A behavior diagram  of workflow is presented below:
 
-image::ciar_diagram.png[align=center]
+image::ciar_diagram.png[700,700,align=center]
 
 *Task Variables:*
 
@@ -4716,16 +4722,19 @@ image::ciar_diagram.png[align=center]
 | Defines an engine to search and download satellite images.
 | List [Peps, Copernicus, All] (default=Copernicus)
 | `IMPORT_FROM`
-| Downloads files or folders to the data space.
-| String (default=PA:GLOBAL_FILE)
+| Selects the type of data source.
+| List [PA:URL,PA:URI,PA:USER_FILE,PA:GLOBAL_FILE] (default=PA:GLOBAL_FILE)
+| `FILE_PATH`
+| Inserts a file path/name.
+= | String
 | `TIME_TO_RETRIEVE_IN_SECONDS`
 | Defines time in second to request an offline product from the Long Term Archive (LTA) in the Copernicus Open Access Hub’s.
 | Int (default=900 seconds)
 | `TIME_TO_CHECK_ONLINE_IN_SECONDS`
-| Defines time in second to check if a product is online.
+| Determines time in second to check if a product is online.
 | Int (default=1800 seconds)
 | `WALLTIME`
-|  Determines the maximum execution time of a task
+|  Defines the maximum execution time of a task
 | Time  (default=24:00:00)
 | `OUTPUT_PATH`
 | Specifies the path where the data should be downloaded.
@@ -4741,7 +4750,8 @@ NOTE: Please click https://peps.cnes.fr/rocket/#/register[here^] to create a new
 
 NOTE: Please click https://scihub.copernicus.eu/dhus/#/self-registration[here^] to create a new user account from Copernicus website.
 
-WARNING: Note que as variaveis `TIME_TO_RETRIEVE_IN_SECONDS`, `TIME_TO_CHECK_ONLINE_IN_SECONDS` and `WALLTIME` are valid only for the Copernicus platform.
+WARNING: Note que as variaveis `TIME_TO_RETRIEVE_IN_SECONDS`, `TIME_TO_CHECK_ONLINE_IN_SECONDS` and `WALLTIME` are valid only for the Copernicus platform. In addition, it is necessary to define a policy used by the ProActive Scheduler, in this case only two tasks must be executed simultaneously.
+
 ==== Fetch_Satellite_Images_From_PEPS
 
 *Task Overview:* Load and return a PEPS dataset including a `metadata folder` with metadata files and `images folder` containing satellite images.
