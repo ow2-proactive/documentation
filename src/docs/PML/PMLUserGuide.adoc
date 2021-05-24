@@ -2488,7 +2488,7 @@ NOTE: All ML tasks were implemented using https://scikit-learn.org/stable/[Sciki
 | If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LIMIT_OUTPUT_VIEW`
-|  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
+| Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
 | Int (default=-1) (`-1` means preview all the rows)
 |===
 
@@ -2599,7 +2599,7 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 | Defines a delimiter to use.
 | String (default=;)
 | `LABEL_COLUMN`
-| Enters the column label name.
+| Refers to the column "label name".
 | String
 | `LIMIT_OUTPUT_VIEW`
 |  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
@@ -3465,7 +3465,7 @@ NOTE: More information about the source of this task can be found https://scikit
 | Specifies the parameters' values of the AdaBoost algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html[here^].
 | JSON format
 | `TYPE`
-| Enters the type of algorithm. There are two possible: classification or regression.
+| Specifies the type of algorithm.
 | List [Classification or Regression]
 //| `N_CLUSTERS`
 //| The number of clusters to form as well as the number of centroids to generate
@@ -3499,7 +3499,7 @@ NOTE: More information about the source of this task can be found https://scikit
 | Specifies the parameters' values of the CatBoost algorithm. Check the list of parameters https://github.com/catboost[here^].
 | JSON format
 | `TYPE`
-| Enters the type of algorithm. There are two possible: classification or regression.
+| Specifies the type of algorithm.
 | List [Classification or Regression]
 //| `N_CLUSTERS`
 //| The number of clusters to form as well as the number of centroids to generate
@@ -3532,7 +3532,7 @@ NOTE: More information about the source of this task can be found https://scikit
 | Specifies the parameters' values of the Gradient Boosting algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingClassifier.html[here^].
 | JSON format
 | `TYPE`
-| Enters the type of algorithm. There are two possible: classification or regression.
+| Specifies the type of algorithm.
 | List [Classification or Regression]
 //| `N_CLUSTERS`
 //| The number of clusters to form as well as the number of centroids to generate
@@ -3565,7 +3565,7 @@ NOTE: More information about the source of this task can be found https://scikit
 | Specifies the parameters' values of the Random Forest algorithm. Check the list of parameters https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html[here^].
 | JSON format
 | `TYPE`
-| Enters the type of algorithm. There are two possible: classification or regression.
+| Specifies the type of algorithm.
 | List [Classification or Regression]
 //| `N_CLUSTERS`
 //| The number of clusters to form as well as the number of centroids to generate
@@ -3599,7 +3599,7 @@ NOTE: More information about the source of this task can be found https://scikit
 | Specifies the parameters' values of the XGBoost algorithm. Check the list of parameters https://xgboost.readthedocs.io/en/latest/python/python_api.html[here^].
 | JSON format
 | `TYPE`
-| Enters the type of algorithm. There are two possible: classification or regression.
+| Specifies the type of algorithm.
 | List [Classification or Regression]
 //| `N_CLUSTERS`
 //| The number of clusters to form as well as the number of centroids to generate
@@ -3630,7 +3630,7 @@ NOTE: More information about the source of this task can be found https://scikit
 | If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LABEL_COLUMN`
-| Enters the column label name.
+| Refers to the column "label name".
 | String
 | `USE_NVIDIA_RAPIDS`
 | Enables NVIDIA RAPIDS support.
@@ -3661,8 +3661,8 @@ NOTE: More information about the source of this task can be found https://scikit
 | If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LABEL_COLUMN`
-| Enters the column label name.
-| String
+| Refers to the column "label name".
+| String.
 | `USE_NVIDIA_RAPIDS`
 | Enables NVIDIA RAPIDS support.
 | Boolean (default=False)
@@ -3683,7 +3683,7 @@ NOTE: More information about the source of this task can be found https://scikit
 | If False, the task will be ignored, it will not be executed.
 | Boolean (default=True)
 | `LABEL_COLUMN`
-| Enters the column label name.
+| Refers to the column "label name".
 | String
 | `FEATURE_PARTIAL_PLOTS`
 | Partial Dependence Plots show how a feature affects predictions.
@@ -3692,11 +3692,15 @@ NOTE: More information about the source of this task can be found https://scikit
 | 2D Partial Dependence Plots show predictions for any combination of two features.
 | String [e.g, distance_circularity, max_length_aspect_ratio].
 | `SHAP_ROW_SHOW`
-| Defines the row of data to show. The SHAP (https://github.com/slundberg/shap) values interpret the impact of having a certain value for a given feature in comparison to the prediction we'd make if that feature took some baseline value. Feature values causing increased predictions are in pink and  Feature values decreasing the prediction are in blue. The SHAP_ROW_SHOW The row of data to show
+| Defines the row of data to show.
 | Integer
 |===
 
 *Usage:* It should be connected with <<Train_Model>>.
+
+NOTE: The SHAP (https://github.com/slundberg/shap) values interpret the impact of having a certain value for a given feature in comparison to the prediction we would make if that feature took some baseline value. Feature values causing increased predictions are in pink and Feature values decreasing the prediction are in blue.
+
+
 
 === Deep Learning Bucket
 
@@ -4731,7 +4735,7 @@ image::ciar_diagram.png[700,700,align=center]
 | Defines time in second to request an offline product from the Long Term Archive (LTA) in the Copernicus Open Access Hub’s.
 | Int (default=900 seconds)
 | `TIME_TO_CHECK_ONLINE_IN_SECONDS`
-| Determines time in second to check if a product is online.
+| Defines time in second to check if a product is online.
 | Int (default=1800 seconds)
 | `WALLTIME`
 |  Defines the maximum execution time of a task
@@ -4750,7 +4754,7 @@ NOTE: Please click https://peps.cnes.fr/rocket/#/register[here^] to create a new
 
 NOTE: Please click https://scihub.copernicus.eu/dhus/#/self-registration[here^] to create a new user account from Copernicus website.
 
-WARNING: Note que as variaveis `TIME_TO_RETRIEVE_IN_SECONDS`, `TIME_TO_CHECK_ONLINE_IN_SECONDS` and `WALLTIME` are valid only for the Copernicus platform. In addition, it is necessary to define a policy used by the ProActive Scheduler, in this case only two tasks must be executed simultaneously.
+WARNING: Note que as variaveis `TIME_TO_RETRIEVE_IN_SECONDS`, `TIME_TO_CHECK_ONLINE_IN_SECONDS` and `WALLTIME` are only valid for the Copernicus platform. In addition, it is necessary to define a policy used by the ProActive Scheduler. In this case, only two tasks must be executed simultaneously.
 
 ==== Fetch_Satellite_Images_From_PEPS
 
