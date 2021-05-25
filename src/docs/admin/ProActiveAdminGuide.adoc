@@ -456,7 +456,7 @@ networks:
 
 ===== Start Proactive using Docker Compose
 
-Login into the Private Activeeon Regitry
+Login into the Private Activeeon Registry
 ----
 $ docker login dockerhub.activeeon.com
 ----
