@@ -3698,7 +3698,7 @@ NOTE: More information about the source of this task can be found https://scikit
 
 *Usage:* It should be connected with <<Train_Model>>.
 
-NOTE: The SHAP (https://github.com/slundberg/shap) values interpret the impact of having a certain value for a given feature in comparison to the prediction we would make if that feature took some baseline value. Feature values causing increased predictions are in pink and Feature values decreasing the prediction are in blue.
+NOTE: The https://github.com/slundberg/shap[SHAP^] values interpret the impact of having a certain value for a given feature in comparison to the prediction we would make if that feature took some baseline value. Feature values causing increased predictions are in pink and Feature values decreasing the prediction are in blue.
 
 
 
@@ -4712,9 +4712,9 @@ The `satellite-imagery` bucket contains some tasks that enable you to search, do
 
 ==== Fetch_Images_From_Satellite_Platforms
 It allows downloading the metadata and images from the Copernicus and PEPS platforms or both simultaneously.
-A behavior diagram  of workflow is presented below:
+A behavior diagram of the Copernicus platform is presented below.
 
-image::ciar_diagram.png[700,700,align=center]
+image::ciar_diagram.png[align=center]
 
 *Task Variables:*
 
