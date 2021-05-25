@@ -211,7 +211,7 @@ DB_NOTIFICATION_PASS=change_me
 
 Once, you create and configure the `.env` file, you can select one of the three following Docker Compose configurations to start the Proactive server and node containers.
 
-For instance, we provided support to three database systems, namely HSQLDB, Postgres, and MySQL.
+For instance, we currently provide support to three database systems, namely HSQLDB, Postgres, and MySQL.
 
 The following Docker Compose configuration could be used to run the Proactive server container with an embedded HSQL Database.
 It will start up two containers, one for the server and one for the nodes.
