@@ -149,6 +149,345 @@ Once the server is up, ProActive Web Portals are available at `\http://localhost
 
 Your ProActive Scheduler is ready to execute <<_glossary_job,*Jobs*>>!
 
+
+==== How to install ProActive using Docker Containers
+ProActive could be easily deployed and started within a fully containerized environment. For this purpose, we provide a ready-to-use Docker Compose configuration that enables you running ProActive Workflows and Scheduling as a containerized service.
+It starts the following services:
+
+*  Proactive server container
+*  Proactive node container
+*  Proactive database container (Postgres or Mysql). The database container is not started when using our embedded HSQL database.
+
+The Docker Compose configuration pulls the Proactive server, node, and database images from the https://dockerhub.activeeon.com/[Private Activeeon Docker Registry^].
+
+These images can be used out of the box, on any operating system. You can customize the server, nodes, and database settings, located in the `.env` file according to your requirements.
+
+To be able to access the https://dockerhub.activeeon.com/[Private Activeeon Docker Registry^], you need to have credentials.
+Please contact us at contact@activeeon.com to request access.
+
+In the following, we describe the installation steps you need to follow in order to have Proactive running in a fully containerized environment.
+
+You need first to create and configure the Docker compose configuration file `.env` to include the following content:
+
+===== Docker compose configuration file: `.env`
+
+[source]
+----
+# Public Host IP Address
+HOST_ADDRESS=XX.XX.XX.XX
+# Turn it on if the host OS is Mac
+HOST_OS_MAC=off
+# Release version, it could be 'trial' or 'enterprise'
+RELEASE=enterprise
+# Proactive version to be deployed
+PROACTIVE_VERSION=11.1.0
+# Protocol to use for accessing Web apps deployed by the proactive server
+PROTOCOL=https
+# Port to use for accessing Web apps deployed by the proactive server
+PORT=8443
+# Remove history older than (in days), 30 days by default
+JOB_CLEANUP_DAYS=30
+# User starting the ProActive service
+UID=1000
+GID=1000
+USER_NAME=activeeon
+GROUP_NAME=activeeon
+# Required to run docker in docker on Linux, look at /etc/group or run 'getent group docker | cut -d: -f3' to get the host docker gid
+DOCKER_GID=115
+# Number of ProActive nodes to start on the server machine
+PROACTIVE_WORKER_NODES=7
+# Proactive admin password
+PROACTIVE_ADMIN_PASSWORD=activeeon
+# External proactive db credentials, used only for postgres and mysql compose configurations
+POSTGRES_PASSWORD=change_me
+MYSQL_ROOT_PASSWORD=change_me
+DB_RM_PASS=change_me
+DB_SCHEDULER_PASS=change_me
+DB_CATALOG_PASS=change_me
+DB_PCA_PASS=change_me
+DB_NOTIFICATION_PASS=change_me
+
+----
+
+Once, you create and configure the `.env` file, you can select one of the three following Docker Compose configurations to start the Proactive server and node containers.
+
+For instance, we currently provide support to three database systems, namely HSQLDB, Postgres, and MySQL.
+
+The following Docker Compose configuration could be used to run the Proactive server container with an embedded HSQL Database.
+It will start up two containers, one for the server and one for the nodes.
+
+===== Proactive using embedded HSQL Database: `docker-compose-hsqldb.yml`
+
+[source]
+----
+version: '2.1'
+
+services:
+  proactive-server:
+    restart: on-failure
+    image: dockerhub.activeeon.com/${RELEASE}/proactive-scheduler:${PROACTIVE_VERSION}
+    extra_hosts:
+      - service-node:${HOST_ADDRESS}
+    container_name: proactive-server
+    networks:
+      - pa-network
+    ports:
+      - ${PORT}:${PORT}
+      - 33647:33647
+    env_file:
+      - .env
+    environment:
+      - PROTOCOL
+      - PORT
+    volumes:
+      - proactive-default:/opt/proactive/server/default
+      - proactive-previous:/opt/proactive/server/previous
+    healthcheck:
+        test: ["CMD", "curl", "-k", "-f", "${PROTOCOL}://proactive-server:${PORT}"]
+        interval: 30s
+        timeout: 10s
+        retries: 30
+
+  proactive-node:
+    image: dockerhub.activeeon.com/${RELEASE}/proactive-node:${PROACTIVE_VERSION}
+    hostname: service-node
+    container_name: proactive-node
+    networks:
+      - pa-network
+    env_file:
+      - .env
+    # enable DOCKER_HOST on Windows machine when you want to run docker-in-docker
+    #environment:
+    #    - DOCKER_HOST=tcp://host.docker.internal:2375
+    volumes:
+      - /tmp
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - node-default:/opt/proactive/node/default
+      - node-previous:/opt/proactive/node/previous
+    depends_on:
+      proactive-server:
+        condition: service_healthy
+
+volumes:
+  proactive-default:
+  proactive-previous:
+  node-default:
+  node-previous:
+
+networks:
+  pa-network:
+----
+
+The following Docker Compose configuration could be used to run Proactive container with an external Postgres Database container.
+It will start up three containers, one for the server, one for the nodes, and one for the database.
+
+===== Proactive using Postgres Database: `docker-compose-postgres.yml`
+[source]
+----
+version: '2.1'
+
+services:
+  proactive-server:
+    restart: on-failure
+    image: dockerhub.activeeon.com/${RELEASE}/proactive-scheduler-external-db:${PROACTIVE_VERSION}
+    extra_hosts:
+      - service-node:${HOST_ADDRESS}
+    container_name: proactive-scheduler-external-db
+    networks:
+      - pa-network
+    ports:
+      - ${PORT}:${PORT}
+      - 33647:33647
+    env_file:
+      - .env
+    environment:
+      - PROTOCOL
+      - PORT
+      - DB_TYPE=postgres
+    volumes:
+      - proactive-default:/opt/proactive/server/default
+      - proactive-previous:/opt/proactive/server/previous
+    depends_on:
+      proactive-database:
+        condition: service_healthy
+    healthcheck:
+        test: ["CMD", "curl", "-k", "-f", "${PROTOCOL}://proactive-server:${PORT}"]
+        interval: 30s
+        timeout: 10s
+        retries: 30
+
+  proactive-database:
+    restart: on-failure
+    image: dockerhub.activeeon.com/${RELEASE}/postgres-pa:12.2
+    container_name: proactive-database
+    networks:
+      - pa-network
+    env_file:
+      - .env
+    volumes:
+      - proactive-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U postgres"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+
+  proactive-node:
+    image: dockerhub.activeeon.com/${RELEASE}/proactive-node:${PROACTIVE_VERSION}
+    hostname: service-node
+    container_name: proactive-node
+    networks:
+      - pa-network
+    env_file:
+      - .env
+    # enable DOCKER_HOST on Windows machine when you want to run docker-in-docker
+    #environment:
+    #    - DOCKER_HOST=tcp://host.docker.internal:2375
+    volumes:
+      - /tmp
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - node-default:/opt/proactive/node/default
+      - node-previous:/opt/proactive/node/previous
+    depends_on:
+      proactive-server:
+        condition: service_healthy
+
+volumes:
+  proactive-default:
+  proactive-previous:
+  node-default:
+  node-previous:
+  proactive-data:
+
+networks:
+  pa-network:
+----
+
+The following Docker Compose configuration could be used to run Proactive container with an external MySQL Database container.
+It will start up three containers, one for the server, one for the nodes, and one for the database.
+
+===== Proactive using MySQL Database: `docker-compose-mysql.yml`
+[source]
+----
+version: '2.1'
+
+services:
+  proactive-server:
+    restart: on-failure
+    image: dockerhub.activeeon.com/${RELEASE}/proactive-scheduler-external-db:${PROACTIVE_VERSION}
+    extra_hosts:
+      - service-node:${HOST_ADDRESS}
+    container_name: proactive-scheduler-external-db
+    networks:
+      - pa-network
+    ports:
+      - ${PORT}:${PORT}
+      - 33647:33647
+    env_file:
+      - .env
+    environment:
+      - PROTOCOL
+      - PORT
+      - DB_TYPE=mysql
+    volumes:
+      - proactive-default:/opt/proactive/server/default
+      - proactive-previous:/opt/proactive/server/previous
+    depends_on:
+      proactive-database:
+        condition: service_healthy
+    healthcheck:
+        test: ["CMD", "curl", "-k", "-f", "${PROTOCOL}://proactive-server:${PORT}"]
+        interval: 30s
+        timeout: 10s
+        retries: 30
+
+  proactive-database:
+    restart: on-failure
+    image: dockerhub.activeeon.com/${RELEASE}/mysql-pa:8.0
+    container_name: proactive-database
+    networks:
+      - pa-network
+    env_file:
+      - .env
+    environment:
+      - MYSQL_ROOT_PASSWORD
+    volumes:
+      - proactive-data:/var/lib/mysql
+    ports:
+      - 3306:3306
+    healthcheck:
+        test: [ "CMD", "mysqladmin" ,"ping", "-h", "proactive-database", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}" ]
+        interval: 20s
+        timeout: 10s
+        retries: 10
+
+  proactive-node:
+    image: dockerhub.activeeon.com/${RELEASE}/proactive-node:${PROACTIVE_VERSION}
+    hostname: service-node
+    container_name: proactive-node
+    networks:
+      - pa-network
+    env_file:
+      - .env
+    # enable DOCKER_HOST on Windows machine when you want to run docker-in-docker
+    #environment:
+    #    - DOCKER_HOST=tcp://host.docker.internal:2375
+    volumes:
+      - /tmp
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - node-default:/opt/proactive/node/default
+      - node-previous:/opt/proactive/node/previous
+    depends_on:
+      proactive-server:
+        condition: service_healthy
+
+volumes:
+  proactive-default:
+  proactive-previous:
+  node-default:
+  node-previous:
+  proactive-data:
+
+networks:
+  pa-network:
+----
+
+===== Start Proactive using Docker Compose
+
+Login into the Private Activeeon Registry
+----
+$ docker login dockerhub.activeeon.com
+----
+
+Start Proactive container with a default HSQL Database:
+----
+$ docker-compose -f docker-compose-hsqldb.yml up -d
+----
+
+Start Proactive container with a Postgres database and node containers:
+----
+$ docker-compose -f docker-compose-postgres.yml up -d
+----
+
+Start Proactive container with a MySQL database and node containers:
+----
+$ docker-compose -f docker-compose-mysql.yml up -d
+----
+
+You should wait for the node container to start up to make sure that the server, database and nodes are up.
+----
+$ docker logs -f proactive-node
+----
+When all nodes are up, ProActive Web Portals are available at http://<PUBLIC-IP>:<PORT>/. The `<PUBLIC-IP>` and `<PORT>` are specified in the `.env` file.
+
+The user can access to any of the four portals using the default credentials: admin/`<PROACTIVE_ADMIN_PASSWORD>`. `PROACTIVE_ADMIN_PASSWORD` is, by default, `activeeon` but you can customize it in the `.env` file.
+
+Your ProActive Scheduler is now running as a set of container services!
+
+
+
 ==== How to upgrade ProActive on Linux
 Before you upgrade to a new version of ProActive (ex 10.0), you first need to back up the configuration and data that you want to restore (DB, workflows, etc) from the old ProActive installation (ex 8.4). Basically, you have to back up the content of the following folders:
 
