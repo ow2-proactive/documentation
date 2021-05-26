@@ -102,6 +102,9 @@ Job Planner:: ProActive component providing advanced scheduling options for <<_g
 [[_glossary_job_planner_portal]] 
 Job Planner portal:: Web interface to manage the <<_glossary_job_planner,*Job Planner*>> service.
 
+[[_glossary_job_planner_calendar_asssociation]]
+Calendar Association:: Component of the <<_glossary_job_planner,*Job Planner*>> that defines <<_glossary_workflow,*Workflows*>> associated to the <<_glossary_calendars_definition,*Calendar Definition*>>.
+
 [[_glossary_workflow_bucket]]
 Bucket:: ProActive notion used with the <<_glossary_catalog, *Catalog*>> to refer to a specific collection of ProActive Objects and in particular ProActive Workflows.
 
