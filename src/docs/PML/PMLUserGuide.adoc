@@ -397,6 +397,7 @@ The following workflows illustrate some examples of multi-node and multi-gpu dis
 
 *TensorFlow_Keras_Multi_Node_Multi_GPU:* is a TensorFlow + Keras workflow template for distributed training (multi-node multi-gpu) with AutoML support.
 
+*TensorFlow_Keras_Multi_GPU_Horovod:* is a Horovod workflow template that support multi-gpu and AutoML.
 
 === Templates
 
