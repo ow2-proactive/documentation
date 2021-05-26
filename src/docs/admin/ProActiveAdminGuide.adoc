@@ -162,14 +162,16 @@ The Docker Compose configuration pulls the Proactive server, node, and database 
 
 These images can be used out of the box, on any operating system. You can customize the server, nodes, and database settings, located in the `.env` file according to your requirements.
 
-To be able to access the https://dockerhub.activeeon.com/[Private Activeeon Docker Registry^], you need to have credentials.
+To be able to access the https://dockerhub.activeeon.com/[Private Activeeon Docker Registry^], a ProActive enterprise licence and access credentials are required.
 Please contact us at contact@activeeon.com to request access.
 
-In the following, we describe the installation steps you need to follow in order to have Proactive running in a fully containerized environment.
+Here are the installation steps you need to follow in order to have Proactive running in a fully containerized environment:
 
-You need first to create and configure the Docker compose configuration file `.env` to include the following content:
+===== 1. Configure the environment
 
-===== Docker compose configuration file: `.env`
+You need first to create and configure the Docker Compose environment file `.env`.
+
+====== Set up the Docker Compose configuration file: `.env`
 
 [source]
 ----
@@ -209,14 +211,17 @@ DB_NOTIFICATION_PASS=change_me
 
 ----
 
-Once, you create and configure the `.env` file, you can select one of the three following Docker Compose configurations to start the Proactive server and node containers.
 
-For instance, we currently provide support to three database systems, namely HSQLDB, Postgres, and MySQL.
+===== 2. Define and configure Praoctive containers
+Once, you create and configure the `.env` file, you can select one of the three following Docker Compose configurations to start the Proactive server and node containers with different databases.
 
-The following Docker Compose configuration could be used to run the Proactive server container with an embedded HSQL Database.
-It will start up two containers, one for the server and one for the nodes.
+We currently provide support to three database systems, namely HSQLDB, Postgres, and MySQL.
 
-===== Proactive using embedded HSQL Database: `docker-compose-hsqldb.yml`
+
+
+====== Set up Proactive using embedded HSQL Database: `docker-compose-hsqldb.yml`
+This Docker Compose configuration could be used to run the Proactive server container with an embedded HSQL Database.
+It will start up to two containers, one for the server and one for the nodes.
 
 [source]
 ----
@@ -278,10 +283,13 @@ networks:
   pa-network:
 ----
 
-The following Docker Compose configuration could be used to run Proactive container with an external Postgres Database container.
-It will start up three containers, one for the server, one for the nodes, and one for the database.
 
-===== Proactive using Postgres Database: `docker-compose-postgres.yml`
+
+====== Set up Proactive using Postgres Database: `docker-compose-postgres.yml`
+
+This Docker Compose configuration could be used to run Proactive container with an external Postgres Database container.
+It will start up to three containers, one for the server, one for the nodes, and one for the database.
+
 [source]
 ----
 version: '2.1'
@@ -365,10 +373,12 @@ networks:
   pa-network:
 ----
 
-The following Docker Compose configuration could be used to run Proactive container with an external MySQL Database container.
-It will start up three containers, one for the server, one for the nodes, and one for the database.
 
-===== Proactive using MySQL Database: `docker-compose-mysql.yml`
+====== Set up Proactive using MySQL Database: `docker-compose-mysql.yml`
+
+This Docker Compose configuration could be used to run Proactive container with an external MySQL Database container.
+It will start up to three containers, one for the server, one for the nodes, and one for the database.
+
 [source]
 ----
 version: '2.1'
@@ -454,7 +464,7 @@ networks:
   pa-network:
 ----
 
-===== Start Proactive using Docker Compose
+===== 3. Start Proactive using Docker Compose
 
 Login into the Private Activeeon Registry
 ----
@@ -480,9 +490,9 @@ You should wait for the node container to start up to make sure that the server,
 ----
 $ docker logs -f proactive-node
 ----
-When all nodes are up, ProActive Web Portals are available at http://<PUBLIC-IP>:<PORT>/. The `<PUBLIC-IP>` and `<PORT>` are specified in the `.env` file.
+When all nodes are up, ProActive Web Portals are available at `<PROTOCOL>://<PUBLIC-IP>:<PORT>/`. The `<PROTOCOL>`, `<PUBLIC-IP>`, and `<PORT>` are specified in the `.env` file.
 
-The user can access to any of the four portals using the default credentials: admin/`<PROACTIVE_ADMIN_PASSWORD>`. `PROACTIVE_ADMIN_PASSWORD` is, by default, `activeeon` but you can customize it in the `.env` file.
+The user can access to any of the four portals using the default credentials: `admin/<PROACTIVE_ADMIN_PASSWORD>`. `PROACTIVE_ADMIN_PASSWORD` is, by default, `activeeon` but you can customize it as well in the `.env` file.
 
 Your ProActive Scheduler is now running as a set of container services!
 
