@@ -743,9 +743,13 @@ ProActive User Space mapped using SFTP has the following benefits:
 It has the following constraints and limitations:
 
  * Every user's credentials of the ProActive server must match system users credentials inside the SFTP server. This is typically achieved by enabling LDAP or PAM authentication on the ProActive server (see <<_user_authentication>>).
- * Every file transfer will use the SFTP protocol when it's configured. Note that SFTP protocol will be less efficient than the ProActive protocol when transferring files on the local file system.
+ * Every file transfer will use the SFTP protocol when it's configured. Note that SFTP protocol is less efficient than the ProActive protocol when transferring files onto and from the local file system.
 
-The SFTP protocol can also be used for the Global Space, but in that case, all file transfers will be accomplished by a single system account.
+The SFTP protocol can also be used for the Global Space. In that case, all file transfers will be accomplished by a single system account.
+Motivations to enable SFTP on the Global Space can be to access a folder:
+
+ * on a remote server, reachable via SSH.
+ * on the local file system, in case this folder belongs to a different user from the ProActive server user.
 
 In order to configure the SFTP protocol for the User Space, the following properties in the `PROACTIVE_HOME/config/scheduler/settings.ini` file must be defined:
 
