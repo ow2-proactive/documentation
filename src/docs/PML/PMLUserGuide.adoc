@@ -403,9 +403,9 @@ The following workflows illustrate some examples of multi-node and multi-gpu dis
 
 The following workflows represent python templates that can be used to implement a generic machine learning task.
 
-*Python_Task_Template_For_AutoML:* is a simple Python task template pre-configured to run with `Distributed_Auto_ML`.
+*Python_Task:* is a simple Python task template pre-configured to run with `Distributed_Auto_ML`.
 
-*R_Task_Template_For_AutoML:* is a simple R task template pre-configured to run with `Distributed_Auto_ML`.
+*R_Task:* is a simple R task template pre-configured to run with `Distributed_Auto_ML`.
 
 == Model as a Service for Machine Learning (MaaS_ML)
 
@@ -2439,11 +2439,11 @@ This section presents custom AI workflows using tasks available on the `deep-lea
 
 The following workflows represent python templates that can be used to implement a generic machine learning task.
 
-*Horovod_Job:* is a template to implement a Horovod task with multi-gpu support.
+*Horovod_Task:* is a template to implement a Horovod task with multi-gpu support.
 
-*Horovod_Job_Slurm:* is a template to implement a Horovod task using a native SLURM scheduler with multi-gpu support.
+*Horovod_Docker_Task:* is a template to implement a Horovod task using a Docker container with multi-gpu support.
 
-*Horovod_Job_Docker:* is a template to implement a Horovod task using a Docker container with multi-gpu support.
+*Horovod_Slurm_Task:* is a template to implement a Horovod task using a native SLURM scheduler with multi-gpu support.
 
 *TensorFlow_Task:* is a simple TensorFlow task template.
 
