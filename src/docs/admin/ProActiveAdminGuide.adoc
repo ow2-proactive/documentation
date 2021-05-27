@@ -156,7 +156,7 @@ It starts the following services:
 
 *  ProActive Server container
 *  ProActive Node container
-*  ProActive Database container (Postgres or Mysql). The Database container is not started when using our embedded HSQL Database.
+*  ProActive Database container (PostgreSQL or MySQL). The Database container is not started when using our embedded HSQL Database.
 
 The Docker Compose configuration pulls the ProActive server, Node, and Database images from the https://dockerhub.activeeon.com/[Private Activeeon Docker Registry^].
 
@@ -200,7 +200,7 @@ DOCKER_GID=115
 PROACTIVE_WORKER_NODES=7
 # ProActive admin password
 PROACTIVE_ADMIN_PASSWORD=activeeon
-# External ProActive db credentials, used only for postgres and mysql compose configurations
+# External ProActive db credentials, used only for PostgreSQL and MySQL compose configurations
 POSTGRES_PASSWORD=change_me
 MYSQL_ROOT_PASSWORD=change_me
 DB_RM_PASS=change_me
@@ -212,10 +212,10 @@ DB_NOTIFICATION_PASS=change_me
 ----
 
 
-===== 2. Define and configure Praoctive containers
+===== 2. Define and configure ProActive containers
 Once you create and configure the `.env` file, you can select one of the three following Docker Compose configurations to start the ProActive server and Node containers with the desired database.
 
-We currently provide support for three Database systems, namely HSQLDB, Postgres, and MySQL.
+We currently provide support for three Database systems, namely HSQLDB, PostgreSQL, and MySQL.
 
 
 
@@ -285,9 +285,9 @@ networks:
 
 
 
-====== Set up ProActive using Postgres Database: `docker-compose-postgres.yml`
+====== Set up ProActive using PostgreSQL Database: `docker-compose-postgres.yml`
 
-This Docker Compose configuration could be used to run the ProActive server container with an external Postgres Database container.
+This Docker Compose configuration could be used to run the ProActive server container with an external PostgreSQL Database container.
 It will start up to three containers, one for the server, one for the Nodes, and one for the Database.
 
 [source]
@@ -476,7 +476,7 @@ Start ProActive container with a default HSQL Database:
 $ docker-compose -f docker-compose-hsqldb.yml up -d
 ----
 
-Start ProActive container with a Postgres Database and Node containers:
+Start ProActive container with a PostgreSQL Database and Node containers:
 ----
 $ docker-compose -f docker-compose-postgres.yml up -d
 ----
