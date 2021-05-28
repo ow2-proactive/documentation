@@ -388,7 +388,7 @@ The following workflows have common variables with the above illustrated workflo
 
 The following workflows contain a search space containing a set of possible neural networks architectures that can be used by `Distributed_Auto_ML` to automatically find the best combinations of neural architectures within the search space.
 
-*Handwritten_Digit_Classification:* trains a simple deep CNN on the MNIST dataset using the PyTorch library.
+*Handwritten_Digit_Classification:* trains a simple deep CNN on the MNIST dataset using the PyTorch library. This example allows  to search for two architecture defined in a Handwritten_Digit_Classification_Search_Space.json file.
 
 
 === Distributed Training
@@ -3723,7 +3723,7 @@ NOTE: More information about the source of this task can be found https://scikit
 ==== ML Explainability
 ===== Model_Explainability
 
-*Task Overview:* Explain ML models globally on all data, or locally on a specific data points using the  SHAP and eli5 Python libraries. You can see more details at: https://www.kaggle.com/learn/machine-learning-explainability
+*Task Overview:* Explain ML models globally on all data, or locally on a specific data points using the  SHAP and eli5 Python libraries.
 
 .Model_Explainability_Task variables
 [cols="2,5,2"]
@@ -3750,6 +3750,7 @@ NOTE: More information about the source of this task can be found https://scikit
 
 NOTE: The https://github.com/slundberg/shap[SHAP^] values interpret the impact of having a certain value for a given feature in comparison to the prediction we would make if that feature took some baseline value. Feature values causing increased predictions are in pink and Feature values decreasing the prediction are in blue.
 
+NOTE: More information about the source of the SHAP and eli5 Python libraries can be found https://www.kaggle.com/learn/machine-learning-explainability[here^].
 
 
 === Deep Learning Bucket
@@ -4360,7 +4361,7 @@ NOTE: PyTorch is used to build the model architecture based on https://pytorch.o
 
 ===== Train_Text_Classification_Model
 
-*Task Overview:* A recurrent neural network (RNN) is a class of artificial neural network where connections between units form a directed graph along a sequence.
+*Task Overview:* Train a model using a Recurrent Neural Network (RNN) algorithm.
 
 *Task Variables:*
 
