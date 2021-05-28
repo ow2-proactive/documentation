@@ -3723,7 +3723,7 @@ NOTE: More information about the source of this task can be found https://scikit
 ==== ML Explainability
 ===== Model_Explainability
 
-*Task Overview:* Explain ML models globally on all data, or locally on a specific data points using the  SHAP and eli5 Python libraries.
+*Task Overview:* Explain ML models globally on all data, or locally on a specific data point using the SHAP and eli5 Python libraries.
 
 .Model_Explainability_Task variables
 [cols="2,5,2"]
