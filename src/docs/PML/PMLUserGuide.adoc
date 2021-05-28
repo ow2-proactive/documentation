@@ -450,7 +450,7 @@ Open the link:https://try.activeeon.com/studio[Studio Portal].
 
 Create a new workflow.
 
-Add the `model_as_a_service` bucket by clicking in the `View` menu field > `Add Bucket Menu to the Palette` > `model_as_a_service`..
+Add the `model_as_a_service` bucket by clicking in the `View` menu field > `Add Bucket Menu to the Palette` > `model_as_a_service`.
 
 Drag and drop the `MaaS_ML_Service_Start` task from the bucket.
 
@@ -706,7 +706,7 @@ Rapids library.
 
 Click on `Execute Action` and follow the progress of the service creation.
 
-image::NEW_MAAS_ML_Service_PSA.PNG[500,500,align=center]
+image::MAAS_ML_Service_PSA.PNG[500,500,align=center]
 
 ==== Deploy a Specific ML Model
 
@@ -748,7 +748,7 @@ Click on `Execute Action` and follow the progress of the model deployment.
 Check that the status correctly evolves to `AI_MODEL_DEPLOYED`.
 
 
-==== Delete (Finish)/Update/Pause the Service
+==== Delete/Finish or Update the Service Instance
 
 
 You can delete the launched service instance directly from Service Automation Portal:
@@ -761,8 +761,6 @@ Set the action `Finish` under Actions and click on `Execute Action`.
 image::MAAS_ML_Delete_Service.PNG[align=center]
 
 There are also two other actions that can be executed from Service Automation Portal which are:
-
-- *Deploy_ML_Model*: This action will put the service instance into deployment.
 
 - *Update_MaaS_ML*: This action will update the deployed instance according to the updated variables.
 
@@ -1353,7 +1351,7 @@ Set the Following variables:
 
 Click on `Execute Action` and follow the progress of the model deployment.
 
-==== Delete (Finish)/Update/Pause the Service
+==== Delete/Finish the Service Instance
 
 You can delete the launched service instance directly from Service Automation Portal:
 
