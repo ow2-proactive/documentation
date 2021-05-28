@@ -388,7 +388,7 @@ The following workflows have common variables with the above illustrated workflo
 
 The following workflows contain a search space containing a set of possible neural networks architectures that can be used by `Distributed_Auto_ML` to automatically find the best combinations of neural architectures within the search space.
 
-*Handwritten_Digit_Classification:* trains a simple deep CNN on the MNIST dataset using the PyTorch library. This example allows to search for two architecture defined in a Handwritten_Digit_Classification_Search_Space.json file.
+*Handwritten_Digit_Classification:* trains a simple deep CNN on the MNIST dataset using the PyTorch library. This example allows to search for two architectures defined in a Handwritten_Digit_Classification_Search_Space.json file.
 
 
 === Distributed Training
