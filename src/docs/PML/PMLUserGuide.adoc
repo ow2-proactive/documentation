@@ -432,18 +432,41 @@ you can also trigger the deployment of a specific VM using the Resource Manager 
 
 In the following subsections, we will illustrate the life cycle of a MaaS_ML instance, from starting the generic service instance,
 deploying a specific model, pausing it, to deleting the instance. We will also talk about how the life cycle of a MaaS_ML instance
-can be managed via three different ways in PML:
+can be managed via four different ways in PML:
 
-. <<Via Studio Portal>>
-. <<Via Service Automation Portal>>
-. <<Via Swagger UI>>
+. <<MaaS_ML Via Workflow Execution Portal>>
+. <<MaaS_ML Via Studio Portal>>
+. <<MaaS_ML Via Service Automation Portal>>
+. <<MaaS_ML Via Swagger UI>>
 
 In the description below, multiple tables represent the main variables that characterize the MaaS_ML workflows.
 In addition to the variables mentioned below, there is a set of generic variables that are common between all workflows
 which can be found in the subsection <<AI Workflows Common Variables>>.
 The management of the life cycle of MaaS_ML will be detailed in the next sub-sections.
 
-=== Via Studio Portal
+=== MaaS_ML Via Workflow Execution Portal
+
+Open the link:https://try.activeeon.com/automation-dashboard/#/portal/workflow-execution[Workflow Execution Portal].
+
+Click on the button *Submit a Job* and then search for *MaaS_ML_Service* workflow as described in the image below.
+
+image::MAAS_ML_Search.png[align=center]
+
+Check the parameters of the service and click on the button *Submit* to start a MaaS_ML Service Instance.
+
+To get more information about the parameters of the service, please check the section <<Start a Generic Service Instance>>.
+
+image::MAAS_ML_Submit.png[align=center]
+
+You can now monitor the status of the service, access its endpoint and execute its different actions :
+
+- Deploy_ML_Model : enables you to deploy a trained ML model in one click.
+- Update_MaaS_ML_Parameters : enables you to update the parameters of the service instance.
+- Finish_MaaS_ML : stops and deletes the service instance.
+
+image::MAAS_ML_Workflow_Management.png[500,500,align=center]
+
+=== MaaS_ML Via Studio Portal
 ==== Start a Generic Service Instance
 
 Open the link:https://try.activeeon.com/studio[Studio Portal].
@@ -634,7 +657,7 @@ Execute the Workflow and set the different workflow's variables as follows:
 | String (default=Empty)
 |===
 
-=== Via Service Automation Portal
+=== MaaS_ML Via Service Automation Portal
 ==== Start a Generic Service Instance
 
 
@@ -760,14 +783,9 @@ Set the action `Finish` under Actions and click on `Execute Action`.
 
 image::MAAS_ML_Delete_Service.PNG[align=center]
 
-There are also two other actions that can be executed from Service Automation Portal which are:
+There is also two another action that can be executed from Service Automation Portal which is:
 
-- *Update_MaaS_ML*: This action will update the deployed instance according to the updated variables.
-
-- *Pause_MaaS_ML*: This action will pause the service instance.
-
-
-When running the Model Service with Singularity as an Engine, the *Pause_MaaS_ML* action can not be executed.
+- *Update_MaaS_ML_Parameters*: This action enable you to update the values of the variables associated to the enacted MaaS_ML instance according to your new preferences.
 
 ==== Audit and Traceability
 To access the Audit and Traceability page, click on the endpoint under the Endpoint list.
@@ -781,7 +799,7 @@ It is possible to visualize the model predictions by clicking on the first link 
 This link will take you to a *Predictions Preview* page that lists the set of predictions corresponding to the input dataset.
 
 
-=== Via Swagger UI
+=== MaaS_ML Via Swagger UI
 
 To access the Swagger UI, click on the second link in the top of the Traceability & Audit page.
 
@@ -1000,18 +1018,42 @@ you can also trigger the deployment of a specific VM using the Resource Manager 
 
 In the following subsections, we will illustrate the life cycle of a MaaS_DL instance, from starting the generic service instance,
 deploying a specific model, undeploying it, to deleting the instance. We will also talk about how the life cycle of a MaaS_DL instance
-can be managed via three different ways in PML:
+can be managed via four different ways in PML:
 
-. <<Via Studio Portal>>
-. <<Via Service Automation Portal>>
-. <<Via Swagger UI>>
+. <<MaaS_DL Via Workflow Execution Portal>>
+. <<MaaS_DL Via Studio Portal>>
+. <<MaaS_DL Via Service Automation Portal>>
+. <<MaaS_DL Via Swagger UI>>
 
 In the description below, multiple tables represent the main variables that characterize the MaaS_DL workflows.
 In addition to the variables mentioned below, there is a set of generic variables that are common between all workflows
 which can be found in the subsection <<AI Workflows Common Variables>>.
 The management of the life cycle of MaaS_DL will be detailed in the next sub-sections.
 
-=== Via Studio Portal
+=== MaaS_DL Via Workflow Execution Portal
+
+Open the link:https://try.activeeon.com/automation-dashboard/#/portal/workflow-execution[Workflow Execution Portal].
+
+Click on the button *Submit a Job* and then search for *MaaS_DL_Service* workflow as described in the image below.
+
+image::MAAS_DL_Search.png[align=center]
+
+Check the parameters of the service and click on the button *Submit* to start a MaaS_DL Service Instance.
+
+To get more information about the parameters of the service, please check the section <<MaaS_DL Via Service Automation Portal>>.
+
+image::MAAS_DL_Submit.png[align=center]
+
+You can now monitor the status of the service, access its endpoint and execute its different actions :
+
+- Deploy_DL_Model : enables you to deploy a trained ML model in one click.
+- Finish_MaaS_DL : stops and deletes the service instance.
+- Redeploy_DL_Model : enables you to redeploy a DL model which was redeployed before.
+- Undeploy_ML_Model : enables you to undeploy an already deployed model.
+
+image::MAAS_DL_Workflow_Management.png[500,500,align=center]
+
+=== MaaS_DL Via Studio Portal
 ==== Start a Generic Service Instance
 Open the link:https://try.activeeon.com/studio[Studio Portal].
 
@@ -1218,7 +1260,7 @@ Execute the Workflow and set the different workflow's variables as follows:
 | String (default=Empty)
 |===
 
-=== Via Service Automation Portal
+=== MaaS_DL Via Service Automation Portal
 ==== Start a Generic Service Instance
 
 Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Service Automation Portal].
@@ -1360,7 +1402,7 @@ Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-auto
 Set the action `Finish` under Actions and click on execute.
 
 image::MAAS_DL_Delete_Service.PNG[align=center]
-=== Via Swagger UI
+=== MaaS_DL Via Swagger UI
 
 To access the Swagger UI, click on the second link in the top of the Traceability & Audit page.
 
