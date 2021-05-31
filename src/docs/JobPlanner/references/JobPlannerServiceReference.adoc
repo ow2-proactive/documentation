@@ -207,7 +207,8 @@ An inclusion or exclusion calendar can become not retrievable if it cannot be do
 
 == Notifications
 
-The <<_glossary_job_planner,*Job Planner*>> can send notifications to users when particular events occur. The <<_glossary_notification_service,*Notification service*>> documentation can be found link:../admin/ProActiveAdminGuide.html#_notification_service[here].
+The <<_glossary_job_planner,*Job Planner*>> can send notifications to users when particular events occur. The <<_glossary_notification_service,*Notification service*>> user guide documentation can be found link:../user/ProActiveUserGuide.html#_notification_service[here] and it's
+configuration in the admin guide link:../admin/ProActiveAdminGuide.html#_notification_service[here].
 
 To start receiving notifications from the <<_glossary_job_planner,*Job Planner*>>, you must:
 
