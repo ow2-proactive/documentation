@@ -430,7 +430,7 @@ Once a MaaS_ML instance is up and running, it could be used for:
 Using MaaS_ML, you can easily deploy and use any machine learning model as a REST Web Service on a physical or a virtual compute host on which there is an available Proactive Node. Going through the Proactive Scheduler,
 you can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and eventually, deploy a Model-Service on that specific node.
 
-In the following subsections, we will illustrate the life cycle of a MaaS_ML instance, from starting the generic service instance,
+In the following subsections, we will illustrate the MaaS_ML instance life cycle, from starting the generic service instance,
 deploying a specific model, pausing it, to deleting the instance. We will also describe how the life cycle of a MaaS_ML instance
 can be managed via four different ways in PML:
 
@@ -1016,7 +1016,7 @@ These tasks can be easily integrated to your AI pipelines/workflows as you can s
 Using MaaS_DL, you can easily deploy and use any machine or deep learning model as a REST Web Service on a physical or a virtual compute host on which there is an available Proactive Node. Going through the Proactive Scheduler,
 you can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and eventually, deploy a Model-Service on that specific node.
 
-In the following subsections, we will describe the life cycle of a MaaS_DL instance, from starting the generic service instance,
+In the following subsections, we will describe the MaaS_DL instance life cycle, from starting the generic service instance,
 deploying a specific model, undeploying it, to deleting the instance. We will also describe how the life cycle of a MaaS_DL instance
 can be managed via four different ways in PML:
 
