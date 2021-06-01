@@ -83,7 +83,7 @@ A. Once dataset has been converted to *CSV* format, upload it into a cloud stora
 For this tutorial, we will use Boston house prices dataset available on this link:
 https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/boston-houses-prices.csv
 
-B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the Proactive Machine Learning.
+B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the ProActive Machine Learning.
 
 C. Click on the task and click `General Parameters` in the left to change the default parameters of this task.
 
@@ -427,8 +427,8 @@ Once a MaaS_ML instance is up and running, it could be used for:
 
 - *Deploy a New Specific AI Model*: the running generic AI model can be used to deploy a new specific AI model.
 
-Using MaaS_ML, you can easily deploy and use any machine learning model as a REST Web Service on a physical or a virtual compute host on which there is an available Proactive Node. Going through the Proactive Scheduler,
-you can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and eventually, deploy a Model-Service on that specific node.
+Using MaaS_ML, you can easily deploy and use any machine learning model as a REST Web Service on a physical or a virtual compute host on which there is an available ProActive Node. Going through the ProActive Scheduler,
+you can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and, eventually, deploy a Model-Service on that specific node.
 
 In the following subsections, we will illustrate the MaaS_ML instance life cycle, from starting the generic service instance,
 deploying a specific model, pausing it, to deleting the instance. We will also describe how the MaaS_ML instance life cycle
@@ -941,7 +941,7 @@ dataset on which the model was trained. Thus, any detected drift indicates that 
 model is not the best predictor and that new training on the new dataset should take place.
 
 As the DDD function is part of the MaaS_ML module,
-it can also be launched from different Proactive portals.
+it can also be launched from different ProActive portals.
 
 ==== Via Studio Portal
 The data drift detection mechanism is added to the tasks and workflows of the bucket
@@ -952,7 +952,7 @@ and to the call of the prediction service in MaaS_ML (where the drift detector i
 and the detection process is started using the chosen detector).
 
 The workflow *IRIS_Deploy_Predict_Flower_Classifier_Model*, found in the
-*model_as_a_service* bucket in the Proactive Studio Portal, shows an example of pipeline using the generic tasks
+*model_as_a_service* bucket in the ProActive Studio Portal, shows an example of pipeline using the generic tasks
 *MaaS_ML_Deploy_Model* and *MaaS_ML_Call_Prediction* including the DDD mechanism.
 
 In particular, in the *MaaS_ML_Deploy_Model* task, the user is asked to enter
@@ -969,11 +969,11 @@ variable *DATA_DRIFT_DETECTOR* in which the user can choose one of HDDM, Page Hi
 or ADWIN as a drift detector. The algorithm here concatenates the deployed baseline_data
 to the new input (to be predicted) dataset. The chosen drift detector then will
 use the concatenated data to extract the rows and columns where the drift took place in the new data.
-These drift detection algorithms are enhanced in Proactive to be able to detect the attributes
+These drift detection algorithms are enhanced in ProActive to be able to detect the attributes
 where the drift occurred (the columns).
 
 The obtained predictions and drifts can be viewed in the resulting output of the
-Proactive Scheduler Portal.
+ProActive Scheduler Portal.
 
 ==== Via Service Automation Portal and Swagger UI
 
@@ -1002,7 +1002,7 @@ of the */predict()* endpoint and in the *Traceability and Audit* page.
 - In the */update* endpoint, the user is able to update the baseline data deployed with the model using the *baseline_data*
 variable.
 
-In case a data drift has occurred, a user will receive a notification using the Proactive
+In case a data drift has occurred, a user will receive a notification using the ProActive
 *Notification* service in the Automation Dashboard.
 
 == Model as a Service for Deep Learning (MaaS_DL)
@@ -1016,7 +1016,7 @@ These tasks can be easily integrated to your AI pipelines/workflows as you can s
 - Using the *Service Automation Portal* by executing the different actions associated to MaaS_DL (i.e. Deploy_DL_Model, Redeploy_DL_Model, Undeploy_DL_Model)
 - Using the *Swagger UI* which is accessible once the MaaS_DL instance is up and running.
 
-Using MaaS_DL, you can easily deploy and use any machine or deep learning model as a REST Web Service on a physical or a virtual compute host on which there is an available Proactive Node. Going through the Proactive Scheduler,
+Using MaaS_DL, you can easily deploy and use any machine or deep learning model as a REST Web Service on a physical or a virtual compute host on which there is an available ProActive Node. Going through the ProActive Scheduler,
 you can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and eventually, deploy a Model-Service on that specific node.
 
 In the following subsections, we will describe the MaaS_DL instance life cycle, from starting the generic service instance,
@@ -1483,7 +1483,7 @@ This example trains a Mnist model, starts a service instance where the trained m
 
 image::NEW_MAAS_DL_MNIST_Workflow_Example.PNG[align=center]
 
-== Proactive Analytics
+== ProActive Analytics
 
 The *ProActive Analytics* is a dashboard that provides an overview of executed workflows
 along with their input variables and results.
@@ -1495,7 +1495,7 @@ It offers several functionalities, including:
 - Charts to track variables and results evolution and correlation.
 - Data exportation in multiple formats for further use in analytics tools.
 
-Proactive Analytics is very useful to compare metrics and charts of workflows that have common variables and results. For example, a ML algorithm might take different variables values and produce multiple results. It would be interesting to analyze the correlation and evolution of the algorithm results regarding the input variation (See also a similar example of link:../PML/PMLUserGuide.html#_AutoML[AutoML]).
+ProActive Analytics is very useful to compare metrics and charts of workflows that have common variables and results. For example, a ML algorithm might take different variables values and produce multiple results. It would be interesting to analyze the correlation and evolution of the algorithm results regarding the input variation (See also a similar example of link:../PML/PMLUserGuide.html#_AutoML[AutoML]).
 The following sections will show you some key features of the dashboard and how to use them for a better understanding of your job executions.
 
 [[_job_search]]
@@ -2302,7 +2302,7 @@ The PML provides a fast, easy and practical way to execute different workflows u
 
 To test these workflows, you need to add the *machine-Learning-workflows Bucket* as main catalog in the ProActive Studio.
 
-A. Open +++<a class="studioUrl" href="/studio" target="_blank">Proactive Machine Learning</a>+++ home page.
+A. Open +++<a class="studioUrl" href="/studio" target="_blank">ProActive Machine Learning</a>+++ home page.
 
 B. Create a new workflow.
 
@@ -2413,7 +2413,7 @@ video::FwMPR87wzoo[youtube, width=700, height=400 start=0, position=center]
 
 You can test these workflows by following these steps:
 
-A. Open +++<a class="studioUrl" href="/studio" target="_blank">Proactive Machine Learning</a>+++ home page.
+A. Open +++<a class="studioUrl" href="/studio" target="_blank">ProActive Machine Learning</a>+++ home page.
 
 B. Create a new workflow.
 
