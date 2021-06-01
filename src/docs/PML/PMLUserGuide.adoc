@@ -464,7 +464,7 @@ You can now monitor the status of the service, access its endpoint and execute i
 - Update_MaaS_ML_Parameters : enables you to update the parameters of the service instance.
 - Finish_MaaS_ML : stops and deletes the service instance.
 
-image::MAAS_ML_Workflow_Management.png[500,500,align=center]
+image::MAAS_ML_Workflow_Management.png[50,align=center]
 
 === MaaS_ML Via Studio Portal
 ==== Start a Generic Service Instance
@@ -1050,7 +1050,7 @@ You can now monitor the status of the service, access its endpoint and execute i
 - Redeploy_DL_Model : enables you to redeploy a DL model which was redeployed before.
 - Undeploy_ML_Model : enables you to undeploy an already deployed model.
 
-image::MAAS_DL_Workflow_Management.png[500,500,align=center]
+image::MAAS_DL_Workflow_Management.png[align=center]
 
 === MaaS_DL Via Studio Portal
 ==== Start a Generic Service Instance
