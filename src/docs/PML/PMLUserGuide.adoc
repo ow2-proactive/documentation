@@ -464,7 +464,11 @@ You can now monitor the status of the service, access its endpoint and execute i
 - Update_MaaS_ML_Parameters : enables you to update the parameters of the service instance.
 - Finish_MaaS_ML : stops and deletes the service instance.
 
-image::MAAS_ML_Workflow_Management.png[50,align=center]
+image::MAAS_ML_Workflow_Management.png[align=center]
+
+When you are done with the service instance, you can terminate it by clicking on *Terminate_Job_and_Service* button as shown in the image below.
+
+image::Terminate_MaaS_ML.png[align=center]
 
 === MaaS_ML Via Studio Portal
 ==== Start a Generic Service Instance
@@ -662,7 +666,6 @@ Execute the Workflow and set the different workflow's variables as follows:
 
 
 Open the link:https://try.activeeon.com/automation-dashboard/#/portal/service-automation[Service Automation Portal].
-
 
 Search for `MaaS_ML` in Services Workflows List.
 
@@ -1051,6 +1054,10 @@ You can now monitor the status of the service, access its endpoint and execute i
 - Undeploy_ML_Model : enables you to undeploy an already deployed model.
 
 image::MAAS_DL_Workflow_Management.png[align=center]
+
+When you are done with the service instance, you can terminate it by clicking on *Terminate_Job_and_Service* button as shown in the image below.
+
+image::Terminate_MaaS_DL.png[align=center]
 
 === MaaS_DL Via Studio Portal
 ==== Start a Generic Service Instance
