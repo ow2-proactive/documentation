@@ -635,7 +635,7 @@ Execute the Workflow and set the different workflow's variables as follows:
 
 ==== Delete/Finish the Service
 
-You can also delete the Service Instance using the link:https://try.activeeon.com/studio[Studio Portal].
+You can also delete the service instance using the link:https://try.activeeon.com/studio[Studio Portal].
 
 Drag and drop the `MaaS_ML_Actions` task from the Model-As-A-Service bucket.
 
