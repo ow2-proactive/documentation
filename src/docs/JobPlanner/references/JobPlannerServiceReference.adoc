@@ -207,13 +207,14 @@ An inclusion or exclusion calendar can become not retrievable if it cannot be do
 
 == Notifications
 
-The <<_glossary_job_planner,*Job Planner*>> can send notifications to users when particular events occur. The <<_glossary_notification_service,*Notification service*>> documentation can be found link:../admin/ProActiveAdminGuide.html#_notification_service[here].
+The <<_glossary_job_planner,*Job Planner*>> can send notifications to users when particular events occur. The <<_glossary_notification_service,*Notification service*>> user guide documentation is available link:../user/ProActiveUserGuide.html#_notification_service[here] and its
+configuration in the admin guide is available link:../admin/ProActiveAdminGuide.html#_notification_service[here].
 
 To start receiving notifications from the <<_glossary_job_planner,*Job Planner*>>, you must:
 
 - Configure your Job planner's <<_glossary_notification_subscription,*Subscription*>> as it is described in link:../user/ProActiveUserGuide.html#_service_subscriptions[Service subscriptions documentation] of the <<_glossary_notification_service,*Notification service*>>.
 - Inside the Job planner subscription, select from available events the ones you wish to be notified of.
-Available Job planner events with their description and example values are detailed in the table in link:../user/ProActiveUserGuide.html#_job_planner_notifications[Job Planner event types].
+Available Job planner events with their description and example values are detailed in the table link:../user/ProActiveUserGuide.html#_job_planner_notifications[Job Planner event types].
 
 == Job Planner Configuration
 
