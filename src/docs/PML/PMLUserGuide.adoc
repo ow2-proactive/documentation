@@ -83,7 +83,7 @@ A. Once dataset has been converted to *CSV* format, upload it into a cloud stora
 For this tutorial, we will use Boston house prices dataset available on this link:
 https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/boston-houses-prices.csv
 
-B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the Proactive Machine Learning.
+B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the ProActive Machine Learning.
 
 C. Click on the task and click `General Parameters` in the left to change the default parameters of this task.
 
@@ -427,23 +427,50 @@ Once a MaaS_ML instance is up and running, it could be used for:
 
 - *Deploy a New Specific AI Model*: the running generic AI model can be used to deploy a new specific AI model.
 
-Using MaaS_ML, you can easily deploy and use any machine learning model as a REST Web Service on a physical or a virtual compute host on which there is an available Proactive Node. Going through the Proactive Scheduler,
-you can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and eventually, deploy a Model-Service on that specific node.
+Using MaaS_ML, you can easily deploy and use any machine learning model as a REST Web Service on a physical or a virtual compute host on which there is an available ProActive Node. Going through the ProActive Scheduler,
+you can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and, eventually, deploy a Model-Service on that specific node.
 
-In the following subsections, we will illustrate the life cycle of a MaaS_ML instance, from starting the generic service instance,
-deploying a specific model, pausing it, to deleting the instance. We will also talk about how the life cycle of a MaaS_ML instance
-can be managed via three different ways in PML:
+In the following subsections, we will illustrate the MaaS_ML instance life cycle, from starting the generic service instance,
+deploying a specific model, pausing it, to deleting the instance. We will also describe how the MaaS_ML instance life cycle
+can be managed via four different ways in PML:
 
-. <<Via Studio Portal>>
-. <<Via Service Automation Portal>>
-. <<Via Swagger UI>>
+. <<MaaS_ML Via Workflow Execution Portal>>
+. <<MaaS_ML Via Studio Portal>>
+. <<MaaS_ML Via Service Automation Portal>>
+. <<MaaS_ML Via Swagger UI>>
 
 In the description below, multiple tables represent the main variables that characterize the MaaS_ML workflows.
 In addition to the variables mentioned below, there is a set of generic variables that are common between all workflows
 which can be found in the subsection <<AI Workflows Common Variables>>.
-The management of the life cycle of MaaS_ML will be detailed in the next sub-sections.
+The management of the life cycle of MaaS_ML will be detailed in the next subsections.
 
-=== Via Studio Portal
+=== MaaS_ML Via Workflow Execution Portal
+
+Open the link:https://try.activeeon.com/automation-dashboard/#/portal/workflow-execution[Workflow Execution Portal].
+
+Click on the button *Submit a Job* and then search for *MaaS_ML_Service* workflow as described in the image below.
+
+image::MAAS_ML_Search.png[align=center]
+
+Check the service parameters and click on the *Submit* button to start a MaaS_ML service instance.
+
+To get more information about the parameters of the service, please check the section <<Start a Generic Service Instance>>.
+
+image::MAAS_ML_Submit.png[align=center]
+
+You can now monitor the service status, access its endpoint and execute its different actions:
+
+- Deploy_ML_Model : enables you to deploy a trained ML model in one click.
+- Update_MaaS_ML_Parameters : enables you to update the parameters of the service instance.
+- Finish_MaaS_ML : stops and deletes the service instance.
+
+image::MAAS_ML_Workflow_Management.png[align=center]
+
+When you are done with the service instance, you can terminate it by clicking on *Terminate_Job_and_Service* button as shown in the image below.
+
+image::Terminate_MaaS_ML.png[align=center]
+
+=== MaaS_ML Via Studio Portal
 ==== Start a Generic Service Instance
 
 Open the link:https://try.activeeon.com/studio[Studio Portal].
@@ -634,12 +661,11 @@ Execute the Workflow and set the different workflow's variables as follows:
 | String (default=Empty)
 |===
 
-=== Via Service Automation Portal
+=== MaaS_ML Via Service Automation Portal
 ==== Start a Generic Service Instance
 
 
 Open the link:https://try.activeeon.com/automation-dashboard/#/portal/service-automation[Service Automation Portal].
-
 
 Search for `MaaS_ML` in Services Workflows List.
 
@@ -760,14 +786,9 @@ Set the action `Finish` under Actions and click on `Execute Action`.
 
 image::MAAS_ML_Delete_Service.PNG[align=center]
 
-There are also two other actions that can be executed from Service Automation Portal which are:
+There is also one more action that can be executed from Service Automation Portal which is:
 
-- *Update_MaaS_ML*: This action will update the deployed instance according to the updated variables.
-
-- *Pause_MaaS_ML*: This action will pause the service instance.
-
-
-When running the Model Service with Singularity as an Engine, the *Pause_MaaS_ML* action can not be executed.
+- *Update_MaaS_ML_Parameters*: This action enables you to update the variables values associated to the MaaS_ML instance according to your new preferences.
 
 ==== Audit and Traceability
 To access the Audit and Traceability page, click on the endpoint under the Endpoint list.
@@ -781,7 +802,7 @@ It is possible to visualize the model predictions by clicking on the first link 
 This link will take you to a *Predictions Preview* page that lists the set of predictions corresponding to the input dataset.
 
 
-=== Via Swagger UI
+=== MaaS_ML Via Swagger UI
 
 To access the Swagger UI, click on the second link in the top of the Traceability & Audit page.
 
@@ -920,7 +941,7 @@ dataset on which the model was trained. Thus, any detected drift indicates that 
 model is not the best predictor and that new training on the new dataset should take place.
 
 As the DDD function is part of the MaaS_ML module,
-it can also be launched from different Proactive portals.
+it can also be launched from different ProActive portals.
 
 ==== Via Studio Portal
 The data drift detection mechanism is added to the tasks and workflows of the bucket
@@ -931,7 +952,7 @@ and to the call of the prediction service in MaaS_ML (where the drift detector i
 and the detection process is started using the chosen detector).
 
 The workflow *IRIS_Deploy_Predict_Flower_Classifier_Model*, found in the
-*model_as_a_service* bucket in the Proactive Studio Portal, shows an example of pipeline using the generic tasks
+*model_as_a_service* bucket in the ProActive Studio Portal, shows an example of pipeline using the generic tasks
 *MaaS_ML_Deploy_Model* and *MaaS_ML_Call_Prediction* including the DDD mechanism.
 
 In particular, in the *MaaS_ML_Deploy_Model* task, the user is asked to enter
@@ -948,11 +969,11 @@ variable *DATA_DRIFT_DETECTOR* in which the user can choose one of HDDM, Page Hi
 or ADWIN as a drift detector. The algorithm here concatenates the deployed baseline_data
 to the new input (to be predicted) dataset. The chosen drift detector then will
 use the concatenated data to extract the rows and columns where the drift took place in the new data.
-These drift detection algorithms are enhanced in Proactive to be able to detect the attributes
+These drift detection algorithms are enhanced in ProActive to be able to detect the attributes
 where the drift occurred (the columns).
 
 The obtained predictions and drifts can be viewed in the resulting output of the
-Proactive Scheduler Portal.
+ProActive Scheduler Portal.
 
 ==== Via Service Automation Portal and Swagger UI
 
@@ -981,7 +1002,7 @@ of the */predict()* endpoint and in the *Traceability and Audit* page.
 - In the */update* endpoint, the user is able to update the baseline data deployed with the model using the *baseline_data*
 variable.
 
-In case a data drift has occurred, a user will receive a notification using the Proactive
+In case a data drift has occurred, a user will receive a notification using the ProActive
 *Notification* service in the Automation Dashboard.
 
 == Model as a Service for Deep Learning (MaaS_DL)
@@ -995,23 +1016,50 @@ These tasks can be easily integrated to your AI pipelines/workflows as you can s
 - Using the *Service Automation Portal* by executing the different actions associated to MaaS_DL (i.e. Deploy_DL_Model, Redeploy_DL_Model, Undeploy_DL_Model)
 - Using the *Swagger UI* which is accessible once the MaaS_DL instance is up and running.
 
-Using MaaS_DL, you can easily deploy and use any machine or deep learning model as a REST Web Service on a physical or a virtual compute host on which there is an available Proactive Node. Going through the Proactive Scheduler,
+Using MaaS_DL, you can easily deploy and use any machine or deep learning model as a REST Web Service on a physical or a virtual compute host on which there is an available ProActive Node. Going through the ProActive Scheduler,
 you can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and eventually, deploy a Model-Service on that specific node.
 
-In the following subsections, we will illustrate the life cycle of a MaaS_DL instance, from starting the generic service instance,
-deploying a specific model, undeploying it, to deleting the instance. We will also talk about how the life cycle of a MaaS_DL instance
-can be managed via three different ways in PML:
+In the following subsections, we will describe the MaaS_DL instance life cycle, from starting the generic service instance,
+deploying a specific model, undeploying it, to deleting the instance. We will also describe how the MaaS_DL instance life cycle can be managed via four different ways in PML:
 
-. <<Via Studio Portal>>
-. <<Via Service Automation Portal>>
-. <<Via Swagger UI>>
+. <<MaaS_DL Via Workflow Execution Portal>>
+. <<MaaS_DL Via Studio Portal>>
+. <<MaaS_DL Via Service Automation Portal>>
+. <<MaaS_DL Via Swagger UI>>
 
 In the description below, multiple tables represent the main variables that characterize the MaaS_DL workflows.
 In addition to the variables mentioned below, there is a set of generic variables that are common between all workflows
 which can be found in the subsection <<AI Workflows Common Variables>>.
-The management of the life cycle of MaaS_DL will be detailed in the next sub-sections.
+The management of the life cycle of MaaS_DL will be detailed in the next subsections.
 
-=== Via Studio Portal
+=== MaaS_DL Via Workflow Execution Portal
+
+Open the link:https://try.activeeon.com/automation-dashboard/#/portal/workflow-execution[Workflow Execution Portal].
+
+Click on the *Submit a Job* button and then search for *MaaS_DL_Service* workflow as described in the image below.
+
+image::MAAS_DL_Search.png[align=center]
+
+Check the service parameters and click on the *Submit* button to start a MaaS_DL service instance.
+
+To get more information about the service parameters, please check the section <<MaaS_DL Via Service Automation Portal>>.
+
+image::MAAS_DL_Submit.png[align=center]
+
+You can now monitor the service status, access its endpoint and execute its different actions:
+
+- Deploy_DL_Model : enables you to deploy a trained ML model in one click.
+- Finish_MaaS_DL : stops and deletes the service instance.
+- Redeploy_DL_Model : enables you to redeploy a DL model which was already redeployed.
+- Undeploy_ML_Model : enables you to undeploy an already deployed model.
+
+image::MAAS_DL_Workflow_Management.png[align=center]
+
+When you are done with the service instance, you can terminate it by clicking on *Terminate_Job_and_Service* button as shown in the image below.
+
+image::Terminate_MaaS_DL.png[align=center]
+
+=== MaaS_DL Via Studio Portal
 ==== Start a Generic Service Instance
 Open the link:https://try.activeeon.com/studio[Studio Portal].
 
@@ -1218,7 +1266,7 @@ Execute the Workflow and set the different workflow's variables as follows:
 | String (default=Empty)
 |===
 
-=== Via Service Automation Portal
+=== MaaS_DL Via Service Automation Portal
 ==== Start a Generic Service Instance
 
 Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-automation[Service Automation Portal].
@@ -1360,7 +1408,7 @@ Open the link:https://try.activeeon.com/automation-dashboard/#/portal/cloud-auto
 Set the action `Finish` under Actions and click on execute.
 
 image::MAAS_DL_Delete_Service.PNG[align=center]
-=== Via Swagger UI
+=== MaaS_DL Via Swagger UI
 
 To access the Swagger UI, click on the second link in the top of the Traceability & Audit page.
 
@@ -1435,7 +1483,7 @@ This example trains a Mnist model, starts a service instance where the trained m
 
 image::NEW_MAAS_DL_MNIST_Workflow_Example.PNG[align=center]
 
-== Proactive Analytics
+== ProActive Analytics
 
 The *ProActive Analytics* is a dashboard that provides an overview of executed workflows
 along with their input variables and results.
@@ -1447,7 +1495,7 @@ It offers several functionalities, including:
 - Charts to track variables and results evolution and correlation.
 - Data exportation in multiple formats for further use in analytics tools.
 
-Proactive Analytics is very useful to compare metrics and charts of workflows that have common variables and results. For example, a ML algorithm might take different variables values and produce multiple results. It would be interesting to analyze the correlation and evolution of the algorithm results regarding the input variation (See also a similar example of link:../PML/PMLUserGuide.html#_AutoML[AutoML]).
+ProActive Analytics is very useful to compare metrics and charts of workflows that have common variables and results. For example, a ML algorithm might take different variables values and produce multiple results. It would be interesting to analyze the correlation and evolution of the algorithm results regarding the input variation (See also a similar example of link:../PML/PMLUserGuide.html#_AutoML[AutoML]).
 The following sections will show you some key features of the dashboard and how to use them for a better understanding of your job executions.
 
 [[_job_search]]
@@ -2250,11 +2298,11 @@ NOTE: The workflow represented in the above is available on the 'machine-learnin
 
 == ML Workflows Examples
 
-The PML provides a fast, easy and practical way to execute different workflows using the ML bucket. We present useful ML workflows for different applications in the following sub-sections.
+The PML provides a fast, easy and practical way to execute different workflows using the ML bucket. We present useful ML workflows for different applications in the following subsections.
 
 To test these workflows, you need to add the *machine-Learning-workflows Bucket* as main catalog in the ProActive Studio.
 
-A. Open +++<a class="studioUrl" href="/studio" target="_blank">Proactive Machine Learning</a>+++ home page.
+A. Open +++<a class="studioUrl" href="/studio" target="_blank">ProActive Machine Learning</a>+++ home page.
 
 B. Create a new workflow.
 
@@ -2359,13 +2407,13 @@ Please find in the table below the list of algorithms which have GPU support and
 
 == Deep Learning Workflows Examples
 
-PML provides a fast, easy and practical way to execute deep learning workflows. In the following sub-sections, we present useful deep learning workflows for text and image classification and generation.
+PML provides a fast, easy and practical way to execute deep learning workflows. In the following subsections, we present useful deep learning workflows for text and image classification and generation.
 
 video::FwMPR87wzoo[youtube, width=700, height=400 start=0, position=center]
 
 You can test these workflows by following these steps:
 
-A. Open +++<a class="studioUrl" href="/studio" target="_blank">Proactive Machine Learning</a>+++ home page.
+A. Open +++<a class="studioUrl" href="/studio" target="_blank">ProActive Machine Learning</a>+++ home page.
 
 B. Create a new workflow.
 
@@ -4616,7 +4664,7 @@ WARNING: If two workflows use the same service instance names, then, their gener
 
 ===== Visdom_Service_Actions
 
-*Task Overview:* Manage the life-cycle of Visdom PSA service. It allows triggering three possible actions: Pause_Visdom, Resume_Visdom and Finish_Visdom.
+*Task Overview:* Manage the life cycle of Visdom PSA service. It allows triggering three possible actions: Pause_Visdom, Resume_Visdom and Finish_Visdom.
 
 *Task Variables:*
 
@@ -4725,7 +4773,7 @@ It provides  the visualization and tooling needed for machine learning experimen
 
 ===== Tensorboard_Service_Actions
 
-*Task Overview:* Manage the life-cycle of TensorBoard PSA service. It allows triggering three possible actions: Pause_Tensorboard, Resume_Tensorboard and Finish_Tensorboard.
+*Task Overview:* Manage the life cycle of TensorBoard PSA service. It allows triggering three possible actions: Pause_Tensorboard, Resume_Tensorboard and Finish_Tensorboard.
 
 *Task Variables:*
 
