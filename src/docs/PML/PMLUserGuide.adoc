@@ -452,13 +452,13 @@ Click on the button *Submit a Job* and then search for *MaaS_ML_Service* workflo
 
 image::MAAS_ML_Search.png[align=center]
 
-Check the parameters of the service and click on the *Submit* button to start a MaaS_ML service instance.
+Check the service parameters and click on the *Submit* button to start a MaaS_ML service instance.
 
 To get more information about the parameters of the service, please check the section <<Start a Generic Service Instance>>.
 
 image::MAAS_ML_Submit.png[align=center]
 
-You can now monitor the status of the service, access its endpoint and execute its different actions :
+You can now monitor the service status, access its endpoint and execute its different actions:
 
 - Deploy_ML_Model : enables you to deploy a trained ML model in one click.
 - Update_MaaS_ML_Parameters : enables you to update the parameters of the service instance.
@@ -1036,21 +1036,21 @@ The management of the life cycle of MaaS_DL will be detailed in the next subsect
 
 Open the link:https://try.activeeon.com/automation-dashboard/#/portal/workflow-execution[Workflow Execution Portal].
 
-Click on the button *Submit a Job* and then search for *MaaS_DL_Service* workflow as described in the image below.
+Click on the *Submit a Job* button and then search for *MaaS_DL_Service* workflow as described in the image below.
 
 image::MAAS_DL_Search.png[align=center]
 
-Check the parameters of the service and click on the button *Submit* to start a MaaS_DL service instance.
+Check the service parameters and click on the *Submit* button to start a MaaS_DL service instance.
 
 To get more information about the service parameters, please check the section <<MaaS_DL Via Service Automation Portal>>.
 
 image::MAAS_DL_Submit.png[align=center]
 
-You can now monitor the status of the service, access its endpoint and execute its different actions :
+You can now monitor the service status, access its endpoint and execute its different actions:
 
 - Deploy_DL_Model : enables you to deploy a trained ML model in one click.
 - Finish_MaaS_DL : stops and deletes the service instance.
-- Redeploy_DL_Model : enables you to redeploy a DL model which was redeployed before.
+- Redeploy_DL_Model : enables you to redeploy a DL model which was already redeployed.
 - Undeploy_ML_Model : enables you to undeploy an already deployed model.
 
 image::MAAS_DL_Workflow_Management.png[align=center]
