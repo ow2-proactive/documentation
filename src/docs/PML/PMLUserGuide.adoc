@@ -450,13 +450,13 @@ Open the link:https://try.activeeon.com/automation-dashboard/#/portal/workflow-e
 
 Click on the button *Submit a Job* and then search for *MaaS_ML_Service* workflow as described in the image below.
 
-image::MAAS_ML_Search.png[align=center]
+image::MaaS_ML_Search.png[align=center]
 
 Check the service parameters and click on the *Submit* button to start a MaaS_ML service instance.
 
 To get more information about the parameters of the service, please check the section <<Start a Generic Service Instance>>.
 
-image::MAAS_ML_Submit.png[align=center]
+image::MaaS_ML_Submit.png[align=center]
 
 You can now monitor the service status, access its endpoint and execute its different actions:
 
@@ -464,7 +464,7 @@ You can now monitor the service status, access its endpoint and execute its diff
 - Update_MaaS_ML_Parameters : enables you to update the parameters of the service instance.
 - Finish_MaaS_ML : stops and deletes the service instance.
 
-image::MAAS_ML_Workflow_Management.png[align=center]
+image::MaaS_ML_Workflow_Management.png[align=center]
 
 When you are done with the service instance, you can terminate it by clicking on *Terminate_Job_and_Service* button as shown in the image below.
 
@@ -848,8 +848,6 @@ Open the `predict` operation and set the provided token, and the data that you n
 
 image::MAS_Predict_Swagger.png[align=center]
 
-
-
 === Deployment Pipeline Examples
 
 You can connect the different tasks in a single workflow to get the full pipeline from the model training step to the model deployment and consumption steps. Each task will propagate the acquired variables to its children tasks.
@@ -1038,13 +1036,13 @@ Open the link:https://try.activeeon.com/automation-dashboard/#/portal/workflow-e
 
 Click on the *Submit a Job* button and then search for *MaaS_DL_Service* workflow as described in the image below.
 
-image::MAAS_DL_Search.png[align=center]
+image::MaaS_DL_Search.png[align=center]
 
 Check the service parameters and click on the *Submit* button to start a MaaS_DL service instance.
 
 To get more information about the service parameters, please check the section <<MaaS_DL Via Service Automation Portal>>.
 
-image::MAAS_DL_Submit.png[align=center]
+image::MaaS_DL_Submit.png[align=center]
 
 You can now monitor the service status, access its endpoint and execute its different actions:
 
@@ -1053,7 +1051,7 @@ You can now monitor the service status, access its endpoint and execute its diff
 - Redeploy_DL_Model : enables you to redeploy a DL model which was already redeployed.
 - Undeploy_ML_Model : enables you to undeploy an already deployed model.
 
-image::MAAS_DL_Workflow_Management.png[align=center]
+image::MaaS_DL_Workflow_Management.png[align=center]
 
 When you are done with the service instance, you can terminate it by clicking on *Terminate_Job_and_Service* button as shown in the image below.
 
