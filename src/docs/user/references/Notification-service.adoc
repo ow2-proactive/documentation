@@ -300,6 +300,16 @@ INFO, WARNING, ERROR, CRITICAL. The default severity is INFO.
 | ERROR
 | A task with no execution attempts left is faulty, failed or in error.
 | A task has finished with the an error status
+| `TASK_PROGRESS`
+| Task progress updated
+| INFO
+| Task progress updated to x%
+| The task progress variable has been updated, it can be a value between 0 and 100.
+| `TASK_VISU_ACTIVATED`
+| Task visualization activated
+| INFO
+| Task visualization activated
+| A task's remote visualisation has been activated
 |===
 
 .Scheduler notifications

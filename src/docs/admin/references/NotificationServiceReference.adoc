@@ -265,6 +265,16 @@ and if they have a value depending on the event origin.
 | Y
 | N
 | Y
+| SEVERITY
+| Y
+| Y
+| Y
+| Y
+| JOB_LINK
+| Y
+| Y
+| N
+| N
 | args[] - see <<multiple-executions-mode, multiple executions mode>>
 | Y
 | Y
