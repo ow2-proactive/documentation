@@ -4,7 +4,7 @@ The following terms are used as ProActive Service Automation (PSA) definitions a
 Service::
 A set of workflows representing Actions and having the same Service ID.
 
-image::PCA_introduction.png[align=center, width=512, height=256]
+image::PCA_introduction.png[align=center, width=390, height=753]
 
 [[_definition_Activated_Service]]
 Activated Service or Service Instance::
@@ -38,7 +38,7 @@ NOTE: Please note that users are free to define their own custom States (e.g. RU
 
 [[_definition_Endpoints]]
 Endpoints::
-Endpoints are a list of (Key,Value) defined in the Variables e.g. [(Swarm, <smarmendpoint>), (HDFS, <hdfs-endpoint>), (Spark, <spark-endpoint>)]. The endpoint URL should contain the protocol, e.g. www.activeeon.com will not work, but https://www.activeeon.com will.
+Endpoints are a list of (Key,Value) defined in the Variables e.g. [(spark_master_gui, <spark_master_gui>), (spark_worker_0_gui, <spark_worker_0_gui>), (spark_worker_1_gui, <spark_worker_1_gui>)]. The endpoint URL should contain the protocol, e.g. www.activeeon.com will not work, but https://www.activeeon.com will.
 
 NOTE: To run multiple PSA services that share an endpoint, the same ENDPOINT_ID value should be given to all of the PSA services that, when started, require this variable.
 
