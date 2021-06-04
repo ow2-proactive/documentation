@@ -933,25 +933,6 @@ By default, the ProActive Resource Manager stores users accounts, passwords, and
 
 * users and passwords accounts are stored in `PROACTIVE_HOME/config/authentication/login.cfg`.
 Each line has to follow the format *user:encrypted password*.
-The default accounts in `login.cfg` file correspond to the following passwords, which are encrypted in the actual login.cfg file:
-+
-.unencrypted_login.cfg
-----
-admin:admin
-user:pwd
-demo:demo
-citizen-ds:proactive
-expert-ds:proactive
-guest:pwd
-test:pwd
-radmin:pwd
-nsadmin:pwd
-provider:pwd
-scheduler:scheduler_pwd
-rm:rm_pwd
-watcher:w_pwd
-test_executor:pwd
-----
 
 * users membership is stored in `PROACTIVE_HOME/config/authentication/group.cfg`. For each user registered in login.cfg,
 a group membership has to be defined in this file. Each line has to look like *user:group*. Group has to be
@@ -1243,6 +1224,8 @@ The following groups are defined by default in the `security.java.policy-server`
 * `rmcoreadmins` : this group gives full interaction capability with the resource manager (create, edit, remove Node Sources, add nodes, etc)
 * `admin` : this group gives full permission on every aspect, this group is [.underline]#deprecated# and is kept for backward compatibility purpose only (use the above `scheduleradmins` and `rmcoreadmins` instead).
 * `watchers` : this group allows to receive notification events from the scheduler and resource manager, but cannot perform any action. It is mostly used internally.
+* `citizen-ds` : this group gives enough permissions for moderate data analysis tasks.
+* `expert-ds` : this group gives permissions to cover all data scientist activities.
 
 
 == Deploy ProActive Nodes
