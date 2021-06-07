@@ -366,42 +366,42 @@ INFO, WARNING, ERROR, CRITICAL. The default severity is INFO.
 .3+| `ASSOCIATION_FAILED`
 .3+| Association failed
 | CRITICAL
-| The server was unable to retrieve the resource Native_Task_Windows in the bucket basic-examples
-located \https://{HOST}/catalog/buckets/basic-examples/resources/Native_Task_Windows/raw.
-Changing the status of the association 152 of the calendar every_minute to FAILED.
+| The server was unable to retrieve the resource `Resource_Name` in the bucket `Bucket_Name`
+located `URL`.
+Changing the status of the association `Association_Id` of the calendar `Calendar_Name` to FAILED.
 | A <<_glossary_catalog, *Catalog*>> resource is not found, the association changes to FAILED status
 .2+| ERROR
-| The association 52 of the workflow Variables_Propagation to the calendar every_monday had a failed execution, as it is configured, the association status is set to FAILED
+| The association `Association_Id` of the workflow `Workflow_Name` to the calendar `Calendar_Name` had a failed execution, as it is configured, the association status is set to FAILED
 | An association's status has been updated to FAILED due to the previous execution having an error
-| Update the association 45 of calendar every_week_day status to failed: Failed to retrieve planned calendar.
+| Update the association `Association_Id` of calendar `Calendar_Name` status to failed: Failed to retrieve planned calendar.
 | <<_glossary_job_planner,*Job Planner*>> could not retrieve the calendar of a Workflow-Calendar association. The association's status has been updated to FAILED.
 | `CANNOT_SUBMIT`
 | Cannot submit
 | ERROR
-| Job-planner was unable to submit the Friday 11 June 2020 14:15:00 CEST the workflow Variable_Propagation in the bucket basic-examples from the association 12 of the calendar every_week_day to the scheduler
+| Job-planner was unable to submit the `Date_Time` the workflow `Workflow_Name` in the bucket `Bucket_Name` from the association `Association_Id` of the calendar `Calendar_Name` to the scheduler
 | <<_glossary_job_planner,*Job Planner*>> was unable to submit the workflow from the bucket to the scheduler
 | `SUBMISSION_POSTPONED`
 | Submission postponed
 | WARNING
-| Submission of the workflow Variable_Propagation planned at Tuesday 15 June 2021 10:35:00 CEST by association 202 of calendar every_minute is postponed because job [639] is on-going
+| Submission of the workflow `Workflow_Name` planned at `Date_Time` by association `Association_Id` of calendar `Calendar_Name` is postponed because job `Job_Id` is on-going
 | A submission has been postponed because the previous execution is still under way
 .3+| `SUBMISSION_CANCELED`
 .3+| Submission canceled
 .3+| WARNING
-| Submission of the workflow Variable_Propagation planned at Tuesday 15 June 2021 10:41:00 CEST by association 202 of calendar every_minute is canceled because job [644] is on-going
+| Submission of the workflow `Workflow_Name` planned at `Date_Time` by association `Association_Id` of calendar `Calendar_Name` is canceled because job `Job_Id` is on-going
 | A submission has been canceled because the previous execution is still under way
-| The workflow Variables_Propagation in the bucket basic-examples from the association 202 of calendar every_minute was not executed at Tuesday 15 June 2021 10:48:02 CEST
+| The workflow Variables_Propagation in the bucket `Bucket_Name` from the association `Association_Id` of calendar `Calendar_Name` was not executed at `Date_Time`
 | The workflow execution time is before the current time that means we missed an execution and it is not configured to postpone the execution
-| The workflow Variables_Propagation in the bucket basic-examples from the association 202 of calendar every_minute was not submitted 10 times, skipping execution to the next association
+| The workflow `Workflow_Name` in the bucket `Bucket_Name` from the association `Association_Id` of `Calendar_Name` was not submitted 10 times, skipping execution to the next association
 | Binded to the upper notification, it informs how many execution were missed
 .2+| `DELAYED_SUBMISSION_EXECUTING`
 .2+| Delayed submission executing
 .2+| INFO
-| The workflow Variables_Propagation in the bucket basic-examples from the association 202 of calendar every_minute planned the Friday 11 June 2020 16:45:02 CEST
-was postponed and executed the Friday 11 June 2020 16:46:12 CEST
+| The workflow `Workflow_Name` in the bucket `Bucket_Name` from the association `Association_Id` of calendar `Calendar_Name` planned the `Date_Time`
+was postponed and executed the `Date_Time`
 | A planned workflow execution that has been postponed is now executing
-| <<_glossary_job_planner,*Job Planner*>> has detect that the execution of the workflow Variables_Propagation in the bucket basic-examples from the association 202 of calendar every_minute
-has been missed the Friday 11 June 2020 16:54:00 CEST. As it is configured, Job-planner will submit an execution now at Friday 11 June 2020 16:59:22 CEST
+| <<_glossary_job_planner,*Job Planner*>> has detect that the execution of the workflow `Workflow_Name` in the bucket `Bucket_Name` from the association `Association_Id` of calendar `Calendar_Name`
+has been missed the `Date_Time`. As it is configured, Job-planner will submit an execution now at `Date_Time`
 | The workflow execution time is before the current time that means we missed an execution and it is
 configured to submit a new execution
 |===
