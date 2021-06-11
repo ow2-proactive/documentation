@@ -1583,6 +1583,26 @@ The main troubles you may have to face are the following ones:
 ----
 * You get an *authentication error*: this is probably due to your default credentials file which cannot be found. In the "Connection" tab of the Configuration Editor (Figure 5.4, “Configuration Editor window - Connection Tab (Resource Manager Registration)”), you can choose the credentials file you want. You can select, for instance, the credentials file located at PROACTIVE_HOME/config/authentication/scheduler.cred or your own credentials file.
 * The node seems to be well started, but you cannot see it in the Resource Manager interface: in this case, make sure that the *port number* is the good one. Do not forget that the runtime port number is incremented from the initial ProActive Resource Manager port number. You can see exactly on which port your runtime has been started looking at the log file described above.
+* The agent does not seem to be starting at all and the log file `Executor<runtime number>Process-log.txt` (see above) is empty. This issue has been observed on some Windows 10 environments. When facing this problem, open Windows https://en.wikipedia.org/wiki/Event_Viewer[Event Viewer] and look at errors associated with application *ProActiveAgent*. Follow the procedure <<_windows_10_patch>> if you see the following error:
+----
+JobManagement.JobException: The management process is running inside a Job, it will not be able to assign child processes to a new Job.
+   à JobManagement.JobObject.ProbeForRunningInJob()
+   à JobManagement.JobObject.CreateJob()
+   à JobManagement.JobObject..ctor(String name)
+   à ProActiveAgent.ProActiveRuntimeExecutor..ctor(CommonStartInfo commonStartInfo, Int32 rank)
+   à ProActiveAgent.ExecutorsManager..ctor(AgentType configuration)
+   à ProActiveAgent.WindowsService.OnStart(String[] args)
+   à System.ServiceProcess.ServiceBase.ServiceQueuedMainCallback(Object state)
+----
+
+===== Windows 10 Patch
+
+In order to solve the issue mentioned above, please do the following:
+
+1. Download the patch zip from the following https://www.activeeon.com/public_content/patches/ProActiveAgent_Win10_patch.zip[link] and expand this archive inside an empty folder.
+2. Close the agent GUI if it's open. In order to do so, in the https://support.microsoft.com/en-us/windows/customize-the-taskbar-notification-area-e159e8d2-9ac5-b2bd-61c5-bb63c1d437c3[Windows notification area] (aka system tray), find the ProActive Agent icon image:ProActiveAgentIcon.png[], right-click on it and select *Close*. A warning message will appear (simply confirm).
+3. Replace existing files in the ProActive Agent installation folder `C:\Program Files (x86)\ProActiveAgent` with patch files copied from the expanded zip.
+4. Start the ProActive Agent again.
 
 ==== Automate Windows Agent Installation
 
