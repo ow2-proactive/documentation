@@ -1397,7 +1397,7 @@ The ProActive Agent for Linux can be downloaded from ActiveEon's https://www.act
 
 To install the ProActive Agent on Debian based distributions (the archive name will vary depending on the version and architecture):
 
-    sudo dpkg -i proactive-agent.deb
+    sudo apt install ./proactive-agent.deb
 
 TIP: Some extra dependencies might be required, to install them: `sudo apt-get -f install`
 
@@ -1463,7 +1463,7 @@ sudo usermod -ag proactive proactive
 
 On Debian based distributions:
 
-    sudo dpkg -r proactive-agent
+    sudo apt purge proactive-agent
 
 On Redhat based distributions:
 
