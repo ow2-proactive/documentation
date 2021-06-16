@@ -458,6 +458,37 @@ This service deploys through  <<_main_principles_of_psa,ProActive Service Automa
 
 NOTE: More details about the variable description can be found https://hub.docker.com/r/datagrip/greenplum[here^].
 
+=== SSH 
+This service deploys the https://github.com/butlerx/wetty[WeTTy software^] through ProActive Service Automation (PSA) portal. It allows the users to open an SSH terminal in their Web browsers.
+The service requires the following variables as input: 
+
+*Variables:*
+
+.SSH PSA service variables
+[cols="2,5,2,2,2"]
+|===
+| *Variable name* | *Description* |  *Required?* | *Type*  | *Default/Examples*
+| `INSTANCE_NAME`
+| Service instance name
+| Yes
+| String
+| `ssh-terminal-1`
+| `TARGET_HOST`
+| SSH target host, among the list of hosts managed by ProActive Resource Manager
+| Yes
+| String
+| `try.activeeon.com`
+| `SSH_PORT`
+| Port used by SSH in the TARGET_HOST
+| Yes
+| Integer
+| `22`
+|`PROXYFIED`
+| Whether the service is accessed via ProActive proxy (for restricted access control).
+| Yes
+| Boolean
+| `True`
+|===
 
 === Storm
 
