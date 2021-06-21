@@ -273,42 +273,42 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 
 | *User space*. Location of the user space. See <<_data_spaces>>.
 | println userspace
-| $USERSPACE
-| -
+| $userspace
+| $userspace (only in tasks arguments)
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 | -
 
 | *Global space*. Location of the global space. See <<_data_spaces>>.
 | println globalspace
-| $GLOBALSPACE
-| -
+| $globalspace
+| $globalspace (only in tasks arguments)
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 | -
 
 | *Input space*. Location of the input space. See <<_data_spaces>>.
 | println inputspace
-| $INPUTSPACE
+| $inputspace
 | -
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 | -
 
 | *Local space*. Location of the local space. See <<_data_spaces>>.
 | println localspace
-| $LOCALSPACE
-| -
+| $localspace
+| $localspace (only in tasks arguments)
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 | -
 
 | *Cache space*. Location of the cache space. See <<_data_spaces>>.
 | println cachespace
-| $CACHESPACE
-| -
+| $cachespace
+| $cachespace (only in tasks arguments)
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 | -
 
 | *Output space*. Location of the output space. See <<_data_spaces>>.
 | println outputspace
-| $OUTPUTSPACE
+| $outputspace
 | -
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_control_flow_scripts,flow>>
 | -
