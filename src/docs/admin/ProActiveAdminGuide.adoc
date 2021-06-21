@@ -179,14 +179,16 @@ You need first to create and configure the Docker Compose environment file `.env
 HOST_ADDRESS=XX.XX.XX.XX
 # Turn it on if the host OS is Mac
 HOST_OS_MAC=off
-# Release version, it could be 'trial' or 'enterprise'
+# Release version, it could be 'dev', 'trial' or 'enterprise'
 RELEASE=enterprise
 # ProActive version to be deployed
-PROACTIVE_VERSION=11.1.0
+PROACTIVE_VERSION=12.0.0
 # Protocol to use for accessing Web apps deployed by the ProActive server
 PROTOCOL=https
 # Port to use for accessing Web apps deployed by the ProActive server
 PORT=8443
+# Port to use for PARM communication
+PAMR_PORT=33647
 # Remove history older than (in days), 30 days by default
 JOB_CLEANUP_DAYS=30
 # User starting the ProActive service
@@ -238,7 +240,7 @@ services:
       - pa-network
     ports:
       - ${PORT}:${PORT}
-      - 33647:33647
+      - ${PAMR_PORT}:${PAMR_PORT}
     env_file:
       - .env
     environment:
@@ -305,7 +307,7 @@ services:
       - pa-network
     ports:
       - ${PORT}:${PORT}
-      - 33647:33647
+      - ${PAMR_PORT}:${PAMR_PORT}
     env_file:
       - .env
     environment:
@@ -394,7 +396,7 @@ services:
       - pa-network
     ports:
       - ${PORT}:${PORT}
-      - 33647:33647
+      - ${PAMR_PORT}:${PAMR_PORT}
     env_file:
       - .env
     environment:
