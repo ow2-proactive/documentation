@@ -949,7 +949,7 @@ It is advised to embed credentials and certificates in the configuation file, in
 - *image:* (Optional) Docker image used to deploy ProActive Nodes. When it is not set, its default value `java:8-jre` is used.
 
 - *nodeDeploymentTemplateFile:* (Optional) Kubernetes deployment template file for deploying ProActive node pods. This template file informs Kubernetes about the environment needed to run ProActive nodes. Each node uses this template file to create its specific Kubernetes deployment environment. 
-The default Kubernetes template file creates an environment (i.e., a pod) where both a ProActive node and a Docker engine are started. This way, the tasks executed by the ProActive node can also run Docker commands. Such an environment is supported through a Docker-in-Docker approach (i.e., running a Docker daemon inside the Kubernetes host container system). Specifically, this environment consists of one pod with two containers (proactive-node and dind-daemon). 
+The default Kubernetes template file creates an environment (i.e., a pod) where both a ProActive node and a Docker engine are started. This way, the tasks executed by the ProActive node can also run Docker commands. Such an environment is supported through a Docker-in-Docker approach (i.e., running a Docker daemon inside the Kubernetes host container system). Specifically, this environment consists of one pod with two containers (proactive-node and proactive-docker-daemon). 
 The template file can use the following macros, which will be interpreted and filled with the corresponding parameter values by Kubernetes Infrastructure later.
 * `${STARTUP_SCRIPT}`: the value of the infrastructure parameter startupScript
 * `${DOCKER_IMAGE}`: the value of the infrastructure parameter image
@@ -1014,7 +1014,7 @@ spec:
           volumeMounts:
             - name: pa-node-data
               mountPath: /tmp
-        - name: dind-daemon
+        - name: proactive-docker-daemon
           image: docker:1.12.6-dind
           resources:
               requests:
