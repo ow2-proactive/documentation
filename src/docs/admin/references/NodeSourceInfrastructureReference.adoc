@@ -396,9 +396,9 @@ Otherwise, a new and distinct VPC will be used to operate the nodes created by t
 	- *rmHostname:* This field is to be filled with the domain name or the IP of the host operating the Resource Manager.
  This option is mandatory.
 
-    - *nodeJarURL:* URL used to download the node jar on the VM. 
+	- *nodeJarURL:* URL used to download the node jar on the VM.
 
-    - *additionalProperties:* Additional parameters to be used when invoking PA Agent (not used if an externalStartupScript is provided).
+	- *additionalProperties:* Additional parameters to be used when invoking PA Agent (not used if an externalStartupScript is provided).
 
 	- *externalStartupScript:* The administrator has to provide a script to configure AWS instances to work with ProActive.
  Usually, if not provided by the AMI, this script is expected to download the Java Runtime Environment and ProActive node.jar agent file.
