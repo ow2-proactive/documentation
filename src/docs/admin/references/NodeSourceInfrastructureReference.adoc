@@ -396,6 +396,10 @@ Otherwise, a new and distinct VPC will be used to operate the nodes created by t
 	- *rmHostname:* This field is to be filled with the domain name or the IP of the host operating the Resource Manager.
  This option is mandatory.
 
+	- *nodeJarURL:* URL used to download the node jar on the VM.
+
+	- *additionalProperties:* Additional parameters to be used when invoking PA Agent (not used if an externalStartupScript is provided).
+
 	- *externalStartupScript:* The administrator has to provide a script to configure AWS instances to work with ProActive.
  Usually, if not provided by the AMI, this script is expected to download the Java Runtime Environment and ProActive node.jar agent file.
  This field is expected to contain the content of the script, and start with a Shebang, as an AWS imposes it.
@@ -416,7 +420,7 @@ WARNING: Please ensure this parameter is aligned with the capacity of the specif
 Using this configuration, you can start a Resource Manager and a Scheduler using the */bin/proactive-server* script  as explained in section <<_run_the_proactive_scheduler>>.
 An AWS Autoscaling NodeSource can now be added using the *Create Node Source* panel in the Resource Manager or the command line interface:
 
-    $ PROACTIVE_HOME/bin/proactive-client --createns awsAutoScaling -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.AwsAutoscalingInfrastructure vmGroupTagPrefix awsKey awsSecretKey maxVms defaultInstanceType amiId publicSshKey defaultVpcId defaultSubNetId defaultSecurityGroup region rmUrl rmCredential rmHostname externalStartupScript maxNodePerVM deploymentTimeOut cleanDelay
+    $ PROACTIVE_HOME/bin/proactive-client --createns awsAutoScaling -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.AwsAutoscalingInfrastructure vmGroupTagPrefix awsKey awsSecretKey maxVms defaultInstanceType amiId publicSshKey defaultVpcId defaultSubNetId defaultSecurityGroup region rmUrl rmHostname nodeJarURL additionalProperties externalStartupScript maxNodePerVM deploymentTimeOut cleanDelay
 
 WARNING: When ProActive server is stopped (without removing the created infrastructure), AWS instances will not be terminated. And when ProActive server is restarted, the infrastructure will be re-configured as per the previous settings. If the instances were deleted at the cloud side, they will be re-created and re-configured.
 
