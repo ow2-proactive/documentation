@@ -1,0 +1,80 @@
+The `application-connectors` bucket contains diverse generic application connectors for the most frequently used cloud data management systems (ERP, ETL, LDAP, Reporting and Monitoring, and ServiceNow). The aim of an application connector is to facilitate and simplify the cloud application usage from your workflows.
+
+=== ETL
+
+The ETL connectors allow connecting to data servers and benefit from their features.
+The following presents the various ETL connectors that PWS handle.
+
+==== Informatica
+
+The Informatica workflow consists of one task.
+
+*Variables:*
+
+The Informatica workflow consists of a list of variables described in the following table.
+
+.Informatica Connector variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
+| `ENDPOINT`
+| Server host.
+| Workflow
+| Yes
+| String
+| e.g. `https://url-api.dm-us.informaticacloud.com/test/test`
+| `USERNAME`
+| Username to use for the authentication.
+| Workflow
+| No
+| String
+| e.g. toto
+| `PASSWORD`
+| Password to use for the authentication.
+| Workflow
+| No
+| String
+| e.g. toto
+| `RESPONSE_FORMAT`
+| Format of the server response .
+| Task
+| Yes
+| string, json, xml, html, contentView
+| json
+| `RESPONSE_PATH`
+| ...
+| Task
+| Yes
+| String
+| .
+| `PARAM_var`
+| Name of the api parameter (in case of multiple parameters, add several parameters fields).
+| Task
+| No
+| String
+| e.g. PARAM_input
+| `HEADER_header`
+| Name of the api request header (in case of multiple parameters, add several headers fields).
+| Task
+| No
+| String
+| e.g. HEADER_sessionId
+| `JWT_TOKEN`
+| JWT Token to use for the authentication.
+| Workflow
+| No
+| String
+| e.g. eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+| `DEBUG`
+| Allows printing more logs in the workflow results.
+| Task
+| Yes
+| Boolean
+| False
+|===
+
+*How to use this task:*
+
+This WorkFlow performs a GET request to an Informatica API associated to an application already created by the Informatica user.
+This template supports: a basic authentication using a username and a password, an advanced authentication using a JWT access token and finally an anonymous authentication where no authorization is required.
+The authentication method is determined based on the definition of the parameters when launching the WF.
