@@ -312,9 +312,7 @@ them to parameterize workflow execution and use workflows as <<_templating,templ
 ==== Job & Task status
 
 During their execution, jobs go through different status.
-The screenshot below shows Pending and Current Jobs status summary as seen in Workflow Execution portal.
 
-image::current_job_states.png[align="center", width=350]
 
 .Job Status for Pending and Current Jobs
 [cols="17%,17%,66%", options="header"]
@@ -327,10 +325,6 @@ image::current_job_states.png[align="center", width=350]
 | `IN_ERROR` | In-Error | The job has one or more In-Error tasks that are suspended along with their dependencies. User intervention is required to fix the causing issues and restart the In-Error tasks to resume the job.
 
 |===
-
-The screenshot below shows Past Jobs status summary as seen in Workflow Execution portal.
-
-image::past_job_states.png[align="center", width=350, title-align="center"]
 
 .Job Status for Past Jobs
 [cols="17%,17%,66%", options="header"]
