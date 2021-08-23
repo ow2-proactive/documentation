@@ -22,7 +22,7 @@ The Informatica workflow consists of a list of variables described in the follow
 | Workflow
 | Yes
 | String
-| e.g. `https://url-api.dm-us.informaticacloud.com/test/test`
+| e.g. `https://xxx.informaticacloud.com/test/test`
 | `USERNAME`
 | Username to use for the authentication.
 | Workflow
@@ -76,5 +76,5 @@ The Informatica workflow consists of a list of variables described in the follow
 *How to use this task:*
 
 This WorkFlow performs a GET request to an Informatica API associated to an application already created by the Informatica user.
-This template supports: a basic authentication using a username and a password, an advanced authentication using a JWT access token and finally an anonymous authentication where no authorization is required.
+This workflow template supports the following authentication methods: a basic authentication using a username and a password, an advanced authentication using a JWT access token and finally an anonymous authentication where no authorization is required.
 The authentication method is determined based on the definition of the parameters when launching the WF.
