@@ -294,10 +294,12 @@ me=propertyvalue`). This is an optional property.
             wget -nv %nodeJarUrl%
             nohup jre/bin/java -jar node.jar -Dproactive.communication.protocol=%protocol% -Dpython.path=%jythonPath% -Dproactive.pamr.router.address=%rmHostname% -D%instanceIdNodeProperty%=%instanceId% -r %rmUrl% -s %nodeSourceName% %nodeNamingOption% -v %credentials% -w %numberOfNodesPerInstance% %additionalProperties% &
 
+-   *spotPrice*: This parameter is only used when you want to deploy ProActive nodes on AWS spot instances. It specifies the maximum price that you are willing to pay per hour per instance (your bid price). When the spot price is too low to be satisfied within the node-running timeout (20 minutes by default, configurable through `connector-iaas.jclouds.compute.timeout.node-running` in the configuration file _dist/war/connector-iaas/WEB-INF/classes/application.properties_), the node source deployment will be failed and the related spot requests will be cancelled. This is an optional property. More information regarding Amazon spot instances available on https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-spot-instances.html[AWS Spot Instances]. For the current Spot Instance prices, see https://aws.amazon.com/ec2/spot/pricing/[Amazon EC2 Spot Instances Pricing].
+
 Using this configuration, you can start a ProActive Resource Manager and Scheduler using the */bin/proactive-server* script.
 An AWS EC2 NodeSource can now be added using the *Create Node Source* panel in the Resource Manager Portal or the command line interface:
 
-    $ PROACTIVE_HOME/bin/proactive-client --createns ec2 -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.AWSEC2Infrastructure awsKey awsSecretKey numberOfInstances numberOfNodesPerInstance image vmUsername vmKeyPairName vmPrivateKey ram cores securityGroupIds subnetId rmHostname connectorIaasURL nodeJarURL additionalProperties nodeTimeout startupScript
+    $ PROACTIVE_HOME/bin/proactive-client --createns ec2 -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.AWSEC2Infrastructure awsKey awsSecretKey numberOfInstances numberOfNodesPerInstance image vmUsername vmKeyPairName vmPrivateKey ram cores securityGroupIds subnetId rmHostname connectorIaasURL nodeJarURL additionalProperties nodeTimeout startupScript spotPrice
 
 As AWS is a paying service, when the ProActive server is stopped normally (without removing the created infrastructure), all the created AWS instances will be terminated. When the ProActive server is restarted, these instances will be re-configured as per the previous settings.
 
