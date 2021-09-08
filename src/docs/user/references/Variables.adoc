@@ -84,6 +84,11 @@ Task variables can be used similarly to job variables using the pattern `${varia
 
 Task variables override job variables, this means that if a job variable and a task variable are defined with the same name, the task variable value will be used inside the task, and the job variable value will be used elsewhere in the job.
 
+===== Global Variables
+
+Global variables are *job variables* that are configured inside ProActive server and apply to all workflows or to certain categories of workflows (e.g. workflows with a given name).
+
+See link:../admin/ProActiveAdminGuide.html#_configure_global_variables_and_generic_information[Configure Global Variables and Generic Information] section to understand how global variables can be configured on the ProActive server.
 
 ===== Variable Model
 
