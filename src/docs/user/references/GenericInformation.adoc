@@ -22,7 +22,11 @@ For example:
 </task>
 ----
 
-The following table describes all availabe generic information:
+Some generic information can also be configured globally on the ProActive server. These *global generic information* will then apply to all submitted workflows or to certain categories of workflows (e.g. workflows with a given name). Global generic information are *job-level* only.
+
+See link:../admin/ProActiveAdminGuide.html#_configure_global_variables_and_generic_information[Configure Global Variables and Generic Information] section to understand how global generic information can be configured on the ProActive server.
+
+The following table describes all available generic information:
 
 .Generic Information
 |===
