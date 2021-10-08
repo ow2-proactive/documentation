@@ -419,10 +419,12 @@ WARNING: Please ensure this parameter is aligned with the capacity of the specif
 	- *cleanDelay:*	The administrator can define the periodicity in seconds for unused instance removal.
  This parameter is mandatory.
 
+    - *spotPrice*: This parameter is only used when you want to deploy ProActive nodes on AWS spot instances. It specifies the maximum price that you are willing to pay per hour per instance (your bid price). If your bid price is lower than the current spot instance price for your specified instance type, the node source deployment will be failed immediately. This is an optional property. More information regarding Amazon spot instances available on https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-spot-instances.html[AWS Spot Instances]. For the current Spot Instance prices, see https://aws.amazon.com/ec2/spot/pricing/[Amazon EC2 Spot Instances Pricing].
+
 Using this configuration, you can start a Resource Manager and a Scheduler using the */bin/proactive-server* script  as explained in section <<_run_the_proactive_scheduler>>.
 An AWS Autoscaling NodeSource can now be added using the *Create Node Source* panel in the Resource Manager or the command line interface:
 
-    $ PROACTIVE_HOME/bin/proactive-client --createns awsAutoScaling -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.AwsAutoscalingInfrastructure vmGroupTagPrefix awsKey awsSecretKey maxVms defaultInstanceType amiId publicSshKey defaultVpcId defaultSubNetId defaultSecurityGroup region rmUrl rmHostname nodeJarURL additionalProperties externalStartupScript maxNodePerVM deploymentTimeOut cleanDelay
+    $ PROACTIVE_HOME/bin/proactive-client --createns awsAutoScaling -infrastructure org.ow2.proactive.resourcemanager.nodesource.infrastructure.AwsAutoscalingInfrastructure vmGroupTagPrefix awsKey awsSecretKey maxVms defaultInstanceType amiId publicSshKey defaultVpcId defaultSubNetId defaultSecurityGroup region rmUrl rmHostname nodeJarURL additionalProperties externalStartupScript maxNodePerVM deploymentTimeOut cleanDelay spotPrice
 
 WARNING: When ProActive server is stopped (without removing the created infrastructure), AWS instances will not be terminated. And when ProActive server is restarted, the infrastructure will be re-configured as per the previous settings. If the instances were deleted at the cloud side, they will be re-created and re-configured.
 
