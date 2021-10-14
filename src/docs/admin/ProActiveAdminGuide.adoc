@@ -968,8 +968,10 @@ The following important rules apply to global variables and generic information:
                 <info name="ginfo2" value="${ginfo1}"/> <!-- INVALID, a generic information cannot reference another generic info-->
             </genericInformation>
 ----
+
 === Custom logo configuration
-To be able to edit the custom logo in ProActive portals, you have to replace the following file`PROACTIVE_HOME/dist/war/getstarted/assets/image/custom-logo.png` with your logo.
+
+To be able to edit the default logo displayed in ProActive portals, you have to replace the following file `PROACTIVE_HOME/dist/war/getstarted/assets/image/custom-logo.png` with your custom logo.
 
 == User Authentication
 
