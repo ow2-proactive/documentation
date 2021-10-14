@@ -969,6 +969,10 @@ The following important rules apply to global variables and generic information:
             </genericInformation>
 ----
 
+=== Custom logo configuration
+
+To be able to edit the default logo displayed in ProActive portals, you have to replace the following file `PROACTIVE_HOME/dist/war/getstarted/assets/image/custom-logo.png` with your custom logo.
+
 == User Authentication
 
 In order to use ProActive Scheduler every user must have an account. It supports three methods for authentication:
