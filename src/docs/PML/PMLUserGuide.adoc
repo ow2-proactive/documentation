@@ -588,10 +588,10 @@ Execute the workflow and set the different workflow's variables as follows:
 | String
 | `MODEL_VERSION`
 | The version number of the model that will be deployed.
-| Integer (default= 1)
+| Integer (default=1)
 | `BASELINE_DATA_URL`
 | URL of the dataset to be deployed and used in the data drift detection process.
-| URL (default= \https://activeeon-public.s3.eu-west-2.amazonaws.com/datasets/baseline_data.csv)
+| URL (default=\https://activeeon-public.s3.eu-west-2.amazonaws.com/datasets/baseline_data.csv)
 |===
 
 ==== Call the Service for Prediction
@@ -643,16 +643,16 @@ Execute the Workflow and set the different workflow's variables as follows:
 | String
 | `MODEL_VERSION`
 | The version number of the model that will be deployed.
-| Integer (default= 1)
+| Integer (default=1)
 | `SAVE_PREDICTIONS`
 | Save the resulted predictions in order to be able to display them through the data analytics dashboard.
-| boolean (default= False)
+| boolean (default=False)
 | `DRIFT_ENABLED`
 | True if a detector is needed to detect data drifts in the input data based on the baseline data.
-| boolean (default= False)
+| boolean (default=False)
 | `DRIFT_NOTIFICATION`
 | True if the user needs to get a notification via Proactive if a data drift is detected.
-| boolean (default= False)
+| boolean (default=False)
 |===
 
 ==== Delete/Finish the Service
