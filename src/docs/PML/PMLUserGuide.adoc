@@ -896,7 +896,7 @@ The following workflows are available on the `model_as_a_service` bucket:
 
 *Diabetics_Deploy_Predict_Classifier_Model:* trains a Diabetics Classifier based on a Random Forest Algorithm and then deploys this classifier in a MaaS_ML service instance.
 *IRIS_Deploy_Predict_Flower_Classifier_Model_Interactive:* trains an Iris Flower Classifier, starts a service instance where the trained model is deployed, and the input data is scored by consuming the endpoints exposed by the MaaS_ML service. The figure below describes this workflow.
-*IRIS_Deploy_Flower_Classifier_Model:* trains an Iris Flower Classifier and deploys it in a new service instance. This instance is stopped when the user trigger the signal through the Workflow Execution portal.
+*IRIS_Deploy_Flower_Classifier_Model:* trains an Iris Flower Classifier and deploys it in a new service instance. This instance is stopped when the user triggers the signal through the Workflow Execution portal.
 
 image::MAAS_ML_IRIS_Workflow_Example_Interactive.png[align=center]
 
