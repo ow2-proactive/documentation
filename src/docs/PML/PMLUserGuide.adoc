@@ -509,9 +509,6 @@ Execute the workflow by setting the different workflow's variables as described 
 | `USE_NVIDIA_RAPIDS`
 | If True, the service will be configured to use the GPU and the Nvidia Rapids library.
 | Boolean (default=False)
-| `DRIFT_ENABLED`
-| True if a detector is needed to check for drifts in the input datasets compared to the training datasets.
-| Boolean (default=True)
 3+^|*Task variables*
 | `SERVICE_ID`
 | The name of the service. Please keep the default value for this variable.
@@ -586,12 +583,18 @@ Execute the workflow and set the different workflow's variables as follows:
 | `DRIFT_DETECTION_WINDOW_SIZE`
 | The size of the data to be extracted from the old training dataset to be used as a baseline data for the drift detection.
 | Integer (default=50).
-| `LOG_PREDICTIONS`
-| If True, the predictions made by the model will be displayed in the traceability page.
-| Boolean (default=True).
+| `MODEL_NAME`
+| The name of the model to be deployed.
+| String
+| `MODEL_VERSION`
+| The version number of the model that will be deployed.
+| Integer (default=1)
+| `BASELINE_DATA_URL`
+| URL of the dataset to be deployed and used in the data drift detection process.
+| URL (default=\https://activeeon-public.s3.eu-west-2.amazonaws.com/datasets/baseline_data.csv)
 |===
 
-==== Call the Service for Predicition
+==== Call the Service for Prediction
 
 Once the model is deployed, you can also call the service for prediction directly from the link:https://try.activeeon.com/studio[Studio Portal].
 
@@ -635,6 +638,21 @@ Execute the Workflow and set the different workflow's variables as follows:
 | `DATA_DRIFT_DETECTOR`
 | Name of the data drift detector to be used in the drift detection process.
 | List [HDDM, Page Hinkley, ADWIN] (default="HDDM")
+| `MODEL_NAME`
+| The name of the model to be deployed.
+| String
+| `MODEL_VERSION`
+| The version number of the model that will be deployed.
+| Integer (default=1)
+| `SAVE_PREDICTIONS`
+| Save the resulted predictions in order to be able to display them through the data analytics dashboard.
+| boolean (default=False)
+| `DRIFT_ENABLED`
+| True if a detector is needed to detect data drifts in the input data based on the baseline data.
+| boolean (default=False)
+| `DRIFT_NOTIFICATION`
+| True if the user needs to get a notification via Proactive if a data drift is detected.
+| boolean (default=False)
 |===
 
 ==== Delete/Finish the Service
@@ -685,12 +703,6 @@ Set the following variables:
 | `DOCKER_IMAGE`
 | Specifies the name of the Docker image that will be used to run the different workflow tasks.
 | String (default="activeeon/maas_ml")
-| `DRIFT_ENABLED`
-| True if a detector is needed to check for drifts in the input datasets compared to the training datasets.
-| Boolean (default=True)
-| `DRIFT_THRESHOLD`
-| The level or point at which the data drift is detected, and the user is notified.
-| Float (default=1.9)
 | `ENDPOINT_ID`
 | The endpoint_id that will be used if `PROXYFIED` is set to True.
 | String (default="maas-ml-gui")
@@ -749,21 +761,15 @@ Set the Following variables:
 | `BASELINE_DATA_URL`
 | URL of the dataset to be deployed and used in the data drift detection process.
 | URL (default= \https://activeeon-public.s3.eu-west-2.amazonaws.com/datasets/baseline_data.csv)
-| `DEVIATION_DETECTION`
-| If True, the data drift will be detected, and the user will be notified about the drift.
-| Boolean (default=True)
-| `DEVIATION_THRESHOLD`
-| It represents the data drift threshold, the level or point at which the data drift is detected, and the user is notified.
-| Float (default=1.9)
-| `LOGGING_PREDICTION`
-| If True, the predictions will be stored, and the user will be able to preview them.
-| Boolean (default=True)
+| `MODEL_NAME`
+| The name of the model to be deployed.
+| String (default="iris_flowers_classifier")
 | `MODEL_URL`
 | A valid URL specified by the user referencing to the model that needs to be deployed.
 | URL (default= \https://activeeon-public.s3.eu-west-2.amazonaws.com/models/model.pkl)
-| `MODEL_METADATA`
-| This variable contains some statistical features such as the mean, and the standard deviation extracted from the training data used to build the model that should be deployed. This metadata is used for the purpose of detecting drifts.
-| Numerical vector (default= [[5.8216666667,3.0658333333,3.695,1.1766666667],[0.8128364419,0.4385797999,1.7614380107,0.7581194484]])
+| `MODEL_VERSION`
+| The version number of the model that will be deployed.
+| Integer (default=1)
 | `USER_NAME`
 | A valid username having the needed privileges to execute this action.
 | String (default="user")
@@ -851,29 +857,25 @@ Through this Swagger UI, you are now able to:
 ** Deploy a model
 ** List the deployed models
 ** Make predictions
-** Return stored predictions
-** Redeploy a previous deployed model
 ** Return the stored traceability information
 ** Remove deployed model
 ** Update the service parameter
 
-==== Deploy/Undeploy/Redeploy a Specific ML Model
+==== Deploy/delete a Specific ML Model version
 
 You can also deploy a specific ML model using the Swagger UI:
 
 Open the Swagger UI.
 
-Open the `get_token` operation and get an api_token by entering your username (default value is `user`).
+Select the `get_token` operation and get an api_token by entering your username (default value is `user`).
 
-Open the `deploy` operation and set the provided token and upload the model that need to be deployed.
+Select the `deploy` operation and set the provided token and upload the model version that need to be deployed.
 
-image::NEW_MAS_Deploy_Swagger.png[align=center]
+image::MAAS_Deploy_Swagger.png[align=center]
 
-Open `list_models` to return the list of all already deployed models.
+Select `list_saved_models` to return the list of all already deployed models.
 
-Open `redeploy` to redeploy a previously deployed model using its token.
-
-Open `undeploy` to remove a deployed model using its token.
+Select `delete_deployed_model` to remove a specific model version.
 
 ==== Call the Service for Predictions
 
@@ -881,11 +883,11 @@ Once the model is deployed, you can call the service for predictions using the S
 
 Open the Swagger UI.
 
-Open the `get_token` operation and get an api_token by entering your username (default value is `user`).
+Select the `get_token` operation and get an api_token by entering your username (default value is `user`).
 
-Open the `predict` operation and set the provided token, and the data that you need to score.
+Select the `predict` operation and set the provided token, the distinct parameters (drift_enabled, drift_notification, detector, model_name, model_version, etc) and the data that you need to score.
 
-image::MAS_Predict_Swagger.png[align=center]
+image::MAAS_Predict_Swagger.png[align=center]
 
 === Deployment Pipeline Examples
 
@@ -893,11 +895,10 @@ You can connect the different tasks in a single workflow to get the full pipelin
 The following workflows are available on the `model_as_a_service` bucket:
 
 *Diabetics_Deploy_Predict_Classifier_Model:* trains a Diabetics Classifier based on a Random Forest Algorithm and then deploys this classifier in a MaaS_ML service instance.
-*IRIS_Deploy_Predict_Flower_Classifier_Model:* trains an Iris Flower Classifier, starts a service instance where the trained model is deployed, and the input data is scored by consuming the endpoints exposed by the MaaS_ML service. The figure below describes this workflow.
-*IRIS_Deploy_Flower_Classifier_Model:* trains an Iris Flower Classifier and deploys it in a new service instance. This instance is stopped when the user validates this action from the Notification portal.
+*IRIS_Deploy_Predict_Flower_Classifier_Model_Interactive:* trains an Iris Flower Classifier, starts a service instance where the trained model is deployed, and the input data is scored by consuming the endpoints exposed by the MaaS_ML service. The figure below describes this workflow.
+*IRIS_Deploy_Flower_Classifier_Model:* trains an Iris Flower Classifier and deploys it in a new service instance. This instance is stopped when the user triggers the signal through the Workflow Execution portal.
 
-
-image::NEW_MAAS_ML_IRIS_Workflow_Example.PNG[align=center]
+image::MAAS_ML_IRIS_Workflow_Example_Interactive.png[align=center]
 
 === Customize the Service
 
@@ -967,7 +968,6 @@ has occurred, but also to indicate the exact location of the drift in the input 
 It can specify on which attributes or characteristics and more precisely on which lines
 the drift occurred.
 
-
 This allows the user to better manage the drift and to act accordingly.
 In fact, the input data set is monitored using different methods of data drift
 detection in which the user is free to choose the one that best suits his needs.
@@ -1035,9 +1035,6 @@ to be deployed.
 specified drift detector method, our algorithm can detect in which attributes and particularly
 which rows the drift took place in the input data. The results are shown in *Response Body*
 of the */predict()* endpoint and in the *Traceability and Audit* page.
-
-- In the */update* endpoint, the user is able to update the baseline data deployed with the model using the *baseline_data*
-variable.
 
 In case a data drift has occurred, a user will receive a notification using the ProActive
 *Notification* service in the Automation Dashboard.
