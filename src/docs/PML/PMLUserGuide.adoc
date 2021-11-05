@@ -2570,12 +2570,15 @@ most of the available AI workflows in PML associated to their descriptions.
 | `NATIVE_SCHEDULER_PARAMS`
 | Parameters given to the native scheduler (SLURM, LSF, etc) while requesting a ProActive node used to deploy the workflow tasks.
 | String (default=empty)
-| `NODE_ACCESS_TOKEN`
-| If not empty, the workflow tasks will be run only on nodes that contains the specified token.
-| String (default=empty)
 | `NODE_SOURCE_NAME`
 | If not empty, the workflow tasks will be run only on nodes belonging to the specified node source.
 | String (default=empty)
+| `NODE_ACCESS_TOKEN`
+| If not empty, the workflow tasks will be run only on nodes that contains the specified token.
+| String (default=empty)
+| `WORK_DIR`
+| Defines the working directory for the data space used to transfer files automatically between the workflow tasks.
+| String
 | `CONTAINER_PLATFORM`
 | Specifies the container platform to be used for executing the workflow tasks.
 | List [no-container, docker, podman, singularity] (default=docker)
@@ -3868,7 +3871,7 @@ NOTE: You can use RGB images in JPG format (Images folder) and the groundtruth a
 
 NOTE: You can find an example of the organization of the folders at: https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/oxford.zip
 
-. _Object Detection Dataset:_ Two folders are demanded: the first folder should contain the RGB images in JPG format and another folder should contain its corresponding anotations in XML format using http://host.robots.ox.ac.uk/pascal/VOC/voc2012/index.html[PASCAL VOC^] format or TXT format using COCO format (http://cocodataset.org/#home). The RGB images and annotations should be organized as follows:
+. _Object Detection Dataset:_ Two folders are demanded: the first folder should contain the RGB images in JPG format and another folder should contain its corresponding anotations in XML format using PASCAL VOC format or TXT format using YOLO format. The RGB images and annotations should be organized as follows:
 
 image::object_detection.png[150,150]
 
@@ -3885,8 +3888,11 @@ NOTE: In these links, you can find an example of the organization of the folders
 | `GPU_NODES_ONLY`
 | If True, the tasks will be executed on GPU nodes.
 | Boolean (default=True)
+| `IMPORT_FROM`
+| Selects the type of data source.
+| List [PA:URL,PA:URI,PA:USER_FILE,PA:GLOBAL_FILE] (default=PA:URL)
 | `DATA_URL`
-| URL pointing to the zip folder containing the needed data.
+| Inserts a file path/name.
 | String
 | `TRAIN_SPLIT`
 | Must be a float within the range (0.0, 1.0), not including the values 0.0 and 1.0.
@@ -4839,10 +4845,20 @@ The following workflows present some examples using TensorBoard service to visua
 
 === Satellite Imagery Bucket
 
-The `satellite-imagery` bucket contains some tasks that enable you to search, download and retrieve the metadata of Sentinel satellite images from the https://peps.cnes.fr/rocket/#/home[PEPS website^] and https://scihub.copernicus.eu/[Copernicus Open Access Hub^].
+The `satellite-imagery` bucket contains some tasks that enable you to search and download Earth Observation products from different providers, such as Copernicus, Creodias, Mundi, Onda, Peps, Sobloo and Wekeo.
+
+Below are some features available:
+
+** Execution of multiple tasks in parallel.
+** Display the download error codes and restart the task automatically if failed.
+** Maintain traceability between requests and images downloaded in a JSON file format.
+** Inform the user if there is not enough free space on the disk.
+** Manage quotas (max number of requests over a period of time, max number of simultaneous requests) for the Copernicus task.
+
 
 ==== Fetch_Images_From_Satellite_Platforms
-It allows downloading the metadata and images from the Copernicus and PEPS platforms or both simultaneously.
+It allows downloading the metadata and images from the Copernicus, Creodias, Mundi, Onda, Peps, Sobloo and Wekeo platforms.
+
 A behavior diagram of the Copernicus platform is presented below.
 
 image::ciar_diagram.png[align=center]
@@ -4855,7 +4871,7 @@ image::ciar_diagram.png[align=center]
 | *Variable name* | *Description* | *Type*
 | `SEARCH_ENGINE`
 | Defines an engine to search and download satellite images.
-| List [Peps, Copernicus, All] (default=Copernicus)
+| List [Copernicus, Creodias, Mundi, Onda, Peps, Sobloo and Weke, All] (default=Peps)
 | `IMPORT_FROM`
 | Selects the type of data source.
 | List [PA:URL,PA:URI,PA:USER_FILE,PA:GLOBAL_FILE] (default=PA:GLOBAL_FILE)
@@ -4881,7 +4897,7 @@ image::ciar_diagram.png[align=center]
 
 
 
-NOTE: Please click https://peps.cnes.fr/rocket/#/register[here^] to create a new user account from Peps website.
+NOTE: Please click https://eodag.readthedocs.io[here^] to create a new user account from  EODAG (Earth Observation Data Access Gateway) website.
 
 NOTE: Please click https://scihub.copernicus.eu/dhus/#/self-registration[here^] to create a new user account from Copernicus website.
 
