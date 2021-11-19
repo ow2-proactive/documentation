@@ -1753,13 +1753,14 @@ Notifications will only be sent for jobs whose generic information (workflow lev
 To enable this functionality, the configuration need to be done following the steps introduced in
 link:../admin/ProActiveAdminGuide.html#_get_notifications[Get Notification on Job Events Configuration].
 
-=== Chaining Jobs
+=== Chaining Workflows: Submit a Workflow from another Workflow
 
 In *ProActive Studio*, the `SubmitJobNoWait` and `SubmitJobAndWait` templates under the *Controls* menu allow you to submit a workflow from another workflow using the <<_scheduler_api,*schedulerapi*>> binding.
 
 These templates accept the single parameter:
 
- * `called_workflow`: a <<_proactive_catalog_object_storage_and_versioning,ProActive Catalog>> path referencing the workflow to submit (e.g. _basic-examples/Native_Task_)
+ * `called_workflow`: a <<_proactive_catalog_object_storage_and_versioning,ProActive Catalog>> path where the syntax is checked by the *PA:CATALOG_OBJECT* model.
+The path must be a valid expression that matches the following pattern: `bucketName/workflowName[/revision]` referencing the workflow to submit from the Catalog (e.g. _basic-examples/Native_Task_)
 
 By default, these templates do not pass any parameter to the submitted workflow (using only default values provided by the workflow).
 
