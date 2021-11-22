@@ -16,14 +16,21 @@ only within the task execution context.
 [[_job_variables]]
 ===== Job variables
 
-In a workflow you can define *job variables* that are shared and visible by all tasks.
+In a workflow, you can define *job variables* that are shared and visible by all tasks.
 
 A job variable is defined using the following attributes:
 
-* *name*: the name of the variable
-* *value*: the value of the variable
-* *model*: the type of the value (optional). See section <<_variable_model,Variable Model>>
-
+* *name*: the variable name.
+* *value*: the variable value.
+* *model*: the variable value type or model (optional). See section <<_variable_model,Variable Model>>.
+* *description*: the variable description (optional). The description can be written using html syntax (e.g. `This variable is <b>mandatory</b>.`).
+* *group*: the group name associated with the variable (optional). When the workflow has many variables,
+defining variable groups helps understanding the various parameters. Variables with no associated group are called _Main Variables_.
+* *advanced*: when a variable is advanced, it is not displayed by default in the workflow submission form.
+A checkbox allows the user to display or hide advanced variables.
+* *hidden*: a hidden variable is not displayed to the user in the workflow submission form. Hidden variables have the following usages:
+** perform _hidden checks_ on other variables, defined by a variable model _SpEL expression_, see <<_variable_model>> and <<_spring_expression_language_model>>.
+** build _dynamic forms_ where variables are displayed or hidden depending on the values of other variables, see <<_variable_model>>, <<_spring_expression_language_model>> and <<_dynamic_forms>>.
 
 [[_templating]]
 Variables are very useful to use workflows as templates where only a few parameters change for each
@@ -60,15 +67,20 @@ Task variables scope is strictly limited to the task definition.
 
 A task variable is defined using the following attributes:
 
-* *name*: the name of the variable
-* *value*: the value of the variable
-* *inherited*: asserts when the content of this variable is propagated from a previous task.
-If _true_, the value defined in the task variable will only be used if no variable with the same name is propagated.
-* *model*: the type of the value (optional). See section <<_variable_model,Variable Model>>
-
-When the inherited parameters is true the variable value is propagated by a previous task (See
-<<_inherited_variables>> for more details). Value field can be left empty however it can
+* *name*: the variable name.
+* *value*: the variable value.
+* *inherited*: asserts when the content of this variable is propagated from a <<_job_variables,job variable>> or a <<_inherited_variables,parent task>>.
+If _true_, the value defined in the task variable will only be used if no variable with the same name is propagated. Value field can be left empty however it can
 also work as a default value in case a previous task fails to define the variable.
+* *model*: the variable value type or model (optional). See section <<_variable_model,Variable Model>>
+* *description*: the variable description (optional). The description can be written using html syntax (e.g. `This variable is <b>mandatory</b>.`).
+* *group*: the group name associated with the variable (optional). When the workflow has many variables,
+defining variable groups helps understanding the various parameters. Variables with no associated group are called _Main Variables_.
+* *advanced*: when a variable is advanced, it is not displayed by default in the workflow submission form.
+A checkbox allows the user to display or hide advanced variables.
+* *hidden*: a hidden variable is not displayed to the user in the workflow submission form. Hidden variables have the following usages:
+** perform _hidden checks_ on other variables, defined by a variable model _SpEL expression_, see <<_variable_model>> and <<_spring_expression_language_model>>.
+** build _dynamic forms_ where variables are displayed or hidden depending on the values of other variables, see <<_variable_model>>, <<_spring_expression_language_model>> and <<_dynamic_forms>>.
 
 For example:
 [source, xml]
@@ -82,7 +94,7 @@ For example:
 ----
 Task variables can be used similarly to job variables using the pattern `${variable_name}` but only inside the task where the variable is defined.
 
-Task variables override job variables, this means that if a job variable and a task variable are defined with the same name, the task variable value will be used inside the task, and the job variable value will be used elsewhere in the job.
+Task variables *override* job variables, this means that if a job variable and a task variable are defined with the same name, the task variable value will be used inside the task (unless the task variable is marked as *inherited*), and the job variable value will be used elsewhere in the job.
 
 ===== Global Variables
 
@@ -181,14 +193,18 @@ In order to interact with variables, the expression has access to the following 
 * `variables['variable_name']`: this property array contains all the variable values of the same context (for example of the same task for a task variable).
 * `models['variable_name']`: this property array contains all the variable models of the same context (for example of the same task for a task variables).
 * `valid`: can be set to `true` or `false` to validate or invalidate a variable.
-* `temp`: can be set to a temporary object used in the SPEL expression.
-* `tempMap`: an empty Hash Map structure which can be populated and used in the SPEL expression.
+* `temp`: can be set to a temporary object used in the SpEL expression.
+* `tempMap`: an empty Hash Map structure which can be populated and used in the SpEL expression.
 
-The expression has also access to the following functions (in addition to the functions available by default in the SPEL language):
+The expression has also access to the following functions (in addition to the functions available by default in the SpEL language):
 
 * `t(expression)`: evaluate the expression and return `true`.
 * `f(expression)`: evaluate the expression and return `false`.
 * `s(expression)`: evaluate the expression and return an empty string.
+* `hideVar('variable name')`: hides the variable given in parameter. Used to build <<_dynamic_forms>>. Returns `true` to allow chaining actions.
+* `showVar('variable name')`: shows the variable given in parameter. Used to build <<_dynamic_forms>>. Returns `true` to allow chaining actions.
+* `hideGroup('group name')`: hides all variables belonging to the variable group given in parameter. Used to build <<_dynamic_forms>>. Returns `true` to allow chaining actions.
+* `showGroup('group name')`: shows all variables belonging to the variable group given in parameter. Used to build <<_dynamic_forms>>. Returns `true` to allow chaining actions.
 
 The SpEL expression must either:
 
@@ -226,12 +242,45 @@ Note that #value always contains a string and must be converted to other types i
 
 NOTE: the SpEL expression must return a boolean value, this is why in the above expressions we use the `t(expression)` function to perform affectations and return a boolean `true` value.
 
+[[_dynamic_forms]]
+====== Dynamic form example using SpEL
+Using SpEL expressions, it is possible to show or hide variables based on the values of other variables. Thus, it allows to create _dynamic forms_.
+
+Consider the following variables definition (attributes xml escaping has been removed for clarity):
+
+```xml
+  <variables>
+    <variable name="type" value="vegetable" model="PA:LIST(vegetable,fruit)" description="" group="" advanced="false" hidden="false"/>
+    <variable name="potatoes" value="0" model="PA:INTEGER" description="Amount of potatoes to order (in kilograms)" group="vegetables" advanced="false" hidden="false"/>
+    <variable name="leek" value="0" model="PA:INTEGER" description="Amount of leek to order (in kilograms)" group="vegetables" advanced="false" hidden="false"/>
+    <variable name="apples" value="0" model="PA:INTEGER" description="Amount of apples to order (in kilograms)" group="fruits" advanced="false" hidden="true"/>
+    <variable name="oranges" value="0" model="PA:INTEGER" description="Amount of oranges to order (in kilograms)" group="fruits" advanced="false" hidden="true"/>
+    <variable name="type_handler" value="" model="PA:SPEL(variables['type'] == 'vegetable' ? showGroup('vegetables') && hideGroup('fruits') : showGroup('fruits') && hideGroup('vegetables'))" description="" group="" advanced="false" hidden="true"/>
+  </variables>
+```
+The first variable `type` presents a choice to the user : select _fruits_ or _vegetables_.
+The last variable `type_handler`, which is hidden to the user, analyses this choice and displays either variables belonging to the _fruits_ group or the _vegetables_ group.
+The <<_spring_expression_language_model,SpEL>> model associated with `type_handler` performs this operation:
+
+----
+PA:SPEL(variables['type'] == 'vegetable' ? showGroup('vegetables') && hideGroup('fruits') : showGroup('fruits') && hideGroup('vegetables'))
+----
+When `type` is equal to `fruit`, then the variables belonging to the `vegetables` group are hidden, and the variables belonging to the `fruits` group are shown. Respectively, the `vegetables` group is shown and the `fruits` group is hidden when `type` is equal to `vegetable`.
+
+The complete workflow example can be downloaded link:examples/my_basket.xml[here^].
+
+Here is how the variables are displayed when submitting the workflow:
+
+image:vegetables.png[Vegetables, align="center"]
+
+image:fruits.png[Fruits, align="center"]
+
+
 
 [[_dynamic_variables]]
-
 ==== Dynamic Variables
 
-As opposed to <<_workflow_variables>>, *dynamic variables* are created or manipulated directly when executing scripts,
+As opposed to <<_workflow_variables>>, *dynamic variables* are created or manipulated directly when executing workflow tasks scripts,
 through the use of the `variables` script binding map (see the <<../user/ProActiveUserGuide.adoc#_script_bindings,Script Bindings chapter>> or <<_variables_quick_reference,Script Bindings Reference>> for more information about script bindings).
 We have mainly two types of *dynamic variables*:
 
