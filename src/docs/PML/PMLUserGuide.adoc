@@ -213,6 +213,9 @@ image::AutoML_2.png[align=center]
 | `PAUSE_AFTER_EVERY_ITERATIONS`
 |  If higher than zero, pause the workflow after every specified number of iterations. Set `-1` to disable.
 | Int (default=-1)
+| `STOP_IF_LOSS_IS_LOWER_THAN`
+|  If higher than zero, stop the workflow execution if loss is lower than the specified value. Set `-1` to disable.
+| Int (default=-1)
 | `TARGET_WORKFLOW`
 | Specifies the workflow path from the catalog that should be optimized.
 | String (default=auto-ml-optimization/Himmelblau_Function)
