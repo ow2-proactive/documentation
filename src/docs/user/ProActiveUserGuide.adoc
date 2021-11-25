@@ -1760,7 +1760,8 @@ In *ProActive Studio*, the `SubmitJobNoWait` and `SubmitJobAndWait` templates un
 These templates accept the single parameter:
 
  * `called_workflow`: a <<_proactive_catalog_object_storage_and_versioning,ProActive Catalog>> path where the syntax is checked by the *PA:CATALOG_OBJECT* model.
-The path must be a valid expression that matches the following pattern: `bucketName/workflowName[/revision]` referencing the workflow to submit from the Catalog (e.g. _basic-examples/Native_Task_)
+The path must be a valid expression that matches the following pattern: `bucketName/workflowName[/revision]` referencing the workflow to submit from the Catalog (e.g. _basic-examples/Native_Task_).
+In case one wants to promote the variable called_workflow at the level of the Workflow in order to be able to select the submitted Workflow at submission time, he just has to duplicate the variable at the workflow level and mark the one at the task level as inherited.
 
 By default, these templates do not pass any parameter to the submitted workflow (using only default values provided by the workflow).
 
