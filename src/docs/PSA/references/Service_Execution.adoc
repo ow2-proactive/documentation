@@ -2,5 +2,5 @@ PSA services can be instantiated in two different ways:
 
 1- Via the <<_psa_portal,ProActive Service Automation>> (PSA) Portal.
 
-2- Via standard workflows (also called *Management Workflows*). ProActive includes predefined standard workflows that manage PSA service lifecycles (e.g., launch and stop PSA services).
-These workflows are provided in the bucket *Service_Automation* under the project *Service Automation - Management*. Their names are constructed using the pattern *PSA_Service_Name* followed by the suffix *_Service*.
+2- Via Workflow Execution Portal. To launch PSA service, you have to open the Submit Template and choose PSA service from the selected bucket. At this point, you can provide values for variables that help configure this service then press submit.
+There's UI support that's allow to display only PSA Services and search for PSA Service by its name.
