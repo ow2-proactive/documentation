@@ -415,11 +415,11 @@ The following workflows represent python templates that can be used to implement
 
 == Federated Learning (FL)
 
-https://ai.googleblog.com/2017/04/federated-learning-collaborative.html[Federated Learning (FL)] enable us to train an algorithm across multiple decentralized devices (or servers) holding local data samples, without exchanging them.
-The `federated-learning` bucket contains a few examples of Federated Learning workflows that can be easily used to build a common, robust machine learning model without sharing data, thus allowing to address critical issues such as data privacy, data security, data access rights and access to heterogeneous data.
+https://ai.googleblog.com/2017/04/federated-learning-collaborative.html[Federated Learning (FL)] enables to train an algorithm across multiple decentralized devices (or servers) holding local data samples, without exchanging them.
+The `federated-learning` bucket contains a few examples of Federated Learning workflows that can be easily used to build a common and robust machine learning model without sharing data, thus allowing to address critical issues such as data privacy, data security, data access rights and access to heterogeneous data.
 This bucket uses the https://flower.dev/[Flower] library to implement federated learning workflows.
 The https://flower.dev/[Flower] library is a friendly federated learning framework that presents a unified approach for federated learning.
-It can federates any workload using any ML framework, and any programming language.
+It help federating any workload using any ML framework, and any programming language.
 
 image::FlowerArchitecture.png[align=center]
 
