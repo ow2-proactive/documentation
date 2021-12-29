@@ -410,6 +410,50 @@ The following workflows represent python templates that can be used to implement
 
 *R_Task:* is a simple R task template pre-configured to run with `Distributed_Auto_ML`.
 
+
+[[_FL]]
+
+== Federated Learning (FL)
+
+https://ai.googleblog.com/2017/04/federated-learning-collaborative.html[Federated Learning (FL)] enable us to train an algorithm across multiple decentralized devices (or servers) holding local data samples, without exchanging them.
+The `federated-learning` bucket contains a few examples of Federated Learning workflows that can be easily used to build a common, robust machine learning model without sharing data, thus allowing to address critical issues such as data privacy, data security, data access rights and access to heterogeneous data.
+This bucket uses the https://flower.dev/[Flower] library to implement federated learning workflows.
+The https://flower.dev/[Flower] library is a friendly federated learning framework that presents a unified approach for federated learning.
+It can federates any workload using any ML framework, and any programming language.
+
+image::FlowerArchitecture.png[align=center]
+
+=== PyTorch Federated Learning Tasks
+
+The following workflows represent a client/server templates that can be used to implement a Federated Learning workflow using PyTorch.
+
+*PyTorch_FL_Client_Task:* is a Federated Learning Client task template using PyTorch.
+
+*PyTorch_FL_Server_Task:* is a Federated Learning Server task template using PyTorch.
+
+=== TensorFlow Federated Learning Tasks
+
+The following workflows represent a client/server templates that can be used to implement a Federated Learning workflow using TensorFlow/Keras.
+
+*TensorFlow_FL_Client_Task:* is a Federated Learning Client task template using TensorFlow/Keras.
+
+*TensorFlow_FL_Server_Task:* is a Federated Learning Server task template using TensorFlow/Keras.
+
+=== Federated Learning Workflows
+
+The following workflows uses the federated learning to train a deep Convolutional Neural Network (ConvNet/CNN) on the https://www.cs.toronto.edu/~kriz/cifar.html[CIFAR10 images dataset] using the https://flower.dev/[Flower] library.
+
+*PyTorch_Federated_Learning_Example:* shows an example of Federated Learning workflow using PyTorch.
+
+*TensorFlow_Federated_Learning_Example:* shows an example of Federated Learning workflow using TensorFlow/Keras.
+
+
+References:
+
+1. http://proceedings.mlr.press/v54/mcmahan17a/mcmahan17a.pdf[Communication-Efficient Learning of Deep Networks from Decentralized Data]
+
+2. https://arxiv.org/pdf/2007.14390.pdf[Flower: A Friendly Federated Learning Research Framework]
+
 == Model as a Service for Machine Learning (MaaS_ML)
 
 Once a predictive model is built, tested and validated, you can easily use it in real world production pipelines by deploying it as a REST Web Service via the MaaS_ML service.
