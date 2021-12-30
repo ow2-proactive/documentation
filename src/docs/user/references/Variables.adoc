@@ -148,9 +148,9 @@ Examples: PA:CRON will accept "5 * * * \*" but not "* * * *" (missing minutes su
 * *PA:CATALOG_OBJECT*, *PA:CATALOG_OBJECT(kind)*, *PA:CATALOG_OBJECT(,contentType)*, *PA:CATALOG_OBJECT(kind,contentType)* : variable syntax must be a valid expression that matches the following pattern: `bucketName/objectName[/revision]`.
 Note that the revision sub-pattern is a hash code number represented by 13 digit. +
 A filter can be specified in the PA:CATALOG_OBJECT model. In that case, the variable value must be a catalog object which matches the kind and content type requirements.
-The scheduler server verifies that the object exists in the catalog and fulfills the requirements during workflow submission. +
+The scheduler server verifies that the object exists in the catalog and fulfills the requirements when the workflow is submitted. +
 Examples: PA:CATALOG_OBJECT will accept "bucket-example/object-example/1539310165443" and "bucket-example/object-example" but not "bucket-example/object-example/153931016" (invalid revision number) and "bucket-example/" (missing object name).
-PA:CATALOG_OBJECT(Script,text/x-python) will only accept catalog objects which is a Python script but not a workflow object or a Groovy script.
+PA:CATALOG_OBJECT(Script,text/x-python) will only accept a catalog object which is a Python script but not a workflow object or a Groovy script.
 * *PA:JSON* : variable syntax must be a valid JSON expression as defined in http://www.json.org/[JSON doc]. +
 Examples: PA:JSON will accept {"name": "John", "city":"New York"} and empty values like {} or [{},{}], but not ["test" : 123] (Unexpected character ':') and {test : 123} (Unexpected character 't').
 * *PA:NOT_EMPTY_STRING* : variable must be provided with a non-empty string value.
