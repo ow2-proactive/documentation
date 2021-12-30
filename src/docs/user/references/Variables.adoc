@@ -147,7 +147,7 @@ Examples: PA:CRON will accept "5 * * * \*" but not "* * * *" (missing minutes su
 * *PA:SPEL(SpEL expression)* : variable syntax will be evaluated by a https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[SpEL] expression. Refer to next paragraph.
 * *PA:CATALOG_OBJECT*, *PA:CATALOG_OBJECT(kind)*, *PA:CATALOG_OBJECT(,contentType)*, *PA:CATALOG_OBJECT(kind,contentType)* : variable syntax must be a valid expression that matches the following pattern: `bucketName/objectName[/revision]`.
 Note that the revision sub-pattern is a hash code number represented by 13 digit. +
-A filter can be specified in the PA:CATALOG_OBJECT model. In that case, the variable value must be a catalog object which matches the kind and content type requirements.
+A filter can be specified in the PA:CATALOG_OBJECT model. In that case, the variable value must be a catalog object which matches the kind and content type requirements (case insensitive).
 The scheduler server verifies that the object exists in the catalog and fulfills the requirements when the workflow is submitted. +
 Examples: PA:CATALOG_OBJECT will accept "bucket-example/object-example/1539310165443" and "bucket-example/object-example" but not "bucket-example/object-example/153931016" (invalid revision number) and "bucket-example/" (missing object name).
 PA:CATALOG_OBJECT(Script,text/x-python) will only accept a catalog object which is a Python script but not a workflow object or a Groovy script.
