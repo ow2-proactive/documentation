@@ -1585,7 +1585,7 @@ AutoFeat currently supports the following encoding methods:
 - Hash: maps each category to an integer within a pre-determined range n_components. n_components is the number of dimensions, in other words, the number of bits to use to represent the feature. We use 8 bits by default .
 
 The most of these methods are implemented using the python link:https://contrib.scikit-learn.org/category_encoders/[Category Encoders] library.
-As we already mentioned, the performance of ML algorithms depends on how categorical variables are encoded. The results produced by the model vary depending on the used encoding techniques. Thus, the hardest part of categorical encoding can sometimes be finding the right categorical encoding method.
+As we already mentioned, the performance of ML algorithms depends on how categorical variables are encoded. The results produced by the model vary depending on the used encoding technique. Thus, the hardest part of categorical encoding can sometimes be finding the right categorical encoding method.
 
 There are numerous research papers and studies dedicated to the analysis of the performance of categorical encoding approaches applied to different datasets. Based on the common factors shared by the datasets using the same encoding method, we have implemented an algorithm for finding the best suited method for your data.
 
