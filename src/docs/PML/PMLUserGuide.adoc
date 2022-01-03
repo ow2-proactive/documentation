@@ -410,6 +410,50 @@ The following workflows represent python templates that can be used to implement
 
 *R_Task:* is a simple R task template pre-configured to run with `Distributed_Auto_ML`.
 
+
+[[_FL]]
+
+== Federated Learning (FL)
+
+https://ai.googleblog.com/2017/04/federated-learning-collaborative.html[Federated Learning (FL)] enables to train an algorithm across multiple decentralized devices (or servers) holding local data samples, without exchanging them.
+The `federated-learning` bucket contains a few examples of Federated Learning workflows that can be easily used to build a common and robust machine learning model without sharing data, thus allowing to address critical issues such as data privacy, data security, data access rights and access to heterogeneous data.
+This bucket uses the https://flower.dev/[Flower] library to implement federated learning workflows.
+The https://flower.dev/[Flower] library is a friendly federated learning framework that presents a unified approach for federated learning.
+It help federating any workload using any ML framework, and any programming language.
+
+image::FlowerArchitecture.png[align=center]
+
+=== PyTorch Federated Learning Tasks
+
+The following workflows represent a client/server templates that can be used to implement a Federated Learning workflow using PyTorch.
+
+*PyTorch_FL_Client_Task:* is a Federated Learning Client task template using PyTorch.
+
+*PyTorch_FL_Server_Task:* is a Federated Learning Server task template using PyTorch.
+
+=== TensorFlow Federated Learning Tasks
+
+The following workflows represent a client/server templates that can be used to implement a Federated Learning workflow using TensorFlow/Keras.
+
+*TensorFlow_FL_Client_Task:* is a Federated Learning Client task template using TensorFlow/Keras.
+
+*TensorFlow_FL_Server_Task:* is a Federated Learning Server task template using TensorFlow/Keras.
+
+=== Federated Learning Workflows
+
+The following workflows uses the federated learning to train a deep Convolutional Neural Network (ConvNet/CNN) on the https://www.cs.toronto.edu/~kriz/cifar.html[CIFAR10 images dataset] using the https://flower.dev/[Flower] library.
+
+*PyTorch_Federated_Learning_Example:* shows an example of Federated Learning workflow using PyTorch.
+
+*TensorFlow_Federated_Learning_Example:* shows an example of Federated Learning workflow using TensorFlow/Keras.
+
+
+References:
+
+1. http://proceedings.mlr.press/v54/mcmahan17a/mcmahan17a.pdf[Communication-Efficient Learning of Deep Networks from Decentralized Data]
+
+2. https://arxiv.org/pdf/2007.14390.pdf[Flower: A Friendly Federated Learning Research Framework]
+
 == Model as a Service for Machine Learning (MaaS_ML)
 
 Once a predictive model is built, tested and validated, you can easily use it in real world production pipelines by deploying it as a REST Web Service via the MaaS_ML service.
@@ -1524,6 +1568,130 @@ The following workflow example is available on the `model_as_a_service` bucket u
 This example trains a Mnist model, starts a service instance where the trained model is deployed as a service using the Maas_DL PSA service.
 
 image::NEW_MAAS_DL_MNIST_Workflow_Example.PNG[align=center]
+
+== AutoFeat
+
+The performance of a machine learning model not only depends on the model and the hyper-parameters but also on how we process and feed different types of variables to the model.
+
+Before going for the modelling, there are various tasks we require to perform as a part of the data preparation. Encoding categorical data is one of such tasks which is considered crucial. As we know, most of the data in real life come with categorical string values and most of the machine learning models basically perform mathematical operations. But the harsh truth is that mathematics is totally dependent on numbers. So in short we can say that most of the machine learning models only accept numerical variables, not strings and these numbers can be float or integer. Thereafter, preprocessing and encoding the categorical variables becomes a necessary step, such we need to convert these categorical variables to numbers which can help in predicting the outcomes in a machine learning task.
+
+AutoFeat provides a complete solution to assist data scientists to encode successfully their categorical data.
+
+In real-world problems, most of the time we require choosing one encoding method for the proper working of the model. Working with different encoders can vary the results of the model.
+
+AutoFeat currently supports the following encoding methods:
+
+- Label: converts each value in a categorical feature into an integer value between 0 and n-1, where n is the number of distinct categories of the variable.
+- Binary: stores categories as binary bitstrings.
+- OneHot: creates a new feature for each category in the Categorical Variable and replaces it with either 1 (presence of the feature) or 0 (absence of the feature). The number of the new features depends on the number of categories in the Categorical Variable.
+- Dummy: transforms the categorical variable into a set of binary variables (also known as dummy variables). The dummy encoding is a small improvement over the one-hot-encoding, such it uses n-1 features to represent n categories.
+- BaseN: encodes the categories into arrays of their base-n representation. A base of 1 is equivalent to one-hot encoding and a base of 2 is equivalent to binary encoding.
+- Target: replaces a categorical value with the mean of the target variable.
+- Hash: maps each category to an integer within a pre-determined range n_components. n_components is the number of dimensions, in other words, the number of bits to use to represent the feature. We use 8 bits by default .
+
+The most of these methods are implemented using the python link:https://contrib.scikit-learn.org/category_encoders/[Category Encoders] library.
+As we said earlier, the performance of ML algorithms depends on how categorical variables are encoded. The results produced by the model varies from different encoding techniques used. Thus, the hardest part of categorical encoding can sometimes be finding the right categorical encoding method.
+
+There are numerous research papers and studies dedicated to analyzing the performance of categorical encoding approaches to different datasets. Based on the common factors shared by the datasets using the same encoding method, we have implemented an algorithm for finding the method best suited for your data. This can help the data scientist to start encoding smarter.
+
+To access the AutoFeat page, please follow the steps below:
+
+Open the link:https://try.activeeon.com/studio[Studio Portal].
+
+Create a new workflow.
+
+Drag and drop the <<Import_Data_Interactive>> task from the *machine-learning* bucket in the ProActive Machine Learning. The <<Import_Data_Interactive>> workflow enables users to easily import, manipulate and encode successfully their data.
+
+Click on the task and click `General Parameters` in the left to change the default parameters of this task.
+
+Put in *FILE_URL* variable the S3 link to upload your dataset.
+
+Set the other parameters according to your dataset format.
+
+Execute the workflow by setting the different workflow's variables as described in the Table below.
+
+.Import_Data_Interactive_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `TASK_ENABLED`
+| If False, the task will be ignored, it will not be executed.
+| Boolean (default=True)
+| `IMPORT_FROM`
+| Selects the type of data source.
+| List [PA:URL,PA:URI,PA:USER_FILE,PA:GLOBAL_FILE] (default=PA:URL)
+| `FILE_PATH`
+| Inserts a file path/name.
+| String
+| `FILE_DELIMITER`
+| Defines a delimiter to use.
+| String (default=;)
+| `LIMIT_OUTPUT_VIEW`
+|  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
+| Int (-1 means preview all the rows)
+|===
+
+Open the link:https://try.activeeon.com/automation-dashboard/#/portal/workflow-execution[Workflow Execution Portal].
+
+You can now access the AutoFeat Page by clicking on the endpoint.
+
+You will be redirected to AutoFeat page which initially contains three tabs we describe in the following sections.
+
+=== Data Preview
+
+AutoFeat loads data from external sources. The dataset could be potentially very big. Initially, Only the 10 first data rows are displayed.
+
+The *Refresh* button enables users to see the last updates made on their data.
+[[_Data_preview]]
+image::AutoFeat_data_preview.png[align=center]
+
+=== Column summaries
+
+Whenever AutoFeat loads data from external sources, it also identifies the datatype of each column. AutoFeat does a great job at datatype recognition. Each decision can be overridden manually by the user, if required.
+
+AutoFeat also creates some summary statistics for each column. A table is displaying the missing values, minimum, maximum, mean and zeros for each numerical feature, and the cardinality (category counts) for each categorical feature.
+
+[[_Column_summaries]]
+image::AutoFeat_column_summaries.png[align=center]
+
+=== Edit column names and types
+A preview of the data is displayed in the *Edit Column Names and Types* as follows.
+
+[[_Edit_column_names_and_types]]
+image::AutoFeat_edit_column_names_and_types.png[align=center]
+
+It is possible to change a column information. These changes can include:
+
+- _Column Name_: There should rarely be a reason to change the field name.
+
+- _Column Type_: AutoFeat automatically recognizes the data type, so the default settings typically do not need to be changed.There are two different data types; *Categorical* and *Numerical*.
+
+- _Category Type_: Categorical variables can be divided into two categories; *Ordinal* such the categories have an inherent order and *Nominal* if the categories do not have any inherent order.
+
+- _Label_: Check this checkbox to select the label column. Label column is the feature about which we want to gain a deeper understanding.
+
+- _Coding Method_: The encoding method used for converting the categorical data values into numeric values. The value is set to *Auto* by default. Thereafter, the method best suited for encoding the categorical feature is automatically identified. The data scientist still has the power to override every decision and select another encoding method from the drop-down menu. Different methods are supported by AutoFeat such as *Label*, *OneHot*, *Dummy*, *Binary*, *Base N*, *Hash* and *Target*. Some of those methods require specifying additional encoding parameters. These parameters vary depending on the selected (e.g., the base and the number of components for BaseN and Hash, respectively, and the target column for Target encoding method). Some of those values are set by default, if no values are specified by the user.
+
+[[_Edit_column_names_and_types]]
+image::AutoFeat_edit_column_names_and_types_encoding_parameters.png[align=center]
+
+It is also possible to perform the following actions on the dataset:
+
+- *Save*, to save the last changes made on a column information.
+- *Restore*, to restore the original version of the dataset loaded from the external source.
+- *Delete Column*, to delete a column from the dataset.
+- *Preview Encoded Data*, to display the encoding results in a new tab.
+
+Once the encoding parameters are set, the user can proceed to display the encoded dataset by clicking on the *Preview Encoded Data*. He can also check and compare different encoding methods and/or parameters based on the obtained results.
+
+=== Encoded data
+
+This page displays the data encoding results based on the selected parameters. At this stage, the user can validate the results by clicking on the button *Proceed*, or erase the encoded dataset by clicking on the button *Delete*.
+
+The user can also download the results as a csv file by clicking on the *Download* button.
+
+[[_Encoded_data]]
+image::AutoFeat_encoded_data.png[align=center]
 
 == ProActive Analytics
 
