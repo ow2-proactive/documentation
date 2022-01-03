@@ -1546,13 +1546,13 @@ image::NEW_MAAS_DL_MNIST_Workflow_Example.PNG[align=center]
 
 == AutoFeat
 
-The performance of a machine learning model not only depends on the model and the hyper-parameters but also on how we process and feed different types of variables to the model.
+The performance of a machine learning model depends not only on the model and the hyper-parameters but also on how we process and feed different types of variables to the model.
 
-Before going for the modelling, there are various tasks we require to perform as a part of the data preparation. Encoding categorical data is one of such tasks which is considered crucial. As we know, most of the data in real life come with categorical string values and most of the machine learning models basically perform mathematical operations. But the harsh truth is that mathematics is totally dependent on numbers. So in short we can say that most of the machine learning models only accept numerical variables, not strings and these numbers can be float or integer. Thereafter, preprocessing and encoding the categorical variables becomes a necessary step, such we need to convert these categorical variables to numbers which can help in predicting the outcomes in a machine learning task.
+Before starting the modelling phase, it is required to perform various tasks for data preparation. Encoding categorical data is one of the most crucial tasks. In real life, data commonly come with categorical string values and most of the machine learning models perform mathematical operations. However, the harsh truth is that mathematics is totally dependent on numbers. As a matter of fact, we can say that most of the machine learning models only accept numerical variables (generally floats or integers) and not strings. Then, preprocessing and encoding the categorical variables become a crucial step to convert these variables into numbers that can help in predicting the results in a machine learning task.
 
 AutoFeat provides a complete solution to assist data scientists to encode successfully their categorical data.
 
-In real-world problems, most of the time we require choosing one encoding method for the proper working of the model. Working with different encoders can vary the results of the model.
+In real-world problems, most of the time we require choosing one encoding method for the proper working of the model. Working with different encoders can influence the results of the model.
 
 AutoFeat currently supports the following encoding methods:
 
@@ -1565,9 +1565,9 @@ AutoFeat currently supports the following encoding methods:
 - Hash: maps each category to an integer within a pre-determined range n_components. n_components is the number of dimensions, in other words, the number of bits to use to represent the feature. We use 8 bits by default .
 
 The most of these methods are implemented using the python link:https://contrib.scikit-learn.org/category_encoders/[Category Encoders] library.
-As we said earlier, the performance of ML algorithms depends on how categorical variables are encoded. The results produced by the model varies from different encoding techniques used. Thus, the hardest part of categorical encoding can sometimes be finding the right categorical encoding method.
+As we already mentioned, the performance of ML algorithms depends on how categorical variables are encoded. The results produced by the model vary depending on the used encoding technique. Thus, the hardest part of categorical encoding can sometimes be finding the right categorical encoding method.
 
-There are numerous research papers and studies dedicated to analyzing the performance of categorical encoding approaches to different datasets. Based on the common factors shared by the datasets using the same encoding method, we have implemented an algorithm for finding the method best suited for your data. This can help the data scientist to start encoding smarter.
+There are numerous research papers and studies dedicated to the analysis of the performance of categorical encoding approaches applied to different datasets. Based on the common factors shared by the datasets using the same encoding method, we have implemented an algorithm for finding the best suited method for your data.
 
 To access the AutoFeat page, please follow the steps below:
 
@@ -1583,7 +1583,7 @@ Put in *FILE_URL* variable the S3 link to upload your dataset.
 
 Set the other parameters according to your dataset format.
 
-Execute the workflow by setting the different workflow's variables as described in the Table below.
+Execute the workflow by setting the different workflow variables as described in the Table below.
 
 .Import_Data_Interactive_Task variables
 [cols="2,5,2"]
@@ -1608,13 +1608,13 @@ Execute the workflow by setting the different workflow's variables as described 
 
 Open the link:https://try.activeeon.com/automation-dashboard/#/portal/workflow-execution[Workflow Execution Portal].
 
-You can now access the AutoFeat Page by clicking on the endpoint.
+You can now access the AutoFeat Page by clicking on the endpoint `AutoFeat`.
 
-You will be redirected to AutoFeat page which initially contains three tabs we describe in the following sections.
+You will be redirected to AutoFeat page which initially contains three tabs that we describe in the following sections.
 
 === Data Preview
 
-AutoFeat loads data from external sources. The dataset could be potentially very big. Initially, Only the 10 first data rows are displayed.
+AutoFeat loads data from external sources. The dataset could be potentially very large. Initially, only the 10 first data rows are displayed.
 
 The *Refresh* button enables users to see the last updates made on their data.
 [[_Data_preview]]
@@ -1639,13 +1639,13 @@ It is possible to change a column information. These changes can include:
 
 - _Column Name_: There should rarely be a reason to change the field name.
 
-- _Column Type_: AutoFeat automatically recognizes the data type, so the default settings typically do not need to be changed.There are two different data types; *Categorical* and *Numerical*.
+- _Column Type_: AutoFeat automatically recognizes the data type, so the default settings typically do not need to be changed. There are two different data types; *Categorical* and *Numerical*.
 
 - _Category Type_: Categorical variables can be divided into two categories; *Ordinal* such the categories have an inherent order and *Nominal* if the categories do not have any inherent order.
 
-- _Label_: Check this checkbox to select the label column. Label column is the feature about which we want to gain a deeper understanding.
+- _Label_: Check this checkbox to select the label column.
 
-- _Coding Method_: The encoding method used for converting the categorical data values into numeric values. The value is set to *Auto* by default. Thereafter, the method best suited for encoding the categorical feature is automatically identified. The data scientist still has the power to override every decision and select another encoding method from the drop-down menu. Different methods are supported by AutoFeat such as *Label*, *OneHot*, *Dummy*, *Binary*, *Base N*, *Hash* and *Target*. Some of those methods require specifying additional encoding parameters. These parameters vary depending on the selected (e.g., the base and the number of components for BaseN and Hash, respectively, and the target column for Target encoding method). Some of those values are set by default, if no values are specified by the user.
+- _Coding Method_: The encoding method used for converting the categorical data values into numerical values. The value is set to *Auto* by default. Thereafter, the best suited method for encoding the categorical feature is automatically identified. The data scientist still has the ability to override every decision and select another encoding method from the drop-down menu. Different methods are supported by AutoFeat such as *Label*, *OneHot*, *Dummy*, *Binary*, *Base N*, *Hash* and *Target*. Some of those methods require specifying additional encoding parameters. These parameters vary depending on the selected method (e.g., the base and the number of components for BaseN and Hash, respectively, and the target column for Target encoding method). Some of those values are set by default, if no values are specified by the user.
 
 [[_Edit_column_names_and_types]]
 image::AutoFeat_edit_column_names_and_types_encoding_parameters.png[align=center]
