@@ -797,7 +797,7 @@ image::MAAS_ML_Delete_Service.PNG[align=center]
 
 There is also one more action that can be executed from Service Automation Portal which is:
 
-- *Update_MaaS_ML_Parameters*: This action enables you to update the variables values associated
+- *Update_MaaS_ML_Parameters*: This action enables you to update the variable values associated
 to the MaaS_ML instance according to your new preferences.
 
 ==== MaaS_ML Analytics
@@ -813,9 +813,9 @@ page by clicking on the instance's endpoint which contains 4 tabs:
 
 
 When clicking on the endpoint, the user is redirected to a 4 tabs webpage. By default, the Audit and
-Traceability tab opens in which the user can check the different chosen values of the MaaS_ML instance
-variables. In addition, the traceability information and warnings are listed in a table where each row represents
-the initialization, deployment, prediction etc... information during different date/time(s).
+Traceability tab opens. In this page, the user user can check the different chosen values of the MaaS_ML instance
+variables. In addition, the MaaS_ML traceability information and warnings are listed in a table where each row represents information about
+the initialization, deployment, prediction etc... corresponding to different date/time(s).
 The figure below shows an overview of the Audit and Traceability tab.
 
 image::traceability1.png[align=center]
