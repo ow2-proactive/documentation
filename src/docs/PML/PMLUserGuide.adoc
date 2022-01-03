@@ -811,7 +811,6 @@ page by clicking on the instance's endpoint which contains 4 tabs:
 
 ===== Audit and Traceability
 
-
 When clicking on the endpoint, the user is redirected to a 4 tabs webpage. By default, the Audit and
 Traceability tab opens. In this page, the user can check the different chosen values of the MaaS_ML instance
 variables. In addition, the MaaS_ML traceability information and warnings are listed in a table where each row represents information about
@@ -819,11 +818,6 @@ the initialization, deployment, prediction etc... corresponding to different dat
 The figure below shows an overview of the Audit and Traceability tab.
 
 image::traceability1.png[align=center]
-
-
-
-
-
 
 ===== Dataset Analytics
 As MaaS_ML supports versioning, you are able to deploy multiple model versions for the same model type.
