@@ -813,7 +813,7 @@ page by clicking on the instance's endpoint which contains 4 tabs:
 
 
 When clicking on the endpoint, the user is redirected to a 4 tabs webpage. By default, the Audit and
-Traceability tab opens. In this page, the user user can check the different chosen values of the MaaS_ML instance
+Traceability tab opens. In this page, the user can check the different chosen values of the MaaS_ML instance
 variables. In addition, the MaaS_ML traceability information and warnings are listed in a table where each row represents information about
 the initialization, deployment, prediction etc... corresponding to different date/time(s).
 The figure below shows an overview of the Audit and Traceability tab.
