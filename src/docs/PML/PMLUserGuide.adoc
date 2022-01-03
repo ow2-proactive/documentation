@@ -1568,7 +1568,7 @@ image::NEW_MAAS_DL_MNIST_Workflow_Example.PNG[align=center]
 
 The performance of a machine learning model depends not only on the model and the hyper-parameters but also on how we process and feed different types of variables to the model.
 
-Before going for the modelling, we require to perform various tasks for data preparation. Encoding categorical data is one of the most crucial tasks. In real life, data commonly come with categorical string values and most of the machine learning models perform mathematical operations. However, the harsh truth is that mathematics is totally dependent on numbers. As a matter of fact, we can say that most of the machine learning models only accept numerical variables (generally floats or integers) and not strings. Then, preprocessing and encoding the categorical variables become a crucial step to convert these variables into numbers that can help in predicting the results in a machine learning task.
+Before starting the modelling phase, it is required to perform various tasks for data preparation. Encoding categorical data is one of the most crucial tasks. In real life, data commonly come with categorical string values and most of the machine learning models perform mathematical operations. However, the harsh truth is that mathematics is totally dependent on numbers. As a matter of fact, we can say that most of the machine learning models only accept numerical variables (generally floats or integers) and not strings. Then, preprocessing and encoding the categorical variables become a crucial step to convert these variables into numbers that can help in predicting the results in a machine learning task.
 
 AutoFeat provides a complete solution to assist data scientists to encode successfully their categorical data.
 
@@ -1591,7 +1591,7 @@ There are numerous research papers and studies dedicated to the analysis of the 
 
 To access the AutoFeat page, please follow the steps below:
 
-Open the link:https://trydev2.activeeon.com/studio[Studio Portal].
+Open the link:https://try.activeeon.com/studio[Studio Portal].
 
 Create a new workflow.
 
@@ -1626,7 +1626,7 @@ Execute the workflow by setting the different workflow variables as described in
 | Int (-1 means preview all the rows)
 |===
 
-Open the link:https://trydev2.activeeon.com/automation-dashboard/#/portal/workflow-execution[Workflow Execution Portal].
+Open the link:https://try.activeeon.com/automation-dashboard/#/portal/workflow-execution[Workflow Execution Portal].
 
 You can now access the AutoFeat Page by clicking on the endpoint `AutoFeat`.
 
