@@ -853,7 +853,7 @@ When the MaaS_ML service instance is running, the user is able to access the Maa
 
 ===== Audit and Traceability
 
-When clicking on the endpoint, the user is redirected to a 4 tabs webpage. By default, the Audit and Traceability page is opened. In this page, the user can check the different chosen values of the MaaS_ML instance variables. In addition, the MaaS_ML traceability information and warnings are listed in a table where each row represents information about the initialization, deployment, prediction, etc... corresponding to different date/time(s). The figure below shows an overview of the Audit and Traceability tab.
+When clicking on the endpoint, the user is redirected to a 4 tabs webpage. By default, the Audit and Traceability page is opened. In this page, the user can check the different chosen values of the MaaS_ML instance variables. In addition, the MaaS_ML traceability information and warnings are listed in a table where each row represents information about the initialization, deployment, prediction, etc. corresponding to different date/time(s). The figure below shows an overview of the Audit and Traceability tab.
 
 image::traceability1.png[align=center]
 
