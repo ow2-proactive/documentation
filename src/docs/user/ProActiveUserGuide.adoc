@@ -2664,7 +2664,7 @@ It is easy to use, and offers a set of basic operations on signals summarized as
    This operation removes the corresponding ready signals if they already exist. For instance, sending `soft_stop` removes the signal
    `ready_soft_stop` if it already exists among the job signals.
 
- * *checkForSignals*: verifies whether all of the signal given as input exist among the set of job signals.
+ * *checkForSignals*: verifies whether all of the signals given as input exist among the set of job signals.
 
  * *waitFor*, *waitForAny*: blocking instruction that waits until one signal (among those given as input) is added to the set of job signals.
 
@@ -2672,7 +2672,7 @@ It is easy to use, and offers a set of basic operations on signals summarized as
 
  * *getJobSignals*: returns the current job signals and variables.
 
-The specified operations can be perform for signals and for *signals with variables*.
+The specified operations can be performed for both *signals* and *signals with variables*.
 
 A signal can have input variables and updated variables.
 
