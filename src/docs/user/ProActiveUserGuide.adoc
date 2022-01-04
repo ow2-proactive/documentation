@@ -2627,15 +2627,20 @@ Fill up the Task Variable *SIGNALS*, and use those templates in your own workflo
 At a more detailed level and advanced use, the Signal API allows jobs and users to exchange signals using a communication channel provided by the <<_task_synchronization_api,synchronization API>>.
 The typical usage scenario of the Signal API is the following:
 
-  . A job declares to be ready to handle one or more signals. The signals are then displayed in the Workflow Execution portal or Scheduler portal(e.g., display the `soft_stop` signal).
+  . Signals are defined by their name and, optionally, a list of variables. Variables attached to a signal have the same structure as <<_workflow_variables>> but are declared exclusively using the <<_task_signal_api,Signal API>>.
+
+  . If the signal has variables, then a new window will appear where the user can set the variables values and then send the signal with variables to the job. If the signal does not have variables then the window will not appear.
+    Adding variables to a signal allows to enhance the manual control of the workflow execution.
+    After receiving the signal with attached variables, the workflow handles the provided input data properly.
+
+  . A job declares to be ready to handle one or more signals that can have attached variables. The signals are then displayed in the Workflow Execution portal or Scheduler portal(e.g., display the `soft_stop` signal).
 
   . The job waits to receive these signals, or check for their reception regularly.
 
   . A user clicks on the signal displayed in the Workflow Execution portal or Scheduler portal (e.g., click on the `soft_stop` signal), which sends this signal to the job.
 
-  . If the signal has variables, then a new window will appear where the user can set the variables values and then send the signal with variables to the job. If the signal does not have variables then the window will not appear.
-
   . At the signal reception, the job executes the corresponding behavior (defined in the workflow).
+    When the signal has attached variables, the workflow will receive the signal only if the received variables are compatible with the variables set at the ready instruction.
 
 As already mentioned, the Signal API uses the <<_task_synchronization_api,synchronization API>> to store jobs' signals, with respect to the following specifications:
 
@@ -2655,30 +2660,26 @@ The Signal API is available inside ProActive Tasks through the *signalapi* <<_gl
 It is easy to use, and offers a set of basic operations on signals summarized as follows:
 
  * *readyForSignal*: declares that the current job is ready to receive and handle one or more signals with or without variables.
+  Variables are passed as a list of <<_job_variables>> objects.
    This operation constructs new signals (by adding the prefix `ready_` to the input signals), then adds them to job signals.
    For example, if a job declares ready for the signal `soft_stop`, the signal `ready_soft_stop` is added to the set of job signals.
    Additionally, if the input signal (e.g., `soft_stop`) already exists among the job signals (which means that it has been sent and handled previously),
     the operation ready for signal automatically removes it, thus the job is ready again to receive and handle the same signal.
 
- * *sendSignal*, *sendManySignals*: adds one or more signals with or without variables given as input to the current job signals.
+ * *sendSignal*, *sendManySignals*: sends programmatically one or more signals with or without variables given as input to the current job signals.
    This operation removes the corresponding ready signals if they already exist. For instance, sending `soft_stop` removes the signal
    `ready_soft_stop` if it already exists among the job signals.
+    Though signals are meant to be sent manually by a human user through to ProActive web portals, it is also possible to use these methods to send them programmatically inside the workflow.
 
- * *checkForSignals*: verifies whether all of the signals given as input exist among the set of job signals.
+* *checkForSignals*: verifies whether all of the signals given as input exist among the set of job signals.
 
  * *waitFor*, *waitForAny*: blocking instruction that waits until one signal (among those given as input) is added to the set of job signals.
+    The instruction _waitFor_ will return a map that represents the name and value of the signal variables.
+    _waitForAny_ instruction returns the first signal object that is received among those given as input
 
  * *removeSignal*, *removeManySignals*: removes one or more signals from the set of job signals.
 
  * *getJobSignals*: returns the current job signals and variables.
-
-The specified operations can be performed for both *signals* and *signals with variables*.
-
-A signal can have input variables and updated variables.
-
-The variables of a signal have predefined values called input variables that can be set using readyForSignal operation.
-
-The updated variables of a signal can be set using sendSignal and sendManySignals operations.
 
 In addition to the above operations available within ProActive Tasks, users and third-party systems can send signals
 to a specific job via link:/doc/rest/#1218178377[ProActive Signals REST endpoint].
@@ -2727,7 +2728,9 @@ signalapi.readyForSignal("soft_stop", signalVariables)
 println("Job signals "+ signalapi.getJobSignals())
 
 //Wait util the 'soft_stop' signal with variables is sent (via the Workflow Execution portal, Scheduler portal or REST API)
-signalapi.waitFor("soft_stop")
+outputParameters = signalapi.waitFor("soft_stop")
+
+println "Output parameters = " + outputParameters
 
 //Remove the 'soft_stop' signal from the set of job signals
 signalapi.removeSignal("soft_stop")
