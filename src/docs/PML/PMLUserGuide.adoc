@@ -1628,7 +1628,9 @@ Execute the workflow by setting the different workflow variables as described in
 
 Open the link:https://try.activeeon.com/automation-dashboard/#/portal/workflow-execution[Workflow Execution Portal].
 
-You can now access the AutoFeat Page by clicking on the endpoint `AutoFeat`.
+You can now access the AutoFeat Page by clicking on the endpoint `AutoFeat` as shown in the image below.
+
+image::AutoFeat_endpoint.png[align=center]
 
 You will be redirected to AutoFeat page which initially contains three tabs that we describe in the following sections.
 
@@ -2916,6 +2918,35 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 NOTE: Your CSV file should be in a table format. See the example below.
 
 image::csv_file_organisation.png[align="center"]
+
+===== Import_Data_Interactive
+
+*Task Overview:* Load data from external sources, predict its features types and assist data scientists to easily encode categorical data.
+
+*Task Variables:*
+
+.Import_Data_Interactive_Task variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+| `TASK_ENABLED`
+| If False, the task will be ignored, it will not be executed.
+| Boolean (default=True)
+| `IMPORT_FROM`
+| Selects the type of data source.
+| List [PA:URL,PA:URI,PA:USER_FILE,PA:GLOBAL_FILE] (default=PA:URL)
+| `FILE_PATH`
+| Inserts a file path/name.
+| String
+| `FILE_DELIMITER`
+| Defines a delimiter to use.
+| String (default=;)
+| `LIMIT_OUTPUT_VIEW`
+|  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
+| Int (-1 means preview all the rows)
+|===
+
+NOTE: More details about the categorical data encoding process can be found in the subsection <<AutoFeat>>.
 
 ===== Import_Model
 
