@@ -2624,9 +2624,12 @@ You can try the <<_examples_2,examples>> below to better understand how it works
 In summary and for simple use, just go to <<_proactive_studio, ProActive Studio>> and use the predefined templates in the _Controls_ bucket, _4. Signal Templates_ project: for example: *Check_For_Signals*, *Wait_For_Signals* or *Wait_For_Signal_With_Variables*.
 Fill up the Task Variable *SIGNALS*, and use those templates in your own workflow to be able to receive input from, for instance, the Workflow Execution portal or Scheduler portal.
 *Check_For_Signals* is a template workflow that sends a ready notification for all the signals specified in the variable SIGNALS, then loops until one signal among those specified is received by the job.
+This workflow is composed by two tasks. The first sends a ready notification for all of the signals. The second task checks if the signals are received and triggers the first task in a loop untill all of the signals are received.
 *Wait_For_Signals* also sends a ready notification for all the signals specified in the variable SIGNALS, loops until one signal among those specified is received by the job and then removes the signal.
-*Wait_For_Signal_With_Variables* is template workflow that waits until one signal (with input parameters) that is specified in the variable SIGNAL is added to the set of job signals.
+Unlike Check_For_Signals, Wait_For_Signals workflow contains a single task that sends a ready notification for all of the signals and then checks if the signals are received. This task is executed in loop untill all of the signals are received.
+*Wait_For_Signal_With_Variables* is a template workflow that waits until one signal (with input parameters) that is specified in the variable SIGNAL is added to the set of job signals.
 The signal's input parameters have predefined values that can be changed when sending the signal.
+The workflow contains a single task that sends a ready nofication for all the signals with input parameters and waits untill all signals with parameters are received.
 
 At a more detailed level and advanced use, the Signal API allows jobs and users to exchange signals using a communication channel provided by the <<_task_synchronization_api,synchronization API>>.
 The typical usage scenario of the Signal API is the following:
