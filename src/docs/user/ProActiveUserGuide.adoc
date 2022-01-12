@@ -2633,7 +2633,7 @@ This workflow allows users to iteratively wait for the reception of one or more 
 *Wait_For_Signals_Reactive* is a template workflow that sends a ready notification for all specified signals in the 'SIGNALS' variable, then waits until one signal among those specified is received.
 This workflow contains no loop. It performs a blocking wait, then immediately triggers some processing at a signal reception.
 
-*Wait_For_Signal_With_Variables* is a template workflow that uses signals having input parameters. It contains a single task that sends a ready notification for all the signals (with input parameters) specified in the variable SIGNALS, then waits until one signal (among those specified) is received.
+*Wait_For_Signal_With_Variables* is a template workflow that uses signals having input parameters. It contains a single task that sends a ready notification for all the signals (with input parameters) specified in the variable SIGNALS, then loops until one signal among those specified is received by the job.
 The signal input parameters have predefined values that can be changed when sending the signal.
 
 At a more detailed level and advanced use, the Signal API allows jobs and users to exchange signals using a communication channel provided by the <<_task_synchronization_api,synchronization API>>.
