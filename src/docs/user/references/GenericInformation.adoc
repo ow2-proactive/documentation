@@ -108,17 +108,47 @@ The following table describes all available generic information:
 |task-level
 |\http://my-server/my-icon.png
 |<<_result_metadata,content.type>>
-|Asseign a MIME content type to a byte array task result
+|Assign a MIME content type to a byte array task result
 |task-level
 |image/png
 |<<_result_metadata,file.name>>
-|Asseign a file name to a byte array task result
+|Assign a file name to a byte array task result
 |task-level
 |image_balloon.png
 |<<_result_metadata,file.extension>>
-|Asseign a file extension to a byte array task result
+|Assign a file extension to a byte array task result
 |task-level
 |.png
+|link:../user/ProActiveUserGuide.html#_run_as_me_generic_info[RUNAS_METHOD]
+|Allows overriding the impersonation method used when executing the task. Can be `pwd`, `key` or `none`.
+|job-level, task-level
+|`pwd`
+|link:../user/ProActiveUserGuide.html#_run_as_me_generic_info[RUNAS_USER]
+|Allows overriding the login name used during the impersonation. This allows to run a task under a different user as the user who submitted the workflow.
+|job-level, task-level
+|bob
+|link:../user/ProActiveUserGuide.html#_run_as_me_generic_info[RUNAS_DOMAIN]
+|Allows defining or overriding a user domain that will be attached to the impersonated user. User domains are only used on Windows operating systems.
+|job-level, task-level
+|MyOrganisation
+|link:../user/ProActiveUserGuide.html#_run_as_me_generic_info[RUNAS_PWD]
+|Allows overriding the password attached to the impersonated user. This can be used only when the impersonation method is set to `pwd`.
+|job-level, task-level
+|MyPassword
+|link:../user/ProActiveUserGuide.html#_run_as_me_generic_info[RUNAS_PWD_CRED]
+|Similar to RUNAS_PWD but the password will be defined inside link:../user/ProActiveUserGuide.adoc#_third_party_credentials[Third-Party Credential] instead of inlined in the workflow. This method of defining the password should be preferred to RUNAS_PWD for security reasons. The value of RUNAS_PWD_CRED must be the third-party credential name containing the user password.
+|job-level, task-level
+|MyPasswordCredName
+|link:../user/ProActiveUserGuide.html#_run_as_me_generic_info[RUNAS_SSH_KEY]
+|Allows overriding the SSH private key attached to the impersonated user. This can be used only when the impersonation method is set to `key`.
+|job-level, task-level
+|-----BEGIN RSA PRIVATE KEY----- +
+MIIEowIBAAKCAQEAp1fwx6R40kIf (...) +
+-----END RSA PRIVATE KEY-----
+|link:../user/ProActiveUserGuide.html#_run_as_me_generic_info[RUNAS_SSH_KEY_CRED]
+|Similar to RUNAS_SSH_KEY but the private key will be defined inside link:../user/ProActiveUserGuide.adoc#_third_party_credentials[Third-Party Credential] instead of inlined in the workflow. This method of defining the SSH private key should be preferred to RUNAS_SSH_KEY for security reasons. The value of RUNAS_SSH_KEY_CRED must be the third-party credential name containing the SSH key.
+|job-level, task-level
+|MySSHKeyCredName
 |<<_python_command,PYTHON_COMMAND>>
 |Python command to use in <<../user/ProActiveUserGuide.adoc#_python,CPython script engine>>.
 |job-level, task-level

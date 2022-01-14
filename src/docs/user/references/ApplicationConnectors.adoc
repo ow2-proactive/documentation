@@ -22,7 +22,7 @@ The Informatica workflow consists of a list of variables described in the follow
 | Workflow
 | Yes
 | String
-| e.g. `https://xxx.informaticacloud.com/test/test`
+| e.g. `\https://xxx.informaticacloud.com/test/test`
 | `USERNAME`
 | Username to use for the authentication.
 | Workflow

@@ -122,7 +122,7 @@ ProActive Workflows supports tasks in many scripting languages. The currently su
 link:http://groovy-lang.org/[Groovy, window="_blank"],
 link:https://www.jython.org[Jython, window="_blank"],
 link:https://www.python.org/[Python, window="_blank"],
-link:https://jruby.org[JRuby, window="_blank"],
+link:https://www.jruby.org[JRuby, window="_blank"],
 link:https://docs.oracle.com/javase/8/docs/technotes/guides/scripting/index.html#jsengine[Javascript, window="_blank"],
 link:https://www.scala-lang.org/[Scala, window="_blank"],
 link:https://docs.microsoft.com/fr-fr/powershell/scripting/overview?view=powershell-5.0[Powershell, window="_blank"],
@@ -1482,38 +1482,106 @@ To do so, a Generic Information is required for the desired task, with the key
 `PRE_SCRIPT_AS_FILE`, and the path of the file that you want to save your pre-script as its value.
 
 The path should contain a file name. If it is an absolute path, then the file will be stored in this absolute path.
-If is is a relative path, then the file will be stored in the link:../user/ProActiveUserGuide.html#_local_space[Local Space].
+If it is a relative path, then the file will be stored in the link:../user/ProActiveUserGuide.html#_local_space[Local Space].
 
 If you don't give a specific extension in the path, the extension will be automatically assigned to the corresponding one of the language selected for this pre-script.
 
+[[_run_as_me]]
+=== Run Computation with a user's system account
 
-=== Run computation with your system account
+When workflow tasks are executed inside a <<_glossary_proactive_node,ProActive Node>>, they run by default under the system account used to start the Node.
 
-It is possible to start a task under the job owner if the system is configured for that purpose.
-There are 2 possible ways to run a task under user account
-(in any case, the administrator should have
-link:../admin/ProActiveAdminGuide.html#_run_as_me[set computing hosts] to authorize
-one of the 2 methods):
+The *RunAsMe* mode, also called _user impersonation_, allows to start a workflow Task either:
 
-* Using your *scheduling login and password*: if computing hosts are configured and user is authorized to run a process under his login and password.
-* Using an *SSH key* provided by the administrator: if computing hosts are configured, the administrator should have given user an SSH key.
+ - under the job owner system account (default _RunAsMe_).
+ - under a specific system account (_RunAsUser_).
 
-User must first create a credential containing this key:
+The *RunAsMe* mode is defined in the XML representation of a Task:
 
+[source, xml]
 ----
-$ PROACTIVE_HOME/tools/proactive-create-cred -F config/authentication/keys/pub.key -l username -p userpwd -k path/to/private/sshkey -o myCredentials.cred
+<task name="Linux_Bash_Task"
+    fork="true"
+    runAsMe="true" >
+      <description>
+        <![CDATA[ A task, ran by a bash engine. ]]>
+      </description>
+      <scriptExecutable>
+        <script>
+          <code language="bash">
+            <![CDATA[
+whoami
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
 ----
 
-This command will create a new credentials with *username* as login, *userpwd* as password, using Scheduler public key at
-`config/authentication/keys/pub.key`
-for credentials encryption and using the private SSH key at
-`path/to/private/sshkey`
-provided by administrator. The new credential will be stored in *myCredentials.cred*
+In the ProActive Studio, the RunAsMe mode is available in the Task Properties *Fork Environment* section.
 
-Once created, user must connect the Scheduler using this credential. Then, in order to execute your task under your account
-set *runAsMe=true* in the task.
+image::../images/StudioRunAsMe.png["RunAsMe in Studio",width=300]
 
-TIP: You can now use <<_third_party_credentials,third party credentials>> to store the SSH key with the special entry named *SSH_PRIVATE_KEY*.
+In order to impersonate a user, RunAsMe can use one of the following *methods*:
+
+ - *PWD*: impersonate a user with a login name and password (this is the default, it is also the only mode available on Windows Nodes).
+ - *KEY*: impersonate a user with a login name and SSH private key.
+ - *NONE*: impersonate a user with a login name and https://en.wikipedia.org/wiki/Sudo[sudo].
+
+The above modes are defined by the ProActive server administrator when ProActive Nodes are deployed. It is possible to define for each Node a different RunAsMe mode.
+The underlying operating system need to be configured appropriately in order to impersonate a task.
+
+See link:../admin/ProActiveAdminGuide.html#_run_as_me_admin[RunAsMe section] in the administration guide for further information.
+
+The default mode for RunAsMe is to impersonate as the current user with the user login and password.
+Accordingly, the user's login and password inside ProActive must match the login and password of the user in the target machine's operating system.
+
+It is possible though to impersonate through a different user, using a different password, or even using a different impersonation method as the one configured by default.
+
+This possibility is given by adding <<_generic_information>> described in the below table to the workflow task.
+Each of these generic information can be defined both at task-level or job-level. When at job-level, it will apply to all tasks of this workflow with RunAsMe enabled.
+Other tasks without RunAsMe enabled will ignore these generic information.
+
+
+
+[[_run_as_me_generic_info]]
+.RunAsMe Generic Information
+|===
+|Name |Description |Example value
+
+|`RUNAS_METHOD`
+|Allows overriding the impersonation method used when executing the task. Can be `pwd`, `key` or `none`.
+|`pwd`
+
+|`RUNAS_USER`
+|Allows overriding the login name used during the impersonation. This allows to run a task under a different user as the user who submitted the workflow.
+|bob
+
+|`RUNAS_DOMAIN`
+|Allows defining or overriding a user domain that will be attached to the impersonated user. User domains are only used on Windows operating systems.
+|MyOrganisation
+
+|`RUNAS_PWD`
+|Allows overriding the password attached to the impersonated user. This can be used only when the impersonation method is set to `pwd`.
+|MyPassword
+
+|`RUNAS_PWD_CRED`
+|Similar to RUNAS_PWD but the password will be defined inside <<_third_party_credentials>> instead of inlined in the workflow. This method of defining the password should be preferred to RUNAS_PWD for security reasons. The value of RUNAS_PWD_CRED must be the third-party credential name containing the user password.
+|MyPasswordCredName
+
+|`RUNAS_SSH_KEY`
+|Allows overriding the SSH private key attached to the impersonated user. This can be used only when the impersonation method is set to `key`.
+|-----BEGIN RSA PRIVATE KEY----- +
+MIIEowIBAAKCAQEAp1fwx6R40kIf (...) +
+-----END RSA PRIVATE KEY-----
+
+|`RUNAS_SSH_KEY_CRED`
+|Similar to RUNAS_SSH_KEY but the private key will be defined inside <<_third_party_credentials>> instead of inlined in the workflow. This method of defining the SSH private key should be preferred to RUNAS_SSH_KEY for security reasons. The value of RUNAS_SSH_KEY_CRED must be the third-party credential name containing the SSH key.
+|MySSHKeyCredName
+|===
+
+
+
 
 [[_multi_node_task]]
 === Reserve more than one node for a task execution
