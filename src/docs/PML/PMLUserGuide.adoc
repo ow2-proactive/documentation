@@ -1154,6 +1154,7 @@ Execute the workflow by setting the different workflow's variables as described 
 | String (default="user").
 | `MODEL_SERVICE_NODE_NAME`
 | The name of the node where the service will be deployed. If empty, the service will be deployed on an available node selected randomly.
+| String
 3+^|*Task variables*
 | `SERVICE_ID`
 | The name of the service. Please keep the default value for this variable.
@@ -1634,8 +1635,7 @@ image::AutoFeat_column_summaries.png[align=center]
 === Edit column names and types
 A preview of the data is displayed in the *Edit Column Names and Types* as follows.
 
-[[_Edit_column_names_and_types]]
-image::AutoFeat_edit_column_names_and_types.png[align=center]
+image::AutoFeat_edit_column_names_and_types.png["Edit column names and types",align=center]
 
 It is possible to change a column information. These changes can include:
 
@@ -1649,8 +1649,7 @@ It is possible to change a column information. These changes can include:
 
 - _Coding Method_: The encoding method used for converting the categorical data values into numerical values. The value is set to *Auto* by default. Thereafter, the best suited method for encoding the categorical feature is automatically identified. The data scientist still has the ability to override every decision and select another encoding method from the drop-down menu. Different methods are supported by AutoFeat such as *Label*, *OneHot*, *Dummy*, *Binary*, *Base N*, *Hash* and *Target*. Some of those methods require specifying additional encoding parameters. These parameters vary depending on the selected method (e.g., the base and the number of components for BaseN and Hash, respectively, and the target column for Target encoding method). Some of those values are set by default, if no values are specified by the user.
 
-[[_Edit_column_names_and_types]]
-image::AutoFeat_edit_column_names_and_types_encoding_parameters.png[align=center]
+image::AutoFeat_edit_column_names_and_types_encoding_parameters.png["Edit column names and types",align=center]
 
 It is also possible to perform the following actions on the dataset:
 
@@ -4274,7 +4273,7 @@ NOTE: Torchtext were used to preprocess and load the text input. More informatio
 | Boolean (default=True)
 |===
 
-NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/docs/stable/torchvision/models.html[AlexNet^].
+NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/vision/stable/models.html[AlexNet^].
 
 ===== DenseNet-161
 
@@ -4282,7 +4281,7 @@ NOTE: PyTorch is used to build the model architecture based on https://pytorch.o
 
 *Usage:* It should be connected to <<Train_Image_Classification_Model>>.
 
-NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/docs/stable/torchvision/models.html[DenseNet-161^].
+NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/vision/stable/models.html[DenseNet-161^].
 
 .DenseNet-161_Task variables
 [cols="2,5,2"]
@@ -4302,7 +4301,7 @@ NOTE: PyTorch is used to build the model architecture based on https://pytorch.o
 
 *Usage:* It should be connected to <<Train_Image_Classification_Model>>.
 
-NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/docs/stable/torchvision/models.html[ResNet-18^].
+NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/vision/stable/models.html[ResNet-18^].
 
 .ResNet-161_Task variables
 [cols="2,5,2"]
@@ -4322,7 +4321,7 @@ NOTE: PyTorch is used to build the model architecture based on https://pytorch.o
 
 *Usage:* It should be connected to <<Train_Image_Classification_Model>>.
 
-NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/docs/stable/torchvision/models.html[VGG-16^].
+NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/vision/stable/models.html[VGG-16^].
 
 .VGG-16_Task variables
 [cols="2,5,2"]
