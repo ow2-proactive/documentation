@@ -2683,7 +2683,7 @@ Task Synchronization API can be used for multiple dynamic synchronization patter
 A complete example of Producer / Consumer, _ServiceDeployerConsumer_ can be downloaded link:examples/ServiceDeployerConsumer.xml[here].
 
 [[_task_signal_api]]
-=== Signal API
+=== Signal API and Templates
 
 The *Signal API* is a high-level API that enables users to interact with running jobs via signals (we also call them actions).
 That is, it allows a job to expose specific signals (e.g., `soft_stop` to properly finish a job) that can be triggered by users from the *Workflow Execution portal* or *Scheduler portal*.
