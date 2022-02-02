@@ -755,11 +755,11 @@ Set the following variables:
 | String (default="maas-ml-gui")
 | `ENGINE`
 | Container engine.
+| List (default="docker")
 | `GPU_ENABLED`
 | If True, the service will be configured to use the GPU and the Nvidia 
 Rapids library.
 | Boolean (default=False)
-| List (default="docker")
 | `HTTPS_ENABLED`
 | True if the protocol https is needed for the defined model-service.
 | Boolean (default=False)
