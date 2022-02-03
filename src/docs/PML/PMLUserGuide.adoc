@@ -2916,30 +2916,6 @@ NOTE: For further information, please check the subsection <<AutoFeat>>.
 | `LIMIT_OUTPUT_VIEW`
 |  Specifies how many rows of the dataframe will be previewed in the browser to check the encoding results.
 | Int (-1 means preview all the rows)
-| `NATIVE_SCHEDULER`
-| Name of the Native Scheduler node source to use when the workflow tasks must be scheduled on a native scheduler such as SLURM, LSF, etc.
-| String (default=empty)
-| `NATIVE_SCHEDULER_PARAMS`
-|Parameters given to the native scheduler (SLURM, LSF, etc) while requesting a ProActive node used to execute the workflow tasks.
-| String (default=empty)
-| `NODE_ACCESS_TOKEN`
-|If not empty, the workflow tasks will be run only on nodes that contains the specified token.
-| String (default=empty)
-| `NODE_SOURCE_NAME`
-|If not empty, the workflow tasks will be run only on nodes belonging to the specified node source.
-| String (default=empty)
-| `WORK_DIR`
-| Defines the working directory for the data space used to transfer files automatically between the workflow tasks.
-| String
-| `CONTAINER_PLATFORM`
-| Specifies the type of container platform to be used (no container, docker, singularity, or podman).
-| String (default=docker)
-| `CONTAINER_GPU_ENABLED`
-| If True, containers will run based on images containing libraries that are compatible with GPU.
-| Boolean (default=False)
-| `CONTAINER_IMAGE`
-| Specifies the name of the image that will be used to run the workflow tasks.
-| String (default=Empty).
 |===
 
 ===== Import_Model
