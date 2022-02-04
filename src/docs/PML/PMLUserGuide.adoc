@@ -755,11 +755,11 @@ Set the following variables:
 | String (default="maas-ml-gui")
 | `ENGINE`
 | Container engine.
+| List (default="docker")
 | `GPU_ENABLED`
 | If True, the service will be configured to use the GPU and the Nvidia 
 Rapids library.
 | Boolean (default=False)
-| List (default="docker")
 | `HTTPS_ENABLED`
 | True if the protocol https is needed for the defined model-service.
 | Boolean (default=False)
@@ -1572,42 +1572,21 @@ There are numerous research papers and studies dedicated to the analysis of the 
 
 To access the AutoFeat page, please follow the steps below:
 
-Open the link:https://try.activeeon.com/studio[Studio Portal].
+Open the link:https://try.activeeon.com/automation-dashboard/#/portal/workflow-execution[Workflow Execution Portal].
 
-Create a new workflow.
+Click on the button *Submit a Job* and then search for *Import_Data_And_Automate_Feature_Engineering* workflow as described in the image below.
 
-Drag and drop the <<Import_Data_Interactive>> task from the *machine-learning* bucket in the ProActive Machine Learning. The <<Import_Data_Interactive>> workflow enables users to easily import, manipulate and encode successfully their data.
-
-Click on the task and click `General Parameters` in the left to change the default parameters of this task.
+image::Import_Data_And_Automate_Feature_Engineerin_Search.png[align=center]
 
 Put in *FILE_URL* variable the S3 link to upload your dataset.
 
 Set the other parameters according to your dataset format.
 
-Execute the workflow by setting the different workflow variables as described in the Table below.
+Click on the *Submit* button to start AutoFeat.
 
-.Import_Data_Interactive_Task variables
-[cols="2,5,2"]
-|===
-| *Variable name* | *Description* | *Type*
-| `TASK_ENABLED`
-| If False, the task will be ignored, it will not be executed.
-| Boolean (default=True)
-| `IMPORT_FROM`
-| Selects the type of data source.
-| List [PA:URL,PA:URI,PA:USER_FILE,PA:GLOBAL_FILE] (default=PA:URL)
-| `FILE_PATH`
-| Inserts a file path/name.
-| String
-| `FILE_DELIMITER`
-| Defines a delimiter to use.
-| String (default=;)
-| `LIMIT_OUTPUT_VIEW`
-|  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
-| Int (-1 means preview all the rows)
-|===
+To get more information about the parameters of the service, please check the section <<Import_Data_And_Automate_Feature_Engineering>>.
 
-Open the link:https://try.activeeon.com/automation-dashboard/#/portal/workflow-execution[Workflow Execution Portal].
+image::Import_Data_And_Automate_Feature_Engineering_Submit.png[align=center]
 
 You can now access the AutoFeat Page by clicking on the endpoint `AutoFeat` as shown in the image below.
 
@@ -1635,6 +1614,7 @@ image::AutoFeat_column_summaries.png[align=center]
 === Edit column names and types
 A preview of the data is displayed in the *Edit Column Names and Types* as follows.
 
+[[_Edit_column_names_and_types]]
 image::AutoFeat_edit_column_names_and_types.png["Edit column names and types",align=center]
 
 It is possible to change a column information. These changes can include:
@@ -1649,6 +1629,7 @@ It is possible to change a column information. These changes can include:
 
 - _Coding Method_: The encoding method used for converting the categorical data values into numerical values. The value is set to *Auto* by default. Thereafter, the best suited method for encoding the categorical feature is automatically identified. The data scientist still has the ability to override every decision and select another encoding method from the drop-down menu. Different methods are supported by AutoFeat such as *Label*, *OneHot*, *Dummy*, *Binary*, *Base N*, *Hash* and *Target*. Some of those methods require specifying additional encoding parameters. These parameters vary depending on the selected method (e.g., the base and the number of components for BaseN and Hash, respectively, and the target column for Target encoding method). Some of those values are set by default, if no values are specified by the user.
 
+[[_Edit_column_names_and_types]]
 image::AutoFeat_edit_column_names_and_types_encoding_parameters.png["Edit column names and types",align=center]
 
 It is also possible to perform the following actions on the dataset:
@@ -1657,6 +1638,7 @@ It is also possible to perform the following actions on the dataset:
 - *Restore*, to restore the original version of the dataset loaded from the external source.
 - *Delete Column*, to delete a column from the dataset.
 - *Preview Encoded Data*, to display the encoding results in a new tab.
+- *Cancel*, to discard any changes the user may have made and finish the workflow execution.
 
 Once the encoding parameters are set, the user can proceed to display the encoded dataset by clicking on the *Preview Encoded Data*. He can also check and compare different encoding methods and/or parameters based on the obtained results.
 
@@ -2898,34 +2880,43 @@ NOTE: Your CSV file should be in a table format. See the example below.
 
 image::csv_file_organisation.png[align="center"]
 
-===== Import_Data_Interactive
+===== Import_Data_And_Automate_Feature_Engineering
 
-*Task Overview:* Load data from external sources, predict its features types and assist data scientists to easily encode categorical data.
+*Task Overview:* This workflow provides a complete solution to assist data scientists to successfully load and encode their categorical data.
+It currently supports different encoding methods such as Label, OneHot, Dummy, Binary, Base N, Hash and Target.
+It also enables:
 
-*Task Variables:*
+- Automatic identification of the best-suited method for encoding each categorical column, when no encoding method is selected (Auto mode).
+- Data type recognition: identification of the data type of each column (categorical or numerical).
+- Creation of summary statistics for each column: missing values, minimum, maximum, average, zeros, and cardinality.
+- Editing of the data structure: modification of column information (name, type, category, etc.), deletion of a column, etc.
 
-.Import_Data_Interactive_Task variables
+This workflow can be used:
+
+- Stand-alone such that the results can be saved in the User Data Space or locally.
+- In a larger workflow where the results will be sent to the next connected task.
+
+NOTE: For further information, please check the subsection <<AutoFeat>>.
+
+
+.Import_Data_And_Automate_Feature_Engineering variables
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-| `TASK_ENABLED`
-| If False, the task will be ignored, it will not be executed.
-| Boolean (default=True)
+3+^|*Workflow variables*
 | `IMPORT_FROM`
-| Selects the type of data source.
+| Selects the method/protocol to import the data source.
 | List [PA:URL,PA:URI,PA:USER_FILE,PA:GLOBAL_FILE] (default=PA:URL)
 | `FILE_PATH`
-| Inserts a file path/name.
+| Inserts the path/name of the file that contains the dataset.
 | String
 | `FILE_DELIMITER`
 | Defines a delimiter to use.
 | String (default=;)
 | `LIMIT_OUTPUT_VIEW`
-|  Specifies how many rows of the dataframe will be previewed in the browser to check each task results.
+|  Specifies how many rows of the dataframe will be previewed in the browser to check the encoding results.
 | Int (-1 means preview all the rows)
 |===
-
-NOTE: More details about the categorical data encoding process can be found in the subsection <<AutoFeat>>.
 
 ===== Import_Model
 
