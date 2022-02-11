@@ -141,7 +141,7 @@ ProActive node will be generated automatically. As a result, the ssh call to
 the nodes will attach the nodes to the infrastructure without modifications to
 the startup command. This mode is selected by default.
 
-*** _useStartupScript_: wtarts the ProActive node using the script in the variable
+*** _useStartupScript_: starts the ProActive node using the script in the variable
 `%startupScriptStandard%`, Allowing the user to modify the startup command of the nodes.
 This mode uses the ProActive node agent identified in the `%schedulingPath%`.
 
