@@ -418,7 +418,7 @@ The configuration form exposes the following fields:
 
 	- *defaultVpcId:* This parameter can be filled with the ID of the VPC to use to operate instance operating nodes.
  If specified, this parameter has to refer to an existing VPC in the region and comply with the VPC ID format. 
- If left blank, the connector will, first, try to get the default VPC ID in the specified region if set, else it will trigger networking autoconfiguration.
+ If left blank, the connector will, first, try to get the default VPC ID in the specified region if set, otherwise it will trigger networking autoconfiguration.
 
 	- *defaultSubNetId:* The administrator can define which subnet has to be attached to the the instance supporting nodes.
  If specified, this parameter has to refer to an existing subnet in the region affected to the specified VPC, and has to comply with the subnet ID format.
