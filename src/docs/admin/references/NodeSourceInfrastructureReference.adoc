@@ -362,7 +362,7 @@ However, it implements a different instance management strategy that reduces the
 	2. The nodes share the same networking infrastructure through a common Virtual Private Cloud (VPC).
  The infrastructure supports networking autoconfiguration if no parameter is supplied.
 
-WARNING: To fully benefit from the latter management strategy, the infrastructure should be coupled with other than the Empty Policy.
+WARNING: The node source using empty policy will not benefit from this latter management strategy. The deployment with empty policy doesn't use the shared instance template and networking configuration.
 
 ===== Pre-Requisites
 
