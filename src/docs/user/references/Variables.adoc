@@ -140,13 +140,17 @@ Examples: PA:LIST(a,b,c) will accept "a", "b", "c" but no other value.
 * *PA:REGEXP(pattern)* : variable syntax must match the regular expression defined in the pattern. The regular expression syntax is described in class https://docs.oracle.com/javase/7/docs/api/index.html?java/util/regex/Pattern.html[Pattern]. +
 Examples: PA:REGEXP([a-z]+) will accept "abc", "foo", but not "Foo".
 * *PA:MODEL_FROM_URL(url)* : variable syntax must match the model fetched from the given URL. This can be used for example when the model needs to represent a list of elements which may evolve over time and is updated inside a file. Such as a list of machines in an infrastructure, a list of users, etc. +
+See <<_variable_model_using_resource_manager_data>> for premade models based on the Resource Manager state. +
 Examples: PA:MODEL_FROM_URL(file:///srv/machines_list_model.txt), if the file machines_list_model.txt contains PA:LIST(host1,host2), will accept only "host1" and "host2", but may accept other values as the machines_list_model file changes.
 * *PA:CRON* : variable syntax must be a valid cron expression as defined in the  http://www.sauronsoftware.it/projects/cron4j/manual.php#p02[cron4j manual]. +
 Examples: PA:CRON will accept "5 * * * \*" but not "* * * *" (missing minutes sub-pattern).
 * *PA:SPEL(SpEL expression)* : variable syntax will be evaluated by a https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[SpEL] expression. Refer to next paragraph.
-* *PA:CATALOG_OBJECT* : variable syntax must be a valid expression that matches the following pattern: `bucketName/objectName[/revision]`.
+* *PA:CATALOG_OBJECT*, *PA:CATALOG_OBJECT(kind)*, *PA:CATALOG_OBJECT(,contentType)*, *PA:CATALOG_OBJECT(kind,contentType)* : variable syntax must be a valid expression that matches the following pattern: `bucketName/objectName[/revision]`.
 Note that the revision sub-pattern is a hash code number represented by 13 digit. +
+A filter can be specified in the PA:CATALOG_OBJECT model. In that case, the variable value must be a catalog object which matches the kind and content type requirements. Note that these filters are case insensitive and require a "startsWith" matching. That is, the kind and the content type of the provided catalog object must start with the filters specified in the model.
+The scheduler server verifies that the object exists in the catalog and fulfills the requirements when the workflow is submitted. +
 Examples: PA:CATALOG_OBJECT will accept "bucket-example/object-example/1539310165443" and "bucket-example/object-example" but not "bucket-example/object-example/153931016" (invalid revision number) and "bucket-example/" (missing object name).
+PA:CATALOG_OBJECT(Script,text/x-python) will only accept a catalog object which is a Python script but not a workflow object or a Groovy script.
 * *PA:JSON* : variable syntax must be a valid JSON expression as defined in http://www.json.org/[JSON doc]. +
 Examples: PA:JSON will accept {"name": "John", "city":"New York"} and empty values like {} or [{},{}], but not ["test" : 123] (Unexpected character ':') and {test : 123} (Unexpected character 't').
 * *PA:NOT_EMPTY_STRING* : variable must be provided with a non-empty string value.
@@ -179,6 +183,37 @@ The validation will only fail when the user fills in an invalid value.
 For example, a variable `MY_OPTIONAL_INTEGER` defined as the model `PA:INTEGER?` will accept an empty string as the variable value, but it will refuse `1.4`.
 
 All the available model syntaxes, except `PA:NOT_EMPTY_STRING` support to be defined as *optional*.
+
+====== Variable Model using Resource Manager data
+
+ProActive Resource Manager provides a set of REST endpoints which allow to create dynamic models based on the Resource Manager state.
+
+These models are summarized in the following table. Models returned are PA:LIST types which allow to select a value in ProActive portals through a drop-down list.
+The list always contain an empty value choice.
+
+.Resource Manager Models
+[%header,cols=4*]
+|===
+|Metric Name
+|Description
+|Model Syntax
+|Example returned data
+
+|Hosts
+|All machine host names or ip addresses registered in the Resource Manager
+|`PA:MODEL_FROM_URL(${PA_SCHEDULER_REST_PUBLIC_URL}/rm/model/hosts)`
+|PA:LIST(,try.activeeon.com,10.0.0.19)
+
+|Node Sources
+|All node sources registered in the Resource Manager
+|`PA:MODEL_FROM_URL(${PA_SCHEDULER_REST_PUBLIC_URL}/rm/model/nodesources)`
+|PA:LIST(,Default,LocalNodes,GPU,Kubernetes)
+
+|Tokens
+|All tokens registered in the Resource Manager (across all registered ProActive Nodes). See <<_node_access_token>>.
+|`PA:MODEL_FROM_URL(${PA_SCHEDULER_REST_PUBLIC_URL}/rm/model/tokens)`
+|PA:LIST(,token1,token2)
+|===
 
 ====== Spring Expression Language Model
 

@@ -410,6 +410,50 @@ The following workflows represent python templates that can be used to implement
 
 *R_Task:* is a simple R task template pre-configured to run with `Distributed_Auto_ML`.
 
+
+[[_FL]]
+
+== Federated Learning (FL)
+
+https://ai.googleblog.com/2017/04/federated-learning-collaborative.html[Federated Learning (FL)] enables to train an algorithm across multiple decentralized devices (or servers) holding local data samples, without exchanging them.
+The `federated-learning` bucket contains a few examples of Federated Learning workflows that can be easily used to build a common and robust machine learning model without sharing data, thus allowing to address critical issues such as data privacy, data security, data access rights and access to heterogeneous data.
+This bucket uses the https://flower.dev/[Flower] library to implement federated learning workflows.
+The https://flower.dev/[Flower] library is a friendly federated learning framework that presents a unified approach for federated learning.
+It help federating any workload using any ML framework, and any programming language.
+
+image::FlowerArchitecture.png[align=center]
+
+=== PyTorch Federated Learning Tasks
+
+The following workflows represent a client/server templates that can be used to implement a Federated Learning workflow using PyTorch.
+
+*PyTorch_FL_Client_Task:* is a Federated Learning Client task template using PyTorch.
+
+*PyTorch_FL_Server_Task:* is a Federated Learning Server task template using PyTorch.
+
+=== TensorFlow Federated Learning Tasks
+
+The following workflows represent a client/server templates that can be used to implement a Federated Learning workflow using TensorFlow/Keras.
+
+*TensorFlow_FL_Client_Task:* is a Federated Learning Client task template using TensorFlow/Keras.
+
+*TensorFlow_FL_Server_Task:* is a Federated Learning Server task template using TensorFlow/Keras.
+
+=== Federated Learning Workflows
+
+The following workflows uses the federated learning to train a deep Convolutional Neural Network (ConvNet/CNN) on the https://www.cs.toronto.edu/~kriz/cifar.html[CIFAR10 images dataset] using the https://flower.dev/[Flower] library.
+
+*PyTorch_Federated_Learning_Example:* shows an example of Federated Learning workflow using PyTorch.
+
+*TensorFlow_Federated_Learning_Example:* shows an example of Federated Learning workflow using TensorFlow/Keras.
+
+
+References:
+
+1. http://proceedings.mlr.press/v54/mcmahan17a/mcmahan17a.pdf[Communication-Efficient Learning of Deep Networks from Decentralized Data]
+
+2. https://arxiv.org/pdf/2007.14390.pdf[Flower: A Friendly Federated Learning Research Framework]
+
 == Model as a Service for Machine Learning (MaaS_ML)
 
 Once a predictive model is built, tested and validated, you can easily use it in real world production pipelines by deploying it as a REST Web Service via the MaaS_ML service.
@@ -711,11 +755,11 @@ Set the following variables:
 | String (default="maas-ml-gui")
 | `ENGINE`
 | Container engine.
+| List (default="docker")
 | `GPU_ENABLED`
 | If True, the service will be configured to use the GPU and the Nvidia 
 Rapids library.
 | Boolean (default=False)
-| List (default="docker")
 | `HTTPS_ENABLED`
 | True if the protocol https is needed for the defined model-service.
 | Boolean (default=False)
@@ -797,45 +841,28 @@ image::MAAS_ML_Delete_Service.PNG[align=center]
 
 There is also one more action that can be executed from Service Automation Portal which is:
 
-- *Update_MaaS_ML_Parameters*: This action enables you to update the variables values associated to the MaaS_ML instance according to your new preferences.
+- *Update_MaaS_ML_Parameters*: This action enables you to update the variable values associated to the MaaS_ML instance according to your new preferences.
 
-==== Audit and Traceability
-To access the Audit and Traceability page, click on the endpoint under the Endpoint list.
+==== MaaS_ML Analytics
+When the MaaS_ML service instance is running, the user is able to access the MaaS_ML Analytics page by clicking on the instance's endpoint which contains 4 tabs:
 
-In this page, you are able to check the different values of the model variables.
-You can also track the traceability information of the token during several date/time(s) as shown in the below image.
-
-image::traceability1.png[align=center]
-
-==== MaaS_ML Data Analytics
-If you click on the link "Click here for MaaS_ML data analytics" provided on the top of the Audit and
-Traceability page, you will be redirected to MaaS_ML Data Analytics page which contains three tabs:
-
+** Audit and Traceability
 ** Dataset Analytics
 ** Data Drift Analytics
 ** Predictions Preview
 
+===== Audit and Traceability
+
+When clicking on the endpoint, the user is redirected to a 4 tabs webpage. By default, the Audit and Traceability page is opened. In this page, the user can check the different chosen values of the MaaS_ML instance variables. In addition, the MaaS_ML traceability information and warnings are listed in a table where each row represents information about the initialization, deployment, prediction, etc. corresponding to different date/time(s). The figure below shows an overview of the Audit and Traceability tab.
+
+image::traceability1.png[align=center]
+
 ===== Dataset Analytics
-As MaaS_ML supports versioning, you are able to deploy multiple model versions for the same model type.
-When deploying different model versions, you have the possibility to associate each version
-with a subset of the data used to train the model i.e. the baseline data. The main job of the baseline data is to help in
-detecting drifts in the future input datasets. Data drift detection is detailed in <<_data_drift_detection_ddd>> subsection.
-Using the several baseline datasets, optionally, deployed with the different model versions, you are able to compare the changes
-occurring from one model version to another, specifically regarding the datasets used to train them.
+As MaaS_ML supports versioning, you are able to deploy multiple model versions for the same model type. When deploying different model versions, you have the possibility to associate each version with a subset of the data used to train the model i.e. the baseline data. The main job of the baseline data is to help in detecting drifts in the future input datasets. Data drift detection is detailed in <<_data_drift_detection_ddd>> subsection. Using the several baseline datasets, optionally, deployed with the different model versions, you are able to compare the changes occurring from one model version to another, specifically regarding the datasets used to train them.
 
-As shown in the figure below, using the three dropdowns on the top of this tab page, you can choose the model name, the feature (or column)
-name you would like to monitor and the metric which is based on some data statistical functions (Mean, Minimum, Maximum, Variance, Standard Deviation).
-By choosing these three values, the first graph
-will show the evolution of the values (according to the chosen statistical function) of the chosen feature relative to
-the different model versions. You also have the possibility to monitor multiple features at the same time by choosing multiple feature
-names in the second dropdown. You can add
-or remove any of the displayed graphical lines using the features dropdown. Details about the obtained values are displayed by hovering over
-the markers on each graphical line.
+As shown in the figure below, using the three dropdowns on the top of this tab page, you can choose the model name, the feature (or column) name you would like to monitor and the metric which is based on some data statistical functions (Mean, Minimum, Maximum, Variance, Standard Deviation). By choosing these three values, the first graph will show the evolution of the values (according to the chosen statistical function) of the chosen feature relative to the different model versions. You also have the possibility to monitor multiple features at the same time by choosing multiple feature names in the second dropdown. You can add or remove any of the displayed graphical lines using the features dropdown. Details about the obtained values are displayed by hovering over the markers on each graphical line.
 
-If you click on one of these markers, a histogram will appear in the second graph of this tab page. The displayed
-histogram shows a comparison of the probability density distributions of the data values of the selected feature
-among all the deployed model version. By clicking on the content of the legend, you can include or exclude from the comparison any of the model
-versions.
+If you click on one of these markers, a histogram will appear in the second graph of this tab page. The displayed histogram shows a comparison of the probability density distributions of the data values of the selected feature among all the deployed model version. By clicking on the content of the legend, you can include or exclude from the comparison any of the model versions.
 
 image::data_analytics_tab.png[align=center]
 
@@ -843,16 +870,13 @@ image::data_analytics_tab.png[align=center]
 Coming soon!
 
 ===== Predictions Preview
-When the user calls a deployed model of a specific version to obtain some predictions, he can choose to save the resulting predictions.
-The saved predictions can be previewed in the Predictions Preview tab page. As shown in the figure below, you can choose the model name and the model
-version using the dropdowns in the top of the page. According to your choices, the predictions dataframe will be previewed. The figure below shows an
-example of the previewed predictions.
+When the user calls a deployed model of a specific version to obtain some predictions, he can choose to save the resulting predictions. The saved predictions can be previewed in the Predictions Preview tab page. As shown in the figure below, you can choose the model name and the model version using the dropdowns in the top of the page. According to your choices, the predictions dataframe will be previewed. The figure below shows an example of the previewed predictions.
 
 image::predictions_tab1.png[align=center]
 
 === MaaS_ML Via Swagger UI
 
-To access the Swagger UI, click on the second link in the top of the Traceability & Audit page.
+To access the Swagger UI, click on the button "GO TO SWAGGER UI" in the top of the Traceability & Audit tab in the MaaS_ML Analytics page.
 
 Through this Swagger UI, you are now able to:
 
@@ -1130,6 +1154,7 @@ Execute the workflow by setting the different workflow's variables as described 
 | String (default="user").
 | `MODEL_SERVICE_NODE_NAME`
 | The name of the node where the service will be deployed. If empty, the service will be deployed on an available node selected randomly.
+| String
 3+^|*Task variables*
 | `SERVICE_ID`
 | The name of the service. Please keep the default value for this variable.
@@ -1519,6 +1544,112 @@ The following workflow example is available on the `model_as_a_service` bucket u
 This example trains a Mnist model, starts a service instance where the trained model is deployed as a service using the Maas_DL PSA service.
 
 image::NEW_MAAS_DL_MNIST_Workflow_Example.PNG[align=center]
+
+== AutoFeat
+
+The performance of a machine learning model depends not only on the model and the hyper-parameters but also on how we process and feed different types of variables to the model.
+
+Before starting the modelling phase, it is required to perform various tasks for data preparation. Encoding categorical data is one of the most crucial tasks. In real life, data commonly come with categorical string values and most of the machine learning models perform mathematical operations. However, the harsh truth is that mathematics is totally dependent on numbers. As a matter of fact, we can say that most of the machine learning models only accept numerical variables (generally floats or integers) and not strings. Then, preprocessing and encoding the categorical variables become a crucial step to convert these variables into numbers that can help in predicting the results in a machine learning task.
+
+AutoFeat provides a complete solution to assist data scientists to encode successfully their categorical data.
+
+In real-world problems, most of the time we require choosing one encoding method for the proper working of the model. Working with different encoders can influence the results of the model.
+
+AutoFeat currently supports the following encoding methods:
+
+- Label: converts each value in a categorical feature into an integer value between 0 and n-1, where n is the number of distinct categories of the variable.
+- Binary: stores categories as binary bitstrings.
+- OneHot: creates a new feature for each category in the Categorical Variable and replaces it with either 1 (presence of the feature) or 0 (absence of the feature). The number of the new features depends on the number of categories in the Categorical Variable.
+- Dummy: transforms the categorical variable into a set of binary variables (also known as dummy variables). The dummy encoding is a small improvement over the one-hot-encoding, such it uses n-1 features to represent n categories.
+- BaseN: encodes the categories into arrays of their base-n representation. A base of 1 is equivalent to one-hot encoding and a base of 2 is equivalent to binary encoding.
+- Target: replaces a categorical value with the mean of the target variable.
+- Hash: maps each category to an integer within a pre-determined range n_components. n_components is the number of dimensions, in other words, the number of bits to use to represent the feature. We use 8 bits by default .
+
+The most of these methods are implemented using the python link:https://contrib.scikit-learn.org/category_encoders/[Category Encoders] library.
+As we already mentioned, the performance of ML algorithms depends on how categorical variables are encoded. The results produced by the model vary depending on the used encoding technique. Thus, the hardest part of categorical encoding can sometimes be finding the right categorical encoding method.
+
+There are numerous research papers and studies dedicated to the analysis of the performance of categorical encoding approaches applied to different datasets. Based on the common factors shared by the datasets using the same encoding method, we have implemented an algorithm for finding the best suited method for your data.
+
+To access the AutoFeat page, please follow the steps below:
+
+Open the link:https://try.activeeon.com/automation-dashboard/#/portal/workflow-execution[Workflow Execution Portal].
+
+Click on the button *Submit a Job* and then search for *Import_Data_And_Automate_Feature_Engineering* workflow as described in the image below.
+
+image::Import_Data_And_Automate_Feature_Engineerin_Search.png[align=center]
+
+Put in *FILE_URL* variable the S3 link to upload your dataset.
+
+Set the other parameters according to your dataset format.
+
+Click on the *Submit* button to start AutoFeat.
+
+To get more information about the parameters of the service, please check the section <<Import_Data_And_Automate_Feature_Engineering>>.
+
+image::Import_Data_And_Automate_Feature_Engineering_Submit.png[align=center]
+
+You can now access the AutoFeat Page by clicking on the endpoint `AutoFeat` as shown in the image below.
+
+image::AutoFeat_endpoint.png[align=center]
+
+You will be redirected to AutoFeat page which initially contains three tabs that we describe in the following sections.
+
+=== Data Preview
+
+AutoFeat loads data from external sources. The dataset could be potentially very large. Initially, only the 10 first data rows are displayed.
+
+The *Refresh* button enables users to see the last updates made on their data.
+[[_Data_preview]]
+image::AutoFeat_data_preview.png[align=center]
+
+=== Column summaries
+
+Whenever AutoFeat loads data from external sources, it also identifies the datatype of each column. AutoFeat does a great job at datatype recognition. Each decision can be overridden manually by the user, if required.
+
+AutoFeat also creates some summary statistics for each column. A table is displaying the missing values, minimum, maximum, mean and zeros for each numerical feature, and the cardinality (category counts) for each categorical feature.
+
+[[_Column_summaries]]
+image::AutoFeat_column_summaries.png[align=center]
+
+=== Edit column names and types
+A preview of the data is displayed in the *Edit Column Names and Types* as follows.
+
+[[_Edit_column_names_and_types]]
+image::AutoFeat_edit_column_names_and_types.png["Edit column names and types",align=center]
+
+It is possible to change a column information. These changes can include:
+
+- _Column Name_: There should rarely be a reason to change the field name.
+
+- _Column Type_: AutoFeat automatically recognizes the data type, so the default settings typically do not need to be changed. There are two different data types; *Categorical* and *Numerical*.
+
+- _Category Type_: Categorical variables can be divided into two categories; *Ordinal* such the categories have an inherent order and *Nominal* if the categories do not have any inherent order.
+
+- _Label_: Check this checkbox to select the label column.
+
+- _Coding Method_: The encoding method used for converting the categorical data values into numerical values. The value is set to *Auto* by default. Thereafter, the best suited method for encoding the categorical feature is automatically identified. The data scientist still has the ability to override every decision and select another encoding method from the drop-down menu. Different methods are supported by AutoFeat such as *Label*, *OneHot*, *Dummy*, *Binary*, *Base N*, *Hash* and *Target*. Some of those methods require specifying additional encoding parameters. These parameters vary depending on the selected method (e.g., the base and the number of components for BaseN and Hash, respectively, and the target column for Target encoding method). Some of those values are set by default, if no values are specified by the user.
+
+[[_Edit_column_names_and_types]]
+image::AutoFeat_edit_column_names_and_types_encoding_parameters.png["Edit column names and types",align=center]
+
+It is also possible to perform the following actions on the dataset:
+
+- *Save*, to save the last changes made on a column information.
+- *Restore*, to restore the original version of the dataset loaded from the external source.
+- *Delete Column*, to delete a column from the dataset.
+- *Preview Encoded Data*, to display the encoding results in a new tab.
+- *Cancel*, to discard any changes the user may have made and finish the workflow execution.
+
+Once the encoding parameters are set, the user can proceed to display the encoded dataset by clicking on the *Preview Encoded Data*. He can also check and compare different encoding methods and/or parameters based on the obtained results.
+
+=== Encoded data
+
+This page displays the data encoding results based on the selected parameters. At this stage, the user can validate the results by clicking on the button *Proceed*, or erase the encoded dataset by clicking on the button *Delete*.
+
+The user can also download the results as a csv file by clicking on the *Download* button.
+
+[[_Encoded_data]]
+image::AutoFeat_encoded_data.png[align=center]
 
 == ProActive Analytics
 
@@ -2748,6 +2879,44 @@ NOTE: More information about this dataset can be found https://scikit-learn.org/
 NOTE: Your CSV file should be in a table format. See the example below.
 
 image::csv_file_organisation.png[align="center"]
+
+===== Import_Data_And_Automate_Feature_Engineering
+
+*Task Overview:* This workflow provides a complete solution to assist data scientists to successfully load and encode their categorical data.
+It currently supports different encoding methods such as Label, OneHot, Dummy, Binary, Base N, Hash and Target.
+It also enables:
+
+- Automatic identification of the best-suited method for encoding each categorical column, when no encoding method is selected (Auto mode).
+- Data type recognition: identification of the data type of each column (categorical or numerical).
+- Creation of summary statistics for each column: missing values, minimum, maximum, average, zeros, and cardinality.
+- Editing of the data structure: modification of column information (name, type, category, etc.), deletion of a column, etc.
+
+This workflow can be used:
+
+- Stand-alone such that the results can be saved in the User Data Space or locally.
+- In a larger workflow where the results will be sent to the next connected task.
+
+NOTE: For further information, please check the subsection <<AutoFeat>>.
+
+
+.Import_Data_And_Automate_Feature_Engineering variables
+[cols="2,5,2"]
+|===
+| *Variable name* | *Description* | *Type*
+3+^|*Workflow variables*
+| `IMPORT_FROM`
+| Selects the method/protocol to import the data source.
+| List [PA:URL,PA:URI,PA:USER_FILE,PA:GLOBAL_FILE] (default=PA:URL)
+| `FILE_PATH`
+| Inserts the path/name of the file that contains the dataset.
+| String
+| `FILE_DELIMITER`
+| Defines a delimiter to use.
+| String (default=;)
+| `LIMIT_OUTPUT_VIEW`
+|  Specifies how many rows of the dataframe will be previewed in the browser to check the encoding results.
+| Int (-1 means preview all the rows)
+|===
 
 ===== Import_Model
 
@@ -4095,7 +4264,7 @@ NOTE: Torchtext were used to preprocess and load the text input. More informatio
 | Boolean (default=True)
 |===
 
-NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/docs/stable/torchvision/models.html[AlexNet^].
+NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/vision/stable/models.html[AlexNet^].
 
 ===== DenseNet-161
 
@@ -4103,7 +4272,7 @@ NOTE: PyTorch is used to build the model architecture based on https://pytorch.o
 
 *Usage:* It should be connected to <<Train_Image_Classification_Model>>.
 
-NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/docs/stable/torchvision/models.html[DenseNet-161^].
+NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/vision/stable/models.html[DenseNet-161^].
 
 .DenseNet-161_Task variables
 [cols="2,5,2"]
@@ -4123,7 +4292,7 @@ NOTE: PyTorch is used to build the model architecture based on https://pytorch.o
 
 *Usage:* It should be connected to <<Train_Image_Classification_Model>>.
 
-NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/docs/stable/torchvision/models.html[ResNet-18^].
+NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/vision/stable/models.html[ResNet-18^].
 
 .ResNet-161_Task variables
 [cols="2,5,2"]
@@ -4143,7 +4312,7 @@ NOTE: PyTorch is used to build the model architecture based on https://pytorch.o
 
 *Usage:* It should be connected to <<Train_Image_Classification_Model>>.
 
-NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/docs/stable/torchvision/models.html[VGG-16^].
+NOTE: PyTorch is used to build the model architecture based on https://pytorch.org/vision/stable/models.html[VGG-16^].
 
 .VGG-16_Task variables
 [cols="2,5,2"]

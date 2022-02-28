@@ -63,9 +63,12 @@ The notification service requires a valid SMTP configuration in order to send em
 These settings are specified in the properties file located at:
  `PROACTIVE_HOME/dist/war/notification-service/WEB-INF/classes/email.properties`
 
-By default Transport Layer Security is active, change to false to deactivate it:
+All available SMTP properties are available at
+https://javaee.github.io/javamail/docs/api/com/sun/mail/smtp/package-summary.html
+
+By default Transport Layer Security is deactivated, change to true to activate it:
 ----
-mail.smtp.starttls.enable=true
+mail.smtp.starttls.enable=false
 ----
 Authentication to the SMTP server is enabled by default.
 ----

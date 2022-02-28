@@ -2618,17 +2618,43 @@ Also, you can find *Needed Nodes* in the Scheduler portal where the Scheduler st
 
 image::neededNodes-scheduler.png[align="center"]
 
-[[_run_as_me]]
-
+[[_run_as_me_admin]]
 == Run Computation with a user's system account
 
-Configure a ProActive Node to execute tasks under a user's system account by ticking the
-link:../user/ProActiveUserGuide.html#_run_computation_with_your_system_account[Run as me] box in the task configuration.
-By default authentication is done through a password, but can also be configured using a SSH key.
+ProActive workflow Tasks can be configured to run under a user's system account by ticking the
+link:../user/ProActiveUserGuide.html#_run_as_me[Run as me] checkbox in the task configuration.
+
+image::../images/StudioRunAsMe.png["RunAsMe in Studio",width=300]
+
+The RunAsMe mode can also be configured globally on the ProActive server. In that case, all workflow tasks from all users will be executed in RunAsMe mode.
+Global RunAsMe can be configured in file `PROACTIVE_HOME/config/scheduler/settings.ini`, by enabling the following property:
+
+[source, properties]
+----
+# If true tasks are always ran in RunAsMe mode (impersonation). This automatically implies pa.scheduler.task.fork=true (other setting is ignored)
+pa.scheduler.task.runasme=true
+----
+
+By default, authentication is done through a <<_using_password,password>>, but can also be configured to use a <<_using_ssh_keys,SSH key>> or <<_using_password_less_sudo,password-less sudo>>.
+
+The impersonation mode is configurable for each ProActive Node, using the java property `pas.launcher.forkas.method`.
+
+For example:
+
+[source, bash]
+----
+./bin/proactive-node -Dpas.launcher.forkas.method=pwd # start a node using password impersonation
+./bin/proactive-node -Dpas.launcher.forkas.method=key # start a node using SSH key impersonation
+./bin/proactive-node -Dpas.launcher.forkas.method=none # start a node using password-less sudo impersonation
+----
+
+This property can also be specified in ResourceManager <<_node_source_infrastructures>> through parameters that allow adding extra arguments to the _java virtual machine_.
 
 Find a step by step tutorial link:AdminTutorials.html[here].
 
-For proper execution, *the user's system account must have:*
+=== System Configuration
+
+For proper execution, *the user's system account must have*:
 
 * Execution rights to the PROACTIVE_HOME directory and all it's parent directories.
 * Write access to the PROACTIVE_HOME directory.
@@ -2652,45 +2678,70 @@ Example:
 proactive-node -Djava.io.tmpdir=C:\TEMP
 ----
 
+Extra configurations are also needed depending on the authentication method below.
+
 === Using password
 
 The ProActive Node will try to impersonate the user that submitted the task when running it. It means the
-username and password must be the same between the Scheduler and the operating system.
+username and password must be the same between the ProActive Scheduler and the operating system.
 
 === Using SSH keys
 
-A SSH key can be tied to the user's account and used to impersonate the user when running a task on a given machine (using SSH).
-The .ssh/authorized_keys files of all machines must be configured to accept this SSH key.
-The SSH key must require *no passphrase*.
-
-When login into the scheduler portal, the private key of the user must be provided, this can be done by selecting on the login dialog: `More options > Use SSH private key`.
-
-To enable this method, set the system property `pas.launcher.forkas.method` to _key_ when starting a ProActive Node.
+To enable this authentication method, set the java system property `-Dpas.launcher.forkas.method=key` when starting a ProActive Node.
 
 Example:
 ----
 proactive-node -Dpas.launcher.forkas.method=key
 ----
 
-=== Using passwordless sudo
+A SSH key can be tied to the user's account and used to impersonate the user when running a task on a given machine (using SSH).
+Additionnally:
 
-This configuration, only availabe on linux nodes, allows the impersonation to be performed using passwordless sudo.
+ - The `.ssh/authorized_keys` files of all machines must be configured to accept this SSH key.
+ - The SSH key must not contain a *passphrase*.
+ - Using this method on Windows machines is not recommended, as it requires the installation and configuration of a SSH Server.
 
-To enable it at the system level, edit the /etc/sudoers file to allow passwordless sudo from the account running the ProActive node
-to any users which require impersonation. Passwordless sudo should be enabled for any command.
+When login into the scheduler portal, the private key of the user must be provided, this can be done by selecting on the login dialog: `More options > Use SSH private key`.
+
+Alternatively, a user can also add its SSH private key to link:../user/ProActiveUserGuide.adoc#_third_party_credentials[Third Party Credentials] under the name `SSH_PRIVATE_KEY`.
+This method allows the user to login normally to the ProActive portals, without the need to enter its private key each time.
+
+Finally, users can also authenticate to the portals with credential files.
+The user must first create a credential file containing the user login, password and SSH key.
+
+Run the following command on the ProActive server to create a credential file:
+
+----
+$ <PROACTIVE_HOME>/tools/proactive-create-cred -F <PROACTIVE_HOME>/config/authentication/keys/pub.key -l username -p userpwd -k path/to/private/sshkey -o myCredentials.cred
+----
+
+This command will create an encrypted file with *username* as login, *userpwd* as password, using Scheduler public key at
+`config/authentication/keys/pub.key`
+for credentials encryption and using the user private SSH key at
+`path/to/private/sshkey`. The new credential will be stored in *myCredentials.cred*.
+
+Once created, the user must connect to the ProActive portals using this credential file. For example, in the studio portal below:
+
+image::../images/StudioCredentialsLogin.png["Studio login with Credentials", ,width=300]
+
+=== Using password-less sudo
+
+This configuration, only available on linux or unix Nodes, allows the impersonation to be performed using password-less sudo.
+
+To enable it at the system level, edit the `/etc/sudoers` file to allow password-less sudo from the account running the ProActive node
+to any users which require impersonation. Password-less sudo should be enabled for any command.
 
 For example, the following line will allow the proactive account to impersonate to any user:
 ----
 proactive ALL=(ALL) NOPASSWD: ALL
 ----
 
-To enable this configuration on the ProActive node, start it with the system property `pas.launcher.forkas.method` to _none_
+To enable this configuration on the ProActive node, start it with the system property `-Dpas.launcher.forkas.method=none`
 
 Example:
 ----
 proactive-node -Dpas.launcher.forkas.method=none
 ----
-
 
 [[_web_applications]]
 == Configure Web applications

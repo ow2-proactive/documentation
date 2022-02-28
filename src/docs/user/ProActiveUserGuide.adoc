@@ -122,7 +122,7 @@ ProActive Workflows supports tasks in many scripting languages. The currently su
 link:http://groovy-lang.org/[Groovy, window="_blank"],
 link:https://www.jython.org[Jython, window="_blank"],
 link:https://www.python.org/[Python, window="_blank"],
-link:https://jruby.org[JRuby, window="_blank"],
+link:https://www.jruby.org[JRuby, window="_blank"],
 link:https://docs.oracle.com/javase/8/docs/technotes/guides/scripting/index.html#jsengine[Javascript, window="_blank"],
 link:https://www.scala-lang.org/[Scala, window="_blank"],
 link:https://docs.microsoft.com/fr-fr/powershell/scripting/overview?view=powershell-5.0[Powershell, window="_blank"],
@@ -1482,38 +1482,106 @@ To do so, a Generic Information is required for the desired task, with the key
 `PRE_SCRIPT_AS_FILE`, and the path of the file that you want to save your pre-script as its value.
 
 The path should contain a file name. If it is an absolute path, then the file will be stored in this absolute path.
-If is is a relative path, then the file will be stored in the link:../user/ProActiveUserGuide.html#_local_space[Local Space].
+If it is a relative path, then the file will be stored in the link:../user/ProActiveUserGuide.html#_local_space[Local Space].
 
 If you don't give a specific extension in the path, the extension will be automatically assigned to the corresponding one of the language selected for this pre-script.
 
+[[_run_as_me]]
+=== Run Computation with a user's system account
 
-=== Run computation with your system account
+When workflow tasks are executed inside a <<_glossary_proactive_node,ProActive Node>>, they run by default under the system account used to start the Node.
 
-It is possible to start a task under the job owner if the system is configured for that purpose.
-There are 2 possible ways to run a task under user account
-(in any case, the administrator should have
-link:../admin/ProActiveAdminGuide.html#_run_as_me[set computing hosts] to authorize
-one of the 2 methods):
+The *RunAsMe* mode, also called _user impersonation_, allows to start a workflow Task either:
 
-* Using your *scheduling login and password*: if computing hosts are configured and user is authorized to run a process under his login and password.
-* Using an *SSH key* provided by the administrator: if computing hosts are configured, the administrator should have given user an SSH key.
+ - under the job owner system account (default _RunAsMe_).
+ - under a specific system account (_RunAsUser_).
 
-User must first create a credential containing this key:
+The *RunAsMe* mode is defined in the XML representation of a Task:
 
+[source, xml]
 ----
-$ PROACTIVE_HOME/tools/proactive-create-cred -F config/authentication/keys/pub.key -l username -p userpwd -k path/to/private/sshkey -o myCredentials.cred
+<task name="Linux_Bash_Task"
+    fork="true"
+    runAsMe="true" >
+      <description>
+        <![CDATA[ A task, ran by a bash engine. ]]>
+      </description>
+      <scriptExecutable>
+        <script>
+          <code language="bash">
+            <![CDATA[
+whoami
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
 ----
 
-This command will create a new credentials with *username* as login, *userpwd* as password, using Scheduler public key at
-`config/authentication/keys/pub.key`
-for credentials encryption and using the private SSH key at
-`path/to/private/sshkey`
-provided by administrator. The new credential will be stored in *myCredentials.cred*
+In the ProActive Studio, the RunAsMe mode is available in the Task Properties *Fork Environment* section.
 
-Once created, user must connect the Scheduler using this credential. Then, in order to execute your task under your account
-set *runAsMe=true* in the task.
+image::../images/StudioRunAsMe.png["RunAsMe in Studio",width=300]
 
-TIP: You can now use <<_third_party_credentials,third party credentials>> to store the SSH key with the special entry named *SSH_PRIVATE_KEY*.
+In order to impersonate a user, RunAsMe can use one of the following *methods*:
+
+ - *PWD*: impersonate a user with a login name and password (this is the default, it is also the only mode available on Windows Nodes).
+ - *KEY*: impersonate a user with a login name and SSH private key.
+ - *NONE*: impersonate a user with a login name and https://en.wikipedia.org/wiki/Sudo[sudo].
+
+The above modes are defined by the ProActive server administrator when ProActive Nodes are deployed. It is possible to define for each Node a different RunAsMe mode.
+The underlying operating system need to be configured appropriately in order to impersonate a task.
+
+See link:../admin/ProActiveAdminGuide.html#_run_as_me_admin[RunAsMe section] in the administration guide for further information.
+
+The default mode for RunAsMe is to impersonate as the current user with the user login and password.
+Accordingly, the user's login and password inside ProActive must match the login and password of the user in the target machine's operating system.
+
+It is possible though to impersonate through a different user, using a different password, or even using a different impersonation method as the one configured by default.
+
+This possibility is given by adding <<_generic_information>> described in the below table to the workflow task.
+Each of these generic information can be defined both at task-level or job-level. When at job-level, it will apply to all tasks of this workflow with RunAsMe enabled.
+Other tasks without RunAsMe enabled will ignore these generic information.
+
+
+
+[[_run_as_me_generic_info]]
+.RunAsMe Generic Information
+|===
+|Name |Description |Example value
+
+|`RUNAS_METHOD`
+|Allows overriding the impersonation method used when executing the task. Can be `pwd`, `key` or `none`.
+|`pwd`
+
+|`RUNAS_USER`
+|Allows overriding the login name used during the impersonation. This allows to run a task under a different user as the user who submitted the workflow.
+|bob
+
+|`RUNAS_DOMAIN`
+|Allows defining or overriding a user domain that will be attached to the impersonated user. User domains are only used on Windows operating systems.
+|MyOrganisation
+
+|`RUNAS_PWD`
+|Allows overriding the password attached to the impersonated user. This can be used only when the impersonation method is set to `pwd`.
+|MyPassword
+
+|`RUNAS_PWD_CRED`
+|Similar to RUNAS_PWD but the password will be defined inside <<_third_party_credentials>> instead of inlined in the workflow. This method of defining the password should be preferred to RUNAS_PWD for security reasons. The value of RUNAS_PWD_CRED must be the third-party credential name containing the user password.
+|MyPasswordCredName
+
+|`RUNAS_SSH_KEY`
+|Allows overriding the SSH private key attached to the impersonated user. This can be used only when the impersonation method is set to `key`.
+|-----BEGIN RSA PRIVATE KEY----- +
+MIIEowIBAAKCAQEAp1fwx6R40kIf (...) +
+-----END RSA PRIVATE KEY-----
+
+|`RUNAS_SSH_KEY_CRED`
+|Similar to RUNAS_SSH_KEY but the private key will be defined inside <<_third_party_credentials>> instead of inlined in the workflow. This method of defining the SSH private key should be preferred to RUNAS_SSH_KEY for security reasons. The value of RUNAS_SSH_KEY_CRED must be the third-party credential name containing the SSH key.
+|MySSHKeyCredName
+|===
+
+
+
 
 [[_multi_node_task]]
 === Reserve more than one node for a task execution
@@ -2615,29 +2683,48 @@ Task Synchronization API can be used for multiple dynamic synchronization patter
 A complete example of Producer / Consumer, _ServiceDeployerConsumer_ can be downloaded link:examples/ServiceDeployerConsumer.xml[here].
 
 [[_task_signal_api]]
-=== Signal API
+=== Signal API and Templates
 
 The *Signal API* is a high-level API that enables users to interact with running jobs via signals (we also call them actions).
-That is, it allows a job to expose specific signals (e.g., `soft_stop` to properly finish a job) that can be triggered by users from the *Workflow Execution portal*.
+That is, it allows a job to expose specific signals (e.g., `soft_stop` to properly finish a job) that can be triggered by users from the *Workflow Execution portal* or *Scheduler portal*.
 You can try the <<_examples_2,examples>> below to better understand how it works.
 
-In summary and for simple use, just go to <<_proactive_studio, ProActive Studio>> and use the 2 predefined templates in the Controls menu: *Check_For_Signals* or *Wait_For_Signals*.
-Fill up the Task Variable *SIGNALS*, and use those templates in your own workflow to be able to receive input from, for instance, the Workflow Execution portal.
+In summary and for simple use, just go to <<_proactive_studio, ProActive Studio>> and use the predefined templates in the _Controls_ bucket, _4. Signal Templates_ project: for example: *Check_For_Signals*, *Wait_For_Signals*, *Wait_For_Signals_Reactive* or *Wait_For_Signals_With_Variables*.
+Fill up the Task Variable *SIGNALS*, and use those templates in your own workflow to be able to receive input from, for instance, the Workflow Execution portal or Scheduler portal.
+
+*Check_For_Signals* is a template workflow composed of two tasks. The first sends a ready notification for the signals specified in the variable SIGNALS'. The second task checks if one signal is received, and if not, the workflow runs in a loop where each iteration lasts one minute.
+This workflow allows users to do an iterative processing, and decide at each iteration to continue this processing or not, i.e., (i) declare being ready to receive one or more signals, (ii) do some processing, then (iii) receive signals and decide whether to continue the processing or not.
+
+*Wait_For_Signals* is a template workflow that contains a single task, which sends a ready notification for the specified signals in the 'SIGNALS' variable, then checks if one or more signals are received by the job. If not, the workflow runs in a loop where each iteration lasts one minute.
+This workflow allows users to iteratively wait for the reception of one or more signals, then trigger some processing.
+
+*Wait_For_Signals_Reactive* is a template workflow that sends a ready notification for all specified signals in the 'SIGNALS' variable, then waits until one signal among those specified is received.
+This workflow contains no loop. It performs a blocking wait, then immediately triggers some processing at a signal reception.
+
+*Wait_For_Signals_With_Variables* is a template workflow that uses signals having input parameters. It contains a single task that sends a ready notification for all the signals (with input parameters) specified in the variable SIGNALS, then loops until one signal among those specified is received by the job.
+The signal input parameters have predefined values that can be changed when sending the signal.
 
 At a more detailed level and advanced use, the Signal API allows jobs and users to exchange signals using a communication channel provided by the <<_task_synchronization_api,synchronization API>>.
 The typical usage scenario of the Signal API is the following:
 
-  . A job declares to be ready to handle one or more signals. The signals are then displayed in the Workflow Execution portal (e.g., display the `soft_stop` signal).
+  . Signals are defined by their name and, optionally, a list of variables. Variables attached to a signal have the same structure as <<_workflow_variables>> but are declared exclusively using the <<_task_signal_api,Signal API>>.
+
+  . If the signal has variables, then a new window will appear where the user can set the variables values and then send the signal with variables to the job. If the signal does not have variables then the window will not appear.
+    Adding variables to a signal allows to enhance the manual control of the workflow execution.
+    After receiving the signal with attached variables, the workflow will then need to process this information and react accordingly (e.g. continue a calculation with a new set of parameters, etc...)
+
+  . A job declares to be ready to handle one or more signals that can have attached variables. The signals are then displayed in the Workflow Execution portal or Scheduler portal(e.g., display the `soft_stop` signal).
 
   . The job waits to receive these signals, or check for their reception regularly.
 
-  . A user clicks on the signal displayed in the Workflow Execution portal (e.g., click on the `soft_stop` signal), which sends this signal to the job.
+  . A user clicks on the signal displayed in the Workflow Execution portal or Scheduler portal (e.g., click on the `soft_stop` signal), which sends this signal to the job.
 
   . At the signal reception, the job executes the corresponding behavior (defined in the workflow).
+    When the signal has attached variables, variables must be valid according to their model specification (see <<_variable_model,Variable Model>>). Sending a signal will not be possible unless they are validated.
 
 As already mentioned, the Signal API uses the <<_task_synchronization_api,synchronization API>> to store jobs' signals, with respect to the following specifications:
 
- * It uses a single persistent channel (called *PA_SIGNALS_CHANNEL*) to store the signals of all jobs. The signal channel contains an entry per job.
+ * It uses a single persistent channel (called *PA_SIGNALS_CHANNEL + {jobId}*) to store the signals and variables of all jobs. The signal channel contains an entry per signal.
 
  * Job signals are automatically removed when the job execution finishes (i.e., the job is in the status Finished, Cancelled, Failed or Killed).
 
@@ -2652,23 +2739,27 @@ The Signal API is available inside ProActive Tasks through the *signalapi* <<_gl
 
 It is easy to use, and offers a set of basic operations on signals summarized as follows:
 
- * *readyForSignal*: declares that the current job is ready to receive and handle one or more signals.
+ * *readyForSignal*: declares that the current job is ready to receive and handle one or more signals with or without variables.
+  Variables are passed as a list of link:../javadoc/org/ow2/proactive/scheduler/common/job/JobVariable.html[JobVariable objects]
    This operation constructs new signals (by adding the prefix `ready_` to the input signals), then adds them to job signals.
    For example, if a job declares ready for the signal `soft_stop`, the signal `ready_soft_stop` is added to the set of job signals.
    Additionally, if the input signal (e.g., `soft_stop`) already exists among the job signals (which means that it has been sent and handled previously),
     the operation ready for signal automatically removes it, thus the job is ready again to receive and handle the same signal.
 
- * *sendSignal*, *sendManySignals*: adds one or more signals given as input to the current job signals.
+ * *sendSignal*, *sendManySignals*: sends programmatically one or more signals with or without variables given as input to the current job signals.
    This operation removes the corresponding ready signals if they already exist. For instance, sending `soft_stop` removes the signal
    `ready_soft_stop` if it already exists among the job signals.
+    Though signals are meant to be sent manually by a human user through to ProActive web portals, it is also possible to use these methods to send them programmatically inside the workflow.
 
- * *checkForSignals*: verifies whether one or more signals exist among the set of job signals.
+* *checkForSignals*: verifies whether all of the signals given as input exist among the set of job signals.
 
  * *waitFor*, *waitForAny*: blocking instruction that waits until one signal (among those given as input) is added to the set of job signals.
+    The instruction _waitFor_ will return a map that represents the name and value of the signal variables.
+    _waitForAny_ instruction returns the first signal object that is received among those given as input
 
  * *removeSignal*, *removeManySignals*: removes one or more signals from the set of job signals.
 
- * *getJobSignals*: returns the current job signals.
+ * *getJobSignals*: returns the current job signals and variables.
 
 In addition to the above operations available within ProActive Tasks, users and third-party systems can send signals
 to a specific job via link:/doc/rest/#1218178377[ProActive Signals REST endpoint].
@@ -2693,8 +2784,34 @@ signalapi.readyForSignal("soft_stop")
 //Display current job signals
 println("Job signals "+ signalapi.getJobSignals())
 
-//Wait util the 'soft_stop' signal is sent (via the Workflow Execution portal or REST API)
+//Wait util the 'soft_stop' signal is sent (via the Workflow Execution portal, Scheduler portal or REST API)
 signalapi.waitFor("soft_stop")
+
+//Remove the 'soft_stop' signal from the set of job signals
+signalapi.removeSignal("soft_stop")
+----
+
+Here is another example of a groovy code that uses some Signal API operations with signal variables.
+
+----
+import org.ow2.proactive.scheduler.common.job.JobVariable
+
+//Declare the signal variables
+List <JobVariable> signalVariables = new java.util.ArrayList<JobVariable>()
+signalVariables.add(variables.get("INTEGER_VARIABLE"))
+signalVariables.add(variables.get("BOOLEAN_VARIABLE"))
+
+//Declare that the current job is ready to receive and handle the 'soft_stop' signal with the given variables
+signalapi.readyForSignal("soft_stop", signalVariables)
+
+//Display current job signals
+println("Job signals "+ signalapi.getJobSignals())
+
+//Wait util the 'soft_stop' signal with variables is sent (via the Workflow Execution portal, Scheduler portal or REST API)
+outputParameters = signalapi.waitFor("soft_stop")
+
+//The outputParameters represent a hashmap containing the names of the variables and their values entered by the user
+println "Output parameters = " + outputParameters
 
 //Remove the 'soft_stop' signal from the set of job signals
 signalapi.removeSignal("soft_stop")

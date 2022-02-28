@@ -250,7 +250,7 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | <<_fork_environment, environment>>, <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>, <<_pre_post_clean, clean>>, <<_control_flow_scripts,flow>>
 | -
 
-| *SSH private key*. Private SSH Key used at login. See <<_run_computation_with_your_system_account>>.
+| *SSH private key*. Private SSH Key used at login. See <<_run_as_me>>.
 | credentials.get( "SSH_PRIVATE_KEY" )
 | $credentials_SSH_PRIVATE_KEY
 | -

@@ -2,5 +2,5 @@ PSA services can be instantiated in two different ways:
 
 1- Via the <<_psa_portal,ProActive Service Automation>> (PSA) Portal.
 
-2- Via Workflow Execution Portal. To launch PSA service, you have to open the Submit Template and choose PSA service from the selected bucket. At this point, you can provide values for variables that help configure this service then press submit.
-There's UI support that's allow to display only PSA Services and search for PSA Service by its name.
+2- Via Workflow Execution Portal. To launch PSA services, you have to open the Submit Window in the Workflow Execution Portal and then select 'Service Workflows Only' option to filter PSA services from the list of workflows.
+After selecting a PSA service to submit, you can provide variable values that help configure this service then press submit.
