@@ -139,14 +139,8 @@ The following table describes all available generic information:
 |Similar to RUNAS_PWD but the password will be defined inside link:../user/ProActiveUserGuide.adoc#_third_party_credentials[Third-Party Credential] instead of inlined in the workflow. This method of defining the password should be preferred to RUNAS_PWD for security reasons. The value of RUNAS_PWD_CRED must be the third-party credential name containing the user password.
 |job-level, task-level
 |MyPasswordCredName
-|link:../user/ProActiveUserGuide.html#_run_as_me_generic_info[RUNAS_SSH_KEY]
-|Allows overriding the SSH private key attached to the impersonated user. This can be used only when the impersonation method is set to `key`.
-|job-level, task-level
-|-----BEGIN RSA PRIVATE KEY----- +
-MIIEowIBAAKCAQEAp1fwx6R40kIf (...) +
------END RSA PRIVATE KEY-----
 |link:../user/ProActiveUserGuide.html#_run_as_me_generic_info[RUNAS_SSH_KEY_CRED]
-|Similar to RUNAS_SSH_KEY but the private key will be defined inside link:../user/ProActiveUserGuide.adoc#_third_party_credentials[Third-Party Credential] instead of inlined in the workflow. This method of defining the SSH private key should be preferred to RUNAS_SSH_KEY for security reasons. The value of RUNAS_SSH_KEY_CRED must be the third-party credential name containing the SSH key.
+|Allows overriding the SSH private key attached to the impersonated user. This can be used only when the impersonation method is set to `key`. The private key will be defined inside link:../user/ProActiveUserGuide.adoc#_third_party_credentials[Third-Party Credential] instead of inlined in the workflow. The value of RUNAS_SSH_KEY_CRED must be the third-party credential name containing the SSH key.
 |job-level, task-level
 |MySSHKeyCredName
 |<<_python_command,PYTHON_COMMAND>>
