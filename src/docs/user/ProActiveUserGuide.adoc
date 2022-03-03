@@ -1569,14 +1569,8 @@ Other tasks without RunAsMe enabled will ignore these generic information.
 |Similar to RUNAS_PWD but the password will be defined inside <<_third_party_credentials>> instead of inlined in the workflow. This method of defining the password should be preferred to RUNAS_PWD for security reasons. The value of RUNAS_PWD_CRED must be the third-party credential name containing the user password.
 |MyPasswordCredName
 
-|`RUNAS_SSH_KEY`
-|Allows overriding the SSH private key attached to the impersonated user. This can be used only when the impersonation method is set to `key`.
-|-----BEGIN RSA PRIVATE KEY----- +
-MIIEowIBAAKCAQEAp1fwx6R40kIf (...) +
------END RSA PRIVATE KEY-----
-
 |`RUNAS_SSH_KEY_CRED`
-|Similar to RUNAS_SSH_KEY but the private key will be defined inside <<_third_party_credentials>> instead of inlined in the workflow. This method of defining the SSH private key should be preferred to RUNAS_SSH_KEY for security reasons. The value of RUNAS_SSH_KEY_CRED must be the third-party credential name containing the SSH key.
+|Allows overriding the SSH private key attached to the impersonated user. This can be used only when the impersonation method is set to `key`. The private key will be defined inside <<_third_party_credentials>> instead of inlined in the workflow. The value of RUNAS_SSH_KEY_CRED must be the third-party credential name containing the SSH key.
 |MySSHKeyCredName
 |===
 
