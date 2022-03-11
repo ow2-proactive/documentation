@@ -498,7 +498,1246 @@ The user can access any of the four portals using the default credentials: `admi
 
 Your ProActive Scheduler is now running as a set of container services!
 
+==== How to install ProActive using Kubernetes
 
+ProActive could be easily deployed and started in a Kubernetes cluster. For this purpose, we provide a ready-to-use Kubernetes configuration files that enable you running ProActive Workflows and Scheduling as a set of Pods.
+It starts the following Pods:
+
+*  ProActive Server Pod
+*  ProActive Node Pod
+*  ProActive Database Pod (PostgreSQL or MySQL). The Database Pod is not started when using an embedded HSQL Database.
+
+The Kubernetes YAML configuration pulls the ProActive server, Node, and Database images from the https://dockerhub.activeeon.com/[Private Activeeon Docker Registry^].
+
+To be able to pull images from the https://dockerhub.activeeon.com/[Private Activeeon Docker Registry^], a ProActive enterprise licence and access credentials are required. Please contact us at contact@activeeon.com to request access.
+
+Here are the installation steps you need to follow in order to have ProActive running in a Kubernetes cluster:
+
+====== Set up ProActive Pods using embedded HSQL Database
+The following YAML Kubernetes configuration could be used to run the ProActive server Pod with an embedded HSQL Database.
+It will start up to two Pods, one for the server and one for the Nodes.
+
+[source]
+----
+apiVersion: v1
+data:
+  DB_CATALOG_PASS: SjSWUF72s?C*eWhB
+  DB_NOTIFICATION_PASS: udEHNmxWp*JBrq6?
+  DB_PCA_PASS: rtj!BZ94!JX*nbDk
+  DB_RM_PASS: Z*+ra3vDEsyrDrW?
+  DB_SCHEDULER_PASS: b93r*V=c77cs42Py
+  DB_TYPE: default
+  DYNAMIC_NS: "true"
+  DYNAMIC_NS_MAX_NODES: "15"
+  DYNAMIC_NS_MIN_NODES: "0"
+  DYNAMIC_NS_NAME: Dynamic-Kubernetes-Nodes
+  GID: "1000"
+  GROUP_NAME: activeeon
+  HOST_ADDRESS: 127.0.0.1
+  JOB_CLEANUP_DAYS: "30"
+  MYSQL_ROOT_PASSWORD: YhUk*5tc_aS7Rtdp
+  PAMR_PORT: "33647"
+  PORT: "8080"
+  POSTGRES_PASSWORD: 87zF=JPZAc%UVby_
+  PROACTIVE_ADMIN_PASSWORD: activeeon
+  PROTOCOL: http
+  STATIC_NS_NAME: Local-Linux-Nodes
+  STATIC_NS_WORKER_NODES: "4"
+  UID: "1000"
+  USER_NAME: activeeon
+kind: ConfigMap
+metadata:
+  name: env-config-g8cf4cd4d8
+---
+apiVersion: v1
+data:
+  kube.config: |
+    <Cluster config>
+kind: Secret
+metadata:
+  name: cluster-config-2cd457dbmc
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proactive-scheduler-service
+spec:
+  ports:
+  - name: pamr
+    port: 33647
+    protocol: TCP
+  selector:
+    app: proactive-scheduler
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proactive-scheduler-service-web
+spec:
+  externalIPs:
+  - <Cluster IP>
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: proactive-scheduler
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    type: local
+  name: default-node-pv-volume
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: /opt/proactive/node/default
+  storageClassName: node-default
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    type: local
+  name: default-scheduler-pv-volume
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: /opt/proactive/server/default
+  storageClassName: scheduler-default
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    type: local
+  name: previous-node-pv-volume
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: /opt/proactive/node/previous
+  storageClassName: node-previous
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    type: local
+  name: previous-scheduler-pv-volume
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: /opt/proactive/server/previous
+  storageClassName: scheduler-previous
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: default-node-pv-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: node-default
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: default-scheduler-pv-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: scheduler-default
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: previous-node-pv-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: node-previous
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: previous-scheduler-pv-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: scheduler-previous
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: proactive-node
+  name: node-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proactive-node
+  template:
+    metadata:
+      labels:
+        app: proactive-node
+    spec:
+      containers:
+      - env:
+        - name: DOCKER_HOST
+          value: tcp://localhost:2375
+        - name: KUBERNETES_NODE_SERVICE
+          value: node-deployment-service
+        envFrom:
+        - configMapRef:
+            name: env-config-g8cf4cd4d8
+        image: dockerhub.activeeon.com/k8s/proactive-node:12.0.0
+        imagePullPolicy: IfNotPresent
+        name: proactive-node
+        ports:
+        - containerPort: 33647
+        resources:
+          limits:
+            cpu: 500m
+            memory: 2G
+          requests:
+            cpu: 500m
+            memory: 2G
+        volumeMounts:
+        - mountPath: /opt/proactive/node/default
+          name: default-node-pv-storage
+        - mountPath: /opt/proactive/node/previous
+          name: previous-node-pv-storage
+        - mountPath: /tmp
+          name: pa-node-data
+      - image: docker:1.12.6-dind
+        imagePullPolicy: IfNotPresent
+        name: dind
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /var/lib/docker
+          name: dind-storage
+        - mountPath: /opt/proactive/node/default
+          name: default-node-pv-storage
+        - mountPath: /opt/proactive/node/previous
+          name: previous-node-pv-storage
+        - mountPath: /tmp
+          name: pa-node-data
+      imagePullSecrets:
+      - name: regcred
+      initContainers:
+      - command:
+        - sh
+        - -c
+        - until nc -vz -w 3 proactive-scheduler-service-web 8080; do echo "Waiting for the server to be up..."; sleep 3; done; echo "Waiting for Node Sources to be added...";sleep 10;
+        image: busybox:latest
+        imagePullPolicy: IfNotPresent
+        name: wait-for-server
+      volumes:
+      - name: default-node-pv-storage
+        persistentVolumeClaim:
+          claimName: default-node-pv-claim
+      - name: previous-node-pv-storage
+        persistentVolumeClaim:
+          claimName: previous-node-pv-claim
+      - emptyDir: {}
+        name: dind-storage
+      - emptyDir: {}
+        name: pa-node-data
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: proactive-scheduler
+  name: proactive-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proactive-scheduler
+  template:
+    metadata:
+      labels:
+        app: proactive-scheduler
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: env-config-g8cf4cd4d8
+        image: dockerhub.activeeon.com/k8s/proactive-scheduler:12.0.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 24
+          httpGet:
+            path: /studio
+            port: 8080
+          initialDelaySeconds: 500
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 3
+        name: proactive-scheduler
+        ports:
+        - containerPort: 8080
+        - containerPort: 33647
+        readinessProbe:
+          httpGet:
+            path: /studio
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 5
+          timeoutSeconds: 3
+        resources:
+          requests:
+            cpu: 1000m
+            memory: 5G
+        volumeMounts:
+        - mountPath: /opt/proactive/server/default
+          name: default-scheduler-pv-storage
+        - mountPath: /opt/proactive/server/previous
+          name: previous-scheduler-pv-storage
+      - command:
+        - sh
+        - -c
+        - /add-node-sources.sh
+        envFrom:
+        - configMapRef:
+            name: env-config-g8cf4cd4d8
+        image: dockerhub.activeeon.com/k8s/proactive-scheduler:12.0.0
+        imagePullPolicy: IfNotPresent
+        name: proactive-scheduler-nodes
+        stdin: true
+        tty: true
+        volumeMounts:
+        - mountPath: /opt/proactive/server/kube.config
+          name: cluster-config
+          subPath: kube.config
+      imagePullSecrets:
+      - name: regcred
+      volumes:
+      - name: default-scheduler-pv-storage
+        persistentVolumeClaim:
+          claimName: default-scheduler-pv-claim
+      - name: previous-scheduler-pv-storage
+        persistentVolumeClaim:
+          claimName: previous-scheduler-pv-claim
+      - name: cluster-config
+        secret:
+          secretName: cluster-config-2cd457dbmc
+
+----
+
+
+
+====== Set up ProActive Pods using PostgreSQL Database
+
+The following configuration could be used to run the ProActive server Pod with an external PostgreSQL Database Pod.
+It will start up to three Pods, one for the server, one for the Nodes, and one for the Database.
+
+[source]
+----
+data:
+  DB_CATALOG_PASS: SjSWUF72s?C*eWhB
+  DB_NOTIFICATION_PASS: udEHNmxWp*JBrq6?
+  DB_PCA_PASS: rtj!BZ94!JX*nbDk
+  DB_RM_PASS: Z*+ra3vDEsyrDrW?
+  DB_SCHEDULER_PASS: b93r*V=c77cs42Py
+  DB_TYPE: postgres
+  DYNAMIC_NS: "true"
+  DYNAMIC_NS_MAX_NODES: "15"
+  DYNAMIC_NS_MIN_NODES: "0"
+  DYNAMIC_NS_NAME: Dynamic-Kubernetes-Nodes
+  GID: "1000"
+  GROUP_NAME: activeeon
+  HOST_ADDRESS: 127.0.0.1
+  JOB_CLEANUP_DAYS: "30"
+  MYSQL_ROOT_PASSWORD: YhUk*5tc_aS7Rtdp
+  PAMR_PORT: "33647"
+  PORT: "8080"
+  POSTGRES_PASSWORD: 87zF=JPZAc%UVby_
+  PROACTIVE_ADMIN_PASSWORD: activeeon
+  PROTOCOL: http
+  STATIC_NS_NAME: Local-Linux-Nodes
+  STATIC_NS_WORKER_NODES: "4"
+  UID: "1000"
+  USER_NAME: activeeon
+kind: ConfigMap
+metadata:
+  name: env-config-g8cf4cd4d8
+---
+apiVersion: v1
+data:
+  kube.config: |
+    <Cluster Config>
+kind: Secret
+metadata:
+  name: cluster-config-2cd457dbmc
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proactive-database
+spec:
+  ports:
+  - port: 5432
+    protocol: TCP
+  selector:
+    app: proactive-db
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proactive-scheduler-service
+spec:
+  ports:
+  - name: pamr
+    port: 33647
+    protocol: TCP
+  selector:
+    app: proactive-scheduler
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proactive-scheduler-service-web
+spec:
+  externalIPs:
+  - <Cluster IP>
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: proactive-scheduler
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    type: local
+  name: db-pv-volume
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: /opt/proactive/db/data
+  storageClassName: db-data
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    type: local
+  name: default-node-pv-volume
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: /opt/proactive/node/default
+  storageClassName: node-default
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    type: local
+  name: default-scheduler-pv-volume
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: /opt/proactive/server/default
+  storageClassName: scheduler-default
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    type: local
+  name: previous-node-pv-volume
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: /opt/proactive/node/previous
+  storageClassName: node-previous
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    type: local
+  name: previous-scheduler-pv-volume
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: /opt/proactive/server/previous
+  storageClassName: scheduler-previous
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-pv-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: db-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: default-node-pv-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: node-default
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: default-scheduler-pv-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: scheduler-default
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: previous-node-pv-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: node-previous
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: previous-scheduler-pv-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: scheduler-previous
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: proactive-node
+  name: node-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proactive-node
+  template:
+    metadata:
+      labels:
+        app: proactive-node
+    spec:
+      containers:
+      - env:
+        - name: DOCKER_HOST
+          value: tcp://localhost:2375
+        - name: KUBERNETES_NODE_SERVICE
+          value: node-deployment-service
+        envFrom:
+        - configMapRef:
+            name: env-config-g8cf4cd4d8
+        image: dockerhub.activeeon.com/k8s/proactive-node:12.0.0
+        imagePullPolicy: IfNotPresent
+        name: proactive-node
+        ports:
+        - containerPort: 33647
+        resources:
+          limits:
+            cpu: 500m
+            memory: 2G
+          requests:
+            cpu: 500m
+            memory: 2G
+        volumeMounts:
+        - mountPath: /opt/proactive/node/default
+          name: default-node-pv-storage
+        - mountPath: /opt/proactive/node/previous
+          name: previous-node-pv-storage
+        - mountPath: /tmp
+          name: pa-node-data
+      - image: docker:1.12.6-dind
+        imagePullPolicy: IfNotPresent
+        name: dind
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /var/lib/docker
+          name: dind-storage
+        - mountPath: /opt/proactive/node/default
+          name: default-node-pv-storage
+        - mountPath: /opt/proactive/node/previous
+          name: previous-node-pv-storage
+        - mountPath: /tmp
+          name: pa-node-data
+      imagePullSecrets:
+      - name: regcred
+      initContainers:
+      - command:
+        - sh
+        - -c
+        - until nc -vz -w 3 proactive-scheduler-service-web 8080; do echo "Waiting for the server to be up..."; sleep 3; done; echo "Waiting for Node Sources to be added...";sleep 10;
+        image: busybox:latest
+        imagePullPolicy: IfNotPresent
+        name: wait-for-server
+      volumes:
+      - name: default-node-pv-storage
+        persistentVolumeClaim:
+          claimName: default-node-pv-claim
+      - name: previous-node-pv-storage
+        persistentVolumeClaim:
+          claimName: previous-node-pv-claim
+      - emptyDir: {}
+        name: dind-storage
+      - emptyDir: {}
+        name: pa-node-data
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proactive-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proactive-db
+  template:
+    metadata:
+      labels:
+        app: proactive-db
+        db: postgresql
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: env-config-g8cf4cd4d8
+        image: dockerhub.activeeon.com/k8s/postgres-pa:12.2
+        imagePullPolicy: IfNotPresent
+        name: proactive-db
+        ports:
+        - containerPort: 5432
+        resources:
+          limits:
+            memory: 2G
+          requests:
+            memory: 2G
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: db-pv-storage
+      imagePullSecrets:
+      - name: regcred
+      volumes:
+      - name: db-pv-storage
+        persistentVolumeClaim:
+          claimName: db-pv-claim
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: proactive-scheduler
+  name: proactive-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proactive-scheduler
+  template:
+    metadata:
+      labels:
+        app: proactive-scheduler
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: env-config-g8cf4cd4d8
+        image: dockerhub.activeeon.com/k8s/proactive-scheduler-external-db:12.0.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 24
+          httpGet:
+            path: /studio
+            port: 8080
+          initialDelaySeconds: 500
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 3
+        name: proactive-scheduler
+        ports:
+        - containerPort: 8080
+        - containerPort: 33647
+        readinessProbe:
+          httpGet:
+            path: /studio
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 5
+          timeoutSeconds: 3
+        resources:
+          requests:
+            cpu: 1000m
+            memory: 5G
+        volumeMounts:
+        - mountPath: /opt/proactive/server/default
+          name: default-scheduler-pv-storage
+        - mountPath: /opt/proactive/server/previous
+          name: previous-scheduler-pv-storage
+      - command:
+        - sh
+        - -c
+        - /add-node-sources.sh
+        envFrom:
+        - configMapRef:
+            name: env-config-g8cf4cd4d8
+        image: dockerhub.activeeon.com/k8s/proactive-scheduler-external-db:12.0.0
+        imagePullPolicy: IfNotPresent
+        name: proactive-scheduler-nodes
+        stdin: true
+        tty: true
+        volumeMounts:
+        - mountPath: /opt/proactive/server/kube.config
+          name: cluster-config
+          subPath: kube.config
+      imagePullSecrets:
+      - name: regcred
+      initContainers:
+      - command:
+        - sh
+        - -c
+        - until nc -vz -w 3 proactive-database 5432; do echo "Waiting for postgres..."; sleep 3; done;
+        image: busybox:latest
+        imagePullPolicy: IfNotPresent
+        name: wait-for-pg
+      volumes:
+      - name: default-scheduler-pv-storage
+        persistentVolumeClaim:
+          claimName: default-scheduler-pv-claim
+      - name: previous-scheduler-pv-storage
+        persistentVolumeClaim:
+          claimName: previous-scheduler-pv-claim
+      - name: cluster-config
+        secret:
+          secretName: cluster-config-2cd457dbmc
+
+----
+
+
+====== Set up ProActive Pods using MySQL Database
+
+The following configuration could be used to run the ProActive server Pod with an external MySQL Database Pod.
+It will start up to three Pods, one for the server, one for the Nodes, and one for the Database.
+
+[source]
+----
+apiVersion: v1
+data:
+  DB_CATALOG_PASS: SjSWUF72s?C*eWhB
+  DB_NOTIFICATION_PASS: udEHNmxWp*JBrq6?
+  DB_PCA_PASS: rtj!BZ94!JX*nbDk
+  DB_RM_PASS: Z*+ra3vDEsyrDrW?
+  DB_SCHEDULER_PASS: b93r*V=c77cs42Py
+  DB_TYPE: mysql
+  DYNAMIC_NS: "true"
+  DYNAMIC_NS_MAX_NODES: "15"
+  DYNAMIC_NS_MIN_NODES: "0"
+  DYNAMIC_NS_NAME: Dynamic-Kubernetes-Nodes
+  GID: "1000"
+  GROUP_NAME: activeeon
+  HOST_ADDRESS: 127.0.0.1
+  JOB_CLEANUP_DAYS: "30"
+  MYSQL_ROOT_PASSWORD: YhUk*5tc_aS7Rtdp
+  PAMR_PORT: "33647"
+  PORT: "8080"
+  POSTGRES_PASSWORD: 87zF=JPZAc%UVby_
+  PROACTIVE_ADMIN_PASSWORD: activeeon
+  PROTOCOL: http
+  STATIC_NS_NAME: Local-Linux-Nodes
+  STATIC_NS_WORKER_NODES: "4"
+  UID: "1000"
+  USER_NAME: activeeon
+kind: ConfigMap
+metadata:
+  name: env-config-g8cf4cd4d8
+---
+apiVersion: v1
+data:
+  kube.config: |
+    <Cluster Config>
+kind: Secret
+metadata:
+  name: cluster-config-2cd457dbmc
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proactive-database
+spec:
+  ports:
+  - port: 3306
+    protocol: TCP
+  selector:
+    app: proactive-db
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proactive-scheduler-service
+spec:
+  ports:
+  - name: pamr
+    port: 33647
+    protocol: TCP
+  selector:
+    app: proactive-scheduler
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proactive-scheduler-service-web
+spec:
+  externalIPs:
+  - <Cluster IP>
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: proactive-scheduler
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    type: local
+  name: db-pv-volume
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: /opt/proactive/db/data
+  storageClassName: db-data
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    type: local
+  name: default-node-pv-volume
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: /opt/proactive/node/default
+  storageClassName: node-default
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    type: local
+  name: default-scheduler-pv-volume
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: /opt/proactive/server/default
+  storageClassName: scheduler-default
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    type: local
+  name: previous-node-pv-volume
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: /opt/proactive/node/previous
+  storageClassName: node-previous
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    type: local
+  name: previous-scheduler-pv-volume
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: /opt/proactive/server/previous
+  storageClassName: scheduler-previous
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-pv-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: db-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: default-node-pv-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: node-default
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: default-scheduler-pv-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: scheduler-default
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: previous-node-pv-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: node-previous
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: previous-scheduler-pv-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: scheduler-previous
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: proactive-node
+  name: node-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proactive-node
+  template:
+    metadata:
+      labels:
+        app: proactive-node
+    spec:
+      containers:
+      - env:
+        - name: DOCKER_HOST
+          value: tcp://localhost:2375
+        - name: KUBERNETES_NODE_SERVICE
+          value: node-deployment-service
+        envFrom:
+        - configMapRef:
+            name: env-config-g8cf4cd4d8
+        image: dockerhub.activeeon.com/k8s/proactive-node:12.0.0
+        imagePullPolicy: IfNotPresent
+        name: proactive-node
+        ports:
+        - containerPort: 33647
+        resources:
+          limits:
+            cpu: 500m
+            memory: 2G
+          requests:
+            cpu: 500m
+            memory: 2G
+        volumeMounts:
+        - mountPath: /opt/proactive/node/default
+          name: default-node-pv-storage
+        - mountPath: /opt/proactive/node/previous
+          name: previous-node-pv-storage
+        - mountPath: /tmp
+          name: pa-node-data
+      - image: docker:1.12.6-dind
+        imagePullPolicy: IfNotPresent
+        name: dind
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /var/lib/docker
+          name: dind-storage
+        - mountPath: /opt/proactive/node/default
+          name: default-node-pv-storage
+        - mountPath: /opt/proactive/node/previous
+          name: previous-node-pv-storage
+        - mountPath: /tmp
+          name: pa-node-data
+      imagePullSecrets:
+      - name: regcred
+      initContainers:
+      - command:
+        - sh
+        - -c
+        - until nc -vz -w 3 proactive-scheduler-service-web 8080; do echo "Waiting for the server to be up..."; sleep 3; done; echo "Waiting for Node Sources to be added...";sleep 10;
+        image: busybox:latest
+        imagePullPolicy: IfNotPresent
+        name: wait-for-server
+      volumes:
+      - name: default-node-pv-storage
+        persistentVolumeClaim:
+          claimName: default-node-pv-claim
+      - name: previous-node-pv-storage
+        persistentVolumeClaim:
+          claimName: previous-node-pv-claim
+      - emptyDir: {}
+        name: dind-storage
+      - emptyDir: {}
+        name: pa-node-data
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proactive-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proactive-db
+  template:
+    metadata:
+      labels:
+        app: proactive-db
+        db: mysql
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: env-config-g8cf4cd4d8
+        image: dockerhub.activeeon.com/k8s/mysql-pa:8.0
+        imagePullPolicy: IfNotPresent
+        name: proactive-db
+        ports:
+        - containerPort: 3306
+        resources:
+          limits:
+            memory: 2G
+          requests:
+            memory: 2G
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: db-pv-storage
+      imagePullSecrets:
+      - name: regcred
+      volumes:
+      - name: db-pv-storage
+        persistentVolumeClaim:
+          claimName: db-pv-claim
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: proactive-scheduler
+  name: proactive-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proactive-scheduler
+  template:
+    metadata:
+      labels:
+        app: proactive-scheduler
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: env-config-g8cf4cd4d8
+        image: dockerhub.activeeon.com/k8s/proactive-scheduler-external-db:12.0.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 24
+          httpGet:
+            path: /studio
+            port: 8080
+          initialDelaySeconds: 500
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 3
+        name: proactive-scheduler
+        ports:
+        - containerPort: 8080
+        - containerPort: 33647
+        readinessProbe:
+          httpGet:
+            path: /studio
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 5
+          timeoutSeconds: 3
+        resources:
+          requests:
+            cpu: 1000m
+            memory: 5G
+        volumeMounts:
+        - mountPath: /opt/proactive/server/default
+          name: default-scheduler-pv-storage
+        - mountPath: /opt/proactive/server/previous
+          name: previous-scheduler-pv-storage
+      - command:
+        - sh
+        - -c
+        - /add-node-sources.sh
+        envFrom:
+        - configMapRef:
+            name: env-config-g8cf4cd4d8
+        image: dockerhub.activeeon.com/k8s/proactive-scheduler-external-db:12.0.0
+        imagePullPolicy: IfNotPresent
+        name: proactive-scheduler-nodes
+        stdin: true
+        tty: true
+        volumeMounts:
+        - mountPath: /opt/proactive/server/kube.config
+          name: cluster-config
+          subPath: kube.config
+      imagePullSecrets:
+      - name: regcred
+      initContainers:
+      - command:
+        - sh
+        - -c
+        - until nc -vz -w 3 proactive-database 3306; do echo "Waiting for mysql..."; sleep 3; done;
+        image: busybox:latest
+        imagePullPolicy: IfNotPresent
+        name: wait-for-mysql
+      volumes:
+      - name: default-scheduler-pv-storage
+        persistentVolumeClaim:
+          claimName: default-scheduler-pv-claim
+      - name: previous-scheduler-pv-storage
+        persistentVolumeClaim:
+          claimName: previous-scheduler-pv-claim
+      - name: cluster-config
+        secret:
+          secretName: cluster-config-2cd457dbmc
+
+----
+
+===== 3. Start ProActive using Kubernetes config files
+
+Create a secret to be able to pull images from the Private Activeeon Registry
+----
+$ kubectl create secret docker-registry regcred --docker-server=dockerhub.activeeon.com --docker-username=<username> --docker-password=<pwd> --docker-email=<email>
+----
+
+Start ProActive by applying the Kubernetes configuration:
+----
+$ kubectl apply -f -
+----
+
+When all Nodes are up, ProActive Web Portals are available at `<PROTOCOL>://<PUBLIC-IP>:<PORT>/`. The `<PROTOCOL>`, `<PUBLIC-IP>`, and `<PORT>` are specified in the YAML file.
+
+The user can access any of the four portals using the default credentials: `admin/<PROACTIVE_ADMIN_PASSWORD>`. `PROACTIVE_ADMIN_PASSWORD` is, by default, `activeeon` but you can customize it as well in the YAML file.
+
+Your ProActive Scheduler is now running as a set of Pods!
 
 ==== How to upgrade ProActive on Linux
 Before you upgrade to a new version of ProActive (ex 10.0), you first need to back up the configuration and data that you want to restore (DB, workflows, etc) from the old ProActive installation (ex 8.4). Basically, you have to back up the content of the following folders:
