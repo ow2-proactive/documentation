@@ -498,7 +498,71 @@ The user can access any of the four portals using the default credentials: `admi
 
 Your ProActive Scheduler is now running as a set of container services!
 
+==== How to install ProActive using Kubernetes
 
+ProActive could be easily deployed and started in a Kubernetes cluster. For this purpose, we provide ready-to-use Kubernetes configuration files that enable you running ProActive Workflows and Scheduling as a set of Pods.
+It starts the following Pods:
+
+*  ProActive Server Pod
+*  ProActive Node Pod
+*  ProActive Database Pod (PostgreSQL or MySQL). The Database Pod is not started when using an embedded HSQL Database.
+
+The Kubernetes YAML configuration pulls the ProActive Server, Node, and Database images from the https://dockerhub.activeeon.com/[Private Activeeon Docker Registry^].
+
+To be able to pull images from the https://dockerhub.activeeon.com/[Private Activeeon Docker Registry^], a ProActive enterprise licence and access credentials are required. Please contact us at contact@activeeon.com to request access.
+
+Here are the installation steps you need to follow in order to have ProActive running in a Kubernetes cluster:
+
+====== Set up ProActive Pods using embedded HSQL Database
+The following YAML Kubernetes configuration could be used to run the ProActive Server Pod with an embedded HSQL Database.
+It will start up to two Pods, one for the Server and one for the Nodes.
+
+link:./references/kubernetes/K8sProActiveHSQLDatabase.yml[Kubernetes configuration of ProActive using HSQL Database, title="Click to donwload"^]:
+[source,yaml]
+----
+include::./references/kubernetes/K8sProActiveHSQLDatabase.yml[]
+----
+
+====== Set up ProActive Pods using PostgreSQL Database
+
+The following configuration could be used to run the ProActive Server Pod with an external PostgreSQL Database Pod.
+It will start up to three Pods, one for the Server, one for the Nodes, and one for the Database.
+
+link:./references/kubernetes/K8sProActivePostgresDatabase.yml[Kubernetes configuration of ProActive using Postgres Database, title="Click to donwload"^]:
+[source,yaml]
+----
+include::./references/kubernetes/K8sProActivePostgresDatabase.yml[]
+----
+
+
+====== Set up ProActive Pods using MySQL Database
+
+The following configuration could be used to run the ProActive Server Pod with an external MySQL Database Pod.
+It will start up to three Pods, one for the Server, one for the Nodes, and one for the Database.
+
+link:./references/kubernetes/K8sProActiveMysqlDatabase.yml[Kubernetes configuration of ProActive using MySQL Database, title="Click to donwload"^]:
+[source,yaml]
+----
+include::./references/kubernetes/K8sProActiveMysqlDatabase.yml[]
+----
+
+===== 3. Start ProActive using Kubernetes config files
+
+Create a secret to be able to pull images from the Private Activeeon Registry
+----
+$ kubectl create secret docker-registry regcred --docker-server=dockerhub.activeeon.com --docker-username=<username> --docker-password=<pwd> --docker-email=<email>
+----
+
+Start ProActive by applying the Kubernetes configuration:
+----
+$ kubectl apply -f -
+----
+
+When all Nodes are up, ProActive Web Portals are available at `<PROTOCOL>://<PUBLIC-IP>:<PORT>/`. The `<PROTOCOL>`, `<PUBLIC-IP>`, and `<PORT>` are specified in the YAML file.
+
+The user can access any of the four portals using the default credentials: `admin/<PROACTIVE_ADMIN_PASSWORD>`. `PROACTIVE_ADMIN_PASSWORD` is, by default, `activeeon` but you can customize it as well in the YAML file.
+
+Your ProActive Scheduler is now running as a set of Pods!
 
 ==== How to upgrade ProActive on Linux
 Before you upgrade to a new version of ProActive (ex 10.0), you first need to back up the configuration and data that you want to restore (DB, workflows, etc) from the old ProActive installation (ex 8.4). Basically, you have to back up the content of the following folders:
