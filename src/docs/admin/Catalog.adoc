@@ -44,24 +44,29 @@ This user can only access to the following buckets list:
 ==== Catalog RBAC management
 
 RBAC, or Role Based Access Control, represents a control model for a system in which each access decision is based on the role to which the user is associated.
-In the catalog, two RBAC operations can be distinguished which are only performed by admins or bucket owners:
+In the catalog, RBAC operations are only performed by admins or bucket owners.
+RBAC operations can be distinguished in two types:
 
     1. Managing an authorization for a bucket
     2. Managing an authorization for a specific object in a bucket
 
-Both bucket and object authorizations can be assigned for a specific user (using her/his username) and can be assigned for a user group (that contains multiple users).
-Consequently, only one authorization can be created for a username or a user group.
+Both bucket and object authorizations can be assigned for either a specific user (using her/his username) or a user group (that contains multiple users).
+For each specific bucket or object, only one authorization can be assigned to a username or a user group.
 However, the user can eventually have multiple authorizations due to a mix of username and user-group related authorizations for a bucket or an object.
 Furthermore, the created authorizations can be modified or deleted.
 
-An authorization can have one of the following access types:
+An authorization gives the specified user(s) some access permission to the specific bucket or object.
+We provide four access types that can be authorized:
 
 * Read: The user or user group can only read the bucket and its objects (in case of a bucket authorization) or the object only (in case of a catalog-object authorization) and execute it.
 * Write: The user or user group have, in addition to the read right, the privilege to add new objects in the bucket and to modify or delete one or many.
 * Admin: The user or user group have, in addition to the write rights, the ability to modify a bucket (e.g. change the group) or delete a bucket.
 Moreover, they can create, modify or delete the authorizations of other users for the bucket or its objects.
-However, if it is a catalog-object authorization, in addition to the write rights, the user or group of users can create, modify or delete the authorizations of other users.
+The same apply in case of a catalog-object admin authorization where the user or group of users, in addition to the write rights, can create, modify or delete a catalog-object authorizations for other users.
+However, they can not create, edit or delete bucket authorization neither edit nor delete them.
+
 * No Access: The user or group of users have no access to the bucket and its objects (in case of a bucket authorization) or to a specific object (in case of a catalog-object authorization).
+This access type is usually used when the admin wants to authorize a user group except for some specific users, or authorize access to a bucket except for some specific objects.
 
 
 To manage the authorizations, there is a dedicated authorization view for each bucket that is accessible by clicking on the shield-like button above the buckets' list, as shown in the figure below.
@@ -128,7 +133,10 @@ Once the selection is made the authorization will be updated as shown in the fig
 
 image::../images/updatedGrant.png[align=center]
 
-In the case where a user has multiple authorizations over a bucket, due to his username or user group(s) authorizations, the resulting access type will be calculated as follows:
+==== Authorization calculation rules
+
+Since each user might belong to multiple user groups, a user could have multiple authorizations over a bucket due to his username or user group(s) authorizations.
+In such case, the resulting access type will be calculated as follows:
 
 * If the username-assigned authorization exists, it is prioritized and its access type will be the user's resulting rights over the bucket.
 
