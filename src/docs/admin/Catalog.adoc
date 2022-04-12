@@ -133,6 +133,9 @@ Once the selection is made the authorization will be updated as shown in the fig
 
 image::../images/updatedGrant.png[align=center]
 
+However, when a user has admin rights over a bucket or an object, he/she can not downgrade his/her rights while updating the authorization.
+Another user, with admin rights over the bucket or the object, can do it for him/her.
+
 ==== Authorization calculation rules
 
 Since each user might belong to multiple user groups, a user could have multiple authorizations over a bucket due to his username or user group(s) authorizations.
@@ -148,4 +151,4 @@ In the case where a user has multiple authorizations over an object, the resulti
 
 * If multiple user-groups authorizations exist for the object, without a username authorization, the resulting user's rights over the object will be the access type of the group authorization that have the highest priority.
 
-* If both username-assigned authorization and user-groups authorizations do not exist for the object, the resulting user's rights for the object will be th same as the user's resulting rights over the bucket that contains the object.
+* If both username-assigned authorization and user-groups authorizations do not exist for the object, the resulting user's rights for the object will be the same as the user's resulting rights over the bucket that contains the object.
