@@ -52,7 +52,11 @@ The following table describes all available generic information:
 |job-level
 |JOB_PENDING_TO_RUNNING, JOB_RUNNING_TO_FINISHED
 |<<_remove_delay,REMOVE_DELAY>>
-|once the job is terminated, this setting controls the delay after which the will be removed from the scheduler database
+|once the job is terminated, this setting controls the delay after which it will be removed from the scheduler database
+|job-level
+|3d 12h
+|<<_remove_delay,REMOVE_DELAY_ON_ERROR>>
+|once the job is terminated with errors, this setting controls the delay after which it will be removed from the scheduler database. This generic information should be set in addition to REMOVE_DELAY when there is a need to keep the job longer in the scheduler database in case of error.
 |job-level
 |3d 12h
 |<<_earliest_deadline_first_policy,JOB_DDL>>
@@ -249,7 +253,7 @@ See <<../user/ProActiveUserGuide.adoc#_get_notifications_on_job_events,Get Notif
 
 ==== REMOVE_DELAY
 
-The `REMOVE_DELAY` Generic Information can be used to control when a job is removed from the scheduler database after its termination.
+The `REMOVE_DELAY` generic information can be used to control when a job is removed from the scheduler database after its termination.
 
 The <<../admin/ProActiveAdminGuide.adoc#_housekeeping,housekeeping mechanism>> must be configured to allow usage of `REMOVE_DELAY`.
 
@@ -265,6 +269,25 @@ The format allows flexible combinations of the elements:
  * `120m 12s` : 120 minutes and 12 seconds.
 
 `REMOVE_DELAY` can be defined at *job-level* only.
+
+==== REMOVE_DELAY_ON_ERROR
+
+The `REMOVE_DELAY_ON_ERROR` generic information can be used to control when a job is removed from the scheduler database after its termination, if the job has terminated with errors.
+
+The <<../admin/ProActiveAdminGuide.adoc#_housekeeping,housekeeping mechanism>> must be configured to allow usage of `REMOVE_DELAY_ON_ERROR`.
+
+`REMOVE_DELAY_ON_ERROR` overrides the global `pa.scheduler.core.automaticremove.errorjob.delay` setting for a particular job.
+It allows a job to be removed either *before* or *after* the delay configured globally on the server.
+
+The general format of the `REMOVE_DELAY_ON_ERROR` generic information is `VVd XXh YYm ZZs`, where VV contain days, XX hours, YY minutes and ZZ seconds.
+
+The format allows flexible combinations of the elements:
+
+* `12d 1h 10m` : 12 days, 1 hour and 10 minutes.
+* `26h` : 26 hours.
+* `120m 12s` : 120 minutes and 12 seconds.
+
+`REMOVE_DELAY_ON_ERROR` can be defined at *job-level* only.
 
 ==== Earliest Deadline First Policy
 
