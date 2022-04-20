@@ -2759,7 +2759,7 @@ proactive-node -Dpas.launcher.forkas.method=key
 ----
 
 A SSH key can be tied to the user's account and used to impersonate the user when running a task on a given machine (using SSH).
-Additionnally:
+Additionally:
 
  - The `.ssh/authorized_keys` files of all machines must be configured to accept this SSH key.
  - The SSH key must not contain a *passphrase*.
@@ -3288,35 +3288,6 @@ that automatically adds indexes on foreign keys, it is strongly recommended to
 ask your DBA to identify and delete duplicate indexes created by the database
 system since they may hurt performances.
 
-==== Housekeeping
-
-The Scheduler provides a housekeeping mechanism that periodically removes finished jobs
-from the Scheduler Portal. It can also remove jobs and all its data from the database to save space.
-This mechanism has two phases:
-
-. Once a job is finished, it sets its scheduled time for removal (the job expiration date)
-. Actual cleaning of expired jobs from the scheduler and/or the database will be periodically triggered and performed in a bulk operation
-
-You can configure housekeeping with the following parameters located in <<Scheduler Properties,the scheduler config file>>:
-
- * `pa.scheduler.core.automaticremovejobdelay` : delay in seconds after job termination to remove the job.
- * `pa.scheduler.core.removejobdelay` : instead of using job termination time to initiate the delay, use the result retrieval time (for example, when a user opens the job results in the scheduler portal).
-
-TIP: Additionnally, you can configure a remove delay for individual job execution using thee `REMOVE_DELAY` <<../user/ProActiveUserGuide.adoc#_remove_delay,generic information>>.
-
-If the `pa.scheduler.core.automaticremovejobdelay` setting is set to `0` (the default), the Housekeeping mechanism is *disabled* (no occurrence of housekeeping).
-
-IMPORTANT: Please note that the housekeeping mechanism is not applied to the jobs
-which were already in the database before housekeeping was switched on.
-Similarly, a modification of the `automaticremovejobdelay` or `removejobdelay` settings will not be retroactively applied to already finished jobs.
-
-The housekeeping mechanism is periodically triggered through the cron
-expression `pa.scheduler.core.automaticremovejobcronexpression`.
-As the boolean `pa.scheduler.job.removeFromDataBase` property is set to `true` by default,
-a query is executed in the scheduler database to remove all jobs that qualify for the bulk removal.
-
-IMPORTANT: The support of `pa.scheduler.job.removeFromDataBase=false` has been discontinued in ProActive Scheduler version `10.1.0`.
-
 ==== Database impact on job submission performance
 
 The choice of the database provider can influence the Scheduler and Resource Manager performance overall.
@@ -3381,6 +3352,40 @@ nofile soft/hard 65536
 ```
 
 In addition, we recommend to have at least 16GB RAM for 15.000 nodes.
+
+=== Housekeeping
+
+The Scheduler provides a housekeeping mechanism that periodically removes finished jobs
+from the Scheduler and Workflow Execution portals. It also removes associated logs and all job data from the database to save space.
+This mechanism has two phases:
+
+. Once a job is finished, it sets its scheduled time for removal (the job expiration date)
+. Actual cleaning of expired jobs from the scheduler and/or the database will be periodically triggered and performed in a bulk operation
+
+You can configure housekeeping with the following parameters located in <<Scheduler Properties,the scheduler config file>>:
+
+* `pa.scheduler.core.automaticremovejobdelay` : delay in seconds to remove a terminated job.
+* `pa.scheduler.core.automaticremove.errorjob.delay` : delay in seconds to remove a job terminated with errors.
+* `pa.scheduler.core.removejobdelay` : instead of using job termination time to initiate the delay, use the result retrieval time (for example, when a user opens the job results in the scheduler portal).
+
+TIP: Additionally, you can configure a remove delay for individual job execution using the <<../user/ProActiveUserGuide.adoc#_remove_delay,`REMOVE_DELAY`>> or <<../user/ProActiveUserGuide.adoc#_remove_delay_on_error,`REMOVE_DELAY_ON_ERROR`>> generic information.
+
+If the `pa.scheduler.core.automaticremovejobdelay` setting is set to `0` (the default), the Housekeeping mechanism is *disabled* (no occurrence of housekeeping).
+
+If the `pa.scheduler.core.automaticremove.errorjob.delay` setting is set to `0` (the default), removal of finished jobs containing errors uses the `pa.scheduler.core.automaticremovejobdelay` configuration.
+
+The `errorjob.delay` setting is generally used in production environment for audit purpose. It allows keeping jobs containing errors longer in the database.
+
+IMPORTANT: Please note that the housekeeping mechanism is not applied to the jobs
+which were already in the database before housekeeping was switched on.
+Similarly, a modification of the `automaticremovejobdelay`, `automaticremove.errorjob.delay` or `removejobdelay` settings will not be retroactively applied to already finished jobs.
+
+The housekeeping mechanism is periodically triggered through the cron
+expression `pa.scheduler.core.automaticremovejobcronexpression`.
+As the boolean `pa.scheduler.job.removeFromDataBase` property is set to `true` by default,
+a query is executed in the scheduler database to remove all jobs that qualify for the bulk removal.
+
+IMPORTANT: The support of `pa.scheduler.job.removeFromDataBase=false` has been discontinued in ProActive Scheduler version `10.1.0`.
 
 
 == Nodes and Task Recovery
