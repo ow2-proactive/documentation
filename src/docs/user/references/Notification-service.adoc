@@ -55,6 +55,9 @@ Users can have multiple job subscriptions with different granularity on the work
 At least one field of <<_glossary_workflow,*Workflow*>> data must be provided to create the subscription, that means it
 is not possible to create a job subscription that will listen for all jobs submitted to the Scheduler.
 
+NOTE: A workflow name which references a variable (e.g., my_workflow_${my_var} or my_workflow_$my_var) is replaced by substituting the variable with its value, in case this variable is defined at the workflow level.
+The replacement is performed when the job subscription is created.
+
 [title="Workflow data to create a job subscription"]
 image::job-subscription-workflow-data.png[align="center"]
 
