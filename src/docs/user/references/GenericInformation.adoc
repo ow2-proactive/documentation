@@ -407,8 +407,8 @@ The following generic information can be used to assign result metadata to a wor
 Can only be used if the task result content is an array of bytes.
 
  * `content.type`: define the MIME type of the result.
- * `file.name`: allows to store (Save as) the result from the scheduer or workflow-automation portals as a specific file name.
- * `file.extension`: allows to store (Save as) the result from the scheduer or workflow-automation portals as a specific file extension with auto-generated file name.
+ * `file.name`: allows to store (Save as) the result from the scheduler or workflow-automation portals as a specific file name.
+ * `file.extension`: allows to store (Save as) the result from the scheduler or workflow-automation portals as a specific file extension with auto-generated file name.
 
 See <<../user/ProActiveUserGuide.adoc#_assigning_metadata_to_task_result,Assigning metadata to task result>> for further information.
 
@@ -454,7 +454,7 @@ When using <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile>> tasks, the
 
 See <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script language>> for further information.
 
-The Dockerfile generic information should be defined at *task-level*. Some (docker-file-options-split-regex, or command options) may be defined at *job-level* to apply to all tasks of the workflow.
+The Dockerfile generic information should be defined at the *task level*. Some (docker-file-options-split-regex, or command options) may be defined at the *job level* to apply to all tasks of the workflow.
 
 ==== Job Planner
 The <<../JobPlanner/JobPlannerUserGuide.html#_all_doc_jp_user_guide, Job Planner>> automatically adds two generic information to the jobs it submits:
