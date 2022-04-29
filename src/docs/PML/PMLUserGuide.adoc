@@ -1572,21 +1572,27 @@ There are numerous research papers and studies dedicated to the analysis of the 
 
 To access the AutoFeat page, please follow the steps below:
 
-Open the link:https://try.activeeon.com/automation-dashboard/#/portal/workflow-execution[Workflow Execution Portal].
+Open the link:https://try.activeeon.com/studio[Studio Portal].
 
-Click on the button *Submit a Job* and then search for *Import_Data_And_Automate_Feature_Engineering* workflow as described in the image below.
+Create a new workflow.
 
-image::Import_Data_And_Automate_Feature_Engineerin_Search.png[align=center]
+Drag and drop the `Import_Data_And_Automate_Feature_Engineering` task from the *machine-learning* bucket in the ProActive Machine Learning.
 
-Put in *FILE_URL* variable the S3 link to upload your dataset.
+Click on the task and click `General Parameters` in the left to change the default parameters of this task.
+
+image::Import_Data_And_Automate_Feature_Engineering_Task.png[align=center]
+
+Put in *FILE_PATH* variable the S3 link to upload your dataset.
 
 Set the other parameters according to your dataset format.
 
-Click on the *Submit* button to start AutoFeat.
+Click on the *Execute* button to run the workflow and start AutoFeat.
+
+image::Import_Data_And_Automate_Feature_Engineering_Execute.png[align=center]
 
 To get more information about the parameters of the service, please check the section <<Import_Data_And_Automate_Feature_Engineering>>.
 
-image::Import_Data_And_Automate_Feature_Engineering_Submit.png[align=center]
+Open the link:https://try.activeeon.com/automation-dashboard/#/portal/workflow-execution[Workflow Execution Portal].
 
 You can now access the AutoFeat Page by clicking on the endpoint `AutoFeat` as shown in the image below.
 
@@ -1611,11 +1617,11 @@ AutoFeat also creates some summary statistics for each column. A table is displa
 [[_Column_summaries]]
 image::AutoFeat_column_summaries.png[align=center]
 
-=== Edit column names and types
-A preview of the data is displayed in the *Edit Column Names and Types* as follows.
+=== Data Preprocessing
+A preview of the data is displayed in the *Data Preprocessing* as follows.
 
-[[_Edit_column_names_and_types]]
-image::AutoFeat_edit_column_names_and_types.png["Edit column names and types",align=center]
+[[_Data_Preprocessing]]
+image::AutoFeat_edit_column_names_and_types.png["Data Preprocessing",align=center]
 
 It is possible to change a column information. These changes can include:
 
@@ -1625,12 +1631,12 @@ It is possible to change a column information. These changes can include:
 
 - _Category Type_: Categorical variables can be divided into two categories; *Ordinal* such the categories have an inherent order and *Nominal* if the categories do not have any inherent order.
 
-- _Label_: Check this checkbox to select the label column.
+- _Label Column_: Only one column can be selected as the label column.
 
 - _Coding Method_: The encoding method used for converting the categorical data values into numerical values. The value is set to *Auto* by default. Thereafter, the best suited method for encoding the categorical feature is automatically identified. The data scientist still has the ability to override every decision and select another encoding method from the drop-down menu. Different methods are supported by AutoFeat such as *Label*, *OneHot*, *Dummy*, *Binary*, *Base N*, *Hash* and *Target*. Some of those methods require specifying additional encoding parameters. These parameters vary depending on the selected method (e.g., the base and the number of components for BaseN and Hash, respectively, and the target column for Target encoding method). Some of those values are set by default, if no values are specified by the user.
 
-[[_Edit_column_names_and_types]]
-image::AutoFeat_edit_column_names_and_types_encoding_parameters.png["Edit column names and types",align=center]
+[[_Data_Preprocessing]]
+image::AutoFeat_edit_column_names_and_types_encoding_parameters.png["Data Preprocessing",align=center]
 
 It is also possible to perform the following actions on the dataset:
 
@@ -1638,7 +1644,7 @@ It is also possible to perform the following actions on the dataset:
 - *Restore*, to restore the original version of the dataset loaded from the external source.
 - *Delete Column*, to delete a column from the dataset.
 - *Preview Encoded Data*, to display the encoding results in a new tab.
-- *Cancel*, to discard any changes the user may have made and finish the workflow execution.
+- *Cancel and Quit*, to discard any changes the user may have made and finish the workflow execution.
 
 Once the encoding parameters are set, the user can proceed to display the encoded dataset by clicking on the *Preview Encoded Data*. He can also check and compare different encoding methods and/or parameters based on the obtained results.
 
@@ -2914,7 +2920,7 @@ NOTE: For further information, please check the subsection <<AutoFeat>>.
 | Defines a delimiter to use.
 | String (default=;)
 | `LIMIT_OUTPUT_VIEW`
-|  Specifies how many rows of the dataframe will be previewed in the browser to check the encoding results.
+|  Specifies how many rows of the encoded dataframe will be previewed in the workflow results.
 | Int (-1 means preview all the rows)
 |===
 
