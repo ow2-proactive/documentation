@@ -813,15 +813,23 @@ You can opt to place this file in `$PROACTIVE_HOME/config/authentication/azure.c
 
 +
 |===
-|https://github.com/Azure/azure-libraries-for-java/blob/master/azure-mgmt-compute/src/main/java/com/microsoft/azure/management/compute/KnownLinuxVirtualMachineImage.java[Linux] |https://github.com/Azure/azure-libraries-for-java/blob/master/azure-mgmt-compute/src/main/java/com/microsoft/azure/management/compute/KnownWindowsVirtualMachineImage.java[Windows]
+|Linux https://github.com/Azure/azure-libraries-for-java/blob/master/azure-mgmt-compute/src/main/java/com/microsoft/azure/management/compute/KnownLinuxVirtualMachineImage.java[++[++link to source++]++] |Windows https://github.com/Azure/azure-libraries-for-java/blob/master/azure-mgmt-compute/src/main/java/com/microsoft/azure/management/compute/KnownWindowsVirtualMachineImage.java[++[++link to source++]++]
 
 |UBUNTU_SERVER_14_04_LTS +
   UBUNTU_SERVER_16_04_LTS +
-  DEBIAN_8 +*+ _default value_ +*+ +
-  CENTOS_7_2
+  UBUNTU_SERVER_18_04_LTS +
+  DEBIAN_9 +*+ _default value_ +*+ +
+  DEBIAN_10 +
+  CENTOS_8_1 +
+  OPENSUSE_LEAP_15_1 +
+  SLES_15_SP1 +
+  REDHAT_RHEL_8_2 +
+  ORACLE_LINUX_8_1
 
-|WINDOWS_SERVER_2008_R2_SP1 +
-  WINDOWS_SERVER_2012_DATACENTER +
+|WINDOWS_DESKTOP_10_20H1_PRO +
+  WINDOWS_SERVER_2019_DATACENTER +
+  WINDOWS_SERVER_2019_DATACENTER_WITH_CONTAINERS +
+  WINDOWS_SERVER_2016_DATACENTER +
   WINDOWS_SERVER_2012_R2_DATACENTER
 |===
 
