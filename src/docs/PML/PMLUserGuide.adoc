@@ -1560,7 +1560,7 @@ AutoFeat currently supports the following encoding methods:
 
 - Label: converts each value in a categorical feature into an integer value between 0 and n-1, where n is the number of distinct categories of the variable.
 - Binary: stores categories as binary bitstrings.
-- OneHot: creates a new feature for each category in the Categorical Variable and replaces it with either 1 (presence of the feature) or 0 (absence of the feature). The number of the new features depends on the number of categories in the Categorical Variable.
+- OneHot: creates a new feature for each category in the categorical variable and replaces it with either 1 (presence of the feature) or 0 (absence of the feature). The number of the new features depends on the number of categories in the categorical variable.
 - Dummy: transforms the categorical variable into a set of binary variables (also known as dummy variables). The dummy encoding is a small improvement over the one-hot-encoding, such it uses n-1 features to represent n categories.
 - BaseN: encodes the categories into arrays of their base-n representation. A base of 1 is equivalent to one-hot encoding and a base of 2 is equivalent to binary encoding.
 - Target: replaces a categorical value with the mean of the target variable.
@@ -1573,29 +1573,31 @@ There are numerous research papers and studies dedicated to the analysis of the 
 
 To access the AutoFeat page, please follow the steps below:
 
-Open the link:https://try.activeeon.com/studio[Studio Portal].
+. Open the link:https://try.activeeon.com/studio[Studio Portal].
 
-Create a new workflow.
+. Create a new workflow.
 
-Drag and drop the `Import_Data_And_Automate_Feature_Engineering` task from the *machine-learning* bucket in the ProActive Machine Learning.
+. Drag and drop the `Import_Data_And_Automate_Feature_Engineering` task from the *machine-learning* bucket in the ProActive Machine Learning.
 
-Click on the task and click `General Parameters` in the left to change the default parameters of this task.
+. Click on the task and click `General Parameters` in the left to change the default parameters of this task.
 
 image::Import_Data_And_Automate_Feature_Engineering_Task.png[align=center]
 
-Put in *FILE_PATH* variable the S3 link to upload your dataset.
+[start=5]
+. Put in *FILE_PATH* variable the S3 link to upload your dataset.
 
-Set the other parameters according to your dataset format.
+. Set the other parameters according to your dataset format.
 
-Click on the *Execute* button to run the workflow and start AutoFeat.
+. Click on the *Execute* button to run the workflow and start AutoFeat.
 
 image::Import_Data_And_Automate_Feature_Engineering_Execute.png[align=center]
 
 To get more information about the parameters of the service, please check the section <<Import_Data_And_Automate_Feature_Engineering>>.
 
-Open the link:https://try.activeeon.com/automation-dashboard/#/portal/workflow-execution[Workflow Execution Portal].
+[start=8]
+. Open the link:https://try.activeeon.com/automation-dashboard/#/portal/workflow-execution[Workflow Execution Portal].
 
-You can now access the AutoFeat Page by clicking on the endpoint `AutoFeat` as shown in the image below.
+. You can now access the AutoFeat Page by clicking on the endpoint `AutoFeat` as shown in the image below.
 
 image::AutoFeat_endpoint.png[align=center]
 
@@ -1657,6 +1659,15 @@ The user can also download the results as a csv file by clicking on the *Downloa
 
 [[_Encoded_data]]
 image::AutoFeat_encoded_data.png[align=center]
+
+=== ML Pipeline Example
+
+You can connect different tasks in a single workflow to get the full pipeline from data preprocessing to model training and deployment. Each task will propagate the acquired variables to its children tasks.
+The following workflow example `Vehicle_Type_Using_Model_Explainability` uses the `Import_Data_And_Automate_Feature_Engineering` task to prepare the data. It is available on the `machine_learning_workflows` bucket.
+
+image::Vehicle_Type_Using_Model_Explainability.png[align=center]
+
+This workflow predicts vehicle type based on silhouette measurements, and apply ELI5 and Kernel Explainer to understand the model’s global behavior or specific predictions.
 
 == ProActive Analytics
 
@@ -2901,7 +2912,7 @@ It also enables:
 This workflow can be used:
 
 - Stand-alone such that the results can be saved in the User Data Space or locally.
-- In a larger workflow where the results will be sent to the next connected task.
+- In a ML pipeline where the results will be transferred as an input for the following task in the pipeline.
 
 NOTE: For further information, please check the subsection <<AutoFeat>>.
 
@@ -2910,7 +2921,7 @@ NOTE: For further information, please check the subsection <<AutoFeat>>.
 [cols="2,5,2"]
 |===
 | *Variable name* | *Description* | *Type*
-3+^|*Workflow variables*
+3+^|*Task variables*
 | `IMPORT_FROM`
 | Selects the method/protocol to import the data source.
 | List [PA:URL,PA:URI,PA:USER_FILE,PA:GLOBAL_FILE] (default=PA:URL)
