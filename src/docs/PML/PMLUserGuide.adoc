@@ -1599,6 +1599,7 @@ To get more information about the parameters of the service, please check the se
 
 . You can now access the AutoFeat Page by clicking on the endpoint `AutoFeat` as shown in the image below.
 
+.AutoFeat endpoint
 image::AutoFeat_endpoint.png[align=center]
 
 You will be redirected to AutoFeat page which initially contains three tabs that we describe in the following sections.
@@ -1623,7 +1624,7 @@ image::AutoFeat_column_summaries.png[align=center]
 === Data Preprocessing
 A preview of the data is displayed in the *Data Preprocessing* as follows.
 
-[[_Data_Preprocessing]]
+.Data Preprocessing
 image::AutoFeat_edit_column_names_and_types.png["Data Preprocessing",align=center]
 
 It is possible to change a column information. These changes can include:
@@ -1638,7 +1639,7 @@ It is possible to change a column information. These changes can include:
 
 - _Coding Method_: The encoding method used for converting the categorical data values into numerical values. The value is set to *Auto* by default. Thereafter, the best suited method for encoding the categorical feature is automatically identified. The data scientist still has the ability to override every decision and select another encoding method from the drop-down menu. Different methods are supported by AutoFeat such as *Label*, *OneHot*, *Dummy*, *Binary*, *Base N*, *Hash* and *Target*. Some of those methods require specifying additional encoding parameters. These parameters vary depending on the selected method (e.g., the base and the number of components for BaseN and Hash, respectively, and the target column for Target encoding method). Some of those values are set by default, if no values are specified by the user.
 
-[[_Data_Preprocessing]]
+.Data Preprocessing
 image::AutoFeat_edit_column_names_and_types_encoding_parameters.png["Data Preprocessing",align=center]
 
 It is also possible to perform the following actions on the dataset:
@@ -1657,7 +1658,7 @@ This page displays the data encoding results based on the selected parameters. A
 
 The user can also download the results as a csv file by clicking on the *Download* button.
 
-[[_Encoded_data]]
+.Encoded data
 image::AutoFeat_encoded_data.png[align=center]
 
 === ML Pipeline Example
@@ -1701,7 +1702,7 @@ More advanced search options (_highlighted in advanced search hints_) could be u
 
 Now you can hit the search button to request jobs from the scheduler database according to the provided filter values. The search bar at the top shows a summary of the active search filters.
 
-[[_JA-search-png]]
+.JA-search
 image::JA-search.png[align=center]
 
 ==== Execution Metrics
@@ -1719,13 +1720,15 @@ image::JA-metrics.png[align=center]
 Job Analytics includes three types of charts:
 
 - *Job duration chart:* This chart shows durations per job. The x-axis shows the job ID and the y-axis shows the job duration. Hovering over the lines will also display the same information as a tooltip (see screenshot below). Using the duration chart will eventually help the users to identify any abnormal performance behaviour among several workflow executions.
-[[_JA-duration]]
 
+.JA duration
 image::JA-duration.png[align=center]
+
 - *Job variables chart:* This chart is intended to show all variable values of selected jobs. It represents the evolution chart for all numeric-only variables of the selected jobs. The chart provides the ability to hide or show specific input variables by clicking on the variable name in the legend, as shown in the figure below.
 
 - *Job results chart:* This chart is intended to show all result values of selected jobs. It represents the evolution chart for all numeric-only results of the selected jobs. The chart provides also the ability to hide or show specific results by clicking on the variable name in the legend, as shown in the figure below.
 
+.JA results chart
 image::JA-chart.png[align=center]
 
 All charts provide some advanced features such as "maximize" and "enlarge" to better visualize the results, and "move" to customize the dashboard layout (see top left side of charts). All of them provide the hovering feature as previously described and two types of charts to display: line and bar charts. Switching from one to the other can be activated through a toggle button located at the top right of the chart. Same for show/hide variables and results.
@@ -1745,6 +1748,7 @@ We note also that clicking on the issue types and charts described in the previo
 
 NOTE: It is important to notice that the dashboard layout and search preferences are saved in the browser cache so that users can have access to their last dashboard and search settings.
 
+.JA table
 image::JA-table.png[align=center]
 
 == ProActive Jupyter Kernel
@@ -1755,6 +1759,7 @@ scheduler and constructs tasks and workflows to execute them on the fly.
 With this interface, users can run their code locally and test it using a native python kernel, and by a simple switch to
 ProActive kernel, run it on remote public or private infrastructures without having to modify the code. See the example below:
 
+.Direct execution from Jupyter with ActiveEon Kernel
 image::direct_execution_from_jupyter.png[Direct execution from Jupyter with ActiveEon Kernel]
 
 === Installation
@@ -2645,7 +2650,7 @@ NOTE: Instead of training a model from scratch, a pre-trained sentiment analysis
 
 *Train_Image_Classification:* trains a model to classify images from ants and bees. 
 
-*Train_Image_Segmentation:* trains a segmentation model using SegNet network on http://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]. 
+*Train_Image_Segmentation:* trains a segmentation model using SegNet network on https://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^].
 
 *Train_Image_Object_Detection:* trains objects using YOLOv3 model on COCO dataset proposed by Microsoft Research. 
 
@@ -2661,7 +2666,7 @@ This section presents custom AI workflows using tasks available on the `deep-lea
 
 *Fake_Celebrity_Faces_Generation:* generates a wild diversity of fake faces using a GAN model that was trained based on thousands of real celebrity photos. The pre-trained GAN model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/Epoch+018.pt[link^].
 
-*Image_Segmentation:* predicts a segmentation model using SegNet network on http://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]. The pre-trained image segmentation model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_segnet.zip[link^].
+*Image_Segmentation:* predicts a segmentation model using SegNet network on https://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^]. The pre-trained image segmentation model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_segnet.zip[link^].
 
 *Image_Object_Detection:* detects objects using a pre-trained YOLOv3 model on COCO dataset proposed by Microsoft Research. The pre-trained model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/yolo3_coco.zip[link^].
 
@@ -4516,7 +4521,7 @@ NOTE: PyTorch is used to build the model architecture based on https://github.co
 | Boolean (default=True)
 |===
 
-NOTE: The default parameters of the YOLO network were set for the COCO dataset (http://cocodataset.org/#home). If you'd like to use another dataset, you probably need to change the default parameters.
+NOTE: The default parameters of the YOLO network were set for the COCO dataset (https://cocodataset.org/#home). If you'd like to use another dataset, you probably need to change the default parameters.
 
 ==== Text Classification
 
