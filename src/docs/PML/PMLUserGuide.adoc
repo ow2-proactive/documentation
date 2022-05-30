@@ -1564,9 +1564,10 @@ AutoFeat currently supports the following encoding methods:
 - Dummy: transforms the categorical variable into a set of binary variables (also known as dummy variables). The dummy encoding is a small improvement over the one-hot-encoding, such it uses n-1 features to represent n categories.
 - BaseN: encodes the categories into arrays of their base-n representation. A base of 1 is equivalent to one-hot encoding and a base of 2 is equivalent to binary encoding.
 - Target: replaces a categorical value with the mean of the target variable.
-- Hash: maps each category to an integer within a pre-determined range n_components. n_components is the number of dimensions, in other words, the number of bits to use to represent the feature. We use 8 bits by default .
+- Hash: maps each category to an integer within a pre-determined range n_components. n_components is the number of dimensions, in other words, the number of bits to use to represent the feature. We use 8 bits by default.
 
-The most of these methods are implemented using the python link:https://contrib.scikit-learn.org/category_encoders/[Category Encoders] library.
+NOTE: The most of these methods are implemented using the python link:https://contrib.scikit-learn.org/category_encoders/[Category Encoders] library. Examples can be found in the https://www.kaggle.com/code/discdiver/category-encoders-examples/notebook[Category Encoders Examples] notebook .
+
 As we already mentioned, the performance of ML algorithms depends on how categorical variables are encoded. The results produced by the model vary depending on the used encoding technique. Thus, the hardest part of categorical encoding can sometimes be finding the right categorical encoding method.
 
 There are numerous research papers and studies dedicated to the analysis of the performance of categorical encoding approaches applied to different datasets. Based on the common factors shared by the datasets using the same encoding method, we have implemented an algorithm for finding the best suited method for your data.
