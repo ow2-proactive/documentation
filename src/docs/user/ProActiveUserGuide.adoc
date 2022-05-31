@@ -2223,7 +2223,7 @@ The figure below shows an example.
 
 image::../images/admin-grant-icon.png[align=center]
 
-Moreover, when the user, who is benefiting from the authorization, log in to his account, she/he will be able to visualize an icon indicating the rights she/he possess over the bucket or the object.
+Moreover, when the user, who is benefiting from the authorization, log in to his/her account, she/he will be able to visualize an icon indicating the rights she/he possess over the bucket or the object.
 These icons are the following:
 
 image::../images/Authorrizations-icons.png[align=center]
@@ -2267,7 +2267,7 @@ Another user, with admin rights over the bucket or the object, can do it for him
 
 ==== Authorization calculation rules
 
-Since each user might belong to multiple user groups, a user could have multiple authorizations over a bucket due to his username or user group(s) authorizations.
+Since each user might belong to multiple user groups, a user could have multiple authorizations over a bucket due to his/her username or user group(s) authorizations.
 In such case, the resulting access type will be calculated as follows:
 
 * If the username-assigned authorization exists, it is prioritized and its access type will be the user's resulting rights over the bucket.
