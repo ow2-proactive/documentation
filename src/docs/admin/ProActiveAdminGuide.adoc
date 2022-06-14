@@ -534,6 +534,29 @@ The user can access any of the four portals using the default credentials: `admi
 
 Your ProActive Scheduler is now running as a set of container services!
 
+==== Upgrade/Downgrade ProActive using Docker Compose
+
+The ProActive version could be easily upgraded using Docker Compose. To do so, we support automatic upgrade, downgrade, and backup of ProActive Server installations in Docker.
+Docker Compose configuration relies on Docker container volumes to host ProActive versions. The `proactive-default` volume hosts the current and default installation. The `proactive-previous` volume hosts the previous installation after upgrade.
+Finally, the `proactive-backup` volume hosts all previous installtion after multiple upgrades.
+In the following, we are going to explain each procedure.
+
+===== ProActive Upgrade
+In order to upgrade the ProActive Server to a newer version, you have to edit the `.env` config file to provide a newer version. The current ProActive version is specified using the `PROACTIVE_VERSION` option.
+For example, you can replace `PROACTIVE_VERSION=12.0.0` by `PROACTIVE_VERSION=12.0.8` to get a maintenance release of ProActive.
+Now that a newer version is provided, you can restart the container. The new version will be detected and the upgrade process will start at container startup.
+In fact, the current version will be automatically placed on the `proactive-previous` volume and the newer version will be placed on the `proactive-default` volume and started from there.
+
+===== ProActive Backup
+The backup of previous ProActive versions is also automatic and it is triggered on every upgrade. When a new upgrade is started, the `proactive-previous` volume is checked and if it is not empty, its content is automatically moved to the backup volume `proactive-backup`.
+Afterwards, the upgrade process starts as previously described.
+
+===== ProActive Downgrade
+Using Docker Compose we also support one-level automatic downgrade of ProActive installations located in `proactive-default` and `proactive-previous` volumes.
+To do so, you should provide the previous version of ProActive, as it is specified in the `proactive-previous` volume, to the `PROACTIVE_VERSION` option in the `.env` file. This will allow to automatically swap the content of `proactive-default` and `proactive-previous` volumes.
+ProActive will be then started from the `proactive-default` volume which will contain the last previous version.
+
+
 === Install and Start ProActive using Kubernetes
 
 ProActive could be easily deployed and started in a Kubernetes cluster. For this purpose, we provide ready-to-use Kubernetes configuration files that enable you running ProActive Workflows and Scheduling as a set of Pods.
