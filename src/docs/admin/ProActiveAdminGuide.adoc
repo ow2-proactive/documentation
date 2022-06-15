@@ -536,8 +536,8 @@ Your ProActive Scheduler is now running as a set of container services!
 
 ==== Upgrade/Downgrade/Backup ProActive using Docker Compose
 
-The ProActive version could be easily upgraded using Docker Compose. To do so, we support automatic upgrade, downgrade, and backup of ProActive Server installations in Docker.
-Docker Compose configuration relies on Docker container volumes to host ProActive versions. The `proactive-default` volume hosts the current and default installation. The `proactive-previous` volume hosts the previous installation after upgrade.
+ProActive can be easily upgraded using Docker Compose. We support automatic upgrade, downgrade, and backup of ProActive server installations in Docker.
+Docker Compose configuration relies on Docker container volumes to host ProActive installation directories. The `proactive-default` volume hosts the current and default installation. The `proactive-previous` volume hosts the previous installation after upgrade.
 Finally, the `proactive-backup` volume hosts all previous installtion after multiple upgrades.
 In the following, we are going to explain each procedure.
 
