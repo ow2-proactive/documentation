@@ -342,6 +342,10 @@ The following workflows represent some mathematical functions that can be optimi
 
 image::Himmelblau_Function.png[448,336,align=center]
 
+*Kursawe_Multiobjective_Function:* is a multiobjective function proposed by Frank Kursawe. It has three parameters (x1, x2, x3) and two objectives (Obj1, Obj2) to minimize. For more info, please click https://deap.readthedocs.io/en/master/api/benchmarks.html#deap.benchmarks.kursawe[here].
+
+image::Kursawe_Multiobjective_Function.png[448,336,align=center]
+
 === Hyperparameter Optimization
 
 The following workflows represent some machine learning and deep learning algorithms that can be optimized.
