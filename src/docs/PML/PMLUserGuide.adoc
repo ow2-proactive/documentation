@@ -860,7 +860,7 @@ When the MaaS_ML service instance is running, the user is able to access the Maa
 
 When clicking on the endpoint, the user is redirected to a 4 tabs webpage. By default, the Audit and Traceability page is opened. In this page, the user can check the different chosen values of the MaaS_ML instance variables. In addition, the MaaS_ML traceability information and warnings are listed in a table where each row represents information about the initialization, deployment, prediction, etc. corresponding to different date/time(s). The figure below shows an overview of the Audit and Traceability tab.
 
-image::traceability1.png[align=center]
+image::MaaS_ML_traceability.png[align=center]
 
 ===== Dataset Analytics
 As MaaS_ML supports versioning, you are able to deploy multiple model versions for the same model type. When deploying different model versions, you have the possibility to associate each version with a subset of the data used to train the model i.e. the baseline data. The main job of the baseline data is to help in detecting drifts in the future input datasets. Data drift detection is detailed in <<_data_drift_detection_ddd>> subsection. Using the several baseline datasets, optionally, deployed with the different model versions, you are able to compare the changes occurring from one model version to another, specifically regarding the datasets used to train them.
@@ -869,7 +869,7 @@ As shown in the figure below, using the three dropdowns on the top of this tab p
 
 If you click on one of these markers, a histogram will appear in the second graph of this tab page. The displayed histogram shows a comparison of the probability density distributions of the data values of the selected feature among all the deployed model version. By clicking on the content of the legend, you can include or exclude from the comparison any of the model versions.
 
-image::data_analytics_tab.png[align=center]
+image::MaaS_ML_data_analytics_tab.png[align=center]
 
 ===== Data Drift Analytics
 Coming soon!
@@ -877,7 +877,7 @@ Coming soon!
 ===== Predictions Preview
 When the user calls a deployed model of a specific version to obtain some predictions, he can choose to save the resulting predictions. The saved predictions can be previewed in the Predictions Preview tab page. As shown in the figure below, you can choose the model name and the model version using the dropdowns in the top of the page. According to your choices, the predictions dataframe will be previewed. The figure below shows an example of the previewed predictions.
 
-image::predictions_tab1.png[align=center]
+image::MaaS_ML_predictions_tab1.png[align=center]
 
 === MaaS_ML Via Swagger UI
 
