@@ -885,7 +885,7 @@ Coming soon!
 ===== Predictions Preview
 When the user calls a deployed model of a specific version to obtain some predictions, he can choose to save the resulting predictions. The saved predictions can be previewed in the Predictions Preview tab page. As shown in the figure below, you can choose the model name and the model version using the dropdowns in the top of the page. According to your choices, the predictions dataframe will be previewed. The figure below shows an example of the previewed predictions.
 
-image::MaaS_ML_predictions_tab1.png[align=center]
+image::MaaS_ML_predictions_tab.png[align=center]
 
 === MaaS_ML Via Swagger UI
 
