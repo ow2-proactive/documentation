@@ -149,8 +149,45 @@ Once the server is up, ProActive Web Portals are available at `\http://localhost
 
 Your ProActive Scheduler is ready to execute <<_glossary_job,*Jobs*>>!
 
+==== How to upgrade ProActive on Linux
+Before you upgrade to a new version of ProActive (ex 10.0), you first need to back up the configuration and data that you want to restore (DB, workflows, etc) from the old ProActive installation (ex 8.4). Basically, you have to back up the content of the following folders:
 
-==== How to install ProActive using Docker Containers
+*  `$PROACTIVE_HOME/data` which contains all databases (scheduler, catalog, rm) and workflows of the different users.
+*  `$PROACTIVE_HOME/config` which contains configuration files required to setup the server initial settings, define the network properties, manage the authentication, internal accounts, access permissions, etc.
+
+To upgrade ProActive, the user has to run the `install.sh` script located under `$PROACTIVE_HOME/tools` folder as *root* and follow the installations steps provided in an interactive mode.
+It is important to mention that the user has to choose the same directory as the old version where to make the ProActive Scheduler installation. This will enable the detection of the existing installation and then copying addons, data files and the configuration changes from the previous installation to the new one.
+In some cases, this operation can induce some conflicts that can be solved easily using Git tools.
+
+....
+$ sudo $PROACTIVE_HOME/tools/install.sh
+This will install the ProActive scheduler 10.1.0-SNAPSHOT as a service.
+Once the installer is started, it must process until the end otherwise the installation may be corrupted.
+Do you want to continue? [Y/n]  y
+Directory where to install the scheduler: /opt/proactive
+Previous installation was owned by user proactive with group proactive
+Detected an existing ProActive Scheduler installation at /opt/proactive/8.4
+Copying addons and data files from the previous installation...
+Do you want to port all configuration changes to the new version (do not do this from a version prior to 8.4.0 before executing the patch)? [Y/n]  y
+Porting configuration into new installation...
+[master 61aaa19] Commit all changes before switching from 8.4 to 10.1
+ 4 files changed, 8 insertions(+), 8 deletions(-)
+warning: no common commits
+Depuis /opt/proactive/8.4/
+ * [nouvelle branche] master     -> old-version/master
+
+Cherry-picking all changes to new installation
+Here is the list of JAR files in the new installation 'addons' folder.
+If there are duplicates, you need to manually remove outdated versions.
+Restrict the access to the ProActive installation folder to user proactive? [y/N]  n
+Restrict the access to the configuration files containing sensitive information to user proactive? [Y/n]  y
+Resource Manager credentials are used by remote ProActive Agents to register to the scheduler.
+Do you want to start the scheduler service now? [Y/n]  y
+If a problem occurs, check output in /var/log/proactive/scheduler
+....
+
+
+=== Install and Start ProActive using Docker Containers
 ProActive could be easily deployed and started within a fully containerized environment. For this purpose, we provide a ready-to-use Docker Compose configuration that enables you running ProActive Workflows and Scheduling as a containerized service.
 It starts the following services:
 
@@ -167,12 +204,11 @@ Please contact us at contact@activeeon.com to request access.
 
 Here are the installation steps you need to follow in order to have ProActive running in a fully containerized environment:
 
-===== 1. Configure the environment
+==== Configure the environment
 
 You need first to create and configure the Docker Compose environment file `.env`.
 
-====== Set up the Docker Compose configuration file: `.env`
-
+..env
 [source]
 ----
 # Public Host IP Address
@@ -214,15 +250,15 @@ DB_NOTIFICATION_PASS=change_me
 ----
 
 
-===== 2. Define and configure ProActive containers
+==== Define and configure ProActive containers
 Once you create and configure the `.env` file, you can select one of the three following Docker Compose configurations to start the ProActive server and Node containers with the desired database.
 
 We currently provide support for three Database systems, namely HSQLDB, PostgreSQL, and MySQL.
 
 
 
-====== Set up ProActive using embedded HSQL Database: `docker-compose-hsqldb.yml`
-This Docker Compose configuration could be used to run the ProActive server container with an embedded HSQL Database.
+===== Set up ProActive using embedded HSQL Database
+This Docker Compose configuration `docker-compose-hsqldb.yml` can be used to run the ProActive server container with an embedded HSQL Database.
 It will start up to two containers, one for the server and one for the Nodes.
 
 [source]
@@ -287,9 +323,9 @@ networks:
 
 
 
-====== Set up ProActive using PostgreSQL Database: `docker-compose-postgres.yml`
+===== Set up ProActive using PostgreSQL Database
 
-This Docker Compose configuration could be used to run the ProActive server container with an external PostgreSQL Database container.
+This Docker Compose configuration `docker-compose-postgres.yml` can be used to run the ProActive server container with an external PostgreSQL Database container.
 It will start up to three containers, one for the server, one for the Nodes, and one for the Database.
 
 [source]
@@ -376,9 +412,9 @@ networks:
 ----
 
 
-====== Set up ProActive using MySQL Database: `docker-compose-mysql.yml`
+===== Set up ProActive using MySQL Database
 
-This Docker Compose configuration could be used to run the ProActive server container with an external MySQL Database container.
+Te Docker Compose configuration `docker-compose-mysql.yml` can be used to run the ProActive server container with an external MySQL Database container.
 It will start up to three containers, one for the server, one for the Nodes, and one for the Database.
 
 [source]
@@ -466,7 +502,7 @@ networks:
   pa-network:
 ----
 
-===== 3. Start ProActive using Docker Compose
+==== Start ProActive using Docker Compose
 
 Login into the Private Activeeon Registry
 ----
@@ -498,57 +534,109 @@ The user can access any of the four portals using the default credentials: `admi
 
 Your ProActive Scheduler is now running as a set of container services!
 
+==== Upgrade/Downgrade/Backup ProActive using Docker Compose
+
+ProActive can be easily upgraded using Docker Compose. We support automatic upgrade, downgrade, and backup of ProActive server installations in Docker.
+Docker Compose configuration relies on Docker container volumes to host ProActive installation directories. The `proactive-default` volume hosts the current and default installation. The `proactive-previous` volume hosts the previous installation after upgrade.
+Finally, the `proactive-backup` volume hosts all previous installtion after multiple upgrades.
+In the following, we are going to explain each procedure.
+
+===== ProActive Upgrade
+In order to upgrade the ProActive Server to a newer version, you have to edit the `.env` config file to provide a newer version. The current ProActive version is specified using the `PROACTIVE_VERSION` option.
+For example, you can replace `PROACTIVE_VERSION=12.0.0` by `PROACTIVE_VERSION=12.0.8` to get a maintenance release of ProActive. It is also applicable for minor and major release versions.
+Now that a newer version is provided, you can restart the container. The new version will be detected and the upgrade process will start at container startup.
+In fact, the current version will be automatically placed on the `proactive-previous` volume and the newer version will be placed on the `proactive-default` volume and started from there.
+
+===== ProActive Backup
+The backup of previous ProActive versions is also automatic and it is triggered on every upgrade. When a new upgrade is started, the `proactive-previous` volume is checked and if it is not empty, its content is automatically moved to the backup volume `proactive-backup`.
+Afterwards, the upgrade process starts as previously described.
+
+===== ProActive Downgrade
+Using Docker Compose we also support one-level automatic downgrade of ProActive installations located in `proactive-default` and `proactive-previous` volumes.
+To do so, you should provide the previous version of ProActive, as it is specified in the `proactive-previous` volume, to the `PROACTIVE_VERSION` option in the `.env` file. This will allow to automatically swap the content of `proactive-default` and `proactive-previous` volumes.
+ProActive will be then started from the `proactive-default` volume which will contain the last previous version.
 
 
-==== How to upgrade ProActive on Linux
-Before you upgrade to a new version of ProActive (ex 10.0), you first need to back up the configuration and data that you want to restore (DB, workflows, etc) from the old ProActive installation (ex 8.4). Basically, you have to back up the content of the following folders:
+=== Install and Start ProActive using Kubernetes
 
-*  `$PROACTIVE_HOME/data` which contains all databases (scheduler, catalog, rm) and workflows of the different users.
-*  `$PROACTIVE_HOME/config` which contains configuration files required to setup the server initial settings, define the network properties, manage the authentication, internal accounts, access permissions, etc.
+ProActive could be easily deployed and started in a Kubernetes cluster. For this purpose, we provide ready-to-use Kubernetes configuration files that enable you running ProActive Workflows and Scheduling as a set of Pods.
+It starts the following Pods:
 
-To upgrade ProActive, the user has to run the `install.sh` script located under `$PROACTIVE_HOME/tools` folder as *root* and follow the installations steps provided in an interactive mode.
-It is important to mention that the user has to choose the same directory as the old version where to make the ProActive Scheduler installation. This will enable the detection of the existing installation and then copying addons, data files and the configuration changes from the previous installation to the new one.
-In some cases, this operation can induce some conflicts that can be solved easily using Git tools.
+*  ProActive Server Pod
+*  ProActive Node Pod
+*  ProActive Database Pod (PostgreSQL or MySQL). The Database Pod is not started when using an embedded HSQL Database.
 
-....
-$ sudo $PROACTIVE_HOME/tools/install.sh
-This will install the ProActive scheduler 10.1.0-SNAPSHOT as a service.
-Once the installer is started, it must process until the end otherwise the installation may be corrupted.
-Do you want to continue? [Y/n]  y
-Directory where to install the scheduler: /opt/proactive
-Previous installation was owned by user proactive with group proactive
-Detected an existing ProActive Scheduler installation at /opt/proactive/8.4
-Copying addons and data files from the previous installation...
-Do you want to port all configuration changes to the new version (do not do this from a version prior to 8.4.0 before executing the patch)? [Y/n]  y
-Porting configuration into new installation...
-[master 61aaa19] Commit all changes before switching from 8.4 to 10.1
- 4 files changed, 8 insertions(+), 8 deletions(-)
-warning: no common commits
-Depuis /opt/proactive/8.4/
- * [nouvelle branche] master     -> old-version/master
+The Kubernetes YAML configuration pulls the ProActive Server, Node, and Database images from the https://dockerhub.activeeon.com/[Private Activeeon Docker Registry^].
 
-Cherry-picking all changes to new installation
-Here is the list of JAR files in the new installation 'addons' folder.
-If there are duplicates, you need to manually remove outdated versions.
-Restrict the access to the ProActive installation folder to user proactive? [y/N]  n
-Restrict the access to the configuration files containing sensitive information to user proactive? [Y/n]  y
-Resource Manager credentials are used by remote ProActive Agents to register to the scheduler.
-Do you want to start the scheduler service now? [Y/n]  y
-If a problem occurs, check output in /var/log/proactive/scheduler
-....
+To be able to pull images from the https://dockerhub.activeeon.com/[Private Activeeon Docker Registry^], a ProActive enterprise licence and access credentials are required. Please contact us at contact@activeeon.com to request access.
+
+Here are the installation steps you need to follow in order to have ProActive running in a Kubernetes cluster:
+
+==== Set up ProActive Pods using embedded HSQL Database
+The following YAML Kubernetes configuration could be used to run the ProActive Server Pod with an embedded HSQL Database.
+It will start up to two Pods, one for the Server and one for the Nodes.
+
+link:./references/kubernetes/K8sProActiveHSQLDatabase.yml[Kubernetes configuration of ProActive using HSQL Database, title="Click to donwload"^]:
+[source,yaml]
+----
+include::./references/kubernetes/K8sProActiveHSQLDatabase.yml[]
+----
+
+==== Set up ProActive Pods using PostgreSQL Database
+
+The following configuration could be used to run the ProActive Server Pod with an external PostgreSQL Database Pod.
+It will start up to three Pods, one for the Server, one for the Nodes, and one for the Database.
+
+link:./references/kubernetes/K8sProActivePostgresDatabase.yml[Kubernetes configuration of ProActive using Postgres Database, title="Click to donwload"^]:
+[source,yaml]
+----
+include::./references/kubernetes/K8sProActivePostgresDatabase.yml[]
+----
+
+
+==== Set up ProActive Pods using MySQL Database
+
+The following configuration could be used to run the ProActive Server Pod with an external MySQL Database Pod.
+It will start up to three Pods, one for the Server, one for the Nodes, and one for the Database.
+
+link:./references/kubernetes/K8sProActiveMysqlDatabase.yml[Kubernetes configuration of ProActive using MySQL Database, title="Click to donwload"^]:
+[source,yaml]
+----
+include::./references/kubernetes/K8sProActiveMysqlDatabase.yml[]
+----
+
+==== Start ProActive using Kubernetes config files
+
+Create a secret to be able to pull images from the Private Activeeon Registry
+----
+$ kubectl create secret docker-registry regcred --docker-server=dockerhub.activeeon.com --docker-username=<username> --docker-password=<pwd> --docker-email=<email>
+----
+
+Start ProActive by applying the Kubernetes configuration:
+----
+$ kubectl apply -f -
+----
+
+When all Nodes are up, ProActive Web Portals are available at `<PROTOCOL>://<PUBLIC-IP>:<PORT>/`. The `<PROTOCOL>`, `<PUBLIC-IP>`, and `<PORT>` are specified in the YAML file.
+
+The user can access any of the four portals using the default credentials: `admin/<PROACTIVE_ADMIN_PASSWORD>`. `PROACTIVE_ADMIN_PASSWORD` is, by default, `activeeon` but you can customize it as well in the YAML file.
+
+Your ProActive Scheduler is now running as a set of Pods!
 
 
 === Scheduler Life-Cycle Management
 
 Under the Admin menu from the scheduler portal, the following administrator actions are proposed:
 
-* Start the scheduler: Jobs can be submitted. Getting the jobs results is possible. The scheduler can be stopped, frozen, paused or killed.
-* Stop the scheduler: Jobs cannot be submitted anymore. Already running jobs run to completion, but not pending jobs. Getting the jobs results is possible. The scheduler can be started or killed.
-* Freeze the scheduler: Every running tasks run to completion, but the running jobs wait for the scheduler to resume. The scheduler can be stopped, resumed or killed.
-* Resume the scheduler: If the scheduler is Paused or Frozen.
-* Pause the scheduler: Every running jobs run to completion. The scheduler can be stopped, resumed or killed.
-* Kill the scheduler: Similar to Ctrl-C. No interaction can be done anymore.
-* Shutdown the scheduler: Every running tasks run to completion before terminating the scheduler.
+image::SchedulerPortalAdminMenu.png[Admin Menu,423,342,role=center]
+
+* `Start` the scheduler: Jobs can be submitted. Getting the jobs results is possible. The scheduler can be stopped, frozen, paused or killed.
+* `Stop` the scheduler: Jobs cannot be submitted anymore. Already running jobs run to completion, but not pending jobs. Getting the jobs results is possible. The scheduler can be started or killed.
+* `Freeze` the scheduler: Every running tasks run to completion, but the running jobs wait for the scheduler to resume. The scheduler can be stopped, resumed or killed.
+* `Resume` the scheduler: If the scheduler is Paused, Stopped or Frozen.
+* `Pause` the scheduler: Every running jobs run to completion. The scheduler can be stopped, resumed or killed.
+* `Kill` the scheduler: Similar to Ctrl-C. No interaction can be done anymore.
+* `Shutdown` the scheduler: Every running tasks run to completion before terminating the scheduler.
 
 == ProActive Scheduler configuration
 
@@ -1015,15 +1103,35 @@ pa.scheduler.core.authentication.loginMethod=SchedulerLDAPLoginMethod
 
 === File
 
-By default, the ProActive Resource Manager stores users accounts, passwords, and group memberships (user or admins), in two files:
+By default, the ProActive Resource Manager stores users accounts, passwords, group memberships (user or admins), and tenant memberships (group agglomerate or organization), in two files.
 
-* users and passwords accounts are stored in `PROACTIVE_HOME/config/authentication/login.cfg`.
+The default file path to store users, group and tenant memberships can be modified by changing the following settings:
+
+.PROACTIVE_HOME/config/rm/settings.ini
+----
+pa.rm.defaultloginfilename=config/authentication/login.cfg
+pa.rm.defaultgroupfilename=config/authentication/group.cfg
+pa.rm.defaulttenantfilename=config/authentication/tenant.cfg
+----
+
+.PROACTIVE_HOME/config/scheduler/settings.ini
+----
+pa.scheduler.core.defaultloginfilename=config/authentication/login.cfg
+pa.scheduler.core.defaultgroupfilename=config/authentication/group.cfg
+pa.scheduler.core.defaulttenantfilename=config/authentication/tenant.cfg
+----
+
+==== Users
+
+Users and passwords accounts are stored in `PROACTIVE_HOME/config/authentication/login.cfg`.
 Each line has to follow the format *user:encrypted password*.
 
-* users membership is stored in `PROACTIVE_HOME/config/authentication/group.cfg`. For each user registered in login.cfg,
+==== Groups
+
+Users group membership is stored in `PROACTIVE_HOME/config/authentication/group.cfg`. For each user registered in login.cfg,
 a group membership has to be defined in this file. Each line has to look like *user:group*. Group has to be
 `user` to have user rights, `scheduleradmins` to have administrator rights on the scheduler, `rmcoreadmins` to have administrator rights on the resource manager, etc. Below is an example `group.cfg` file:
-+
+
 .group.cfg
 ----
 admin:scheduleradmins
@@ -1043,21 +1151,50 @@ user:user
 watcher:watchers
 ----
 
-ProActive contains a set of predefined groups such as "user" and "providers". Groups are defined in `PROACTIVE_HOME/config/security.java.policy-server` as described in chapter <<User Permissions>>.
+ProActive contains a set of predefined groups such as `user` and `providers`. Group rights are defined in `PROACTIVE_HOME/config/security.java.policy-server` as described in chapter <<User Permissions>>.
 
-The default file path to store users and group memberships can be modified by changing the following settings:
+==== Tenants
 
-.PROACTIVE_HOME/config/rm/settings.ini
+A *tenant* can either be a collection of groups (if defined using a file) or an organization unit (if defined using an _LDAP_ attribute).
+
+When defined via a file, tenant organization is stored in `PROACTIVE_HOME/config/authentication/tenant.cfg`.
+Each line of this file contains a couple _(group_name, tenant_name)_, using the syntax `group_name:tenant_name`.
+To define tenants, an administrator of the platform need to associate one or more groups to each tenant.
+
+IMPORTANT: Each user can belong to only one tenant. Thus, if a user is a member of multiple groups belonging to different tenants, only the first tenant found will be associated.
+
+By default, the tenant configuration file is empty, below is an example tenant configuration:
+
+.tenant.cfg
 ----
-pa.rm.defaultloginfilename=config/authentication/login.cfg
-pa.rm.defaultgroupfilename=config/authentication/group.cfg
+scheduleradmins:admins
+rmcoreadmins:admins
+nsadmin:admins
+citizen-ds:citizens
+expert-ds:experts
+user:users
 ----
 
-.PROACTIVE_HOME/config/scheduler/settings.ini
-----
-pa.scheduler.core.defaultloginfilename=config/authentication/login.cfg
-pa.scheduler.core.defaultgroupfilename=config/authentication/group.cfg
-----
+When defined via <<_ldap,LDAP>>, the name of the <<_configure_tenant_attribute,LDAP attribute>> which will contain tenant information must be configured.
+
+Tenants are used to isolate groups of users, where users belonging to one tenant will not see the activities launched by users belonging to other tenants.
+In order to isolate tenants, the setting `pa.scheduler.core.tenant.filter` must be set to `true` in `PROACTIVE_HOME/config/scheduler/settings.ini`.
+When this configuration is enabled, standard users will only see jobs according to the user's tenant. Admin users will still be able to see jobs coming from all tenants.
+
+.Users Tenant View
+image::TenantSPUsers.png[Users Tenant View]
+
+.Experts Tenant View
+image::TenantSPExperts.png[Experts Tenant View]
+
+.Admins Tenant View
+image::TenantSPAdmins.png[Admins Tenant View]
+
+
+
+Tenants can also be used to restrict access to <<_glossary_node_source,Node Sources>> (see <<_policy_common_parameters,Node Source Policy Common Parameters>>).
+
+==== Command Line
 
 In order to create new users, delete an existing user, or modify the groups or password for an existing user, a command-line tool is available.
 
@@ -1173,75 +1310,86 @@ We assume that the LDAP server is configured in a way that:
 
 The LDAP configuration is defined in `PROACTIVE_HOME/config/authentication/ldap.cfg`. You need to:
 
-. *Set the LDAP server URL*
-+
+==== Set the LDAP server URL
+
 First, you have to define the LDAP's URL of your organization. This address corresponds to the property: `pa.ldap.url`. You have to put a standard LDAP-like URL, for example *ldap://myLdap*. You can also set a URL with secure access: *ldaps://myLdap:636*.
-+
-. *Define object class of user and group entities*
-+
+
+==== Define object class of user and group entities
+
 Then, you need to define how to differentiate user and group entities in the LDAP tree. The users object class is defined by
 property `pa.ldap.user.objectclass` and by default is _inetOrgPerson_. For groups, the property `pa.ldap.group.objectclass`
 has a default value _groupOfUniqueNames_ which could be changed.
 
-. *Configure LDAP authentication parameters*
-+
+==== Configure LDAP authentication parameters
+
 By default, the ProActive Scheduler binds to LDAP in anonymous mode. You can change this authentication
 method by modifying the property `pa.ldap.authentication.method`. This property can have several values:
-+
+
 * none (default value) - the ProActive Resource Manager performs connection to LDAP in anonymous mode.
 * simple - the ProActive Resource Manager performs connection to LDAP with a specified user/password (see below for user password setting).
-+
+
 You can also specify a SASL mechanism for LDAPv3. There are many SASL available mechanisms: cram-md5, digest-md5, kerberos4. Just set this property to *sasl* to let the ProActive Resource Manager JVM choose SASL authentication mechanism.
 If you specify an authentication method different from 'none' (anonymous connection to LDAP), you must specify a login/password for authentication.
-+
+
 There are two properties to set in LDAP configuration file:
-+
+
 ** `pa.ldap.bind.login` - sets user name for authentication.
 ** `pa.ldap.bind.pwd` - sets password for authentication.
-+
-. *Set SSL/TLS parameters*
-+
+
+==== Set SSL/TLS parameters
+
 A secured SSL/TLS layer can be useful if your network is not trusted, and critical information is transmitted between the Resource Manager server and LDAP, such as user passwords.
 First, set the LDAP URL property `pa.ldap.url` to a URL of type *ldaps://myLdap*. Then, set `pa.ldap.authentication.method` to *none* so as to delegate authentication to SSL.
-+
+
 For using SSL properly, you have to specify your certificate and public keys for SSL handshake. Java stores certificates in a keyStore and public keys in a trustStore. In most of the cases, you just have to define a trustStore with public key part of LDAP's certificate. Put the certificate in a keyStore, and the public keys in a trustStore with the keytool command (keytool command is distributed with standard java platforms):
-+
+
 
     keytool -import -alias myAlias -file myCertificate -keystore myKeyStore
-+
+
 myAlias is the alias name of your certificate, myCertificate is your private certificate file and myKeyStore is the new keyStore file produced in output. This command asks you to enter a password for your keyStore.
-+
+
 Put LDAP certificate's public key in a trustStore, with the keytool command:
-+
+
     keytool -import -alias myAlias -file myPublicKey -keystore myTrustStore
-+
+
 where:
-+
+
 * `myAlias` is the alias name of your certificate's public key.
 * `myPublicKey` is your certificate's public key file.
 * `myTrustore` is the new trustStore file produced in output.
-+
+
 This command asks you to enter a password for your trustStore.
-+
+
 Finally, in `config/authentication/ldap.cfg`, set keyStore and trustStore created before to their respective passwords:
-+
+
 * Set `pa.ldap.keystore.path` to the path of your keyStore.
 * Set `pa.ldap.keystore.passwd` to the password defined previously for keyStore.
 * Set `pa.ldap.truststore.path` to the path of your trustStore.
 * Set `pa.ldap.truststore.passwd` to the password defined previously for trustStore.
 
-. *Use fall back to file authentication*
-+
+==== Configure tenant attribute
+
+LDAP can be used to retrieve the tenant information associated with a user. Tenants are used to isolate users into organization units. Each unit will not be able to monitor other units' activity.
+
+If your LDAP structure contains an user attribute that seems suitable for tenants isolation, set the `pa.ldap.tenant.attr` property to the name of this attribute. Example atributes: `division`, `department`, `company`, etc.
+
+See <<_tenants>> for more information.
+
+==== Use fall back to file authentication
+
 You can use simultaneously file-based authentication and LDAP-based authentication.
 In this scenario, ProActive Scheduler checks at first user/password and group memberships in
 the login and group files, as performed in the <<_file,File login method>>.
 If the user or group attribution is not found in the login/group files, login or groups will be searched via LDAP.
-+
-There are two configuration options to control this mechanism (present in the `ldap.cfg` configuration file):
-+
-* `pa.ldap.authentication.fallback`: if set to `true`, the user login/password will be searched first in the login file, and then on the LDAP server. If set to `false`, only the LDAP server will be queried.
-* `pa.ldap.group.membership.fallback`: if set to `true`, group memberships will be read from the group file and then from the LDAP server. In that sense, a user will be affected to groups defined in both file and LDAP server. If set to `false`, only the LDAP server will be queried.
 
+There are two configuration options to control this mechanism (present in the `ldap.cfg` configuration file):
+
+* `pa.ldap.authentication.fallback`: if set to `true`, the user login/password will be searched first in the login file, and then on the LDAP server. If set to `false`, only the LDAP server will be queried.
+* `pa.ldap.group.membership.fallback`: if set to `true`, group memberships will be read from the LDAP server if the user exists, and then from the group file. In that sense, a user will be affected to groups defined in both file and LDAP server. If set to `false`, only the LDAP server will be queried.
+* `pa.ldap.tenant.membership.fallback`: if set to `true`, tenant memberships will be read from the tenant file if:
+** The user does not exist in the LDAP server.
+** The pa.ldap.tenant.attr configuration is not defined.
+** The pa.ldap.tenant.attr configuration is defined, but the configured attribute is empty for the user.
 
 === PAM
 
@@ -2198,13 +2346,14 @@ Please see detailed information about policies in the following sections.
 [[_policy_common_parameters]]
 ==== Common Parameters
 
-Each node source policy regardless it specifics has a common part where you describe users' and groups' permissions.
+Each node source policy regardless its specifics has a common part where you describe users, groups or tenants permissions.
 When you create a policy you must specify them:
 
 * *nodeUsers* - utilization permission that defines who can get nodes for computations from this node source. It has to take one of the following values:
 ** `ME` - only the node source creator
-** `users=user1,user2;groups=group1,group2;tokens=t1,t2` - only specific users, groups or tokens. For example:
+** `users=user1,user2;groups=group1,group2;tenants=tenant1,tenant2;tokens=t1,t2` - only specific users, groups, tenants or tokens. For example:
 *** users=user1 - node access is limited to user1
+*** tenants=tenant1 - node access is limited to users belonging to tenant1
 *** users=user1;groups=group1 - node access is limited to user1 and all users from group group1
 *** users=user1;tokens=t1 - node access is limited to user1 or anyone who specified token t1. If node access is protected by a token, node will not be found by the ProActive Resource Manager when trying to execute workflows, unless the corresponding token is specified inside the workflow(s).
 To exclude specific users or groups use for example:
@@ -2215,7 +2364,7 @@ NOTE: To specify a token inside a chosen workflow, add the key/value pair *NODE_
 
 * *nodeProviders* - provider permission defines who can add nodes to this node source. It should take one of the following values:
 ** `ME` - pnly the node source creator
-** `users=user1,user2;groups=group1,group2` - only specific users or groups (for our example user1, user2, group1 and group2). It is possible to specify only groups or only users.
+** `users=user1,user2;groups=group1,group2;tenants=tenant1,tenant2` - only specific users, groups or tenants (for our example user1, user2, group1, group2, tenant1 or tenant2). It is also possible to specify only groups, only users or only tenants.
 ** `ALL` - everybody can add nodes to this node source
 
 The user who created the node source is the administrator of this node source. He can add and removed nodes to it, remove the node source itself,
@@ -2695,7 +2844,7 @@ proactive-node -Dpas.launcher.forkas.method=key
 ----
 
 A SSH key can be tied to the user's account and used to impersonate the user when running a task on a given machine (using SSH).
-Additionnally:
+Additionally:
 
  - The `.ssh/authorized_keys` files of all machines must be configured to accept this SSH key.
  - The SSH key must not contain a *passphrase*.
@@ -3224,35 +3373,6 @@ that automatically adds indexes on foreign keys, it is strongly recommended to
 ask your DBA to identify and delete duplicate indexes created by the database
 system since they may hurt performances.
 
-==== Housekeeping
-
-The Scheduler provides a housekeeping mechanism that periodically removes finished jobs
-from the Scheduler Portal. It can also remove jobs and all its data from the database to save space.
-This mechanism has two phases:
-
-. Once a job is finished, it sets its scheduled time for removal (the job expiration date)
-. Actual cleaning of expired jobs from the scheduler and/or the database will be periodically triggered and performed in a bulk operation
-
-You can configure housekeeping with the following parameters located in <<Scheduler Properties,the scheduler config file>>:
-
- * `pa.scheduler.core.automaticremovejobdelay` : delay in seconds after job termination to remove the job.
- * `pa.scheduler.core.removejobdelay` : instead of using job termination time to initiate the delay, use the result retrieval time (for example, when a user opens the job results in the scheduler portal).
-
-TIP: Additionnally, you can configure a remove delay for individual job execution using thee `REMOVE_DELAY` <<../user/ProActiveUserGuide.adoc#_remove_delay,generic information>>.
-
-If the `pa.scheduler.core.automaticremovejobdelay` setting is set to `0` (the default), the Housekeeping mechanism is *disabled* (no occurrence of housekeeping).
-
-IMPORTANT: Please note that the housekeeping mechanism is not applied to the jobs
-which were already in the database before housekeeping was switched on.
-Similarly, a modification of the `automaticremovejobdelay` or `removejobdelay` settings will not be retroactively applied to already finished jobs.
-
-The housekeeping mechanism is periodically triggered through the cron
-expression `pa.scheduler.core.automaticremovejobcronexpression`.
-As the boolean `pa.scheduler.job.removeFromDataBase` property is set to `true` by default,
-a query is executed in the scheduler database to remove all jobs that qualify for the bulk removal.
-
-IMPORTANT: The support of `pa.scheduler.job.removeFromDataBase=false` has been discontinued in ProActive Scheduler version `10.1.0`.
-
 ==== Database impact on job submission performance
 
 The choice of the database provider can influence the Scheduler and Resource Manager performance overall.
@@ -3317,6 +3437,40 @@ nofile soft/hard 65536
 ```
 
 In addition, we recommend to have at least 16GB RAM for 15.000 nodes.
+
+=== Housekeeping
+
+The Scheduler provides a housekeeping mechanism that periodically removes finished jobs
+from the Scheduler and Workflow Execution portals. It also removes associated logs and all job data from the database to save space.
+This mechanism has two phases:
+
+. Once a job is finished, it sets its scheduled time for removal (the job expiration date)
+. Actual cleaning of expired jobs from the scheduler and/or the database will be periodically triggered and performed in a bulk operation
+
+You can configure housekeeping with the following parameters located in <<Scheduler Properties,the scheduler config file>>:
+
+* `pa.scheduler.core.automaticremovejobdelay` : delay in seconds to remove a terminated job.
+* `pa.scheduler.core.automaticremove.errorjob.delay` : delay in seconds to remove a job terminated with errors.
+* `pa.scheduler.core.removejobdelay` : instead of using job termination time to initiate the delay, use the result retrieval time (for example, when a user opens the job results in the scheduler portal).
+
+TIP: Additionally, you can configure a remove delay for individual job execution using the <<../user/ProActiveUserGuide.adoc#_remove_delay,`REMOVE_DELAY`>> or <<../user/ProActiveUserGuide.adoc#_remove_delay_on_error,`REMOVE_DELAY_ON_ERROR`>> generic information.
+
+If the `pa.scheduler.core.automaticremovejobdelay` setting is set to `0` (the default), the Housekeeping mechanism is *disabled* (no occurrence of housekeeping).
+
+If the `pa.scheduler.core.automaticremove.errorjob.delay` setting is set to `0` (the default), removal of finished jobs containing errors uses the `pa.scheduler.core.automaticremovejobdelay` configuration.
+
+The `errorjob.delay` setting is generally used in production environment for audit purpose. It allows keeping jobs containing errors longer in the database.
+
+IMPORTANT: Please note that the housekeeping mechanism is not applied to the jobs
+which were already in the database before housekeeping was switched on.
+Similarly, a modification of the `automaticremovejobdelay`, `automaticremove.errorjob.delay` or `removejobdelay` settings will not be retroactively applied to already finished jobs.
+
+The housekeeping mechanism is periodically triggered through the cron
+expression `pa.scheduler.core.automaticremovejobcronexpression`.
+As the boolean `pa.scheduler.job.removeFromDataBase` property is set to `true` by default,
+a query is executed in the scheduler database to remove all jobs that qualify for the bulk removal.
+
+IMPORTANT: The support of `pa.scheduler.job.removeFromDataBase=false` has been discontinued in ProActive Scheduler version `10.1.0`.
 
 
 == Nodes and Task Recovery
