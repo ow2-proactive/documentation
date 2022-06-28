@@ -342,6 +342,18 @@ The following workflows represent some mathematical functions that can be optimi
 
 image::Himmelblau_Function.png[448,336,align=center]
 
+https://al-roomi.org/benchmarks/unconstrained/2-dimensions/56-himmelblau-s-function[Mathematical Expression]
+
+image::himmelblau_math.png[948,736,align=center]
+
+*Kursawe_Multiobjective_Function:* is a multiobjective function proposed by http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.47.8050[Frank Kursawe]. It has two objectives (f1, f2) to minimize. For more info, please click https://deap.readthedocs.io/en/master/api/benchmarks.html#deap.benchmarks.kursawe[here].
+
+image::Kursawe_Multiobjective_Function.png[648,536,align=center]
+
+https://al-roomi.org/benchmarks/multi-objective/unconstrained-list/322-kursawe-s-function-kur[Mathematical Expression]
+
+image::kursawe_math.png[548,436,align=center]
+
 === Hyperparameter Optimization
 
 The following workflows represent some machine learning and deep learning algorithms that can be optimized.
@@ -856,7 +868,7 @@ When the MaaS_ML service instance is running, the user is able to access the Maa
 
 When clicking on the endpoint, the user is redirected to a 4 tabs webpage. By default, the Audit and Traceability page is opened. In this page, the user can check the different chosen values of the MaaS_ML instance variables. In addition, the MaaS_ML traceability information and warnings are listed in a table where each row represents information about the initialization, deployment, prediction, etc. corresponding to different date/time(s). The figure below shows an overview of the Audit and Traceability tab.
 
-image::traceability1.png[align=center]
+image::MaaS_ML_traceability.png[align=center]
 
 ===== Dataset Analytics
 As MaaS_ML supports versioning, you are able to deploy multiple model versions for the same model type. When deploying different model versions, you have the possibility to associate each version with a subset of the data used to train the model i.e. the baseline data. The main job of the baseline data is to help in detecting drifts in the future input datasets. Data drift detection is detailed in <<_data_drift_detection_ddd>> subsection. Using the several baseline datasets, optionally, deployed with the different model versions, you are able to compare the changes occurring from one model version to another, specifically regarding the datasets used to train them.
@@ -865,7 +877,7 @@ As shown in the figure below, using the three dropdowns on the top of this tab p
 
 If you click on one of these markers, a histogram will appear in the second graph of this tab page. The displayed histogram shows a comparison of the probability density distributions of the data values of the selected feature among all the deployed model version. By clicking on the content of the legend, you can include or exclude from the comparison any of the model versions.
 
-image::data_analytics_tab.png[align=center]
+image::MaaS_ML_data_analytics_tab.png[align=center]
 
 ===== Data Drift Analytics
 Coming soon!
@@ -873,7 +885,7 @@ Coming soon!
 ===== Predictions Preview
 When the user calls a deployed model of a specific version to obtain some predictions, he can choose to save the resulting predictions. The saved predictions can be previewed in the Predictions Preview tab page. As shown in the figure below, you can choose the model name and the model version using the dropdowns in the top of the page. According to your choices, the predictions dataframe will be previewed. The figure below shows an example of the previewed predictions.
 
-image::predictions_tab1.png[align=center]
+image::MaaS_ML_predictions_tab.png[align=center]
 
 === MaaS_ML Via Swagger UI
 
@@ -1600,7 +1612,7 @@ To get more information about the parameters of the service, please check the se
 
 . You can now access the AutoFeat Page by clicking on the endpoint `AutoFeat` as shown in the image below.
 
-.AutoFeat endpoint
+[[_AutoFeat_endpoint]]
 image::AutoFeat_endpoint.png[align=center]
 
 You will be redirected to AutoFeat page which initially contains three tabs that we describe in the following sections.
@@ -1625,7 +1637,7 @@ image::AutoFeat_column_summaries.png[align=center]
 === Data Preprocessing
 A preview of the data is displayed in the *Data Preprocessing* as follows.
 
-.Data Preprocessing
+[[_Data_Preprocessing]]
 image::AutoFeat_edit_column_names_and_types.png["Data Preprocessing",align=center]
 
 It is possible to change a column information. These changes can include:
@@ -1640,7 +1652,7 @@ It is possible to change a column information. These changes can include:
 
 - _Coding Method_: The encoding method used for converting the categorical data values into numerical values. The value is set to *Auto* by default. Thereafter, the best suited method for encoding the categorical feature is automatically identified. The data scientist still has the ability to override every decision and select another encoding method from the drop-down menu. Different methods are supported by AutoFeat such as *Label*, *OneHot*, *Dummy*, *Binary*, *Base N*, *Hash* and *Target*. Some of those methods require specifying additional encoding parameters. These parameters vary depending on the selected method (e.g., the base and the number of components for BaseN and Hash, respectively, and the target column for Target encoding method). Some of those values are set by default, if no values are specified by the user.
 
-.Data Preprocessing
+[[_Data_Preprocessing]]
 image::AutoFeat_edit_column_names_and_types_encoding_parameters.png["Data Preprocessing",align=center]
 
 It is also possible to perform the following actions on the dataset:
@@ -1659,7 +1671,7 @@ This page displays the data encoding results based on the selected parameters. A
 
 The user can also download the results as a csv file by clicking on the *Download* button.
 
-.Encoded data
+[[_Encoded_data]]
 image::AutoFeat_encoded_data.png[align=center]
 
 === ML Pipeline Example
