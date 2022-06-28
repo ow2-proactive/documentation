@@ -1849,8 +1849,8 @@ In case an error occurs in the chained jobs, a user may want to escalate this er
 ----
 jobid = variables.get("jobID")
 jobState = schedulerapi.getJobState(jobid)
-jobStatus = jobState.getStatus().toString()
-isJobSuccessful = !(jobStatus.equals("FAILED") || jobStatus.equals("CANCELED") || jobStatus.equals("KILLED") || (jobStatus.equals("FINISHED") && jobStatus.getNumberOfFaultyTasks() > 0))
+jobStatus = jobState.getStatus().toString().toUpperCase()
+isJobSuccessful = !(jobStatus.equals("FAILED") || jobStatus.equals("CANCELED") || jobStatus.equals("KILLED") || (jobStatus.equals("FINISHED") && jobState.getNumberOfFaultyTasks() > 0))
 if (isJobSuccessful) {
     println("Submitted job id=" + jobid + " (" + variables.get("called_workflow") + ") has been successfully run")
 } else {
