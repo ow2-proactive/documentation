@@ -1594,7 +1594,7 @@ To access the AutoFeat page, please follow the steps below:
 
 . Click on the task and click `General Parameters` in the left to change the default parameters of this task.
 
-image::Import_Data_And_Automate_Feature_Engineering_Task.png[align=center]
+image::Import_Data_And_Automate_Feature_Engineering_Task.png[align=center, link="../images/Import_Data_And_Automate_Feature_Engineering_Task.png", window="_blank"]
 
 [start=5]
 . Put in *FILE_PATH* variable the S3 link to upload your dataset.
@@ -1603,7 +1603,7 @@ image::Import_Data_And_Automate_Feature_Engineering_Task.png[align=center]
 
 . Click on the *Execute* button to run the workflow and start AutoFeat.
 
-image::Import_Data_And_Automate_Feature_Engineering_Execute.png[align=center]
+image::Import_Data_And_Automate_Feature_Engineering_Execute.png[align=center, link="../images/Import_Data_And_Automate_Feature_Engineering_Execute.png", window="_blank"]
 
 To get more information about the parameters of the service, please check the section <<Import_Data_And_Automate_Feature_Engineering>>.
 
@@ -1613,7 +1613,7 @@ To get more information about the parameters of the service, please check the se
 . You can now access the AutoFeat Page by clicking on the endpoint `AutoFeat` as shown in the image below.
 
 [[_AutoFeat_endpoint]]
-image::AutoFeat_endpoint.png[align=center]
+image::AutoFeat_endpoint.png[align=center, link="../images/AutoFeat_endpoint.png", window="_blank"]
 
 You will be redirected to AutoFeat page which initially contains three tabs that we describe in the following sections.
 
@@ -1623,7 +1623,7 @@ AutoFeat loads data from external sources. The dataset could be potentially very
 
 The *Refresh* button enables users to see the last updates made on their data.
 [[_Data_preview]]
-image::AutoFeat_data_preview.png[align=center]
+image::AutoFeat_data_preview.png[align=center, link="../images/AutoFeat_data_preview.png", window="_blank"]
 
 === Column summaries
 
@@ -1632,13 +1632,13 @@ Whenever AutoFeat loads data from external sources, it also identifies the datat
 AutoFeat also creates some summary statistics for each column. A table is displaying the missing values, minimum, maximum, mean and zeros for each numerical feature, and the cardinality (category counts) for each categorical feature.
 
 [[_Column_summaries]]
-image::AutoFeat_column_summaries.png[align=center]
+image::AutoFeat_column_summaries.png[align=center, link="../images/AutoFeat_column_summaries.png", window="_blank"]
 
 === Data Preprocessing
 A preview of the data is displayed in the *Data Preprocessing* as follows.
 
 [[_Data_Preprocessing]]
-image::AutoFeat_edit_column_names_and_types.png["Data Preprocessing",align=center]
+image::AutoFeat_edit_column_names_and_types.png["Data Preprocessing",align=center, link="../images/AutoFeat_edit_column_names_and_types.png", window="_blank"]
 
 It is possible to change a column information. These changes can include:
 
@@ -1653,7 +1653,7 @@ It is possible to change a column information. These changes can include:
 - _Coding Method_: The encoding method used for converting the categorical data values into numerical values. The value is set to *Auto* by default. Thereafter, the best suited method for encoding the categorical feature is automatically identified. The data scientist still has the ability to override every decision and select another encoding method from the drop-down menu. Different methods are supported by AutoFeat such as *Label*, *OneHot*, *Dummy*, *Binary*, *Base N*, *Hash* and *Target*. Some of those methods require specifying additional encoding parameters. These parameters vary depending on the selected method (e.g., the base and the number of components for BaseN and Hash, respectively, and the target column for Target encoding method). Some of those values are set by default, if no values are specified by the user.
 
 [[_Data_Preprocessing]]
-image::AutoFeat_edit_column_names_and_types_encoding_parameters.png["Data Preprocessing",align=center]
+image::AutoFeat_edit_column_names_and_types_encoding_parameters.png["Data Preprocessing",align=center, link="../images/AutoFeat_edit_column_names_and_types_encoding_parameters.png", window="_blank"]
 
 It is also possible to perform the following actions on the dataset:
 
@@ -1672,7 +1672,7 @@ This page displays the data encoding results based on the selected parameters. A
 The user can also download the results as a csv file by clicking on the *Download* button.
 
 [[_Encoded_data]]
-image::AutoFeat_encoded_data.png[align=center]
+image::AutoFeat_encoded_data.png[align=center, link="../images/AutoFeat_encoded_data.png", window="_blank"]
 
 === ML Pipeline Example
 
