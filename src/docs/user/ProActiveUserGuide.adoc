@@ -1844,6 +1844,20 @@ To provide the _firstName_ and _lastName_ variables parameters to the submitted 
 
 The `SubmitJobNoWait` or `SubmitJobAndWait` templates behavior is different in the sense that the latter will wait until the submitted workflow terminates.
 
+In case an error occurs in the chained jobs, a user may want to escalate this error from the submitted (child) job to the parent job by throwing an exception. It is possible to integrate this behavior in the `SubmitJobAndWait` implementation using the <<_scheduler_api,*schedulerapi*>> binding as described in the code below.
+[source,groovy]
+----
+jobid = variables.get("jobID")
+jobState = schedulerapi.getJobState(jobid)
+jobStatus = jobState.getStatus().toString().toUpperCase()
+isJobSuccessful = !(jobStatus.equals("FAILED") || jobStatus.equals("CANCELED") || jobStatus.equals("KILLED") || (jobStatus.equals("FINISHED") && jobState.getNumberOfFaultyTasks() > 0))
+if (isJobSuccessful) {
+    println("Submitted job id=" + jobid + " (" + variables.get("called_workflow") + ") has been successfully run")
+} else {
+    throw new IllegalStateException("Submitted job id=" + jobid + " (" + variables.get("called_workflow") + ") has failed. The error is escalated to the parent job.")
+}
+----
+
 === Control and Validation
 
 In order to better control your workflows, two ProActive Studio templates *Web Validation* and *Email Validation* are provided under the *Manuals* menu. These templates aim at the validating part of your workflows manually.
