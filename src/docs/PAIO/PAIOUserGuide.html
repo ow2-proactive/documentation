@@ -692,7 +692,7 @@ b.conum * { color: inherit !important; }
 <span id="email" class="email"><a href="mailto:contact@activeeon.com">contact@activeeon.com</a></span><br>
 </div>
 <div id="toc" class="toc2">
-<div id="toctitle">PML User Guide</div>
+<div id="toctitle">PAIO User Guide</div>
 <ul class="sectlevel1">
 <li><a href="#_all_documentation_links">All documentation links</a></li>
 <li><a href="#_overview">1. Overview</a></li>
@@ -754,10 +754,10 @@ document.getElementById('header').innerHTML = newHeader
 </div>
 </div>
 <div class="sect2">
-<h3 id="_proactive_machine_learning_paio"><a class="anchor" href="#_proactive_machine_learning_paio"></a><a class="link" href="#_proactive_machine_learning_paio">ProActive Machine Learning (PML)</a></h3>
+<h3 id="_proactive_machine_learning_paio"><a class="anchor" href="#_proactive_machine_learning_paio"></a><a class="link" href="#_proactive_machine_learning_paio">ProActive Machine Learning (PAIO)</a></h3>
 <div class="ulist">
 <ul>
-<li><p><h4 id="_all_doc_paio_user_guide" style="display:inline;font-size:1em"><a href="../PML/PMLUserGuide.html#_all_doc_paio_user_guide">PML User Guide</a></h4>
+<li><p><h4 id="_all_doc_paio_user_guide" style="display:inline;font-size:1em"><a href="../PAIO/PAIOUserGuide.html#_all_doc_paio_user_guide">PAIO User Guide</a></h4>
 &nbsp;(a complete Data Science and Machine Learning platform, with Studio & MLOps)</p>
 </li>
 </ul>
@@ -771,7 +771,7 @@ document.getElementById('header').innerHTML = newHeader
 <a href="../javadoc/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html">Scheduler Java</a>  
 <a href="../javadoc/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html">Workflow Creation Java</a>  
 <a href="https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client">Python Client</a>  
-<a href="../PML/PMLUserGuide.html#_proactive_jupyter_kernel">Jupyter Kernel</a>
+<a href="../PAIO/PAIOUserGuide.html#_proactive_jupyter_kernel">Jupyter Kernel</a>
 <a href="https://www.activeeon.com/public_content/documentation/csharp-client/">.NET Client</a>
 </strong></p>
 </div>
@@ -782,24 +782,24 @@ document.getElementById('header').innerHTML = newHeader
 <h2 id="_overview"><a class="anchor" href="#_overview"></a><a class="link" href="#_overview">1. Overview</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_what_is_proactive_machine_learning_paio"><a class="anchor" href="#_what_is_proactive_machine_learning_paio"></a><a class="link" href="#_what_is_proactive_machine_learning_paio">1.1. What is ProActive Machine Learning (PML)?</a></h3>
+<h3 id="_what_is_proactive_machine_learning_paio"><a class="anchor" href="#_what_is_proactive_machine_learning_paio"></a><a class="link" href="#_what_is_proactive_machine_learning_paio">1.1. What is ProActive Machine Learning (PAIO)?</a></h3>
 <div class="paragraph">
-<p><strong>Proactive Machine Learning (PML)</strong> is a complete DSML platform (Data Science and Machine Learning) including a ML Studio, AutoML, Data Science Orchestration and MLOps for the deployment,
+<p><strong>Proactive Machine Learning (PAIO)</strong> is a complete DSML platform (Data Science and Machine Learning) including a ML Studio, AutoML, Data Science Orchestration and MLOps for the deployment,
 training, execution and scalability of artificial intelligence and machine learning models on
 any type of infrastructure. Created for data scientists and ML engineers, the solution is simple to use and accelerate the development and deployment of machine learning models.</p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
-<img src="../images/PML_overview.PNG" alt="PML overview">
+<img src="../images/PAIO_overview.PNG" alt="PAIO overview">
 </div>
 </div>
 <div class="paragraph">
 <p>Proactive Machine Learning platform provides a rich catalog of generic machine learning tasks that can be connected together to build either basic or advanced machine learning workflows for various use cases such as: fraud detection, text analysis, online offer recommendations, prediction of equipment failures, facial expression analysis, etc.
-PML workflows enable users to manage machine learning pipelines through the different phases of the development lifecycle and allow them to better control tasks parallelization, by running the tasks on resources matching constraints (Multi-CPU, GPU, FPGA, data locality, libraries, etc).</p>
+PAIO workflows enable users to manage machine learning pipelines through the different phases of the development lifecycle and allow them to better control tasks parallelization, by running the tasks on resources matching constraints (Multi-CPU, GPU, FPGA, data locality, libraries, etc).</p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
-<img src="../images/PML-Open-Studio-ActiveEon.PNG" alt="PML Open Studio ActiveEon">
+<img src="../images/PAIO-Open-Studio-ActiveEon.PNG" alt="PAIO Open Studio ActiveEon">
 </div>
 </div>
 <div class="paragraph">
@@ -906,7 +906,7 @@ Please note the difference between <strong>Scheduler</strong> and <a href="#_glo
 <dl>
 <dt class="hdlist1">Proactive Machine Learning</dt>
 <dd>
-<p>PML component that provides a web interface for designing and composing ML <a href="#_glossary_workflow"><strong>Workflows</strong></a> with drag and drop.</p>
+<p>PAIO component that provides a web interface for designing and composing ML <a href="#_glossary_workflow"><strong>Workflows</strong></a> with drag and drop.</p>
 </dd>
 </dl>
 </div>
@@ -1176,12 +1176,12 @@ your environment (default credentials: admin/admin) or just use our demo platfor
 </ul>
 </div>
 <div class="paragraph">
-<p>Predicting houses prices is a complex problem, but we can simplify it a bit for this step-by-step example. We&#8217;ll show you how you can easily create a predictive analytics solution using PML.</p>
+<p>Predicting houses prices is a complex problem, but we can simplify it a bit for this step-by-step example. We&#8217;ll show you how you can easily create a predictive analytics solution using PAIO.</p>
 </div>
 <div class="sect2">
 <h3 id="_manage_the_canvas"><a class="anchor" href="#_manage_the_canvas"></a><a class="link" href="#_manage_the_canvas">3.1. Manage the Canvas</a></h3>
 <div class="paragraph">
-<p>To use PML, you need to add the <strong>Machine Learning Bucket</strong> as main catalog in the ProActive Studio. This bucket contains a set of generic tasks that enables you to upload and prepare data, train a model and test it.</p>
+<p>To use PAIO, you need to add the <strong>Machine Learning Bucket</strong> as main catalog in the ProActive Studio. This bucket contains a set of generic tasks that enables you to upload and prepare data, train a model and test it.</p>
 </div>
 <div class="olist upperalpha">
 <ol class="upperalpha">
@@ -1288,7 +1288,7 @@ For this tutorial, we will use Boston house prices dataset available on this lin
 <div class="sect2">
 <h3 id="_train_a_predictive_model"><a class="anchor" href="#_train_a_predictive_model"></a><a class="link" href="#_train_a_predictive_model">3.4. Train a Predictive Model</a></h3>
 <div class="paragraph">
-<p>Using PML, you can easily create different ML models in a single experiment and compare their results. This type of experimentation helps you find the best solution for your problem.
+<p>Using PAIO, you can easily create different ML models in a single experiment and compare their results. This type of experimentation helps you find the best solution for your problem.
 You can also enrich the <code>machine-learning</code> bucket by adding new ML algorithms and publish or customize an existing task according to your requirements as the tasks are open source.</p>
 </div>
 <div class="admonitionblock note">
@@ -1307,7 +1307,7 @@ To change the code of a task click on it and click the <code>Task Implementation
 <p>In this step, we will create two different types of models and then compare their scores to decide which algorithm is most suitable to our problem. As the Boston dataset used for this example consists of predicting price of houses (continuous label). As such, we need to deal with a regression predictive problem.</p>
 </div>
 <div class="paragraph">
-<p>To solve this problem, we have to choose a regression algorithm to train the predictive model. To see the available regression algorithms available on the PML, see <strong>ML Regression</strong> Section in the <strong>machine-learning</strong> bucket.</p>
+<p>To solve this problem, we have to choose a regression algorithm to train the predictive model. To see the available regression algorithms available on the PAIO, see <strong>ML Regression</strong> Section in the <strong>machine-learning</strong> bucket.</p>
 </div>
 <div class="paragraph">
 <p>For this example, we will use <a href="#_linear_regression">Linear_Regression</a> Task and <a href="#_support_vector_regression">Support_Vector_Regression</a> Task.</p>
@@ -1373,7 +1373,7 @@ To change the code of a task click on it and click the <code>Task Implementation
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-if you have a pickled file (.pkl) containing a predictive model that you have learned using another platform, and you need to test it in the PML, you can load it using <strong>Import_Model</strong> Task.
+if you have a pickled file (.pkl) containing a predictive model that you have learned using another platform, and you need to test it in the PAIO, you can load it using <strong>Import_Model</strong> Task.
 </td>
 </tr>
 </table>
@@ -1417,7 +1417,7 @@ if you have a pickled file (.pkl) containing a predictive model that you have le
 <div class="paragraph">
 <p>The <code>auto-ml-optimization</code> bucket contains the <code>Distributed_Auto_ML</code> workflow that can be easily used to find the operating parameters for any system whose performance can be measured as a function of adjustable parameters.
 It is an estimator that minimizes the posterior expected value of a loss function.
-This bucket also comes with a set of workflows' examples that demonstrates how we can optimize mathematical functions, PML workflows and machine/deep learning algorithms from scripts using AutoML tuners.
+This bucket also comes with a set of workflows' examples that demonstrates how we can optimize mathematical functions, PAIO workflows and machine/deep learning algorithms from scripts using AutoML tuners.
 In the following subsections, several tables represent the main variables that characterize the AutoML workflows.
 In addition to the variables mentioned below, there is a set of generic variables that are common between all workflows
 which can be found in the subsection <a href="#_ai_workflows_common_variables">AI Workflows Common Variables</a>.</p>
@@ -1798,7 +1798,7 @@ by few additional variables.</p>
 <p><strong>CIFAR_100_Image_Classification:</strong> trains a simple deep CNN on the CIFAR100 images dataset using the Keras library.</p>
 </div>
 <div class="paragraph">
-<p><strong>Image_Object_Detection:</strong> trains a YOLO model on the coco dataset using PML deep learning generic tasks.</p>
+<p><strong>Image_Object_Detection:</strong> trains a YOLO model on the coco dataset using PAIO deep learning generic tasks.</p>
 </div>
 <div class="paragraph">
 <p><strong>Digits_Classification:</strong> python script illustrating an example of multiple machine learning models optimization.</p>
@@ -1919,7 +1919,7 @@ It help federating any workload using any ML framework, and any programming lang
 MaaS_ML is dedicated to make deployments of lightweight machine learning (ML) models simple, portable, and scalable, and to easily manage their lifetimes. This will be particularly useful for engineering or business teams that want to take advantage of this model.</p>
 </div>
 <div class="paragraph">
-<p>The life cycle of any MaaS_ML instance (i.e., from starting the generic service instance, deploying an AI specific model to pausing or deleting the instance) can be managed in three different ways in PML :</p>
+<p>The life cycle of any MaaS_ML instance (i.e., from starting the generic service instance, deploying an AI specific model to pausing or deleting the instance) can be managed in three different ways in PAIO :</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1958,7 +1958,7 @@ you can also trigger the deployment of a specific VM using the Resource Manager 
 <div class="paragraph">
 <p>In the following subsections, we will illustrate the MaaS_ML instance life cycle, from starting the generic service instance,
 deploying a specific model, pausing it, to deleting the instance. We will also describe how the MaaS_ML instance life cycle
-can be managed via four different ways in PML:</p>
+can be managed via four different ways in PAIO:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -2991,7 +2991,7 @@ of the <strong>/predict()</strong> endpoint and in the <strong>Traceability and 
 It provides out-of-the-box integration with TensorFlow Serving TFX taking advantage of its flexibility and high-performance serving system.</p>
 </div>
 <div class="paragraph">
-<p>The life cycle of any MaaS_DL instance (i.e., from starting the generic service instance, deploying an AI specific model to pausing or deleting the instance) can be managed in three different ways in PML :</p>
+<p>The life cycle of any MaaS_DL instance (i.e., from starting the generic service instance, deploying an AI specific model to pausing or deleting the instance) can be managed in three different ways in PAIO :</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3013,7 +3013,7 @@ you can also trigger the deployment of a specific VM using the Resource Manager 
 </div>
 <div class="paragraph">
 <p>In the following subsections, we will describe the MaaS_DL instance life cycle, from starting the generic service instance,
-deploying a specific model, undeploying it, to deleting the instance. We will also describe how the MaaS_DL instance life cycle can be managed via four different ways in PML:</p>
+deploying a specific model, undeploying it, to deleting the instance. We will also describe how the MaaS_DL instance life cycle can be managed via four different ways in PAIO:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -4132,7 +4132,7 @@ along with their input variables and results.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>ProActive Analytics is very useful to compare metrics and charts of workflows that have common variables and results. For example, a ML algorithm might take different variables values and produce multiple results. It would be interesting to analyze the correlation and evolution of the algorithm results regarding the input variation (See also a similar example of <a href="../PML/PMLUserGuide.html#_AutoML">AutoML</a>).
+<p>ProActive Analytics is very useful to compare metrics and charts of workflows that have common variables and results. For example, a ML algorithm might take different variables values and produce multiple results. It would be interesting to analyze the correlation and evolution of the algorithm results regarding the input variation (See also a similar example of <a href="../PAIO/PAIOUserGuide.html#_AutoML">AutoML</a>).
 The following sections will show you some key features of the dashboard and how to use them for a better understanding of your job executions.</p>
 </div>
 <div class="sect2">
@@ -5493,7 +5493,7 @@ The workflow represented in the above is available on the 'machine-learning-work
 <h2 id="_ml_workflows_examples"><a class="anchor" href="#_ml_workflows_examples"></a><a class="link" href="#_ml_workflows_examples">12. ML Workflows Examples</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The PML provides a fast, easy and practical way to execute different workflows using the ML bucket. We present useful ML workflows for different applications in the following subsections.</p>
+<p>The PAIO provides a fast, easy and practical way to execute different workflows using the ML bucket. We present useful ML workflows for different applications in the following subsections.</p>
 </div>
 <div class="paragraph">
 <p>To test these workflows, you need to add the <strong>machine-Learning-workflows Bucket</strong> as main catalog in the ProActive Studio.</p>
@@ -5674,7 +5674,7 @@ The workflow represented in the above is available on the 'machine-learning-work
 <h2 id="_deep_learning_workflows_examples"><a class="anchor" href="#_deep_learning_workflows_examples"></a><a class="link" href="#_deep_learning_workflows_examples">13. Deep Learning Workflows Examples</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>PML provides a fast, easy and practical way to execute deep learning workflows. In the following subsections, we present useful deep learning workflows for text and image classification and generation.</p>
+<p>PAIO provides a fast, easy and practical way to execute deep learning workflows. In the following subsections, we present useful deep learning workflows for text and image classification and generation.</p>
 </div>
 <div class="videoblock">
 <div class="content">
@@ -5836,7 +5836,7 @@ It is recommended to use an enabled-GPU node to run the deep learning tasks.
 <h3 id="_ai_workflows_common_variables"><a class="anchor" href="#_ai_workflows_common_variables"></a><a class="link" href="#_ai_workflows_common_variables">14.1. AI Workflows Common Variables</a></h3>
 <div class="paragraph">
 <p>In the following table, you can find the variables that are common between
-most of the available AI workflows in PML associated to their descriptions.</p>
+most of the available AI workflows in PAIO associated to their descriptions.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>

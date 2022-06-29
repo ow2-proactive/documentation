@@ -32,7 +32,7 @@ asciidoctor {
     sources {
         include 'user/ProActiveUserGuide.adoc'
         include 'JobPlanner/JobPlannerUserGuide.adoc'
-        include 'PML/PMLUserGuide.adoc'
+        include 'PAIO/PAIOUserGuide.adoc'
         include 'PEO/PEOUserGuide.adoc'
         include 'PSA/PSAUserGuide.adoc'
         include 'admin/ProActiveAdminGuide.adoc'
