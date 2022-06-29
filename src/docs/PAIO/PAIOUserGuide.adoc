@@ -67,7 +67,7 @@ B. Create a new workflow.
 
 C. Change palette preset to `Machine Learning`.
 
-D. Click on `ai-machine-learning` catalog and pin it open, and same for the `data-visualization` catalog.
+D. Click on `ai-machine-learning` catalog and pin it open, and same for the `ai-data-visualization` catalog.
 
 E. Organize your canvas.
 
@@ -2547,7 +2547,7 @@ The following workflows present some ML basic examples using AutoML generic task
 
 === Log Analysis
 
-The following workflows are designed to detect anomalies in log files. They are constructed using generic tasks which are available on the `ai-machine-learning` and `data-visualization` buckets.
+The following workflows are designed to detect anomalies in log files. They are constructed using generic tasks which are available on the `ai-machine-learning` and `ai-data-visualization` buckets.
 
 *Anomaly_Detection_in_Apache_Logs:* detects intrusions in apache logs using a predictive model trained using Support Vector Machines algorithm.
 
@@ -4870,7 +4870,7 @@ NOTE: This task requires too much memory. You may receive an error message if yo
 
 === Data Visualization Bucket
 
-The data-visualization catalog integrates generic tasks that can be easily used to broadcast visualizations of the analytic results provided by AI tasks. It offers a large set of plots that can be organized programmatically or through the UI. These plots are used to create dashboards for both live and real-time data, inspect results of experiments, or debug experimental code. The data-visualization catalog  provides a fast, easy and practical way to execute different workflows generating these diverse visualizations that are automatically cached by the
+The `ai-data-visualization` catalog integrates generic tasks that can be easily used to broadcast visualizations of the analytic results provided by AI tasks. It offers a large set of plots that can be organized programmatically or through the UI. These plots are used to create dashboards for both live and real-time data, inspect results of experiments, or debug experimental code. The `ai-data-visualization` catalog provides a fast, easy and practical way to execute different workflows generating these diverse visualizations that are automatically cached by the
 TensorBoard and Visdom Server. However, other visualization libraries can be integrated as well.
 
 ==== Visdom
