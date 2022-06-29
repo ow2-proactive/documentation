@@ -34,7 +34,7 @@ Scheduler Web Interface:: ProActive component that provides a web interface to t
 Workflow Studio:: ProActive component that provides a web interface for designing <<_glossary_workflow,*Workflows*>>.
 
 [[_glossary_machine_learning_open_studio]]
-Proactive Machine Learning:: PML component that provides a web interface for designing and composing ML <<_glossary_workflow,*Workflows*>> with drag and drop.
+ProActive AI Orchestration:: PAIO component that provides a web interface for designing and composing ML <<_glossary_workflow,*Workflows*>> with drag and drop.
 
 [[_glossary_job_planner_portal]]
 Job Planner Portal:: ProActive component that provides a web interface for planning <<_glossary_workflow,*Workflows*>>, and creating <<_glossary_workflow,*Calendar Definitions*>>

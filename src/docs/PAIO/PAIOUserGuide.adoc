@@ -1,13 +1,13 @@
 :docinfo:
 :toc:
-:toc-title: PML User Guide
-= ProActive Machine Learning
+:toc-title: PAIO User Guide
+= ProActive AI Orchestration
 include::../common-settings.adoc[]
 include::../all-doc-links.adoc[]
 
 == Overview
 
-=== What is ProActive Machine Learning (PML)?
+=== What is ProActive AI Orchestration (PAIO)?
 
 include::references/Overview.adoc[]
 
@@ -55,11 +55,11 @@ Suppose you need to predict houses prices based on this information (features) p
 - *LSTAT* % lower status of the population
 - *MDEV* Median value of owner-occupied homes in $1000' s
 
-Predicting houses prices is a complex problem, but we can simplify it a bit for this step-by-step example. We'll show you how you can easily create a predictive analytics solution using PML.
+Predicting houses prices is a complex problem, but we can simplify it a bit for this step-by-step example. We'll show you how you can easily create a predictive analytics solution using PAIO.
 
 === Manage the Canvas
 
-To use PML, you need to add the *Machine Learning Bucket* as main catalog in the ProActive Studio. This bucket contains a set of generic tasks that enables you to upload and prepare data, train a model and test it.
+To use PAIO, you need to add the *Machine Learning Bucket* as main catalog in the ProActive Studio. This bucket contains a set of generic tasks that enables you to upload and prepare data, train a model and test it.
 
 A. Open +++<a class="studioUrl" href="/studio" target="_blank">ProActive Workflow Studio</a>+++ home page.
 
@@ -83,7 +83,7 @@ A. Once dataset has been converted to *CSV* format, upload it into a cloud stora
 For this tutorial, we will use Boston house prices dataset available on this link:
 https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/boston-houses-prices.csv
 
-B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the ProActive Machine Learning.
+B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the ProActive AI Orchestration.
 
 C. Click on the task and click `General Parameters` in the left to change the default parameters of this task.
 
@@ -113,14 +113,14 @@ image::prepare_data.gif[100000,2000]
 
 === Train a Predictive Model
 
-Using PML, you can easily create different ML models in a single experiment and compare their results. This type of experimentation helps you find the best solution for your problem.
+Using PAIO, you can easily create different ML models in a single experiment and compare their results. This type of experimentation helps you find the best solution for your problem.
 You can also enrich the `machine-learning` bucket by adding new ML algorithms and publish or customize an existing task according to your requirements as the tasks are open source.
 
 NOTE: To change the code of a task click on it and click the `Task Implementation`. You can also add new variables to a specific task.
 
 In this step, we will create two different types of models and then compare their scores to decide which algorithm is most suitable to our problem. As the Boston dataset used for this example consists of predicting price of houses (continuous label). As such, we need to deal with a regression predictive problem.
 
-To solve this problem, we have to choose a regression algorithm to train the predictive model. To see the available regression algorithms available on the PML, see *ML Regression* Section in the *machine-learning* bucket.
+To solve this problem, we have to choose a regression algorithm to train the predictive model. To see the available regression algorithms available on the PAIO, see *ML Regression* Section in the *machine-learning* bucket.
 
 For this example, we will use <<Linear_Regression>> Task and <<Support_Vector_Regression>> Task.
 
@@ -152,7 +152,7 @@ F. Connect each <<Preview_Results>> Task with <<Predict_Model>>.
 
 image::test_the_predictive_model.png[100000,2000]
 
-NOTE: if you have a pickled file (.pkl) containing a predictive model that you have learned using another platform, and you need to test it in the PML, you can load it using *Import_Model* Task.
+NOTE: if you have a pickled file (.pkl) containing a predictive model that you have learned using another platform, and you need to test it in the PAIO, you can load it using *Import_Model* Task.
 
 === Run the Experiment and Preview the Results
 
@@ -176,7 +176,7 @@ image::execute.gif[100000,2000]
 
 The `auto-ml-optimization` bucket contains the `Distributed_Auto_ML` workflow that can be easily used to find the operating parameters for any system whose performance can be measured as a function of adjustable parameters.
 It is an estimator that minimizes the posterior expected value of a loss function.
-This bucket also comes with a set of workflows' examples that demonstrates how we can optimize mathematical functions, PML workflows and machine/deep learning algorithms from scripts using AutoML tuners.
+This bucket also comes with a set of workflows' examples that demonstrates how we can optimize mathematical functions, PAIO workflows and machine/deep learning algorithms from scripts using AutoML tuners.
 In the following subsections, several tables represent the main variables that characterize the AutoML workflows.
 In addition to the variables mentioned below, there is a set of generic variables that are common between all workflows
 which can be found in the subsection <<AI Workflows Common Variables>>.
@@ -392,7 +392,7 @@ The following workflows have common variables with the above illustrated workflo
 
 *CIFAR_100_Image_Classification:* trains a simple deep CNN on the CIFAR100 images dataset using the Keras library.
 
-*Image_Object_Detection:* trains a YOLO model on the coco dataset using PML deep learning generic tasks.
+*Image_Object_Detection:* trains a YOLO model on the coco dataset using PAIO deep learning generic tasks.
 
 *Digits_Classification:* python script illustrating an example of multiple machine learning models optimization.
 
@@ -472,7 +472,7 @@ References:
 Once a predictive model is built, tested and validated, you can easily use it in real world production pipelines by deploying it as a REST Web Service via the MaaS_ML service.
 MaaS_ML is dedicated to make deployments of lightweight machine learning (ML) models simple, portable, and scalable, and to easily manage their lifetimes. This will be particularly useful for engineering or business teams that want to take advantage of this model.
 
-The life cycle of any MaaS_ML instance (i.e., from starting the generic service instance, deploying an AI specific model to pausing or deleting the instance) can be managed in three different ways in PML :
+The life cycle of any MaaS_ML instance (i.e., from starting the generic service instance, deploying an AI specific model to pausing or deleting the instance) can be managed in three different ways in PAIO :
 
 - Using the *Studio Portal* and more specifically the bucket *model-as-a-service* where specific generic tasks are provided to process all the possible actions (i.e., MaaS_ML_Service_Start, MaaS_ML_Deploy_Model, MaaS_ML_Call_Prediction, MaaS_ML_Actions[Finish/Pause/Resume]).
 These tasks can be easily integrated to your AI pipelines/workflows as you can see in this <<Deployment Pipeline Example>>.
@@ -492,7 +492,7 @@ you can also trigger the deployment of a specific VM using the Resource Manager 
 
 In the following subsections, we will illustrate the MaaS_ML instance life cycle, from starting the generic service instance,
 deploying a specific model, pausing it, to deleting the instance. We will also describe how the MaaS_ML instance life cycle
-can be managed via four different ways in PML:
+can be managed via four different ways in PAIO:
 
 . <<MaaS_ML Via Workflow Execution Portal>>
 . <<MaaS_ML Via Studio Portal>>
@@ -1083,7 +1083,7 @@ In case a data drift has occurred, a user will receive a notification using the 
 MaaS_DL is a model deployment service for putting AI models to production. MaaS_DL comes with new capabilities, compared to MaaS_ML, enabling users to deploy deep learning models, to update the deployed models with an updated version and to easily rollback to any previous version(s).
 It provides out-of-the-box integration with TensorFlow Serving TFX taking advantage of its flexibility and high-performance serving system.
 
-The life cycle of any MaaS_DL instance (i.e., from starting the generic service instance, deploying an AI specific model to pausing or deleting the instance) can be managed in three different ways in PML :
+The life cycle of any MaaS_DL instance (i.e., from starting the generic service instance, deploying an AI specific model to pausing or deleting the instance) can be managed in three different ways in PAIO :
 
 - Using the *Studio Portal* and more specifically the bucket *model-as-a-service* where specific generic tasks are provided to process all the possible actions (i.e., MaaS_DL_Service_Start, MaaS_DL_Deploy_Model, MaaS_DL_Actions[Finish/Pause/Resume], MaaS_DL_Undeploy_Model).
 These tasks can be easily integrated to your AI pipelines/workflows as you can see in this <<Deployment Pipeline Example>>.
@@ -1094,7 +1094,7 @@ Using MaaS_DL, you can easily deploy and use any machine or deep learning model 
 you can also trigger the deployment of a specific VM using the Resource Manager elastic policies, and eventually, deploy a Model-Service on that specific node.
 
 In the following subsections, we will describe the MaaS_DL instance life cycle, from starting the generic service instance,
-deploying a specific model, undeploying it, to deleting the instance. We will also describe how the MaaS_DL instance life cycle can be managed via four different ways in PML:
+deploying a specific model, undeploying it, to deleting the instance. We will also describe how the MaaS_DL instance life cycle can be managed via four different ways in PAIO:
 
 . <<MaaS_DL Via Workflow Execution Portal>>
 . <<MaaS_DL Via Studio Portal>>
@@ -1590,7 +1590,7 @@ To access the AutoFeat page, please follow the steps below:
 
 . Create a new workflow.
 
-. Drag and drop the `Import_Data_And_Automate_Feature_Engineering` task from the *machine-learning* bucket in the ProActive Machine Learning.
+. Drag and drop the `Import_Data_And_Automate_Feature_Engineering` task from the *machine-learning* bucket in the ProActive AI Orchestration.
 
 . Click on the task and click `General Parameters` in the left to change the default parameters of this task.
 
@@ -1695,7 +1695,7 @@ It offers several functionalities, including:
 - Charts to track variables and results evolution and correlation.
 - Data exportation in multiple formats for further use in analytics tools.
 
-ProActive Analytics is very useful to compare metrics and charts of workflows that have common variables and results. For example, a ML algorithm might take different variables values and produce multiple results. It would be interesting to analyze the correlation and evolution of the algorithm results regarding the input variation (See also a similar example of link:../PML/PMLUserGuide.html#_AutoML[AutoML]).
+ProActive Analytics is very useful to compare metrics and charts of workflows that have common variables and results. For example, a ML algorithm might take different variables values and produce multiple results. It would be interesting to analyze the correlation and evolution of the algorithm results regarding the input variation (See also a similar example of link:../PAIO/PAIOUserGuide.html#_AutoML[AutoML]).
 The following sections will show you some key features of the dashboard and how to use them for a better understanding of your job executions.
 
 [[_job_search]]
@@ -2502,11 +2502,11 @@ NOTE: The workflow represented in the above is available on the 'machine-learnin
 
 == ML Workflows Examples
 
-The PML provides a fast, easy and practical way to execute different workflows using the ML bucket. We present useful ML workflows for different applications in the following subsections.
+The PAIO provides a fast, easy and practical way to execute different workflows using the ML bucket. We present useful ML workflows for different applications in the following subsections.
 
 To test these workflows, you need to add the *machine-Learning-workflows Bucket* as main catalog in the ProActive Studio.
 
-A. Open +++<a class="studioUrl" href="/studio" target="_blank">ProActive Machine Learning</a>+++ home page.
+A. Open +++<a class="studioUrl" href="/studio" target="_blank">ProActive AI Orchestration</a>+++ home page.
 
 B. Create a new workflow.
 
@@ -2611,13 +2611,13 @@ Please find in the table below the list of algorithms which have GPU support and
 
 == Deep Learning Workflows Examples
 
-PML provides a fast, easy and practical way to execute deep learning workflows. In the following subsections, we present useful deep learning workflows for text and image classification and generation.
+PAIO provides a fast, easy and practical way to execute deep learning workflows. In the following subsections, we present useful deep learning workflows for text and image classification and generation.
 
 video::FwMPR87wzoo[youtube, width=700, height=400 start=0, position=center]
 
 You can test these workflows by following these steps:
 
-A. Open +++<a class="studioUrl" href="/studio" target="_blank">ProActive Machine Learning</a>+++ home page.
+A. Open +++<a class="studioUrl" href="/studio" target="_blank">ProActive AI Orchestration</a>+++ home page.
 
 B. Create a new workflow.
 
@@ -2729,7 +2729,7 @@ WARNING: It is recommended to use an enabled-GPU node to run the deep learning t
 === AI Workflows Common Variables
 
 In the following table, you can find the variables that are common between
-most of the available AI workflows in PML associated to their descriptions.
+most of the available AI workflows in PAIO associated to their descriptions.
 
 [cols="2,5,2"]
 |===

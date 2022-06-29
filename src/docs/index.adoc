@@ -15,12 +15,12 @@
 ** link:PSA/PSAUserGuide.html[*Service Automation*] (PaaS On-Demand, Service deployment and management)
 * link:admin/ProActiveAdminGuide.html[*PWS Admin Guide*] (Installation, Infrastructure & Nodes setup, Agents,…​)
 
-=== ProActive Machine Learning (PML)
+=== ProActive AI Orchestration (PAIO)
 
-* link:PML/PMLUserGuide.html[*PML User Guide*] (​a complete Data Science and Machine Learning platform, with Studio & MLOps)
+* link:PAIO/PAIOUserGuide.html[*PAIO User Guide*] (​a complete Data Science and Machine Learning platform, with Studio & MLOps)
 
 === API documentation
-link:rest/[*Scheduler REST*] &emsp; link:user/ProActiveUserGuide.html#_scheduler_graphql_api[*Scheduler GraphQL*] &emsp; link:user/ProActiveUserGuide.html#_scheduler_command_line[*Scheduler CLI*] &emsp; link:javadoc/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html[*Scheduler Java*] &emsp; link:javadoc/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html[*Workflow Creation Java*] &emsp; https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client[*Python Client*] &emsp; link:PML/PMLUserGuide.html#_proactive_jupyter_kernel[*Jupyter Kernel*] &emsp; https://www.activeeon.com/public_content/documentation/csharp-client/[*.NET Client*]
+link:rest/[*Scheduler REST*] &emsp; link:user/ProActiveUserGuide.html#_scheduler_graphql_api[*Scheduler GraphQL*] &emsp; link:user/ProActiveUserGuide.html#_scheduler_command_line[*Scheduler CLI*] &emsp; link:javadoc/index.html?org/ow2/proactive/scheduler/rest/SchedulerClient.html[*Scheduler Java*] &emsp; link:javadoc/index.html?org/ow2/proactive/scheduler/common/job/TaskFlowJob.html[*Workflow Creation Java*] &emsp; https://github.com/ow2-proactive/proactive-python-client#proactive-scheduler-client[*Python Client*] &emsp; link:PAIO/PAIOUserGuide.html#_proactive_jupyter_kernel[*Jupyter Kernel*] &emsp; https://www.activeeon.com/public_content/documentation/csharp-client/[*.NET Client*]
 
 == Links
 
