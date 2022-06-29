@@ -93,7 +93,7 @@ It serves as a generic template that can be used to create and start any docker 
 | options like environment variables, etc
 | No
 | String
-| e.g. `-e POSTGRES_USER=pml -e POSTGRES_PASSWORD=proactive -e POSTGRES_DB=activeeon`
+| e.g. `-e POSTGRES_USER=paio -e POSTGRES_PASSWORD=proactive -e POSTGRES_DB=activeeon`
 |`DOCKER_COMMAND`
 | Password for the root user
 | No
