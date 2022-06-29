@@ -59,7 +59,7 @@ Predicting houses prices is a complex problem, but we can simplify it a bit for 
 
 === Manage the Canvas
 
-To use PAIO, you need to add the *Machine Learning Bucket* as main catalog in the ProActive Studio. This bucket contains a set of generic tasks that enables you to upload and prepare data, train a model and test it.
+To use PAIO, you need to select the *Machine Learning* preset as main catalog in the ProActive Studio. This preset contains a set of buckets containing machine learning tasks and workflows that enables you to upload and prepare data, train a model and test it.
 
 A. Open +++<a class="studioUrl" href="/studio" target="_blank">ProActive Workflow Studio</a>+++ home page.
 
@@ -174,7 +174,7 @@ image::execute.gif[100000,2000]
 
 == Automated Machine Learning (AutoML)
 
-The `auto-ml-optimization` bucket contains the `Distributed_Auto_ML` workflow that can be easily used to find the operating parameters for any system whose performance can be measured as a function of adjustable parameters.
+The `ai-auto-ml-optimization` bucket contains the `Distributed_Auto_ML` workflow that can be easily used to find the operating parameters for any system whose performance can be measured as a function of adjustable parameters.
 It is an estimator that minimizes the posterior expected value of a loss function.
 This bucket also comes with a set of workflows' examples that demonstrates how we can optimize mathematical functions, PAIO workflows and machine/deep learning algorithms from scripts using AutoML tuners.
 In the following subsections, several tables represent the main variables that characterize the AutoML workflows.
@@ -218,7 +218,7 @@ image::AutoML_2.png[align=center]
 | Int (default=-1)
 | `TARGET_WORKFLOW`
 | Specifies the workflow path from the catalog that should be optimized.
-| String (default=auto-ml-optimization/Himmelblau_Function)
+| String (default=ai-auto-ml-optimization/Himmelblau_Function)
 | `TARGET_NATIVE_SCHEDULER`
 | Name of the native scheduler node source to use on the target workflow tasks when deployed inside a cluster such as SLURM, LSF, etc.
 | String (default=empty)
@@ -429,7 +429,7 @@ The following workflows represent python templates that can be used to implement
 == Federated Learning (FL)
 
 https://ai.googleblog.com/2017/04/federated-learning-collaborative.html[Federated Learning (FL)] enables to train an algorithm across multiple decentralized devices (or servers) holding local data samples, without exchanging them.
-The `federated-learning` bucket contains a few examples of Federated Learning workflows that can be easily used to build a common and robust machine learning model without sharing data, thus allowing to address critical issues such as data privacy, data security, data access rights and access to heterogeneous data.
+The `ai-federated-learning` bucket contains a few examples of Federated Learning workflows that can be easily used to build a common and robust machine learning model without sharing data, thus allowing to address critical issues such as data privacy, data security, data access rights and access to heterogeneous data.
 This bucket uses the https://flower.dev/[Flower] library to implement federated learning workflows.
 The https://flower.dev/[Flower] library is a friendly federated learning framework that presents a unified approach for federated learning.
 It help federating any workload using any ML framework, and any programming language.
@@ -474,7 +474,7 @@ MaaS_ML is dedicated to make deployments of lightweight machine learning (ML) mo
 
 The life cycle of any MaaS_ML instance (i.e., from starting the generic service instance, deploying an AI specific model to pausing or deleting the instance) can be managed in three different ways in PAIO :
 
-- Using the *Studio Portal* and more specifically the bucket *model-as-a-service* where specific generic tasks are provided to process all the possible actions (i.e., MaaS_ML_Service_Start, MaaS_ML_Deploy_Model, MaaS_ML_Call_Prediction, MaaS_ML_Actions[Finish/Pause/Resume]).
+- Using the *Studio Portal* and more specifically the bucket `ai-model-as-a-service` where specific generic tasks are provided to process all the possible actions (i.e., MaaS_ML_Service_Start, MaaS_ML_Deploy_Model, MaaS_ML_Call_Prediction, MaaS_ML_Actions[Finish/Pause/Resume]).
 These tasks can be easily integrated to your AI pipelines/workflows as you can see in this <<Deployment Pipeline Example>>.
 - Using the *Service Automation Portal* by executing the different actions associated to MaaS_ML (i.e. Deploy_ML_Model, Pause_MaaS_ML, Update_MaaS_ML, Finish_MaaS_ML.)
 - Using the *Swagger UI* which is accessible once the MaaS_ML instance is up and running.
@@ -537,7 +537,7 @@ Open the link:https://try.activeeon.com/studio[Studio Portal].
 
 Create a new workflow.
 
-Add the `model_as_a_service` bucket by clicking in the `View` menu field > `Add Bucket Menu to the Palette` > `model_as_a_service`.
+Add the `ai-model_as_a_service` bucket by clicking in the `View` menu field > `Add Bucket Menu to the Palette` > `ai-model_as_a_service`.
 
 Drag and drop the `MaaS_ML_Service_Start` task from the bucket.
 
@@ -606,7 +606,7 @@ Execute the workflow by setting the different workflow's variables as described 
 
 You can also deploy a specific ML model directly from the link:https://try.activeeon.com/studio[Studio Portal].
 
-Drag and drop the `MaaS_ML_Deploy_Model` task from the Model-As-A-Service bucket.
+Drag and drop the `MaaS_ML_Deploy_Model` task from the `ai-model-as-a-service` bucket.
 
 Execute the workflow and set the different workflow's variables as follows:
 
@@ -658,7 +658,7 @@ Execute the workflow and set the different workflow's variables as follows:
 
 Once the model is deployed, you can also call the service for prediction directly from the link:https://try.activeeon.com/studio[Studio Portal].
 
-Drag and drop the `MaaS_ML_Call_Prediction` task from the Model-As-A-Service bucket.
+Drag and drop the `MaaS_ML_Call_Prediction` task from the `ai-model-as-a-service` bucket.
 
 Execute the Workflow and set the different workflow's variables as follows:
 
@@ -719,7 +719,7 @@ Execute the Workflow and set the different workflow's variables as follows:
 
 You can also delete the service instance using the link:https://try.activeeon.com/studio[Studio Portal].
 
-Drag and drop the `MaaS_ML_Actions` task from the Model-As-A-Service bucket.
+Drag and drop the `MaaS_ML_Actions` task from the `ai-model-as-a-service` bucket.
 
 Execute the Workflow and set the different workflow's variables as follows:
 
@@ -932,7 +932,7 @@ image::MAAS_Predict_Swagger.png[align=center]
 === Deployment Pipeline Examples
 
 You can connect the different tasks in a single workflow to get the full pipeline from the model training step to the model deployment and consumption steps. Each task will propagate the acquired variables to its children tasks.
-The following workflows are available on the `model_as_a_service` bucket:
+The following workflows are available on the `ai-model_as_a_service` bucket:
 
 *Diabetics_Deploy_Predict_Classifier_Model:* trains a Diabetics Classifier based on a Random Forest Algorithm and then deploys this classifier in a MaaS_ML service instance.
 *IRIS_Deploy_Predict_Flower_Classifier_Model_Interactive:* trains an Iris Flower Classifier, starts a service instance where the trained model is deployed, and the input data is scored by consuming the endpoints exposed by the MaaS_ML service. The figure below describes this workflow.
@@ -950,7 +950,7 @@ It is possible to customize the model as a service defined by default and adapt 
 
 In the following, we describe in depth the content of each element:
 
-*PYTHON_ENTRYPOINT file*:  The following python script refers to the ml_service.py file stored in the catalog under the `model_as_a_service_resources` bucket.
+*PYTHON_ENTRYPOINT file*:  The following python script refers to the ml_service.py file stored in the catalog under the `ai-model_as_a_service_resources` bucket.
 This script defines the different functions needed to deploy the model, score data and generate tokens.
 It is possible to edit this script to make it more customized to your model. The entry script must take into consideration the:
 
@@ -961,10 +961,10 @@ It is possible to edit this script to make it more customized to your model. The
 
 [NOTE]
 ====
-The `model_as_a_service_resources` bucket can be found under the *Catalog* section in the *Automation Dashboard* portal.
+The `ai-model_as_a_service_resources` bucket can be found under the *Catalog* section in the *Automation Dashboard* portal.
 ====
 
-*YAML_FILE file*:  The following YAML script refers to the ml_service-api.yml file stored in the catalog under the `model_as_a_service_resources` bucket.
+*YAML_FILE file*:  The following YAML script refers to the ml_service-api.yml file stored in the catalog under the `ai-model_as_a_service_resources` bucket.
 This script defines the OpenAPI specification describing the entire API built once a model_service is started.
 You can adapt and edit this script in order to customize your service.
 
@@ -1022,14 +1022,14 @@ it can also be launched from different ProActive portals.
 
 ==== Via Studio Portal
 The data drift detection mechanism is added to the tasks and workflows of the bucket
-*model_as_a_service*. This mechanism is directly linked to the deployment of the model
+`ai-model_as_a_service`. This mechanism is directly linked to the deployment of the model
 in MaaS_ML (where the user deploys the model, and a part of the
 old training dataset to be used for drift detection in the new input data set),
 and to the call of the prediction service in MaaS_ML (where the drift detector is chosen,
 and the detection process is started using the chosen detector).
 
 The workflow *IRIS_Deploy_Predict_Flower_Classifier_Model*, found in the
-*model_as_a_service* bucket in the ProActive Studio Portal, shows an example of pipeline using the generic tasks
+`ai-model_as_a_service` bucket in the ProActive Studio Portal, shows an example of pipeline using the generic tasks
 *MaaS_ML_Deploy_Model* and *MaaS_ML_Call_Prediction* including the DDD mechanism.
 
 In particular, in the *MaaS_ML_Deploy_Model* task, the user is asked to enter
@@ -1085,7 +1085,7 @@ It provides out-of-the-box integration with TensorFlow Serving TFX taking advant
 
 The life cycle of any MaaS_DL instance (i.e., from starting the generic service instance, deploying an AI specific model to pausing or deleting the instance) can be managed in three different ways in PAIO :
 
-- Using the *Studio Portal* and more specifically the bucket *model-as-a-service* where specific generic tasks are provided to process all the possible actions (i.e., MaaS_DL_Service_Start, MaaS_DL_Deploy_Model, MaaS_DL_Actions[Finish/Pause/Resume], MaaS_DL_Undeploy_Model).
+- Using the *Studio Portal* and more specifically the bucket `ai-model-as-a-service` where specific generic tasks are provided to process all the possible actions (i.e., MaaS_DL_Service_Start, MaaS_DL_Deploy_Model, MaaS_DL_Actions[Finish/Pause/Resume], MaaS_DL_Undeploy_Model).
 These tasks can be easily integrated to your AI pipelines/workflows as you can see in this <<Deployment Pipeline Example>>.
 - Using the *Service Automation Portal* by executing the different actions associated to MaaS_DL (i.e. Deploy_DL_Model, Redeploy_DL_Model, Undeploy_DL_Model)
 - Using the *Swagger UI* which is accessible once the MaaS_DL instance is up and running.
@@ -1139,7 +1139,7 @@ Open the link:https://try.activeeon.com/studio[Studio Portal].
 
 Create a new workflow.
 
-Add the `model_as_a_service` bucket by clicking in the `View` menu field > `Add Bucket Menu to the Palette` > `model_as_a_service`.
+Add the `ai-model_as_a_service` bucket by clicking in the `View` menu field > `Add Bucket Menu to the Palette` > `ai-model_as_a_service`.
 
 Drag and drop the `MaaS_DL_Service_Start` task from the bucket.
 
@@ -1199,7 +1199,7 @@ Execute the workflow by setting the different workflow's variables as described 
 
 You can also deploy a specific DL model directly from the link:https://try.activeeon.com/studio[Studio Portal].
 
-Drag and drop the `MaaS_DL_Deploy_Model` task from the Model-As-A-Service bucket.
+Drag and drop the `MaaS_DL_Deploy_Model` task from the `ai-model-as-a-service` bucket.
 
 Execute the workflow and set the different workflow's variables as follows:
 
@@ -1245,7 +1245,7 @@ Execute the workflow and set the different workflow's variables as follows:
 
 You can also undeploy a specific DL model directly from the link:https://try.activeeon.com/studio[Studio Portal].
 
-Drag and drop the `MaaS_DL_Undeploy_Model` task from the Model-As-A-Service bucket.
+Drag and drop the `MaaS_DL_Undeploy_Model` task from the `ai-model-as-a-service` bucket.
 
 Execute the Workflow and set the different workflow's variables as follows:
 
@@ -1272,7 +1272,7 @@ Execute the Workflow and set the different workflow's variables as follows:
 
 Once the model is deployed, you can also call the service for prediction directly from the link:https://try.activeeon.com/studio[Studio Portal].
 
-Drag and drop the `MaaS_DL_Call_Prediction` task from the Model-As-A-Service bucket.
+Drag and drop the `MaaS_DL_Call_Prediction` task from the `ai-model-as-a-service` bucket.
 
 Execute the Workflow and set the different workflow's variables as follows:
 
@@ -1321,7 +1321,7 @@ Execute the Workflow and set the different workflow's variables as follows:
 
 You can also delete the service instance using the link:https://try.activeeon.com/studio[Studio Portal].
 
-Drag and drop the `MaaS_DL_Actions` task from the Model-As-A-Service bucket.
+Drag and drop the `MaaS_DL_Actions` task from the `ai-model-as-a-service` bucket.
 
 Execute the Workflow and set the different workflow's variables as follows:
 
@@ -1553,7 +1553,7 @@ image::MAAS_DL_model_config.PNG[align=center]
 === Deployment Pipeline Example
 
 You can connect the different tasks in a single workflow to get the full pipeline from the model training step to the model deployment and consumption steps. Each task will propagate the acquired variables to its children tasks.
-The following workflow example is available on the `model_as_a_service` bucket under the name of `MNIST_Model_Training_and_Deployment`.
+The following workflow example is available on the `ai-model_as_a_service` bucket under the name of `MNIST_Model_Training_and_Deployment`.
 This example trains a Mnist model, starts a service instance where the trained model is deployed as a service using the Maas_DL PSA service.
 
 image::NEW_MAAS_DL_MNIST_Workflow_Example.PNG[align=center]
@@ -2629,7 +2629,7 @@ E. Execute the chosen workflow, track its progress and preview its results.
 
 === Azure Cognitive Services
 
-The following workflows present useful examples composed by pre-built Azure cognitive services available on `azure-cognitive-services` bucket.
+The following workflows present useful examples composed by pre-built Azure cognitive services available on `ai-azure-cognitive-services` bucket.
 
 *Emotion_Detection_in_Bing_News:* is a mashup that searches for images of a person using Azure Bing Image Search then performs an emotion detection using Azure Emotion API.
 
@@ -2649,7 +2649,7 @@ The following workflows present useful examples for predictive models training a
 
 === Mixed Workflows
 
-The following workflow presents an example of a workflow built using pre-built Azure cognitive services tasks available on the `azure-cognitive-services` bucket and custom AI tasks available on the `ai-deep-learning` bucket.
+The following workflow presents an example of a workflow built using pre-built Azure cognitive services tasks available on the `ai-azure-cognitive-services` bucket and custom AI tasks available on the `ai-deep-learning` bucket.
 
 *Custom_Sentiment_Analysis:* is a mashup that searches for news related to a given search term using Azure Bing News API then performs a sentiment analysis using a custom deep learning based pretrained model.
 
