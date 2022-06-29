@@ -2621,7 +2621,7 @@ A. Open +++<a class="studioUrl" href="/studio" target="_blank">ProActive AI Orch
 
 B. Create a new workflow.
 
-C. Click on `Catalog` menu then `Add Bucket as Extra Catalog Menu` and select `deep-learning-workflows` bucket.
+C. Click on `Catalog` menu then `Add Bucket as Extra Catalog Menu` and select `ai-deep-learning-workflows` bucket.
 
 D. Open this added extra catalog menu and drag and drop the workflow example of your choice.
 
@@ -2649,12 +2649,12 @@ The following workflows present useful examples for predictive models training a
 
 === Mixed Workflows
 
-The following workflow presents an example of a workflow built using pre-built Azure cognitive services tasks available on the `azure-cognitive-services` bucket and custom AI tasks available on the `deep-learning` bucket.
+The following workflow presents an example of a workflow built using pre-built Azure cognitive services tasks available on the `azure-cognitive-services` bucket and custom AI tasks available on the `ai-deep-learning` bucket.
 
 *Custom_Sentiment_Analysis:* is a mashup that searches for news related to a given search term using Azure Bing News API then performs a sentiment analysis using a custom deep learning based pretrained model.
 
 === Training Custom AI Workflows - PyTorch library
-This section presents custom AI workflows using tasks available on the `deep-learning` bucket. Such tasks enable you to train your own AI models by a simple drag and drop of custom AI task.
+This section presents custom AI workflows using tasks available on the `ai-deep-learning` bucket. Such tasks enable you to train your own AI models by a simple drag and drop of custom AI task.
 
 *IMDB_Sentiment_Analysis:* trains a model to perform sentiment identification and categorization expressed in a piece of text, especially in order to determine the opinion of IMDB users regarding specific movies [positive or negative].
 NOTE: Instead of training a model from scratch, a pre-trained sentiment analysis model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/basic_sentiment_analysis.zip[link^].
@@ -2673,7 +2673,7 @@ NOTE: Instead of training a model from scratch, a pre-trained sentiment analysis
 
 === Prediction Custom AI Workflows - PyTorch library
 
-This section presents custom AI workflows using tasks available on the `deep-learning` bucket. Such tasks enable you to test your own AI models by a simple drag and drop of custom AI task.
+This section presents custom AI workflows using tasks available on the `ai-deep-learning` bucket. Such tasks enable you to test your own AI models by a simple drag and drop of custom AI task.
 
 *Image_Classification:* predicts a classification model using ResNet_18 network on https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/ants_vs_bees.zip[Ants_vs_Bees Dataset^]. The pre-trained image classification model is available on this https://s3.eu-west-2.amazonaws.com/activeeon-public/models/model_resnet18.zip[link^].
 
@@ -4046,7 +4046,7 @@ NOTE: More information about the source of the SHAP and eli5 Python libraries ca
 
 === Deep Learning Bucket
 
-The `deep-learning` bucket contains diverse generic deep learning tasks that enable you to easily compose workflows for predictive models learning and testing. This bucket can be easily customized according to your needs.
+The `ai-deep-learning` bucket contains diverse generic deep learning tasks that enable you to easily compose workflows for predictive models learning and testing. This bucket can be easily customized according to your needs.
 It offers different options, you can customize it by adding new tasks or update the existing tasks.
 
 [NOTE]
