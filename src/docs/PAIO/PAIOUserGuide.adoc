@@ -1,13 +1,13 @@
 :docinfo:
 :toc:
 :toc-title: PAIO User Guide
-= ProActive Machine Learning
+= ProActive AI Orchestration
 include::../common-settings.adoc[]
 include::../all-doc-links.adoc[]
 
 == Overview
 
-=== What is ProActive Machine Learning (PAIO)?
+=== What is ProActive AI Orchestration (PAIO)?
 
 include::references/Overview.adoc[]
 
@@ -83,7 +83,7 @@ A. Once dataset has been converted to *CSV* format, upload it into a cloud stora
 For this tutorial, we will use Boston house prices dataset available on this link:
 https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/boston-houses-prices.csv
 
-B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the ProActive Machine Learning.
+B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the ProActive AI Orchestration.
 
 C. Click on the task and click `General Parameters` in the left to change the default parameters of this task.
 
@@ -1590,7 +1590,7 @@ To access the AutoFeat page, please follow the steps below:
 
 . Create a new workflow.
 
-. Drag and drop the `Import_Data_And_Automate_Feature_Engineering` task from the *machine-learning* bucket in the ProActive Machine Learning.
+. Drag and drop the `Import_Data_And_Automate_Feature_Engineering` task from the *machine-learning* bucket in the ProActive AI Orchestration.
 
 . Click on the task and click `General Parameters` in the left to change the default parameters of this task.
 
@@ -2506,7 +2506,7 @@ The PAIO provides a fast, easy and practical way to execute different workflows 
 
 To test these workflows, you need to add the *machine-Learning-workflows Bucket* as main catalog in the ProActive Studio.
 
-A. Open +++<a class="studioUrl" href="/studio" target="_blank">ProActive Machine Learning</a>+++ home page.
+A. Open +++<a class="studioUrl" href="/studio" target="_blank">ProActive AI Orchestration</a>+++ home page.
 
 B. Create a new workflow.
 
@@ -2617,7 +2617,7 @@ video::FwMPR87wzoo[youtube, width=700, height=400 start=0, position=center]
 
 You can test these workflows by following these steps:
 
-A. Open +++<a class="studioUrl" href="/studio" target="_blank">ProActive Machine Learning</a>+++ home page.
+A. Open +++<a class="studioUrl" href="/studio" target="_blank">ProActive AI Orchestration</a>+++ home page.
 
 B. Create a new workflow.
 
