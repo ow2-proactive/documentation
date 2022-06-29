@@ -67,7 +67,7 @@ B. Create a new workflow.
 
 C. Change palette preset to `Machine Learning`.
 
-D. Click on `machine-learning` catalog and pin it open, and same for the `data-visualization` catalog.
+D. Click on `ai-machine-learning` catalog and pin it open, and same for the `data-visualization` catalog.
 
 E. Organize your canvas.
 
@@ -83,7 +83,7 @@ A. Once dataset has been converted to *CSV* format, upload it into a cloud stora
 For this tutorial, we will use Boston house prices dataset available on this link:
 https://s3.eu-west-2.amazonaws.com/activeeon-public/datasets/boston-houses-prices.csv
 
-B. Drag and drop the <<Import_Data>> task from the *machine-learning* bucket in the ProActive AI Orchestration.
+B. Drag and drop the <<Import_Data>> task from the `ai-machine-learning` bucket in the ProActive AI Orchestration.
 
 C. Click on the task and click `General Parameters` in the left to change the default parameters of this task.
 
@@ -114,13 +114,13 @@ image::prepare_data.gif[100000,2000]
 === Train a Predictive Model
 
 Using PAIO, you can easily create different ML models in a single experiment and compare their results. This type of experimentation helps you find the best solution for your problem.
-You can also enrich the `machine-learning` bucket by adding new ML algorithms and publish or customize an existing task according to your requirements as the tasks are open source.
+You can also enrich the `ai-machine-learning` bucket by adding new ML algorithms and publish or customize an existing task according to your requirements as the tasks are open source.
 
 NOTE: To change the code of a task click on it and click the `Task Implementation`. You can also add new variables to a specific task.
 
 In this step, we will create two different types of models and then compare their scores to decide which algorithm is most suitable to our problem. As the Boston dataset used for this example consists of predicting price of houses (continuous label). As such, we need to deal with a regression predictive problem.
 
-To solve this problem, we have to choose a regression algorithm to train the predictive model. To see the available regression algorithms available on the PAIO, see *ML Regression* Section in the *machine-learning* bucket.
+To solve this problem, we have to choose a regression algorithm to train the predictive model. To see the available regression algorithms available on the PAIO, see *ML Regression* Section in the `ai-machine-learning` bucket.
 
 For this example, we will use <<Linear_Regression>> Task and <<Support_Vector_Regression>> Task.
 
@@ -1590,7 +1590,7 @@ To access the AutoFeat page, please follow the steps below:
 
 . Create a new workflow.
 
-. Drag and drop the `Import_Data_And_Automate_Feature_Engineering` task from the *machine-learning* bucket in the ProActive AI Orchestration.
+. Drag and drop the `Import_Data_And_Automate_Feature_Engineering` task from the `ai-machine-learning` bucket in the ProActive AI Orchestration.
 
 . Click on the task and click `General Parameters` in the left to change the default parameters of this task.
 
@@ -2498,13 +2498,13 @@ At the left part, are illustrated the **General Parameters** of the workflow wit
 - `Documentation`: if the workflow has a Generic Information named "Documentation", then its URL value is displayed as a link.
 - `Job Priority`: the priority assigned to the workflow. It is by default set to `NORMAL`, but can be increased or decreased once the job is submitted.
 
-NOTE: The workflow represented in the above is available on the 'machine-learning-workflows' bucket.
+NOTE: The workflow represented in the above is available on the `ai-machine-learning-workflows` bucket.
 
 == ML Workflows Examples
 
 The PAIO provides a fast, easy and practical way to execute different workflows using the ML bucket. We present useful ML workflows for different applications in the following subsections.
 
-To test these workflows, you need to add the *machine-Learning-workflows Bucket* as main catalog in the ProActive Studio.
+To test these workflows, you need to add the `ai-machine-learning-workflows` bucket as main catalog in the ProActive Studio.
 
 A. Open +++<a class="studioUrl" href="/studio" target="_blank">ProActive AI Orchestration</a>+++ home page.
 
@@ -2512,7 +2512,7 @@ B. Create a new workflow.
 
 C. Change palette preset to `Machine Learning`.
 
-D. Click on `machine-learning` catalog and pin it open.
+D. Click on `ai-machine-learning` catalog and pin it open.
 
 E. Drag and drop the workflow example of your choice.
 
@@ -2539,7 +2539,7 @@ The following workflows present some ML basic examples. These workflows are buil
 *House_Price_Prediction_using_Linear_Regression:* trains and tests a regression model using Mean_shift algorithm.
 
 === Basic AutoML
-The following workflows present some ML basic examples using AutoML generic tasks available in the `machine-learning` bucket.
+The following workflows present some ML basic examples using AutoML generic tasks available in the `ai-machine-learning` bucket.
 
 *Breast_Cancer_Detection_Using_AutoSklearn_Classifier:* tests several ML pipelines and selects the best model for Cancer Breast detection.
 
@@ -2547,7 +2547,7 @@ The following workflows present some ML basic examples using AutoML generic task
 
 === Log Analysis
 
-The following workflows are designed to detect anomalies in log files. They are constructed using generic tasks which are available on the `machine-learning` and `data-visualization` buckets.
+The following workflows are designed to detect anomalies in log files. They are constructed using generic tasks which are available on the `ai-machine-learning` and `data-visualization` buckets.
 
 *Anomaly_Detection_in_Apache_Logs:* detects intrusions in apache logs using a predictive model trained using Support Vector Machines algorithm.
 
@@ -2588,7 +2588,7 @@ The following workflows are designed to train machine learning models on GPU usi
 
 *Train_Regression_Model_On_GPU:* trains a machine learning model for data regression on GPU using NVIDIA RAPIDS.
 
-Please find in the table below the list of algorithms which have GPU support and that can be tested using the generic tasks in the `machine-learning` bucket.
+Please find in the table below the list of algorithms which have GPU support and that can be tested using the generic tasks in the `ai-machine-learning` bucket.
 
 [cols="12,9"]
 |===
@@ -2762,7 +2762,7 @@ docker://activeeon/tensorflow:latest, docker://activeeon/tensorflow:latest-gpu] 
 |===
 === ML Bucket
 
-The `machine-learning` bucket contains diverse generic ML tasks that enable you to easily compose workflows for predictive models learning and testing. This bucket can be easily customized according to your needs.
+The `ai-machine-learning` bucket contains diverse generic ML tasks that enable you to easily compose workflows for predictive models learning and testing. This bucket can be easily customized according to your needs.
 This bucket offers different options, you can customize it by adding new tasks or update the existing tasks.
 
 NOTE: All ML tasks were implemented using https://scikit-learn.org/stable/[Scikit-learn library^].
