@@ -37,6 +37,14 @@ image::calendar_wf_association_2.png[align="center"]
 The created association can be deactivated by clicking on the _unlink_ button. This means that the workflows won't be submitted for the next calendar occurrences, but it will still be visible on the Execution Planning and the Gantt chart. You can reactivate it with the _link_ button.
 On the left panel, you can easily see the number of associated workflows to each calendar, and how many of them are activated.
 
+It is possible to display the associations as icons or as list by switching between the two buttons next to the search field.
+
+image::calendar_wf_association_3.png[align="center"]
+
+When selecting a calendar with associated workflows, it is possible to filter the associations within this calendar by workflow name, bucket name, username, status, project name, id, description, variables(name and value), and generic info(value and name).
+
+image::calendar_wf_association_4.png[align="center"]
+
 This page can also be opened when clicking on the "plan" button on the <<_glossary_workflow_studio, *Studio*>> or the <<_glossary_scheduler_web_interface, *Scheduler Portal*>>.
 
 == Execution Planning visualisation and GANTT
