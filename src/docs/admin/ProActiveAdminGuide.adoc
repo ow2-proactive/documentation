@@ -1730,7 +1730,7 @@ to note that a ProActive Node running tasks can potentially spawn child processe
 The ProActive Windows Agent installation pack is available on the https://www.activeeon.com/community-downloads[ProActive website^].
 Run the `setup.exe` file and follow instructions. When the following dialog appears:
 
-image::install_config.png[align=center, width=512, height=256]
+image::install_config.png[align=left, width=512, height=256, title=Windows agent installation]
 
 . Specify the directory that will contain the *configuration* file named `PAAgent-config.xml`, note that if this file already exists in the specified directory it will be re-used.
 . Specify the directory that will contain the *log files* of the ProActive Agent and the spawned runtimes.
@@ -1757,7 +1757,7 @@ To configure the Agent, launch 'Start->Programs->ProActiveAgent->AgentControl' p
 the notify icon if the "Automatic launch" is activated.
 Double click on the tray icon to open the *ProActive Agent Control* window. The following window will appear:
 
-image::agent_control.png[align=center, width=612, height=306]
+image::agent_control.png[align=left, width=612, height=306, title=Windows Agent GUI]
 
 From the ProActive Agent Control window, the user can load a configuration file, edit it, start/stop the service and view logs.
 A GUI for editing is provided (explained below). Even if it is not recommended, you can edit the configuration file by yourself with your favorite text editor.
@@ -1766,7 +1766,7 @@ It is also possible to change the ProActive Nodes Account using the 'Change Acco
 
 When you click on 'GUI Edit', the following window appears:
 
-image::config_editor_general.png[align=center, width=612, height=306]
+image::config_editor_general.png[align=left, width=612, height=306, title=General configuration]
 
 In the general tab, the user can specify:
 
@@ -1783,7 +1783,7 @@ In the general tab, the user can specify:
 
 Clicking on the 'Connection' tab, the window will look like this:
 
-image::config_editor_connection.png[align=center, width=612, height=306]
+image::config_editor_connection.png[align=left, width=612, height=306, title=Connection configuration]
 
 In the 'Connection' tab, the user can select between three types of connections:
 
@@ -1795,7 +1795,7 @@ The node name and the node source name are optional. Since the Resource Manager 
 
 Finally, clicking on the "Planning" tab, the window will look like this:
 
-image::config_editor_planning.png[align=center]
+image::config_editor_planning.png[width=612, height=412, align=left, title=Planning configuration]
 
 In the Planning Tab, depending on the selected connection type, the agent will initiate it according to a *weekly planning* where each plan specifies the connection start time as well as the working duration. The agent will end the connection as well as the ProActive Nodes and its child processes when the plan duration has expired.
 
@@ -1836,7 +1836,10 @@ In order to solve the issue mentioned above, please do the following:
 1. Download the patch zip from the following https://www.activeeon.com/public_content/patches/ProActiveAgent_Win10_patch.zip[link] and expand this archive inside an empty folder.
 2. Close the agent GUI if it's open. In order to do so, in the https://support.microsoft.com/en-us/windows/customize-the-taskbar-notification-area-e159e8d2-9ac5-b2bd-61c5-bb63c1d437c3[Windows notification area] (aka system tray), find the ProActive Agent icon image:ProActiveAgentIcon.png[], right-click on it and select *Close*. A warning message will appear (simply confirm).
 3. Replace existing files in the ProActive Agent installation folder `C:\Program Files (x86)\ProActiveAgent` with patch files copied from the expanded zip.
-4. Start the ProActive Agent again.
+4. Start the ProActive Agent again. If the agent does not start and display the following error, start the service called *ProActiveAgent* manually from Windows services user interface (`services.exe`).
+
+image::ProActiveAgentStartFailure.png[align=left, width=383, height=206, title=Start failure after Windows 10 Patch]
+
 
 ==== Automate Windows Agent Installation
 
