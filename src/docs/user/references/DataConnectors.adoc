@@ -3,39 +3,39 @@ The `data-connectors` bucket contains diverse generic data connectors for the mo
 
 === File
 The File connectors allow to import and export data from HTTP, FTP and SFTP servers.
-We begin by presenting FTP and SFTP connectors then, URL connector.
+We begin by presenting FTP, FTPS and SFTP connectors then, URL connector.
 
-==== FTP and SFTP connectors
+==== FTP, FTPS and SFTP connectors
 
 
-The FTP and SFTP file connector workflows consists of two tasks:
+The FTP, FTPS and SFTP file connector workflows consists of two tasks:
 
 * Import_from_FTP/SFTP_Server: Downloads files or folders recursively from an FTP/SFTP server to the data space.
 * Export_to_FTP/SFTP_Server: Uploads files or folders recursively from the data space (global or user space) to an FTP/SFTP server.
 
 *Variables:*
 
-The FTP and SFTP workflow tasks share the same list of variables. Consequently, we describe them in the following table using a unique notation.
+The FTP, FTPS and SFTP connectors share the same list of variables with the exception of the FTPS connector which has in addition two other variables related to the SSL Certificate configuration. Consequently, we describe these variables in the following table using a unique notation.
 
-.FTP/SFTP Connector variables
+.FTP/FTPS/SFTP Connector common variables
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
 | `HOST`
 | Server host.
-| Task
+| Workflow, both Tasks
 | Yes
 | String
 | `localhost`
 | `USERNAME`
 | Username to use for the authentication.
-| Task
+| Workflow, both Tasks
 | Yes
 |  String
 | e.g. toto
 | `PORT`
 | Listening port.
-| Task
+| Workflow, both Tasks
 | No
 | Integer
 | e.g. 21, 22
@@ -59,9 +59,29 @@ The FTP and SFTP workflow tasks share the same list of variables. Consequently, 
 | e.g. remoteDirectory/
 |===
 
-*How to use this task:*
+The following table describe the specific workflow variables of the FTPS Connector to Import/Export file(s) from/to an FTP server over an SSL/TLS certificate.
 
-The task requires the following third-party credentials: `{key: <PROTOCOL>://<username>@<hostname>, value: PASSWORD}` where `<PROTOCOL>` can take one of the following values: {`FTP`, `SFTP`}. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
+.FTPS Connector specific variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
+| `KEY_STORE_PATH`
+| Path to the keyStore.
+| Workflow
+| Yes
+| String
+| `/path/to/privatekeystore.jks`
+| `KEY_STORE_PASSWORD`
+| keyStore password.
+| Workflow
+| Yes
+|  String
+| e.g. my_password
+|===
+
+*How to use this connector:*
+
+The connector requires the following third-party credentials: `{key: <PROTOCOL>://<username>@<hostname>, value: PASSWORD}` where `<PROTOCOL>` can take one of the following values: {`ftp`, `ftps`, `sftp`}. Please refer to the User documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
 ==== URL connector
 
@@ -172,9 +192,9 @@ Default: `CSV`
 | Indicates the behavior to follow when the table exists in the database amongst:
 
   - fail: If table exists, do nothing.
-  
+
   - replace: If table exists, drop it, recreate it, and insert data.
-  
+
   - append: (default) If table exists, insert data. Create if does not exist.
 
 | Export Task
@@ -381,9 +401,9 @@ All NoSQL connector workflows are composed of two tasks:
 | A JSON Object/Array to be inserted in MongoDB. This variable can:
 
    - A String describing the JSON Object/Array
-   
+
    - A relative path in the data space of a JSON file.
-   
+
 | Export Task
 | Yes
 | String
@@ -464,9 +484,9 @@ In the import mode, the output containing the imported data takes one or many of
 | Path of the CSV file that contains data to be imported. This variable can:
 
    - A URL. Valid URL schemes include http, ftp, s3, and file.
-   
+
    - A relative path in the data space of a CSV file.
-   
+
 | Export Task
 | Yes
 | String
@@ -537,9 +557,9 @@ In the import mode, the output containing the imported data takes one or many of
 | A JSON Object/Array to be indexed in ElasticSearch. This variable can:
 
    - A String describing the JSON Object/Array
-   
+
    - A relative path in the data space of a JSON file.
-   
+
 | Export Task
 | Yes
 | String
