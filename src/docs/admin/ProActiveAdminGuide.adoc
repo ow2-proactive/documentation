@@ -566,7 +566,7 @@ It starts the following Pods:
 *  ProActive Node Pod
 *  ProActive Database Pod (PostgreSQL or MySQL). The Database Pod is not started when using an embedded HSQL Database.
 
-The Kubernetes YML configuration pulls the ProActive Server, Node, and Database images from the https://dockerhub.activeeon.com/[Private Activeeon Docker Registry^].
+The Kubernetes YAML configuration pulls the ProActive Server, Node, and Database images from the https://dockerhub.activeeon.com/[Private Activeeon Docker Registry^].
 
 To be able to pull images from the https://dockerhub.activeeon.com/[Private Activeeon Docker Registry^], a ProActive enterprise licence and access credentials are required. Please contact us at contact@activeeon.com to request access.
 
@@ -610,9 +610,9 @@ Or, you can define some individual properties values to the install command to o
 helm install --set publicClusterIp=xx.xx.xx.xx --set services.scheduler.webService.externalIPs=xx.xx.xx.xx --set imageCredentials.password=changeme activeeon/activeeon-proactive-chart --generate-name
 ```
 
-After installing the Chart, all ProActive pds are deployed. The ProActive Web Portals will be available at `<PROTOCOL>://<PUBLIC-IP>:<PORT>/`. The `<PROTOCOL>`, `<PUBLIC-IP>`, and `<PORT>` are specified in the YML file.
+After installing the Chart, all ProActive pods are deployed. The ProActive Web Portals will be available at `<PROTOCOL>://<PUBLIC-IP>:<PORT>/`. The `<PROTOCOL>`, `<PUBLIC-IP>`, and `<PORT>` are specified in the YAML file.
 
-The user can access any of the four portals using the default credentials: `admin/<PROACTIVE_ADMIN_PASSWORD>`. `PROACTIVE_ADMIN_PASSWORD` is also defined in the YML file.
+The user can access any of the four portals using the default credentials: `admin/<PROACTIVE_ADMIN_PASSWORD>`. `PROACTIVE_ADMIN_PASSWORD` is also defined in the YAML file.
 
 Your ProActive Scheduler is now running as a set of Pods!
 
