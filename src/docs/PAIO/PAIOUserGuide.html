@@ -717,7 +717,7 @@ b.conum * { color: inherit !important; }
 <div class="sectionbody">
 <script>
 var header = document.getElementById('header').innerHTML
-var newHeader = header.replace("</h1>", "</h1><h4>Version " + conf.version + ' - ' + conf.date + "</h4>");
+var newHeader = header.replace("</h1>", "</h1><h4>Version " + localStorage.getItem('conf_version') + ' - ' + localStorage.getItem('conf_date') + "</h4>");
 document.getElementById('header').innerHTML = newHeader
 </script>
 </div>
