@@ -346,7 +346,7 @@ https://al-roomi.org/benchmarks/unconstrained/2-dimensions/56-himmelblau-s-funct
 
 image::himmelblau_math.png[948,736,align=center]
 
-*Kursawe_Multiobjective_Function:* is a multiobjective function proposed by http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.47.8050[Frank Kursawe]. It has two objectives (f1, f2) to minimize. For more info, please click https://deap.readthedocs.io/en/master/api/benchmarks.html#deap.benchmarks.kursawe[here].
+*Kursawe_Multiobjective_Function:* is a multiobjective function proposed by https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.47.8050[Frank Kursawe]. It has two objectives (f1, f2) to minimize. For more info, please click https://deap.readthedocs.io/en/master/api/benchmarks.html#deap.benchmarks.kursawe[here].
 
 image::Kursawe_Multiobjective_Function.png[648,536,align=center]
 
@@ -1637,7 +1637,7 @@ image::AutoFeat_column_summaries.png[align=center, link="../images/AutoFeat_colu
 === Data Preprocessing
 A preview of the data is displayed in the *Data Preprocessing* as follows.
 
-[[_Data_Preprocessing]]
+[[_Data_Preprocessing_1]]
 image::AutoFeat_edit_column_names_and_types.png["Data Preprocessing",align=center, link="../images/AutoFeat_edit_column_names_and_types.png", window="_blank"]
 
 It is possible to change a column information. These changes can include:
@@ -1652,7 +1652,7 @@ It is possible to change a column information. These changes can include:
 
 - _Coding Method_: The encoding method used for converting the categorical data values into numerical values. The value is set to *Auto* by default. Thereafter, the best suited method for encoding the categorical feature is automatically identified. The data scientist still has the ability to override every decision and select another encoding method from the drop-down menu. Different methods are supported by AutoFeat such as *Label*, *OneHot*, *Dummy*, *Binary*, *Base N*, *Hash* and *Target*. Some of those methods require specifying additional encoding parameters. These parameters vary depending on the selected method (e.g., the base and the number of components for BaseN and Hash, respectively, and the target column for Target encoding method). Some of those values are set by default, if no values are specified by the user.
 
-[[_Data_Preprocessing]]
+[[_Data_Preprocessing_2]]
 image::AutoFeat_edit_column_names_and_types_encoding_parameters.png["Data Preprocessing",align=center, link="../images/AutoFeat_edit_column_names_and_types_encoding_parameters.png", window="_blank"]
 
 It is also possible to perform the following actions on the dataset:
