@@ -3284,8 +3284,6 @@ See https://www.google.com/settings/security/lesssecureapps.
 
 Password authentication to Microsoft servers requires extra configuration.
 
-See https://pchelp.ricmedia.com/how-to-fix-550-5-3-4-requested-action-not-taken-error/
-
 [width="60%",frame="topbot",options="header,footer"]
 |======================
 | Key | Value
@@ -3295,6 +3293,8 @@ See https://pchelp.ricmedia.com/how-to-fix-550-5-3-4-requested-action-not-taken-
 | mail.smtp.username        | user@gmail.com
 | mail.smtp.password        | user_password
 |======================
+
+If the above settings do not succeed, check in the scheduler logs any errors related to email sending.
 
 === Statistics on ProActive Jobs and Resource Usage
 
