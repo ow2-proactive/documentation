@@ -784,16 +784,20 @@ TIP: If you plan to use another DB version, it is important to get the correspon
 Moreover, it is also important to notice that the Scheduler and 3 microservices (*scheduling-api*, *job-planner*, and *proactive-cloud-watch*) have to point to the same scheduler database since they use that one.
 
 ==== Example configuration with PostgreSQL
-It is recommanded to use a PostgreSQL database in a ProActive prod environment.
+Configuring ProActive with an external database such as PostgreSQL is recommended in a production environment.
 In the following, we show an example of PostgreSQL installation and configuration to be used along with ProActive.
 
 ===== PostgreSQL version
-PostgreSQL version 12.2 or 12.9 is required to be installed. PostgreSQL could be installed on the same machine as for ProActive or on a separate server (on-prem or on the cloud).
+PostgreSQL versions 12.0 to 12.11 are fully compatible with ProActive. More recent versions of PostgreSQL have not been fully tested yet for compatibility.
+PostgreSQL server can be installed on the same machine as the ProActive server or on a separate machine.
 
 ===== Initialize the database
-To initialize the DB, some SQL queries should be executed in the PostgreSQL server machine.
-To do so, please create the init script in the /tmp folder for example and put the following SQL queries:
-....
+To initialize the database, some SQL queries should be executed in the PostgreSQL server machine.
+In order to do so, the following SQL queries can be defined in a SQL initialization script (default users passwords should be modified):
+
+.init.sql
+[source,sql]
+----
 -- Create users
 CREATE USER rm WITH PASSWORD 'rm';
 CREATE USER scheduler WITH PASSWORD 'scheduler';
@@ -826,101 +830,42 @@ GRANT USAGE ON SCHEMA public TO notification;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO notification;
 
 ALTER SYSTEM SET max_connections ='500';
-....
+----
 
-Set the host name or IP address(es) to listen to:
-....
+When the PostgreSQL server is installed on a separate machine, the `listen-addresses` setting should be set to allow remote connections:
+
+[source, bash]
+----
 sudo vim /opt/postgres/data/postgresql.conf
 listen-addresses = ‘IP_ADDRESS’
-....
+----
 
-Then, execute the script
-....
-psql -f /tmp/init.sql
-....
+Then, execute the initialization script inside the PotsgreSQL database:
 
-===== Prepare the database purge operation
-In normal PostgreSQL operation, tuples that are deleted or obsoleted by an update are not physically removed from their table;
-they remain present until a purge (VACUUM) is done. Therefore it is necessary to do a purge periodically, especially on frequently-updated tables.
-In our case, the preparation for the DB purge operation is done in two steps.
-
-In the first step, we alter several tables in the databases after the first start of the server by executing the following SQL queries:
-....
-# rm database
-\c rm
-alter table nodesourcedata alter column infrastructuretype TYPE oid USING infrastructuretype::oid;
-\q
-
-
-# scheduler database
-\c scheduler
-alter table environment_modifier_data alter column value TYPE oid USING value::oid;
-alter table job_data alter column input_space TYPE oid USING input_space::oid;
-alter table job_data alter column out_space TYPE oid USING out_space::oid;
-alter table job_data alter column global_space TYPE oid USING global_space::oid;
-alter table job_data alter column user_space TYPE oid USING user_space::oid;
-alter table job_data alter column description TYPE oid USING description::oid;
-alter table job_data_variable alter column variable_value TYPE oid USING variable_value::oid;
-alter table job_data_variable alter column variable_model TYPE oid USING variable_model::oid;
-alter table job_data_variable alter column variable_description TYPE oid USING  variable_description::oid;
-alter table script_data alter column script TYPE oid USING script::oid;
-alter table script_data alter column url TYPE oid USING url::oid;
-alter table selection_script_data alter column script TYPE oid USING script::oid;
-alter table selection_script_data alter column url TYPE oid USING url::oid;
-alter table task_data alter column description TYPE oid USING description::oid;
-alter table task_data alter column java_home TYPE oid USING java_home::oid;
-alter table task_data alter column working_dir TYPE oid USING working_dir::oid;
-alter table task_data_variable alter column variable_value TYPE oid USING variable_value::oid;
-alter table task_data_variable alter column variable_model TYPE oid USING variable_model::oid;
-alter table task_data_variable alter column variable_description TYPE oid USING variable_description::oid;
-alter table plannedworkflow alter column failure_message TYPE oid USING failure_message::oid;
-alter table rule_error alter column error_message TYPE oid USING error_message::oid;
-alter table submittedrule alter column failure_message TYPE oid USING failure_message::oid;
-\q
-
-# PCA database
-\c pca
-alter table variable alter column name TYPE oid USING name::oid;
-alter table variable alter column value TYPE oid USING value::oid;
-\q
-....
-In the second step, we remove large objects stored in these tables by executing the following SQL queries.
-....
-# rm database
-vacuumlo -v rm
-vacuumdb -f -v -d rm -t pg_largeobject
-
-# scheduler database
-vacuumlo -v scheduler
-vacuumdb -f -v -d scheduler -t pg_largeobject
-
-# pca database
-vacuumlo -v pca
-vacuumdb -f -v -d pca -t pg_largeobject
-
-# check autovacuum
-SHOW autovacuum;
-....
-
-**Notes:**
-
- * The command vacuumdb is executed implicitly if AutoVacuum is enabled.
- * The command vacuumlo consumes a lot of RAM and disk space depending on the number of large objects to be removed.
-
+[source, bash]
+----
+psql -f init.sql
+----
 
 ===== Download the Postgres driver
-The Postgres driver have to be downloaded and added to the addons folder of ProActive (SCHEDULER_PATH/addons/)
+The Postgres driver has to be downloaded and added inside the addons folder of ProActive (SCHEDULER_PATH/addons/).
 
 The link to download a Postgres driver version compatible with Postgres 12.X is: `https://jdbc.postgresql.org/download/postgresql-42.2.11.jar`
 
 ===== Configure ProActive
-To configure ProActive to connect to the Postgres DB, we need to edit the database configuration files as follows:
-....
+To configure ProActive to connect to the Postgres DB, we need to edit the database configuration files as follows.
+
+NOTE: The database passwords should be modified according to your chosen passwords. Note that passwords can be encrypted in configuration files as explained in section <<_encrypting_configuration_passwords>>
+
+[source, bash]
+----
 #To easily get the configuration file names, you can execute the following command:
 cd SCHEDULER_PATH/dist/war
 find . -name ‘database.properties’
-....
-....
+----
+
+[source, bash]
+----
 #Scheduler config (SCHEDULER_PATH/config/scheduler/database.properties)
 hibernate.connection.driver_class=org.postgresql.Driver
 hibernate.connection.url=jdbc:postgresql://PG_SERVER_DNS:5432/scheduler
@@ -935,14 +880,12 @@ hibernate.dialect=org.hibernate.dialect.PostgreSQL94Dialect
 hibernate.connection.username=rm
 hibernate.connection.password=rm
 
-
 #Catalog config (SCHEDULER_PATH/dist/war/catalog/WEB-INF/classes/application.properties)
 spring.datasource.driverClassName=org.postgresql.Driver
 spring.datasource.url=jdbc:postgresql://PG_SERVER_DNS:5432/catalog
 spring.jpa.database-platform=org.hibernate.dialect.PostgreSQL94Dialect
 spring.datasource.username=catalog
 spring.datasource.password=catalog
-
 
 #Scheduling config (SCHEDULER_PATH/dist/war/scheduling-api/WEB-INF/classes/application.properties)
 spring.datasource.driver-class-name=org.postgresql.Driver
@@ -978,8 +921,82 @@ spring.datasource.url=jdbc:postgresql://PG_SERVER_DNS:5432/notification
 spring.jpa.database-platform=org.hibernate.dialect.PostgreSQL94Dialect
 spring.datasource.username=notification
 spring.datasource.password=notification
-....
+----
 
+===== Prepare the database purge operation
+Additionally, a vacuum operation does not by default remove orphaned Large Objects from the database.
+Identification and removal of these objects is performed by the vacuumlo command.
+
+As the ProActive database contains many large objects, it is essential to apply both `vacuumlo` and `vacuum` operations in order to control the disk space usage over time.
+
+Prior to execute the above operations, a preliminary configuration step is necessary (this preliminary step is done once for a given ProActive installation).
+
+After the first start of the ProActive server, the following SQL queries will alter several tables of the database (this is needed due to a PotsgreSQL driver issue):
+
+.tables-configuration.sql
+[source,sql]
+----
+# rm database
+\c rm
+alter table nodesourcedata alter column infrastructuretype TYPE oid USING infrastructuretype::oid;
+\q
+
+
+# scheduler database
+\c scheduler
+alter table environment_modifier_data alter column value TYPE oid USING value::oid;
+alter table job_data alter column input_space TYPE oid USING input_space::oid;
+alter table job_data alter column out_space TYPE oid USING out_space::oid;
+alter table job_data alter column global_space TYPE oid USING global_space::oid;
+alter table job_data alter column user_space TYPE oid USING user_space::oid;
+alter table job_data alter column description TYPE oid USING description::oid;
+alter table job_data_variable alter column variable_value TYPE oid USING variable_value::oid;
+alter table job_data_variable alter column variable_model TYPE oid USING variable_model::oid;
+alter table job_data_variable alter column variable_description TYPE oid USING  variable_description::oid;
+alter table script_data alter column script TYPE oid USING script::oid;
+alter table script_data alter column url TYPE oid USING url::oid;
+alter table selection_script_data alter column script TYPE oid USING script::oid;
+alter table selection_script_data alter column url TYPE oid USING url::oid;
+alter table task_data alter column description TYPE oid USING description::oid;
+alter table task_data alter column java_home TYPE oid USING java_home::oid;
+alter table task_data alter column working_dir TYPE oid USING working_dir::oid;
+alter table task_data_variable alter column variable_value TYPE oid USING variable_value::oid;
+alter table task_data_variable alter column variable_model TYPE oid USING variable_model::oid;
+alter table task_data_variable alter column variable_description TYPE oid USING variable_description::oid;
+alter table plannedworkflow alter column failure_message TYPE oid USING failure_message::oid;
+alter table rule_error alter column error_message TYPE oid USING error_message::oid;
+alter table submittedrule alter column failure_message TYPE oid USING failure_message::oid;
+\q
+
+# pca database
+\c pca
+alter table variable alter column name TYPE oid USING name::oid;
+alter table variable alter column value TYPE oid USING value::oid;
+\q
+----
+
+After the initial configuration step is done, it is possible to execute a full vacuum by using the following commands:
+
+[source,sql]
+----
+# rm database
+vacuumlo -v rm
+vacuumdb -f -v -d rm -t pg_largeobject
+
+# scheduler database
+vacuumlo -v scheduler
+vacuumdb -f -v -d scheduler -t pg_largeobject
+
+# pca database
+vacuumlo -v pca
+vacuumdb -f -v -d pca -t pg_largeobject
+
+# check autovacuum
+SHOW autovacuum;
+----
+
+NOTE: The command vacuumdb is executed implicitly if AutoVacuum is enabled.
+The command vacuumlo consumes a lot of RAM and disk space depending on the number of large objects to be removed.
 
 === Data Spaces configuration
 
