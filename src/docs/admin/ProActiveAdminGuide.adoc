@@ -924,8 +924,8 @@ spring.datasource.password=notification
 ----
 
 ===== Prepare the database purge operation
-Additionally, a vacuum operation does not by default remove orphaned Large Objects from the database.
-Identification and removal of these objects is performed by the vacuumlo command.
+Additionally, a `vacuum` operation does not by default remove orphaned Large Objects from the database.
+Identification and removal of these objects is performed by the `vacuumlo` command.
 
 As the ProActive database contains many large objects, it is essential to apply both `vacuumlo` and `vacuum` operations in order to control the disk space usage over time.
 
@@ -975,7 +975,7 @@ alter table variable alter column value TYPE oid USING value::oid;
 \q
 ----
 
-After the initial configuration step is done, it is possible to execute a full vacuum by using the following commands:
+After the initial configuration step is done, it is possible to execute a full `vacuum` by using the following commands:
 
 [source,sql]
 ----
@@ -995,8 +995,8 @@ vacuumdb -f -v -d pca -t pg_largeobject
 SHOW autovacuum;
 ----
 
-NOTE: The command vacuumdb is executed implicitly if AutoVacuum is enabled.
-The command vacuumlo consumes a lot of RAM and disk space depending on the number of large objects to be removed.
+NOTE: The command `vacuumdb` is executed implicitly if `AutoVacuum` is enabled.
+The command `vacuumlo` consumes a lot of RAM and disk space depending on the number of large objects to be removed.
 
 === Data Spaces configuration
 
