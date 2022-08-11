@@ -783,6 +783,221 @@ TIP: If you plan to use another DB version, it is important to get the correspon
 
 Moreover, it is also important to notice that the Scheduler and 3 microservices (*scheduling-api*, *job-planner*, and *proactive-cloud-watch*) have to point to the same scheduler database since they use that one.
 
+==== Example configuration with PostgreSQL
+Configuring ProActive with an external database such as PostgreSQL is recommended in a production environment.
+In the following, we show an example of PostgreSQL installation and configuration to be used along with ProActive.
+
+===== PostgreSQL version
+PostgreSQL versions 12.0 to 12.11 are fully compatible with ProActive. More recent versions of PostgreSQL have not been fully tested yet for compatibility.
+PostgreSQL server can be installed on the same machine as the ProActive server or on a separate machine.
+
+===== Initialize the database
+To initialize the database, some SQL queries should be executed in the PostgreSQL server machine.
+In order to do so, the following SQL queries can be defined in a SQL initialization script (default users passwords should be modified):
+
+.init.sql
+[source,sql]
+----
+-- Create users
+CREATE USER rm WITH PASSWORD 'rm';
+CREATE USER scheduler WITH PASSWORD 'scheduler';
+CREATE USER catalog WITH PASSWORD 'catalog';
+CREATE USER pca WITH PASSWORD 'pca';
+CREATE USER notification WITH PASSWORD 'notification';
+
+-- Creating empty databases
+CREATE DATABASE rm OWNER rm;
+CREATE DATABASE scheduler OWNER scheduler;
+CREATE DATABASE catalog OWNER catalog;
+CREATE DATABASE pca OWNER pca;
+CREATE DATABASE notification OWNER notification;
+
+-- Grant access
+GRANT CONNECT ON DATABASE scheduler TO scheduler;
+GRANT USAGE ON SCHEMA public TO scheduler;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO scheduler;
+GRANT CONNECT ON DATABASE rm TO rm;
+GRANT USAGE ON SCHEMA public TO rm;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO rm;
+GRANT CONNECT ON DATABASE catalog TO catalog;
+GRANT USAGE ON SCHEMA public TO catalog;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO catalog;
+GRANT CONNECT ON DATABASE pca TO pca;
+GRANT USAGE ON SCHEMA public TO pca;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO pca;
+GRANT CONNECT ON DATABASE notification TO notification;
+GRANT USAGE ON SCHEMA public TO notification;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO notification;
+
+ALTER SYSTEM SET max_connections ='500';
+----
+
+When the PostgreSQL server is installed on a separate machine, the `listen-addresses` setting should be set to allow remote connections:
+
+[source, bash]
+----
+sudo vim /opt/postgres/data/postgresql.conf
+listen-addresses = ‘IP_ADDRESS’
+----
+
+Then, execute the initialization script inside the PotsgreSQL database:
+
+[source, bash]
+----
+psql -f init.sql
+----
+
+===== Download the Postgres driver
+The Postgres driver has to be downloaded and added inside the addons folder of ProActive (SCHEDULER_PATH/addons/).
+
+The link to download a Postgres driver version compatible with Postgres 12.X is: `https://jdbc.postgresql.org/download/postgresql-42.2.11.jar`
+
+===== Configure ProActive
+To configure ProActive to connect to the Postgres DB, we need to edit the database configuration files as follows.
+
+NOTE: The database passwords should be modified according to your chosen passwords. Note that passwords can be encrypted in configuration files as explained in section <<_encrypting_configuration_passwords>>
+
+[source, bash]
+----
+#To easily get the configuration file names, you can execute the following command:
+cd SCHEDULER_PATH/dist/war
+find . -name ‘database.properties’
+----
+
+[source, bash]
+----
+#Scheduler config (SCHEDULER_PATH/config/scheduler/database.properties)
+hibernate.connection.driver_class=org.postgresql.Driver
+hibernate.connection.url=jdbc:postgresql://PG_SERVER_DNS:5432/scheduler
+hibernate.dialect=org.hibernate.dialect.PostgreSQL94Dialect
+hibernate.connection.username=scheduler
+hibernate.connection.password=scheduler
+
+#RM config (SCHEDULER_PATH/config/rm/database.properties)
+hibernate.connection.driver_class=org.postgresql.Driver
+hibernate.connection.url=jdbc:postgresql://PG_SERVER_DNS:5432/rm
+hibernate.dialect=org.hibernate.dialect.PostgreSQL94Dialect
+hibernate.connection.username=rm
+hibernate.connection.password=rm
+
+#Catalog config (SCHEDULER_PATH/dist/war/catalog/WEB-INF/classes/application.properties)
+spring.datasource.driverClassName=org.postgresql.Driver
+spring.datasource.url=jdbc:postgresql://PG_SERVER_DNS:5432/catalog
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQL94Dialect
+spring.datasource.username=catalog
+spring.datasource.password=catalog
+
+#Scheduling config (SCHEDULER_PATH/dist/war/scheduling-api/WEB-INF/classes/application.properties)
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.url=jdbc:postgresql://PG_SERVER_DNS:5432/scheduler
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQL94Dialect
+spring.datasource.username=scheduler
+spring.datasource.password=scheduler
+
+#Job planner config (SCHEDULER_PATH/dist/war/job-planner/WEB-INF/classes/application.properties)
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.url=jdbc:postgresql://PG_SERVER_DNS:5432/scheduler
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQL94Dialect
+spring.datasource.username=scheduler
+spring.datasource.password=scheduler
+
+#PCW config (SCHEDULER_PATH/dist/war/proactive-cloud-watch/WEB-INF/classes/application.properties)
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.url=jdbc:postgresql://PG_SERVER_DNS:5432/scheduler
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQL94Dialect
+spring.datasource.username=scheduler
+spring.datasource.password=scheduler
+
+#PCA config (SCHEDULER_PATH/dist/war/cloud-automation-service/WEB-INF/classes/application.properties)
+spring.datasource.driverClassName=org.postgresql.Driver
+spring.datasource.url=jdbc:postgresql://PG_SERVER_DNS:5432/pca
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQL94Dialect
+spring.datasource.username=pca
+spring.datasource.password=pca
+
+#Notification config (SCHEDULER_PATH/dist/war/notification-service/WEB-INF/classes/application.properties)
+spring.datasource.driverClassName=org.postgresql.Driver
+spring.datasource.url=jdbc:postgresql://PG_SERVER_DNS:5432/notification
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQL94Dialect
+spring.datasource.username=notification
+spring.datasource.password=notification
+----
+
+===== Prepare the database purge operation
+Additionally, a `vacuum` operation does not by default remove orphaned Large Objects from the database.
+Identification and removal of these objects is performed by the `vacuumlo` command.
+
+As the ProActive database contains many large objects, it is essential to apply both `vacuumlo` and `vacuum` operations in order to control the disk space usage over time.
+
+Prior to execute the above operations, a preliminary configuration step is necessary (this preliminary step is done once for a given ProActive installation).
+
+After the first start of the ProActive server, the following SQL queries will alter several tables of the database (this is needed due to a PotsgreSQL driver issue):
+
+.tables-configuration.sql
+[source,sql]
+----
+# rm database
+\c rm
+alter table nodesourcedata alter column infrastructuretype TYPE oid USING infrastructuretype::oid;
+\q
+
+
+# scheduler database
+\c scheduler
+alter table environment_modifier_data alter column value TYPE oid USING value::oid;
+alter table job_data alter column input_space TYPE oid USING input_space::oid;
+alter table job_data alter column out_space TYPE oid USING out_space::oid;
+alter table job_data alter column global_space TYPE oid USING global_space::oid;
+alter table job_data alter column user_space TYPE oid USING user_space::oid;
+alter table job_data alter column description TYPE oid USING description::oid;
+alter table job_data_variable alter column variable_value TYPE oid USING variable_value::oid;
+alter table job_data_variable alter column variable_model TYPE oid USING variable_model::oid;
+alter table job_data_variable alter column variable_description TYPE oid USING  variable_description::oid;
+alter table script_data alter column script TYPE oid USING script::oid;
+alter table script_data alter column url TYPE oid USING url::oid;
+alter table selection_script_data alter column script TYPE oid USING script::oid;
+alter table selection_script_data alter column url TYPE oid USING url::oid;
+alter table task_data alter column description TYPE oid USING description::oid;
+alter table task_data alter column java_home TYPE oid USING java_home::oid;
+alter table task_data alter column working_dir TYPE oid USING working_dir::oid;
+alter table task_data_variable alter column variable_value TYPE oid USING variable_value::oid;
+alter table task_data_variable alter column variable_model TYPE oid USING variable_model::oid;
+alter table task_data_variable alter column variable_description TYPE oid USING variable_description::oid;
+alter table plannedworkflow alter column failure_message TYPE oid USING failure_message::oid;
+alter table rule_error alter column error_message TYPE oid USING error_message::oid;
+alter table submittedrule alter column failure_message TYPE oid USING failure_message::oid;
+\q
+
+# pca database
+\c pca
+alter table variable alter column name TYPE oid USING name::oid;
+alter table variable alter column value TYPE oid USING value::oid;
+\q
+----
+
+After the initial configuration step is done, it is possible to execute a full `vacuum` by using the following commands:
+
+[source,sql]
+----
+# rm database
+vacuumlo -v rm
+vacuumdb -f -v -d rm -t pg_largeobject
+
+# scheduler database
+vacuumlo -v scheduler
+vacuumdb -f -v -d scheduler -t pg_largeobject
+
+# pca database
+vacuumlo -v pca
+vacuumdb -f -v -d pca -t pg_largeobject
+
+# check autovacuum
+SHOW autovacuum;
+----
+
+NOTE: The command `vacuumdb` is executed implicitly if `AutoVacuum` is enabled.
+The command `vacuumlo` consumes a lot of RAM and disk space depending on the number of large objects to be removed.
+
 === Data Spaces configuration
 
 link:../user/ProActiveUserGuide.html#_data_spaces[ProActive Data Spaces] is an integrated file-transfer mechanism used by ProActive workflows.
