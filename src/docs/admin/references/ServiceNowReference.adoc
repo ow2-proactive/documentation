@@ -1,5 +1,6 @@
 *Product Name:* ServiceNow +
-*Product Version:* Quebec
+*Product Version:* Quebec +
+*Compatibility:* Tokyo
 
 ==== Overview
 
@@ -17,11 +18,11 @@ It boils down to: +
 
 ==== Installation
 
-This section describes the available processes to set up the required files in ServiceNow to be able to communicate
+This section describes the available processes to set up the required files in ServiceNow in order to communicate
 with ProActive. The process choice is dictated by the architecture the integration will have in ServiceNow. Because ServiceNow
-is application-based the natural course of action is to create a dedicated ProActive application.
+is application-based, the natural course of action is to create a dedicated ProActive application.
 Otherwise, you might want to incorporate this integration in another application that already exists. In such case,
-you will have to manually create files in the destination application, and copy-paste code that will be presented in the next sections.
+you will have to manually create files in the host application, which means copy-paste code that will be presented in the next sections.
 
 ===== Import from source control
 
@@ -29,26 +30,26 @@ Working from an online repository is the most convenient and durable way to proc
 Importing an application from source control will result in a new application being created in this ServiceNow instance based on the remote repository you specify.
 The account credentials you supply must have read access to the remote repository
 
-. Lay down the Application
+. [.underline]#Lay down the Application#
     .. Fork the https://bitbucket.org/activeeon/proactive-application[Application's repository]
     .. Go to the Studio, under _System Applications_ -> _Studio_
 +
-image::../../images/servicenow-studio-select.png[align="center"]
+image::servicenow-studio-select.png[align="center"]
     .. Click _Import from source control_
 +
-image::../../images/servicenow-import-from-source-control.png[align="center"]
+image::servicenow-import-from-source-control.png[align="center"]
     .. Click _Import_. When the application import is completed, click the _Select Application button_.
 +
-image::../../images/servicenow-imported-from-source-control.png[align="center"]
+image::servicenow-imported-from-source-control.png[align="center"]
     .. In the Select Application dialog, click the link to the new application to open it for editing in Studio.
 
 Because you will very likely customize the application, it's a good idea to create a new branch an start working from there
 
 [start=2]
-. Create a new branch
+. [.underline]#Create a new branch#
 .. In Studio, open the _Source Control_ menu and select the _Create Branch_ menu item.
 +
-image::../../images/servicenow-create-branch.png[align="center"]
+image::servicenow-create-branch.png[align="center"]
 .. Configure the branch.
 
     Branch Name: branchName
@@ -64,7 +65,7 @@ To load the application files included in the tag, return to the main ServiceNow
 Though not recommended by ServiceNow, you can download the following Update Set and import it in a ServiceNow instance
 to create an application. An Update Set describes and contains all application's files and is specific to ServiceNow.
 
-. link:servicenow/update_set_21813bcd2f9c91103c5d9facf699b605.xml[Download the Update Set].
+. link:../admin/references/servicenow/update_set_21813bcd2f9c91103c5d9facf699b605.xml[Download the Update Set].
 . Go to _Retrieved Update Sets_ under _System Update Sets_
 . Click on _Import Update Set from XML_
 . Select the Update Set you just downloaded
@@ -76,14 +77,14 @@ The Retrieved Update Set table should be displayed with the freshly uploaded fil
 . Click on the Update Set Name to open it.
 . Click on _Preview Update Set_ and wait for the preview to finish. +
 This step is important as it compares an update set retrieved from a remote instance to
-updates on the local instance to detect potential problems. You must preview an update set and address all problems before you can commit the update set.
+updates on the local instance to detect potential conflicts. You must preview an update set and address all problems before you can commit the update set.
 . Once finished, click on _Close_
-. Problems will appear because some tables/records don't exist in the instance and ServiceNow doesn't like that.
+. Problems will appear because some tables and records don't exist in your instance and ServiceNow doesn't like that.
 That's because we are installing an application and not updating it. We can ignore them and commit the changes.
 .. Select all errors by clicking on the top left checkbox (this selects all the displayed errors)
 .. Click on _Accept remote changes_ on the top right
 +
-image::../../images/servicenow-accept-remote-update.png[align="center"]
+image::servicenow-accept-remote-update.png[align="center"]
 .. Repeat step a. and b. if errors remain
 . Once all problems have been addressed. Click _Commit Update Set_.
 . Click Confirm data loss and wait for the commit to finish
@@ -95,13 +96,6 @@ Set a filter as shown and click on _Run_ to apply it.
 image::servicenow-search-by-status.png[align="center"]
 Result should be empty.
 
-////
-===== Manual creation
-
-The least effective way to create the application.
-
-It requires you to define and create the application in ServiceNow
-////
 
 ==== Communicate with ProActive
 
@@ -122,7 +116,7 @@ It can be in another Script Include, In Worfklow Activities, Flow Actions, UI el
 
 Calling a Script Include where scripting is enabled is very easy. You just need to create an instance of the Script Include and execute its functions.
 
-Here is an example where the Script Include "SchedulerClient" is called in a Flow Action to submit a job:
+Here is an example where the Script Include named SchedulerClient is called in a Flow's Action to submit a job:
 
 [[submit_from_catalog_script_code]]
 [source,javascript]
@@ -162,7 +156,7 @@ a|
 |The session id associated to the user
 
 |restartInErrorTasks
-|Executes a PUT request to restart all tasks in error in the job represented by jobid
+|Executes a PUT request to restart all tasks in error in the job represented by a job id
 a|
 * jobId: Id of the job to restart in error tasks
 |True if success, false if not
@@ -293,7 +287,6 @@ You will find in the next section the structure of the table, which corresponds 
 
 Here is the list of the current available functions
 
-.Functions of the JobRepository Script Include
 [cols="1,1,1,1"]
 |===
 |Function name | Action | Inputs | Output
@@ -429,16 +422,6 @@ Other columns can be added in the Incident table to store logs, outputs or any n
 ===== Flow Designer
 
 Flow Designer is a feature for automating processes in a single design environment.
-To put it simply a flow is an automated process consisting of a sequence of actions and a trigger.
-
-A Flow consists of the content types:
-
-- Subflows: A Subflow is an automated process consisting of a sequence of reusable actions and specific data inputs that allow the process to be started from a flow, subflow, or script.
-- Actions: An Action is a reusable operation that enables process analysts to automate Now Platform features without having to write code
-- Core Actions: A ServiceNow Core Action is a ServiceNow-provided action available to any flow that cannot be viewed or edited from the Action Designer design environment.
-For example, the Ask for Approval action
-
-A Subflow is basically a Flow called by a parent Flow.
 
 Actions and Core Actions are what composes a Flow and Subflow. The application comes with Actions ready to be used.
 These Actions use the Script Includes that we described earlier.
@@ -468,15 +451,15 @@ the Scheduler Client Script Include to make it as linear as possible.
 Here is an example with the "Submit From Catalog" action. Principles are the same for other actions
 
 .Inputs of the Submit From Catalog action
-image::../../images/servicenow-action-inputs.png[align="center"]
+image::servicenow-action-inputs.png[align="center"]
 
 The Action inputs are accessible by all steps of the Action
 
-.Inputs of the Submit From Catalog script step
-image::../../images/servicenow-step-inputs.png[align="center"]
-
 Inputs of this step are bound to the Action inputs. This is represented by a pill
 in the "Value" column.
+
+.Inputs of the Submit From Catalog script step
+image::servicenow-step-inputs.png[align="center"]
 
 The action is composed of a single Script step. A script step is JavaScript code to execute within a reusable action.
 While most core actions and steps fit common use cases, a Script step enables to execute behavior not satisfied by the core steps.
@@ -492,7 +475,86 @@ As you can see it is very simple and the execution flow consists of:
 Finally, we define the outputs of the action with the same pills system, binding them to the step outputs.
 
 .Outputs of the Submit From Catalog Action
-image::../../images/servicenow-action-outputs.png[align="center"]
+image::servicenow-action-outputs.png[align="center"]
 
 The concept is the same for all the application's Actions.
 
+===== Flows
+
+To put it simply a flow is an automated process consisting of a sequence of actions and a trigger.
+Flow building takes place in the Flow Designer application which requires a paid subscription to the Integration Hub application.
+
+A Flow consists of the content types:
+
+- Subflows: A Subflow is an automated process consisting of a sequence of reusable actions and specific data inputs that allow the process to be started from a flow, subflow, or script.
+- Actions: An Action is a reusable operation that enables process analysts to automate Now Platform features without having to write code
+- Core Actions: A ServiceNow Core Action is a ServiceNow-provided action available to any flow that cannot be viewed or edited from the Action Designer design environment.
+For example, the Ask for Approval action
+
+A trigger identifies what causes the flow to execute. +
+
+Flows are triggered by:
+
+- Record creation and/or update
+- Date
+- Service Catalog request
+- Inbound email
+- Service Level Agreements
+- MetricBase (requires the MetricBase plugin)
+
+[NOTE]
+To access Flows, a user must have the flow_designer or admin roles.
+
+The ProActive application come with Flows that can:
+
+- Submit a job from the catalog asynchronously
+- Restart in error tasks
+
+Below is the "Submit job from catalog async" Flow
+
+image::servicenow-flow.png[align="center"]
+
+This Flow submits a job to ProActive's Scheduler in parallel, thus not blocking the main Flow thread.
+
+In the Right panel named Data, you will find the data flow of the Flow. It offers a quick view of the Flow variables, accessible by all actions
+and the inputs for each Action. Fo convenience, it has been cut in half in this screenshot.
+
+image::servicenow-data-flow-flow-designer.png[align="center"]
+
+The flow needs a trigger definition, and it will ready to run.
+
+===== Workflows
+
+The second way to automate complex processes is using Workflows that are built in the Workflow Editor.
+A Workflow is the native way to do automation in ServiceNow. Workflow editor is intended for a more technical audience.
+
+The goal and concepts of Workflows are the same as Flows only with a different interface and terminology.
+
+Like Actions for Flows, a Workflow is a suite of Activities used for automating the processes.
+Activities are the workflow blocks that carry out various tasks like sending emails, obtaining approvals, running scripts, and configuring field values on the records.
+
+Every workflow starts with a Begin activity and ends with the End activity.
+When the activity ends, the activity is available through the suitable node and transition is comprehended to the later activity.
+
+Following are the ways to launch Workflows:
+
+- UI Action
+- Server-side script
+- Triggered by field values on a record
+
+The ProActive application comes with a set of activities ready to be used in your workflows.
+Like the Actions in the Flows, they call the application's Script Include to perform their actions.
+
+Each activity likely have inputs that needs to be defined.
+
+Here the Login activity will read variables defined in the workflow's scratchpad.
+
+image::servicenow-activity-variables.png[align="center"]
+
+This window automatically opens when the activity is dragged and dropped on the canvas.
+
+Use ProActive's custom activities from the Custom tab to integrate ProActive in your pipelines.
+
+Here an example of a simple Workflow, that can be stored and used as a Sub Workflow, that Submits a job to ProActive from the Catalog
+
+image::servicenow-workflow-example.png[align="center"]
