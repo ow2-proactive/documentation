@@ -923,15 +923,29 @@ spring.datasource.username=notification
 spring.datasource.password=notification
 ----
 
-===== Prepare the database purge operation
+===== Database purge operation
 Additionally, a `vacuum` operation does not by default remove orphaned Large Objects from the database.
 Identification and removal of these objects is performed by the `vacuumlo` command.
 
 As the ProActive database contains many large objects, it is essential to apply both `vacuumlo` and `vacuum` operations in order to control the disk space usage over time.
 
-Prior to execute the above operations, a preliminary configuration step is necessary (this preliminary step is done once for a given ProActive installation).
+In addition, prior to execute the purge operation, a preliminary configuration step is necessary (this preliminary step is done once for a given ProActive installation).
 
-After the first start of the ProActive server, the following SQL queries will alter several tables of the database (this is needed due to a PotsgreSQL driver issue):
+In the following paragraphs, we describe the step by step procedure to perform the database purge operations:
+
+- **Start the ProActive Server to fill up the database**
+
+Initially, the ProActive server has to be started **at least once** to fill up the ProActive database.
+
+- **Stop the ProActive Server**
+
+Then, once the ProActive server is up and the web portals become accessible, you have to stop the ProActive server.
+
+PotgreSQL database must remain running in order to perform the next operations.
+
+- **Prepare the database purge operation**
+
+While the ProActive server is stopped and the Postgres server is running, the following SQL queries have to be executed in order to alter the type of certain columns in several database tables (this is needed due to a PotsgreSQL driver issue):
 
 .tables-configuration.sql
 [source,sql]
@@ -975,7 +989,13 @@ alter table variable alter column value TYPE oid USING value::oid;
 \q
 ----
 
-After the initial configuration step is done, it is possible to execute a full `vacuum` by using the following commands:
+- **Restart the ProActive Server**
+
+After editing the table columns as described above, you have to start again the ProActive server to take into account the new modifications made to the Postgres database.
+
+- **Database purge operation**
+
+Now, while the ProActive server is running, it is possible to execute a full `vacuum` by using the following commands:
 
 [source,sql]
 ----
