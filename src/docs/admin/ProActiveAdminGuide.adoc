@@ -931,7 +931,7 @@ As the ProActive database contains many large objects, it is essential to apply 
 
 In addition, prior to execute the purge operation, a preliminary configuration step is necessary (this preliminary step is done once for a given ProActive installation).
 
-In the following, we explain, step by step, the different steps to follow in order to perform the database purge operation:
+In the following paragraphs, we describe the step by step procedure to perform the database purge operations:
 
 - **Start the ProActive Server to fill up the database**
 
