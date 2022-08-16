@@ -923,15 +923,21 @@ spring.datasource.username=notification
 spring.datasource.password=notification
 ----
 
-===== Prepare the database purge operation
+===== Database purge operation
 Additionally, a `vacuum` operation does not by default remove orphaned Large Objects from the database.
 Identification and removal of these objects is performed by the `vacuumlo` command.
 
 As the ProActive database contains many large objects, it is essential to apply both `vacuumlo` and `vacuum` operations in order to control the disk space usage over time.
 
-Prior to execute the above operations, a preliminary configuration step is necessary (this preliminary step is done once for a given ProActive installation).
+- Start the ProActive Server
 
-After the first start of the ProActive server, the following SQL queries will alter several tables of the database (this is needed due to a PotsgreSQL driver issue):
+The vacuum operations should be done after the first start of the ProActive server. So, the ProActiver Server has be to be running.
+
+- Prepare the database purge operation
+
+Prior to execute purge operation, a preliminary configuration step is necessary (this preliminary step is done once for a given ProActive installation).
+
+While the ProActive Server is running, the following SQL queries have to be executed to alter several database tables (this is needed due to a PotsgreSQL driver issue):
 
 .tables-configuration.sql
 [source,sql]
@@ -975,7 +981,9 @@ alter table variable alter column value TYPE oid USING value::oid;
 \q
 ----
 
-After the initial configuration step is done, it is possible to execute a full `vacuum` by using the following commands:
+- Database purge operation
+
+After that the initial configuration step is done, it is possible to execute a full `vacuum` by using the following commands:
 
 [source,sql]
 ----
