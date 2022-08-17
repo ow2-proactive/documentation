@@ -9,7 +9,7 @@ between a ProActive server, and a ServiceNow instance.
 
 ==== Objectives
 
-The goal is to provide templates and coding elements to help ServiceNow and ProActive engineers to easily integrate both solutions in their pipelines.
+The goal is to provide templates and coding elements to help ServiceNow and ProActive users to easily integrate both solutions in their pipelines.
 
 It boils down to: +
 
@@ -18,16 +18,20 @@ It boils down to: +
 
 ==== Installation
 
-This section describes the available processes to set up the required files in ServiceNow in order to communicate
-with ProActive. The process choice is dictated by the architecture the integration will have in ServiceNow. Because ServiceNow
-is application-based, the natural course of action is to create a dedicated ProActive application.
-Otherwise, you might want to incorporate this integration in another application that already exists. In such case,
-you will have to manually create files in the host application, which means copy-paste code that will be presented in the next sections.
+This section describes the available processes to set up the required files in ServiceNow to communicate
+with ProActive. The preferred installation process is dictated by the architecture of your application ecosystem
+in ServiceNow. Either ProActive's integration will have a dedicated ServiceNow application, or it will be combined with an existing one.
+ServiceNow being an application-based solution, the natural approach is to create a dedicated ProActive application.
+If you want to incorporate this integration in another application that already exists, you will have to manually
+create files in the host application, which means copying code blocks and ServiceNow files that will be presented in the next sections.
+
+TIP: If the latter process is chosen, you can always install the ProActive application in a ServiceNow test instance to look at the
+application's files and use them as templates as well as copy their code blocks.
 
 ===== Import from source control
 
 Working from an online repository is the most convenient and durable way to proceed.
-Importing an application from source control will result in a new application being created in this ServiceNow instance based on the remote repository you specify.
+Importing an application from source control will result in a new application being created in this ServiceNow instance, based on the specified remote repository.
 The account credentials you supply must have read access to the remote repository
 
 . [.underline]#Lay down the Application#
@@ -43,7 +47,7 @@ image::servicenow-import-from-source-control.png[align="center"]
 image::servicenow-imported-from-source-control.png[align="center"]
     .. In the Select Application dialog, click the link to the new application to open it for editing in Studio.
 
-Because you will very likely customize the application, it's a good idea to create a new branch an start working from there
+If you would like to customize the application, it is better to create a new branch and start working from there.
 
 [start=2]
 . [.underline]#Create a new branch#
@@ -62,7 +66,7 @@ To load the application files included in the tag, return to the main ServiceNow
 
 ===== Upload an Update Set
 
-Though not recommended by ServiceNow, you can download the following Update Set and import it in a ServiceNow instance
+Although it is not recommended by ServiceNow, you can download the following Update Set and import it into a ServiceNow instance
 to create an application. An Update Set describes and contains all application's files and is specific to ServiceNow.
 
 . link:../admin/references/servicenow/update_set_21813bcd2f9c91103c5d9facf699b605.xml[Download the Update Set].
@@ -86,10 +90,10 @@ That's because we are installing an application and not updating it. We can igno
 +
 image::servicenow-accept-remote-update.png[align="center"]
 .. Repeat step a. and b. if errors remain
-. Once all problems have been addressed. Click _Commit Update Set_.
+. Once all problems have been addressed, Click _Commit Update Set_
 . Click Confirm data loss and wait for the commit to finish
-. Once again, and for the same reason ServiceNow will inform us of errors.
-.. Click on _Show Commit Log_ and check that all records are of "Info" status.
+. Once again, and for the same reason ServiceNow will inform us of errors
+. Click on _Show Commit Log_ and check that all records are of "Info" status
 
 Set a filter as shown and click on _Run_ to apply it.
 
@@ -99,18 +103,18 @@ Result should be empty.
 
 ==== Communicate with ProActive
 
-Once the application installed, you are ready to integrate ProActive in your ServiceNow pipelines.
+Once the application is installed, you are ready to integrate ProActive in your ServiceNow pipelines.
 
-We will go over the core application files in the application, what they do and how to use them.
+We will go over the core application files in the application to explain how to use them.
 
-===== Script include
+===== Script Includes
 
 ====== Overview
 
-As defined by ServiceNow, Script Includes are reusable server-side script logic that define a function or class.
+As defined by ServiceNow, Script Includes are reusable server-side scripts logic that define a function or a class.
 Script Includes execute their script logic only when explicitly called by other scripts anywhere in the application where scripting is permitted.
 
-It can be in another Script Include, In Worfklow Activities, Flow Actions, UI elements ...
+It can be in another Script Include, In Workflow Activities, Flow Actions, UI elements ...
 
 ====== Usage
 
@@ -251,8 +255,7 @@ a|
 |Cell in column 4, row 3
 |===
 
-[NOTE]
-Functions starting with an _ is a ServiceNow naming convention for private functions. This is purely informative
+NOTE: Functions starting with an _ is a ServiceNow naming convention for private functions. This is purely informative
 as in reality they are callable from anywhere like other functions.
 
 *OutboundRestService*: A service class that contains a utility function to execute a ServiceNow's Outbound Rest Messages.
@@ -338,7 +341,7 @@ The application has two tables that can be used to store and read data:
 . *Submitted Job*: Each row contains data of a job submitted to the Scheduler.
 This is the table used by the JobRepository Script Include to perform CRUD operations.
 . *Workflow*: Each row contains a ProActive workflow xml definition file. The function submitJobFromFile of the SchedulerService Script Include
-will search for the specified workflow xml definition in this table.
+will search for the specified workflow's XML definition in this table.
 
 Below you will find the structure of both tables
 
@@ -408,8 +411,7 @@ Below you will find the structure of both tables
 |Cell in column 4, row 3
 |===
 
-[NOTE]
-All tables contain additional fields starting with sys_ . Those fields are automatically generated by ServiceNow when the table is created and can't be changed.
+NOTE: All tables contain additional fields starting with sys_ . Those fields are automatically generated by ServiceNow when the table is created and can't be changed.
 
 Two Table Columns have been added to the Incident table:
 
@@ -448,7 +450,7 @@ the Scheduler Client Script Include to make it as linear as possible.
 | Disconnect from ProActive
 |===
 
-Here is an example with the "Submit From Catalog" action. Principles are the same for other actions
+Here is an example with the "Submit From Catalog" action. It applies to other actions as well.
 
 .Inputs of the Submit From Catalog action
 image::servicenow-action-inputs.png[align="center"]
@@ -461,8 +463,8 @@ in the "Value" column.
 .Inputs of the Submit From Catalog script step
 image::servicenow-step-inputs.png[align="center"]
 
-The action is composed of a single Script step. A script step is JavaScript code to execute within a reusable action.
-While most core actions and steps fit common use cases, a Script step enables to execute behavior not satisfied by the core steps.
+The action is composed of a single script step. A script step is JavaScript code to execute within a reusable action.
+While most core actions and steps fit common use cases, a Script step enables to execute a behavior that is not satisfied by the core steps.
 
 The code of this script step is displayed <<submit_from_catalog_script_code, here>>.
 
@@ -481,7 +483,7 @@ The concept is the same for all the application's Actions.
 
 ===== Flows
 
-To put it simply a flow is an automated process consisting of a sequence of actions and a trigger.
+To put it simply, a flow is an automated process consisting of a sequence of actions and a trigger.
 Flow building takes place in the Flow Designer application which requires a paid subscription to the Integration Hub application.
 
 A Flow consists of the content types:
@@ -502,8 +504,7 @@ Flows are triggered by:
 - Service Level Agreements
 - MetricBase (requires the MetricBase plugin)
 
-[NOTE]
-To access Flows, a user must have the flow_designer or admin roles.
+NOTE: To access Flows, a user must have the flow_designer or admin roles.
 
 The ProActive application come with Flows that can:
 
@@ -533,8 +534,8 @@ The goal and concepts of Workflows are the same as Flows only with a different i
 Like Actions for Flows, a Workflow is a suite of Activities used for automating the processes.
 Activities are the workflow blocks that carry out various tasks like sending emails, obtaining approvals, running scripts, and configuring field values on the records.
 
-Every workflow starts with a Begin activity and ends with the End activity.
-When the activity ends, the activity is available through the suitable node and transition is comprehended to the later activity.
+Every workflow starts with a Begin activity and ends with an End activity.
+When the activity ends, the activity is available through the suitable node and the transition is comprehended to the latter activity.
 
 Following are the ways to launch Workflows:
 
