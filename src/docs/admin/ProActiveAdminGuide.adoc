@@ -3535,6 +3535,10 @@ If the above settings do not succeed, check in the scheduler logs any errors rel
 
 include::./references/StatisticsOnProActiveJobsAndResourceUsageReference.adoc[]
 
+=== ServiceNow integration
+
+include::./references/ServiceNowReference.adoc[]
+
 == Scheduler start tuning
 
 Scheduler start can be customized by automatically triggering user's scripts.
