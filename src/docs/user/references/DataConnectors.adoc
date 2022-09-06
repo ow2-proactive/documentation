@@ -65,18 +65,54 @@ The following table describe the specific workflow variables of the FTPS Connect
 [cols="2,5,2,2,2,2"]
 |===
 | *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
-| `KEY_STORE_PATH`
-| Path to the keyStore.
+| `CLIENT_CERTIFICATE_AUTHENTICATION`
+| If true, enable client certificate authentication.
 | Workflow
 | Yes
-| String
-| `/path/to/privatekeystore.jks`
-| `KEY_STORE_PASSWORD`
-| keyStore password.
+| Boolean
+| Default: `False`
+| `CLIENT_CERTIFICATE_CRED`
+| Client SSL certificate credential.
 | Workflow
-| Yes
+| No
+|  String
+| e.g. client_certificate_cred
+| `CLIENT_PRIVATE_KEY_CRED`
+| The private key credential.
+| Workflow
+| No
+|  String
+| e.g. private_key_cred
+| `CLIENT_PRIVATE_KEY_PASSWORD`
+| The password to protect the key.
+| Workflow
+| No
 |  String
 | e.g. my_password
+| `CLIENT_PRIVATE_KEY_ALIAS`
+| The alias of the key to use, may be null in which case the first key entry alias is used.
+| Workflow
+| No
+|  String
+| e.g. private_key_alias
+| `SERVER_CERTIFICATE_VERIFICATION`
+| If true, enable to verify server certificate.
+| Workflow
+| Yes
+|  Boolean
+| Default: `True`
+| `PROVIDE_SERVER_CERTIFICATE`
+| If true, enable to provide server certificate.
+| Workflow
+| No
+|  Boolean
+| Default: `False`
+| `SERVER_CERTIFICATE_CRED`
+| Public Server SSL certificate.
+| Workflow
+| No
+|  String
+| e.g. server_certificate_cred
 |===
 
 *How to use this connector:*
