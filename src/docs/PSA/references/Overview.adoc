@@ -5,5 +5,5 @@ At any point in time, each Service Instance has a specific State (RUNNING, ERROR
 Attached to each Service Instance, PSA service stores some information such as:
 Service Instance Id, Service Id, Service Instance State, the ordered list of Jobs executed for the Service, a set of variables with their values (a map that includes for instance the service endpoint), etc.
 
-The link:https://try.activeeon.com/tutorials/clearwater/clearwater.html[Create your own service tutorial, window="_blank"] on link:https://try.activeeon.com[try.activeeon.com, window="_blank"]
+The tutorials link:https://try.activeeon.com/tutorials/basic_service_creation/basic_service_creation.html[Create your own basic service, window="_blank"] or link:https://try.activeeon.com/tutorials/advanced_service_creation/advanced_service_creation.html[Create your own advanced service, window="_blank"]
 help you to build your own services.
