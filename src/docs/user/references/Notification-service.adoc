@@ -409,3 +409,68 @@ has been missed the `Date_Time`. As it is configured, Job-planner will submit an
 configured to submit a new execution
 |===
 
+.Resource Manager notifications
+[cols="2,2,2,5,5"]
+|===
+| *Type* | *Readable name* | *Severity* | *Message* | *Description*
+| `STARTED`
+| Started
+| INFO
+| The Resource Manager has started
+| ProActive has been launched, and the Resource Manager has started
+| `SHUTTING_DOWN`
+| Shutting Down
+| INFO
+| The Resource Manager is shutting down
+| ProActive has been stopped and the Resource Manager is shutting down
+| `SHUTDOWN`
+| Shutdown
+| INFO
+| The Resource Manage is shutdown
+| ProActive is stopped, and the Resource Manager is shut down
+| `NODE_DOWN`
+| Node down
+| WARNING
+| The Node `Node_Name` from the Node Source `Node_Source` is down
+| A node has been declared as down by the Resource Manager
+| `NODE_LOST`
+| Node lost
+| WARNING
+| The Node `Node_Name` from the Node Source `Node_Source` is lost
+| The Resource Manager can't connect to a Node, so it is declared as lost
+| `NODE_REMOVED`
+| Node removed
+| INFO
+| The Node `Node_Name` from the Node Source `Node_Source` is removed
+| A Node Source has been undeployed, and the node has been removed
+| `NODE_ADDED`
+| Node added
+| INFO
+| The Node `Node_Name` from the Node Source `Node_Source` is added
+| A Node Source has been deployed, and the node has been added
+| `NODESOURCE_SHUTDOWN`
+| Node Source shutdown
+| INFO
+| The Node Source `Node_Source` is shutdown
+| A Node Source has been undeployed
+| `NODESOURCE_REMOVED`
+| Node Source removed
+| INFO
+| The Node Source `Node_Source` is removed
+| A Node Source has been removed
+| `NODESOURCE_DEFINED`
+| Node Source defined
+| INFO
+| The Node Source `Node_Source` is defined
+| A Node Source has been defined
+| `NODESOURCE_UPDATED`
+| Node Source updated
+| INFO
+| The Node Source `Node_Source` is updated
+| A Node Source has been updated
+| `NODESOURCE_CREATED`
+| Node Source created
+| INFO
+| The Node Source `Node_Source` is created
+| A Node Source has been deployed
+|===
