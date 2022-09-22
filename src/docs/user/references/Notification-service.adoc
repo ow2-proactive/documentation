@@ -426,7 +426,7 @@ configured to submit a new execution
 | `SHUTDOWN`
 | Shutdown
 | INFO
-| The Resource Manage is shutdown
+| The Resource Manager is shutdown
 | ProActive is stopped, and the Resource Manager is shut down
 | `NODE_DOWN`
 | Node down
@@ -437,7 +437,7 @@ configured to submit a new execution
 | Node lost
 | WARNING
 | The Node `Node_Name` from the Node Source `Node_Source` is lost
-| The Resource Manager can't connect to a Node, so it is declared as lost
+| The Resource Manager can not connect to a Node, therefore it is declared as lost
 | `NODE_REMOVED`
 | Node removed
 | INFO
