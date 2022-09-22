@@ -19,8 +19,8 @@ It boils down to: +
 ==== Installation
 
 This section describes the available processes to set up the required files in ServiceNow to communicate
-with ProActive.The preferred installation process is dictated by the architecture of your application ecosystem
-in ServiceNow.Either ProActive's integration will have a dedicated ServiceNow application, or it will be combined with an existing one.
+with ProActive. The preferred installation process is dictated by the architecture of your application ecosystem
+in ServiceNow. Either ProActive's integration will have a dedicated ServiceNow application, or it will be combined with an existing one.
 ServiceNow being an application-based solution, the natural approach is to create a dedicated ProActive application.
 If you want to incorporate this integration in another application that already exists, you will have to manually
 create files in the host application, which means copying code blocks and ServiceNow files that will be presented in the next sections.
@@ -103,7 +103,7 @@ Result should be empty.
 
 ==== Usage
 
-Once the application imported in your ServiceNow instances, you are ready to communication both ways between ProActive and ServiceNow.
+Once the application is imported in your ServiceNow instances, you are ready to communication both ways between ProActive and ServiceNow.
 
 Please refer to the xref:../user/references/ApplicationConnectors.adoc#_servicenow[User documentation] to look at:
 
