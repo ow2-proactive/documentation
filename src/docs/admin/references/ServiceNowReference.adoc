@@ -103,9 +103,9 @@ Result should be empty.
 
 ==== Usage
 
-Once the application is imported in your ServiceNow instances, you are ready to communication both ways between ProActive and ServiceNow.
+Once the application is imported in your ServiceNow instances, the two-way communication between ProActive and ServiceNow is ready.
 
 Please refer to the xref:../user/references/ApplicationConnectors.adoc#_servicenow[User documentation] to look at:
 
 - The available ServiceNow workflows in ProActive's catalog
-- How to use ProActive client in ServiceNow
+- How to use ProActive client in a ServiceNow instance

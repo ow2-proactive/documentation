@@ -90,8 +90,9 @@ in the link:../admin/ProActiveAdminGuide.adoc#_servicenow_integration[ServiceNow
 
 ==== ProActive to ServiceNow
 
-A set of ProActive workflows are available in the catalog to communicate with ServiceNow.
-These workflows perform HTTP queries to ServiceNow's TABLE or EMAIL API depending on their action.
+A set of ProActive workflow templates are available in the catalog to communicate with ServiceNow.
+They are usually integrated as a task or a subworkflow in an end-to-end workflow and perform
+HTTP queries to ServiceNow's TABLE or EMAIL API depending on their action.
 
 Go to link:https://docs.servicenow.com/en-US/bundle/quebec-application-development/page/build/applications/concept/api-rest.html[ServiceNow's REST API reference, window="_blank"] for the complete API's documentation.
 
@@ -205,7 +206,7 @@ The two Task related workflows have both one task with the following variables:
 | `TASK_TYPE`
 | The subtype of the ServiceNow Task
 | Yes
-| String
+| PA:LIST(incident,ticket,problem,change_request)
 | e.g. `incident`
 | `PATH`
 | The path of the query
@@ -454,9 +455,9 @@ a|
 |True if success, false if not
 
 |submitJobFromCatalog
-|Submits a workflow to the scheduler from a workflow URL, creating a new job resource
+|Submits a job to the scheduler from the catalog, creating a new job resource
 a|
-* proactiveUrl: Root URL of ProActive server
+* proactiveUrl: URL of the ProActive installation folder
 * sessionId: sessiondId of the user that will submit the job
 * bucket: Bucket name of the workflow
 * workflow: Name of the workflow
