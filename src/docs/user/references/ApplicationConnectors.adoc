@@ -443,7 +443,7 @@ TIP: The REST API documentation for our try platform is available at https://try
 |getSessionId
 |Executes a POST request to login and retrieve the sessionId of a ProActive user
 a|
-* proActiveUrl: Root URL of ProActive server
+* proActiveUrl: URL of the ProActive installation folder
 * username: Name of user
 * password: Password of user
 |The session id associated to the user
@@ -478,7 +478,7 @@ a|The jobid of the newly created job as JSON
 Provided a workflow name, the script will search for the corresponding workflow stored in ProActive's application table named "x_661207_proacti_0_workflow" and labeled "Workflow".
 The workflow's must be stored as a file that complies with ProActive's xref:../user/ProActiveUserGuide.adoc#_job_and_task_specification[XML schema].
 a|
-* proactiveUrl: Root URL of ProActive server
+* proactiveUrl: URL of the ProActive installation folder
 * sessionId: Session id of the ProActive who submits the job
 * workflowName: Name of the workflow to submit, stored in the Workflow table
 * variables: Variables of the workflow as JSON
@@ -495,14 +495,14 @@ a|The jobid of the newly created job as JSON
 |disconnectUser
 |Executes a PUT request to disconnect a user represented by a sessionId from a ProActive server
 a|
-* proactiveUrl: Root URL of ProActive server
+* proactiveUrl: URL of the ProActive installation folder
 * sessionId: Session id of the user to disconnect
 |True if successful else false
 
 |getJobInfo
 |Executes a GET request to retrieve a job's job info
 a|
-* proactiveUrl: Root URL of ProActive server
+* proactiveUrl: URL of the ProActive installation folder
 * sessionId: Session id of the ProActive user
 |True if successful, else false
 
@@ -510,7 +510,7 @@ a|
 |Executes the getJobInfo function and checks the current job status to determine if the job is Faulty.
 A job is considered faulty when it is finished, canceled or failed and has at least one task that is failed, faulty or in error
 a|
-* proactiveUrl: Root URL of ProActive server
+* proactiveUrl: URL of the ProActive installation folder
 * sessionId: Session id of the ProActive user
 * jobId: Id of the job to test
 |True if the job is faulty, else false
@@ -518,7 +518,7 @@ a|
 |waitForTerminalStatus
 |Polling function that blocks the current thread and checks the current job status every 2.5 seconds until it reaches a terminal status.
 a|
-* proactiveUrl: Root URL of ProActive server
+* proactiveUrl: URL of the ProActive installation folder
 * sessionId: Session id of the ProActive user
 * jobId: Id of the job to poll
 |The polled job info
@@ -559,7 +559,7 @@ Like the SchedulerClient class, its function can be called from anywhere scripti
 | executeOutboundRestMsg
 | Prepares and executes a ServiceNow HTTP Method from the ProActive Scheduler REST Message
 a|
-* proActiveUrl: Root URL of ProActive server
+* proActiveUrl: URL of the ProActive installation folder
 * sessionId: Session id of the ProActive user
 * httpMethodName: Name of the HTTP Method to execute
 * httpMethodVariables: A JSON collection of name/value pairs which holds the name of the HTTP Method variable to replace and its value.
