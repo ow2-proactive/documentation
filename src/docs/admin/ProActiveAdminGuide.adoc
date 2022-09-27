@@ -3535,6 +3535,7 @@ If the above settings do not succeed, check in the scheduler logs any errors rel
 
 include::./references/StatisticsOnProActiveJobsAndResourceUsageReference.adoc[]
 
+[#_servicenow_integration]
 === ServiceNow integration
 
 include::./references/ServiceNowReference.adoc[]
