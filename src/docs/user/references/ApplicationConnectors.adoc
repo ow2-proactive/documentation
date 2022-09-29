@@ -80,13 +80,16 @@ This workflow template supports the following authentication methods: a basic au
 The authentication method is determined based on the definition of the parameters when launching the WF.
 
 
-[#_servicenow]
+[#_servicenow_user_doc]
 === ServiceNow
+*Product Name:* ServiceNow +
+*Product Version:* Quebec +
+*Compatibility:* Tokyo
 
 The ServiceNow connectors allow ProActive to communicate with ServiceNow instances to perform CRUD operations on their data as well as to send emails.
 
 The installation of the ProActive application in ServiceNow, which enables a ServiceNow instance to communication with a ProActive server, is described
-in the link:../admin/ProActiveAdminGuide.adoc#_servicenow_integration[ServiceNow admin documentation].
+in the link:../../admin/ProActiveAdminGuide.adoc#_servicenow_integration[ServiceNow admin documentation].
 
 ==== ProActive to ServiceNow
 
