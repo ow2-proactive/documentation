@@ -5,7 +5,11 @@
 ==== Overview
 
 The ServiceNow integration provides means to establish a bidirectional communication
-between a ProActive server, and a ServiceNow instance.
+between a ProActive server, and a ServiceNow instance. Here we describe how to install
+the integration in a ServiceNow instance and how to communicate with a ProActive server.
+
+To learn how to communicate from ServiceNow to ProActive using ServiceNow's REST API, please
+refer to the link:../../user/references/ApplicationConnectors.adoc#_servicenow_user_doc[ServiceNow user documentation].
 
 ==== Objectives
 
@@ -32,7 +36,8 @@ application's files and use them as templates as well as copy their code blocks.
 
 Working from an online repository is the most convenient and durable way to proceed.
 Importing an application from source control will result in a new application being created in this ServiceNow instance, based on the specified remote repository.
-The account credentials you supply must have read access to the remote repository
+The account credentials you supply must have read access to the remote repository.
+You can request access to this repository by contacting our support at support@activeeon.com
 
 . [.underline]#Lay down the Application#
     .. Fork the https://bitbucket.org/activeeon/proactive-application[Application's repository]
@@ -69,7 +74,7 @@ To load the application files included in the tag, return to the main ServiceNow
 Although it is not recommended by ServiceNow, you can download the following Update Set and import it into a ServiceNow instance
 to create an application. An Update Set describes and contains all application's files and is specific to ServiceNow.
 
-. link:../admin/references/servicenow/update_set_21813bcd2f9c91103c5d9facf699b605.xml[Download the Update Set].
+. link:../../admin/references/servicenow/update_set_21813bcd2f9c91103c5d9facf699b605.xml[Download the Update Set].
 . Go to _Retrieved Update Sets_ under _System Update Sets_
 . Click on _Import Update Set from XML_
 . Select the Update Set you just downloaded
@@ -105,7 +110,7 @@ Result should be empty.
 
 Once the application is imported in your ServiceNow instances, the two-way communication between ProActive and ServiceNow is ready.
 
-Please refer to the xref:../user/references/ApplicationConnectors.adoc#_servicenow[User documentation] to look at:
+Please refer to the xref:../../user/references/ApplicationConnectors.adoc#_servicenow_user_doc[User documentation] to look at:
 
 - The available ServiceNow workflows in ProActive's catalog
 - How to use ProActive client in a ServiceNow instance
