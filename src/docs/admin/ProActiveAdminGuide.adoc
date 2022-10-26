@@ -1291,16 +1291,20 @@ To be able to edit the default logo displayed in ProActive portals, you have to 
 
 == User Authentication
 
-In order to use ProActive Scheduler every user must have an account. It supports three methods for authentication:
+In order to log into ProActive server, every user must have a registered account.
+ProActive supports several methods to authenticate users:
 
-* *File based*
-* *LDAP*
-* *PAM*
+* <<_file,*File-based*>>
+* <<_ldap,*LDAP*>>
+* <<_ldap_with_multiple_domains,*LDAP with Multiple Domains*>>
+* <<_pam,*PAM*>>
 
 === Select authentication method
 
-By default the ProActive Scheduler is configured to use *file based* authentication and has some default accounts ('demo/demo', 'admin/admin') that
-work out of the box.
+By default, the ProActive server is configured to use *file-based* authentication and has some default accounts ('demo', 'admin', 'user') that
+can be used to first log into the server.
+
+The default accounts passwords (demo:demo, admin:admin and user:pwd) should be modified using the <<_command_line,proactive-users>> command.
 
 If you would like to change the authentication mechanism to use your *LDAP* server or use Linux PAM, you need to modify two configuration files:
 
@@ -1310,10 +1314,11 @@ If you would like to change the authentication mechanism to use your *LDAP* serv
 ----
 #Property that defines the method that has to be used for logging users to the Resource Manager
 #It can be one of the following values:
-#    - "RMFileLoginMethod" to use file login and group management
-#    - "RMLDAPLoginMethod" to use LDAP login management
-#    - "RMPAMLoginMethod" to use PAM login management
-pa.rm.authentication.loginMethod=RMLDAPLoginMethod
+#  - "RMFileLoginMethod" to use file login and group management
+#  - "RMLDAPLoginMethod" to use LDAP login management
+#  - "RMMultiLDAPLoginMethod" to use LDAP with multiple domains
+#  - "RMPAMLoginMethod" to use PAM login management
+pa.rm.authentication.loginMethod=RMFileLoginMethod
 ----
 
 * *Scheduler* configuration (`PROACTIVE_HOME/config/scheduler/settings.ini`)
@@ -1322,16 +1327,17 @@ pa.rm.authentication.loginMethod=RMLDAPLoginMethod
 ----
 #Property that define the method that have to be used for logging users to the Scheduler
 #It can be one of the following values:
-#	- "SchedulerFileLoginMethod" to use file login and group management
-#	- "SchedulerLDAPLoginMethod" to use LDAP login management
-#   - "SchedulerPAMLoginMethod" to use PAM login management
-pa.scheduler.core.authentication.loginMethod=SchedulerLDAPLoginMethod
+#  - "SchedulerFileLoginMethod" to use file login and group management
+#  - "SchedulerLDAPLoginMethod" to use LDAP login management
+#  - "SchedulerMultiLDAPLoginMethod" to use LDAP with multiple domains
+#  - "SchedulerPAMLoginMethod" to use PAM login management
+pa.scheduler.core.authentication.loginMethod=SchedulerFileLoginMethod
 ----
 
+[[_file]]
+=== File authentication
 
-=== File
-
-By default, the ProActive Resource Manager stores users accounts, passwords, group memberships (user or admins), and tenant memberships (group agglomerate or organization), in two files.
+By default, the ProActive server stores users accounts, passwords, group memberships (user or admins), and tenant memberships (group agglomerate or organization), in two files.
 
 The default file path to store users, group and tenant memberships can be modified by changing the following settings:
 
@@ -1383,7 +1389,7 @@ ProActive contains a set of predefined groups such as `user` and `providers`. Gr
 
 ==== Tenants
 
-A *tenant* can either be a collection of groups (if defined using a file) or an organization unit (if defined using an _LDAP_ attribute).
+A *tenant* can either be a collection of groups (if defined using a file), an organization unit (if defined using an _LDAP_ attribute) or a _LDAP domain_ (if the authentication method is configured to LDAP with multiple domains).
 
 When defined via a file, tenant organization is stored in `PROACTIVE_HOME/config/authentication/tenant.cfg`.
 Each line of this file contains a couple _(group_name, tenant_name)_, using the syntax `group_name:tenant_name`.
@@ -1403,11 +1409,17 @@ expert-ds:experts
 user:users
 ----
 
-When defined via <<_ldap,LDAP>>, the name of the <<_configure_tenant_attribute,LDAP attribute>> which will contain tenant information must be configured.
+When defined as a <<_ldap,LDAP attribute>>, the name of the <<_configure_tenant_attribute,attribute>> which will contain tenant information must be configured.
 
-Tenants are used to isolate groups of users, where users belonging to one tenant will not see the activities launched by users belonging to other tenants.
+When the authentication method is set to <<_ldap_with_multiple_domains,LDAP with Multiple Domains>>, the tenant is automatically set to the current user _LDAP domain_.
+
+Tenants allow users to work in isolated silos, where users belonging to one tenant cannot see the activities launched by users belonging to other tenants.
+Tenants can thus improve the management and governance of an organization's hybrid compute infrastructure.
+
 In order to isolate tenants, the setting `pa.scheduler.core.tenant.filter` must be set to `true` in `PROACTIVE_HOME/config/scheduler/settings.ini`.
 When this configuration is enabled, standard users will only see jobs according to the user's tenant. Admin users will still be able to see jobs coming from all tenants.
+
+NOTE: It is not mandatory to configure tenant isolation. Tenants can simply be used as additional information associated with each user submitted jobs.
 
 .Users Tenant View
 image::TenantSPUsers.png[Users Tenant View]
@@ -1499,22 +1511,22 @@ Stored login file in H:\Install\scheduling\tools\..\config/authentication/login.
 Stored group file in H:\Install\scheduling\tools\..\config/authentication/group.cfg
 ----
 
-=== LDAP
+[[_ldap]]
+=== LDAP authentication
 
-The ProActive Resource Manager is able to connect to an existing *LDAP* server, to check users login/password and verify users group
-membership. This authentication method can be used with an existing LDAP server that is already configured.
+The ProActive server is able to connect to an existing *LDAP* server, to check users' logins, passwords and verify users group
+memberships.
 
+In order to use the LDAP authentication method, change the default authentication method as described in <<_select_authentication_method,Select authentication method>>.
 
-In order to use it, few parameters have to be configured, such as *path in LDAP tree users*, LDAP *groups* that define
+Additionally, multiple LDAP parameters must be configured in a dedicated LDAP configuration file, such as *path in LDAP tree users*, LDAP *groups* that define
 user and admin group membership, *URL* of the LDAP server, LDAP *binding method* used by connection and configuration
 of SSL/TLS if you want a secured connection between the ProActive Resource Manager and LDAP.
 
-We assume that the LDAP server is configured in a way that:
+We assume that the existing LDAP server is configured in a way that:
 
-* all existing users and groups are located under a single domain
-* users have object class specified in parameter *pa.ldap.user.objectclass*
-* groups have object class specified in parameter *pa.ldap.group.objectclass*
-* user and group name is defined in cn (Common Name) attribute
+* all existing users and groups are located under a _single domain_
+* user and group name is defined in _cn_ (Common Name) attribute
 
 [source]
 ----
@@ -1540,13 +1552,121 @@ The LDAP configuration is defined in `PROACTIVE_HOME/config/authentication/ldap.
 
 ==== Set the LDAP server URL
 
-First, you have to define the LDAP's URL of your organization. This address corresponds to the property: `pa.ldap.url`. You have to put a standard LDAP-like URL, for example *ldap://myLdap*. You can also set a URL with secure access: *ldaps://myLdap:636*.
+First, you have to define the LDAP URL of your organization. This address corresponds to the property: `pa.ldap.url`.
+You have to put a standard LDAP-like URL, for example *ldap://myLdap*.
+You can also set a URL with secure access: *ldaps://myLdap:636*.
 
-==== Define object class of user and group entities
+Finally, it is possible to define additional URLs that will be used as backup if the primary URL is not responding.
+----
+pa.ldap.url=ldap://myLdapServer1 ldap://myLdapServer2
+----
 
-Then, you need to define how to differentiate user and group entities in the LDAP tree. The users object class is defined by
-property `pa.ldap.user.objectclass` and by default is _inetOrgPerson_. For groups, the property `pa.ldap.group.objectclass`
-has a default value _groupOfUniqueNames_ which could be changed.
+==== Define user and group filters
+
+The authentication module must be able to find a user ldap entry, given its login name (or any other appropriate ldap attribute).
+For each user, the module must also be able to find all group ldap entries associated with the user.
+
+The LDAP module uses ldap filters to search for users and groups.
+
+===== User filters
+
+The user filter is defined using the property `pa.ldap.user.filter`.
+The search is performed according to a configurable ldap subtree, controlled by the property `pa.ldap.userssubtree`.
+
+`pa.ldap.userssubtree` must be defined according to the base distinguished name of the ldap server.
+It can be further refined to restrict the search to a specific subtree where the users are located.
+
+Example:
+
+----
+pa.ldap.userssubtree=dc=mycompany,dc=com
+----
+
+`pa.ldap.user.filter` must be defined according to the ldap server version.
+
+For an _OpenLDAP_ server (V2 or V3), use:
+
+----
+pa.ldap.user.filter=(&(objectclass=inetOrgPerson)(uid=%s))
+----
+
+For an _Active Directory_ server, use:
+
+----
+pa.ldap.user.filter=(&(objectclass=user)(sAMAccountName=%s))
+----
+
+The link:https://linux.die.net/man/1/ldapsearch[ldapsearch] command can be used to test the execution of user filters.
+
+For example:
+
+----
+ldapsearch -x -b "dc=mycompany,dc=com" -H ldap://myLdapServer1 -D "cn=admin,dc=mycompany,dc=com" -W '(&(objectclass=user)(sAMAccountName=user1))'
+----
+
+Can be used to search that the configured user filter is able to locate the ldap entry for _user1_ on an Active Directory server
+
+
+
+===== Group filters
+
+The group filter is defined using the property `pa.ldap.group.filter`.
+The search is performed according to a configurable ldap subtree, controlled by the property `pa.ldap.groupssubtree`.
+
+`pa.ldap.groupssubtree` can be left undefined. In that case, the value configured for `pa.ldap.userssubtree` will be used.
+
+As group membership search can be time-consuming for large organizations, it is recommended to set `pa.ldap.groupssubtree` to a subtree that contains groups that will be mapped as ProActive server roles.
+
+Example:
+
+----
+pa.ldap.groupssubtree=ou=groups,ou=mydepartment,dc=mycompany,dc=com
+----
+
+`pa.ldap.group.filter` must be defined according to the ldap server version.
+
+For an _OpenLDAP_ server V2, use:
+
+----
+pa.ldap.group.filter=(&(objectclass=groupOfUniqueNames)(uniqueMember=%s))
+----
+
+For an _OpenLDAP_ server V3, use:
+
+----
+pa.ldap.group.filter=(&(objectclass=posixGroup)(memberUID=%s))
+----
+
+The following setting must also be enabled for an open ldap server V3:
+
+----
+pa.ldap.group.search.use.uid=true
+----
+
+This tells the authentication module to use the login name instead of distinguished name as parameter of the group filter.
+
+For an _Active Directory_ server, use:
+
+----
+pa.ldap.group.filter=(&(objectclass=group)(member:1.2.840.113556.1.4.1941:=%s))
+----
+
+Finally, the following property controls which LDAP attribute contains the group name in the group ldap entry (it is normally not necessary to change the default value):
+
+----
+pa.ldap.group.name.attr=cn
+----
+
+The link:https://linux.die.net/man/1/ldapsearch[ldapsearch] command can be used to test the execution of group filters.
+
+For example:
+
+----
+ldapsearch -x -b "dc=mycompany,dc=com" -H ldap://myLdapServer1 -D "cn=admin,dc=mycompany,dc=com" -W '(&(objectclass=group)(member:1.2.840.113556.1.4.1941:=cn=user1,ou=users,dc=mycompany,dc=com))'
+----
+
+Can be used to search that the configured group filter is able to find all groups associated with _user1_ (contrary to the user filter, the user distinguished name (dn) is given as parameter)
+
 
 ==== Configure LDAP authentication parameters
 
@@ -1556,7 +1676,8 @@ method by modifying the property `pa.ldap.authentication.method`. This property 
 * none (default value) - the ProActive Resource Manager performs connection to LDAP in anonymous mode.
 * simple - the ProActive Resource Manager performs connection to LDAP with a specified user/password (see below for user password setting).
 
-You can also specify a SASL mechanism for LDAPv3. There are many SASL available mechanisms: cram-md5, digest-md5, kerberos4. Just set this property to *sasl* to let the ProActive Resource Manager JVM choose SASL authentication mechanism.
+You can also specify a SASL mechanism for LDAPv3. There are many SASL available mechanisms: cram-md5, digest-md5, kerberos4. Just set this property to *sasl* to let the ProActive server choose a SASL authentication mechanism.
+
 If you specify an authentication method different from 'none' (anonymous connection to LDAP), you must specify a login/password for authentication.
 
 There are two properties to set in LDAP configuration file:
@@ -1564,24 +1685,52 @@ There are two properties to set in LDAP configuration file:
 ** `pa.ldap.bind.login` - sets user name for authentication.
 ** `pa.ldap.bind.pwd` - sets password for authentication.
 
+The login used should be the _distinguished name_ (dn) of a user with read access on the LDAP server.
+The password can be encrypted using the <<_encrypting_configuration_passwords,encryption command line tool>>.
+
 ==== Set SSL/TLS parameters
 
 A secured SSL/TLS layer can be useful if your network is not trusted, and critical information is transmitted between the Resource Manager server and LDAP, such as user passwords.
+
+Encryption of the communication to the ldap server can be performed in two ways:
+
+* by using the _LDAPS_ protocol (<<_ssl_encryption>>).
+* by using <<_starttls_encryption>>.
+
+===== SSL encryption
+
 First, set the LDAP URL property `pa.ldap.url` to a URL of type *ldaps://myLdap*. Then, set `pa.ldap.authentication.method` to *none* so as to delegate authentication to SSL.
 
-For using SSL properly, you have to specify your certificate and public keys for SSL handshake. Java stores certificates in a keyStore and public keys in a trustStore. In most of the cases, you just have to define a trustStore with public key part of LDAP's certificate. Put the certificate in a keyStore, and the public keys in a trustStore with the keytool command (keytool command is distributed with standard java platforms):
+For using SSL properly, it is required to specify a certificate and authorities (public keys) for the SSL handshake.
+Java stores certificates inside a keyStore and public keys inside a trustStore.
+In most of the cases, adding authority public keys in a trust store is sufficient.
 
+====== Generate trustStore manually
 
-    keytool -import -alias myAlias -file myCertificate -keystore myKeyStore
+The following steps show how to create a keystore and trustStore manually using the keytool command (included in the ProActive server installation):
 
-myAlias is the alias name of your certificate, myCertificate is your private certificate file and myKeyStore is the new keyStore file produced in output. This command asks you to enter a password for your keyStore.
-
-Put LDAP certificate's public key in a trustStore, with the keytool command:
-
-    keytool -import -alias myAlias -file myPublicKey -keystore myTrustStore
+----
+PROCTIVE_HOME/jre/bin/keytool -import -alias myAlias -file myCertificate -keystore myKeyStore
+----
 
 where:
 
+* `PROCTIVE_HOME` is the path to the ProActive server installation
+* `myAlias` is the alias name of your certificate.
+* `myCertificate` is your private certificate file.
+* `myKeyStore` is the new keyStore file produced in output.
+
+This command asks you to enter a password for your keyStore.
+
+Put the LDAP certificate's public key in a trustStore, with the following keytool command:
+
+----
+PROCTIVE_HOME/jre/bin/keytool -import -alias myAlias -file myPublicKey -keystore myTrustStore
+----
+
+where:
+
+* `PROCTIVE_HOME` is the path to the ProActive server installation
 * `myAlias` is the alias name of your certificate's public key.
 * `myPublicKey` is your certificate's public key file.
 * `myTrustore` is the new trustStore file produced in output.
@@ -1594,6 +1743,38 @@ Finally, in `config/authentication/ldap.cfg`, set keyStore and trustStore create
 * Set `pa.ldap.keystore.passwd` to the password defined previously for keyStore.
 * Set `pa.ldap.truststore.path` to the path of your trustStore.
 * Set `pa.ldap.truststore.passwd` to the password defined previously for trustStore.
+
+====== Download the ldap server certificate
+
+Alternatively to the above procedure, the following command can be used to automatically download the ldap server certificates and install it inside the ProActive server Java Runtime Environment default trustStore:
+
+----
+PROCTIVE_HOME/jre/bin/java -jar PROCTIVE_HOME/tools/installcert-usn-20140115.jar ldap_server_hostname_or_ip:ldap_port
+----
+
+where:
+
+* `PROCTIVE_HOME` is the path to the ProActive server installation.
+* `ldap_server_hostname_or_ip` is the hostname or ip address of the ldap server.
+* `ldap_port` is the port used to connect to the ldap server.
+
+The command is interactive and will ask the java trustStore password. The default password is `changeit`.
+
+
+===== StartTLS encryption
+
+StartTLS is an alternative encryption method to SSL. StartTLS works by opening a connection using an unencrypted protocol, then upgrading this connection to an encrypted channel.
+The LDAP server must support StartTLS in order to use it.
+
+In order to configure StartTLS inside the ProActive LDAP module, the keystore/trustStore operations described in <<_generate_truststore_manually>> or <<_download_the_ldap_server_certificate>> must be executed.
+
+Additionally, the following properties must be set in the LDAP configuration file:
+
+----
+pa.ldap.starttls=true
+
+pa.ldap.connection.pooling=false
+----
 
 ==== Configure tenant attribute
 
@@ -1619,7 +1800,49 @@ There are two configuration options to control this mechanism (present in the `l
 ** The pa.ldap.tenant.attr configuration is not defined.
 ** The pa.ldap.tenant.attr configuration is defined, but the configured attribute is empty for the user.
 
-=== PAM
+[[_ldap_with_multiple_domains]]
+=== LDAP authentication with Multiple Domains
+
+The ProActive server can be configured to authenticate users according to *multiple LDAP domains*.
+
+Following is a step-by-step procedure to configure it.
+
+1. Copy the file `PROACTIVE_HOME\config\authentication\ldap.cfg` into multiple files, one for each domain.
++
+For example:
++
+----
+config\authentication\ldap-domain1.cfg
+config\authentication\ldap-domain2.cfg
+----
++
+2. Using the procedure described in chapter <<_ldap>>, configure each ldap file according to the domain used (each domain will have its own ldap server, bind login name, user subtree, etc.).
++
+3. Follow the steps described in chapter <<_select_authentication_method>> to configure `RMMultiLDAPLoginMethod` and `SchedulerMultiLDAPLoginMethod`.
++
+4. In `config\rm\settings.ini`, uncomment the property `pa.rm.multi.ldap.config` and define it according to the ldap configuration files you created and their corresponding domain names:
++
+----
+pa.rm.multi.ldap.config=domain1:config/authentication/ldap-domain1.cfg,domain2:config/authentication/ldap-domain2.cfg
+----
++
+5. In `config\scheduler\settings.ini`, uncomment the property `pa.scheduler.multi.ldap.config` and define it according to the ldap configuration files you created and their corresponding domain names:
++
+----
+pa.scheduler.multi.ldap.config=domain1:config/authentication/ldap-domain1.cfg,domain2:config/authentication/ldap-domain2.cfg
+----
+
+Once all the steps above are completed, the ProActive server can be (re)started in order to make the multi-domain ldap configuration effective.
+
+IMPORTANT: In multi-domain mode, when a user logs in to any portal of the ProActive server, the user must specify the domain used.
+
+For example, if _user1_ belongs to _domain1_, the information provided in the login form must be _domain1\user1_.
+This is essential to allow the ProActive server select the adequate ldap configuration where the user is registered.
+
+NOTE: The user domain name will be automatically recorded as <<_tenants, tenant>> name.
+
+[[_pam]]
+=== PAM authentication
 
 The ProActive Scheduler & Resource Manager are able to interact with *Linux PAM (Pluggable Authentication Modules)* to check users login/password.
 It is not currently possible to retrieve linux system group memberships for users. Thus, groups must be managed using the `PROACTIVE_HOME/config/authentication/group.cfg` file.
@@ -3253,7 +3476,7 @@ done, the value for properties `web.https.keystore` and
 entered.
 
 For more information, please look at the
-link:http://www.eclipse.org/jetty/documentation/current/configuring-ssl.html[Jetty documentation].
+link:https://www.eclipse.org/jetty/documentation/current/configuring-ssl.html[Jetty documentation].
 
 ===== With a trusted certificate
 
