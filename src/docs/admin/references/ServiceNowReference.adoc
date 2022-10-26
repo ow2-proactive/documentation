@@ -34,25 +34,62 @@ application's files and use them as templates as well as copy their code blocks.
 
 ===== Import from source control
 
-Working from an online repository is the most convenient and durable way to proceed.
-Importing an application from source control will result in a new application being created in this ServiceNow instance, based on the specified remote repository.
-The account credentials you supply must have read access to the remote repository.
-You can request access to this repository by contacting our support at support@activeeon.com
+Working from an online repository is the most convenient and durable way to proceed. It greatly eases the
+backup, update and distribution of the application's versions across ServiceNow instances. This method requires
+you to have git installed on your local system.
 
-. [.underline]#Lay down the Application#
-    .. Fork the https://bitbucket.org/activeeon/proactive-application[Application's repository]
+Here are the steps to get started from source control and lay down the application:
+
+. [.underline]#Define the online repository#
+.. In your preferred git hosting service, create a new private repository
+.. Make sure that all users acting on the repository have the write and read permissions
+
+. [.underline]#Add the application's files#
+.. Download the link:../../admin/references/servicenow/servicenow-proactive-application.zip[Application's files] as a zip archive
+.. `git clone` the newly created repository on your local system
+.. Add the applications file to the project and add them in git with `git add`
+.. `git commit` the changes
+.. `git push origin master` to push the changes to the online repository. (You will be able to create and navigate through branches directly from ServiceNow)
+
+. [.underline]#Import the application in ServiceNow#
+
+Connect to ServiceNow as an administrator and:
+
+    .. Create a new Credential record that ServiceNow will use to connect to the online repository:
+        - Click on the _Credentials_ item of the _Connections & Credentials_ menu
++
+image::servicenow-credentials-menu.png[align="center", width=200]
++
+        - Click on _New_ to start creating a new record
++
+image::servicenow-credentials-records.png[align="center"]
++
+        - Click on _Basic Auth Credentials_
++
+image::servicenow-credentials-basic-auth.png[align="center", width=350]
++
+        - Fill in the fields and click on _Submit_
++
+image::servicenow-credentials-new-record.png[align="center"]
++
+
+The remote repository Credential is now created.
+
     .. Go to the Studio, under _System Applications_ -> _Studio_
 +
 image::servicenow-studio-select.png[align="center"]
     .. Click _Import from source control_
 +
 image::servicenow-import-from-source-control.png[align="center"]
+    .. Fill at least the required URL and Credential fields
++
+image::servicenow-import-from-source-control-definition.png[align="center"]
     .. Click _Import_. When the application import is completed, click the _Select Application button_.
 +
 image::servicenow-imported-from-source-control.png[align="center"]
     .. In the Select Application dialog, click the link to the new application to open it for editing in Studio.
 
-If you would like to customize the application, it is better to create a new branch and start working from there.
+If you want to customize the application, it is better to create a new branch and start working from there.
 
 [start=2]
 . [.underline]#Create a new branch#
