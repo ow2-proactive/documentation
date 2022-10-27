@@ -1878,7 +1878,7 @@ After this command, the user, called "your_user" here in this example, will be a
 
 4. Associate, for each Linux system users which will connect to the Scheduler, a ProActive group.
 +
-Following the procedure described in chapter <<File>>, groups must be associated to existing PAM users in the ProActive group file `PROACTIVE_HOME/config/authentication/group.cfg`.
+Following the procedure described in chapter <<_file>>, groups must be associated to existing PAM users in the ProActive group file `PROACTIVE_HOME/config/authentication/group.cfg`.
 +
 In case of PAM users, the login file should not be modified as password authentication will be performed at the Linux system level. Accordingly, you should not use the *proactive-users* command to associate groups to PAM users.
 
