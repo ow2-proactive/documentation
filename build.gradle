@@ -3,6 +3,7 @@ import org.aim42.htmlsanitycheck.check.*
 
 buildscript {
     repositories {
+        maven { url 'http://repository.activeeon.com/content/groups/proactive/' }
         mavenCentral()
         maven {
             url "https://plugins.gradle.org/m2/"
@@ -11,7 +12,11 @@ buildscript {
 
     dependencies {
         classpath 'de.undercouch:gradle-download-task:3.1.2'
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.9.2'
+        classpath 'org.tukaani:xz:1.6'
+        classpath 'org.ysb33r.gradle:grolifant:0.9'
+        classpath ('org.asciidoctor:asciidoctor-gradle-plugin:1.6.1') {
+            exclude group: 'org.ysb33r.gradle', module: 'grolifant'
+        }
         classpath 'xalan:xalan:2.7.2'
         classpath 'org.aim42.htmlSanityCheck:org.aim42.htmlSanityCheck.gradle.plugin:1.1.6'
 	    classpath 'com.github.jk1:gradle-license-report:1.7'
