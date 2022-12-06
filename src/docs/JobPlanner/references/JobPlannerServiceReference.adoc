@@ -312,47 +312,48 @@ RBAC operations can be distinguished in two types:
 
 Both types of authorizations can be assigned for either a specific user (using her/his username) or a user group (that contains multiple users).
 Only one authorization can be assigned to a username or a user group for each type of RBAC operation.
-However, the user can eventually have multiple authorizations due to a mix of username and user-group related authorizations for an association or a group of them (due to an authorizations resulting from the second type of RBAC operations).
+However, the user can eventually have multiple authorizations due to a mix of both types of RBAC operations.
 Furthermore, the created authorizations can be modified or deleted.
 
 An authorization gives the specified user(s) some access permission to the specific association(s).
-We provide four access types that can be authorized:
+We provide four authorization levels:
 
-* Read: The user or user group can only read the association(s) and visualize its planning in the gantt chart.
-* Write: The user or user group have, in addition to the read right, the privilege to modify the association(s)' variables, deactivate or reactivate it(them).
-* Admin: The user or user group have, in addition to the write rights, the ability to delete an association(s).
-Moreover, they can create, modify or delete the authorizations of other users for the association(s).
-* No Access: The user or group of users have no access to the association(s).
-This access type is usually used when the admin wants to authorize a user group except for some specific users, or for example authorize access to her/his all associations except for some of them.
+* `read`: The user or user group can only view the association(s), along with its parameters and visualize its planning in the gantt chart.
+* `write`: The user or user group have, in addition to the read right, the privilege to deactivate or reactivate an association and modify its parameters.
+* `admin`: The user or user group have, in addition to the write rights, the ability to remove the association.
+Additionally, this level allow users to create, modify or delete authorization rules.
+* `noAccess`: The association will be hidden from the user or user group.
+Any operation on this association is forbidden.
 
-To manage the association authorizations, first you need to select one then a shield-like button above the associations view in the Job-Planner calendar associations portal will be activated, as shown in the figure below.
+To manage an association's authorizations in the Job-Planner Calendar Associations portal, first select the association, then click on the insert icon button above the associations view as shown in the figure below:
 
 image::../../images/Association-authorisations-button.png[align=center]
 
-Once you click on it, a dedicated authorization view will open.
-The figure below shows an example.
+A dedicated authorization view will open.
+The figure below shows an example:
 
 image::../../images/Association-authorisations-view.png[align=center]
 
 The authorization view consists in two parts:
 
-* First, there are three buttons that allow the admin to refresh the authorizations list, add a new authorization and delete an existing one
-* Second, under the buttons, there is the list that shows the authorizations that are assigned to the selected association.
+* The buttons on top allow to refresh the authorizations list, add a new authorization and delete an existing one.
+* The list below shows the authorization rules that are assigned to the selected association.
 
 Each authorization has the following properties:
 
 * Association ID
 * Grantee (required): the username or the user group name
-* Grantee Type: Group or user
-* Access Type: read, write, admin or no access
+* Grantee Type: group or user
+* Access Type: read, write, admin or noAccess
 * Creator: The user who created the authorization
-* Priority: This attribute is only used for access associated with a group. Thus, if the user belongs to 2 groups, each of which has a different type of access, the system will choose the access with the highest priority for the user.
+* Priority: This attribute is only used for access associated with a group.
+For example, if the user belongs to 2 groups and each group has a different type of access, the system will choose the access with the highest priority for the user.
 For an authorization assigned to a user, the value is 0, since it will be ignored when calculating the resulting access type.
 
 To create a new authorization, the admin just needs to click on the "+" button.
 Then the view of creating an authorization (as shown in the figure below) will be popped up.
 The admin needs to fill in the authorization attributes (as presented above), then click the "Add authorization" button.
-The figure below shows an example of an authorization which authorize the user named `Olivia` the `write` access to association `1`.
+The figure below shows an example of an authorization which gives the user named `Olivia` `write` access to association `1`.
 
 image::../../images/Create-association-authorisation.png[align=center]
 
