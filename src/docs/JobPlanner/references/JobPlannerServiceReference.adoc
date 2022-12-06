@@ -325,6 +325,8 @@ Additionally, this level allow users to create, modify or delete authorization r
 * `noAccess`: The association will be hidden from the user or user group.
 Any operation on this association is forbidden.
 
+==== Manage the authorizations of a single association
+
 To manage an association's authorizations in the Job-Planner Calendar Associations portal, first select the association, then click on the image:../../images/Open-authorisations-view.png[] above the associations view as shown in the figure below:
 
 image::../../images/Association-authorisations-button.png[align=center]
@@ -373,53 +375,53 @@ image::../../images/Association-authorrizations-icons.png[align=center]
 
 * The first icon indicates that the user has `read` rights over the association(s).
 * The second icon indicates that the user has `write` rights over the association(s).
-* The third icon indicates that the user has `admin` rights over the association(s).
+* The third icon indicates that authorizations rules are defined on the association and the user has `admin` rights over the association.
 
 The figure below shows how the user visualize the authorization icon next to the association.
 
 image::../../images/User-association-icon.png[align=center]
 
-To delete an authorization, the admin simply needs to select one from the list and the delete button will be activated.
-It is the button with a "bin" symbol next to the add a new authorization button "+".
-The figure below shows an example.
+To delete an authorization, the admin simply needs to select it from the list and click on the image:../../images/Delete-authorisation-button.png[] button.
+The figure below shows an example:
 
 image::../../images/Delete-association-authorisation.png[align=center]
 
-Once the admin delete the authorization, it will be removed from the list as shown in the figure below.
+Once the admin deletes the authorization, it will be removed from the list as shown in the figure below:
 
 image::../../images/Association-authorisations-view.png[align=center]
 
 To update an authorization, the admin needs to click on the drop-down list of the access type or the priority level and select a new value.
-The figure below shows an example.
+The figure below shows an example:
 
 image::../../images/Update-association-authorisation.png[align=center]
 
-Once the selection is made the authorization will be updated as shown in the figure below.
+Once the selection is made the authorization will be updated as shown in the figure below:
 
 image::../../images/Updated-association-authorisation.png[align=center]
 
+==== Manage authorizations for all associations owned by the user
+
 To manage authorization for all associations owned by a specific user, the process is nearly identical.
-The admin or the associations' owner need to click on the dedicated button above the associations view in the Job-Planner calendar associations portal will be activated.
-The button has a shield-like with a user icon, as shown in the figure below.
+The user can manage the global authorizations level of every association he/she created by clicking on the image:../../images/Create-association-owner-button.png[] button above the associations view, as shown in the figure below:
 
 image::../../images/Association-owner-button.png[align=center]
 
 A dedicated authorization view will open.
-The figure below shows an example.
+The figure below shows an example:
 
 image::../../images/Association-owner-view.png[align=center]
 
-Each authorization has the same attributes as an association authorization, however, only the association ID is replaced by `Owner`.
+Each authorization has the same attributes as an association authorization, however, the `association ID` is replaced by `Owner`.
 This attribute is used to give access to all associations created by the specified username.
 
-To create a new associations' owner authorization, the admin just needs to click on the "+" button.
-Then the view of creating authorization (as shown in the figure below) will be popped up.
-The admin needs to fill in the authorization attributes (as presented above), then click the "Add authorization" button.
-The figure below shows an example of an authorization which gives the user named `Joseph` `write` access to all of `admin`'s authorizations.
+To create a new associations' owner authorization, the user just needs to click on the "+" button.
+Then the view of creating authorization (as shown in the figure below) will appear.
+The user needs to fill in the authorization attributes (as presented above), then click the "Add authorization" button.
+The figure below shows an example of an authorization which gives the user named `Joseph` `read` access to all of `Tom` 's associations.
 
 image::../../images/Create-association-owner-autthorisation.png[align=center]
 
-Once the admin has created an authorization, it will appear in the authorizations list in the authorization view, as shown in the figure below.
+Once the user has created an authorization, it will appear in the authorization view, as shown in the figure below:
 
 image::../../images/List-of-owner-authorisations.png[align=center]
 
@@ -430,14 +432,14 @@ The remaining actions such as edit and delete are identical to the association a
 Since each user might belong to multiple user groups, a user could have multiple authorizations over an association or a group of them due to his/her username or user group(s) authorizations.
 In such case, the resulting access type will be calculated as follows:
 
-* If the username-assigned authorization for the association exists, it is prioritized and its access type will be the user's resulting rights over the association.
+* If a username-assigned authorization for the association exists, it is prioritized and its access type will be the user's resulting rights over the association.
 
-* If the previous case does not exist, the username-assigned associations' owner authorization access type will be the resulting user's rights over the association.
+* If the previous case does not exist, but the association owner has created a global username-assigned authorization targeting the current-user, then this authorization will take the priority.
 
-* If multiple user-groups association authorizations exist for the selected association, without the previous cases, the resulting user's rights over the association will be the access type of the group authorization that have the highest priority.
+* If multiple user-groups association authorizations exist for the selected association, and none of the previous cases apply, the resulting user's rights over the association will be the access type of the group authorization that has the highest priority.
 If two authorizations have the same priority level, the resulting rights will be based on the following access type order (from the most prioritized access type to the least): admin -> write -> read -> noAccess.
 
-* If the previous case does not exist and multiple user-groups assigned associations' owner authorizations exist, the resulting user's rights over the association will be the access type of the group authorization that have the highest priority.
-The same apply as before if the authorizations have the same priority level.
+* If none of the previous case apply and multiple user-groups assigned associations' owner authorizations exist, the resulting user's rights over the association will be the access type of the group authorization that has the highest priority.
+The same apply as before if two authorizations have the same priority level.
 
-* If all cases do not exist, the user will have `noAccess` to the association (unless he/she is a Job-Planner admin or the association's creator).
+* If none of the above apply, the default authorization for a user who is not the creator of a job-planner association is `noAccess`.
