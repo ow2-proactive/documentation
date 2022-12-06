@@ -404,7 +404,7 @@ The button has a shield-like with a user icon, as shown in the figure below.
 
 image::../../images/Association-owner-button.png[align=center]
 
-Once you click on it, a dedicated authorization view will open.
+A dedicated authorization view will open.
 The figure below shows an example.
 
 image::../../images/Association-owner-view.png[align=center]
@@ -415,7 +415,7 @@ This attribute is used to give access to all associations created by the specifi
 To create a new associations' owner authorization, the admin just needs to click on the "+" button.
 Then the view of creating authorization (as shown in the figure below) will be popped up.
 The admin needs to fill in the authorization attributes (as presented above), then click the "Add authorization" button.
-The figure below shows an example of an authorization which authorize the user named `Joseph` the `write` access to all of admin's authorizations. .
+The figure below shows an example of an authorization which gives the user named `Joseph` `write` access to all of `admin`'s authorizations.
 
 image::../../images/Create-association-owner-autthorisation.png[align=center]
 
