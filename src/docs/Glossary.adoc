@@ -25,10 +25,10 @@ NOTE: Please note the difference between *Scheduler* and <<_glossary_proactive_s
 REST API:: ProActive component that provides RESTful API for the <<_glossary_resource_manager,*Resource Manager*>>, the <<_glossary_scheduler,*Scheduler*>> and the <<_glossary_catalog, *Catalog*>>.
 
 [[_glossary_rm_web_interface]]
-Resource Manager Web Interface:: ProActive component that provides a web interface to the <<_glossary_resource_manager,*Resource Manager*>>. Also called Resource Manager portal.
+Resource Manager Portal:: ProActive component that provides a web interface to the <<_glossary_resource_manager,*Resource Manager*>>. Also called Resource Manager portal.
 
 [[_glossary_scheduler_web_interface]]
-Scheduler Web Interface:: ProActive component that provides a web interface to the <<_glossary_scheduler,*Scheduler*>>. Also called Scheduler portal.
+Scheduler Portal:: ProActive component that provides a web interface to the <<_glossary_scheduler,*Scheduler*>>. Also called Scheduler portal.
 
 [[_glossary_workflow_studio]]
 Workflow Studio:: ProActive component that provides a web interface for designing <<_glossary_workflow,*Workflows*>>.
@@ -37,7 +37,7 @@ Workflow Studio:: ProActive component that provides a web interface for designin
 Automation Dashboard:: Centralized interface for the following web portals: <<_glossary_workflow_automation_portal,*Workflow Execution*>>, <<_glossary_catalog_portal,*Catalog*>>, <<_glossary_analytics_portal,*Analytics*>>, <<_glossary_job_planner_portal,*Job Planner*>>, <<_glossary_service_automation_portal,*Service Automation*>>, <<_glossary_event_orchestration_portal,*Event Orchestration*>> and <<_glossary_notification_portal,*Notifications*>>.
 
 [[_glossary_analytics]]
-Analytics::  ProActive component responsible to gather monitoring information for <<_glossary_job,*Jobs*>> and <<_glossary_proactive_node,*ProActive Nodes*>>
+Analytics::  Web interface and ProActive component, responsible to gather monitoring information for <<_glossary_proactive_scheduler,*ProActive Scheduler*>>, <<_glossary_job,*Jobs*>> and <<_glossary_proactive_node,*ProActive Nodes*>>
 
 [[_glossary_job_analytics]]
 Job Analytics:: ProActive component, part of the <<_glossary_analytics,*Analytics*>> service, that provides an overview of executed workflows along with their input variables and results.
@@ -48,8 +48,11 @@ Job Gantt:: ProActive component, part of the <<_glossary_analytics,*Analytics*>>
 [[_glossary_node_gantt]]
 Node Gantt:: ProActive component, part of the <<_glossary_analytics,*Analytics*>> service, that provides an overview of <<_glossary_proactive_node,*ProActive Nodes*>> usage over time.
 
+[[_glossary_health_dashboard]]
+Health Dashboard:: Web interface, part of the <<_glossary_analytics,*Analytics*>> service, that displays global statistics and current state of the ProActive server.
+
 [[_glossary_analytics_portal]]
-Analytics portal:: Web interface of the <<_glossary_job_analytics,*Analytics*>> component.
+Job Analytics portal:: Web interface of the <<_glossary_job_analytics,*Analytics*>> component.
 
 [[_glossary_notification_service]]
 Notification Service:: ProActive component that allows a user or a group of users to subscribe to different types of notifications (web, email, sms or a third-party notification) when certain event(s) occur (e.g., job In-Error state, job in Finished state, scheduler in Paused state, etc.).
@@ -88,7 +91,7 @@ Catalog portal:: Web interface of the <<_glossary_catalog,*Catalog*>> component.
 Event Orchestration:: ProActive component that monitors a system, according to predefined set of rules, detects complex events and then triggers user-specified actions.
 
 [[_glossary_event_orchestration_portal]]
-Event Orchestration portal::Web interface of the <<_glossary_cloud_watch,*Event Orchestration*>> component.
+Event Orchestration portal:: Web interface of the <<_glossary_cloud_watch,*Event Orchestration*>> component.
 
 [[_glossary_scheduling_api]]
 Scheduling API:: ProActive component that offers a GraphQL endpoint for getting information about a ProActive Scheduler instance.
@@ -102,8 +105,17 @@ Job Planner:: ProActive component providing advanced scheduling options for <<_g
 [[_glossary_job_planner_portal]] 
 Job Planner portal:: Web interface to manage the <<_glossary_job_planner,*Job Planner*>> service.
 
+[[_glossary_job_planner_calendar_definition_portal]]
+Calendar Definition portal:: Web interface, component of the <<_glossary_job_planner,*Job Planner*>> that allows to create <<_glossary_calendars_definition,*Calendar Definitions*>>.
+
 [[_glossary_job_planner_calendar_asssociation]]
-Calendar Association:: Component of the <<_glossary_job_planner,*Job Planner*>> that defines <<_glossary_workflow,*Workflows*>> associated to the <<_glossary_calendars_definition,*Calendar Definition*>>.
+Calendar Association portal:: Web interface, component of the <<_glossary_job_planner,*Job Planner*>> that defines <<_glossary_workflow,*Workflows*>> associated to <<_glossary_calendars_definition,*Calendar Definitions*>>.
+
+[[_glossary_job_planner_execution_planning]]
+Execution Planning portal:: Web interface, component of the <<_glossary_job_planner,*Job Planner*>> that allows to see future executions per calendar.
+
+[[_glossary_job_planner_gantt_chart]]
+Job Planner Gantt portal:: Web interface, component of the <<_glossary_job_planner,*Job Planner*>> that allows to see past and future executions on a Gantt diagram.
 
 [[_glossary_workflow_bucket]]
 Bucket:: ProActive notion used with the <<_glossary_catalog, *Catalog*>> to refer to a specific collection of ProActive Objects and in particular ProActive Workflows.

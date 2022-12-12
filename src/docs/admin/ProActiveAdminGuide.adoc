@@ -1887,17 +1887,19 @@ A user defined in the ProActive login file always has precedence over the same u
 
 == User Permissions
 
-All users authenticated in the Resource Manager have their own role according to granted permissions.
-In ProActive Scheduler, we use the standard
+All users authenticated in the ProActive server have their own role according to granted permissions.
+ProActive uses the standard
 https://www.oracle.com/technetwork/java/javase/jaas/index.html[Java Authentication and Authorization Service (JAAS)^]
 to address these needs.
 
-The file `PROACTIVE_HOME/config/security.java.policy-server` allows to configure fine-grained access for all users, e.g. who has the right to:
+The file `PROACTIVE_HOME/config/security.java.policy-server` allows configuring fine-grained access for all users, e.g. who has the right to:
 
 * Deploy ProActive Nodes
 * Execute jobs
 * Pause the Scheduler
 * etc
+
+=== Default Groups/Roles
 
 The following groups are defined by default in the `security.java.policy-server` file:
 
@@ -1912,6 +1914,259 @@ The following groups are defined by default in the `security.java.policy-server`
 * `citizen-ds` : this group gives enough permissions to software power users who can do moderate data analysis tasks (studio, catalog-portal, workflow-execution, job-analytics).
 * `expert-ds` : this group gives permissions to expert data scientists to collect and clean a wide range of data, and to analyze it to solve business problems (studio, scheduler, catalog-portal, workflow-execution, service-automation, job-analytics, job-gantt, job-planner-calendar-def, job-planner-calendar-def-workflows, job-planner-execution-planning, job-planner-gantt-chart, notification-portal).
 
+=== Creating New Groups
+
+New groups can be defined by copying an existing group definition and edit its permissions.
+
+A *group* is defined using the following syntax:
+
+----
+grant principal org.ow2.proactive.authentication.principals.GroupNamePrincipal "mygroup" {
+  // roles definition
+}
+----
+
+Each group must at least contain the following permissions (without them, the ProActive software will not work properly):
+
+----
+// AuthPermission is requires for those who would like to access any mbean
+permission javax.security.auth.AuthPermission "getSubject";
+permission java.lang.RuntimePermission "setContextClassLoader";
+permission javax.management.MBeanPermission "-#-[-]", "queryNames";
+permission javax.management.MBeanPermission "javax.management.MBeanServerDelegate#-[JMImplementation:type=MBeanServerDelegate]", "addNotificationListener";
+permission javax.management.MBeanPermission "org.ow2.proactive.scheduler.core.jmx.mbean.MyAccountMBeanImpl#*[*:*]", "*";
+permission javax.management.MBeanPermission "org.ow2.proactive.scheduler.core.jmx.mbean.RuntimeDataMBeanImpl#*[*:*]", "*";
+permission javax.management.MBeanPermission "org.ow2.proactive.resourcemanager.core.jmx.mbean.MyAccountMBeanImpl#*[*:*]", "*";
+permission javax.management.MBeanPermission "org.ow2.proactive.resourcemanager.core.jmx.mbean.RuntimeDataMBeanImpl#*[*:*]", "*";
+
+// Granting file reading permission i.e. to read RRD database via JMX
+permission java.io.FilePermission "<<ALL FILES>>", "read";
+
+// API - access to database
+permission java.sql.SQLPermission "setLog";
+permission java.sql.SQLPermission "callAbort";
+permission java.sql.SQLPermission "setSyncFactory";
+permission java.sql.SQLPermission "setNetworkTimeout";
+permission java.util.PropertyPermission "*", "read, write";
+permission java.net.SocketPermission "*", "accept, connect, listen, resolve";
+----
+
+In addition to this common set of permissions, the group should contain permissions related to <<_resource_manager_permissions,Resource Manager access>>, <<_scheduler_permissions,Scheduler access>>, <<_dataspace_permissions,Dataspace access>> and <<_other_components_permissions,Other Components access>>.
+
+=== Resource Manager Permissions
+
+==== Core Resource Manager Permissions
+
+Resource Manager permissions are defined using the following syntax:
+
+----
+permission org.ow2.proactive.permissions.ServiceRolePermission "org.ow2.proactive.resourcemanager.core.RMCore.<role>"
+----
+
+`<role>` can be one of:
+
+* `basic`: login, logout.
+* `read`: read access to the Resource Manager information such as node sources, nodes, etc.
+* `write`: ability to use nodes in the Resource Manager (necessary to submit workflows).
+* `provider`: ability to add/remove nodes to/from the Resource Manager.
+* `nsadmin`: ability to create, edit, deploy, undeploy or remove node sources.
+* `admin`: access to some specific administrative features such as server thread dump, loggers level change.
+* `*`: shortcut for all above permissions.
+
+When a group needs to have access to several of the above permissions, it must be specified in separate lines, for example:
+
+----
+permission org.ow2.proactive.permissions.ServiceRolePermission "org.ow2.proactive.resourcemanager.core.RMCore.basic"
+permission org.ow2.proactive.permissions.ServiceRolePermission "org.ow2.proactive.resourcemanager.core.RMCore.read"
+permission org.ow2.proactive.permissions.ServiceRolePermission "org.ow2.proactive.resourcemanager.core.RMCore.write"
+----
+
+==== Resource Manager Permissions Advanced Syntax
+
+`ServiceRolePermission` is a coarse-grained permission definition, in order to fine tune permissions, it is possible to use either of the following syntax:
+
+----
+permission org.ow2.proactive.permissions.MethodCallPermission "org.ow2.proactive.resourcemanager.core.RMCore.<method_name>";
+permission org.ow2.proactive.permissions.DeniedMethodCallPermission "org.ow2.proactive.resourcemanager.core.RMCore.<method_name>";
+----
+
+`MethodCallPermission` is an additive permission definition, which allows a member of the group to call the Java method `<method_name>` of class `org.ow2.proactive.resourcemanager.core.RMCore`.
+
+`DeniedMethodCallPermission` is a subtractive permission definition, which prevents a member of the group from calling the Java method `<method_name>` of class `org.ow2.proactive.resourcemanager.core.RMCore`.
+
+The description of `org.ow2.proactive.resourcemanager.core.RMCore` methods is beyond the scope of this documentation.
+
+==== Additional Resource Manager Permissions
+
+Additionally, administrative roles should include the following permissions:
+
+----
+permission javax.management.MBeanPermission "org.ow2.proactive.resourcemanager.core.jmx.mbean.AllAccountsMBeanImpl#*[*:*]", "*";
+permission javax.management.MBeanPermission "org.ow2.proactive.resourcemanager.core.jmx.mbean.ManagementMBeanImpl#*[*:*]", "*";
+----
+
+=== Scheduler Permissions
+
+==== Core Scheduler Permissions
+
+Scheduler permissions are defined using the following syntax:
+
+----
+permission org.ow2.proactive.permissions.ServiceRolePermission "org.ow2.proactive.scheduler.core.SchedulerFrontend.<role>";
+----
+
+`<role>` can be one of:
+
+* `basic`: login, logout.
+* `read`: read access to scheduler information (list of jobs, etc).
+* `write`: ability to submit, pause, resume, kill or remove a job.
+* `admin`: access to some specific administrative features such as pause, freeze and stop the scheduler, accounting information, etc.
+* `*`: shortcut for all above permissions.
+
+==== Scheduler Permissions Advanced Syntax
+
+`ServiceRolePermission` is a coarse-grained permission definition, in order to fine tune permissions, it is possible to use either of the following syntax:
+
+----
+permission org.ow2.proactive.permissions.MethodCallPermission "org.ow2.proactive.scheduler.core.SchedulerFrontend.<method_name>";
+permission org.ow2.proactive.permissions.DeniedMethodCallPermission "org.ow2.proactive.scheduler.core.SchedulerFrontend.<method_name>";
+----
+
+`MethodCallPermission` is an additive permission definition, which allows a member of the group to call the Java method `<method_name>` of class `org.ow2.proactive.scheduler.core.SchedulerFrontend`.
+
+`DeniedMethodCallPermission` is a subtractive permission definition, which prevents a member of the group from calling the Java method `<method_name>` of class `org.ow2.proactive.scheduler.core.SchedulerFrontend`.
+
+==== Additional Scheduler Permissions
+
+In addition to these standard set of permissions, a few special permissions are defined:
+
+----
+permission org.ow2.proactive.scheduler.permissions.HandleOnlyMyJobsPermission "true";
+----
+Mandatory for any scheduler user, defines whether each member of the group can interact (kill, pause, resume, etc) with other users jobs (`false`) or only with the jobs that belong to the user (`true`).
+
+----
+permission org.ow2.proactive.scheduler.permissions.ChangePriorityPermission "1,2,3";
+----
+Mandatory for any scheduler user, defines the set of link:../user/ProActiveUserGuide.html#_job_priority[Job Priorities] that the group is allowed to use in submitted workflows.
+
+Possible values are:
+
+ * `0`: Idle
+ * `1`: Lowest
+ * `2`: Low
+ * `3`: Normal
+ * `4`: High
+ * `5`: Highest
+
+When a member tries to submit a workflow with a priority not included in the defined set, an error will occur and the submission will be cancelled.
+
+----
+permission org.ow2.proactive.scheduler.permissions.HandleJobsWithGenericInformationPermission "<gi_definitions>";
+----
+Optional permission that allows member to interact with any job that contain the mentioned link:../user/ProActiveUserGuide.html#_generic_information[Generic Information].
+
+`<gi_definitions>` can either be empty or contain a comma separated list of generic information pairs, such as `gi1=value1,gi2=value2`.
+
+When more than one generic information is specified, then a member can interact with jobs which contain all generic information specified with their values. A job which contain a single generic information in the list will not be elected.
+
+----
+permission org.ow2.proactive.scheduler.permissions.ConnectToResourceManagerPermission;
+----
+Administrative permission that allows linking the scheduler to an existing resource manager.
+
+----
+permission org.ow2.proactive.scheduler.permissions.ChangePolicyPermission;
+----
+Administrative permission that allows changing the server's <<_scheduling_policies,Scheduling Policy>>.
+
+----
+permission org.ow2.proactive.scheduler.permissions.TenantAllAccessPermission;
+----
+Administrative permission that allows access to all tenants when tenant isolation is enabled. See <<_tenants>>.
+
+Finally, the following permissions are needed for administrative access:
+
+----
+permission javax.management.MBeanPermission "org.ow2.proactive.scheduler.core.jmx.mbean.AllAccountsMBeanImpl#*[*:*]", "*";
+permission javax.management.MBeanPermission "org.ow2.proactive.scheduler.core.jmx.mbean.ManagementMBeanImpl#*[*:*]", "*";
+----
+
+=== Dataspace Permissions
+
+Access to the link:../user/ProActiveUserGuide.html#_global_and_user_spaces[Global Space] through <<_glossary_workflow_studio,Workflow Studio portal>> or <<_glossary_workflow_automation_portal,Workflow Execution portal>> is controlled with the following permission:
+
+----
+permission org.ow2.proactive.permissions.ServiceRolePermission "org.ow2.proactive_grid_cloud_portal.dataspace.RestDataspaceImpl.global.<role>";
+----
+
+`<role>` can be one of:
+
+* `read`: read access to the dataspace (list contents, download file).
+* `write`: write access to the dataspace (create folder, delete folder, upload file).
+* `*`: shortcut for all above permissions.
+
+Similarly, access to the link:../user/ProActiveUserGuide.html#_global_and_user_spaces[User Space] through <<_glossary_workflow_studio,Workflow Studio portal>> or <<_glossary_workflow_automation_portal,Workflow Execution portal>> is controlled with the following permission:
+
+----
+permission org.ow2.proactive.permissions.ServiceRolePermission "org.ow2.proactive_grid_cloud_portal.dataspace.RestDataspaceImpl.user.*";
+----
+
+
+=== Other Components Permissions
+
+In addition to Resource Manager and Scheduler, a few permissions can be defined for other components.
+
+==== Portals access
+
+----
+permission org.ow2.proactive_grid_cloud_portal.common.PortalAccessPermission "<portal_list>";
+----
+This mandatory permission defines which portals are accessible for members of the group.
+
+`<portal_list>` is either `*` to allow accessing all portals or a comma-separated list of portal names:
+
+* `rm`: allow access to the <<_glossary_rm_web_interface,Resource Manager portal>>.
+* `scheduler`: allow access to the <<_glossary_scheduler_web_interface,Scheduler portal>>.
+* `studio`: allow access to the <<_glossary_workflow_studio,Workflow Studio portal>>.
+
+* `automation-dashboard`: allow access to the <<_glossary_automation_dashboard,Automation Dashboard portal>>, which contain the following portals
+(note that in order to access any of the portal below, `automation-dashboard` must be accessible):
+
+** `workflow-execution`: allow access to the <<_glossary_workflow_automation_portal,Workflow Execution portal>>.
+** `catalog`: allow access to the <<_glossary_catalog_portal,Catalog portal>>.
+** `health-dashboard`: allow access to the <<_glossary_health_dashboard,Health Dashboard>>, part of the <<_glossary_analytics,Analytics portal>>.
+** `job-analytics`: allow access to <<_glossary_analytics_portal,Job Analytics>>, part of the <<_glossary_analytics,Analytics portal>>.
+** `job-gantt`: allow access to the <<_glossary_job_gantt,Job Gantt>>, part of the <<_glossary_analytics,Analytics portal>>.
+** `node-gantt`: allow access to the <<_glossary_node_gantt,Node Gantt>>, part of the <<_glossary_analytics,Analytics portal>>.
+** `job-planner-calendar-def`: allow access to <<_glossary_job_planner_calendar_definition_portal,Calendar Definition>>, part of the <<_glossary_job_planner_portal,Job Planner portal>>.
+** `job-planner-calendar-def-workflows`: allow access to <<_glossary_job_planner_calendar_asssociation,Calendar Associations>>, part of the <<_glossary_job_planner_portal,Job Planner portal>>.
+** `job-planner-execution-planning`: allow access to the <<_glossary_job_planner_execution_planning,Execution Planning>>, part of the <<_glossary_job_planner_portal,Job Planner portal>>.
+** `job-planner-gantt-chart`: allow access to the <<_glossary_job_planner_gantt_chart,Gantt Chart>>, part of the <<_glossary_job_planner_portal,Job Planner portal>>.
+** `event-orchestration`: allow access to the <<_glossary_event_orchestration_portal,Event Orchestration portal>>.
+** `service-automation`: allow access to the <<_glossary_service_automation_portal,Service Automation portal>>.
+** `notification-portal`: allow access to the <<_glossary_notification_portal,Notification portal>>.
+
+==== Service Automation permissions
+
+----
+permission org.ow2.proactive.permissions.PcaAdminPermission;
+----
+This permission gives administrative access to <<_glossary_cloud_automation_service,Service Automation>>. A member of a group with such permission can interact with any service (not only owned services).
+
+==== Job Planner permissions
+
+----
+permission org.ow2.proactive.scheduler.permissions.JobPlannerAllAccessPermission;
+----
+This permission gives administrative access to <<_glossary_job_planner,Job Planner>>. A member of a group with such permission can interact with any calendar association (not only owned associations).
+
+==== Notification Service permissions
+
+----
+permission org.ow2.proactive.permissions.NotificationAdminPermission;
+----
+This permission gives administrative access to <<_glossary_notification_service,Notification Service>>, allowing to delete any notification.
 
 == Deploy ProActive Nodes
 
