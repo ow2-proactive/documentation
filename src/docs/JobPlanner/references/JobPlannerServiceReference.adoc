@@ -327,14 +327,14 @@ Any operation on this association is forbidden.
 
 ==== Manage the authorizations of a single association
 
-To manage an association's authorizations in the Job-Planner Calendar Associations portal, first select the association, then click on the image:../../images/Open-authorisations-view.png[] above the associations view as shown in the figure below:
+To manage an association's authorizations in the Job-Planner Calendar Associations portal, first select the association, then click on the image:Open-authorisations-view.png[] above the associations view as shown in the figure below:
 
-image::../../images/Association-authorisations-button.png[align=center]
+image::Association-authorisations-button.png[align=center]
 
 A dedicated authorization view will open.
 The figure below shows an example:
 
-image::../../images/Association-authorisations-view.png[align=center]
+image::Association-authorisations-view.png[align=center]
 
 The authorization view consists in two parts:
 
@@ -352,26 +352,26 @@ Each authorization has the following properties:
 For example, if the user belongs to 2 groups and each group has a different type of access, the system will choose the access with the highest priority for the user.
 For an authorization assigned to a user, the value is 0, since it will be ignored when calculating the resulting access type.
 
-To create a new authorization, the admin just needs to click on the image:../../images/Add-authorisation-button.png[] button.
+To create a new authorization, the admin just needs to click on the image:Add-authorisation-button.png[] button.
 Then the view of creating an authorization (as shown in the figure below) will be popped up.
 The admin needs to fill in the authorization attributes (as presented above), then click the "Add authorization" button.
 The figure below shows an example of an authorization which gives the user named `Olivia` `write` access to association `1`.
 
-image::../../images/Create-association-authorisation.png[align=center]
+image::Create-association-authorisation.png[align=center]
 
 Once the admin has created an authorization, it will appear in the authorizations list in the authorization view, as shown in the figure below.
 
-image::../../images/List-of-authorisations.png[align=center]
+image::List-of-authorisations.png[align=center]
 
 Once the first authorization has been created, the admin will see a "shield" icon next to the association to which the authorization was created.
 The figure below shows an example.
 
-image::../../images/Admin-association-shield.png[align=center]
+image::Admin-association-shield.png[align=center]
 
 Moreover, when the user, who is benefiting from the authorization, log in to his/her account, he/she will be able to visualize an icon indicating the rights he/she possess over the association(s).
 These icons are the following:
 
-image::../../images/Association-authorrizations-icons.png[align=center]
+image::Association-authorrizations-icons.png[align=center]
 
 * The first icon indicates that the user has `read` rights over the association(s).
 * The second icon indicates that the user has `write` rights over the association(s).
@@ -379,37 +379,37 @@ image::../../images/Association-authorrizations-icons.png[align=center]
 
 The figure below shows how the user visualize the authorization icon next to the association.
 
-image::../../images/User-association-icon.png[align=center]
+image::User-association-icon.png[align=center]
 
-To delete an authorization, the admin simply needs to select it from the list and click on the image:../../images/Delete-authorisation-button.png[] button.
+To delete an authorization, the admin simply needs to select it from the list and click on the image:Delete-authorisation-button.png[] button.
 The figure below shows an example:
 
-image::../../images/Delete-association-authorisation.png[align=center]
+image::Delete-association-authorisation.png[align=center]
 
 Once the admin deletes the authorization, it will be removed from the list as shown in the figure below:
 
-image::../../images/Association-authorisations-view.png[align=center]
+image::Association-authorisations-view.png[align=center]
 
 To update an authorization, the admin needs to click on the drop-down list of the access type or the priority level and select a new value.
 The figure below shows an example:
 
-image::../../images/Update-association-authorisation.png[align=center]
+image::Update-association-authorisation.png[align=center]
 
 Once the selection is made the authorization will be updated as shown in the figure below:
 
-image::../../images/Updated-association-authorisation.png[align=center]
+image::Updated-association-authorisation.png[align=center]
 
 ==== Manage authorizations for all associations owned by the user
 
 To manage authorization for all associations owned by a specific user, the process is nearly identical.
-The user can manage the global authorizations level of every association he/she created by clicking on the image:../../images/Create-association-owner-button.png[] button above the associations view, as shown in the figure below:
+The user can manage the global authorizations level of every association he/she created by clicking on the image:Create-association-owner-button.png[] button above the calendars view, as shown in the figure below:
 
-image::../../images/Association-owner-button.png[align=center]
+image::Association-owner-button.png[align=center]
 
 A dedicated authorization view will open.
 The figure below shows an example:
 
-image::../../images/Association-owner-view.png[align=center]
+image::Association-owner-view.png[align=center]
 
 Each authorization has the same attributes as an association authorization, however, the `association ID` is replaced by `Owner`.
 This attribute is used to give access to all associations created by the specified username.
@@ -419,11 +419,11 @@ Then the view of creating authorization (as shown in the figure below) will appe
 The user needs to fill in the authorization attributes (as presented above), then click the "Add authorization" button.
 The figure below shows an example of an authorization which gives the user named `Joseph` `read` access to all of `Tom` 's associations.
 
-image::../../images/Create-association-owner-autthorisation.png[align=center]
+image::Create-association-owner-autthorisation.png[align=center]
 
 Once the user has created an authorization, it will appear in the authorization view, as shown in the figure below:
 
-image::../../images/List-of-owner-authorisations.png[align=center]
+image::List-of-owner-authorisations.png[align=center]
 
 The remaining actions such as edit and delete are identical to the association authorization actions.
 
