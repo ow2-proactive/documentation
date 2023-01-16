@@ -153,9 +153,9 @@ The scheduler server verifies that the object exists in the catalog and fulfills
 Examples:
     ** PA:CATALOG_OBJECT will accept "bucket-example/object-example/1539310165443" and "bucket-example/object-example" but not "bucket-example/object-example/153931016" (invalid revision number) and "bucket-example/" (missing object name).
     ** PA:CATALOG_OBJECT(Script, text/x-python) will only accept a catalog object which is a Python script but not a workflow object or a Groovy script.
-    ** PA:CATALOG_OBJECT(,,basic-example, Native_Task) will accept catalog objects that is in buckets ia-basic-example or basic-example-python and named Native_Task or Native_Task_Python but not NATIVE_TASK.
+    ** PA:CATALOG_OBJECT(,,basic-example, Native_Task) will accept catalog objects that are in buckets ia-basic-example or basic-example-python and named Native_Task or Native_Task_Python but not NATIVE_TASK.
 Notice that the default behaviour of bucketName or objectName filters can be modified by including the special character `%` that matches any word.
-So, by adding `%` in the beginning (resp. end) of a bucketName or an objectName we mean that the filtered value should end (resp. start) with the specified string.
+Hence, by adding `%` in the beginning (resp. end) of a bucketName or an objectName we mean that the filtered value should end (resp. start) with the specified string.
 Examples:
     ** PA:CATALOG_OBJECT(,,%basic-example) will accept catalog objects that are in buckets ia-basic-example or db-basic-example but not the ones in basic-example-python.
     ** PA:CATALOG_OBJECT(,,,Native_Task%) will accept catalog objects that are named Native_Task or Native_Task_Python but not Simplified_Native_Task.
