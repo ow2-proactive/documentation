@@ -153,12 +153,21 @@ The scheduler server verifies that the object exists in the catalog and fulfills
 Examples:
     ** PA:CATALOG_OBJECT will accept "bucket-example/object-example/1539310165443" and "bucket-example/object-example" but not "bucket-example/object-example/153931016" (invalid revision number) and "bucket-example/" (missing object name).
     ** PA:CATALOG_OBJECT(Script, text/x-python) will only accept a catalog object which is a Python script but not a workflow object or a Groovy script.
-    ** PA:CATALOG_OBJECT(,,basic-example, Native_Task) will accept catalog objects that are in buckets ia-basic-example or basic-example-python and named Native_Task or Native_Task_Python but not NATIVE_TASK.
+    ** PA:CATALOG_OBJECT(,,basic-example, Native_Task) will accept catalog objects that are in buckets ia-basic-example or basic-example-python and named Native_Task or Native_Task_Python but not NATIVE_TASK. +
+
++
 Notice that the default behaviour of bucketName or objectName filters can be modified by including the special character `%` that matches any word.
-Hence, by adding `%` in the beginning (resp. end) of a bucketName or an objectName we mean that the filtered value should end (resp. start) with the specified string.
+Hence, by adding `%` in the beginning (resp. end) of a bucketName or an objectName we mean that the filtered value should end (resp. start) with the specified string. +
 Examples:
+
+[none]
+* {empty}
     ** PA:CATALOG_OBJECT(,,%basic-example) will accept catalog objects that are in buckets ia-basic-example or db-basic-example but not the ones in basic-example-python.
     ** PA:CATALOG_OBJECT(,,,Native_Task%) will accept catalog objects that are named Native_Task or Native_Task_Python but not Simplified_Native_Task.
+
++
+NOTE: It is possible to make a PA:CATALOG_OBJECT object variable optional by using the notation `PA:CATALOG_OBJECT?`. See <<optional_variable, here>>.
+--
 * *PA:JSON* : variable syntax must be a valid JSON expression as defined in http://www.json.org/[JSON doc]. +
 Examples: PA:JSON will accept {"name": "John", "city":"New York"} and empty values like {} or [{},{}], but not ["test" : 123] (Unexpected character ':') and {test : 123} (Unexpected character 't').
 * *PA:NOT_EMPTY_STRING* : variable must be provided with a non-empty string value.
@@ -182,7 +191,8 @@ For example, if we have: +
 `variable2` has as its model `$variable1` +
 Then the model of `variable2` is the value that the variable `variable1` will have in runtime. Thus, it will be either `PA:GLOBAL_FILE` or `PA:INTEGER`.
 
-====== Optional Variable
+====== Optional Variable [[optional_variable]]
+
 To define an *optional variable*, the workflow designer can simply add `?` at the end of the `model` attribute, such as `PA:INTEGER?`.
 
 When submitting the workflow, it will be allowed to not provide a value for the optional variables.
