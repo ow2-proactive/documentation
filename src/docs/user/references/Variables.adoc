@@ -166,7 +166,7 @@ Examples:
     ** PA:CATALOG_OBJECT(,,,Native_Task%) will accept catalog objects that are named Native_Task or Native_Task_Python but not Simplified_Native_Task.
 
 +
-NOTE: To accept an empty value as a catalog object, the variable model should be set to `PA:CATALOG_OBJECT?`.
+NOTE: It is possible to make a PA:CATALOG_OBJECT object variable optional by using the notation `PA:CATALOG_OBJECT?`. See <<optional_variable, here>>.
 --
 * *PA:JSON* : variable syntax must be a valid JSON expression as defined in http://www.json.org/[JSON doc]. +
 Examples: PA:JSON will accept {"name": "John", "city":"New York"} and empty values like {} or [{},{}], but not ["test" : 123] (Unexpected character ':') and {test : 123} (Unexpected character 't').
@@ -191,7 +191,8 @@ For example, if we have: +
 `variable2` has as its model `$variable1` +
 Then the model of `variable2` is the value that the variable `variable1` will have in runtime. Thus, it will be either `PA:GLOBAL_FILE` or `PA:INTEGER`.
 
-====== Optional Variable
+====== Optional Variable [[optional_variable]]
+
 To define an *optional variable*, the workflow designer can simply add `?` at the end of the `model` attribute, such as `PA:INTEGER?`.
 
 When submitting the workflow, it will be allowed to not provide a value for the optional variables.
