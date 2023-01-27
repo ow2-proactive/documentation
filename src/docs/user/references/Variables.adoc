@@ -127,7 +127,7 @@ Examples: PA:FLOAT[-0.33,5.99] will accept "3.5" but not "6".
 * *PA:SHORT* , *PA:SHORT[min,max]* : same as above with https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Short.html[java.lang.Short].
 * *PA:BOOLEAN* : variable is either "true", "false", "0" or "1".
 * *PA:NOT_EMPTY_STRING* : variable must be provided with a non-empty string value.
-* *PA:HIDDEN* : variable which allows the user to securely enter its value (i.e., each character is shown as an asterisk, so that it cannot be read.) while submitting the workflow.
+* *PA:HIDDEN* : variable which allows the user to securely enter his/her value (i.e., each character is shown as an asterisk, so that it cannot be read.) while submitting the workflow.
 * *PA:URL* : variable can be converted to https://docs.oracle.com/javase/7/docs/api/index.html?java/net/URL.html[java.net.URL]. +
 Examples: PA:URL will accept "http://mysite.com" but not "c:/Temp".
 * *PA:URI* : variable can be converted to https://docs.oracle.com/javase/7/docs/api/index.html?java/net/URI.html[java.net.URI]. +
@@ -142,7 +142,7 @@ Examples: PA:REGEXP([a-z]+) will accept "abc", "foo", but not "Foo".
 . Advanced variable models
 
 * *PA:CATALOG_OBJECT*, *PA:CATALOG_OBJECT(kind)*, *PA:CATALOG_OBJECT(,contentType)*, *PA:CATALOG_OBJECT(,,bucketName)*, *PA:CATALOG_OBJECT(,,,objectName)*, *PA:CATALOG_OBJECT(kind,contentType,bucketName,objectName)* :
-use this type when you want to reference and use, in the current workflow, another object from the Catalog. Various portals and tool will make it easy to manage catalog objects. For instance, at Job submission, you will be able to browse the Catalog to select the needed object. +
+use this type when you want to reference and use, in the current workflow, another object from the Catalog. Various portals and tools will make it easy to manage catalog objects. For instance, at Job submission, you will be able to browse the Catalog to select the needed object. +
 Variable syntax must be a valid expression that matches the following pattern: `bucketName/objectName[/revision]`.
 Note that the revision sub-pattern is a hash code number represented by 13 digit. +
 A filter can be specified in the PA:CATALOG_OBJECT model. In that case, the variable value must be a catalog object which matches the kind, content type, bucketName and objectName requirements. Note that kind and content type are case insensitive and require a "startsWith" matching, while bucketName and objectName are case sensitive and, by default, require a "contains" matching.
@@ -171,7 +171,7 @@ NOTE: It is possible to have a PA:CATALOG_OBJECT object variable that has an opt
 [none]
 * {empty}
 
-** *PA:CREDENTIAL* : variable whose value is a key of the <<_third_party_credentials, ProActive Scheduler Third-Party Credentials>> (which are stored on the server side in encrypted form). The variable allows the user to access a credential from the task implementation in a secure way (e.g., for a groovy task credentials.get(variables.get("MY_CRED_KEY")) instead of in plain-text. At workflow submission, the scheduler server verifies that the key exists in the 3rd party credentials of the user. In addition, the use of this model enables the user to manage her/his credentials via a graphical interface.
+** *PA:CREDENTIAL* : variable whose value is a key of the <<_third_party_credentials, ProActive Scheduler Third-Party Credentials>> (which are stored on the server side in encrypted form). The variable allows the user to access a credential from the task implementation in a secure way (e.g., for a groovy task credentials.get(variables.get("MY_CRED_KEY")) instead of a plain-text. At workflow submission, the scheduler server verifies that the key exists in the 3rd party credentials of the user. In addition, the use of this model enables the user to manage her/his credentials via a graphical interface.
 ** *PA:CRON* : variable syntax must be a valid cron expression as defined in the  http://www.sauronsoftware.it/projects/cron4j/manual.php#p02[cron4j manual]. This model can be used for example to control the provided value to the `loop` control flow parameter.+
 Examples: PA:CRON will accept "5 * * * \*" but not "* * * *" (missing minutes sub-pattern).
 ** *PA:DATETIME(format)* , *PA:DATETIME(format)[min,max]* : variable can be converted to a https://docs.oracle.com/javase/7/docs/api/index.html?java/util/Date.html[java.util.Date] using the format specified (see the format definition syntax in the https://docs.oracle.com/javase/7/docs/api/index.html?java/text/SimpleDateFormat.html[SimpleDateFormat] class). +
@@ -189,7 +189,7 @@ Examples: PA:MODEL_FROM_URL(file:///srv/machines_list_model.txt), if the file ma
 ** *PA:USER_FILE* : variable whose value is the relative path of a file in the <<_global_and_user_spaces, User Data Space>>. At workflow submission, the scheduler server verifies that the file exists in the user dataspace. In addition, this model enables the user to graphically browse the user dataspace to select a file as an input data for the workflow.
 ** *PA:GLOBAL_FOLDER* : variable whose value is the relative path of a folder in the <<_global_and_user_spaces, Global Data Space>>. At workflow submission, the scheduler server verifies that the folder exists in the global dataspace. Note, the variable value should not end with a slash to avoid the problem of duplicate slash in its usage.
 ** *PA:USER_FOLDER* : variable whose value is the relative path of a folder in the <<_global_and_user_spaces, User Data Space>>. At workflow submission, the scheduler server verifies that the folder exists in the user dataspace. Note, the variable value should not end with a slash to avoid the problem of duplicate slash in its usage.
-** *PA:SPEL(SpEL expression)* : variable syntax will be evaluated by a https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[SpEL] expression. Refer to next paragraph.
+** *PA:SPEL(SpEL expression)* : variable syntax will be evaluated by a https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[SpEL] expression. Refer to the next paragraph.
 
 --
 ====== Variable Model (Type) using a type defined dynamically in another Variable +
