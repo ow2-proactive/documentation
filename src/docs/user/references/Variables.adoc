@@ -116,7 +116,8 @@ If the user submitting the workflow chooses for example the value -5, the valida
 
 The following list describes the various model syntaxes available:
 
-* *PA:BOOLEAN* : variable is either "true", "false", "0" or "1".
+. Main variable models
+
 * *PA:INTEGER* , *PA:INTEGER[min,max]* : variable can be converted to https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Integer.html[java.lang.Integer], and eventually is contained in the range [min, max]. +
 Examples: PA:INTEGER will accept "-5" but not "1.4", PA:INTEGER[0,20] will accept "12" but not "25".
 * *PA:LONG* , *PA:LONG[min,max]* : same as above with https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Long.html[java.lang.Long].
@@ -124,36 +125,33 @@ Examples: PA:INTEGER will accept "-5" but not "1.4", PA:INTEGER[0,20] will accep
 Examples: PA:FLOAT[-0.33,5.99] will accept "3.5" but not "6".
 * *PA:DOUBLE* , *PA:DOUBLE[min,max]* : same as above with https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Double.html[java.lang.Double].
 * *PA:SHORT* , *PA:SHORT[min,max]* : same as above with https://docs.oracle.com/javase/7/docs/api/index.html?java/lang/Short.html[java.lang.Short].
+* *PA:BOOLEAN* : variable is either "true", "false", "0" or "1".
+* *PA:NOT_EMPTY_STRING* : variable must be provided with a non-empty string value.
+* *PA:HIDDEN* : variable which allows the user to securely enter his/her value (i.e., each character is shown as an asterisk, so that it cannot be read.) while submitting the workflow.
 * *PA:URL* : variable can be converted to https://docs.oracle.com/javase/7/docs/api/index.html?java/net/URL.html[java.net.URL]. +
 Examples: PA:URL will accept "http://mysite.com" but not "c:/Temp".
 * *PA:URI* : variable can be converted to https://docs.oracle.com/javase/7/docs/api/index.html?java/net/URI.html[java.net.URI]. +
 Examples: PA:URI will accept "/tmp/file" but not "c:\a^~to" due to invalid characters.
-* *PA:DATETIME(format)* , *PA:DATETIME(format)[min,max]* : variable can be converted to a https://docs.oracle.com/javase/7/docs/api/index.html?java/util/Date.html[java.util.Date] using the format specified (see the format definition syntax in the https://docs.oracle.com/javase/7/docs/api/index.html?java/text/SimpleDateFormat.html[SimpleDateFormat] class). +
-A range can also be used in the PA:DATETIME model. In that case, each bound of the range must match the date format used. +
-+
-Examples: +
-PA:DATETIME(yyyy-MM-dd) will accept "2014-12-01" but not "2014". +
-PA:DATETIME(yyyy-MM-dd)[2014-01-01, 2015-01-01] will accept "2014-12-01" but not "2015-03-01". +
-PA:DATETIME(yyyy-MM-dd)[2014, 2015] will result in an error during the workflow definition as the range bounds [2014, 2015] are not using the format yyyy-MM-dd.
 * *PA:LIST(item1,item2,...)* : variable must be one of the values defined in the list. +
 Examples: PA:LIST(a,b,c) will accept "a", "b", "c" but no other value.
+* *PA:JSON* : variable syntax must be a valid JSON expression as defined in http://www.json.org/[JSON doc]. +
+Examples: PA:JSON will accept {"name": "John", "city":"New York"} and empty values like {} or [{},{}], but not ["test" : 123] (Unexpected character ':') and {test : 123} (Unexpected character 't').
 * *PA:REGEXP(pattern)* : variable syntax must match the regular expression defined in the pattern. The regular expression syntax is described in class https://docs.oracle.com/javase/7/docs/api/index.html?java/util/regex/Pattern.html[Pattern]. +
 Examples: PA:REGEXP([a-z]+) will accept "abc", "foo", but not "Foo".
-* *PA:MODEL_FROM_URL(url)* : variable syntax must match the model fetched from the given URL. This can be used for example when the model needs to represent a list of elements which may evolve over time and is updated inside a file. Such as a list of machines in an infrastructure, a list of users, etc. +
-See <<_variable_model_using_resource_manager_data>> for premade models based on the Resource Manager state. +
-Examples: PA:MODEL_FROM_URL(file:///srv/machines_list_model.txt), if the file machines_list_model.txt contains PA:LIST(host1,host2), will accept only "host1" and "host2", but may accept other values as the machines_list_model file changes.
-* *PA:CRON* : variable syntax must be a valid cron expression as defined in the  http://www.sauronsoftware.it/projects/cron4j/manual.php#p02[cron4j manual]. +
-Examples: PA:CRON will accept "5 * * * \*" but not "* * * *" (missing minutes sub-pattern).
-* *PA:SPEL(SpEL expression)* : variable syntax will be evaluated by a https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[SpEL] expression. Refer to next paragraph.
-* *PA:CATALOG_OBJECT*, *PA:CATALOG_OBJECT(kind)*, *PA:CATALOG_OBJECT(,contentType)*, *PA:CATALOG_OBJECT(,,bucketName)*, *PA:CATALOG_OBJECT(,,,objectName)*, *PA:CATALOG_OBJECT(kind,contentType,bucketName,objectName)* : variable syntax must be a valid expression that matches the following pattern: `bucketName/objectName[/revision]`.
+
+. Advanced variable models
+
+* *PA:CATALOG_OBJECT*, *PA:CATALOG_OBJECT(kind)*, *PA:CATALOG_OBJECT(,contentType)*, *PA:CATALOG_OBJECT(,,bucketName)*, *PA:CATALOG_OBJECT(,,,objectName)*, *PA:CATALOG_OBJECT(kind,contentType,bucketName,objectName)* :
+use this type when you want to reference and use, in the current workflow, another object from the Catalog. Various portals and tools will make it easy to manage catalog objects. For instance, at Job submission, you will be able to browse the Catalog to select the needed object. +
+Variable syntax must be a valid expression that matches the following pattern: `bucketName/objectName[/revision]`.
 Note that the revision sub-pattern is a hash code number represented by 13 digit. +
 A filter can be specified in the PA:CATALOG_OBJECT model. In that case, the variable value must be a catalog object which matches the kind, content type, bucketName and objectName requirements. Note that kind and content type are case insensitive and require a "startsWith" matching, while bucketName and objectName are case sensitive and, by default, require a "contains" matching.
 That is, the kind and the content type of the provided catalog object must start with the filters specified in the model while bucketName and objectName of the catalog object should contain them.
 The scheduler server verifies that the object exists in the catalog and fulfills the requirements when the workflow is submitted. +
 Examples:
-    ** PA:CATALOG_OBJECT will accept "bucket-example/object-example/1539310165443" and "bucket-example/object-example" but not "bucket-example/object-example/153931016" (invalid revision number) and "bucket-example/" (missing object name).
-    ** PA:CATALOG_OBJECT(Script, text/x-python) will only accept a catalog object which is a Python script but not a workflow object or a Groovy script.
-    ** PA:CATALOG_OBJECT(,,basic-example, Native_Task) will accept catalog objects that are in buckets ia-basic-example or basic-example-python and named Native_Task or Native_Task_Python but not NATIVE_TASK. +
+** PA:CATALOG_OBJECT will accept "bucket-example/object-example/1539310165443" and "bucket-example/object-example" but not "bucket-example/object-example/153931016" (invalid revision number) and "bucket-example/" (missing object name).
+** PA:CATALOG_OBJECT(Script, text/x-python) will only accept a catalog object which is a Python script but not a workflow object or a Groovy script.
+** PA:CATALOG_OBJECT(,,basic-example, Native_Task) will accept catalog objects that are in buckets ia-basic-example or basic-example-python and named Native_Task or Native_Task_Python but not NATIVE_TASK. +
 
 +
 Notice that the default behaviour of bucketName or objectName filters can be modified by including the special character `%` that matches any word.
@@ -162,22 +160,38 @@ Examples:
 
 [none]
 * {empty}
-    ** PA:CATALOG_OBJECT(,,%basic-example) will accept catalog objects that are in buckets ia-basic-example or db-basic-example but not the ones in basic-example-python.
-    ** PA:CATALOG_OBJECT(,,,Native_Task%) will accept catalog objects that are named Native_Task or Native_Task_Python but not Simplified_Native_Task.
-
+[none]
+** {empty}
+*** PA:CATALOG_OBJECT(,,%basic-example) will accept catalog objects that are in buckets ia-basic-example or db-basic-example but not the ones in basic-example-python.
+*** PA:CATALOG_OBJECT(,,,Native_Task%) will accept catalog objects that are named Native_Task or Native_Task_Python but not Simplified_Native_Task.
 +
-NOTE: It is possible to make a PA:CATALOG_OBJECT object variable optional by using the notation `PA:CATALOG_OBJECT?`. See <<optional_variable, here>>.
---
-* *PA:JSON* : variable syntax must be a valid JSON expression as defined in http://www.json.org/[JSON doc]. +
-Examples: PA:JSON will accept {"name": "John", "city":"New York"} and empty values like {} or [{},{}], but not ["test" : 123] (Unexpected character ':') and {test : 123} (Unexpected character 't').
-* *PA:NOT_EMPTY_STRING* : variable must be provided with a non-empty string value.
-* *PA:HIDDEN* : variable which allows the user to securely enter its value (i.e., each character is shown as an asterisk, so that it cannot be read.) while submitting the workflow.
-* *PA:CREDENTIAL* : variable whose value is a key of the <<_third_party_credentials, ProActive Scheduler Third-Party Credentials>> (which are stored on the server side in encrypted form). The variable allows the user to access a credential through `credentials.get(variables.get("MY_CRED_KEY"))` instead of in plain-text in the workflow definition. At workflow submission, the scheduler server verifies that the key exists in the 3rd party credentials of the user.
-* *PA:GLOBAL_FILE* : variable whose value is the relative path of a file in the <<_global_and_user_spaces, Global Data Space>>. At workflow submission, the scheduler server verifies that the file exists in the global dataspace.
-* *PA:USER_FILE* : variable whose value is the relative path of a file in the <<_global_and_user_spaces, User Data Space>>. At workflow submission, the scheduler server verifies that the file exists in the user dataspace.
-* *PA:GLOBAL_FOLDER* : variable whose value is the relative path of a folder in the <<_global_and_user_spaces, Global Data Space>>. At workflow submission, the scheduler server verifies that the folder exists in the global dataspace. Note, the variable value should not end with a slash to avoid the problem of duplicate slash in its usage.
-* *PA:USER_FOLDER* : variable whose value is the relative path of a folder in the <<_global_and_user_spaces, User Data Space>>. At workflow submission, the scheduler server verifies that the folder exists in the user dataspace. Note, the variable value should not end with a slash to avoid the problem of duplicate slash in its usage.
+NOTE: It is possible to have a PA:CATALOG_OBJECT object variable that has an optional value by using the notation `PA:CATALOG_OBJECT?`. See <<optional_variable, here>>.
 
+--
+[none]
+* {empty}
+
+** *PA:CREDENTIAL* : variable whose value is a key of the <<_third_party_credentials, ProActive Scheduler Third-Party Credentials>> (which are stored on the server side in encrypted form). The variable allows the user to access a credential from the task implementation in a secure way (e.g., for a groovy task credentials.get(variables.get("MY_CRED_KEY")) instead of a plain-text. At workflow submission, the scheduler server verifies that the key exists in the 3rd party credentials of the user. In addition, the use of this model enables the user to manage her/his credentials via a graphical interface.
+** *PA:CRON* : variable syntax must be a valid cron expression as defined in the  http://www.sauronsoftware.it/projects/cron4j/manual.php#p02[cron4j manual]. This model can be used for example to control the provided value to the `loop` control flow parameter.+
+Examples: PA:CRON will accept "5 * * * \*" but not "* * * *" (missing minutes sub-pattern).
+** *PA:DATETIME(format)* , *PA:DATETIME(format)[min,max]* : variable can be converted to a https://docs.oracle.com/javase/7/docs/api/index.html?java/util/Date.html[java.util.Date] using the format specified (see the format definition syntax in the https://docs.oracle.com/javase/7/docs/api/index.html?java/text/SimpleDateFormat.html[SimpleDateFormat] class). +
+A range can also be used in the PA:DATETIME model. In that case, each bound of the range must match the date format used. +
+This model is used for example to control an input value used to trigger the execution of a task at a specific date time.
++
+Examples: +
+PA:DATETIME(yyyy-MM-dd) will accept "2014-12-01" but not "2014". +
+PA:DATETIME(yyyy-MM-dd)[2014-01-01, 2015-01-01] will accept "2014-12-01" but not "2015-03-01". +
+PA:DATETIME(yyyy-MM-dd)[2014, 2015] will result in an error during the workflow definition as the range bounds [2014, 2015] are not using the format yyyy-MM-dd.
+** *PA:MODEL_FROM_URL(url)* : variable syntax must match the model fetched from the given URL. This can be used for example when the model needs to represent a list of elements which may evolve over time and is updated inside a file. Such as a list of machines in an infrastructure, a list of users, etc. +
+See <<_variable_model_using_resource_manager_data>> for premade models based on the Resource Manager state. +
+Examples: PA:MODEL_FROM_URL(file:///srv/machines_list_model.txt), if the file machines_list_model.txt contains PA:LIST(host1,host2), will accept only "host1" and "host2", but may accept other values as the machines_list_model file changes.
+** *PA:GLOBAL_FILE* : variable whose value is the relative path of a file in the <<_global_and_user_spaces, Global Data Space>>. At workflow submission, the scheduler server verifies that the file exists in the global dataspace. In addition, this model enables the user to graphically browse the global dataspace to select a file as an input data for the workflow.
+** *PA:USER_FILE* : variable whose value is the relative path of a file in the <<_global_and_user_spaces, User Data Space>>. At workflow submission, the scheduler server verifies that the file exists in the user dataspace. In addition, this model enables the user to graphically browse the user dataspace to select a file as an input data for the workflow.
+** *PA:GLOBAL_FOLDER* : variable whose value is the relative path of a folder in the <<_global_and_user_spaces, Global Data Space>>. At workflow submission, the scheduler server verifies that the folder exists in the global dataspace. Note, the variable value should not end with a slash to avoid the problem of duplicate slash in its usage.
+** *PA:USER_FOLDER* : variable whose value is the relative path of a folder in the <<_global_and_user_spaces, User Data Space>>. At workflow submission, the scheduler server verifies that the folder exists in the user dataspace. Note, the variable value should not end with a slash to avoid the problem of duplicate slash in its usage.
+** *PA:SPEL(SpEL expression)* : variable syntax will be evaluated by a https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[SpEL] expression. Refer to the next paragraph.
+
+--
 ====== Variable Model (Type) using a type defined dynamically in another Variable +
 
 A Variable can use as its type a model that is defined in another variable. +
