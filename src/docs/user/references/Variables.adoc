@@ -154,7 +154,8 @@ Examples:
 ** PA:CATALOG_OBJECT(,,basic-example, Native_Task) will accept catalog objects that are in buckets ia-basic-example or basic-example-python and named Native_Task or Native_Task_Python but not NATIVE_TASK. +
 
 +
-Notice that the default behaviour of bucketName or objectName filters can be modified by including the special character `%` that matches any word.
+[none]
+* Notice that the default behaviour of bucketName or objectName filters can be modified by including the special character `%` that matches any word.
 Hence, by adding `%` in the beginning (resp. end) of a bucketName or an objectName we mean that the filtered value should end (resp. start) with the specified string. +
 Examples:
 
