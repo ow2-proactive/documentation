@@ -141,22 +141,25 @@ Examples: PA:REGEXP([a-z]+) will accept "abc", "foo", but not "Foo".
 
 . Advanced variable models
 
-* *PA:CATALOG_OBJECT*, *PA:CATALOG_OBJECT(kind)*, *PA:CATALOG_OBJECT(,contentType)*, *PA:CATALOG_OBJECT(,,bucketName)*, *PA:CATALOG_OBJECT(,,,objectName)*, *PA:CATALOG_OBJECT(kind,contentType,bucketName,objectName)* :
+* *PA:CATALOG_OBJECT* :
 use this type when you want to reference and use, in the current workflow, another object from the Catalog. Various portals and tools will make it easy to manage catalog objects. For instance, at Job submission, you will be able to browse the Catalog to select the needed object. +
-Variable syntax must be a valid expression that matches the following pattern: `bucketName/objectName[/revision]`.
+Variable value syntax must be a valid expression that matches the following pattern: `bucketName/objectName[/revision]`.
 Note that the revision sub-pattern is a hash code number represented by 13 digit. +
-A filter can be specified in the PA:CATALOG_OBJECT model. In that case, the variable value must be a catalog object which matches the kind, content type, bucketName and objectName requirements. Note that kind and content type are case insensitive and require a "startsWith" matching, while bucketName and objectName are case sensitive and, by default, require a "contains" matching.
-That is, the kind and the content type of the provided catalog object must start with the filters specified in the model while bucketName and objectName of the catalog object should contain them.
-The scheduler server verifies that the object exists in the catalog and fulfills the requirements when the workflow is submitted. +
+Examples: PA:CATALOG_OBJECT will accept "bucket-example/object-example" and "bucket-example/object-example/1539310165443" but not "bucket-example/object-example/153931016" (invalid revision number) nor "bucket-example/" (missing object name).
+
+* *PA:CATALOG_OBJECT(kind,contentType,bucketName,objectName)* :
+One or more filters can be specified in the PA:CATALOG_OBJECT model to limit the accepted values. In that case, the variable value must be a catalog object which matches the `Kind`, `Content type`, `BucketName` and/or `ObjectName` requirements (For more information regarding Kind and Content type click <<_exportingimporting_objects_into_the_catalog, here>>). Note that Kind and Content type are case insensitive and require a "startsWith" matching, while BucketName and ObjectName are case sensitive and, by default, require a "contains" matching.
+That is, the Kind and the Content type of the provided catalog object must start with the filters specified in the model while BucketName and ObjectName of the catalog object should contain them.
+The scheduler server verifies that the object exists in the catalog and fulfills the specified requirements when the workflow is submitted. +
 Examples:
-** PA:CATALOG_OBJECT will accept "bucket-example/object-example/1539310165443" and "bucket-example/object-example" but not "bucket-example/object-example/153931016" (invalid revision number) and "bucket-example/" (missing object name).
+** PA:CATALOG_OBJECT(Workflow/standard) will accept standard workflow objects and not PSA workflows or scripts.
 ** PA:CATALOG_OBJECT(Script, text/x-python) will only accept a catalog object which is a Python script but not a workflow object or a Groovy script.
 ** PA:CATALOG_OBJECT(,,basic-example, Native_Task) will accept catalog objects that are in buckets ia-basic-example or basic-example-python and named Native_Task or Native_Task_Python but not NATIVE_TASK. +
 
 +
 [none]
-* Notice that the default behaviour of bucketName or objectName filters can be modified by including the special character `%` that matches any word.
-Hence, by adding `%` in the beginning (resp. end) of a bucketName or an objectName we mean that the filtered value should end (resp. start) with the specified string. +
+* Notice that the default behaviour of BucketName or ObjectName filters can be modified by including the special character `%` that matches any word.
+Hence, by adding `%` in the beginning (resp. end) of a BucketName or an ObjectName we mean that the filtered value should end (resp. start) with the specified string. +
 Examples:
 
 [none]
