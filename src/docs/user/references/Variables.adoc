@@ -148,7 +148,8 @@ Note that the revision sub-pattern is a hash code number represented by 13 digit
 Examples: PA:CATALOG_OBJECT accepts "bucket-example/object-example" and "bucket-example/object-example/1539310165443" but not "bucket-example/object-example/153931016" (invalid revision number) nor "bucket-example/" (missing object name).
 
 * *PA:CATALOG_OBJECT(kind,contentType,bucketName,objectName)* :
-One or more filters can be specified in the PA:CATALOG_OBJECT model to limit the accepted values. In that case, the variable value must be a catalog object which matches the `Kind`, `Content type`, `BucketName` and/or `ObjectName` requirements (For more information regarding Kind and Content type click <<_exportingimporting_objects_into_the_catalog, here>>). +
+one or more filters can be specified in the specified order of the PA:CATALOG_OBJECT model to limit the accepted values. For example PA:CATALOG_OBJECT(kind) can be used to filter a specific kind, PA:CATALOG_OBJECT(kind,contentType) to filter both kind and content-type, PA:CATALOG_OBJECT(,contentType) to filter only a content-type (note the empty first parameter), etc... +
+In that case, the variable value must be a catalog object which matches the `Kind`, `Content type`, `BucketName` and/or `ObjectName` requirements (For more information regarding Kind and Content type click <<_exportingimporting_objects_into_the_catalog, here>>). +
 Note that Kind and Content type are case insensitive and require a "startsWith" matching, while BucketName and ObjectName are case sensitive and, by default, require a "contains" matching.
 That is, the Kind and the Content type of the provided catalog object must start with the filters specified in the model while BucketName and ObjectName of the catalog object should contain them.
 The scheduler server verifies that the object exists in the catalog and fulfills the specified requirements when the workflow is submitted. +
