@@ -145,16 +145,16 @@ Examples: PA:REGEXP([a-z]+) will accept "abc", "foo", but not "Foo".
 use this type when you want to reference and use, in the current workflow, another object from the Catalog. Various portals and tools will make it easy to manage catalog objects. For instance, at Job submission, you will be able to browse the Catalog to select the needed object. +
 Variable value syntax must be a valid expression that matches the following pattern: `bucketName/objectName[/revision]`.
 Note that the revision sub-pattern is a hash code number represented by 13 digit. +
-Examples: PA:CATALOG_OBJECT will accept "bucket-example/object-example" and "bucket-example/object-example/1539310165443" but not "bucket-example/object-example/153931016" (invalid revision number) nor "bucket-example/" (missing object name).
+Examples: PA:CATALOG_OBJECT accepts "bucket-example/object-example" and "bucket-example/object-example/1539310165443" but not "bucket-example/object-example/153931016" (invalid revision number) nor "bucket-example/" (missing object name).
 
 * *PA:CATALOG_OBJECT(kind,contentType,bucketName,objectName)* :
 One or more filters can be specified in the PA:CATALOG_OBJECT model to limit the accepted values. In that case, the variable value must be a catalog object which matches the `Kind`, `Content type`, `BucketName` and/or `ObjectName` requirements (For more information regarding Kind and Content type click <<_exportingimporting_objects_into_the_catalog, here>>). Note that Kind and Content type are case insensitive and require a "startsWith" matching, while BucketName and ObjectName are case sensitive and, by default, require a "contains" matching.
 That is, the Kind and the Content type of the provided catalog object must start with the filters specified in the model while BucketName and ObjectName of the catalog object should contain them.
 The scheduler server verifies that the object exists in the catalog and fulfills the specified requirements when the workflow is submitted. +
 Examples:
-** PA:CATALOG_OBJECT(Workflow/standard) will accept standard workflow objects and not PSA workflows or scripts.
-** PA:CATALOG_OBJECT(Script, text/x-python) will only accept a catalog object which is a Python script but not a workflow object or a Groovy script.
-** PA:CATALOG_OBJECT(,,basic-example, Native_Task) will accept catalog objects that are in buckets ia-basic-example or basic-example-python and named Native_Task or Native_Task_Python but not NATIVE_TASK. +
+** PA:CATALOG_OBJECT(Workflow/standard) accepts only standard workflow objects, that means PSA workflows or scripts are not valid values.
+** PA:CATALOG_OBJECT(Script, text/x-python) accepts a catalog object which is a Python script but not a workflow object or a Groovy script.
+** PA:CATALOG_OBJECT(,,basic-example, Native_Task) accepts catalog objects that are in buckets ia-basic-example or basic-example-python and named Native_Task or Native_Task_Python but not NATIVE_TASK. +
 
 +
 [none]
@@ -166,8 +166,8 @@ Examples:
 * {empty}
 [none]
 ** {empty}
-*** PA:CATALOG_OBJECT(,,%basic-example) will accept catalog objects that are in buckets ia-basic-example or db-basic-example but not the ones in basic-example-python.
-*** PA:CATALOG_OBJECT(,,,Native_Task%) will accept catalog objects that are named Native_Task or Native_Task_Python but not Simplified_Native_Task.
+*** PA:CATALOG_OBJECT(,,%basic-example) accepts catalog objects that are in buckets ia-basic-example or db-basic-example but not the ones in basic-example-python.
+*** PA:CATALOG_OBJECT(,,,Native_Task%) accepts catalog objects that are named Native_Task or Native_Task_Python but not Simplified_Native_Task.
 +
 NOTE: It is possible to have a PA:CATALOG_OBJECT object variable that has an optional value by using the notation `PA:CATALOG_OBJECT?`. See <<optional_variable, here>>.
 
