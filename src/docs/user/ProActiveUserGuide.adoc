@@ -2327,7 +2327,7 @@ Methods to add or remove the credentials and to list the stored
 credential keys are exposed in both Java and REST APIs.
 
 End users can manage their credentials using the
-<<_glossary_scheduler_web_interface,Scheduler Web Interface>> (Portal
+<<_glossary_scheduler_web_interface,Scheduler Web Interface>> & Workflow Execution  (Portal
 -> Manage third-party credentials) or the
 <<_scheduler_command_line,Command Line Interface>>.
 

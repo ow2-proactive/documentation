@@ -770,7 +770,7 @@ Set the following variables:
 | Container engine.
 | List (default="docker")
 | `GPU_ENABLED`
-| If True, the service will be configured to use the GPU and the Nvidia 
+| If True, the service will be configured to use the GPU and the Nvidia
 Rapids library.
 | Boolean (default=False)
 | `HTTPS_ENABLED`
@@ -1036,8 +1036,8 @@ In particular, in the *MaaS_ML_Deploy_Model* task, the user is asked to enter
 *DRIFT_DETECTION_WINDOW_SIZE* which is a task variable specifying the size of the data
 to be extracted from the old training dataset (the dataset on which the model was initially
 trained). For example, if the user chooses a value = 50 for this variable, the algorithm will
-randomly choose 50 lines from the old training dataset. This subset of data (we call it *baseline data*) 
-will be saved in the service in order to be used afterward for the data drift detection process 
+randomly choose 50 lines from the old training dataset. This subset of data (we call it *baseline data*)
+will be saved in the service in order to be used afterward for the data drift detection process
 which will be enacted in the *MaaS_ML_Call_Prediction*.
 
 In the *Call_Prediction_Service*, the user is asked to choose the data drift
@@ -2661,11 +2661,11 @@ NOTE: Instead of training a model from scratch, a pre-trained sentiment analysis
 
 *Language_Detection:* build an RNN model to perform language detection from a text data.
 
-*Train_Image_Classification:* trains a model to classify images from ants and bees. 
+*Train_Image_Classification:* trains a model to classify images from ants and bees.
 
 *Train_Image_Segmentation:* trains a segmentation model using SegNet network on https://www.robots.ox.ac.uk/~vgg/data/pets/[Oxford-IIIT Pet Dataset^].
 
-*Train_Image_Object_Detection:* trains objects using YOLOv3 model on COCO dataset proposed by Microsoft Research. 
+*Train_Image_Object_Detection:* trains objects using YOLOv3 model on COCO dataset proposed by Microsoft Research.
 
 *Deep_Model_Explainability:* explains a ResNet-18 model using GradientExplainer.
 
@@ -4247,7 +4247,7 @@ NOTE: Torchtext were used to preprocess and load the text input. More informatio
 
 ===== Search_Image_Dataset
 
-*Task Overview:* Search image from Bing or DuckDuckGo navigator and return an image dataset. 
+*Task Overview:* Search image from Bing or DuckDuckGo navigator and return an image dataset.
 
 *Task Variables:*
 
@@ -5153,7 +5153,7 @@ WARNING: Note that the variables `TIME_TO_RETRIEVE_IN_SECONDS`, `TIME_TO_CHECK_O
 |  String
 |===
 
-WARNING: Please add third party credentials (USER_NAME_PEPS and USER_PASS_PEPS) in the `Scheduling & Orchestration interface -> Manage Third-Party Credentials` to connect to PEPS.
+WARNING: Please add third party credentials (USER_NAME_PEPS and USER_PASS_PEPS) in the `Scheduling & Orchestration interface or Workflow Execution -> Manage Third-Party Credentials` to connect to PEPS.
 
 NOTE: More information about the source of this task can be found https://github.com/olivierhagolle/maja_peps[here^].
 
@@ -5197,7 +5197,7 @@ NOTE: More information about the source of this task can be found https://github
 | String
 |===
 
-WARNING: Please add third party credentials (USER_NAME_COP and USER_PASS_COP) in the `Scheduling & Orchestration interface -> Manage Third-Party Credentials` to connect to Copernicus.
+WARNING: Please add third party credentials (USER_NAME_COP and USER_PASS_COP) in the `Scheduling & Orchestration interface or Workflow Execution -> Manage Third-Party Credentials` to connect to Copernicus.
 
 NOTE: More information about the source of this task can be found https://pypi.org/project/sentinelsat/[here^].
 

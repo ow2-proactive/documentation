@@ -68,7 +68,7 @@ tools/proactive-users -C -l Gord -p Gord -g admin
 ----
 . Start the Scheduler
 . Log in as Gord
-. Add the private key of Gord in the Scheduler interface under _Manage third-party credentials_. Key: SSH_PRIVATE_KEY,
+. Add the private key of Gord in the Scheduler interface or Workflow Execution under _Manage third-party credentials_. Key: SSH_PRIVATE_KEY,
 Credential: Content of Gords' private key, without the '_-----BEGIN RSA PRIVATE KEY-----_' and _-----END RSA PRIVATE KEY-----_ comments
 . Create a task in the Studio and tick _Run as me_
 
