@@ -1800,6 +1800,52 @@ There are two configuration options to control this mechanism (present in the `l
 ** The pa.ldap.tenant.attr configuration is not defined.
 ** The pa.ldap.tenant.attr configuration is defined, but the configured attribute is empty for the user.
 
+==== Specific example of LDAP configuration
+
+Below is an example of LDAP configuration which summarizes the LDAP properties frequently configured in the file `config/authentication/ldap.cfg`.
+
+----
+# URL of a ldap used for authentication
+pa.ldap.url=ldaps://ldap-server.activeeon.com
+
+# path in the LDAP tree users
+pa.ldap.userssubtree=ou=users,dc=activeeon,dc=org
+
+# path in the LDAP tree groups
+# if empty, then the value for pa.ldap.userssubtree is used
+pa.ldap.groupssubtree=ou=groups,dc=activeeon,dc=org
+
+# the filter that allows to find the user dn given its scheduler login
+# %s is replaced by the user-submitted login
+pa.ldap.user.filter=(&(objectclass=inetOrgPerson)(uid=%s))
+
+# retrieves the groups the user dn belongs to
+# the '%s' parameter is the user dn previously retrieved
+pa.ldap.group.filter=(&(objectclass=groupOfUniqueNames)(uniqueMember=%s))
+
+# the attribute in the group entry that matches the jaas' group name
+pa.ldap.group.name.attr=cn
+
+# authentication method used to connect to LDAP : none (for anonymous connection), simple or a SASL method
+pa.ldap.authentication.method=simple
+
+# login name used to perform ldap's binding
+# ex uid=narf,ou=People,dc=activeeon,dc=com
+pa.ldap.bind.login=cn=admin,dc=activeeon,dc=org
+
+# password used to perform ldap binding
+pa.ldap.bind.pwd=change-pwd
+
+# check user password and group membership in login and group files
+pa.ldap.authentication.fallback=true
+
+# check user group membership in group file
+pa.ldap.group.membership.fallback=true
+
+# check user tenant membership in tenant file
+pa.ldap.tenant.membership.fallback=true
+----
+
 [[_ldap_with_multiple_domains]]
 === LDAP authentication with Multiple Domains
 
