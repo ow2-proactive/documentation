@@ -1803,7 +1803,7 @@ There are two configuration options to control this mechanism (present in the `l
 ==== Specific example of LDAP configuration
 
 Below is an example of LDAP configuration which summarizes the LDAP properties frequently configured in the file `config/authentication/ldap.cfg`.
-
+[source,properties]
 ----
 # URL of a ldap used for authentication
 pa.ldap.url=ldaps://ldap-server.activeeon.com
