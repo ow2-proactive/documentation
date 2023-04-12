@@ -215,6 +215,10 @@ The following table describes all available generic information:
 |generic information automatically added by the Job Planner. It contains the next execution date of the job.
 |job-level
 |2022-04-26 12:50:00 CEST
+|<<_submission_mode,submission.mode>>
+|contains the portal name from which the job was submitted
+|job-level
+|job-planner
 |===
 
 ==== START_AT
@@ -462,3 +466,12 @@ The <<../JobPlanner/JobPlannerUserGuide.html#_all_doc_jp_user_guide, Job Planner
 * `calendar.name`: the calendar name based on which the job is planned.
 * `next.execution`: the next execution date of the planned job. The date is formatted with respect to the pattern `yyyy-MM-dd HH:mm:ss z` and considers the time zone specified in the Job Planner configuration.
 When no time zone is specified, the default time zone of ProActive server is considered.
+
+==== submission.mode
+
+The `submission.mode` Generic Information displays the name of the portal from where the job was submitted.
+
+`Possible values:`
+workflow-api, cli, rest-api, scheduler-portal, job-planner, studio, catalog, workflow-execution, service-automation, event-orchestration
+
+`Default value:` rest-api

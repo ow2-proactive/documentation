@@ -1609,7 +1609,7 @@ In the Job xml schema, the multi-nodes execution is available at the parallel ta
 </parallel>
 ----
 
-=== Handling failures
+=== Error Handling
 
 It’s possible to have errors when your Job is executed. *ProActive Scheduler* provides several mechanisms to deal with exceptional situations in your Jobs.
 If a Task contains errors during Job execution, the *ProActive Scheduler* automatically restarts this Task. The number of automatic restarts is defined by the Workflow owner by assigning an integer value to the counter *Number of Automatic Restarts*.
@@ -1617,16 +1617,16 @@ The user also defines *Where he wants that the scheduler restarts In-Error tasks
 
 If automatic restarts does not fix errors, the Scheduler applies one of the following Task error management policies, i.e., the one defined by the user during Workflow creation:
 
-* *Ignore error and continue Job execution* - each *In-Error* Task inside the Job transits to *Faulty* and its successor Tasks are executed.
+* *Default: Ignore Error and continue Job execution* - each *In-Error* Task inside the Job transits to *Faulty* and its successor Tasks are executed.
 
-* *Only suspend dependencies of In-Error Tasks* - successor Tasks of each *In-Error* Task are *Pending* until errors are fixed. The Job is in *In-Error* status.
+* *In-Error: Continue Job execution, but suspend error-dependent Tasks* - successor Tasks of each *In-Error* Task are *Pending* until errors are fixed. The Job is in *In-Error* status.
                                                The user can restart *In-Error* Tasks as many times as he wishes.
 
 
-* *Pause Job execution (running Tasks can terminate)* - successor Tasks of each *In-Error* Task are paused until errors are fixed. The Job is paused.
+* *Pause: Continue running Tasks, and suspend all others* - successor Tasks of each *In-Error* Task are paused until errors are fixed. The Job is paused.
                                                      The user can restart *In-Error* Tasks as many times as he wishes.
 
-* *Kill Job (running Tasks are killed)* - The Job is killed with all Tasks.
+* *Cancel: Running Tasks are aborted, and others not started* - The Job is canceled with all Tasks.
 
 
 ==== Maximum execution time for a task
