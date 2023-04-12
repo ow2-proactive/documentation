@@ -216,7 +216,7 @@ The following table describes all available generic information:
 |job-level
 |2022-04-26 12:50:00 CEST
 |<<_submission_mode,submission.mode>>
-|contains the portal name from which the job was submitted
+|contains the origin from which the job was submitted.
 |job-level
 |job-planner
 |===
@@ -469,9 +469,10 @@ When no time zone is specified, the default time zone of ProActive server is con
 
 ==== submission.mode
 
-The `submission.mode` Generic Information displays the name of the portal from where the job was submitted.
+The `submission.mode` Generic Information displays the name of the portal, service or feature from which the job was submitted.
 
-`Possible values:`
-workflow-api, cli, rest-api, scheduler-portal, job-planner, studio, catalog, workflow-execution, service-automation, event-orchestration
+It can either be one of the standardized values below or a user-defined name.
+
+`Values:` workflow-api, cli, rest-api, scheduler-portal, job-planner, studio, catalog, workflow-execution, service-automation, event-orchestration
 
 `Default value:` rest-api
