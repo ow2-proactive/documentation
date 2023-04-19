@@ -473,13 +473,15 @@ The `submission.mode` Generic Information displays the name of the portal, servi
 
 It can either be one of the standardized values below or a user-defined name.
 
-The user can define a custom value for 'submission.mode' property when submitting the workflow, in studio portal for example.
+When submitting a workflow from one of ProActive portals (Studio, Scheduler, Workflow Execution, etc) or when using one of the ProActive submission services (Job Planner, Service Automation, Event Orchestration) this generic information is automatically defined by the system, using the standardized values.
+
+When a workflow is submitted from a third party component (such as a company service), it is advisable to set this generic information to a meaningful name, that will help identify the workflow origin in ProActive monitoring portals.
 
 The values can be seen in Workflow Execution or in Scheduler Portal.
 
-From Workflow Execution the user can see the value in the Generic Information section of the job.
+* From Workflow Execution, the user can see the value in the Generic Information section of the job.
 
-From Scheduler Portal, the value is displayed in "Submitted from" column of the table and in the job info tab.
+* From Scheduler Portal, the value is displayed in "Submitted from" column of the table and in the job info tab.
 
 `Values:` workflow-api, cli, rest-api, scheduler-portal, job-planner, studio, catalog, workflow-execution, service-automation, event-orchestration
 
