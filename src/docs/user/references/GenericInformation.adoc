@@ -479,13 +479,13 @@ It can have values in:
 
 It is implemented with the *submission.mode* Generic Information that records the information.
 
-When submitting a workflow from one of the portals (Studio, Scheduler, Workflow Execution, Catalog, etc.), or when using one of the ProActive submission services (Job Planner, Service Automation, Event Orchestration) this generic information is automatically defined by the system, using the standardized values.
+When submitting a workflow from one of the portals (Studio, Scheduler, Workflow Execution, Catalog, etc.), or when using one of the ProActive submission services (Job Planner, Service Automation, Event Orchestration) this Generic Information is automatically defined by the system, using the standardized values.
 
-When a workflow is submitted from a third-party component (such as a company service), one can set this generic information to a meaningful custom name, that will help identify the Job origin in various portals.
+When a workflow is submitted from a third-party component (such as a company service), one can set this Generic Information value to a meaningful custom name, that will help identify the origin from which the workflow has been submitted.
 
-The Submission Mode can be seen synthetically in the *Health Dashboard* for a selected time-frame in the widget “Submission Mode”, including custom values.
+The Submission Mode can be seen synthetically in the  <<_glossary_health_dashboard,Health Dashboard>> for a selected time-frame in the widget “Submission Mode”, including custom values.
 
 The Submission Mode can also be seen:
 
-* In *Workflow Execution*: the user can see the value in the Generic Information section of the job.
-* In *Scheduler Portal*: the value is displayed in “Submitted from” column of the Job table, and in the job info tab.
+* In *Workflow Execution*: the user can see the value in the Generic Information section of the detailed Job info.
+* In *Scheduler Portal*: the value is displayed in “Submitted from” column of the Job table, and in the Job info tab.
