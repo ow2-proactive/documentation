@@ -467,22 +467,25 @@ The <<../JobPlanner/JobPlannerUserGuide.html#_all_doc_jp_user_guide, Job Planner
 * `next.execution`: the next execution date of the planned job. The date is formatted with respect to the pattern `yyyy-MM-dd HH:mm:ss z` and considers the time zone specified in the Job Planner configuration.
 When no time zone is specified, the default time zone of ProActive server is considered.
 
-==== submission.mode
+==== Submission.mode
 
-The `submission.mode` Generic Information displays the name of the portal, service or feature from which the job was submitted.
+The *Submission Mode* allows keeping track from where a Job has been submitted.
+It can have values in:
 
-It can either be one of the standardized values below or a user-defined name.
+* *Interactive Submissions:* `studio`, `catalog`, `workflow-execution`, `scheduler-portal`
+* *Automated Submissions:* `job-planner`, `service-automation`, `event-orchestration`
+* *API Submissions:* `workflow-api`, `cli`, `rest-api`
+* *Custom:* `user-defined value`, to differentiate application-specific submissions.
 
-When submitting a workflow from one of ProActive portals (Studio, Scheduler, Workflow Execution, etc) or when using one of the ProActive submission services (Job Planner, Service Automation, Event Orchestration) this generic information is automatically defined by the system, using the standardized values.
+It is implemented with the *submission.mode* Generic Information that records the information.
 
-When a workflow is submitted from a third party component (such as a company service), it is advisable to set this generic information to a meaningful name, that will help identify the workflow origin in ProActive monitoring portals.
+When submitting a workflow from one of the portals (Studio, Scheduler, Workflow Execution, Catalog, etc.), or when using one of the ProActive submission services (Job Planner, Service Automation, Event Orchestration) this Generic Information is automatically defined by the system, using the standardized values.
 
-The values can be seen in Workflow Execution or in Scheduler Portal.
+When a workflow is submitted from a third-party component (such as a company service), one can set this Generic Information value to a meaningful custom name, that will help identify the origin from which the workflow has been submitted.
 
-* From Workflow Execution, the user can see the value in the Generic Information section of the job.
+The Submission Mode can be seen synthetically in the  <<_glossary_health_dashboard,Health Dashboard>> for a selected time-frame in the widget “Submission Mode”, including custom values.
 
-* From Scheduler Portal, the value is displayed in "Submitted from" column of the table and in the job info tab.
+The Submission Mode can also be seen:
 
-`Values:` workflow-api, cli, rest-api, scheduler-portal, job-planner, studio, catalog, workflow-execution, service-automation, event-orchestration
-
-`Default value:` rest-api
+* In *Workflow Execution*: the user can see the value in the Generic Information section of the detailed Job info.
+* In *Scheduler Portal*: the value is displayed in “Submitted from” column of the Job table, and in the Job info tab.
