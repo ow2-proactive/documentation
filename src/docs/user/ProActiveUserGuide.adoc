@@ -1617,17 +1617,26 @@ The user also defines *Where he wants that the scheduler restarts In-Error tasks
 
 If automatic restarts does not fix errors, the Scheduler applies one of the following Task error management policies, i.e., the one defined by the user during Workflow creation:
 
-* *Default: Ignore Error and continue Job execution* - each *In-Error* Task inside the Job transits to *Faulty* and its successor Tasks are executed.
+* *Level 0 - Default: Ignore Error and continue Job execution:*
 
-* *In-Error: Continue Job execution, but suspend error-dependent Tasks* - successor Tasks of each *In-Error* Task are *Pending* until errors are fixed. The Job is in *In-Error* status.
-                                               The user can restart *In-Error* Tasks as many times as he wishes.
+Each *In-Error* Task inside the Job transits to *Faulty* and its successor Tasks are executed.
+
+* *Level 1 - In-Error: Continue Job execution, but suspend error-dependent Tasks:*
+
+Successor Tasks of each *In-Error* Task are *Pending* until errors are fixed. The Job is in *In-Error* status.
+The user can restart *In-Error* Tasks as many times as he wishes.
 
 
-* *Pause: Continue running Tasks, and suspend all others* - successor Tasks of each *In-Error* Task are paused until errors are fixed. The Job is paused.
-                                                     The user can restart *In-Error* Tasks as many times as he wishes.
+* *Level 2 - Pause: Continue running Tasks, and suspend all others:*
 
-* *Cancel: Running Tasks are aborted, and others not started* - The Job is canceled with all Tasks.
+Successor Tasks of each *In-Error* Task are paused until errors are fixed. The Job is paused.
+The user can restart *In-Error* Tasks as many times as he wishes.
 
+* *Level 3 - Cancel: Running Tasks are aborted, and others not started:*
+
+The Job is canceled with all Tasks.
+
+Error handling policy can be set globally on the job level, and also can be specified (overridden) individually for each Task.
 
 ==== Maximum execution time for a task
 
