@@ -8,6 +8,7 @@ Generic information semantics differ from <<_job_variables>> semantics in the fo
 * Generic information cannot be used directly inside the workflow with the syntax ${} (See  <<_job_variables>>).
 * Generic information are used in general internally by the scheduler, for example to provide information to the scheduling loop on how to handle the task. An example of such generic information is the _START_AT_ info used inside <<_cron_tasks>>.
 * Generic information can use in their definition job/task variables patterns, pattern replacements can be done at execution time when using task generic information.
+* Generic information need in most cases to be defined manually by the workflow designer, but some generic information such as _PARENT_JOB_ID_ are defined automatically by ProActive.
 
 Example of a generic information definition:
 
@@ -30,195 +31,258 @@ The following table describes all available generic information:
 
 .Generic Information
 |===
-|Name |Description |Scope | Example
-|<<_start_at,START_AT>>
-|delay a job or task execution at a specified date/time
-|job-level, task-level
-|2020-06-20T18:00:00+02:00
-|<<_parent_job_id,PARENT_JOB_ID>>
-|contains the id of the parent job (if the current job has been submitted from another workflow)
-|job-level
-|24
+|*Name* |*Description* |*Scope* | *Mode* | *Example*
+5+^|*Resource Manager*
 |<<_node_access_token,NODE_ACCESS_TOKEN>>
 |execute task(s) on node(s) with token-based usage restriction
 |job-level, task-level
+|Manual
 |my_token
-|<<_email,EMAIL>>
-|send email to recipient(s) based on job state events
-|job-level
-|user@example.com
-|<<_email,NOTIFICATION_EVENTS>>
-|a list of job events associated with email notifications
-|job-level
-|JOB_PENDING_TO_RUNNING, JOB_RUNNING_TO_FINISHED
-|<<_remove_delay,REMOVE_DELAY>>
-|once the job is terminated, this setting controls the delay after which it will be removed from the scheduler database
-|job-level
-|3d 12h
-|<<_remove_delay,REMOVE_DELAY_ON_ERROR>>
-|once the job is terminated with errors, this setting controls the delay after which it will be removed from the scheduler database. This generic information should be set in addition to REMOVE_DELAY when there is a need to keep the job longer in the scheduler database in case of error.
-|job-level
-|3d 12h
+|<<_node_source_generic_info,NODE_SOURCE>>
+|execute task(s) on node(s) belonging to the given node source. Provision nodes if needed similarly to <<_native_scheduler,NS>> or <<_nodesourcename,NODESOURCENAME>>.
+|job-level, task-level
+|Manual
+|MyNodeSource
+|<<_native_scheduler,NS>>
+|run the task on a <<../admin/ProActiveAdminGuide.html#_deploy_via_other_schedulers,Native Scheduler Node Source>>. Provision a new node to run the task on the associated cluster. Value is the Node Source name. *Deprecated*, consider using <<_node_source_generic_info>> instead.
+|job-level,task-level
+|Manual
+|SLURM
+|<<_native_scheduler,NS_BATCH>>
+|extra parameters given to the native scheduler command
+|job-level,task-level
+|Manual
+|-q queue1 -lnodes=2:ppn=2
+|<<_native_scheduler,NS_PRE>>
+|command run before the ProActive Node is started inside the Native Scheduler infrastructure
+|job-level,task-level
+|Manual
+|module load mpi/gcc/openmpi-1.6.4
+|<<_nodesourcename,NODESOURCENAME>>
+|run the task on a Node Source controlled by a <<../admin/ProActiveAdminGuide.html#_dynamic_policy,Dynamic Policy>> (generally cloud node sources). Provision a new node to run the task on the associated node source. Value is the Node Source name. *Deprecated*, consider using <<_node_source_generic_info>> instead.
+|job-level,task-level
+|Manual
+|Azure
+5+^|*Scheduling*
+|<<_start_at,START_AT>>
+|delay a job or task execution at a specified date/time
+|job-level, task-level
+|Manual
+|2020-06-20T18:00:00+02:00
 |<<_earliest_deadline_first_policy,JOB_DDL>>
 |job deadline used in <<../user/ProActiveUserGuide.html#_earliest_deadline_first_edf_policy,Earliest Deadline First Scheduling Policy>>
 |job-level
+|Manual
 |+5:30:00
 |<<_earliest_deadline_first_policy,JOB_EXEC_TIME>>
 |job expected execution time used in <<../user/ProActiveUserGuide.html#_earliest_deadline_first_edf_policy,Earliest Deadline First Scheduling Policy>>
 |job-level
+|Manual
 |1:00:00
-|<<_disable_ptk,DISABLE_PTK>>
-|skip sub-process cleaning after the task is terminated
-|task-level
-|true
 |<<_walltime,WALLTIME>>
 |maximum execution time of a task
 |job-level, task-level
+|Manual
 |10:00
-|<<_pre_script_as_file,PRE_SCRIPT_AS_FILE>>
-|skip pre-script execution and store its content as a file
-|task-level
-|my_prescript.py
-|<<_native_scheduler,NS>>
-|run the task on a <<../admin/ProActiveAdminGuide.html#_deploy_via_other_schedulers,Native Scheduler Node Source>>. Value is the Node Source name
-|task-level
-|SLURM
-|<<_native_scheduler,NS_BATCH>>
-|extra parameters given to the native scheduler command
-|task-level
-|-q queue1 -lnodes=2:ppn=2
-|<<_native_scheduler,NS_PRE>>
-|command run before the ProActive Node is started inside the Native Scheduler infrastructure
-|task-level
-|module load mpi/gcc/openmpi-1.6.4
-|<<_nodesourcename,NODESOURCENAME>>
-|run the task on a Node Source controlled by a <<../admin/ProActiveAdminGuide.html#_dynamic_policy,Dynamic Policy>> (generally cloud node sources). Value is the Node Source name
-|task-level
-|Azure
+5+^|*User Interface*
+|<<_parent_job_id,PARENT_JOB_ID>>
+|contains the id of the parent job (if the current job has been submitted from another workflow)
+|job-level
+|Automatic
+|24
 |<<_documentation,Documentation>>
 |Add a documentation link to the workflow
 |job-level
+|Manual
 |\http://my-server/my-doc.html
 |<<_documentation,task.documentation>>
 |Add a documentation link to the task
 |task-level
+|Manual
 |\http://my-server/my-doc.html
 |<<_icon_management,workflow.icon>>
 |Add an icon to the workflow
 |job-level
+|Manual
 |\http://my-server/my-icon.png
 |<<_icon_management,task.icon>>
 |Add an icon to the task
 |task-level
+|Manual
 |\http://my-server/my-icon.png
-|<<_result_metadata,content.type>>
-|Assign a MIME content type to a byte array task result
-|task-level
-|image/png
-|<<_result_metadata,file.name>>
-|Assign a file name to a byte array task result
-|task-level
-|image_balloon.png
-|<<_result_metadata,file.extension>>
-|Assign a file extension to a byte array task result
-|task-level
-|.png
-|link:../user/ProActiveUserGuide.html#_run_as_me_generic_info[RUNAS_METHOD]
-|Allows overriding the impersonation method used when executing the task. Can be `pwd`, `key` or `none`.
-|job-level, task-level
-|`pwd`
-|link:../user/ProActiveUserGuide.html#_run_as_me_generic_info[RUNAS_USER]
-|Allows overriding the login name used during the impersonation. This allows to run a task under a different user as the user who submitted the workflow.
-|job-level, task-level
-|bob
-|link:../user/ProActiveUserGuide.html#_run_as_me_generic_info[RUNAS_DOMAIN]
-|Allows defining or overriding a user domain that will be attached to the impersonated user. User domains are only used on Windows operating systems.
-|job-level, task-level
-|MyOrganisation
-|link:../user/ProActiveUserGuide.html#_run_as_me_generic_info[RUNAS_PWD]
-|Allows overriding the password attached to the impersonated user. This can be used only when the impersonation method is set to `pwd`.
-|job-level, task-level
-|MyPassword
-|link:../user/ProActiveUserGuide.html#_run_as_me_generic_info[RUNAS_PWD_CRED]
-|Similar to RUNAS_PWD but the password will be defined inside link:../user/ProActiveUserGuide.adoc#_third_party_credentials[Third-Party Credential] instead of inlined in the workflow. This method of defining the password should be preferred to RUNAS_PWD for security reasons. The value of RUNAS_PWD_CRED must be the third-party credential name containing the user password.
-|job-level, task-level
-|MyPasswordCredName
-|link:../user/ProActiveUserGuide.html#_run_as_me_generic_info[RUNAS_SSH_KEY_CRED]
-|Allows overriding the SSH private key attached to the impersonated user. This can be used only when the impersonation method is set to `key`. The private key will be defined inside link:../user/ProActiveUserGuide.adoc#_third_party_credentials[Third-Party Credential] instead of inlined in the workflow. The value of RUNAS_SSH_KEY_CRED must be the third-party credential name containing the SSH key.
-|job-level, task-level
-|MySSHKeyCredName
-|<<_python_command,PYTHON_COMMAND>>
-|Python command to use in <<../user/ProActiveUserGuide.adoc#_python,CPython script engine>>.
-|job-level, task-level
-|python3
-|<<_docker_compose_options,docker-compose-options>>
-|general parameters given to the docker-compose command in <<../user/ProActiveUserGuide.adoc#_docker_compose,Docker Compose script engine>>.
-|job-level, task-level
-|--verbose
-|<<_docker_compose_options,docker-compose-up-options>>
-|general parameters given to the docker-compose up command in <<../user/ProActiveUserGuide.adoc#_docker_compose,Docker Compose script engine>>.
-|job-level, task-level
-|--exit-code-from helloworld
-|<<_docker_compose_options,docker-compose-options-split-regex>>
-|declare a string to be used as options separator in <<../user/ProActiveUserGuide.adoc#_docker_compose,Docker Compose script engine>>.
-|job-level, task-level
-|!SPLIT!
-|<<_dockerfile_options,docker-actions>>
-|actions to perform in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
-|task-level
-|build,run
-|<<_dockerfile_options,docker-image-tag>>
-|tag identifying the docker image in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
-|task-level
-|my-image
-|<<_dockerfile_options,docker-container-tag>>
-|tag identifying the docker container in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
-|task-level
-|my-container
-|<<_dockerfile_options,docker-build-options>>
-|options given to the `docker build` command in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
-|job-level, task-level
-|--no-cache
-|<<_dockerfile_options,docker-run-options>>
-|options given to the `docker run` command in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
-|job-level, task-level
-|--detach
-|<<_dockerfile_options,docker-exec-command>>
-|command given to `docker exec`, if used in *docker-actions*. See <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
-|job-level, task-level
-|/bin/sh -c echo 'hello'
-|<<_dockerfile_options,docker-exec-options>>
-|options given to the `docker exec` command in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
-|job-level, task-level
-|-t -w /my/work/dir
-|<<_dockerfile_options,docker-stop-options>>
-|options given to the `docker stop` command in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
-|job-level, task-level
-|--time 20
-|<<_dockerfile_options,docker-rm-options>>
-|options given to the `docker rm` command in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
-|job-level, task-level
-|--volumes
-|<<_dockerfile_options,docker-rmi-options>>
-|options given to the `docker rmi` command in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
-|job-level, task-level
-|--force
-|<<_dockerfile_options,docker-file-options-split-regex>>
-|declare a string to be used as options separator in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
-|job-level, task-level
-|!SPLIT!
 |<<_job_planner,calendar.name>>
 |generic information automatically added by the Job Planner. It contains the name of the calendar based on which the job is planned.
 |job-level
+|Automatic
 |every_10_minutes
 |<<_job_planner,next.execution>>
 |generic information automatically added by the Job Planner. It contains the next execution date of the job.
 |job-level
+|Automatic
 |2022-04-26 12:50:00 CEST
 |<<_submission_mode,submission.mode>>
 |contains the origin from which the job was submitted.
 |job-level
+|Automatic
 |job-planner
+5+^|*Notification*
+|<<_email,EMAIL>>
+|send email to recipient(s) based on job state events
+|job-level
+|Manual
+|user@example.com
+|<<_email,NOTIFICATION_EVENTS>>
+|a list of job events associated with email notifications
+|job-level
+|Manual
+|JOB_PENDING_TO_RUNNING, JOB_RUNNING_TO_FINISHED
+5+^|*Housekeeping*
+|<<_remove_delay,REMOVE_DELAY>>
+|once the job is terminated, this setting controls the delay after which it will be removed from the scheduler database
+|job-level
+|Manual
+|3d 12h
+|<<_remove_delay,REMOVE_DELAY_ON_ERROR>>
+|once the job is terminated with errors, this setting controls the delay after which it will be removed from the scheduler database. This generic information should be set in addition to REMOVE_DELAY when there is a need to keep the job longer in the scheduler database in case of error.
+|job-level
+|Manual
+|3d 12h
+5+^|*Task Control*
+|<<_disable_ptk,DISABLE_PTK>>
+|skip sub-process cleaning after the task is terminated
+|task-level
+|Manual
+|true
+|<<_pre_script_as_file,PRE_SCRIPT_AS_FILE>>
+|skip pre-script execution and store its content as a file
+|task-level
+|Manual
+|my_prescript.py
+5+^|*Result Format*
+|<<_result_metadata,content.type>>
+|Assign a MIME content type to a byte array task result
+|task-level
+|Manual
+|image/png
+|<<_result_metadata,file.name>>
+|Assign a file name to a byte array task result
+|task-level
+|Manual
+|image_balloon.png
+|<<_result_metadata,file.extension>>
+|Assign a file extension to a byte array task result
+|task-level
+|Manual
+|.png
+5+^|*Run As User*
+|link:../user/ProActiveUserGuide.html#_run_as_me_generic_info[RUNAS_METHOD]
+|Allows overriding the impersonation method used when executing the task. Can be `pwd`, `key` or `none`.
+|job-level, task-level
+|Manual
+|`pwd`
+|link:../user/ProActiveUserGuide.html#_run_as_me_generic_info[RUNAS_USER]
+|Allows overriding the login name used during the impersonation. This allows to run a task under a different user as the user who submitted the workflow.
+|job-level, task-level
+|Manual
+|bob
+|link:../user/ProActiveUserGuide.html#_run_as_me_generic_info[RUNAS_DOMAIN]
+|Allows defining or overriding a user domain that will be attached to the impersonated user. User domains are only used on Windows operating systems.
+|job-level, task-level
+|Manual
+|MyOrganisation
+|link:../user/ProActiveUserGuide.html#_run_as_me_generic_info[RUNAS_PWD]
+|Allows overriding the password attached to the impersonated user. This can be used only when the impersonation method is set to `pwd`.
+|job-level, task-level
+|Manual
+|MyPassword
+|link:../user/ProActiveUserGuide.html#_run_as_me_generic_info[RUNAS_PWD_CRED]
+|Similar to RUNAS_PWD but the password will be defined inside link:../user/ProActiveUserGuide.adoc#_third_party_credentials[Third-Party Credential] instead of inlined in the workflow. This method of defining the password should be preferred to RUNAS_PWD for security reasons. The value of RUNAS_PWD_CRED must be the third-party credential name containing the user password.
+|job-level, task-level
+|Manual
+|MyPasswordCredName
+|link:../user/ProActiveUserGuide.html#_run_as_me_generic_info[RUNAS_SSH_KEY_CRED]
+|Allows overriding the SSH private key attached to the impersonated user. This can be used only when the impersonation method is set to `key`. The private key will be defined inside link:../user/ProActiveUserGuide.adoc#_third_party_credentials[Third-Party Credential] instead of inlined in the workflow. The value of RUNAS_SSH_KEY_CRED must be the third-party credential name containing the SSH key.
+|job-level, task-level
+|Manual
+|MySSHKeyCredName
+5+^|*CPython engine*
+|<<_python_command,PYTHON_COMMAND>>
+|Python command to use in <<../user/ProActiveUserGuide.adoc#_python,CPython script engine>>.
+|job-level, task-level
+|Manual
+|python3
+5+^|*Docker Compose engine*
+|<<_docker_compose_options,docker-compose-options>>
+|general parameters given to the docker-compose command in <<../user/ProActiveUserGuide.adoc#_docker_compose,Docker Compose script engine>>.
+|job-level, task-level
+|Manual
+|--verbose
+|<<_docker_compose_options,docker-compose-up-options>>
+|general parameters given to the docker-compose up command in <<../user/ProActiveUserGuide.adoc#_docker_compose,Docker Compose script engine>>.
+|job-level, task-level
+|Manual
+|--exit-code-from helloworld
+|<<_docker_compose_options,docker-compose-options-split-regex>>
+|declare a string to be used as options separator in <<../user/ProActiveUserGuide.adoc#_docker_compose,Docker Compose script engine>>.
+|job-level, task-level
+|Manual
+|!SPLIT!
+5+^|*Dockerfile engine*
+|<<_dockerfile_options,docker-actions>>
+|actions to perform in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|task-level
+|Manual
+|build,run
+|<<_dockerfile_options,docker-image-tag>>
+|tag identifying the docker image in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|task-level
+|Manual
+|my-image
+|<<_dockerfile_options,docker-container-tag>>
+|tag identifying the docker container in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|task-level
+|Manual
+|my-container
+|<<_dockerfile_options,docker-build-options>>
+|options given to the `docker build` command in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|job-level, task-level
+|Manual
+|--no-cache
+|<<_dockerfile_options,docker-run-options>>
+|options given to the `docker run` command in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|job-level, task-level
+|Manual
+|--detach
+|<<_dockerfile_options,docker-exec-command>>
+|command given to `docker exec`, if used in *docker-actions*. See <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|job-level, task-level
+|Manual
+|/bin/sh -c echo 'hello'
+|<<_dockerfile_options,docker-exec-options>>
+|options given to the `docker exec` command in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|job-level, task-level
+|Manual
+|-t -w /my/work/dir
+|<<_dockerfile_options,docker-stop-options>>
+|options given to the `docker stop` command in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|job-level, task-level
+|Manual
+|--time 20
+|<<_dockerfile_options,docker-rm-options>>
+|options given to the `docker rm` command in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|job-level, task-level
+|Manual
+|--volumes
+|<<_dockerfile_options,docker-rmi-options>>
+|options given to the `docker rmi` command in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|job-level, task-level
+|Manual
+|--force
+|<<_dockerfile_options,docker-file-options-split-regex>>
+|declare a string to be used as options separator in <<../user/ProActiveUserGuide.adoc#_dockerfile,Dockerfile script engine>>.
+|job-level, task-level
+|Manual
+|!SPLIT!
 |===
 
 ==== START_AT
@@ -356,13 +420,37 @@ More information is available in the <<_save_script>> section.
 
 `PRE_SCRIPT_AS_FILE` can be defined at *task-level* only.
 
+[[_node_source_generic_info]]
+==== NODE_SOURCE
+
+`NODE_SOURCE` is a multipurpose generic information which allows selecting only nodes that belong to the specified _Node Source_.
+
+Other than selecting nodes, it allows also the dynamic provisioning of nodes when the selected Node Source is controlled by a <<../admin/ProActiveAdminGuide.adoc#_dynamic_policy,Dynamic Policy>> or is a
+<<../admin/ProActiveAdminGuide.adoc#_execute_tasks_on_a_native_scheduler_node_source,Native Scheduler Node Source>>.
+
+`NODE_SOURCE` should be preferred to using <<_native_scheduler,NS>> or <<_nodesourcename,NODESOURCENAME>> generic information.
+
+Example usages:
+
+ * `NODE_SOURCE=LocalNodes` => the task will run exclusively on nodes that belong to the _LocalNodes_ node source.
+ * `NODE_SOURCE=AzureNodeSource` => will dynamically provision nodes in _AzureNodeSource_ (here _AzureNodeSource_ refer to an _AzureInfrastructure_ node source controlled by a _DynamicPolicy_) and run the task in the provisioned node.
+ * `NODE_SOURCE=SlurmNodeSource` => will dynamically provision nodes in a Slurm cluster attached to _SlurmNodeSource_ (here _SlurmNodeSource_ refer to a _NativeSchedulerInfrastructure_ node source) and run the task in the provisioned node.
+
+`NODE_SOURCE` can be defined at *job-level* (applies to all tasks of a workflow) or at  *task-level* (applies to a single task).
+
 ==== Native Scheduler
 
 `NS` (short for *Native Scheduler*), `NS_BATCH` and `NS_PRE` are Generic Information used to deploy and configure workflow tasks inside a *Native Scheduler infrastructure*.
 
- * `NS`: execute a task associated with this generic information inside a ProActive Node Source interacting with a native scheduler. The value of this generic information must be equal to the node source name. Example: `NS=Slurm`.
- * `NS_BATCH`: allows to provide additional parameters to the native scheduler. Example: `NS_BATCH=-q queue1 -lnodes=2:ppn=2`.
- * `NS_PRE`: allows to provide a single line command which will be executed before the ProActive Node on the cluster. Example: `NS_PRE=module load mpi/gcc/openmpi-1.6.4`.
+ * `NS`: execute a task associated with this generic information inside a ProActive Node Source interacting with a native scheduler.
+The Node Source will dynamically deploy a Node to execute a task marked with this generic information.
+*Deprecated*, consider using <<_node_source_generic_info>> instead.
+The value of this generic information can be:
+   - equal to the node source name. Example: `NS=Slurm`.
+   - `true` to select any Native Scheduler node source.
+   - `false` to disallow executing the task on a Native Scheduler node source.
+ * `NS_BATCH`: allows providing additional parameters to the native scheduler. Example: `NS_BATCH=-q queue1 -lnodes=2:ppn=2`.
+ * `NS_PRE`: allows providing a single line command which will be executed before the ProActive Node on the cluster. Example: `NS_PRE=module load mpi/gcc/openmpi-1.6.4`.
 
 See <<../admin/ProActiveAdminGuide.adoc#_execute_tasks_on_a_native_scheduler_node_source,Execute Tasks on a Native Scheduler Node Source>> for more information.
 
@@ -371,6 +459,9 @@ See <<../admin/ProActiveAdminGuide.adoc#_execute_tasks_on_a_native_scheduler_nod
 ==== NODESOURCENAME
 
 `NODESOURCENAME` is used to deploy workflow tasks in a Node Source controlled by a *Dynamic Policy*.
+The Node Source will dynamically deploy a Node to execute a task marked with this generic information.
+
+*Deprecated*, consider using <<_node_source_generic_info>> instead.
 
 See <<../admin/ProActiveAdminGuide.adoc#_dynamic_policy,Dynamic Policy>> for more information.
 
