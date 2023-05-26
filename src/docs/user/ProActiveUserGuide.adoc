@@ -1193,6 +1193,8 @@ They are used in the ProActive Scheduler to:
 [[_selection]]
 === Selection of ProActive Nodes
 
+==== Selection Scripts
+
 A <<_glossary_selection_script, selection script>> provides an ability for the Scheduler to execute tasks on particular ProActive nodes.
 E.g. you can specify that a task must be executed on a Unix/Linux system.
 
@@ -1261,6 +1263,14 @@ variable *operating_system* (task scope) resolves to variable *operating_system_
   </taskFlow>
 </job>
 ----
+
+[[_generic_information_selection]]
+==== Generic Information
+
+A few <<_generic_information>> allow to control where the associated task will be executed:
+
+ * <<_node_access_token,NODE_ACCESS_TOKEN>>: the task will be executed only on Nodes which have the specified token. A node token is defined as a link:../admin/ProActiveAdminGuide.html#_policy_common_parameters[parameter] of a link:../admin/ProActiveAdminGuide.html#_node_source_policies[Node Source Policy].
+ * <<_node_source_generic_info,NODE_SOURCE>>: the task will be executed only on Nodes which belong to the specified <<_glossary_node_source,Node Source>>.
 
 === Fork environment
 
