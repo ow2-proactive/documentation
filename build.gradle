@@ -58,7 +58,8 @@ asciidoctor {
 }
 
 asciidoctorj {
-    version = '1.5.3'
+    version = '2.5.10'
+    groovyDslVersion = '2.0.2'
 }
 
 htmlSanityCheck {

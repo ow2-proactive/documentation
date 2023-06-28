@@ -115,7 +115,7 @@ It is made of a single task with its variables.
 | ServiceNow server endpoint.
 | Yes
 | URL
-| `https://SN_SERVER/api/now/v1/email`
+| `\https://SN_SERVER/api/now/v1/email`
 | `USER`
 | ServiceNow user.
 | Yes
@@ -195,7 +195,7 @@ The two Task related workflows have both one task with the following variables:
 | ServiceNow server endpoint.
 | Yes
 | URL
-| `https://SN_SERVER/api/now`
+| `\https://SN_SERVER/api/now`
 | `USER`
 | ServiceNow user.
 | Yes
@@ -288,7 +288,7 @@ The other four generic workflows to perform CRUD have the following structure.
 | Base URL of the ServiceNow instance
 | Yes
 | String
-| `https://SN_SERVER.com`
+| `\https://SN_SERVER.com`
 | `SERVICENOW_USER`
 | ServiceNow user
 | Yes

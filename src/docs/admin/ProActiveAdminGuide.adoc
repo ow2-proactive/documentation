@@ -693,6 +693,8 @@ Thus, they must each have a correct configuration for each supported database (H
 To configure Scheduler or Resource Mananger, one have to modify *PROACTIVE_HOME/config/scheduler/database.properties*
 and *PROACTIVE_HOME/config/rm/database.properties* respectively. For microservices, you have also to modify files in: *PROACTIVE_HOME/config/MICROSERVICE-NAME/database.properties*.
 
+TIP: The `PROACTIVE_HOME/tools/configure-db` command can be used to apply a database configuration. See <<_configure_database_command>>
+
 For *HSQLDB*, the following five properties must be configured:
 [source]
 ----
@@ -1298,6 +1300,233 @@ The REGEX constrain is specified by the property pa.scheduler.label.regex. If th
 
 To be able to edit the default logo displayed in ProActive portals, you have to replace the following file `PROACTIVE_HOME/dist/war/getstarted/assets/image/custom-logo.png` with your custom logo.
 
+=== Configuration Tools
+
+==== Configure Http Server Command
+
+The command line `PROACTIVE_HOME/tools/configure-http` allows configuring the main parameters of the *http server*.
+
+ * The _protocol_ (scheme).
+ * The _port_.
+ * The _hostname_ or _IP address_ used by internal http communications (when a specific hostname must be configured rather than localhost).
+ * a _public url_ (when the ProActive server is behind a reverse proxy or installed in a cloud instance).
+
+The command options with several usage examples are described below:
+
+----
+$> ./configure-http -h
+usage: configure-http [-d] [-h] [-H <HOSTNAME>] [-P <PORT>] [--public-hostname <PUBLIC-HOSTNAME>] [--public-port <PUBLIC-PORT>]
+[--public-scheme <PUBLIC-SCHEME>] [-S <SCHEME>]
+
+Change ProActive Jetty (Web) Server parameters and apply it to all configuration files.
+This command can be used, for example, to change the ProActive server HTTP port or switch the server to the HTTPS protocol.
+
+ -d,--debug                               Debug mode (prints modified files and properties)
+ -h,--help                                Display this help
+ -H,--hostname <HOSTNAME>                 Hostname used (e.g. localhost, myserver) or IP address (e.g. 127.0.0.1, 192.168.12.1). When
+                                          this option is not provided, the hostname appearing in existing configuration files urls will
+                                          be unchanged.
+ -P,--port <PORT>                         Port used (e.g. 8080, 8443). When this option is not provided, the port configured for the
+                                          current scheme (http or https) will be used.
+    --public-hostname <PUBLIC-HOSTNAME>   Public Hostname used (e.g. myserver.mydomain) or IP address (e.g. 192.168.12.1). This setting
+                                          should be used when the ProActive server is deployed behind a reverse proxy or inside a cloud
+                                          instance. This option must be defined when any of public-scheme or public-port is set.
+    --public-port <PUBLIC-PORT>           Public port used (e.g. 8080, 8443). This setting should be used when the ProActive server is
+                                          deployed behind a reverse proxy or inside a cloud instance. This option must be defined when
+                                          any of public-scheme or public-hostname is set.
+    --public-scheme <PUBLIC-SCHEME>       Public protocol used (http or https). This setting should be used when the ProActive server
+                                          is deployed behind a reverse proxy or inside a cloud instance. This option must be defined
+                                          when any of public-hostname or public-port is set.
+ -S,--scheme <SCHEME>                     Http protocol to use (http or https). When this option is not provided, the currently
+                                          configured protocol will remain unchanged.
+
+Examples:
+# Configure scheme to https with port 8444 and default hostname. Debug output to see all modifications.
+configure-http -S https -P 8444 -d
+# Configure scheme to http with default port and specific hostname
+configure-http -S http -H myserver
+# Configure public address to use the server behind a reverse-proxy
+configure-http --public-scheme=https --public-hostname=myproxy.mycompany.com --public-port=8443
+----
+
+See <<_rest_api_properties>> for the full description of the http server configuration.
+
+==== Configure Database Command
+
+The command line `PROACTIVE_HOME/tools/configure-db` allows configuring the ProActive server to use an external database.
+
+ProActive uses by default an embedded database called link:https://hsqldb.org/[HSQLDB].
+In order to use a different database such as PostgreSQL, MySQL or Oracle, the `configure-db` command can be used to modify the ProActive server configuration files
+and allow interaction with this external database.
+
+NOTE: `configure-db` configures the connection from ProActive components to the database and not the database itself.
+
+WARNING: Each ProActive component (*Resource Manager*, *Scheduler*, *Catalog*, *Service Automation* and *Notification Service*) that uses an external database needs to be configured separately. Accordingly, the `configure-db` command should be run multiple times.
+
+The command options with several usage examples are described below:
+
+----
+$> ./configure-db -h
+usage: configure-db [-c <COMPONENT>] [-d] [-h] [-H <HOSTNAME>] [-p <PASSWORD>] [-P <PORT>] [-s <SCHEMA-NAME>] [-U <URL>] [-u
+       <USERNAME>] [-v <DATABASE-VENDOR>] [-z <TIMEZONE>]
+
+Change ProActive server database configuration.
+ProActive can either use the integrated HSQLDB database or an external database (PostgreSQL MySQL or Oracle).
+ProActive requires the following components to be mapped to different database schemas:
+Resource Manager, Scheduler, Catalog, Service Automation and Notification Service.
+
+ -c,--component <COMPONENT>               Target component to configure. Component name can be "rm", "scheduler", "catalog",
+                                          "service-automation", "notification" or "all" (to configure all components with a common
+                                          configuration).
+ -d,--debug                               Debug mode (prints modified files and properties)
+ -h,--help                                Display this help
+ -H,--hostname <HOSTNAME>                 Database hostname used (e.g. localhost, myserver) or IP address (e.g. 127.0.0.1,
+                                          192.168.12.1). This option cannot be used in conjunction with --url.
+ -p,--password <PASSWORD>                 Database user password. Password can be provided already encrypted using the 'encypt' command
+                                          or in clear text. The password will always be encrypted when stored in configuration files.
+ -P,--port <PORT>                         Database port used (e.g. 9001, 5432). If this option is not provided, the database vendor
+                                          default port will be used. This option cannot be used in conjunction with --url.
+ -s,--schema-name <SCHEMA-NAME>           Override the default database schema name for the selected component. Defaults names are {
+                                          Resource Manager : "rm", Scheduler : "scheduler", Catalog : "catalog", Service Automation :
+                                          "pca", Notification Service : "notification" }. This option cannot be used when
+                                          --component=all or when --database-vendor=hsqldb
+ -U,--url <URL>                           Sets the JDBC url that will be used to access the target component database. If not used, the
+                                          url will be inferred from --hostname, --port and optionally --schema-name options. This
+                                          option cannot be used when --component=all. Note: this parameter is the only way to use the
+                                          TNS URL Format with Oracle database.
+ -u,--username <USERNAME>                 Database user name
+ -v,--database-vendor <DATABASE-VENDOR>   Target database vendor to configure ("hsqldb", "postgresql", "mysql" or "oracle")
+ -z,--timezone <TIMEZONE>                 Specific to MySQL, sets the timezone used by the MySQL server. The default is "UTC". This
+                                          option cannot be used in conjunction with --url.
+
+Examples:
+# Configure HSQLDB for all components with single user and password, default hostname and port. Debug output to see all modifications.
+configure-db -c all -v hsqldb -u user -p pwd -d
+# Configure PostgreSQL for the Resource Manager component with a specific hostname and port
+configure-db -c rm -v postgresql -H myserver -P 5434 -u user -p pwd
+# Configure PostgreSQL for the Resource Manager component with a specific hostname, port and schema name
+configure-db -c rm -v postgresql -H myserver -P 5434 -s RESOURCE_MANAGER -u user -p pwd
+# Configure Oracle for the Resource Manager component with a TNS URL format
+configure-db -c rm -v oracle -U
+"jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=myserver)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=rm))" -u user -p pwd
+----
+
+See <<_database_configuration>> for a complete explanation of different database vendor configurations.
+
+[_configure_ldap_command]
+==== Configure LDAP / Active Directory Command
+
+The command line `PROACTIVE_HOME/tools/configure-ldap` allows configuring the ProActive server to use LDAP or Active Directory authentication.
+
+`configure-ldap` uses the following process in order to configure authentication:
+
+1. It *modifies* the various configuration files using the parameters received (LDAP server url, bind login, user/group subtree, etc).
+2. It *checks* the connection to the LDAP server and *installs* inside the ProActive Java Runtime Environment *SSL certificates* in case of _LDAPS_ usage.
+3. It *tests* authentication with a provided _test user_'s credentials to validate that authentication works properly.
+4. If it succeeds, the configuration is *persisted*. Otherwise, the configuration is *reverted*.
+
+The command options with several usage examples are described below:
+
+----
+$> ./configure-ldap -h
+usage: configure-ldap [-a] [-d] [--group.attr <GROUP.ATTR>] [--group.filter <GROUP.FILTER>] [--group.subtree <GROUP.SUBTREE>] [-h]
+       [-l <LOGIN>] [-o <OUTPUT.FILE>] [-p <PASSWORD>] [-s] [--start.tls.disable.check] [--tenant.attribute <TENANT.ATTRIBUTE>]
+       [--test.pwd <TEST.PWD>] [--test.user <TEST.USER>] [--truststore.path <TRUSTSTORE.PATH>] [--truststore.pwd <TRUSTSTORE.PWD>] [-u
+       <URL>] [--user.filter <USER.FILTER>] [--user.subtree <USER.SUBTREE>]
+
+Configure ProActive server for LDAP authentication.
+ProActive can either use an Active Directory or a classical LDAP server for authentication.
+
+ -a,--auth.disable                          Use this option to disable authentication to the LDAP server (only when the server supports
+                                            anonymous connections).
+ -d,--debug                                 Debug mode (prints modified files and properties)
+    --group.attr <GROUP.ATTR>               The attribute in the group entry that matches the jaas' group name. Default is "cn".
+    --group.filter <GROUP.FILTER>           LDAP filter executed when searching for all groups associated with a given user. By
+                                            default, the search takes as parameter the user LDAP entry. Option group.filter.use.uid can
+                                            be enabled to give as parameter the user identifier instead. The default group filter,
+                                            depending on the LDAP server type and group.filter.use.uid option is  :
+                                            {LDAP=(&(objectclass=groupOfUniqueNames)(uniqueMember=%s)),
+                                            LDAPwithUID=(&(objectclass=posixGroup)(memberUID=%s)),
+                                            AD=(&(objectclass=group)(member:1.2.840.113556.1.4.1941:=%s))}
+    --group.subtree <GROUP.SUBTREE>         Scope in the LDAP tree where groups can be found. If not set, the value of option
+                                            user.subtree will be used.
+ -h,--help                                  Display this help
+ -l,--login <LOGIN>                         login name used to connect (bind) to the ldap server when executing queries. The login is
+                                            usually a LDAP distinguished name (e.g. uid=janedoe,ou=People,dc=activeeon,dc=com).
+ -o,--output.file <OUTPUT.FILE>             Ldap configuration file that will be modified. It will be created by copying the default
+                                            configuration file if it does not exist.
+ -p,--password <PASSWORD>                   Password associated with the login name. Password can be provided already encrypted using
+                                            the 'encypt' command or in clear text.The password will always be encrypted when stored in
+                                            the ldap configuration file.
+ -s,--start.tls                             Enable StartTLS mode.
+    --start.tls.disable.check               If StartTLS mode is enable, disable certificate verification check.
+    --tenant.attribute <TENANT.ATTRIBUTE>   An LDAP attribute such as "department" or "project" can be used to group categories of
+                                            users in an abstract organization called "Tenant".
+    --test.pwd <TEST.PWD>                   (Required) Password of the user that will be searched using configured filters. This
+                                            parameter is required to validate the configuration and guarantee that the connection and
+                                            filters are working properly.
+    --test.user <TEST.USER>                 (Required) Identifier of the user that will be searched using configured filters. This
+                                            parameter is required to validate the configuration and guarantee that the connection and
+                                            filters are working properly.
+    --truststore.path <TRUSTSTORE.PATH>     Path to the truststore that will be used to store LDAPS certificates. If the file does not
+                                            exist it will be created. The default value is config/authentication/truststore
+    --truststore.pwd <TRUSTSTORE.PWD>       Password used to encrypt the truststore that will be created if the LDAP server is using
+                                            LDAPS protocol. If not provided the default password will be "activeeon".
+ -u,--url <URL>                             (required) Url(s) of the LDAP server(s). Multiple servers can be configured using a
+                                            comma-separated list.
+    --user.filter <USER.FILTER>             LDAP filter executed when searching for a LDAP user entry which corresponds to a given user
+                                            identifier. The default user filter, depending on the LDAP server type is :
+                                            {LDAP=(&(objectclass=inetOrgPerson)(uid=%s)), AD=(&(objectclass=user)(sAMAccountName=%s))}
+    --user.subtree <USER.SUBTREE>           (required) Scope in the LDAP tree where users can be found.
+
+Examples:
+# Configure Ldap authentication for a ldaps server and default filters. Debug output to see all modifications.
+configure-ldap --url ldaps://ldap-server1.activeeon.com --user.subtree "ou=users,dc=activeeon,dc=org" --group.subtree
+"ou=groups,dc=activeeon,dc=org" --login "cn=admin,dc=activeeon,dc=org" --password "my_bind_pwd" --test.user user1 --test.pwd
+"my_test_pwd" --debug
+----
+
+See <<_ldap>> for a full explanation of LDAP authentication parameters.
+
+==== Copy Role Command
+
+The command line `PROACTIVE_HOME/tools/copy-role` can be used to duplicate a role defined in the `PROACTIVE_HOME/config/security.java.policy-server` file.
+
+As described in <<_user_permissions>>, the file `security.java.policy-server` is used to store the definitions of users groups and their rights within the ProActive server.
+
+The `copy-role` command is used when a new group of users needs to be created with the same rights as an existing group.
+It can also be used after configuring <<_ldap>>, to map existing _ldap groups_ to one of the default roles defined in `security.java.policy-server`.
+
+For example, in order to import the ldap group `it-admin` as an administrator of the ProActive server:
+
+----
+copy-role --source server-admins --destination it-admin
+----
+
+See <<_default_groupsroles>> for a description of all roles defined by default in the ProActive server.
+
+WARNING: Any modification to the `security.java.policy-server` file is taken into account only after the ProActive server is restarted.
+
+The command options with several usage examples are described below:
+
+----
+$> ./copy-role -h
+usage: copy-role [-d] [-D <DESTINATION>] [-h] [-S <SOURCE>] [-y]
+
+Create a new JaaS role by copying an existing one.
+JaaS roles are used to define authorization inside the ProActive server.
+
+ -d,--debug                       Debug mode (prints modified files and properties)
+ -D,--destination <DESTINATION>   (required) Name of the destination role (group).
+ -h,--help                        Display this help
+ -S,--source <SOURCE>             (required) Name of the role (group) that will be copied.
+ -y,--overwrite                   Overwrite if the destination role already exists.
+
+Examples:
+# Copy existing 'server-admins' role into new role 'my-admin-group'. Debug output to see all modifications.
+copy-role --source server-admins --destination my-admin-group --debug
+----
+
 == User Authentication
 
 In order to log into ProActive server, every user must have a registered account.
@@ -1531,6 +1760,8 @@ In order to use the LDAP authentication method, change the default authenticatio
 Additionally, multiple LDAP parameters must be configured in a dedicated LDAP configuration file, such as *path in LDAP tree users*, LDAP *groups* that define
 user and admin group membership, *URL* of the LDAP server, LDAP *binding method* used by connection and configuration
 of SSL/TLS if you want a secured connection between the ProActive Resource Manager and LDAP.
+
+TIP: The `PROACTIVE_HOME/tools/configure-ldap` command can be used to configure LDAP and test the configuration. See <<_configure_ldap_active_directory_command>>.
 
 We assume that the existing LDAP server is configured in a way that:
 
@@ -1964,14 +2195,19 @@ The following groups are defined by default in the `security.java.policy-server`
 * `nsadmins`: this group gives the permission to create, edit or remove Node Sources in the resource manager.
 * `providers`: this group gives only the permission to add nodes to the resource manager or to an existing Node Source.
 * `rmcoreadmins` : this group gives full interaction capability with the resource manager (create, edit, remove Node Sources, add nodes, etc).
-* `admin` : this group gives full permission on every aspect, this group is [.underline]#deprecated# and is kept for backward compatibility purpose only (use the above `scheduleradmins` and `rmcoreadmins` instead).
-* `watchers` : this group allows to receive notification events from the scheduler and resource manager, but cannot perform any action. It is mostly used internally.
+* `server-admins` : this group combine the rights of `rmcoreadmins` and `scheduleradmins` groups.
+* `admin` : this group gives full permission on every aspect, this group is [.underline]#deprecated# and is kept for backward compatibility purpose only (use the above `server-admins` for a global administrator instead).
+* `watchers` : this group allows receiving notification events from the scheduler and resource manager, but cannot perform any action. It is mostly used internally.
 * `citizen-ds` : this group gives enough permissions to software power users who can do moderate data analysis tasks (studio, catalog-portal, workflow-execution, job-analytics).
 * `expert-ds` : this group gives permissions to expert data scientists to collect and clean a wide range of data, and to analyze it to solve business problems (studio, scheduler, catalog-portal, workflow-execution, service-automation, job-analytics, job-gantt, job-planner-calendar-def, job-planner-calendar-def-workflows, job-planner-execution-planning, job-planner-gantt-chart, notification-portal).
 
 === Creating New Groups
 
 New groups can be defined by copying an existing group definition and edit its permissions.
+
+TIP: The `PROACTIVE_HOME/tools/copy-role` command can be used to duplicate an existing group inside the `security.java.policy-server` file. See <<_copy_role_command>>.
+
+WARNING: Any modification to the `security.java.policy-server` file is taken into account only after the ProActive server is restarted.
 
 A *group* is defined using the following syntax:
 
@@ -3786,7 +4022,7 @@ done, the value for properties `web.https.keystore` and
 entered.
 
 For more information, please look at the
-link:https://www.eclipse.org/jetty/documentation/current/configuring-ssl.html[Jetty documentation].
+link:https://wiki.eclipse.org/Jetty/Howto/Configure_SSL[Jetty documentation].
 
 ===== With a trusted certificate
 
