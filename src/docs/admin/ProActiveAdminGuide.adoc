@@ -1285,6 +1285,15 @@ The following important rules apply to global variables and generic information:
             </genericInformation>
 ----
 
+=== Manage job labels
+It is possible to define the job labels list in the Admin menu from Scheduler Portal in order to be able to set a label on a job.
+
+The constraints of a label name can be configured in the `PROACTIVE_HOME/config/scheduler/settings.ini` file.
+
+The maximum length is specified by the property pa.scheduler.label.max.length. If this property is not specified, the default value is 20.
+
+The REGEX constrain is specified by the property pa.scheduler.label.regex. If this property is not specified, the default value is ^[a-zA-Z0-9_/-]*$.
+
 === Custom logo configuration
 
 To be able to edit the default logo displayed in ProActive portals, you have to replace the following file `PROACTIVE_HOME/dist/war/getstarted/assets/image/custom-logo.png` with your custom logo.
