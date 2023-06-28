@@ -2518,7 +2518,7 @@ E. Drag and drop the workflow example of your choice.
 
 F. Execute the chosen workflow, track its progress and preview its results.
 
-More details about these workflows are available in this in link:https://www.activeeon.com/resources/automated-machine-learning-activeeon.pdf[ActiveEon's Machine Learning Documentation]
+More details about these workflows are available in this in link:https://www.activeeon.com/blog/how-to-auto-ml-with-mlos/[ActiveEon's Auto ML Blog]
 
 === Basic ML
 
@@ -2801,7 +2801,7 @@ NOTE: All ML tasks were implemented using https://scikit-learn.org/stable/[Sciki
 
 - After this task, you can use the <<Split_Data>> task to divide the dataset into training and testing sets.
 
-NOTE: More information about this dataset can be found https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_boston.html[here^].
+NOTE: More information about this dataset can be found https://scikit-learn.org/1.0/modules/generated/sklearn.datasets.load_boston.html[here^].
 
 ===== Load_Iris_Dataset
 

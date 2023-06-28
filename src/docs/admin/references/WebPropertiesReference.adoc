@@ -5,6 +5,8 @@ The REST API documentation can be found at _SCHEDULER_URL/rest/doc_.
 
 TIP: The REST API documentation for our try platform is available at https://try.activeeon.com/doc/rest/
 
+TIP: The `PROACTIVE_HOME/tools/configure-http` command can be used to configure the main parameters of the web server such as the protocol (http/https) and port. See <<_configure_http_server_command>>.
+
 The default configuration file is _SCHEDULER_HOME/web/settings.ini_.
 
 [source]
