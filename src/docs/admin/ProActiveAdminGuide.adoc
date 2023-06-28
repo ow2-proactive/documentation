@@ -1286,6 +1286,13 @@ The following important rules apply to global variables and generic information:
 ----
 
 === Manage job labels
+
+A label is a property that can be attached to a job.
+The advantage of having labels is given by the possibility to group and manipulate a certain number of jobs by filtering based on this "custom status" or label.
+
+The job labels are stored in a table in the scheduler database.
+When a label is attached to a job, the label information will be stored in the job table in the scheduler database.
+
 It is possible to define the job labels list in the Admin menu from Scheduler Portal in order to be able to set a label on a job.
 
 The constraints of a label name can be configured in the `PROACTIVE_HOME/config/scheduler/settings.ini` file.
