@@ -1885,6 +1885,17 @@ to validate the workflow and continue the execution of the rest tasks; the *Mayb
 
 In order to validate your workflow using *Web Validation*, you need to go to the *ProActive Notification & Validation* portal. The workflow will be validated by clicking on one of the three buttons. By using *Email Validation*, you will receive an email with three links, the workflow can be validated by clicking on one of the links.
 
+=== Adding Labels to Jobs
+
+A label is a property that can be attached to a job.
+The advantage of having labels is given by the possibility to group and manipulate a certain number of jobs by filtering based on this "custom status" or label.
+For example, a company can require that jobs which are having errors being reviewed by operators and mark them as "reviewed" when completed. Job labels can be used for this purpose.
+
+The user can set a label on a job by clicking on `Job Actions` button of the job and then click on `Edit label`. The user can select any of the labels available in the submenu list.
+It's possible as well to remove a label from a job by selecting `Job Actions` button of the job  and then click on `Remove label`.
+
+Before being able to apply a label to a job, an Administrator has to define the label list link:../admin/ProActiveAdminGuide.html#_manage_job_labels[Data Spaces configuration]
+
 == Data Spaces
 
 If a shared folder or file system is not an option in your environment, the ProActive Scheduler provides a convenient way to transfer files between server and tasks.
