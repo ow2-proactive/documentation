@@ -1295,8 +1295,10 @@ For example, a company can require that jobs which are having errors being revie
 
 Administrators can define which labels can be applied to jobs in the Admin menu of the <<_glossary_scheduler_web_interface,*Scheduler Portal*>>. Physically, possible labels are stored in the scheduler database.
 
-Once a label is applied to a job, it will be stored alonside the job information in the scheduler database.
+Once a label is applied to a job, it will be stored alongside the job information in the scheduler database.
 If, in the future, the administrator changes the label name or deletes it, this operation will not be applied retroactively (the original label attached to the job will not be modified).
+
+image::manage_labels.png[Manage Labels]
 
 The constraints of a label name can be configured in the `PROACTIVE_HOME/config/scheduler/settings.ini` file.
 
