@@ -1892,12 +1892,12 @@ The advantage of having labels is given by the possibility to group and manipula
 For example, a company can require that jobs which are having errors being reviewed by operators and mark them as "reviewed" when completed. Job labels can be used for this purpose.
 
 It's possible to add a label on a job in <<_glossary_workflow_automation_portal,*Workflow Execution*>>
-The user can set a label on a job by clicking on `Job Actions` button of the job and then click on `Edit label`. The user can select any of the labels available in the submenu list.
-It's possible as well to remove a label from a job by selecting `Job Actions` button of the job  and then click on `Remove label`.
+The user can set a label on a job by clicking on *Job Actions* button of the job and then click on *Edit label*. The user can select any of the labels available in the submenu list.
+It's possible as well to remove a label from a job by selecting *Job Actions* button of the job  and then click on *Remove label*.
 
 The user can set a label on a job from <<_glossary_scheduler_web_interface,*Scheduler Portal*>> as well.
-It's possible to select one or more jobs and then, from the right-click dropdown menu, the user should select `Edit label` and chose from the available labels.
-The user has the option to remove a label from a job or a list of jobs by selecting `Remove label` from the same dropdown menu.
+It's possible to select one or more jobs and then, from the right-click dropdown menu, the user should select *Edit label* and chose from the available labels.
+The user has the option to remove a label from a job or a list of jobs by selecting *Remove label* from the same dropdown menu.
 
 Before being able to apply a label to a job, an Administrator has to define the label list link:../admin/ProActiveAdminGuide.html#_manage_job_labels[Data Spaces configuration]
 
