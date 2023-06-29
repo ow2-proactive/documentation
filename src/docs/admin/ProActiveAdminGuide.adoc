@@ -1287,6 +1287,27 @@ The following important rules apply to global variables and generic information:
             </genericInformation>
 ----
 
+=== Manage job labels
+
+A label is a property that can be attached to a job.
+The advantage of having labels is given by the possibility to group and manipulate a certain number of jobs by filtering based on this "custom status" or label.
+For example, a company can require that jobs which are having errors being reviewed by operators and mark them as "reviewed" when completed. Job labels can be used for this purpose.
+
+Administrators can define which labels can be applied to jobs in the Admin menu of the <<_glossary_scheduler_web_interface,*Scheduler Portal*>>. Physically, possible labels are stored in the scheduler database.
+
+Once a label is applied to a job, it will be stored alongside the job information in the scheduler database.
+If, in the future, the administrator changes the label name or deletes it, this operation will not be applied retroactively (the original label attached to the job will not be modified).
+
+image::manage_labels.png[Manage Labels]
+
+The constraints of a label name can be configured in the `PROACTIVE_HOME/config/scheduler/settings.ini` file.
+
+The maximum length is specified by the property `pa.scheduler.label.max.length`.
+If this property is not specified, the default value is ``20``.
+
+The regular expression constraint is specified by the `property pa.scheduler.label.regex`.
+If this property is not specified, the default value is ``^[a-zA-Z0-9_/-]*$``.
+
 === Custom logo configuration
 
 To be able to edit the default logo displayed in ProActive portals, you have to replace the following file `PROACTIVE_HOME/dist/war/getstarted/assets/image/custom-logo.png` with your custom logo.
