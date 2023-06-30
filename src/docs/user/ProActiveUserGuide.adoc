@@ -1899,7 +1899,7 @@ The user can set a label on a job from <<_glossary_scheduler_web_interface,*Sche
 It's possible to select one or more jobs and then, from the right-click dropdown menu, the user should select *Edit label* and chose from the available labels.
 The user has the option to remove a label from a job or a list of jobs by selecting *Remove label* from the same dropdown menu.
 
-Before being able to apply a label to a job, an Administrator has to define the label list link:../admin/ProActiveAdminGuide.html#_manage_job_labels[Data Spaces configuration]
+Before being able to apply a label to a job, an Administrator has to define the label list, see link:../admin/ProActiveAdminGuide.html#_manage_job_labels[*Manage job labels*]
 
 == Data Spaces
 
