@@ -235,22 +235,57 @@ The list always contain an empty value choice.
 |Metric Name
 |Description
 |Model Syntax
-|Example returned data
+|Example query/returned data
 
 |Hosts
 |All machine host names or ip addresses registered in the Resource Manager
 |`PA:MODEL_FROM_URL(${PA_SCHEDULER_REST_PUBLIC_URL}/rm/model/hosts)`
 |PA:LIST(,try.activeeon.com,10.0.0.19)
 
+|Hosts Filtered by Name
+|All machine host names or ip addresses registered in the Resource Manager that match a given link:https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[regular expression].
+|`PA:MODEL_FROM_URL(${PA_SCHEDULER_REST_PUBLIC_URL}/rm/model/hosts?name=regexp)`
+
+_Some characters of the regular expression must be encoded according to the link:https://en.wikipedia.org/wiki/URL_encoding[specification]._
+|?name=try%5Ba-z%5D*.activeeon.com => PA:LIST(,try.activeeon.com,trydev.activeeon.com,tryqa.activeeon.com)
+
 |Node Sources
 |All node sources registered in the Resource Manager
 |`PA:MODEL_FROM_URL(${PA_SCHEDULER_REST_PUBLIC_URL}/rm/model/nodesources)`
 |PA:LIST(,Default,LocalNodes,GPU,Kubernetes)
 
+|Node Sources Filtered by Name
+|All node sources registered in the Resource Manager that match a given link:https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[regular expression].
+|`PA:MODEL_FROM_URL(${PA_SCHEDULER_REST_PUBLIC_URL}/rm/model/nodesources?name=regexp)`
+
+_Some characters of the regular expression must be encoded according to the link:https://en.wikipedia.org/wiki/URL_encoding[specification]._
+|?name=Azure.* => PA:LIST(,AzureScaleSet1,AzureScaleSet2)
+
+|Node Sources Filtered by Infrastructure Type
+|All node sources registered in the Resource Manager whose infrastructure type corresponds to the given parameter. See link:../admin/ProActiveAdminGuide.html#_node_source_infrastructures[Node Source Infrastructures].
+|`PA:MODEL_FROM_URL(${PA_SCHEDULER_REST_PUBLIC_URL}/rm/model/nodesources?infrastructure=name)`
+
+_Any infrastructure class name which contains the given parameter (case-insensitive) will be accepted._
+|?infrastructure=Azure.* will return all node sources that have an AzureInfrastructure or AzureVMScaleSetInfrastructure types.
+
+|Node Sources Filtered by Policy Type
+|All node sources registered in the Resource Manager whose policy type corresponds to the given parameter. See link:../admin/ProActiveAdminGuide.html#_node_source_policies[Node Source Policies].
+|`PA:MODEL_FROM_URL(${PA_SCHEDULER_REST_PUBLIC_URL}/rm/model/nodesources?policy=name)`
+
+_Any policy class name which contains the given parameter (case-insensitive) will be accepted._
+|?policy=Dynamic.* will return all node sources that have a DynamicPolicy type.
+
 |Tokens
 |All tokens registered in the Resource Manager (across all registered ProActive Nodes). See <<_node_access_token>>.
 |`PA:MODEL_FROM_URL(${PA_SCHEDULER_REST_PUBLIC_URL}/rm/model/tokens)`
 |PA:LIST(,token1,token2)
+
+|Tokens Filtered by Name
+|All tokens registered in the Resource Manager (across all registered ProActive Nodes) that match a given link:https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[regular expression]. See <<_node_access_token>>.
+|`PA:MODEL_FROM_URL(${PA_SCHEDULER_REST_PUBLIC_URL}/rm/model/tokens?name=regexp)`
+
+_Some characters of the regular expression must be encoded according to the link:https://en.wikipedia.org/wiki/URL_encoding[specification]._
+|?name=token.* => PA:LIST(,token1,token2)
 |===
 
 ====== Spring Expression Language Model
