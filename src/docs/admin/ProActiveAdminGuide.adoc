@@ -1302,7 +1302,7 @@ Once a label is applied to a job, it will be stored alongside the job informatio
 
 image::manage_labels.png[Manage Labels]
 
-In User Guide, link:../admin/ProActiveUserGuide.html#_adding_labels_to_jobs[*Adding Labels to Jobs*]
+In User Guide, link:../user/ProActiveUserGuide.html#_adding_labels_to_jobs[*Adding Labels to Jobs*]
 
 The constraints of a label name can be configured in the `PROACTIVE_HOME/config/scheduler/settings.ini` file.
 
