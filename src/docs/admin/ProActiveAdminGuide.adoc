@@ -2350,12 +2350,18 @@ In addition to these standard set of permissions, a few special permissions are 
 ----
 permission org.ow2.proactive.scheduler.permissions.HandleOnlyMyJobsPermission "true";
 ----
-Mandatory for any scheduler user, defines whether each member of the group can interact (kill, pause, resume, etc) with other users jobs (`false`) or only with the jobs that belong to the user (`true`).
+_Mandatory_ for any user that submits workflows, defines whether each member of the group can interact (kill, pause, resume, etc) with other users jobs (`false`) or only with the jobs that belong to the user (`true`).
+
+----
+permission org.ow2.proactive.scheduler.permissions.OtherUsersJobReadPermission;
+----
+_Optional_ permission that allows a group of users to have read-only access to other users jobs.
+With this permission enabled, a user will be able to read the details of other users' jobs (such as logs, results, etc.) but will not be able to perform an operation that will modify the job execution (pause, kill, etc.).
 
 ----
 permission org.ow2.proactive.scheduler.permissions.ChangePriorityPermission "1,2,3";
 ----
-Mandatory for any scheduler user, defines the set of link:../user/ProActiveUserGuide.html#_job_priority[Job Priorities] that the group is allowed to use in submitted workflows.
+_Mandatory_ for any user that submits workflows, defines the set of link:../user/ProActiveUserGuide.html#_job_priority[Job Priorities] that the group is allowed to use in submitted workflows.
 
 Possible values are:
 
@@ -2371,7 +2377,7 @@ When a member tries to submit a workflow with a priority not included in the def
 ----
 permission org.ow2.proactive.scheduler.permissions.HandleJobsWithGenericInformationPermission "<gi_definitions>";
 ----
-Optional permission that allows member to interact with any job that contain the mentioned link:../user/ProActiveUserGuide.html#_generic_information[Generic Information].
+_Optional_ permission that allows a group of users to interact with any job that contain the mentioned link:../user/ProActiveUserGuide.html#_generic_information[Generic Information].
 
 `<gi_definitions>` can either be empty or contain a comma separated list of generic information pairs, such as `gi1=value1,gi2=value2`.
 
@@ -2380,19 +2386,19 @@ When more than one generic information is specified, then a member can interact 
 ----
 permission org.ow2.proactive.scheduler.permissions.ConnectToResourceManagerPermission;
 ----
-Administrative permission that allows linking the scheduler to an existing resource manager.
+_Administrative_ permission that allows linking the scheduler to an existing resource manager.
 
 ----
 permission org.ow2.proactive.scheduler.permissions.ChangePolicyPermission;
 ----
-Administrative permission that allows changing the server's <<_scheduling_policies,Scheduling Policy>>.
+_Administrative_ permission that allows changing the scheduler's <<_scheduling_policies,Scheduling Policy>>.
 
 ----
 permission org.ow2.proactive.scheduler.permissions.TenantAllAccessPermission;
 ----
-Administrative permission that allows access to all tenants when tenant isolation is enabled. See <<_tenants>>.
+_Administrative_ permission that allows access to all tenants when tenant isolation is enabled. See <<_tenants>>.
 
-Finally, the following permissions are needed for administrative access:
+Finally, the following permissions are needed for _administrative_ access to the scheduler:
 
 ----
 permission javax.management.MBeanPermission "org.ow2.proactive.scheduler.core.jmx.mbean.AllAccountsMBeanImpl#*[*:*]", "*";
@@ -2429,7 +2435,7 @@ In addition to Resource Manager and Scheduler, a few permissions can be defined 
 ----
 permission org.ow2.proactive_grid_cloud_portal.common.PortalAccessPermission "<portal_list>";
 ----
-This mandatory permission defines which portals are accessible for members of the group.
+_Mandatory_ permission that defines which portals are accessible for members of the group.
 
 `<portal_list>` is either `*` to allow accessing all portals or a comma-separated list of portal names:
 
@@ -2459,21 +2465,21 @@ This mandatory permission defines which portals are accessible for members of th
 ----
 permission org.ow2.proactive.permissions.PcaAdminPermission;
 ----
-This permission gives administrative access to <<_glossary_cloud_automation_service,Service Automation>>. A member of a group with such permission can interact with any service (not only owned services).
+This permission gives _administrative_ access to <<_glossary_cloud_automation_service,Service Automation>>. A member of a group with such permission can interact with any service (not only owned services).
 
 ==== Job Planner permissions
 
 ----
 permission org.ow2.proactive.scheduler.permissions.JobPlannerAllAccessPermission;
 ----
-This permission gives administrative access to <<_glossary_job_planner,Job Planner>>. A member of a group with such permission can interact with any calendar association (not only owned associations).
+This permission gives _administrative_ access to <<_glossary_job_planner,Job Planner>>. A member of a group with such permission can interact with any calendar association (not only owned associations).
 
 ==== Notification Service permissions
 
 ----
 permission org.ow2.proactive.permissions.NotificationAdminPermission;
 ----
-This permission gives administrative access to <<_glossary_notification_service,Notification Service>>, allowing to delete any notification.
+This permission gives _administrative_ access to <<_glossary_notification_service,Notification Service>>, allowing to delete any notification.
 
 == Deploy ProActive Nodes
 
