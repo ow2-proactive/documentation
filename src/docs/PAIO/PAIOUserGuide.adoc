@@ -473,13 +473,13 @@ In the domain of machine learning operations (MLOps), the successful deployment 
 
 An MLOps dashboard serves as a centralized hub for data scientists, engineers, and stakeholders involved in deploying and monitoring machine learning models. It provides a comprehensive view of the deployment pipelines, real-time performance metrics, and key indicators. Furthermore, it includes features specifically designed to manage and monitor the underlying model servers.
 
-Model servers, also known as serving infrastructure, play a vital role in hosting deployed machine learning models and providing predictions or inferences to applications or users. An MLOps dashboard equipped with model server management capabilities allows users to seamlessly manage the infrastructure aspect of model deployment.
+Model servers, also known as serving infrastructure, are responsible for hosting the deployed machine learning models and providing predictions or inferences to applications or users. An MLOps dashboard equipped with model server management capabilities allows users to seamlessly handle the infrastructure aspect of model deployment.
 
-The MLOps dashboard enhances its monitoring capabilities by incorporating the monitoring of the underlying infrastructure's health and performance. It provides real-time insights into server metrics, resource utilization, and availability, allowing teams to promptly identify and address any infrastructure-related issues. This comprehensive monitoring capability ensures that the model servers are performing optimally and can handle the predicted workloads efficiently.
+The MLOps dashboard extends its monitoring capabilities by incorporating the monitoring of the underlying infrastructure's health and performance. It provides real-time insights into server metrics, resource utilization, and availability, allowing teams to promptly identify and address any infrastructure-related issues. This comprehensive monitoring capability ensures that the model servers are performing optimally and can handle the predicted workloads efficiently.
 
 Collaboration is also a key aspect of an MLOps dashboard. It enables seamless communication and collaboration among data scientists, engineers, and other stakeholders involved in both model deployment and server management. The dashboard allows users to share insights, discuss server performance trends, and provide feedback, fostering a collaborative environment that facilitates continuous improvement and innovation for both models and infrastructure.
 
-To facilitate this process, our MLOps dashboard with three distinct tabs - <<Model Servers Monitoring>>, <<Models Resource Usage>>, and <<Dashboard Resource Usage>> - provides a comprehensive and intuitive interface for data scientists, engineers, and stakeholders involved in MLOps.
+To facilitate this process, the MLOps dashboard provide three distinct tabs - <<Model Servers Monitoring>>, <<Models Resource Usage>>, and <<Dashboard Resource Usage>> - provides a comprehensive and intuitive interface for data scientists, engineers, and stakeholders involved in MLOps.
 
 === Model Servers Monitoring
 
@@ -499,7 +499,7 @@ In the first part, there are 6 main widgets providing general information about 
 
 5. *Average Inference Time*: This widget displays the average time taken for an inference to be processed. It provides an indication of the computational efficiency and latency of the model servers in generating predictions or inferences. Additionally, the minimum and maximum inference times help identify the performance variations.
 
-6. *Average Inference Rate*: This widget shows the average rate at which inferences are processed, indicating the throughput or number of inferences handled per unit of time (per ninute). The minimum and maximum inference rates provide insights into the server's capacity and ability to handle varying workloads.
+6. *Average Inference Rate*: This widget shows the average rate at which inferences are processed, indicating the throughput or number of inferences handled per unit of time (per minute). The minimum and maximum inference rates provide insights into the server's capacity and ability to handle varying workloads.
 
 In the second part of the Model Servers Monitoring tab, there is a table listing the model servers along with their respective specific characteristics. The table provides detailed information about each model server instance. Here are the columns representing the characteristics of the model servers:
 
@@ -509,7 +509,7 @@ In the second part of the Model Servers Monitoring tab, there is a table listing
 
 3. *Instance Name*: This column specifies the name given to the model server instance, enabling users to easily identify and differentiate between different instances.
 
-4. *Status*: The Status column indicates the current status of the model server instance. The Status column provides important visibility into the current state of each model server instance, allowing users to quickly identify whether an instance is actively serving, has completed its task, or requires further attention due to issues encountered. It can take one of the following values:
+4. *Status*: The Status column indicates the current status of the model server instance. It provides important visibility into the current state of each model server instance, allowing users to quickly identify whether an instance is actively serving, has completed its task, or requires further attention due to issues encountered. It can take one of the following values:
 
 - Running: This status indicates that the model server instance is currently active and operational, ready to serve model predictions or inferences.
 
@@ -517,7 +517,7 @@ In the second part of the Model Servers Monitoring tab, there is a table listing
 
 - Finished with issues: The "Finished with issues" status indicates that the model server instance has encountered problems or issues during its operation. It suggests that the instance has completed its task, but there may have been complications or errors along the way that require attention or investigation.
 
-5. *Start Time*: The Start Time column indicates the datetime when the model server instance was initiated or started.
+5. *Start Time*: The Start Time column indicates the datetime when the model server instance was initiated.
 
 6. *Node*: This column identifies the specific node or machine where the model server instance is running, providing insights into the underlying infrastructure allocation.
 
@@ -590,10 +590,9 @@ This subtable provides additional information about each model. Here are the col
 
 2. *Model Name*: This column represents the name or identifier of the model deployed on the model server, allowing for easy identification and differentiation between different models.
 
-3. *Version*: The Version column indicates the version of the model deployed. It is particularly relevant when a model has multiple deployed versions. Model versioning enables reproducibility and traceability,
-facilitates performance monitoring and evaluation of different model versions, supports experimentation and iterative development, provides a safety net for rollbacks and recovery, and enhances collaboration and teamwork among data scientists.
+3. *Version*: The Version column indicates the version of the model deployed. It is particularly relevant when a model has multiple deployed versions. Model versioning enables reproducibility and traceability, facilitates performance monitoring and evaluation of different model versions, supports experimentation and iterative development, provides a safety net for rollbacks and recovery, and enhances collaboration and teamwork among data scientists.
 
-4. *Stat*: The State column specifies the current state of the model, which can be Active or Inactive. It indicates whether the model is actively serving predictions or has been deactivated.
+4. *State*: The State column specifies the current state of the model, which can be Active or Inactive. It indicates whether the model is actively serving predictions or has been deactivated.
 
 5. *Deployment Time*: The Deployment Time column denotes the timestamp or date when the model was deployed on the model server, providing visibility into the model's deployment history.
 
@@ -676,31 +675,31 @@ The first part focuses on providing information about the overall system. This p
 In the second part of the "Dashboard Resource Usage" tab, there are time series graphs that provide insights into various metrics related to CPU utilization, memory usage, disk memory, and network traffic. The specific graphs in this section include:
 
 1. *CPU Utilization*:
-   - iowait: indicates the percentage of time the CPU is idle but waiting for I/O operations.
-   - irq: displays the CPU utilization due to hardware interrupts.
-   - nice: represents the CPU utilization by processes with a user-defined priority.
-   - softirq: shows the CPU utilization due to software interrupts.
-   - steal: indicates the CPU utilization stolen by other virtual machines in a virtualized environment.
-   - system: reflects the CPU utilization by the system/kernel processes.
-   - user: represents the CPU utilization by user processes.
+  - iowait: indicates the percentage of time the CPU is idle but waiting for I/O operations.
+  - irq: displays the CPU utilization due to hardware interrupts.
+  - nice: represents the CPU utilization by processes with a user-defined priority.
+  - softirq: shows the CPU utilization due to software interrupts.
+  - steal: indicates the CPU utilization stolen by other virtual machines in a virtualized environment.
+  - system: reflects the CPU utilization by the system/kernel processes.
+  - user: represents the CPU utilization by user processes.
 
 2. *Memory Usage*:
-   - Used: displays the memory usage in use by the system.
-   - Buffers: represents the memory used for buffering data from disk.
-   - Cached: shows the memory used for caching data from disk.
-   - Free: indicates the amount of free memory available in the system.
+  - Used: displays the memory usage in use by the system.
+  - Buffers: represents the memory used for buffering data from disk.
+  - Cached: shows the memory used for caching data from disk.
+  - Free: indicates the amount of free memory available in the system.
 
 3. *Used Disk Memory*:
-   - Graphs for specific files or directories, such as "/etc/timezone," "/usr/share/zoneinfo/Etc/UTC," "/etc/hostname," "/etc/hosts," "/etc/resolv.conf," "/etc/prometheus," "/opt/dashboard," and "/opt/grafana/conf." These graphs provide information about the disk memory usage for each specific file or directory.
+  - Graphs for specific files or directories, such as "/etc/timezone," "/usr/share/zoneinfo/Etc/UTC," "/etc/hostname," "/etc/hosts," "/etc/resolv.conf," "/etc/prometheus," "/opt/dashboard," and "/opt/grafana/conf." These graphs provide information about the disk memory usage for each specific file or directory.
 
 4. *Available Disk Space*:
-   - Graphs for specific files or directories, such as "/etc/timezone," "/usr/share/zoneinfo/Etc/UTC," "/etc/hostname," "/etc/hosts," "/etc/resolv.conf," "/etc/prometheus," "/opt/dashboard," and "/opt/grafana/conf." These graphs indicate the available disk space for each specific file or directory.
+  - Graphs for specific files or directories, such as "/etc/timezone," "/usr/share/zoneinfo/Etc/UTC," "/etc/hostname," "/etc/hosts," "/etc/resolv.conf," "/etc/prometheus," "/opt/dashboard," and "/opt/grafana/conf." These graphs indicate the available disk space for each specific file or directory.
 
 5. *Network Traffic*:
-   - eth0 receive: displays the network traffic received on the eth0 network interface.
-   - lo receive: represents the network traffic received on the loopback interface.
-   - eth0 transmit: shows the network traffic transmitted on the eth0 network interface.
-   - lo transmit: indicates the network traffic transmitted on the loopback interface.
+  - eth0 receive: displays the network traffic received on the eth0 network interface.
+  - lo receive: represents the network traffic received on the loopback interface.
+  - eth0 transmit: shows the network traffic transmitted on the eth0 network interface.
+  - lo transmit: indicates the network traffic transmitted on the loopback interface.
 
 
 == Model as a Service for Machine Learning (MaaS_ML)
