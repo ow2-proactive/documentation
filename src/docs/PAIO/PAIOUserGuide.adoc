@@ -467,6 +467,241 @@ References:
 
 2. https://arxiv.org/pdf/2007.14390.pdf[Flower: A Friendly Federated Learning Research Framework]
 
+== MLOps Dashboard
+
+In the domain of machine learning operations (MLOps), the successful deployment and continuous monitoring of machine learning models are crucial for ensuring their reliability and performance. However, in addition to managing models, it is equally important to handle the infrastructure where the models are deployed. This is where an MLOps dashboard, designed specifically for model deployment, monitoring, and model servers, becomes a powerful asset.
+
+An MLOps dashboard serves as a centralized hub for data scientists, engineers, and stakeholders involved in deploying and monitoring machine learning models. It provides a comprehensive view of the deployment pipelines, real-time performance metrics, and key indicators. Furthermore, it includes features specifically designed to manage and monitor the underlying model servers.
+
+Model servers, also known as serving infrastructure, are responsible for hosting the deployed machine learning models and providing predictions or inferences to applications or users. An MLOps dashboard equipped with model server management capabilities allows users to seamlessly handle the infrastructure aspect of model deployment.
+
+The MLOps dashboard extends its monitoring capabilities by incorporating the monitoring of the underlying infrastructure's health and performance. It provides real-time insights into server metrics, resource utilization, and availability, allowing teams to promptly identify and address any infrastructure-related issues. This comprehensive monitoring capability ensures that the model servers are performing optimally and can handle the predicted workloads efficiently.
+
+Collaboration is also a key aspect of an MLOps dashboard. It enables seamless communication and collaboration among data scientists, engineers, and other stakeholders involved in both model deployment and server management. The dashboard allows users to share insights, discuss server performance trends, and provide feedback, fostering a collaborative environment that facilitates continuous improvement and innovation for both models and infrastructure.
+
+To facilitate this process, the MLOps dashboard provide three distinct tabs - <<Model Servers Monitoring>>, <<Models Resource Usage>>, and <<Dashboard Resource Usage>> - provides a comprehensive and intuitive interface for data scientists, engineers, and stakeholders involved in MLOps.
+
+=== Model Servers Monitoring
+
+The Model Servers Monitoring tab focuses on overseeing the health and performance of the model servers or serving infrastructure. It is divided into two main parts. 
+
+image::MLOps_dashboard_model_servers.png[align=center]
+
+In the first part, there are 6 main widgets providing general information about the model servers. These widgets offer valuable insights into the overall performance and usage of the serving infrastructure. Here are the widgets included in this tab:
+
+1. *Model Servers*: This widget displays the number of currently running model servers. It provides a quick overview of the active instances responsible for serving machine learning models.
+
+2. *GPUs*: This widget shows the number of running GPUs. It indicates the availability and utilization of GPU resources within the model servers, which is particularly relevant for GPU-accelerated machine learning workloads.
+
+3. *Deployed Models*: This widget provides the total count of deployed models. It offers a summary of the number of machine learning models that have been successfully deployed and are currently running on the model servers.
+
+4. *TimeSpan Inferences and Total Inferences*: These widgets track the number of inferences performed within a specific timespan and the total number of inferences overall. They give insights into the workload and usage patterns of the deployed models, allowing teams to assess the level of usage and demand for the served models.
+
+5. *Average Inference Time*: This widget displays the average time taken for an inference to be processed. It provides an indication of the computational efficiency and latency of the model servers in generating predictions or inferences. Additionally, the minimum and maximum inference times help identify the performance variations.
+
+6. *Average Inference Rate*: This widget shows the average rate at which inferences are processed, indicating the throughput or number of inferences handled per unit of time (per minute). The minimum and maximum inference rates provide insights into the server's capacity and ability to handle varying workloads.
+
+In the second part of the Model Servers Monitoring tab, there is a table listing the model servers along with their respective specific characteristics. The table provides detailed information about each model server instance. Here are the columns representing the characteristics of the model servers:
+
+1. *ID*: This column displays the unique identifier assigned to each model server instance for easy reference and identification.
+
+2. *Info*: The Info column presents relevant variables and their corresponding values used to launch the model server. It includes details such as the Docker Image utilized, GPU Enabled status, Endpoint ID, Node Source, and whether it is Proxyfied or not.
+
+3. *Instance Name*: This column specifies the name given to the model server instance, enabling users to easily identify and differentiate between different instances.
+
+4. *Status*: The Status column indicates the current status of the model server instance. It provides important visibility into the current state of each model server instance, allowing users to quickly identify whether an instance is actively serving, has completed its task, or requires further attention due to issues encountered. It can take one of the following values:
+
+- Running: This status indicates that the model server instance is currently active and operational, ready to serve model predictions or inferences.
+
+- Finished: The "Finished" status indicates that the model server instance is no longer active and not serving predictions. 
+
+- Finished with issues: The "Finished with issues" status indicates that the model server instance has encountered problems or issues during its operation. It suggests that the instance has completed its task, but there may have been complications or errors along the way that require attention or investigation.
+
+5. *Start Time*: The Start Time column indicates the datetime when the model server instance was initiated.
+
+6. *Node*: This column identifies the specific node or machine where the model server instance is running, providing insights into the underlying infrastructure allocation.
+
+7. *GPUs*: The GPUs column displays the number of GPUs utilized by the corresponding model server instance. It highlights the GPU resource allocation for each instance, particularly useful for GPU-accelerated workloads.
+
+8. *Model Registry*: This column indicates the location or source where the deployed models are stored, facilitating easy access and retrieval.
+
+9. *Model Control Mode*: The Model Control Mode column specifies the mode of model control for the server instance, which can be Poll or None: where all actions can be performed using this mode such as deploying, undeploying, activating or deactivating models, or Explicit: where the models can be activated and deactivated but can not be deployed or undeployed. Using the Model Control Mode all models are loaded from the Model Registry in which models that can not be loaded are marked as UNAVAILABLE.
+
+10. *Nb of models*: This column shows the count of models deployed on the specific model server instance, providing an overview of the model quantity hosted on that instance.
+
+11. *Total Inferences*: The Total Inferences column represents the total number of inferences performed on the model server instance since its start.
+
+12. *TimeSpan Inferences*: This column displays the number of inferences performed on the model server instance within a specified timespan.
+
+13. *Average Inference Time*: The Average Inference Time column indicates the average duration taken by the model server instance to process an inference.
+
+14. *Min Inference Time*: This column represents the minimum time taken for an inference on the model server instance.
+
+15. *Max Inference Time*: The Max Inference Time column displays the maximum time taken for an inference on the model server instance.
+
+16. *Inference Rate*: This column presents the rate or frequency at which inferences are processed by the model server instance, indicating the throughput or performance of the server.
+
+17. *Min Inference Rate*: The Min Inference Rate column shows the lowest inference rate observed on the model server instance.
+
+18. *Max Inference Rate*: This column represents the highest inference rate observed on the model server instance.
+
+19. *Actions*: The Actions column contains buttons that allow users to interact with the model server instance. It includes options such as (1) Deploy a new Model on a running instance, (2) Stop a running model server instance, or (3) Re-Submit a stopped model server instance.
+
+At the top of this tab, there is a "New Model Server Instance" button that allows users to launch a new model server. When clicked, a window will open, presenting variables that need to be specified by the user. There are two types of variables: General or Advanced. The Table below displays all the variables used to start a new model server.
+
+.New_Model_Server_Instance variables
+[cols="2,5,2"]
+|===
+|*Variable name* | *Description* | *Type* 
+3+^|*Workflow variables*
+| `INSTANCE_NAME`
+| Instance name of the new model server.
+| String (default=Empty) [General].
+| `GPU_ENABLED`
+| If True, container will run with NVIDIA GPU support.
+| Boolean (default=False) [General].
+| `MODEL_REGISTRY_PATH`
+| Path to the model repository.
+| String (default="/opt/models") [General].
+| `MODEL_CONTROL_MODE`
+| The model control mode determines how changes to the model repository are handled by the model server.
+| List [none, explicit, poll] (default="explicit") [General].
+|`NODE_SOURCE`
+| If not empty, the workflow tasks will be run only on nodes belonging to the specified node source.
+| List [Default, LocalNodes] (default=Empty) [Advanced].
+|`NODE_ACCESS_TOKEN`
+| If not empty, the workflow tasks will be run only on nodes that contains the specified token.
+| List [model-server-xxx] (default=Empty) [Advanced].
+|`NATIVE_SCHEDULER_PARAMS`
+|Parameters given to the native scheduler (SLURM, LSF, etc) while requesting a ProActive node used to deploy the workflow tasks.
+| String (default=Empty) [Advanced].
+|`DOCKER_IMAGE`
+| Docker image used to start the model server.
+| String (default="nvcr.io/nvidia/tritonserver:22.10-py3") [Advanced].
+|===
+
+In the model servers table, when a model server is selected, it shows another subtable that lists all the models stored in the model registry of that specific model server. 
+
+image::MLOps_dashboard_models.png[align=center]
+
+This subtable provides additional information about each model. Here are the columns characterizing each model:
+
+1. *Server Name*: The Server Name column displays the name of the model server where the model is deployed, providing a clear association between the model and its corresponding server.
+
+2. *Model Name*: This column represents the name or identifier of the model deployed on the model server, allowing for easy identification and differentiation between different models.
+
+3. *Version*: The Version column indicates the version of the model deployed. It is particularly relevant when a model has multiple deployed versions. Model versioning enables reproducibility and traceability, facilitates performance monitoring and evaluation of different model versions, supports experimentation and iterative development, provides a safety net for rollbacks and recovery, and enhances collaboration and teamwork among data scientists.
+
+4. *State*: The State column specifies the current state of the model, which can be Active or Inactive. It indicates whether the model is actively serving predictions or has been deactivated.
+
+5. *Deployment Time*: The Deployment Time column denotes the timestamp or date when the model was deployed on the model server, providing visibility into the model's deployment history.
+
+6. *Total Inferences*: This column represents the total number of inferences performed by the model since its deployment on the model server.
+
+7. *TimeSpan Inferences* The TimeSpan Inferences column displays the number of inferences performed by the model within a specific timespan, allowing for tracking and monitoring of recent model activity.
+
+8. *Inference Time*: The Inference Time column indicates the average duration taken by the model to process an inference.
+
+9. *Min Inference Time*: This column represents the minimum time taken for an inference by the model.
+
+10. *Max Inference Time*: The Max Inference Time column displays the maximum time taken for an inference by the model.
+
+11. *Inference Rate*: This column presents the rate or frequency at which inferences are processed by the model, indicating the throughput or performance of the model.
+
+12. *Min Inference Rate*: The Min Inference Rate column shows the lowest inference rate observed for the model.
+
+13. *Max Inference Rate*: This column represents the highest inference rate observed for the model.
+
+14. *Actions*: The Actions column contains buttons that allow users to interact with the model. The available actions depend on the Model Control Mode of the corresponding model server. For model servers with Model Control Mode as Poll or None, the "Undeploy" button is available to remove the model from the server. For model servers with Model Control Mode as Poll, None, or Explicit, the "Activate" and "Deactivate" buttons are available to control the state of the model.
+
+This tab and the other two tabs include a "Refresh" button, which, when clicked, refreshes the page and displays the last update datetime. 
+
+Additionally, all tabs offer an autorefresh feature that allows users to specify the time period for automatic refreshing. Users can choose from a list of predefined time periods, such as 15 seconds, 30 seconds, 5 minutes, 15 minutes, 30 minutes, 1 hour, etc., to determine how frequently the page should be refreshed automatically.
+
+All the values displayed in the widgets and tables are calculated based on a selected time window. The time window can be chosen from a list of predefined options located at the top of the page, such as "Last 15 minutes," "Last 30 minutes," "Last 1 hour," "Last 24 hours," "Yesterday," "This month," "Previous month," and more. Alternatively, the user can select "Use Calendar," which activates a calendar feature. By choosing this option, the user can manually select the desired "From" and "To" dates, allowing for a custom time window selection.
+
+=== Models Resource Usage
+
+The second tab of the MLOps monitoring dashboard is dedicated to the Models Resource Usage, providing users with valuable insights into the CPU and GPU resource utilization. This tab is thoughtfully divided into two main parts to ensure a comprehensive understanding of the system's resource consumption. 
+
+image::MLOps_dashboard_tab2.png[align=center]
+
+The first part features ten main widgets that offer users a wealth of general information about the CPU and GPU usage. These widgets provide real-time metrics, such as average CPU and GPU utilization, memory consumption, etc. By presenting this data in a visually appealing and easily comprehensible format, users can efficiently monitor and evaluate the overall resource consumption of their system. Whether it's tracking performance trends or identifying potential bottlenecks, these widgets empower users to make informed decisions and optimize their resources effectively.
+
+1. *Avg. CPU Utilization and Avg. GPU Utilization*: These widgets provide users with valuable insights into the average CPU and GPU utilization across all model servers. By calculating and displaying the average utilization percentages, users can quickly evaluate the overall resource usage of their model servers. These metrics allows users to gauge the overall CPU and GPU load and monitor any potential spikes or fluctuations in resource usage.
+
+2. *CPU Memory Consumption and GPU Memory Consumption*: These widgets provide users with insights into the memory usage of both the CPU and GPU across all model servers allowing users to monitor the memory consumption patterns and identify any potential memory-related issues. These information are crucial for ensuring efficient memory allocation and optimizing the performance of the model servers.
+
+3. *Total CPU Available Memory and Total GPU Available Memory*: These widgets present the overall amount of memory that is available for CPU and GPU usage across all model servers. They provide users with a numerical value in gigabytes (GB), indicating the total amount of memory that can be allocated to CPU tasks. These information allow users to understand the total capacity of CPU and GPU memory and make informed decisions regarding memory allocation for their models servers.
+
+4. *Total CPU Memory Usage  and Total GPU Memory Usage*: These widgets display the memory consumption of the CPU and GPU resources across all model servers. It presents users with information about the total amount of memory being used by the CPU, typically measured in gigabytes (GB). These metrics allow users to monitor the overall memory usage of the CPU and GPU resources and identify any potential memory-related issues or constraints.
+
+5. *Total CPU Free Memory and Total GPU Free Memory*: These widgets present the amount of free memory available for CPU and GPU usage across all model servers. It would display a numerical value in gigabytes (GB). These information help users understand the remaining memory capacity that can be allocated to CPU and GPU tasks.
+
+In the second part of the Model Resources Usage tab, there are several graphs that display time series data for each model server. These graphs provide users with detailed information about various metrics related to CPU and GPU utilization, memory usage, and power consumption. The first two graphs are related to CPU Resources and the rest of the graphs are related to GPU Resources:
+
+1. *CPU Utilization*: This graph illustrates the CPU utilization over time for each model server. It presents the percentage of CPU resources being utilized by the respective servers, allowing users to analyze trends and identify periods of high or low CPU usage.
+
+2. *Memory Usage*: This graph showcases the memory usage over time for each model server. It provides insights into the amount of memory being utilized by the servers, helping users monitor memory consumption patterns and identify any potential memory-related issues.
+
+3. *GPU Utilization* This graph displays the GPU utilization over time for each model server. It shows the percentage of GPU resources being utilized by the servers, enabling users to track GPU usage trends and optimize resource allocation for GPU-intensive tasks.
+
+4. *Avg. GPU Utilization per Model Server*: This graph presents the average GPU utilization per model server over time. It provides a comparative view of GPU utilization across different servers, allowing users to identify variations and patterns in resource usage.
+
+5. *GPU Used Memory*: This graph visualizes the GPU memory usage over time for each model server. It illustrates the amount of GPU memory being actively used by the servers, aiding in monitoring memory consumption and optimizing GPU resource allocation.
+
+6. *GPU Free Memory*: This graph shows the GPU free memory over time for each model server. It provides information about the available free memory on the GPUs, helping users track memory availability and ensure optimal memory usage.
+
+7. *GPU Power Usage (Watts)*: This graph displays the power usage of the GPUs over time for each model server. It shows the power consumption in watts, enabling users to monitor the energy usage of the GPUs and evaluate their power requirements.
+
+=== Dashboard Resource Usage
+
+The third tab in this dashboard is dedicated to "Dashboard Resource Usage" providing information about the resource consumption of the entire system, it focuses on monitoring the resources utilized by the MLOps infrastructure as a whole. This tab is divided into two main parts:
+
+image::MLOps_dashboard_tab3.png[align=center]
+
+The first part focuses on providing information about the overall system. This part includes five main metrics:
+
+1. *CPU Utilization*: This metric indicates the overall CPU utilization of the system. It provides information on the average or current CPU usage across all components of the MLOps infrastructure. Monitoring CPU utilization helps users assess the system's workload and identify any potential performance issues or bottlenecks.
+
+2. *Memory Consumption*: This metric reflects the total memory consumption of the system. It provides insights into the amount of memory being used by the MLOps infrastructure as a whole. Monitoring memory consumption helps users ensure sufficient memory resources are available and identify any excessive memory usage that may impact system performance.
+
+3. *Total Available Memory*: This metric represents the total amount of memory available in the system. It provides an understanding of the overall memory capacity that can be allocated to various processes and applications within the MLOps infrastructure.
+
+4. *Used Memory*: This metric indicates the total amount of memory currently in use by the system. It helps users assess the memory usage and understand how much memory is actively being utilized by processes and applications.
+
+5. *Free Memory*: This metric reflects the amount of memory that is currently unoccupied and available for use. It helps users determine the remaining memory capacity in the system and ensure that sufficient free memory is available for optimal performance.
+
+In the second part of the "Dashboard Resource Usage" tab, there are time series graphs that provide insights into various metrics related to CPU utilization, memory usage, disk memory, and network traffic. The specific graphs in this section include:
+
+1. *CPU Utilization*:
+  - iowait: indicates the percentage of time the CPU is idle but waiting for I/O operations.
+  - irq: displays the CPU utilization due to hardware interrupts.
+  - nice: represents the CPU utilization by processes with a user-defined priority.
+  - softirq: shows the CPU utilization due to software interrupts.
+  - steal: indicates the CPU utilization stolen by other virtual machines in a virtualized environment.
+  - system: reflects the CPU utilization by the system/kernel processes.
+  - user: represents the CPU utilization by user processes.
+
+2. *Memory Usage*:
+  - Used: displays the memory usage in use by the system.
+  - Buffers: represents the memory used for buffering data from disk.
+  - Cached: shows the memory used for caching data from disk.
+  - Free: indicates the amount of free memory available in the system.
+
+3. *Used Disk Memory*:
+  - Graphs for specific files or directories, such as "/etc/timezone," "/usr/share/zoneinfo/Etc/UTC," "/etc/hostname," "/etc/hosts," "/etc/resolv.conf," "/etc/prometheus," "/opt/dashboard," and "/opt/grafana/conf." These graphs provide information about the disk memory usage for each specific file or directory.
+
+4. *Available Disk Space*:
+  - Graphs for specific files or directories, such as "/etc/timezone," "/usr/share/zoneinfo/Etc/UTC," "/etc/hostname," "/etc/hosts," "/etc/resolv.conf," "/etc/prometheus," "/opt/dashboard," and "/opt/grafana/conf." These graphs indicate the available disk space for each specific file or directory.
+
+5. *Network Traffic*:
+  - eth0 receive: displays the network traffic received on the eth0 network interface.
+  - lo receive: represents the network traffic received on the loopback interface.
+  - eth0 transmit: shows the network traffic transmitted on the eth0 network interface.
+  - lo transmit: indicates the network traffic transmitted on the loopback interface.
+
+
 == Model as a Service for Machine Learning (MaaS_ML)
 
 Once a predictive model is built, tested and validated, you can easily use it in real world production pipelines by deploying it as a REST Web Service via the MaaS_ML service.
