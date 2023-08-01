@@ -479,7 +479,13 @@ The MLOps dashboard extends its monitoring capabilities by incorporating the mon
 
 Collaboration is also a key aspect of an MLOps dashboard. It enables seamless communication and collaboration among data scientists, engineers, and other stakeholders involved in both model deployment and server management. The dashboard allows users to share insights, discuss server performance trends, and provide feedback, fostering a collaborative environment that facilitates continuous improvement and innovation for both models and infrastructure.
 
-To facilitate this process, the MLOps dashboard provide three distinct tabs - <<Model Servers Monitoring>>, <<Models Resource Usage>>, and <<Dashboard Resource Usage>> - provides a comprehensive and intuitive interface for data scientists, engineers, and stakeholders involved in MLOps.
+To facilitate this process, the MLOps dashboard provides three distinct tabs:
+
+* <<Model Servers Monitoring>>
+* <<Models Resource Usage>>
+* <<Dashboard Resource Usage>>
+
+They provide a comprehensive and intuitive interface for data scientists, engineers, DevOps, and all stakeholders involved in MLOps.
 
 === Model Servers Monitoring
 
