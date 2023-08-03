@@ -518,6 +518,7 @@ In the left part, are illustrated the **General Parameters** of the workflow wit
 
 - `Name`: the name of the workflow.
 - `Project`: the project name to which belongs the workflow.
+- `Tags`: the tags of the workflow.
 - `Description`: the textual description of the workflow.
 - `Documentation`: if the workflow has a Generic Information named "Documentation", then its URL value is displayed as a link.
 - `Job Priority`: the priority assigned to the workflow. It is by default set to `NORMAL`, but can be increased or decreased once the job is submitted.
@@ -2178,6 +2179,9 @@ image::upload-catalog-objects.png[align=left]
 * *Content Type*: The Content Type is used to indicate the media type of the resource. New content Types can be added by clicking the `plus` button.
 
 * *Project Name*: The name of the project to which belongs the object. The project name can be provided for all catalog objects (e.g. workflow, script, rule, etc).
+
+* *Tags*: The tags of the object as a comma-separated values list. The tags can not be provided for workflow and zip files.
+
 WARNING: In case of uploading an archive, all the objects in the zip must have the same Kind and Content Type.
 
 ==== Create a zip archive with Catalog objects
