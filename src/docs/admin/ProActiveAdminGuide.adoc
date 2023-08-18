@@ -1546,12 +1546,121 @@ copy-role --source server-admins --destination my-admin-group --debug
 == User Authentication
 
 In order to log into ProActive server, every user must have a registered account.
-ProActive supports several methods to authenticate users:
+
+A user *login information* is associated with the following attributes:
+
+* a *login* name: when the user authenticate himself into the ProActive server, he/she will use his registered login.
+* a *domain*: when the server runs on a _Windows operating system_ or when the authentication method is configured as <<_ldap_with_multiple_domains>>, a domain name may be associated with the account.
+* a *password*.
+* a list of *groups*. A user may belong to one or more groups. Each group has its own set of authorizations as described in chapter <<_user_permissions>>.
+* a *tenant*: a tenant name may be associated with the user account. Tenants represent the isolation of a set of users within the ProActive server. Tenants must first be configured either using <<_tenants_file,Tenant File Configuration>>,
+<<_configure_tenant_attribute,Tenant LDAP attribute configuration>> or <<_ldap_with_multiple_domains>>.
+When <<_ldap_with_multiple_domains>> is set, the tenant name is equal to the domain name.
+
+User accounts are defined with one of the following *authentication methods*:
 
 * <<_file,*File-based*>>
 * <<_ldap,*LDAP*>>
 * <<_ldap_with_multiple_domains,*LDAP with Multiple Domains*>>
 * <<_pam,*PAM*>>
+
+=== Configure Domains / Tenants
+
+==== Domains
+
+Within ProActive, a *domain* is part of a user login information and can either represent:
+
+ * A link:https://en.wikipedia.org/wiki/Windows_domain[Windows domain].
+ * The name of a LDAP server in case of <<_ldap_with_multiple_domains>>.
+ * Both when Windows domain names and LDAP/Active Directory server names match.
+
+The domain is used either:
+
+ * to select which _LDAP/Active Directory server_ will be queried in case of <<_ldap_with_multiple_domains>>.
+ * to select which _Windows domain_ will be used when the user executes link:../user/ProActiveUserGuide.adoc#_run_as_me[RunAsMe] workflow tasks inside a <<_glossary_proactive_node,ProActive Node>> running on a Windows Operating System.
+
+Before being able to use *domains* in login information, the list of allowed domains must be configured on the ProActive server.
+
+IMPORTANT: When configuring allowed domains, it is important to include an empty domain name. This is because ProActive uses internal accounts that do not belong to any domain.
+Failing to do so would prevent the ProActive server from starting. An empty domain is included by using the syntax `",domain1,domain2"`.
+
+There are two properties to configure:
+
+ * in `PROACTIVE_HOME/config/rm/settings.ini`
+----
+pa.rm.allowed.domains=,domain1,domain2
+----
+* in `PROACTIVE_HOME/config/scheduler/settings.ini`
+----
+pa.scheduler.allowed.domains=,domain1,domain2
+----
+
+=> Allows using either domain1, domain2 or an empty domain name.
+
+NOTE: When the ProActive server runs on a Windows operating system, allowed domains properties default to `",SERVER_USER_DOMAIN"`, where _SERVER_USER_DOMAIN_ corresponds to the Windows domain name of the user that starts the ProActive server.
+
+After _allowed domains_ have been configured, the login page of the various portals will display a drop-down list which allows to select the login domain.
+
+Example:
+
+image::LoginSchedDomain.png[Scheduler Portal login using Domains,237,220]
+
+==== Tenants
+
+*Tenants* are organization units that regroup class of users in an isolated environment within the ProActive server.
+
+For example, _user1_ belonging to _tenant1_ will not be able to see *jobs* submitted by _user2_ belonging to _tenant2_.
+It is also possible to restrict access to *ProActive Nodes* based on tenants (a *Node Source* can restrict its access to a specific tenant name).
+
+Tenants can thus improve the management and governance of an organization's hybrid compute infrastructure.
+
+User *tenants* are different from user *groups*:
+
+ * A user can belong to *several groups* but can only belong to a *single tenant*.
+ * User groups does not allow the same level of *isolation* as tenants allow (for example, it is not possible to prevent users from seeing jobs that belong to a different group).
+ * User groups allow defining *roles* (administrators, standard users, etc.) inside the ProActive server. A user tenant does not correspond to a role.
+
+Tenant user membership can be configured using one of the following methods:
+
+ * a <<_tenants_file,file-based tenant configuration>>.
+This file is a group -> tenant association which allows to define a collection of groups as tenant.
+ * a <<_configure_tenant_attribute,LDAP attribute configuration>>.
+This method can be used when a single LDAP/Active Directory server is configured as authentication method. In that case, a scalar LDAP attribute defined for all users can be used as tenant name (For example _Organization Name_, _Division_, etc.).
+ * a <<_ldap_with_multiple_domains,Multi-Domain LDAP configuration>>. When multi-domain LDAP configuration is used as authentication method, the tenant name will be automatically set to the domain name used during authentication. For example, if _user1_ logs in from _domain1_, _user1_ will also belong to the _domain1_ tenant.
+This is the only case where domain name and tenant name will be equal.
+
+A *tenant* can either be a collection of groups (if defined using a file), an organization unit (if defined using an _LDAP_ attribute) or a _LDAP domain_ (if the authentication method is configured to LDAP with multiple domains).
+
+After tenants definition is configured, it is necessary to configure in the ProActive Server tenant isolation.
+
+===== Tenants Job Isolation
+
+*Tenants Job isolation* is the ability to hide submitted <<_glossary_job,jobs>> across tenants.
+
+For example, when _user1_ belonging to _tenant1_ submits a job to the ProActive Scheduler, then _user2_ belonging to _tenant2_ will not see this job activity on the <<_glossary_scheduler_web_interface,Scheduler>> or <<_glossary_workflow_automation_portal,Workflow Execution>> portals.
+
+In order to configure Tenants Job isolation, the setting `pa.scheduler.core.tenant.filter` must be set to `true` in `PROACTIVE_HOME/config/scheduler/settings.ini`.
+
+When this configuration is enabled, standard users will only see jobs according to the user's tenant. Admin users will still be able to see jobs coming from all tenants.
+
+NOTE: It is not mandatory to configure tenant isolation. Tenants can simply be used as additional information associated with each user submitted jobs.
+
+.Scheduler Portal for "Users" tenant
+image::TenantSPUsers.png[Scheduler Portal for "users" tenant]
+
+.Scheduler Portal for "Experts" tenant
+image::TenantSPExperts.png[Scheduler Portal for "experts" tenant]
+
+.Scheduler Portal for Admin users
+image::TenantSPAdmins.png[Admins Tenant View]
+
+===== Tenants Node Source Isolation
+
+Apart from job isolation, it is also possible to restrict <<_glossary_node_source,Node Sources>> across tenants.
+
+Restricting a Node Source to a specific tenant can be done by using the `nodeUsers` parameter which is common to all <<_glossary_node_source_policy,Node Source Policies>>.
+
+See <<_policy_common_parameters,Policy Common Parameters>> for more information.
 
 === Select authentication method
 
@@ -1641,9 +1750,10 @@ watcher:watchers
 
 ProActive contains a set of predefined groups such as `user` and `providers`. Group rights are defined in `PROACTIVE_HOME/config/security.java.policy-server` as described in chapter <<User Permissions>>.
 
+[[_tenants_file]]
 ==== Tenants
 
-A *tenant* can either be a collection of groups (if defined using a file), an organization unit (if defined using an _LDAP_ attribute) or a _LDAP domain_ (if the authentication method is configured to LDAP with multiple domains).
+<<_tenants,Tenants>> are organization units that regroup class of users in an isolated environment within the ProActive server.
 
 When defined via a file, tenant organization is stored in `PROACTIVE_HOME/config/authentication/tenant.cfg`.
 Each line of this file contains a couple _(group_name, tenant_name)_, using the syntax `group_name:tenant_name`.
@@ -1662,31 +1772,6 @@ citizen-ds:citizens
 expert-ds:experts
 user:users
 ----
-
-When defined as a <<_ldap,LDAP attribute>>, the name of the <<_configure_tenant_attribute,attribute>> which will contain tenant information must be configured.
-
-When the authentication method is set to <<_ldap_with_multiple_domains,LDAP with Multiple Domains>>, the tenant is automatically set to the current user _LDAP domain_.
-
-Tenants allow users to work in isolated silos, where users belonging to one tenant cannot see the activities launched by users belonging to other tenants.
-Tenants can thus improve the management and governance of an organization's hybrid compute infrastructure.
-
-In order to isolate tenants, the setting `pa.scheduler.core.tenant.filter` must be set to `true` in `PROACTIVE_HOME/config/scheduler/settings.ini`.
-When this configuration is enabled, standard users will only see jobs according to the user's tenant. Admin users will still be able to see jobs coming from all tenants.
-
-NOTE: It is not mandatory to configure tenant isolation. Tenants can simply be used as additional information associated with each user submitted jobs.
-
-.Users Tenant View
-image::TenantSPUsers.png[Users Tenant View]
-
-.Experts Tenant View
-image::TenantSPExperts.png[Experts Tenant View]
-
-.Admins Tenant View
-image::TenantSPAdmins.png[Admins Tenant View]
-
-
-
-Tenants can also be used to restrict access to <<_glossary_node_source,Node Sources>> (see <<_policy_common_parameters,Node Source Policy Common Parameters>>).
 
 ==== Command Line
 
@@ -2034,7 +2119,9 @@ pa.ldap.connection.pooling=false
 
 ==== Configure tenant attribute
 
-LDAP can be used to retrieve the tenant information associated with a user. Tenants are used to isolate users into organization units. Each unit will not be able to monitor other units' activity.
+A LDAP attribute can be used to associate a *tenant name* to an existing user.
+
+<<_tenants,Tenants>> are organization units that regroup class of users in an isolated environment within the ProActive server.
 
 If your LDAP structure contains an user attribute that seems suitable for tenants isolation, set the `pa.ldap.tenant.attr` property to the name of this attribute. Example atributes: `division`, `department`, `company`, etc.
 
@@ -2107,6 +2194,12 @@ pa.ldap.tenant.membership.fallback=true
 
 The ProActive server can be configured to authenticate users according to *multiple LDAP domains*.
 
+It means that when a user logs in, he/she will need to select which LDAP <<_domains,domain>> will be used for the authentication.
+
+image::LoginSchedDomain.png[Scheduler Portal login using Domains,237,220]
+
+NOTE: In that configuration, the user <<_domains, domain name>> will be automatically recorded as <<_tenants, tenant>> name.
+
 Following is a step-by-step procedure to configure it.
 
 1. Copy the file `PROACTIVE_HOME\config\authentication\ldap.cfg` into multiple files, one for each domain.
@@ -2128,20 +2221,39 @@ config\authentication\ldap-domain2.cfg
 pa.rm.multi.ldap.config=domain1:config/authentication/ldap-domain1.cfg,domain2:config/authentication/ldap-domain2.cfg
 ----
 +
+Uncomment also the property `pa.rm.allowed.domains` and configure with the list of domains that will be available.
++
+----
+pa.rm.allowed.domains=,domain1,domains2
+----
++
+This expression must start with a comma, it allows login with an empty domain, necessary for internal ProActive users.
++
 5. In `config\scheduler\settings.ini`, uncomment the property `pa.scheduler.multi.ldap.config` and define it according to the ldap configuration files you created and their corresponding domain names:
 +
 ----
 pa.scheduler.multi.ldap.config=domain1:config/authentication/ldap-domain1.cfg,domain2:config/authentication/ldap-domain2.cfg
 ----
++
+Uncomment also the property `pa.scheduler.allowed.domains` and configure with the list of domains that will be available.
++
+----
+pa.scheduler.allowed.domains=,domain1,domains2
+----
++
+This expression must start with a comma, it allows login with an empty domain, necessary for internal ProActive users.
 
 Once all the steps above are completed, the ProActive server can be (re)started in order to make the multi-domain ldap configuration effective.
 
-IMPORTANT: In multi-domain mode, when a user logs in to any portal of the ProActive server, the user must specify the domain used.
+[IMPORTANT]
+====
+In multi-domain mode, when a user logs in to any portal of the ProActive server, the user must specify the domain used.
+A drop-down list of configured domains will appear when login into ProActive portals.
 
-For example, if _user1_ belongs to _domain1_, the information provided in the login form must be _domain1\user1_.
-This is essential to allow the ProActive server select the adequate ldap configuration where the user is registered.
+For other methods of login (such as command line or REST api), the domain can be specified using the notation `domain\user`.
 
-NOTE: The user domain name will be automatically recorded as <<_tenants, tenant>> name.
+It is essential to allow the ProActive server select the adequate ldap domain configuration where the user is registered.
+====
 
 [[_pam]]
 === PAM authentication
@@ -2223,7 +2335,8 @@ New groups can be defined by copying an existing group definition and edit its p
 
 TIP: The `PROACTIVE_HOME/tools/copy-role` command can be used to duplicate an existing group inside the `security.java.policy-server` file. See <<_copy_role_command>>.
 
-WARNING: Any modification to the `security.java.policy-server` file is taken into account only after the ProActive server is restarted.
+WARNING: Any modification to the `security.java.policy-server` file is taken into account periodically by the ProActive server (by default every 30 seconds). This period can be configured in
+`PROACTIVE_HOME/config/rm/settings.ini:pa.rm.auth.policy.refreshperiod.seconds` and `PROACTIVE_HOME/config/scheduler/settings.ini:pa.scheduler.auth.policy.refreshperiod.seconds`.
 
 A *group* is defined using the following syntax:
 
