@@ -25,17 +25,19 @@ Changes made in the Calendar Definition panel will be automatically saved. When 
 
 === Associating workflows to Calendar Definitions
 
-Once a workflow has been published to the <<_glossary_catalog, *Catalog*>>, it can be planned with the <<_glossary_job_planner_portal, *Job Planner Portal*>>, Calendar Association page. To plan a workflow, you need to associate it to a Calendar Definition.
+Once a workflow has been published to the <<_glossary_catalog, *Catalog*>>, it can be planned with the <<_glossary_job_planner_portal, *Job Planner Portal*>>, Calendar Association page.
+On the top of this page there is a dashboard of counters that display statistics on the status of planned jobs (total, active, deactivated and failed) to help users gain a better understanding of the operational view of the platform.
+As a result, when an association is added / removed / deactivated / failed, the corresponding counter is updated accordingly as shown in the screenshot below.
 
 image::calendar_wf_association.png[align="center"]
 
-On this page, select an already existing Calendar Definition and add/remove workflows associated to it.
-When creating an association, it is possible to set the workflows variables with specific values, that can be different from the default values stored in the Catalog for that workflow.
+To plan a workflow, first select a calendar from the list on the left, then click on the _add_ button to browse the catalog for the workflow to be scheduled.
+When creating an association, workflow variables can be given specific values, which may differ from the default values stored in the catalog for that workflow. Thus, a single workflow can be scheduled many times for the same calendar but with different input parameters.
 
 image::calendar_wf_association_2.png[align="center"]
 
 The created association can be deactivated by clicking on the _unlink_ button. This means that the workflows won't be submitted for the next calendar occurrences, but it will still be visible on the Execution Planning and the Gantt chart. You can reactivate it with the _link_ button.
-On the left panel, you can easily see the number of associated workflows to each calendar, and how many of them are activated.
+On the left panel, you can easily see the number of associated workflows to each calendar, and how many of them are activated or failed.
 
 It is possible to display the associations as icons or as list by switching between the two buttons next to the search field.
 
