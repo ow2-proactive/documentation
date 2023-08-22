@@ -208,6 +208,14 @@ ProgressFile.setProgress(variables.get("PA_TASK_PROGRESS_FILE"), 50);
 | <<_selection, selection>>
 | -
 
+| *Node Tokens (Selection Script)*. The list of <<../admin/ProActiveAdminGuide.adoc#_policy_common_parameters,tokens>> attached to the node which executes the selection script.
+As the selection script will only be executed on Nodes which contains the token defined using the generic information <<_node_access_token>>, *nodeTokens* can only be used to perform additional filtering of nodes (for example, restrict to nodes which only contains the required token and none others). See <<_selection>>.
+| selected = (!nodeTokens.contains("excludedToken"))
+| -
+| -
+| <<_selection, selection>>
+| -
+
 | *Scheduler REST URL*. The REST url of the scheduler server. The public REST url is also available (if the setting pa.scheduler.rest.public.url is defined in `PROACTIVE_HOME/config/scheduler/settings.ini`)
 | variables.get( "PA_SCHEDULER_REST_URL" ) or variables.get( "PA_SCHEDULER_REST_PUBLIC_URL" )
 | $variables_PA_SCHEDULER_REST_URL or $variables_PA_SCHEDULER_REST_PUBLIC_URL

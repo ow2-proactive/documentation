@@ -1577,7 +1577,7 @@ Within ProActive, a *domain* is part of a user login information and can either 
 The domain is used either:
 
  * to select which _LDAP/Active Directory server_ will be queried in case of <<_ldap_with_multiple_domains>>.
- * to select which _Windows domain_ will be used when the user executes link:../user/ProActiveUserGuide.adoc#_run_as_me[RunAsMe] workflow tasks inside a <<_glossary_proactive_node,ProActive Node>> running on a Windows Operating System.
+ * to select which _Windows domain_ will be used when the user executes <<../user/ProActiveUserGuide.adoc#_run_as_me,RunAsMe>> workflow tasks inside a <<_glossary_proactive_node,ProActive Node>> running on a Windows Operating System.
 
 Before being able to use *domains* in login information, the list of allowed domains must be configured on the ProActive server.
 
@@ -3987,7 +3987,7 @@ Additionally:
 
 When login into the scheduler portal, the private key of the user must be provided, this can be done by selecting on the login dialog: `More options > Use SSH private key`.
 
-Alternatively, a user can also add its SSH private key to link:../user/ProActiveUserGuide.adoc#_third_party_credentials[Third Party Credentials] under the name `SSH_PRIVATE_KEY`.
+Alternatively, a user can also add its SSH private key to <<../user/ProActiveUserGuide.adoc#_third_party_credentials,Third Party Credentials>> under the name `SSH_PRIVATE_KEY`.
 This method allows the user to login normally to the ProActive portals, without the need to enter its private key each time.
 
 Finally, users can also authenticate to the portals with credential files.

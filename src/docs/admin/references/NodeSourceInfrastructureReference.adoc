@@ -750,7 +750,33 @@ The next four parameters are optional, and apply to advanced Azure endpoint conf
 
 - *rmHttpUrl:* Here you should provide your server's URL or public IP (e.g. try.activeeon.com). A default value will be generated from the system properties but you might need to modify it according to your network configuration so that it is accessible from your Azure nodes.
 - *connectorIaasUrl:* The URL of your _Connector IaaS_ service. A default value will be generated as well (e.g. +http://try.activeeon.com:8080/connector-iaas+).
-- *image:* The name or id of your custom image. The image should be located within the provided subscription and accessible to the service principal. It should also be located in the Azure region that you define in your configuration (see *region* parameter below).
+- *image:* Can be, either:
+  * the name or id of your *custom image*. The image should be located within the provided subscription and accessible to the service principal. It should also be located in the Azure region that you define in your configuration (see *region* parameter below).
+  * the name of a *known image*, as described in the table below:
++
+|===
+|Linux https://github.com/Azure/azure-libraries-for-java/blob/master/azure-mgmt-compute/src/main/java/com/microsoft/azure/management/compute/KnownLinuxVirtualMachineImage.java[++[++link to source++]++] |Windows https://github.com/Azure/azure-libraries-for-java/blob/master/azure-mgmt-compute/src/main/java/com/microsoft/azure/management/compute/KnownWindowsVirtualMachineImage.java[++[++link to source++]++]
+
+|UBUNTU_SERVER_14_04_LTS +
+UBUNTU_SERVER_16_04_LTS +
+UBUNTU_SERVER_18_04_LTS (_default value_) +
+DEBIAN_9 +
+DEBIAN_10 +
+CENTOS_8_1 +
+OPENSUSE_LEAP_15_1 +
+SLES_15_SP1 +
+REDHAT_RHEL_8_2 +
+ORACLE_LINUX_8_1
+
+|WINDOWS_DESKTOP_10_20H1_PRO +
+WINDOWS_SERVER_2019_DATACENTER +
+WINDOWS_SERVER_2019_DATACENTER_WITH_CONTAINERS +
+WINDOWS_SERVER_2016_DATACENTER +
+WINDOWS_SERVER_2012_R2_DATACENTER
+|===
++
+NOTE: Due to a recent change in Debian images that disables VM Extensions, Debian images (_DEBIAN_9_, _DEBIAN_10_) are not supported anymore.
+
 - *imageOSType:* Image OS type (A choice between _linux_ and _windows_). The default value is _linux_.
 - *vmSizeType:* The size of the VMs to be deployed. The default value is _Standard_D1_v2_. Azure provides an extensive list of https://docs.microsoft.com/en-us/azure/virtual-machines/linux/sizes[Linux VM sizes]. If you want to know the available sizes for a specific region or subscription you can use https://docs.microsoft.com/en-us/cli/azure/vm?view=azure-cli-latest#az-vm-list-sizes[Azure CLI command] `az vm list-sizes -l {your location}`.
 - *vmUsername:* Provide a user name for the VM.
@@ -863,8 +889,8 @@ You can opt to place this file in `$PROACTIVE_HOME/config/authentication/azure.c
 
 |UBUNTU_SERVER_14_04_LTS +
   UBUNTU_SERVER_16_04_LTS +
-  UBUNTU_SERVER_18_04_LTS +
-  DEBIAN_9 +*+ _default value_ +*+ +
+  UBUNTU_SERVER_18_04_LTS (_default value_) +
+  DEBIAN_9 +
   DEBIAN_10 +
   CENTOS_8_1 +
   OPENSUSE_LEAP_15_1 +
@@ -878,6 +904,7 @@ You can opt to place this file in `$PROACTIVE_HOME/config/authentication/azure.c
   WINDOWS_SERVER_2016_DATACENTER +
   WINDOWS_SERVER_2012_R2_DATACENTER
 |===
+NOTE: Due to a recent change in Debian images that disables VM Extensions, Debian images (_DEBIAN_9_, _DEBIAN_10_) are not supported anymore.
 
 * *_Azure Marketplace._* If you want to choose a particular image from Azure's Marketplace, use the prefix `marketplace#` plus the image's https://docs.microsoft.com/en-us/azure/virtual-machines/linux/cli-ps-findimage[URN] in the form `publisher:offer:sku[:version]`. Similarly to Azure CLI or PowerShell, ProActive allows you to specify a version of the image (with `:version`), or it will use the latest one if the version is omitted. Examples of valid inputs are: +
 `marketplace#OpenLogic:CentOS:7.5` +
