@@ -293,9 +293,10 @@ TIP: If all the nodes of an AWS instance are removed, the instance will be termi
 
 -   *vmType*: The AWS VM type required for each VM (e.g. t3.medium).
             An optional parameter, if not provided, selecting a specific machineType will be ignored.
-            It only supports VM types supported by Apache Jclouds.
-            For more information see https://aws.amazon.com/ec2/instance-types/[AWS EC2 Instance Types] and
-            https://jclouds.apache.org/reference/javadoc/2.1.x/org/jclouds/ec2/domain/InstanceType.html[Apache Jclouds Supported Instance Types]
+            It only supports VM types supported by Apache Jclouds. The list of supported instances can be found at
+	        https://jclouds.apache.org/reference/javadoc/2.1.x/org/jclouds/ec2/domain/InstanceType.html[Apache Jclouds Supported Instance Types].
+	        *vmType* accepts the AWS instance type corresponding to each of these constants (for example `m4.large`, corresponding to the jclouds
+            constant `InstanceType.M4_LARGE` will be accepted). See https://aws.amazon.com/ec2/instance-types/[AWS EC2 Instance Types] for the full list of AWS instance types.
 
 TIP: Once the vmType parameter is set it will override the parameters set for ram and cores.
 
