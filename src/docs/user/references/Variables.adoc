@@ -262,17 +262,17 @@ _Some characters of the regular expression must be encoded according to the link
 |?name=Azure.* => PA:LIST(,AzureScaleSet1,AzureScaleSet2)
 
 |Node Sources Filtered by Infrastructure Type
-|All node sources registered in the Resource Manager whose infrastructure type corresponds to the given parameter. See link:../admin/ProActiveAdminGuide.html#_node_source_infrastructures[Node Source Infrastructures].
-|`PA:MODEL_FROM_URL(${PA_SCHEDULER_REST_PUBLIC_URL}/rm/model/nodesources?infrastructure=name)`
+|All node sources registered in the Resource Manager whose infrastructure type matches a given link:https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[regular expression]. See link:../admin/ProActiveAdminGuide.html#_node_source_infrastructures[Node Source Infrastructures].
+|`PA:MODEL_FROM_URL(${PA_SCHEDULER_REST_PUBLIC_URL}/rm/model/nodesources?infrastructure=regexp)`
 
-_Any infrastructure class name which contains the given parameter (case-insensitive) will be accepted._
+_Some characters of the regular expression must be encoded according to the link:https://en.wikipedia.org/wiki/URL_encoding[specification]._
 |?infrastructure=Azure.* will return all node sources that have an AzureInfrastructure or AzureVMScaleSetInfrastructure types.
 
 |Node Sources Filtered by Policy Type
-|All node sources registered in the Resource Manager whose policy type corresponds to the given parameter. See link:../admin/ProActiveAdminGuide.html#_node_source_policies[Node Source Policies].
-|`PA:MODEL_FROM_URL(${PA_SCHEDULER_REST_PUBLIC_URL}/rm/model/nodesources?policy=name)`
+|All node sources registered in the Resource Manager whose policy type matches a given link:https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[regular expression]. See link:../admin/ProActiveAdminGuide.html#_node_source_policies[Node Source Policies].
+|`PA:MODEL_FROM_URL(${PA_SCHEDULER_REST_PUBLIC_URL}/rm/model/nodesources?policy=regexp)`
 
-_Any policy class name which contains the given parameter (case-insensitive) will be accepted._
+_Some characters of the regular expression must be encoded according to the link:https://en.wikipedia.org/wiki/URL_encoding[specification]._
 |?policy=Dynamic.* will return all node sources that have a DynamicPolicy type.
 
 |Tokens

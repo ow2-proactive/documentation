@@ -398,7 +398,7 @@ print variables["key"]
 For Ruby:
 [source, ruby]
 ----
-puts $variables["key"]
+puts variables["key"]
 ----
 
 For R:
