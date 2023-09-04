@@ -16,11 +16,5 @@ PAIO also encompasses a range of interfaces that serve as centralized hubs, offe
 
 image::MLOps_dashboard_model_servers.png[align=center]
 
-Within the MLOps dashboard interface shown in the image above, a set of widgets and tables converge to offer valuable insights into the overall performance and usage of the serving infrastructurea and a comprehensive view of model servers and their deployments.
-
-image::mlops-we-jobs.png[align=center]
-image::mlops-we-services.png[align=center]
-
-Within the ProActive platform, an integral facet is the Workflow Execution portal shown in the above images, that includes an ai-mlops-dashboard bucket. This bucket houses a collection of MLOps-oriented workflows designed to orchestrate and streamline various aspects of the model server lifecycle. These workflows encompass tasks spanning from the initialization and scaling of model servers to an inference workflow that recurrently generates predictions consuming deployed models and a performance analyzer workflow allowing thorough assessment and optimization of model performance, ensuring the seamless functioning of the entire machine learning operational pipeline.
-
-The Workflow Execution portal also offers a seamless avenue to launch the MLOps dashboard and to initiate model servers as services. This integration streamlines the operational process by providing a unified interface for managing both the visualization and the execution aspects. Users can effortlessly trigger the deployment of model servers while simultaneously accessing the MLOps dashboard, fostering a cohesive and efficient management experience for the entire machine learning lifecycle.
+The *MLOps Dashboard* (screenshot above) serves as a centralized hub for data scientists, engineers, and stakeholders involved in deploying and monitoring machine learning models. It provides a comprehensive view of the deployment pipelines, real-time performance metrics, and key indicators. Furthermore, it includes features specifically designed to manage and monitor the underlying model servers.
+Refer to link:../PAIOUserGuide.html#_mlops_dashboard[MLOps Dashboard] section for more information.
