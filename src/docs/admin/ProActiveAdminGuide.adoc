@@ -1314,7 +1314,15 @@ If this property is not specified, the default value is ``^[a-zA-Z0-9_/-]*$``.
 
 === Custom logo configuration
 
-To be able to edit the default logo displayed in ProActive portals, you have to replace the following file `PROACTIVE_HOME/dist/war/getstarted/assets/image/custom-logo.png` with your custom logo.
+image::generic_logo.png[align="center"]
+
+To be able to edit the default logo displayed in ProActive portals, you have to replace the following file `PROACTIVE_HOME/dist/war/getstarted/assets/image/custom-logo.png` with your company custom logo.
+
+You can use the command SCP to copy the file from your local machine to the ProActive server machine. The dimensions of the custom logo are automatically adapted.
+
+Please note that there's no need to restart the server, just clear the cache and refresh the Web page.
+
+image::custom_logo.png[align="center"]
 
 === Configuration Tools
 
