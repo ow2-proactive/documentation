@@ -10,6 +10,10 @@ Finally, at the bottom right is the *Resource manager* interface which manages a
 on any Public Cloud, on any virtualization software, on any container system, and on any Physical Machine of any OS.
 All the components you see come with fully Open and modern REST APIs. 
 
+image::workflow-execution.png[align=center]
+
+The screenshot above shows the *Workflow Execution Portal*, which is the main portal of ProActive Workflows & Scheduling and the entry point for end-users to submit workflows manually, monitor their executions and access job outputs, results, services endpoints, etc.
+
 image::automation-dashboard-catalog.png[align=center]
 
 The screenshot above shows the *Catalog Portal*, where one can store Workflows, Calendars, Scripts, etc.
@@ -25,14 +29,24 @@ image::calendar_planning_gantt.png[align=center]
 The Gantt screenshot above shows the *Gantt View* of Job Planner, featuring past job history, current Job being executed, and future Jobs that will be submitted, all in a comprehensive interactive view.
 You easily see the potential differences between Planned Submission Time and Actual Start Time of the Jobs, get estimations of the Finished Time, visualize the Job that stayed PENDING for some time (in Yellow) and the Jobs that had issues and got KILLED, CANCELLED, or FAILED (in red).
 
+image::health-dashboard.png[align=center]
+The screenshot above shows the *Health Dashboard Portal*, which is a part of the Analytics service, that displays global statistics and current state of the ProActive server.
+
+image::job-analytics.png[align=center]
+The screenshot above shows the *Job Analytics Portal*, which is a ProActive component, part of the Analytics service, that provides an overview of executed workflows along with their input variables and results.
+
 image::automation-dashboard-cloud-watch.PNG[align=center]
 
-The screenshot above shows the *Event Orchestration* portal, where a user can manage and benefit from *Event Orchestration* - smart monitoring system. This ProActive component detects complex events and then triggers user-specified actions according to predefined set of rules.
+The screenshot above shows the *Event Orchestration Portal*, where a user can manage and benefit from *Event Orchestration* - smart monitoring system. This ProActive component detects complex events and then triggers user-specified actions according to predefined set of rules.
 
 image::cloud-automation-on-demand-paas.png[align=center]
 
-The screenshot above shows the *Service Automation* portal which is actually a PaaS automation tool. It allows you to easily manage any On-Demand Services with full Life-Cycle Management (create, deploy, suspend, resume and terminate).
+The screenshot above shows the *Service Automation Portal* which is actually a PaaS automation tool. It allows you to easily manage any On-Demand Services with full Life-Cycle Management (create, deploy, suspend, resume and terminate).
 
 image::scalable-elastic-resources.png[align=center]
 
-The screenshots above taken from the *Resource Manager* portal shows that you can configure ProActive Scheduler to *dynamically scale up and down* the infrastructure being used (e.g. the number of VMs you buy on Clouds) according to the actual workload to execute.
+The screenshots above taken from the *Resource Manager Portal* shows that you can configure ProActive Scheduler to *dynamically scale up and down* the infrastructure being used (e.g. the number of VMs you buy on Clouds) according to the actual workload to execute.
+
+image::notifications.png[align=center]
+The screenshot above shows the *Notifications Portal*, which is a ProActive component that allows a user or a group of users to subscribe to different types of notifications (web, email, sms or a third-party notification) when certain event(s) occur (e.g., job In-Error state, job in Finished state, scheduler in Paused state, etc.).
+
