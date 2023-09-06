@@ -17,4 +17,4 @@ PAIO also encompasses a range of interfaces that serve as centralized hubs, offe
 image::MLOps_dashboard_model_servers.png[align=center]
 
 The *MLOps Dashboard* (screenshot above) serves as a centralized hub for data scientists, engineers, and stakeholders involved in deploying and monitoring machine learning models. It provides a comprehensive view of the deployment pipelines, real-time performance metrics, and key indicators. Furthermore, it includes features specifically designed to manage and monitor the underlying model servers.
-Refer to link:../PAIOUserGuide.html#_mlops_dashboard[MLOps Dashboard] section for more information.
+Refer to link:../PAIO/PAIOUserGuide.html#_mlops_dashboard[MLOps Dashboard] section for more information.
