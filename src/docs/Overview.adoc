@@ -29,8 +29,10 @@ image::calendar_planning_gantt.png[align=center]
 The Gantt screenshot above shows the *Gantt View* of Job Planner, featuring past job history, current Job being executed, and future Jobs that will be submitted, all in a comprehensive interactive view.
 You easily see the potential differences between Planned Submission Time and Actual Start Time of the Jobs, get estimations of the Finished Time, visualize the Job that stayed PENDING for some time (in Yellow) and the Jobs that had issues and got KILLED, CANCELLED, or FAILED (in red).
 
-image::health-dashboard.png[align=center]
-The screenshot above shows the *Health Dashboard Portal*, which is a part of the Analytics service, that displays global statistics and current state of the ProActive server.
+image::health-dashboard1.png[align=center]
+image::health-dashboard2.png[align=center]
+
+The screenshots above show the *Health Dashboard Portal*, which is a part of the Analytics service, that displays global statistics and current state of the ProActive server. Using this portal, users can monitor the status of critical resources, detect issues, and take proactive measures to ensure the efficient operation of workflows and services.
 
 image::job-analytics.png[align=center]
 The screenshot above shows the *Job Analytics Portal*, which is a ProActive component, part of the Analytics service, that provides an overview of executed workflows along with their input variables and results.
