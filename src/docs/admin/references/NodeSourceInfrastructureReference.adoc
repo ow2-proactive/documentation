@@ -343,7 +343,7 @@ me=propertyvalue`). This is an optional property.
         This is an optional property. If left blank, the script is automatically generated for the Linux OS. Here is the default value of startupScript:
 
             mkdir -p /tmp/node && cd /tmp/node
-            if ! type -p jre/bin/java; then wget -nv -N https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u312b07-linux-x64.tar.gz; tar -xf jre-8u312b07-linux-x64.tar.gz; mv jre1.8.0_312b07/ jre; fi
+            if ! type -p jre/bin/java; then wget -nv -N https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u382b05-linux-x64.tar.gz; tar -xf jre-8u382b05-linux-x64.tar.gz; mv jre1.8.0_382b05/ jre; fi
             wget -nv %nodeJarUrl%
             nohup jre/bin/java -jar node.jar -Dproactive.communication.protocol=%protocol% -Dpython.path=%jythonPath% -Dproactive.pamr.router.address=%rmHostname% -D%instanceIdNodeProperty%=%instanceId% -r %rmUrl% -s %nodeSourceName% %nodeNamingOption% -v %credentials% -w %numberOfNodesPerInstance% %additionalProperties% &
 
@@ -564,7 +564,7 @@ Other properties for the node deployment in the *Create OpenStack Node Source* a
         This is an optional property. If left blank, the script is automatically generated for the Linux OS. Here is the default value of startupScript:
 
             mkdir -p /tmp/node && cd /tmp/node
-            if ! type -p jre/bin/java; then wget -nv -N https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u312b07-linux-x64.tar.gz; tar -xf jre-8u312b07-linux-x64.tar.gz; mv jre1.8.0_312b07/ jre; fi
+            if ! type -p jre/bin/java; then wget -nv -N https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u382b05-linux-x64.tar.gz; tar -xf jre-8u382b05-linux-x64.tar.gz; mv jre1.8.0_382b05/ jre; fi
             wget -nv %nodeJarUrl%
             nohup jre/bin/java -jar node.jar -Dproactive.communication.protocol=%protocol% -Dpython.path=%jythonPath% -Dproactive.pamr.router.address=%rmHostname% -D%instanceIdNodeProperty%=%instanceId% -r %rmUrl% -s %nodeSourceName% %nodeNamingOption% -v %credentials% -w %numberOfNodesPerInstance% %additionalProperties% &
 
@@ -714,7 +714,7 @@ TIP: Once the machineType parameter is set, it will override the parameters set 
         This is an optional property. If left blank, the script is automatically generated for the Linux OS. Here is the default value of startupScript:
 
             mkdir -p /tmp/node && cd /tmp/node
-            if ! type -p jre/bin/java; then wget -nv -N https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u312b07-linux-x64.tar.gz; tar -xf jre-8u312b07-linux-x64.tar.gz; mv jre1.8.0_312b07/ jre; fi
+            if ! type -p jre/bin/java; then wget -nv -N https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u382b05-linux-x64.tar.gz; tar -xf jre-8u382b05-linux-x64.tar.gz; mv jre1.8.0_382b05/ jre; fi
             wget -nv %nodeJarUrl%
             nohup jre/bin/java -jar node.jar -Dproactive.communication.protocol=%protocol% -Dpython.path=%jythonPath% -Dproactive.pamr.router.address=%rmHostname% -D%instanceIdNodeProperty%=%instanceId% -r %rmUrl% -s %nodeSourceName% %nodeNamingOption% -v %credentials% -w %numberOfNodesPerInstance% %additionalProperties% &
 
@@ -811,7 +811,7 @@ NOTE: Due to a recent change in Debian images that disables VM Extensions, Debia
     This is an optional property. If left blank, the script is automatically generated. Here is the default value of linuxStartupScript:
 
         mkdir -p /tmp/node && cd /tmp/node
-        if ! type -p jre/bin/java; then wget -nv -N https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u312b07-linux-x64.tar.gz; tar -xf jre-8u312b07-linux-x64.tar.gz; mv jre1.8.0_312b07/ jre; fi
+        if ! type -p jre/bin/java; then wget -nv -N https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u382b05-linux-x64.tar.gz; tar -xf jre-8u382b05-linux-x64.tar.gz; mv jre1.8.0_382b05/ jre; fi
         wget -nv %nodeJarUrl%
         nohup jre/bin/java -jar node.jar -Dproactive.communication.protocol=%protocol% -Dpython.path=%jythonPath% -Dproactive.pamr.router.address=%rmHostname% -D%instanceIdNodeProperty%=%instanceId% -r %rmUrl% -s %nodeSourceName% %nodeNamingOption% -v %credentials% -w %numberOfNodesPerInstance% %additionalProperties% &
 
@@ -1159,7 +1159,7 @@ Default startupScript:
 mkdir -p /tmp/node && cd /tmp/node
 if ! command -v wget; then apt-get update; apt-get -y install wget; fi
 wget -nv --no-check-certificate %nodeJarUrl%
-if ! command -v java; then wget -nv -N https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u312b07-linux-x64.tar.gz; tar -xf jre-8u312b07-linux-x64.tar.gz; export PATH=/tmp/node/jre1.8.0_312b07/bin/:$PATH; fi
+if ! command -v java; then wget -nv -N https://s3.amazonaws.com/ci-materials/Latest_jre/jre-8u382b05-linux-x64.tar.gz; tar -xf jre-8u382b05-linux-x64.tar.gz; export PATH=/tmp/node/jre1.8.0_382b05/bin/:$PATH; fi
 java -jar node.jar -Dproactive.communication.protocol=%protocol% -Dpython.path=%jythonPath% -Dproactive.pamr.router.address=%rmHostname% -D%instanceIdNodeProperty%=%instanceId% -r %rmUrl% -s %nodeSourceName% %nodeNamingOption% -v %credentials% -w %numberOfNodesPerInstance% %additionalProperties%
 ....
 
