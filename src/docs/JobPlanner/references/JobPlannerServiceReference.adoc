@@ -59,7 +59,7 @@ Advanced filtering will update the associations to match the filters but also th
 
 image::calendar_wf_association_7.png[align="center"]
 
-To clear the filters, you can either click on the Clear filters button next to the filters pills, or use the Clear button the advanced filtering form as you can see in the second screenshot above.
+To reset the filters, you have two options: you can click on the "Clear icon" located next to the filter pills, or you can use the "Clear button" within the advanced filtering form, as depicted in the second screenshot above
 
 image::calendar_wf_association_8.png[align="center"]
 
@@ -184,7 +184,7 @@ The description allows users who are not familiar with cron expressions to provi
 === Time Zone
 
 The aim of the time zone is to make the user able to select a specific time for his future scheduled jobs depending on the region. By default, it is set according to the client location. The server time zone is always displayed on the top right corner. It indicates the time of the machine where ProActive instance is running.
-To facilitate the time zone selection, the time zone dropdown includes a search field. Users can input a value into this field to filter and reduce the available options.
+To simplify the process of selecting a time zone, the time zone dropdown now features a search field. Users can enter a value into this field to filter and narrow down the list of available options.
 
 === Cron
 

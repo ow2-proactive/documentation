@@ -113,7 +113,7 @@ There are three notification methods available
 - "Portal": The notification will be displayed in the <<_glossary_notification_portal,*Notification Portal*>>.
 
 - "Emails": The notification will be sent by email.
-User can provide multiple emails as recipients for notifications.
+Users can specify multiple email addresses as recipients for notifications.
 In order to use this method, the SMTP settings must be defined in the dedicated configuration file, inside the ProActive server.
 Please refer to the corresponding link:../admin/ProActiveAdminGuide.html#_email_notification_method[Email notification configuration] section in the administration guide.
 
@@ -125,8 +125,7 @@ section in the Admin guide to look at the full configuration.
 ===== Notification Method confirmation
 
 An administrator can activate confirmation request for notification methods other than portal.
-In such case, after providing the notification method parameter, an input field will appear below the third-party parameter or telephone parameter asking for a confirmation code.
-For emails, the verification code input is always displayed.
+In such a scenario, once you've specified the notification method parameter, an input field will become visible below the third-party parameter or telephone parameter, prompting the user to enter a confirmation code. In the case of emails, the verification code input field is always shown.
 
 It is also possible to resend from there a confirmation code in case it hasn't been received
 , or if it has exceeded its 15 minutes life span and is now expired.
@@ -479,13 +478,13 @@ configured to submit a new execution
 
 === Presets
 
-Presets are not standalone event types as the one described above but rather preconfigured selections within a subscription's event type list.
-These presets serve as convenient groupings of related event types. Once selected, multiple events are added to the subscription.
+Presets are not individual event types like the ones described above; instead, they are preconfigured groupings within a subscription's list of event types. These presets conveniently group related event types, and when selected, automatically add multiple events to the subscription
 
 .Presets
-[cols="2,2,2,5,5"]
+[cols="2,2,5"]
 |===
 | *Name* | *Subscription* | *Description*
 | `All with issues`
 | Jobs
 | Automatically adds the events JOB_IN_ERROR, JOB_FINISHED_WITH_ISSUES, TASK_IN_ERROR, TASK_FINISHED_WITH_ERRORS to the subscription
+|===
