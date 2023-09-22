@@ -112,7 +112,8 @@ There are three notification methods available
 
 - "Portal": The notification will be displayed in the <<_glossary_notification_portal,*Notification Portal*>>.
 
-- "Email": The notification will be sent by email.
+- "Emails": The notification will be sent by email.
+User can provide multiple emails as recipients for notifications.
 In order to use this method, the SMTP settings must be defined in the dedicated configuration file, inside the ProActive server.
 Please refer to the corresponding link:../admin/ProActiveAdminGuide.html#_email_notification_method[Email notification configuration] section in the administration guide.
 
@@ -124,15 +125,16 @@ section in the Admin guide to look at the full configuration.
 ===== Notification Method confirmation
 
 An administrator can activate confirmation request for notification methods other than portal.
-In such case, after providing the notification method parameter (Email, Third-party parameter, Telephone)
-, an input field will appear below the parameter asking for a confirmation code.
+In such case, after providing the notification method parameter, an input field will appear below the third-party parameter or telephone parameter asking for a confirmation code.
+For emails, the verification code input is always displayed.
+
 It is also possible to resend from there a confirmation code in case it hasn't been received
 , or if it has exceeded its 15 minutes life span and is now expired.
 
 [title="Code confirmation request"]
-image::confirmation-request.png[align="center"]
+image::notification-method.png[align="center"]
 
-- "Email": An email will be sent to the provided address with the confirmation code in the body.
+- "Email": When a new email address is added, an email will be sent with the confirmation code in the body.
 - "Third-party": An execution will occur with the confirmation code in the accessible MESSAGE script field.
 
 For notification methods which parameters are mandatory (ie: Email), the user may go to his subscriptions
@@ -474,3 +476,16 @@ configured to submit a new execution
 | The Node Source `Node_Source` is created
 | A Node Source has been deployed
 |===
+
+=== Presets
+
+Presets are not standalone event types as the one described above but rather preconfigured selections within a subscription's event type list.
+These presets serve as convenient groupings of related event types. Once selected, multiple events are added to the subscription.
+
+.Presets
+[cols="2,2,2,5,5"]
+|===
+| *Name* | *Subscription* | *Description*
+| `All with issues`
+| Jobs
+| Automatically adds the events JOB_IN_ERROR, JOB_FINISHED_WITH_ISSUES, TASK_IN_ERROR, TASK_FINISHED_WITH_ERRORS to the subscription

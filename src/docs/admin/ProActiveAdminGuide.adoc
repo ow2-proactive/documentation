@@ -2204,7 +2204,7 @@ The ProActive server can be configured to authenticate users according to *multi
 
 It means that when a user logs in, he/she will need to select which LDAP <<_domains,domain>> will be used for the authentication.
 
-image::LoginSchedDomain.png[Scheduler Portal login using Domains,237,220]
+image::LoginSchedDomain.png[Scheduler Portal login using Domains,237,220][align="center"]
 
 NOTE: In that configuration, the user <<_domains, domain name>> will be automatically recorded as <<_tenants, tenant>> name.
 
