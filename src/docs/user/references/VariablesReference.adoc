@@ -1,6 +1,6 @@
 This section describes useful bindings and variables, their scope, and their usage.
 
-The following script names refer to:
+The different scripts a user can set are the followings:
 
 * <<_selection,selection>>: a script executed to select nodes suitable to execute a task. This script is executed on many nodes from the scheduling loop, before the task is deployed.
 * <<_fork_environment, environment>>: the default mode to execute a task is to fork a dedicated JVM from the selected ProActive Node. The environment script, if defined in the workflow, is executed on the node to
@@ -9,7 +9,7 @@ The following script names refer to:
 * <<_script_tasks,task>>: the main script of a task when the task is a *script task*.
 * <<_pre_post_clean, post>>: a script which is executed _after_ the task execution, in the same context. The post script is executed only if there was no error inside the task.
 * <<_control_flow_scripts,flow>>: a script which is executed _after_ the task execution, in the same context, and when the task is part of a control flow.
-* <<_pre_post_clean, clean>>: a script which is executed _after_ the task execution, directly on the node selected to execute the task (so not inside the forked JVM), whether there was a *task error* or not. The _clean script_ is mainly used to clean the task host. If there was a *node failure* (the node is lost during the task execution), then the _clean script_ is not executed and the task will be executed on another node.
+* <<_pre_post_clean, clean>>: a script which is executed _after_ the post script, directly on the node selected to execute the task (so not inside the forked JVM), whether there was a *task error* or not. The _clean script_ is mainly used to clean the task host. If there was a *node failure* (the node is lost during the task execution), then the _clean script_ is not executed and the task will be executed on another node.
 
 The order in this list corresponds to the task life-cycle order.
 *all scripts* refers to all above scripts
