@@ -1,6 +1,6 @@
 This section describes useful bindings and variables, their scope, and their usage.
 
-The different scripts a user can set are the following:
+The different scripts a user can set are the followings:
 
 * <<_selection,selection>>: a script executed to select nodes suitable to execute a task. This script is executed on many nodes from the scheduling loop, before the task is deployed.
 * <<_fork_environment, environment>>: the default mode to execute a task is to fork a dedicated JVM from the selected ProActive Node. The environment script, if defined in the workflow, is executed on the node to
