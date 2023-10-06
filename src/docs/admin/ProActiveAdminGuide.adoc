@@ -186,6 +186,7 @@ Do you want to start the scheduler service now? [Y/n]  y
 If a problem occurs, check output in /var/log/proactive/scheduler
 ....
 
+WARNING: When restarting, ProActive populates the catalog of the new installation with the default objects, by preserving those modified by the user from the old installation (based on the last commit). 
 
 === Install and Start ProActive using Docker Containers
 ProActive could be easily deployed and started within a fully containerized environment. For this purpose, we provide a ready-to-use Docker Compose configuration that enables you running ProActive Workflows and Scheduling as a containerized service.
