@@ -743,7 +743,7 @@ Azure Data Lake tasks require your Azure login credentials to be set as third-pa
 You have two options for providing your login credentials:
 
 * Standard Azure login: `AZ_U:your_user` (usually an email). `AZ_P:your_password`.
-* Using an link:https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?toc=%2Fazure%2Fazure-resource-manager%2Ftoc.json&view=azure-cli-latest[Azure service principal]: `AZ_U:appId`. `AZ_P:password`. `AZ_T:tenant`. By default, if `AZ_T` is set, the tasks will attempt to connect through a service principal.
+* Using an link:https://learn.microsoft.com/en-us/cli/azure/azure-cli-sp-tutorial-1[Azure service principal]: `AZ_U:appId`. `AZ_P:password`. `AZ_T:tenant`. By default, if `AZ_T` is set, the tasks will attempt to connect through a service principal.
 
 [NOTE]
 ====

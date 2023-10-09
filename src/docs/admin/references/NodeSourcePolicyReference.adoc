@@ -286,7 +286,8 @@ tasks running on (default is false).
 
 The *Dynamic policy* is similar to the <<_scheduler_loading_policy>> in the sense that it can acquire/release nodes according to the
 scheduler load. The *Dynamic policy* is more advanced and gives a fuller range of configuration parameters which allow to:
- - filter the scheduler load to specific tasks which use the `NODESOURCENAME` <<_glossary_generic_information,generic information>>.
+
+ - filter the scheduler load to consider specific tasks which use the <<../user/ProActiveUserGuide.adoc#_node_source_generic_info,NODE_SOURCE>> or the (deprecated) <<../user/ProActiveUserGuide.adoc#_nodesourcename,NODESOURCENAME>> <<_glossary_generic_information,generic information>>.
  - delay the initial triggering of the policy.
  - release nodes after a configurable idle period.
 
@@ -296,6 +297,10 @@ Similarly to the <<_scheduler_loading_policy>>, it is important to correctly con
 policy will try to hold in accordance with the underlying infrastructure.
 This policy will never acquire more nodes than the infrastructure is capable of (as configured in the infrastructure parameters).
 Symmetrically, if an infrastructure defines a minimum number of nodes to acquire, this policy will never go below this number.
+
+The DynamicPolicy will scale up when pending tasks are detected in the ProActive Scheduler queue and the Node Source does not have enough free nodes to assign.
+In some cases, the existing free nodes will not match the requirements of these pending tasks. This can happen when the task contains a <<../user/ProActiveUserGuide.adoc#_selection_scripts,Selection Script>> or a <<../user/ProActiveUserGuide.adoc#_generic_information_selection,NODE_ACCESS_TOKEN>> restriction that discards existing free nodes.
+In that case, the Dynamic Policy will use a *best-effort strategy* to handle these tasks that remain in pending state. When tasks remain in pending state longer than `initDelay` milliseconds, the node source will trigger a scale-up (one new node per pending task).
 
 To use this policy, you have to define the following parameters:
 
@@ -332,7 +337,7 @@ and so on ...
 The load factor accepts decimal values to allow more precise control (1.5, etc.)
 
 -   *initDelay* - Delay in milliseconds to initialize the infrastructure (eg. in a azure cloud infrastructure this must
-cover the creation of Azure's initial resources such as network, storage account, etc.).
+cover the creation of Azure's initial resources such as network, storage account, etc.). This parameter is also used as a trigger for the *best-effort scale-up strategy* described above.
 
 -   *minUptime* - Minimal uptime of a free node to be candidate for deletion (in milliseconds). For example, if this parameter
 is set to 10 minutes, a node will not be removed from the node source unless it stays 10 minutes consecutively in state FREE, without executing any new task.
