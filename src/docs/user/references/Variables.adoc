@@ -286,6 +286,19 @@ _Some characters of the regular expression must be encoded according to the link
 
 _Some characters of the regular expression must be encoded according to the link:https://en.wikipedia.org/wiki/URL_encoding[specification]._
 |?name=token.* => PA:LIST(,token1,token2)
+
+|Tokens Filtered by Node Source
+a|All tokens registered in the given Node Source. This filter returns a list which contains tokens defined:
+
+  * globally on the Node Source.
+  * on any Node which belongs to the Node Source.
+
+See <<_node_access_token>>.
+
+|`PA:MODEL_FROM_URL(${PA_SCHEDULER_REST_PUBLIC_URL}/rm/model/tokens?nodeSource=name)`
+
+The exact name of the target Node Source must be provided (check is case-sensitive).
+|?nodeSource=LocalNodes => PA:LIST(,token1,token2)
 |===
 
 ====== Spring Expression Language Model
