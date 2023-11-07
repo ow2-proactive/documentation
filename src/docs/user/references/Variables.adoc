@@ -6,6 +6,13 @@ how variables can ease development. ProActive has basically two groups of variab
 - <<_workflow_variables>>, declared on the XML job definition.
 - <<_dynamic_variables>>, system variables or variables created at task runtime.
 
+In order to immediately distinguish advanced and hidden variables, we present advanced variables in orange and hidden variables in light grey in our portals.
+
+Here is an example with an Object's details in the *Catalog Portal*
+
+[title="Catalog's object variables"]
+image::advanced-hidden-variables.png[align="center"]
+
 [[_workflow_variables]]
 ==== Workflow variables
 
