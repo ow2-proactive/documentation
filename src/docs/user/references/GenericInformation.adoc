@@ -63,6 +63,14 @@ The following table describes all available generic information:
 |job-level,task-level
 |Manual
 |Azure
+|<<_resource_tags,RESOURCE_TAGS>>
+|add tags to cloud instances acquired by a Node Source controlled by a <<../admin/ProActiveAdminGuide.html#_dynamic_policy,Dynamic Policy>> (only available when the associated infrastructure is an <<../admin/ProActiveAdminGuide.html#_azure_scale_set_infrastructure,Azure Scale Set Infrastructure>>). Definition must be a json key/value structure which contain tag names and values.
+|job-level,task-level
+|Manual
+|{
+"tagName1" :  "tagValue1",
+"tagName2" :  "tagValue2"
+}
 5+^|*Scheduling*
 |<<_start_at,START_AT>>
 |delay a job or task execution at a specified date/time
@@ -466,6 +474,29 @@ The Node Source will dynamically deploy a Node to execute a task marked with thi
 See <<../admin/ProActiveAdminGuide.adoc#_dynamic_policy,Dynamic Policy>> for more information.
 
 `NODESOURCENAME` can be defined at *job-level* (applies to all tasks of a workflow) or at  *task-level* (applies to a single task).
+
+==== RESOURCE_TAGS
+
+`RESOURCE_TAGS` is used to assign tags to compute instances deployed in a Node Source controlled by a *Dynamic Policy*.
+
+RESOURCE_TAGS format is a json key/value structure, such as:
+
+[source, json]
+----
+{
+  "tagName1" :  "tagValue1",
+  "tagName2" :  "tagValue2"
+}
+----
+
+The Node Source will forward these tags to the <<../admin/ProActiveAdminGuide.adoc#_node_source_infrastructures,Node Source Infrastructure>>.
+The way these tags will be added to compute resources depends on the infrastructure.
+Currently, only the <<../admin/ProActiveAdminGuide.adoc#_azure_scale_set_infrastructure,Azure Scale Set Infrastructure>> supports tags assignment.
+
+See <<../admin/ProActiveAdminGuide.adoc#_dynamic_policy_resource_tagging,Dynamic Policy Resource Tagging>> and <<../admin/ProActiveAdminGuide.adoc#_scale_set_tagging,Scale Set Tagging>> for more information.
+
+`RESOURCE_TAGS` can be defined at *job-level* (applies to all tasks of a workflow) or at  *task-level* (applies to a single task).
+
 
 ==== Documentation
 

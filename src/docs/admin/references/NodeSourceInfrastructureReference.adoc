@@ -857,6 +857,31 @@ As in our standard <<_azure_infrastructure>>, ProActive relies on an existing Az
 * Delete a resource group.
 - *Service Principal credentials:* ProActive uses Azure Resource Manager API to manage the Scale Set and Storage resources. This API requires a set of Active Directory _service principal credentials_ for non-interactive login (client, secret, tenant). If you do not have them, you can create them via the https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal[Azure Portal] or https://learn.microsoft.com/en-us/cli/azure/azure-cli-sp-tutorial-1[Azure CLI]. Please ask your administrator in case you do not have the privileges to create them. The credentials should be strings of hexadecimal values like _1a2b3c4d-5e6f-1a2b-3c4d-5e6f-1a2b3c4d5e6f_.
 
+===== Scale Set Tagging
+
+The infrastructure can dynamically apply tags to the created Scale Set when the infrastructure is attached to a <<_dynamic_policy,Dynamic Policy>>.
+
+This feature can be used to track Scale Set usage information in Azure Cost Monitoring. For example, when several computing batches are run subsequently on a Scale Set, it will be possible to know an approximate cost of each individual batch.
+
+When the Dynamic Policy triggers a scale up of the Scale Set and when pending tasks that triggered this scale up have the <<../user/ProActiveUserGuide.adoc#_resource_tags,RESOURCE_TAGS>> Generic Information defined (a key/value structure), configured tags will be applied to the Scale Set.
+
+Please note that Azure Scale Set _do not support individual instance tagging_ and tags will only be applied *globally on the Scale Set*. Accordingly, in a cost monitoring scenario, it is only possible to track the cost of subsequent computing batches (batches that run one after another) and not parallel batches on the same Scale Set.
+
+When a tag with a given name has been applied, any new application of the tag will overwrite the previous value.
+
+When the Scale Set scales down to zero instances, all currently applied tags will be removed. _This is the only case where tags are removed from the Scale Set_.
+
+Finally, please note that tags are applied only when the Scale Set scales up (regardless of its current size). If a pending task with tags defined simply reuse existing instances without triggering a scale up, its configured tags will not be applied to the Scale Set.
+
+Example Scenario:
+
+1. The scale set is idle with zero instance
+2. 5 tasks with tags <batch=batch1,step=step1> are pending and trigger a scale up to 0->5 instances. The tags <batch=batch1,step=step1> will be applied to the Scale Set.
+3. 2 tasks terminate and release 2 instances. The Scale Set scales down 5->3, and still contains tags <batch=batch1,step=step1>.
+4. 3 tasks with tags <batch=batch1,step=step2> are pending and trigger a scale up 3->6. The tags <batch=batch1,step=step2> will be applied to the Scale Set. The new value for the tag 'step' will overwrite the previous value.
+5. The 6 running tasks terminate and release 6 instances. The Scale Set scales down 6->0. All tags currently applied on the scale set are removed.
+6. 5 tasks with tags <batch=batch2,step=step1> are pending and trigger a scale up to 0->5 instances. The tags <batch=batch2,step=step1> will be applied to the Scale Set.
+7. ...
 
 ===== Infrastructure Configuration
 
