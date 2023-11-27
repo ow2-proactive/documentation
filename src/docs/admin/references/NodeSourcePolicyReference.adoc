@@ -302,7 +302,28 @@ The DynamicPolicy will scale up when pending tasks are detected in the ProActive
 In some cases, the existing free nodes will not match the requirements of these pending tasks. This can happen when the task contains a <<../user/ProActiveUserGuide.adoc#_selection_scripts,Selection Script>> or a <<../user/ProActiveUserGuide.adoc#_generic_information_selection,NODE_ACCESS_TOKEN>> restriction that discards existing free nodes.
 In that case, the Dynamic Policy will use a *best-effort strategy* to handle these tasks that remain in pending state. When tasks remain in pending state longer than `initDelay` milliseconds, the node source will trigger a scale-up (one new node per pending task).
 
-To use this policy, you have to define the following parameters:
+===== Dynamic Policy Resource Tagging
+
+The DynamicPolicy has the ability to add *tags* to resources acquired by cloud providers.
+The tagging mechanism depends on the <<_node_source_infrastructures,infrastructure>> associated with the DynamicPolicy. Currently,
+only the <<_azure_scale_set_infrastructure,Azure Scale Set Infrastructure>> supports resource tagging (see <<_scale_set_tagging,Scale Set Tagging>> for more information).
+
+Tagging can be activated by adding the <<../user/ProActiveUserGuide.adoc#_resource_tags,RESOURCE_TAGS>> Generic Information to workflows or workflow tasks that will target this node source.
+RESOURCE_TAGS must contain the following json key/value structure:
+
+[source, json]
+----
+{
+  "tagName1" :  "tagValue1",
+  "tagName2" :  "tagValue2"
+}
+----
+
+When the node source scales up due to the scheduling of a task with the above RESOURCE_TAGS generic information example, resources will be tagged with 2 tags `tagName1:tagValue1` and `tagName2:tagValue2`.
+
+===== Dynamic Policy Parameters
+
+To use the *DynamicPolicy*, you have to define the following parameters:
 
 -   *userAccessType* - see <<_policy_common_parameters>>
 
