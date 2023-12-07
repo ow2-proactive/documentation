@@ -975,7 +975,7 @@ If left unset, a new Virtual Network and subnet will be created inside the Resou
  ** Delete: When an instance is evicted, it is immediately deleted, and any workloads running on the instance are terminated.
  ** Deallocate: When an instance is evicted, it is deallocated but not immediately deleted.
  Learn more with the https://learn.microsoft.com/en-us/azure/virtual-machines/spot-vms[Azure Spot documentation, target="_blank"].
-- *maxPrice:* Defines the maximum price that you are willing to pay for Low or Spot virtual machines in the scale set.
+- *maxPrice:* Defines the maximum price in USD that you are willing to pay for Low or Spot virtual machines in the scale set.
 - *resourceGroupExistingName:*  Optional parameter. Defines the existing Resource Group name where only the Azure Scale Set and Storage Account should be created. This parameter should correspond to the existing Azure Resource Group in the specified *azureRegion*. +
  The Resource Group will be created with the Node Source unique name if the parameter *resourceGroupExistingName* is unset. +
  In case the parameter is set, several conditions have to be met:
