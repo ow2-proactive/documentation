@@ -964,6 +964,18 @@ The non-default subscription must be accessible with your Azure Credentials prov
 If left unset, a new Virtual Network and subnet will be created inside the Resource Group.
 - *restrictStorageAccountToNetwork:* Optional parameter. If _true_ and a _targetNetwork_ is specified, the storage account created by the infrastructure will be restricted to the provided network. In that case, the ProActive server must be deployed inside the provided network, as otherwise access to the storage account from the server would not be possible. Additionally, _Microsoft.Storage_ must be enabled in the Service Endpoints section of the subnet configuration. More information about Service Endpoints is available in the https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-service-endpoints-overview[Azure Documentation].
 - *azureRegion:* Defines the Azure region where the Resource Group and the Scale Set will be created. For the list of the regions supported by your subscription, you can use the https://docs.microsoft.com/en-us/cli/azure/account?view=azure-cli-latest#az-account-list-locations[CLI command] `az account list-locations -o table`, the right name to use is the one in the column _name_. The region name should be in lowercase without spaces, e.g. for the region _West US 2_ use _westus2_. Default value is _westeurope_.
+- *instancePriority:* Defines the type of VM instances to be deployed for the Scale Set.
+ It can be set to:
+ ** Regular: Regular instances are standard virtual machines.
+ ** Spot: Spot instances have the lowest priority among the three options and offer significant cost savings. They are allocated from surplus capacity and can be preempted with little notice if the capacity is needed for regular or Low-priority instances.
+ ** Low: Low-priority instances have a higher priority than Spot instances. These instances are cheaper than Regular but more expensive than Spot instances.
+ Learn more with the https://learn.microsoft.com/en-us/azure/virtual-machines/spot-vms[Azure Spot documentation, target="_blank"].
+- *evictionPolicy:* This parameter allows you to specify what action should be taken when an instance is reclaimed by Azure due to capacity constraints when the instancePriority is set to Spot or Low.
+ It can be set to:
+ ** Delete: When an instance is evicted, it is immediately deleted, and any workloads running on the instance are terminated.
+ ** Deallocate: When an instance is evicted, it is deallocated but not immediately deleted.
+ Learn more with the https://learn.microsoft.com/en-us/azure/virtual-machines/spot-vms[Azure Spot documentation, target="_blank"].
+- *maxPrice:* Defines the maximum price in USD that you are willing to pay for Low or Spot virtual machines in the scale set.
 - *resourceGroupExistingName:*  Optional parameter. Defines the existing Resource Group name where only the Azure Scale Set and Storage Account should be created. This parameter should correspond to the existing Azure Resource Group in the specified *azureRegion*. +
  The Resource Group will be created with the Node Source unique name if the parameter *resourceGroupExistingName* is unset. +
  In case the parameter is set, several conditions have to be met:
