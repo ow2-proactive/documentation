@@ -345,17 +345,9 @@ scheduler authentication.
 -   *refreshTime* - Time in milliseconds between each calculation of the number of
     needed nodes.
 
--   *loadFactor* - Number of tasks per node. Actually, if this number is
-*N*, it does not means that there will be exactly *N* tasks executed on
-each node. This factor is just used to compute the total number of
-nodes. For instance, let us assume that this factor is 3 and that we
-schedule 100 tasks. In that case, we will have 34 (= upper bound of
-100/3) started nodes. Once one task finished and the refresh time
-passed, one node will be removed since 99 divided by 3 is 33. When there
-will remain 96 tasks (assuming that no other tasks are scheduled
-meanwhile), another node will be removed at the next calculation time,
-and so on ...
-The load factor accepts decimal values to allow more precise control (1.5, etc.)
+-   *loadFactor* - Threshold of pending tasks that triggers the deployment of new nodes.
+Used with the observed ratio: `Number of Pending Tasks / Available free nodes to execute them`. If the current ratio is above loadFactor, it will trigger a node deployment.
+For example, if loadFactor is `1`, as soon as one task is pending and no node is free to execute a task, the Node Source will deploy one new node. A loadFactor of `10` means that 1 new node will be deployed when up to 10 tasks are pending and no nodes are free for executing them.
 
 -   *initDelay* - Delay in milliseconds to initialize the infrastructure (eg. in a azure cloud infrastructure this must
 cover the creation of Azure's initial resources such as network, storage account, etc.). This parameter is also used as a trigger for the *best-effort scale-up strategy* described above.
@@ -363,9 +355,9 @@ cover the creation of Azure's initial resources such as network, storage account
 -   *minUptime* - Minimal uptime of a free node to be candidate for deletion (in milliseconds). For example, if this parameter
 is set to 10 minutes, a node will not be removed from the node source unless it stays 10 minutes consecutively in state FREE, without executing any new task.
 
--   *globalScope* - if this parameter is set to `true`, the tasks considered to compute the load factor of the scheduler
-will correspond to all pending tasks in the scheduler queue. If it is set to `false`, only tasks which contain the <<_glossary_generic_information,generic information>>
-`NODESOURCENAME` with value equal to the node source name will be considered. This allows to restrict the provisioning of nodes to specific tasks.
+-   *globalScope* - Specifies the scope of the policy: If `true`, all the pending tasks will be taken into account for scaling up.
+If `false`, only the pending tasks targeting this specific Node Source will be taken into account. Pending tasks can target a Node Source by defining either the <<../user/ProActiveUserGuide.adoc#_node_source_generic_info,NODE_SOURCE>>
+ or the (deprecated) <<../user/ProActiveUserGuide.adoc#_nodesourcename,NODESOURCENAME>> generic information.
 
 
 ===== Native Scheduler Policy
