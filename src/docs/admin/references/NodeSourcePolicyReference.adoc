@@ -349,6 +349,9 @@ scheduler authentication.
 Used with the observed ratio: `Number of Pending Tasks / Available free nodes to execute them`. If the current ratio is above loadFactor, it will trigger a node deployment.
 For example, if loadFactor is `1`, as soon as one task is pending and no node is free to execute a task, the Node Source will deploy one new node. A loadFactor of `10` means that 1 new node will be deployed when up to 10 tasks are pending and no nodes are free for executing them.
 
+-   *loadFactorRoundingUp* - Boolean value which decides if `Number of pending tasks / loadFactor` should be rounded up (`true`) or down (`false`) when calculating the amount of nodes to deploy.
+For example if loadFactor is `10` and loadFactorRoundingUp is `true`, 1 new node will be deployed when 1 to 10 tasks are pending. If loadFactorRoundingUp is `false`, 1 new node will be deployed when 10 to 19 tasks are pending.
+
 -   *initDelay* - Delay in milliseconds to initialize the infrastructure (eg. in a azure cloud infrastructure this must
 cover the creation of Azure's initial resources such as network, storage account, etc.). This parameter is also used as a trigger for the *best-effort scale-up strategy* described above.
 
