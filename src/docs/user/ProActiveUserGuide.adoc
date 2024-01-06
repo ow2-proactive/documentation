@@ -518,7 +518,6 @@ In the left part, are illustrated the **General Parameters** of the workflow wit
 
 - `Name`: the name of the workflow.
 - `Project`: the project name to which belongs the workflow.
-- `Tags`: the tags of the workflow.
 - `Description`: the textual description of the workflow.
 - `Documentation`: if the workflow has a Generic Information named "Documentation", then its URL value is displayed as a link.
 - `Job Priority`: the priority assigned to the workflow. It is by default set to `NORMAL`, but can be increased or decreased once the job is submitted.
