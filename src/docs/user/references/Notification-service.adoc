@@ -4,6 +4,9 @@ The <<_glossary_notification_portal,*Notification Portal*>> allows users to subs
 types of events occur during <<_glossary_job,*Job*>> execution, on the state of the <<_glossary_proactive_scheduler,*ProActive Scheduler*>> or when
 automating and scheduling jobs with the <<_glossary_job_planner,*Job Planner*>>.
 
+The <<_glossary_notification_portal,*Notification Portal*>> is also where users can perform actions on *Validations* when they are
+authorized to visualize them. Learn more at the link:../user/ProActiveUserGuide.html#_control_and_validations[Validation's dedicated section].
+
 [title="Notifications view"]
 image::notifications-view.png[align="center"]
 

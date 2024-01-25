@@ -1877,13 +1877,36 @@ if (isJobSuccessful) {
 }
 ----
 
-=== Control and Validation
+[[_control_and_validations]]
+=== Control and Validations
 
-In order to better control your workflows, two ProActive Studio templates *Web Validation* and *Email Validation* are provided under the *Manuals* menu. These templates aim at the validating part of your workflows manually.
-It allows to suspend the execution of the validation task dependencies and set the job as *Paused*. You can put your validation description message under the *MESSAGE* variable in *Web Validation* template, and under *notification_message* variable in *Email Validation* template. Three options are provided, the *Yes* option indicates that you want
-to validate the workflow and continue the execution of the rest tasks; the *Maybe* option means that you do not know what to do for the moment; the *No* option denotes that you do not want to validate the workflow, and the remaining of the workflow will be paused.
+*Web Validations* and *Email Validations* are two *Tasks* available in the *Studio's* control-notification *Bucket*. +
+When the *Workflow's* execution flow reaches one of these Tasks, the *Job* is paused, emails are sent if necessary and a *Validation* is created in the *Notification Portal*.
+From there, the Job remains in pause until an authorized user or user group performs an action on the Validation.
 
-In order to validate your workflow using *Web Validation*, you need to go to the *ProActive Notification & Validation* portal. The workflow will be validated by clicking on one of the three buttons. By using *Email Validation*, you will receive an email with three links, the workflow can be validated by clicking on one of the links.
+A *Web Validation* defines:
+
+* A message: The associated message readable by all notified users.
+* A severity: The associated severity. Can be CRITICAL, ERROR, WARNING or INFO.
+* The *Job* submitter authorization: If the user who submits the job is authorized to perform an action on the Validation.
+* Authorized users: A comma separated list of users who will be notified and able to process the Validation.
+* Authorized groups: A comma separated list of groups who will be notified and able to process the Validation.
+
+*Email Validations* define an extra field called Emails which holds a comma separated list of emails. +
+Each provided email will be notified that a Validation is pending. The email contains a link to the *Notification Portal*
+where the user can perform an action on the Validation.
+
+Authorized users may perform three type of actions on a *Validation*:
+
+* Yes: The Job will resume.
+* No: The Job will be killed.
+* Abstain: The Job will remain paused. Another user must process the *Validation*.
+
+All actions are final for each user. A user cannot modify his response.
+Once a Validation receives a Yes or No action, the Validation is considered processed and no future actions can be done by any user.
+
+[title="A Validation in the Notification-Portal"]
+image::notification-service-validation.png[align=center,768,121]
 
 === Adding Labels to Jobs
 
