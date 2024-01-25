@@ -1888,7 +1888,7 @@ A *Web Validation* defines:
 
 * A message: The associated message readable by all notified users.
 * A severity: The associated severity. Can be CRITICAL, ERROR, WARNING or INFO.
-* The *Job* submitter authorization: If the user who submits the job is authorized to perform an action on the Validation.
+* The Job submitter authorization: If the user who submits the job is authorized to perform an action on the Validation.
 * Authorized users: A comma separated list of users who will be notified and able to process the Validation.
 * Authorized groups: A comma separated list of groups who will be notified and able to process the Validation.
 
@@ -1900,10 +1900,10 @@ Authorized users may perform three type of actions on a *Validation*:
 
 * Yes: The Job will resume.
 * No: The Job will be killed.
-* Abstain: The Job will remain paused. Another user must process the *Validation*.
+* Abstain: The Job will remain paused. Another user must process the Validation.
 
 All actions are final for each user. A user cannot modify his response.
-Once a Validation receives a Yes or No action, the Validation is considered processed and no future actions can be done by any user.
+Once a Validation receives a *Yes* or *No action*, the Validation is considered processed and *no future actions* can be done by any user.
 
 [title="A Validation in the Notification-Portal"]
 image::notification-service-validation.png[align=center,768,121]
