@@ -352,6 +352,8 @@ For example, if loadFactor is `1`, as soon as one task is pending and no node is
 -   *loadFactorRoundingUp* - Boolean value which decides if `Number of pending tasks / loadFactor` should be rounded up (`true`) or down (`false`) when calculating the amount of nodes to deploy.
 For example if loadFactor is `10` and loadFactorRoundingUp is `true`, 1 new node will be deployed when 1 to 10 tasks are pending. If loadFactorRoundingUp is `false`, 1 new node will be deployed when 10 to 19 tasks are pending.
 
+- *loadFactorLegacyBehavior* - Boolean value which decides if the legacy _loadFactor_ behavior should be enabled (default to `false`). The Dynamic Policy used to apply the _loadFactor_ setting on pending tasks only. This meant that as long as pending tasks were present, new nodes could be deployed (up to the _maxNodes_ parameter). This behavior did not really satisfy the philosophy of _loadFactor_ which aims to deploy a limited number of nodes to handle a larger amount of short-lived tasks. The new mechanism takes into account both pending tasks and already deployed nodes. The legacy mechanism can be enabled for backward-compatibility reasons by setting _loadFactorLegacyBehavior_ to `true`.
+
 -   *initDelay* - Delay in milliseconds to initialize the infrastructure (eg. in a azure cloud infrastructure this must
 cover the creation of Azure's initial resources such as network, storage account, etc.). This parameter is also used as a trigger for the *best-effort scale-up strategy* described above.
 
