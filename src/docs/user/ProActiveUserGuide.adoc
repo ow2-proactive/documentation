@@ -3044,6 +3044,131 @@ Many use cases can be fulfilled using this API. For instance:
   can scale up and down these resources when receiving the corresponding signals from users (via the Workflow Execution portal),
   or from third-party systems (via the Signals REST endpoint).
 
+== Third party ?ProActive? services API
+
+Some ProActive services offers java Clients ready to be used in ProActive's workflows.
+
+=== ProActive Service Automation (PSA) API
+
+The ProActive Service Automation API, or ProActive Service Automation Client, is a way by which a workflow can communicate with ProActive's Service Automation service
+using java code to send HTTP requests.
+
+The ProActive Service Automation Client hides the complexity of building and sending HTTP requests manually by providing
+ready-to-use classes callable from a groovy task.
+
+Below is an example of a groovy script starting a managed service.
+
+NOTE: This example has been truncated for readability and is not meant to be used as is:
+
+[source,groovy]
+----
+// Import necessary classes from the Service Automation Client
+import org.ow2.proactive.pca.service.client.ApiClient
+import org.ow2.proactive.pca.service.client.api.ServiceInstanceRestApi
+import org.ow2.proactive.pca.service.client.model.ServiceInstanceData
+import org.ow2.proactive.pca.service.client.model.ServiceDescription
+import com.google.common.base.Strings;
+
+// Get session id
+def sessionId = schedulerapi.getSession()
+
+// Create a ServiceInstanceRestApi object
+def pcaUrl = variables.get('PA_CLOUD_AUTOMATION_REST_URL')
+def apiClient = new ApiClient()
+apiClient.setBasePath(pcaUrl)
+def serviceInstanceRestApi = new ServiceInstanceRestApi(apiClient)
+
+// Read workflow variables
+def serviceId = variables.get("SERVICE_ID")
+def instanceName = variables.get("INSTANCE_NAME")
+def serviceActivationWorkflow = variables.get("SERVICE_ACTIVATION_WORKFLOW")
+
+// Prepare service description
+ServiceDescription serviceDescription = new ServiceDescription()
+serviceDescription.setBucketName(bucketName)
+serviceDescription.setWorkflowName(startingWorkflowName)
+
+// Run service
+def serviceInstanceData = serviceInstanceRestApi.createRunningServiceInstance(sessionId, serviceDescription, Integer.parseInt(variables.get("PA_JOB_ID")))
+
+// Acquire service Instance ID
+def serviceInstanceId = serviceInstanceData.getInstanceId()
+
+// Acquire service endpoint
+serviceInstanceData = serviceInstanceRestApi.getServiceInstance(sessionId, serviceInstanceId)
+endpoint = serviceInstanceData.getDeployments().iterator().next().getEndpoint().getUrl()
+
+// Store variables and result
+variables.put("INSTANCE_ID_" + instanceName, serviceInstanceId)
+variables.put("ENDPOINT_" + instanceName, endpoint)
+result = endpoint
+----
+
+To see a complete list of possible actions using the ProActive Service Automation Client, please refer to the javadoc.
+
+=== Notification Service API
+
+The Notification Service API, or Notification Client, is a way by which a workflow can communicate with ProActive's Notification Service
+using java code to send HTTP requests.
+
+The Notification Client hides the complexity of building and sending HTTP requests manually by providing
+ready-to-use classes callable from a groovy task.
+
+Below is an example of how to create a Notification in the Notification Portal using the Notification Client:
+
+[source,groovy]
+----
+// Import necessary classes from the Notification Client
+import org.ow2.proactive.notification.client.ApiClient
+import org.ow2.proactive.notification.client.api.EventRestApi
+import org.ow2.proactive.notification.client.model.EventRequest
+import org.ow2.proactive.notification.client.model.Event
+import org.ow2.proactive.notification.client.ApiException
+
+// Get the notification-service URL
+def notifUrl = variables.get('PA_NOTIFICATION_SERVICE_REST_URL')
+def apiClient = new ApiClient()
+apiClient.setBasePath(notifUrl)
+
+// Instantiate the EventRestApi class, the class that effectively sends HTTP requests
+def eventRestApi = new EventRestApi(apiClient)
+
+// Get the current job id
+def jobId = new Long(variables.get("PA_JOB_ID"))
+
+// Set the Notification's message
+def eventMessage = "This is a message"
+
+// Set the Notification's severity
+def eventSeverity = EventRequest.EventSeverityEnum.INFO
+
+// Get session id
+schedulerapi.connect()
+def sessionId = schedulerapi.getSession()
+
+// Create the eventRequest object
+def eventRequest = new EventRequest()
+        .bucketName(genericInformation.get("bucketName"))
+        .workflowName(variables.get("PA_JOB_NAME"))
+        .eventType(EventRequest.EventTypeEnum.CUSTOM)
+        .eventSeverity(eventSeverity)
+        .jobId(jobId)
+        .message(eventMessage);
+
+try {
+    // Send the POST request to create the Notification
+    result = eventRestApi.createEvent(sessionId, eventRequest).toString()
+    println(result)
+} catch (ApiException e) {
+    System.err.println("Exception when calling EventRestApi#createEvent")
+    e.printStackTrace();
+}
+----
+
+By using this groovy script, workflow designers can create custom Notifications anywhere in workflows.
+
+To see a complete list of possible actions using the Notification Client, please refer to the javadoc.
+
 == Scheduling policies
 
 See link:../admin/ProActiveAdminGuide.html#_scheduling_policies[Admin Guide] to configure scheduling policies.
