@@ -3104,7 +3104,7 @@ variables.put("ENDPOINT_" + instanceName, endpoint)
 result = endpoint
 ----
 
-To see a complete list of possible actions using the ProActive Service Automation Client, please refer to the javadoc.
+The complete ProActive Cloud Automation Client API is available in the javadoc link:../javadoc/cloudAutomationClient[Cloud Automation Client JavaDoc].
 
 === Notification Service API
 
@@ -3167,7 +3167,7 @@ try {
 
 By using this groovy script, workflow designers can create custom Notifications anywhere in workflows.
 
-To see a complete list of possible actions using the Notification Client, please refer to the javadoc.
+The complete Notification Client API is available in the javadoc link:../javadoc/notificationClient[Notification Client JavaDoc].
 
 == Scheduling policies
 
