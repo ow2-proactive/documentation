@@ -3044,21 +3044,20 @@ Many use cases can be fulfilled using this API. For instance:
   can scale up and down these resources when receiving the corresponding signals from users (via the Workflow Execution portal),
   or from third-party systems (via the Signals REST endpoint).
 
-== Third party services API
+== ProActive Modules APIs
 
-Some ProActive services offers java Clients ready to be used in ProActive's workflows.
+In addition to the core component APIs described above, ProActive workflow tasks can also interact with other ProActive Modules such as Service Automation and Notification Service.
 
 === ProActive Service Automation (PSA) API
 
-The ProActive Service Automation API, or ProActive Service Automation Client, is a way by which a workflow can communicate with ProActive's Service Automation service
-using java code to send HTTP requests.
+The ProActive Service Automation API, or ProActive Service Automation Client, is a way by which a workflow can communicate with the link:../PSA/PSAUserGuide.html[Service Automation module]
 
 The ProActive Service Automation Client hides the complexity of building and sending HTTP requests manually by providing
-ready-to-use classes callable from a groovy task.
+ready-to-use code callable from various tasks.
 
 Below is an example of a groovy script starting a managed service.
 
-NOTE: This example has been truncated for readability and is not meant to be used as is:
+NOTE: This example has been truncated for readability and is not meant to be used as is.
 
 [source,groovy]
 ----
@@ -3069,7 +3068,7 @@ import org.ow2.proactive.pca.service.client.model.ServiceInstanceData
 import org.ow2.proactive.pca.service.client.model.ServiceDescription
 import com.google.common.base.Strings;
 
-// Get session id
+// Get session id using the Scheduler API
 def sessionId = schedulerapi.getSession()
 
 // Create a ServiceInstanceRestApi object
@@ -3104,15 +3103,14 @@ variables.put("ENDPOINT_" + instanceName, endpoint)
 result = endpoint
 ----
 
-The complete ProActive Cloud Automation Client API is available in the javadoc link:../javadoc/cloudAutomationClient[Cloud Automation Client JavaDoc].
+The complete ProActive Service Automation Client API is available in the javadoc link:../javadoc/cloudAutomationClient[Service Automation Client JavaDoc].
 
 === Notification Service API
 
-The Notification Service API, or Notification Client, is a way by which a workflow can communicate with ProActive's Notification Service
-using java code to send HTTP requests.
+The Notification Service API, or Notification Client, is a way by which a workflow can communicate with the <<_notification_service,Notification Service>>
 
 The Notification Client hides the complexity of building and sending HTTP requests manually by providing
-ready-to-use classes callable from a groovy task.
+ready-to-use code callable from various tasks.
 
 Below is an example of how to create a Notification in the Notification Portal using the Notification Client:
 
@@ -3165,9 +3163,9 @@ try {
 }
 ----
 
-By using this groovy script, workflow designers can create custom Notifications anywhere in workflows.
+By using this groovy script, workflow designers can create custom Notifications anywhere in their workflows.
 
-The complete Notification Client API is available in the javadoc link:../javadoc/notificationClient[Notification Client JavaDoc].
+The complete Notification Client API is available in the javadoc link:../javadoc/notificationClient[Notification Client Javadoc].
 
 == Scheduling policies
 
