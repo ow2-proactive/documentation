@@ -3044,7 +3044,7 @@ Many use cases can be fulfilled using this API. For instance:
   can scale up and down these resources when receiving the corresponding signals from users (via the Workflow Execution portal),
   or from third-party systems (via the Signals REST endpoint).
 
-== Third party ?ProActive? services API
+== Third party services API
 
 Some ProActive services offers java Clients ready to be used in ProActive's workflows.
 
