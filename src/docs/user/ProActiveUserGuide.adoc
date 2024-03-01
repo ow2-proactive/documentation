@@ -1880,7 +1880,7 @@ if (isJobSuccessful) {
 [[_control_and_validations]]
 === Control and Validations
 
-*Web Validations* and *Email Validations* are two *Tasks* available in the *Studio's* control-notification *Bucket*. +
+*Web Validations* and *Email Validations* are two *Tasks* available in the Studio's *control-notification* Bucket. +
 When the *Workflow's* execution flow reaches one of these Tasks, the *Job* is paused, emails are sent if necessary and a *Validation* is created in the *Notification Portal*.
 From there, the Job remains in pause until an authorized user or user group performs an action on the Validation.
 
@@ -1889,14 +1889,14 @@ A *Web Validation* defines:
 * A message: The associated message readable by all notified users.
 * A severity: The associated severity. Can be CRITICAL, ERROR, WARNING or INFO.
 * The Job submitter authorization: If the user who submits the job is authorized to perform an action on the Validation.
-* Authorized users: A comma separated list of users who will be notified and able to process the Validation.
+* Authorized users: A comma separated list of users (login names) who will be notified and able to process the Validation.
 * Authorized groups: A comma separated list of groups who will be notified and able to process the Validation.
 
 *Email Validations* define an extra field called Emails which holds a comma separated list of emails. +
 Each provided email will be notified that a Validation is pending. The email contains a link to the *Notification Portal*
 where the user can perform an action on the Validation.
 
-Authorized users may perform three type of actions on a *Validation*:
+Authorized users may perform three types of actions on a *Validation*:
 
 * Yes: The Job will resume.
 * No: The Job will be killed.
@@ -1905,7 +1905,7 @@ Authorized users may perform three type of actions on a *Validation*:
 All actions are final for each user. A user cannot modify his response.
 Once a Validation receives a *Yes* or *No action*, the Validation is considered processed and *no future actions* can be done by any user.
 
-[title="A Validation in the Notification-Portal"]
+[title="A Validation in the Notification-Portal", align="center"]
 image::notification-service-validation.png[align=center,768,121]
 
 === Adding Labels to Jobs
