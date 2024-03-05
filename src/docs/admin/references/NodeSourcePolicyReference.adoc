@@ -299,8 +299,26 @@ This policy will never acquire more nodes than the infrastructure is capable of 
 Symmetrically, if an infrastructure defines a minimum number of nodes to acquire, this policy will never go below this number.
 
 The DynamicPolicy will scale up when pending tasks are detected in the ProActive Scheduler queue and the Node Source does not have enough free nodes to assign.
+
 In some cases, the existing free nodes will not match the requirements of these pending tasks. This can happen when the task contains a <<../user/ProActiveUserGuide.adoc#_selection_scripts,Selection Script>> or a <<../user/ProActiveUserGuide.adoc#_generic_information_selection,NODE_ACCESS_TOKEN>> restriction that discards existing free nodes.
 In that case, the Dynamic Policy will use a *best-effort strategy* to handle these tasks that remain in pending state. When tasks remain in pending state longer than `initDelay` milliseconds, the node source will trigger a scale-up (one new node per pending task).
+
+The *loadFactor* is the main parameter that allows to control the scale up/down of the DynamicPolicy. It decides how many new ProActive Nodes will be deployed when considering the current number of pending and running tasks. *loadFactor* is a ratio which computes the expected number of Nodes in the Node Source according to the formula:
+
+----
+expectedNbNodes = Math.ceil((nbPendingTasks + nbBusyNodes) / loadFactor)
+----
+
+Two additional parameters allow to fine-tune this formula:
+
+ * loadFactorRoundingUp: when `false`, `Math.ceil` is replaced by `Math.floor` in the above formula (rounding down instead of rounding up).
+ * loadFactorLegacyBehavior: when `true`, the formula is transformed to:
+----
+expectedNbNodes = Math.ceil(nbPendingTasks / loadFactor + nbBusyNodes)
+----
+This means that new Nodes will be deployed as long as there are pending tasks remaining, regardless of the *loadFactor* value. In that case, *loadFactor* controls only how many new Nodes are deployed per policy cycle and not how many Nodes are present in the Node Source with regard to the number of tasks to run.
+
+Finally, it is also possible to _fully control_ the scale up/down formula and even link it with the state of other Node Sources. This is achieved by using the *scaleNodesExpression* parameter described in <<_scale_nodes_spel_expression>>.
 
 ===== Dynamic Policy Resource Tagging
 
@@ -364,8 +382,92 @@ is set to 10 minutes, a node will not be removed from the node source unless it 
 If `false`, only the pending tasks targeting this specific Node Source will be taken into account. Pending tasks can target a Node Source by defining either the <<../user/ProActiveUserGuide.adoc#_node_source_generic_info,NODE_SOURCE>>
  or the (deprecated) <<../user/ProActiveUserGuide.adoc#_nodesourcename,NODESOURCENAME>> generic information.
 
+-   *scaleNodesExpression*: advanced parameter allowing to fully control the formula used to scale up or scale down Nodes. The parameter expects a SpEL expression with a syntax described below.
 
-===== Native Scheduler Policy
+===== Scale Nodes SpEL expression
+
+*scaleNodesExpression* is a powerful, advanced parameter which allows full control on the scale up and scale down of a DynamicPolicy.
+
+*scaleNodesExpression* uses the link:https://docs.spring.io/spring-framework/docs/4.3.x/spring-framework-reference/html/expressions.html#expressions-language-ref[Spring Expression Language] syntax
+
+*scaleNodesExpression* must return an integer with the following semantic:
+
+ * a positive integer N will require the Node Source to deploy N new Nodes.
+ * a negative integer N will require the Node Source to remove N Nodes (only Nodes that have been in `FREE` state for more than *minUptime* milliseconds can be removed).
+ * 0 will keep the current Nodes unchanged.
+
+[[_scalenodes_vars]]
+===== Variables and Functions
+
+The expression can use the following given variables:
+
+* *loadFactor*: the currently configured load factor in the DynamicPolicy (see <<_dynamic_policy_parameters>>).
+* *globalScope*: the currently configured scope of the DynamicPolicy (see <<_dynamic_policy_parameters>>).
+* *aliveNodes* : the current number of alive Nodes in the Node Source when *globalScope* is `false`. Otherwise, *aliveNodes* will be the current number of alive Nodes in the Resource Manager. Alive Nodes are Nodes in the following states: `DEPLOYING`, `CONFIGURING`, `FREE`, `BUSY` or `TO_BE_REMOVED` (see <<_node_states,Node States>>).
+* *aliveNodesInNodeSource*: the current number of alive nodes in the Node Source, regardless of the *globalScope* configuration.
+* *busyNodes*: the current number of Nodes in BUSY state in the Node Source when *globalScope* is `false`. Otherwise, *busyNodes* will be the current number of Nodes in BUSY state in the Resource Manager.
+* *busyNodesInNodeSource*: the current number of Nodes in BUSY state in the Node Source regardless of the *globalScope* configuration.
+* *deployingNodes*: the current number of Nodes in DEPLOYING state in the Node Source (does not consider the *globalScope* parameter).
+* *neededNodes*: the number of Nodes needed by pending tasks. This value contains all pending tasks when *globalScope* is `true` and only tasks which define the <<../user/ProActiveUserGuide.adoc#_node_source_generic_info,NODE_SOURCE>> or the <<../user/ProActiveUserGuide.adoc#_nodesourcename,NODESOURCENAME>> generic information when *globalScope* is `false`. Also, this value considers multi-node pending tasks (for example, a task can require using 3 Nodes).
+* *temp*: can be set to a temporary object used in the SpEL expression.
+* *tempMap*: an empty Hash Map structure which can be populated and used in the SpEL expression.
+* *nodeSources*: a _key-value_ HashMap which contain the state of all Node Sources in the Resource Manager. The key is the Node Source name and the value contains the following properties:
+** *acquiredNodes*: the current number of acquired Nodes in this Node Source. *acquiredNodes* contain Nodes in `CONFIGURING`, `FREE`, `BUSY` or `TO_BE_REMOVED` states. This property is accessed using `nodeSources.get('node-source-name').getAcquiredNodes()`.
+** *aliveNodes* : the current number of alive Nodes in the Node Source. Alive Nodes are Nodes in `DEPLOYING`, `CONFIGURING`, `FREE`, `BUSY` or `TO_BE_REMOVED` states. This property is accessed using `nodeSources.get('node-source-name').getAliveNodes()`.
+** *deployingNodes*: the current number of Nodes in `DEPLOYING` state in this Node Source. This property is accessed using `nodeSources.get('node-source-name').getDeployingNodes()`.
+** *busyNodes*: the current number of Nodes in `BUSY` or `TO_BE_REMOVED` states in this Node Source. This property is accessed using `nodeSources.get('node-source-name').getBusyNodes()`.
+** *totalNodes*: the total number of Nodes in this Node Source. This property is accessed using `nodeSources.get('node-source-name').getTotalNodes()`.
+** *descriptor*: a link:../javadoc/org/ow2/proactive/resourcemanager/nodesource/NodeSourceDescriptor.html[NodeSourceDescriptor] object containing all the parameters of this Node Source. This property is accessed using `nodeSources.get('node-source-name').getDescriptor()`.
+The NodeSourceDescriptor object contain many methods, among which the `getInfrastructureParameter(name)` and the `getPolicyParameter(name)` will be the most useful.
++
+For example, it is possible to access the *maxNodes* parameter of a specific Node Source that uses a DynamicPolicy:
++
+----
+T(Integer).parseInt(nodeSources.get('node-source-name').getDescriptor().	getPolicyParameter('maxNodes'))
+----
++
+As _getPolicyParameter_ returns a string, it is necessary to transform it into an integer before doing any integer comparison.
+
+*scaleNodesExpression* can also use the following function (in addition to the functions available by default in the SpEL language):
+
+ * `z(expression)`: evaluate the expression and return `zero`.
+This is used to allow performing affectations to the `temp` or `tempMap` variables. For example:
+----
+z(temp=neededNodes+busyNodes)+T(Math).ceil(temp/loadFactor)-aliveNodes
+----
+In this expression, the `z` function prevents the affectation from adding its value to the total.
+
+[[_scalenodes_examples]]
+===== Example Expressions
+
+Below is an example of a *scaleNodesExpression* that reproduces the default behavior of the DynamicPolicy:
+
+----
+T(Math).ceil((neededNodes + busyNodes) / loadFactor) - aliveNodes
+----
+
+Explanation:
+
+ * `T(Math).ceil((neededNodes + busyNodes) / loadFactor)`: this computes the expected number of Nodes. When *loadFactor* is 1, the expected number of Nodes is the sum of pending tasks and current Nodes in `BUSY` state. A *loadFactor* greater than 1 will reduce the amount of expected Nodes.
+ * `- aliveNodes`: the number of alive Nodes is substracted to the expected number of Nodes to return the signed difference. The returned value will either be positive (scale up) or negative (scale down).
+
+Below is an example of a *scaleNodesExpression* that will scale up the Node Source when another Dynamic Policy Node Source has reached maximum capacity (this expression considers that *globalScope* is `true` for both Node Sources). The following expression must be defined on the second Node Source:
+
+----
+z(temp=nodeSources.get('FirstNS')) + (temp.getAliveNodes() == T(Integer).parseInt(temp.getDescriptor().getPolicyParameter('maxNodes')) ? T(Math).ceil((neededNodes + busyNodesInNodeSource) / loadFactor) - aliveNodesInNodeSource : -aliveNodesInNodeSource )
+----
+
+Explanation:
+
+The main structure of this expression uses the `test ? case1 : case2` syntax, which evaluates `case1` when `test` is `true` and `case2` when `test` is `false`.
+
+ * `z(temp=nodeSources.get('FirstNS')) {plus}`: read the state of the first node source and store it into a temporary variable. Notice the use of the `z()` function and the `{plus}` sign, so that this affectation does not change the value returned by the expression.
+ * `temp.getAliveNodes() == T(Integer).parseInt(temp.getDescriptor().getPolicyParameter('maxNodes'))` : check if the current number of alive Nodes in the Node Source `FirstNS` is equal to the maximum configured for the first Node Source.
+ * `T(Math).ceil((neededNodes + busyNodesInNodeSource) / loadFactor) - aliveNodesInNodeSource`: when the maximum number of nodes is reached on the first Node Source, the second Node Source will scale up based on the default scale up expression (see previous example). Note that we use `busyNodesInNodeSource` and `aliveNodesInNodeSource` to count only Nodes that belong to the second Node Source.
+ * `-aliveNodesInNodeSource`: when the first Node Source is not at the maximum, remove all alive Nodes in the second Node Source (only `FREE` Nodes will be removed after *minUptime* milliseconds).
+
+
+==== Native Scheduler Policy
 
 *Full name:* `org.ow2.proactive.resourcemanager.nodesource.policy.NativeSchedulerPolicy`
 
