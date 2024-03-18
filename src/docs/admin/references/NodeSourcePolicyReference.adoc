@@ -409,8 +409,9 @@ The expression can use the following given variables:
 * *busyNodesInNodeSource*: the current number of Nodes in BUSY state in the Node Source regardless of the *globalScope* configuration.
 * *deployingNodes*: the current number of Nodes in DEPLOYING state in the Node Source (does not consider the *globalScope* parameter).
 * *neededNodes*: the number of Nodes needed by pending tasks. This value contains all pending tasks when *globalScope* is `true` and only tasks which define the <<../user/ProActiveUserGuide.adoc#_node_source_generic_info,NODE_SOURCE>> or the <<../user/ProActiveUserGuide.adoc#_nodesourcename,NODESOURCENAME>> generic information when *globalScope* is `false`. Also, this value considers multi-node pending tasks (for example, a task can require using 3 Nodes).
-* *temp*: can be set to a temporary object used in the SpEL expression.
-* *tempMap*: an empty Hash Map structure which can be populated and used in the SpEL expression.
+* *temp*, *temp2*, *temp3*, *temp4*: each of these variables can be set to a temporary object used in the SpEL expression. Affectations should use the `z()` function described below. e.g. `z(temp=neededNodes+busyNodes)`
+
+* *tempMap*: an empty Hash Map structure which can be populated and used in the SpEL expression. Affectations to the map should use the `z()` function described below. e.g. `z(tempMap.put('key', 'value'))`.
 * *nodeSources*: a _key-value_ HashMap which contain the state of all Node Sources in the Resource Manager. The key is the Node Source name and the value contains the following properties:
 ** *acquiredNodes*: the current number of acquired Nodes in this Node Source. *acquiredNodes* contain Nodes in `CONFIGURING`, `FREE`, `BUSY` or `TO_BE_REMOVED` states. This property is accessed using `nodeSources.get('node-source-name').getAcquiredNodes()`.
 ** *aliveNodes* : the current number of alive Nodes in the Node Source. Alive Nodes are Nodes in `DEPLOYING`, `CONFIGURING`, `FREE`, `BUSY` or `TO_BE_REMOVED` states. This property is accessed using `nodeSources.get('node-source-name').getAliveNodes()`.
@@ -428,6 +429,8 @@ T(Integer).parseInt(nodeSources.get('node-source-name').getDescriptor().	getPoli
 +
 As _getPolicyParameter_ returns a string, it is necessary to transform it into an integer before doing any integer comparison.
 
+* *previousNodeSources*: this variable contains a similar structure as *nodeSources* but retrieved from the previous refresh cycle. This can be used to ensure that the state of another Node Source remains stable between 2 cycles and take scale up/down decisions accordingly.  Please note that on the first cycle, *previousNodeSources* will contain an empty HashMap. It is thus advised to ensure in the SpEL expression that returned node source information are not `null`. An example usage of *previousNodeSources* is described in <<_scalenodes_examples>>.
+
 *scaleNodesExpression* can also use the following function (in addition to the functions available by default in the SpEL language):
 
  * `z(expression)`: evaluate the expression and return `zero`.
@@ -435,7 +438,7 @@ This is used to allow performing affectations to the `temp` or `tempMap` variabl
 ----
 z(temp=neededNodes+busyNodes)+T(Math).ceil(temp/loadFactor)-aliveNodes
 ----
-In this expression, the `z` function prevents the affectation from adding its value to the total.
+In this expression, the `z()` function prevents the affectation from adding its value to the total.
 
 [[_scalenodes_examples]]
 ===== Example Expressions
@@ -449,22 +452,24 @@ T(Math).ceil((neededNodes + busyNodes) / loadFactor) - aliveNodes
 Explanation:
 
  * `T(Math).ceil((neededNodes + busyNodes) / loadFactor)`: this computes the expected number of Nodes. When *loadFactor* is 1, the expected number of Nodes is the sum of pending tasks and current Nodes in `BUSY` state. A *loadFactor* greater than 1 will reduce the amount of expected Nodes.
- * `- aliveNodes`: the number of alive Nodes is substracted to the expected number of Nodes to return the signed difference. The returned value will either be positive (scale up) or negative (scale down).
+ * `- aliveNodes`: the number of alive Nodes is subtracted to the expected number of Nodes to return the signed difference. The returned value will either be positive (scale up) or negative (scale down).
 
 Below is an example of a *scaleNodesExpression* that will scale up the Node Source when another Dynamic Policy Node Source has reached maximum capacity (this expression considers that *globalScope* is `true` for both Node Sources). The following expression must be defined on the second Node Source:
 
 ----
-z(temp=nodeSources.get('FirstNS')) + (temp.getAliveNodes() == T(Integer).parseInt(temp.getDescriptor().getPolicyParameter('maxNodes')) ? T(Math).ceil((neededNodes + busyNodesInNodeSource) / loadFactor) - aliveNodesInNodeSource : -aliveNodesInNodeSource )
+z(temp=nodeSources.get('FirstNS')) + z(temp2=previousNodeSources.get('FirstNS')) + z(temp3=(temp2!=null?temp2.getBusyNodes():0)) + (T(Math).min(temp.getBusyNodes(),temp3) == T(Integer).parseInt(temp.getDescriptor().getPolicyParameter('maxNodes')) ? T(Math).ceil((neededNodes + busyNodesInNodeSource) / loadFactor) - aliveNodesInNodeSource : -aliveNodesInNodeSource )
 ----
 
 Explanation:
 
 The main structure of this expression uses the `test ? case1 : case2` syntax, which evaluates `case1` when `test` is `true` and `case2` when `test` is `false`.
 
- * `z(temp=nodeSources.get('FirstNS')) {plus}`: read the state of the first node source and store it into a temporary variable. Notice the use of the `z()` function and the `{plus}` sign, so that this affectation does not change the value returned by the expression.
- * `temp.getAliveNodes() == T(Integer).parseInt(temp.getDescriptor().getPolicyParameter('maxNodes'))` : check if the current number of alive Nodes in the Node Source `FirstNS` is equal to the maximum configured for the first Node Source.
+ * `z(temp=nodeSources.get('FirstNS'))`: read the state of the first Node Source and store it into a temporary variable. Notice the use of the `z()` function and the `{plus}` sign, so that this affectation does not change the value returned globally by the SpEL expression.
+ * `z(temp2=previousNodeSources.get('FirstNS'))`: read the previous state of the first Node Source and store it into another temporary variable.
+ * `z(temp3=(temp2!=null?temp2.getBusyNodes():0))`: store into another variable the amount of busy nodes that were accounted on the first Node Source in the previous refresh cycle. If the previous cycle is empty, store `0` into the variable.
+ * `T(Math).min(temp.getBusyNodes(),temp3) == T(Integer).parseInt(temp.getDescriptor().getPolicyParameter('maxNodes'))` : check if the number of busy Nodes in the Node Source `FirstNS` is equal to the maximum configured for the first Node Source for 2 consecutive refresh periods.
  * `T(Math).ceil((neededNodes + busyNodesInNodeSource) / loadFactor) - aliveNodesInNodeSource`: when the maximum number of nodes is reached on the first Node Source, the second Node Source will scale up based on the default scale up expression (see previous example). Note that we use `busyNodesInNodeSource` and `aliveNodesInNodeSource` to count only Nodes that belong to the second Node Source.
- * `-aliveNodesInNodeSource`: when the first Node Source is not at the maximum, remove all alive Nodes in the second Node Source (only `FREE` Nodes will be removed after *minUptime* milliseconds).
+ * `-aliveNodesInNodeSource`: when the first Node Source is not at the maximum, remove all alive Nodes in the second Node Source (in reality, only `FREE` Nodes will be removed after *minUptime* milliseconds).
 
 
 ==== Native Scheduler Policy
