@@ -280,6 +280,28 @@ tasks running on (default is false).
 
 -   *acquireNow* - If true, the policy will acquire all nodes immediately.
 
+==== Native Scheduler Policy
+
+*Full name:* `org.ow2.proactive.resourcemanager.nodesource.policy.NativeSchedulerPolicy`
+
+The Native Scheduler Policy interacts with the <<_glossary_ns_native_scheduler,native scheduler>> to request ProActive nodes deployment dynamically based on the <<_glossary_proactive_scheduler,*ProActive Scheduler*>> pending queue.
+This mechanism is described in <<_deploy_via_other_schedulers>>. This policy must be associated with a <<_native_scheduler_infrastructure>> and cannot be associated with any other infrastructure.
+To use this policy, you need to define the following parameters:
+
+-   *userAccessType* - see <<_policy_common_parameters>>
+
+-   *providerAccessType* - see <<_policy_common_parameters>>
+
+-   *schedulerUrl* - URL of the Scheduler, e.g. pnp://mymachine:64738, pamr://0, etc
+
+-   *schedulerCredentialsPath* - Path to a file which contains the credentials of an administrator user which will connect to the scheduler. The ProActive Scheduler Server release contains two admin users credentials files : `config/authentication/rm.cred` and `config/authentication/admin_user.cred`
+
+-   *rearrangeTasks* - Currently not implemented.
+
+-   *autoScaling* - If set to `true`, the NativeSchedulerPolicy will scan the Resource Manager activity and Scheduler queue. If the scheduler queue is not empty and all Resource Manager nodes are busy, `autoscaling` will automatically start ProActive Nodes from the NativeSchedulerInfrastructure. This setting cannot be used when multiple NativeScheduler node sources are deployed.
+
+-   *refreshTime* -  The NativeSchedulerPolicy will refresh its status and observe the ProActive Scheduler queue every `refreshTime` milliseconds.
+
 ==== Dynamic Policy
 
 *Full name:* `org.ow2.proactive.resourcemanager.nodesource.policy.DynamicPolicy`
@@ -417,6 +439,7 @@ The expression can use the following given variables:
 ** *aliveNodes* : the current number of alive Nodes in the Node Source. Alive Nodes are Nodes in `DEPLOYING`, `CONFIGURING`, `FREE`, `BUSY` or `TO_BE_REMOVED` states. This property is accessed using `nodeSources.get('node-source-name').getAliveNodes()`.
 ** *deployingNodes*: the current number of Nodes in `DEPLOYING` state in this Node Source. This property is accessed using `nodeSources.get('node-source-name').getDeployingNodes()`.
 ** *busyNodes*: the current number of Nodes in `BUSY` or `TO_BE_REMOVED` states in this Node Source. This property is accessed using `nodeSources.get('node-source-name').getBusyNodes()`.
+** *freeNodes*: the current number of Nodes in `FREE` state in this Node Source. This property is accessed using `nodeSources.get('node-source-name').getFreeNodes()`.
 ** *totalNodes*: the total number of Nodes in this Node Source. This property is accessed using `nodeSources.get('node-source-name').getTotalNodes()`.
 ** *descriptor*: a link:../javadoc/org/ow2/proactive/resourcemanager/nodesource/NodeSourceDescriptor.html[NodeSourceDescriptor] object containing all the parameters of this Node Source. This property is accessed using `nodeSources.get('node-source-name').getDescriptor()`.
 The NodeSourceDescriptor object contain many methods, among which the `getInfrastructureParameter(name)` and the `getPolicyParameter(name)` will be the most useful.
@@ -457,7 +480,7 @@ Explanation:
 Below is an example of a *scaleNodesExpression* that will scale up the Node Source when another Dynamic Policy Node Source has reached maximum capacity (this expression considers that *globalScope* is `true` for both Node Sources). The following expression must be defined on the second Node Source:
 
 ----
-z(temp=nodeSources.get('FirstNS')) + z(temp2=previousNodeSources.get('FirstNS')) + z(temp3=(temp2!=null?temp2.getBusyNodes():0)) + (T(Math).min(temp.getBusyNodes(),temp3) == T(Integer).parseInt(temp.getDescriptor().getPolicyParameter('maxNodes')) ? T(Math).ceil((neededNodes + busyNodesInNodeSource) / loadFactor) - aliveNodesInNodeSource : -aliveNodesInNodeSource )
+z(temp=nodeSources.get('FirstNS')) + z(temp2=previousNodeSources.get('FirstNS')) + z(temp3=(temp2!=null?T(Math).min(temp.getBusyNodes(),temp2.getBusyNodes()):0)) + (temp3 == T(Integer).parseInt(temp.getDescriptor().getPolicyParameter('maxNodes')) ? T(Math).ceil((neededNodes + busyNodesInNodeSource) / loadFactor) - aliveNodesInNodeSource : -aliveNodesInNodeSource )
 ----
 
 Explanation:
@@ -466,31 +489,96 @@ The main structure of this expression uses the `test ? case1 : case2` syntax, wh
 
  * `z(temp=nodeSources.get('FirstNS'))`: read the state of the first Node Source and store it into a temporary variable. Notice the use of the `z()` function and the `{plus}` sign, so that this affectation does not change the value returned globally by the SpEL expression.
  * `z(temp2=previousNodeSources.get('FirstNS'))`: read the previous state of the first Node Source and store it into another temporary variable.
- * `z(temp3=(temp2!=null?temp2.getBusyNodes():0))`: store into another variable the amount of busy nodes that were accounted on the first Node Source in the previous refresh cycle. If the previous cycle is empty, store `0` into the variable.
- * `T(Math).min(temp.getBusyNodes(),temp3) == T(Integer).parseInt(temp.getDescriptor().getPolicyParameter('maxNodes'))` : check if the number of busy Nodes in the Node Source `FirstNS` is equal to the maximum configured for the first Node Source for 2 consecutive refresh periods.
+ * `z(temp3=(temp2!=null?T(Math).min(temp.getBusyNodes(),temp2.getBusyNodes()):0))`: store into another variable the minimum amount of busy nodes that were accounted on the first Node Source in both refresh cycle. If the previous cycle is empty, store `0` into the variable.
+ * `temp3 == T(Integer).parseInt(temp.getDescriptor().getPolicyParameter('maxNodes'))` : check if the number of busy Nodes in the Node Source `FirstNS` is equal to the maximum configured for the first Node Source for 2 consecutive refresh periods.
  * `T(Math).ceil((neededNodes + busyNodesInNodeSource) / loadFactor) - aliveNodesInNodeSource`: when the maximum number of nodes is reached on the first Node Source, the second Node Source will scale up based on the default scale up expression (see previous example). Note that we use `busyNodesInNodeSource` and `aliveNodesInNodeSource` to count only Nodes that belong to the second Node Source.
  * `-aliveNodesInNodeSource`: when the first Node Source is not at the maximum, remove all alive Nodes in the second Node Source (in reality, only `FREE` Nodes will be removed after *minUptime* milliseconds).
 
+==== Dynamic Policy Canonical Examples
 
-==== Native Scheduler Policy
+In this section we will present several canonical use cases that make use of node sources controlled by a *DynamicPolicy*:
 
-*Full name:* `org.ow2.proactive.resourcemanager.nodesource.policy.NativeSchedulerPolicy`
+ * A single cloud Dynamic Infrastructure
+ * A Static Infrastructure (on-premise or cloud) + a single Cloud Dynamic Infrastructure.
+ * A primary cloud Dynamic Infrastructure + a secondary Cloud Dynamic Infrastructure.
+ * A Static Infrastructure (on-premise or cloud) + a primary Cloud Dynamic Infrastructure + a secondary Cloud Dynamic Infrastructure.
 
-The Native Scheduler Policy interacts with the <<_glossary_ns_native_scheduler,native scheduler>> to request ProActive nodes deployment dynamically based on the <<_glossary_proactive_scheduler,*ProActive Scheduler*>> pending queue.
-This mechanism is described in <<_deploy_via_other_schedulers>>. This policy must be associated with a <<_native_scheduler_infrastructure>> and cannot be associated with any other infrastructure.
-To use this policy, you need to define the following parameters:
+===== Single Cloud Dynamic Infrastructure
 
--   *userAccessType* - see <<_policy_common_parameters>>
+In this use case the Resource Manager defines a single cloud infrastructure with a *DynamicPolicy* attached. As type of cloud infrastructure we can use for example an <<_azure_scale_set_infrastructure,Azure Scale Set Infrastructure>>, an <<_aws_autoscaling_infrastructure,AWS Autoscaling Infrastructure>>, a <<_gce_infrastructure,GCE Infrastructure>>, etc...
 
--   *providerAccessType* - see <<_policy_common_parameters>>
+The configuration of the DynamicPolicy is this use case is fairly simple, we only need to set *globalScope* to `true` to ensure that Nodes will be dynamically deployed whenever `PENDING` tasks appear in the ProActive Scheduler queue. We control the cloud node source capacity using the *minNodes* and *maxNodes* parameters. And *minUptimes* will be adjusted to determine how long a `FREE` Node will remain before scaling down.
 
--   *schedulerUrl* - URL of the Scheduler, e.g. pnp://mymachine:64738, pamr://0, etc
+===== Static Infrastructure and single Cloud Dynamic Infrastructure
 
--   *schedulerCredentialsPath* - Path to a file which contains the credentials of an administrator user which will connect to the scheduler. The ProActive Scheduler Server release contains two admin users credentials files : `config/authentication/rm.cred` and `config/authentication/admin_user.cred`
+In this use case the Resource Manager defines two Node Sources:
 
--   *rearrangeTasks* - Currently not implemented.
+ * A first Node Source _'StaticNS'_ which will be controlled by a *StaticPolicy*. This Node Source can either use an on-premise infrastructure such as <<_ssh_infrastructure_v2,SSH Infrastructure V2>> or a cloud infrastructure such as  <<_azure_scale_set_infrastructure,Azure Scale Set Infrastructure>>).
+ * A second Node Source _'DynamicNS'_ witch uses a cloud infrastructure and a *DynamicPolicy*.
 
--   *autoScaling* - If set to `true`, the NativeSchedulerPolicy will scan the Resource Manager activity and Scheduler queue. If the scheduler queue is not empty and all Resource Manager nodes are busy, `autoscaling` will automatically start ProActive Nodes from the NativeSchedulerInfrastructure. This setting cannot be used when multiple NativeScheduler node sources are deployed.
+The general configuration mentioned in the previous scenario will be applied to _'DynamicNS'_. *globalScope* must be set to `true`. In addition, a *scaleNodesExpression* must be defined to ensure that the dynamic cloud Node Source will scale up when all Nodes of _'StaticNS'_ are used.
 
--   *refreshTime* -  The NativeSchedulerPolicy will refresh its status and observe the ProActive Scheduler queue every `refreshTime` milliseconds.
+The maximum number of Nodes of _'StaticNS'_ cannot be easily determined by reading the parameters of its infrastructure, as it highly depends on the type of infrastructure selected (e.g. LocalInfrastructure, SSHInfrastructureV2). On the other hand, we can assume that _'StaticNS'_ is fully used when the number of `FREE` and `DEPLOYING` Nodes is zero and the number of `BUSY` Nodes is greater than zero.
 
+*scaleNodesExpression* defined in _'DynamicNS'_:
+
+----
+z(temp=nodeSources.get('StaticNS')) + z(temp2=previousNodeSources.get('StaticNS')) + z(temp3=(temp2!=null?temp2.getFreeNodes()+temp2.getDeployingNodes()+temp.getFreeNodes()+temp.getDeployingNodes():-1)) + z(temp4=(temp2!=null?T(Math).min(temp2.getBusyNodes(),temp.getBusyNodes()):0)) + (temp3 == 0 && temp4 > 0 ? T(Math).ceil((neededNodes + busyNodesInNodeSource) / loadFactor) - aliveNodesInNodeSource : -aliveNodesInNodeSource )
+----
+
+We query _'StaticNS_' info through 2 successive cycles (using *nodeSources* and *previousNodeSources*) to ensure that the observed state is stable. In _temp3_ we assign a number that will be zero when no `DEPLOYING` or `FREE` Node was observed. This number will be a non-zero value on the very first cycle. In _temp4_ we assign the minimum number of `BUSY` Nodes observed.
+
+_'DynamicNS'_ will scale up when _temp3_ is zero and _temp4_ is greater than zero. It will scale down otherwise.
+
+
+===== Cloud Dynamic Infrastructure and Secondary Cloud Dynamic Infrastructure
+
+In this use case the Resource Manager defines two Node Sources:
+
+ * A first Node Source _'DynamicNS'_ which will be controlled by a *DynamicPolicy* and using cloud infrastructure such as  <<_azure_scale_set_infrastructure,Azure Scale Set Infrastructure>>).
+ * A second Node Source _'DynamicNSExtended'_ witch uses a similar setup.
+
+The configuration of _'DynamicNS'_ will be a basic configuration as described in <<_single_cloud_dynamic_infrastructure>> with *globalScope* `true`.
+
+The configuration of _'DynamicNSExtended'_ will also use *globalScope* `true` and add a *scaleNodesExpression* to ensure that the secondary Node Source will scale up only when _'DynamicNS'_ is fully used.
+
+*scaleNodesExpression* defined in _'DynamicNSExtended'_:
+
+----
+z(temp=nodeSources.get('DynamicNS')) + z(temp2=previousNodeSources.get('DynamicNS')) + z(temp3=(temp2!=null?T(Math).min(temp.getBusyNodes(),temp2.getBusyNodes()):0)) + (temp3 == T(Integer).parseInt(temp.getDescriptor().getPolicyParameter('maxNodes')) ? T(Math).ceil((neededNodes + busyNodesInNodeSource) / loadFactor) - aliveNodesInNodeSource : -aliveNodesInNodeSource )
+----
+
+We query _'DynamicNS_' info through 2 successive cycles (using *nodeSources* and *previousNodeSources*) to ensure that the observed state is stable. In _temp3_ we assign the minimum busy nodes amount in _'DynamicNS_' the two cycles.
+
+_'DynamicNS'_ will scale up when there are pending tasks in ProActiveScheduler queue. _'DynamicNSExtended'_ will scale up when the amount of `BUSY` Nodes in _'DynamicNS'_ is equal to the maximum number of Nodes configured, and will scale down otherwise.
+
+
+===== Static Infrastructure, Primary Cloud Dynamic Infrastructure and Secondary Cloud Dynamic Infrastructure
+
+In this use case the Resource Manager defines three Node Sources:
+
+ * A first Node Source _'StaticNS'_ which will be controlled by a *StaticPolicy*. This Node Source can either use an on-prem infrastructure such as <<_ssh_infrastructure_v2,SSH Infrastructure V2>> or a cloud infrastructure such as  <<_azure_scale_set_infrastructure,Azure Scale Set Infrastructure>>).
+ *  A second Node Source _'DynamicNS'_ which will be controlled by a *DynamicPolicy* and using cloud infrastructure such as  <<_azure_scale_set_infrastructure,Azure Scale Set Infrastructure>>).
+* A third Node Source _'DynamicNSExtended'_ witch uses a similar setup.
+
+This use case is a combination of <<_static_infrastructure_and_single_cloud_dynamic_infrastructure>> and <<_cloud_dynamic_infrastructure_and_secondary_cloud_dynamic_infrastructure>>:
+
+ * In _'DynamicNS'_, we set *globalScope* to `true` and define a *scaleNodesExpression* as following:
++
+----
+z(temp=nodeSources.get('StaticNS')) + z(temp2=previousNodeSources.get('StaticNS')) + z(temp3=(temp2!=null?temp2.getFreeNodes()+temp2.getDeployingNodes()+temp.getFreeNodes()+temp.getDeployingNodes():-1)) + z(temp4=(temp2!=null?T(Math).min(temp2.getBusyNodes(),temp.getBusyNodes()):0)) + (temp3 == 0 && temp4 > 0 ? T(Math).ceil((neededNodes + busyNodesInNodeSource) / loadFactor) - aliveNodesInNodeSource : -aliveNodesInNodeSource )
+----
+
+ * In _'DynamicNSExtended'_, we set *globalScope* to `true` and define a *scaleNodesExpression* as following:
++
+----
+z(temp=nodeSources.get('DynamicNS')) + z(temp2=previousNodeSources.get('DynamicNS')) + z(temp3=(temp2!=null?T(Math).min(temp.getBusyNodes(),temp2.getBusyNodes()):0)) + (temp3 == T(Integer).parseInt(temp.getDescriptor().getPolicyParameter('maxNodes')) ? T(Math).ceil((neededNodes + busyNodesInNodeSource) / loadFactor) - aliveNodesInNodeSource : -aliveNodesInNodeSource )
+----
+
+////
+prevents the following from being in a source block (bug?)
+////
+
+_'DynamicNS'_ will scale up when _'StaticNS'_ has reached its maximum capacity.
+
+_'DynamicNSExtended'_ will scale up when _'DynamicNS'_ has reached its max capacity.
