@@ -2321,7 +2321,7 @@ ProActive uses the OpenID Connect (OIDC) protocol to communicate with Keycloak a
 It further parses the obtained access token and extracts from it the user information, including the user role.
 Based on the user role, ProActive determines the set of privileges and authorizations to be granted to the user.
 
-In order to enact ProActive access control against a Keycloak server, two steps must be accomplished: (i) deploying and configuring a Keycloak server and (ii) configuring ProActive to connect to the Keycloak server and perform access control against it.
+In order to perform ProActive access control against a Keycloak server, two steps must be accomplished: (i) deploying and configuring a Keycloak server and (ii) configuring ProActive to connect to the Keycloak server and perform access control against it.
 
 ==== Configuring Keycloak server
 
@@ -2333,9 +2333,9 @@ For advanced configurations, please refer to the https://www.keycloak.org/docume
 2. The Keycloak server's administrator should select a security realm (or create a new one if needed).
 
 ===== Configuring a new Keycloak client for ProActive
-The Keycloak server's administrator have to configure a new client for ProActive in the chosen realm.
+The Keycloak server's administrator has to configure a new client for ProActive in the chosen realm.
 A client is an external software application for which the access control is managed via Keycloak.
-In the section *General Settings* og the configuration, the parameters following must be properly set (as shown in the screenshot below):
+In the section *General Settings* of the configuration, the parameters following must be properly set (as shown in the screenshot below):
 
 * The property `Client type` specifies the security protocol of the client application. It must be set to `OpenID Connect`.
 * The property `Client ID` specifies the ID of the client application (e.g., ProActive).
