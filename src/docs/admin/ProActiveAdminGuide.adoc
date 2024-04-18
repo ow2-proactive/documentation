@@ -675,7 +675,7 @@ into
 |User group assignments|config/authentication/group.cfg|<<_file>>
 |User permissions|config/security.java.policy-server|<<_user_permissions>>
 |LDAP configuration|config/authentication/ldap.cfg|<<_ldap>>
-|Keycloak configuration|config/authentication/keycloak.cfg|<<_ldap>>
+|Keycloak configuration|config/authentication/keycloak.cfg|<<_keycloak>>
 
 .6+^.^|Database
 |Scheduler configuration|config/scheduler/database.properties|<<Database configuration>>
