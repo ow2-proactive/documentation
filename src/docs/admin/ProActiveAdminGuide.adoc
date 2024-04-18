@@ -2343,7 +2343,7 @@ In the section *General Settings* og the configuration, the parameters following
 * The property `Description` specifies description of the client (e.g., ProActive workflows engine).
 
 .General settings of Keycloak client
-image::KeycloakClientGeneralConfig.png[Keycloak Client General Configuration,500,400]
+image::KeycloakClientGeneralConfig.png[Keycloak Client General Configuration,600,400]
 
 ===== Configuring the authentication mechanism of the client
 In the section *Capability config* of the client configuration, the parameters following must be properly set (as shown in the screenshot below):
@@ -2353,7 +2353,7 @@ In the section *Capability config* of the client configuration, the parameters f
 * The checkbox `Direct access grants` must be ticked.
 
 .Authentication settings of the Keycloak client
-image::KeycloakClientAuthConfig.png[Keycloak Client Authentication Configuration,500,400]
+image::KeycloakClientAuthConfig.png[Keycloak Client Authentication Configuration,600,400]
 
 [[_keycloak_client_roles]]
 ===== Configuring the client roles
@@ -2364,7 +2364,7 @@ In the *Roles* tab of the client configuration, click on the button *Create role
 * The property `Description` specifies description of the role.
 
 .Roles to be associated to the Keycloak client
-image::KeycloakClientRolesConfig.png[Keycloak Client Roles Configuration,500,400]
+image::KeycloakClientRolesConfig.png[Keycloak Client Roles Configuration,600,400]
 
 ===== Binding client roles to user groups
 * Once the client configuration is fulfilled, go to the section *Groups* which lists the groups of users available in Keycloak.
@@ -2374,7 +2374,7 @@ image::KeycloakClientRolesConfig.png[Keycloak Client Roles Configuration,500,400
 TIP: In the search menu, select *Filter by client* and enter the client name (e.g., ProActive) in order to easily find the roles defined above.
 
 .Binding client roles to user groups in Keycloak
-image::KeycloakGroupToRolesBinding.png[Keycloak Role-to-Group Binding,500,400]
+image::KeycloakGroupToRolesBinding.png[Keycloak Role-to-Group Binding,600,400]
 
 ==== Configuring ProActive server
 
