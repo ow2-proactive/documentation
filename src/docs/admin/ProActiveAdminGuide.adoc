@@ -675,6 +675,7 @@ into
 |User group assignments|config/authentication/group.cfg|<<_file>>
 |User permissions|config/security.java.policy-server|<<_user_permissions>>
 |LDAP configuration|config/authentication/ldap.cfg|<<_ldap>>
+|Keycloak configuration|config/authentication/keycloak.cfg|<<_ldap>>
 
 .6+^.^|Database
 |Scheduler configuration|config/scheduler/database.properties|<<Database configuration>>
@@ -1572,6 +1573,7 @@ User accounts are defined with one of the following *authentication methods*:
 * <<_ldap,*LDAP*>>
 * <<_ldap_with_multiple_domains,*LDAP with Multiple Domains*>>
 * <<_pam,*PAM*>>
+* <<_keycloak,*Keycloak*>>
 
 === Configure Domains / Tenants
 
@@ -1690,6 +1692,7 @@ If you would like to change the authentication mechanism to use your *LDAP* serv
 #  - "RMLDAPLoginMethod" to use LDAP login management
 #  - "RMMultiLDAPLoginMethod" to use LDAP with multiple domains
 #  - "RMPAMLoginMethod" to use PAM login management
+#  - "RMKeycloakLoginMethod" to use Keycloak login management
 pa.rm.authentication.loginMethod=RMFileLoginMethod
 ----
 
@@ -1703,6 +1706,7 @@ pa.rm.authentication.loginMethod=RMFileLoginMethod
 #  - "SchedulerLDAPLoginMethod" to use LDAP login management
 #  - "SchedulerMultiLDAPLoginMethod" to use LDAP with multiple domains
 #  - "SchedulerPAMLoginMethod" to use PAM login management
+#  - "SchedulerKeycloakLoginMethod" to use Keycloak login management
 pa.scheduler.core.authentication.loginMethod=SchedulerFileLoginMethod
 ----
 
@@ -2308,6 +2312,163 @@ In case of PAM users, the login file should not be modified as password authenti
 NOTE: Similarly to the LDAP authentication, there is a fallback mechanism for login authentication, with the difference that it is always activated.
 A user defined in the ProActive login file always has precedence over the same user defined on the Linux system.
 
+[[_keycloak]]
+=== Keycloak-based access control
+https://www.keycloak.org/[Keycloak] is an access control solution that allows single sign-on with identity and access management aimed at modern applications and services.
+ProActive is able to connect to an existing Keycloak server, and perform user authentication and authorization against it.
+
+ProActive uses the OpenID Connect (OIDC) protocol to communicate with Keycloak and acquire an access tokens for a given user.
+It further parses the obtained access token and extracts from it the user information, including the user role.
+Based on the user role, ProActive determines the set of privileges and authorizations to be granted to the user.
+
+In order to enact ProActive access control against a Keycloak server, two steps must be accomplished: (i) deploying and configuring a Keycloak server and (ii) configuring ProActive to connect to the Keycloak server and perform access control against it.
+
+==== Configuring Keycloak server
+
+WARNING: The configuration steps mentioned below provide an example of the basic steps needed to configure ProActive access control against Keycloak.
+For advanced configurations, please refer to the https://www.keycloak.org/documentation[Keycloak documentation].
+
+===== Pre-requisites
+1. A Keycloak server must be up and in operational mode so ProActive can interact with it.
+2. The administrator of the Keycloak should select a security realm (or create a new one if needed).
+
+===== Configuring a new Keycloak client for ProActive
+The administrator of the Keycloak have to configure a new client for ProActive in the chosen realm.
+A client is an external software application to be protected using Keycloak.
+In the section *General Settings* og the configuration, the parameters following must be properly set (as shown in the screenshot below):
+
+* The property `Client type` specifies the security protocol of the client application. It must be set to *OpenID Connect*.
+* The property `Client ID` specifies the ID of the client application (e.g., ProActive).
+* The property `Name` specifies display name of the client  (e.g., ProActive Workflows and Scheduling).
+* The property `Description` specifies description of the client (e.g., ProActive workflows engine).
+
+.General settings of Keycloak client
+image::KeycloakClientGeneralConfig.png[Keycloak Client General Configuration,500,400]
+
+===== Configuring the authentication mechanism of the client
+In the section *Capability config* of the client configuration, the parameters following must be properly set (as shown in the screenshot below):
+
+* The property `Client authentication` must be enabled (i.e., set to On).
+* The checkbox `Standard flow` must be ticked.
+* The checkbox `Direct access grants` must be ticked.
+
+.Authentication settings of the Keycloak client
+image::KeycloakClientAuthConfig.png[Keycloak Client Authentication Configuration,500,400]
+
+[[_keycloak_client_roles]]
+===== Configuring the client roles
+In the *Roles* tab of the client configuration, click on the button *Create role* and add the following parameters for each user role needed in ProActive.
+
+* The property `Role name` specifies name of the role. It will be used later on when <<_keycloak_proactive_privileges, configuring ProActive privileges>>.
+* The property `Composite` should be set to false.
+* The property `Description` specifies description of the role.
+
+.Roles to be associated to the Keycloak client
+image::KeycloakClientRolesConfig.png[Keycloak Client Roles Configuration,500,400]
+
+===== Binding client roles to user groups
+* Once the client configuration is fulfilled, go to the section *Groups* which lists the groups of users available in Keycloak.
+* For each group of users that require access to ProActive, select the tab *Role mapping* and click on the button *Assign role*.
+* In the list of roles that will be displayed, select the set of roles to be granted for the considered group of users.
+
+TIP: In the search menu, select *Filter by client* and enter the client name (e.g., ProActive) in order to easily find the roles defined above.
+
+.Binding client roles to user groups in Keycloak
+image::KeycloakGroupToRolesBinding.png[Keycloak Role-to-Group Binding,500,400]
+
+==== Configuring ProActive server
+
+In order to enable ProActive access control against a Keycloak server, the following configuration steps must be accomplished at ProActive side:
+
+===== Configuring the authentication method for ProActive scheduler and Resource Manager
+The Keycloak authentication method must be selected for the scheduler and resource manager, as described in <<_select_authentication_method,Select authentication method>>.
+
+===== Configuring ProActive properties for Keycloak
+The configuration file config/authentication/keycloak.cfg must be edited in order the set the proper values of the following properties:
+
+* The property `keycloak.url` should be set to the URL of the Keycloak server (already configured for ProActive).
+* The property `keycloak.https.allow_any_certificate` must be set to true when the keycloak server operates in TLS mode and uses a non-trusted (e.g., self-signed) TLS/SSL certificate. Otherwise, this property is set to false.
+* The property `keycloak.realm` must take the name of the Keycloak realm in which the ProActive client application is configured.
+* The property `keycloak.proactive.client_id` must take as value the name of the ProActive client application in Keycloak.
+* The property `keycloak.proactive.client_secret` must take as value the secret credential of the ProActive client application in Keycloak.
+* The property `keycloak.proactive.scope` must take as value the name of a scope configured in Keycloak. A scope defines the set of user information/parameters to be included in a Keycloak access token. If the value is empty, the default scope in Keycloak is used.
+* The property `keycloak.public.key` must have as value the content of public encryption key of Keycloak (e.g., public RSA key). This key is used to decrypt the access token returned by Keycloak.
+* The property `keycloak.principal_attribute` is the parameter in Keycloak access token based on which the user name is determined (e.g., `name` or `given_name`).
+* The property `keycloak.use_resource_role_mappings` is set to true when the user roles are determined based on the information block `resource_access` in Keycloak access token. When it is set to false, the user roles are determined based on the information block `realm_access` in Keycloak access token.
+* Using the fall back to file authentication: ProActive can be configured to use simultaneously file-based authentication and Keycloak-based access control. In this scenario, ProActive Scheduler checks at first user credentials (login/password) and group memberships in
+the login and group files, as performed in the <<_file,File login method>>. If the user or group attribution is not found in the login/group files, the user credentials and roles will be checked via Keycloak. There are three configuration options to control the fallback mechanism:
+** `pa.keycloak.authentication.fallback`: if set to `true`, the user credentials will be checked first in the login file, and then in the Keycloak server. If set to `false`, only the Keycloak server will be queried.
+** `pa.keycloak.group.membership.fallback`: if set to `true`, group memberships will be read from the Keycloak server if the user exists, and then from the group file. In that sense, a user will be affected to groups defined in both file and Keycloak server. If set to `false`, only the Keycloak server will be queried.
+** `pa.keycloak.tenant.membership.fallback`: Must be always set to `false` for the current version of ProActive.
+
+[[_keycloak_proactive_privileges]]
+===== Configuring the granted privileges for user roles
+ProActive has a set of predefined roles (also called groups), each one of them grants certain access rights and privileges to the users having the considered role.
+If the roles configured in Keycloak (for the ProActive client) do not already exist, the administrator of ProActive server have to create these roles with the appropriate privileges, as explained in the section <<_creating_new_groups,creating new groups>>.
+
+WARNING: The name of the roles to be created in ProActive must be the same as those configured in <<_keycloak_client_roles, Keycloak client for ProActive>>.
+For example, if the role `proactive-workflow-engineer` is configured in Keycloak, the role/group to be created in proActive must be as follows:
+
+----
+grant principal org.ow2.proactive.authentication.principals.GroupNamePrincipal "proactive-workflow-engineer" {
+  // list of granted privileges
+}
+----
+
+===== Specific example of Keycloak configuration
+
+Below is an example of Keycloak configuration which provides sample values for the Keycloak properties to be configured in the file `config/authentication/keycloak.cfg`.
+[source,properties]
+----
+# URL of a Keycloak server configured for ProActive authentication
+keycloak.url=https://keycloak.activeeon.com:9443
+
+# When Keycloak URL uses the HTTPS protocol, this parameter indicates which kind of TLS certificate to consider for the Keycloak server.
+# True means that any certificate can be used including the self-signed ones.
+# False means that only valid certificates generated by trusted Certification Authorities are allowed.
+keycloak.https.allow_any_certificate=true
+
+# Keycloak realm in which ProActive client is configured
+keycloak.realm=activeeon
+
+# Keycloak client credentials (note that ProActive is the client application of Keycloak)
+keycloak.proactive.client_id=ProActive
+keycloak.proactive.client_secret=w9jvqPPTMvxxxyyyrnessKxt7nCs75NpDZ
+
+# Scope of the information to be returned by Keycloak for the ProActive client.
+# An empty value considers the scopes defined for ProActive client in Keycloak.
+keycloak.proactive.scope=
+
+# Keycloak RSA public key used to decrypt the access tokens
+keycloak.public.key=MIIBIjANBgkutvbS5w0BAQEFAAOCAQ8AMGGBCgKCAQEAsmVExiiZgtnrN7DrPRu6Cx/H1Fx4wOCy1b9sT4w7YjSLfX0d5GN51bDiz5olcvgBNvNIXGXm3Vax8OoOJdIYaq2EiVa0p0ATpzYFIZkKFOkiuriDJd3TpxuJyWIoEg1zUZHNPw0zvFftZ24HByZr51qm/QMBQNvj2tMcPvBgm5tUbIe1bzR3VURXA41+p0Cs4I1kjhWV5B95+SLbxcj/+TMkUt5BVDxPy0nJixM+4zZ/R48OCTpPUnLrGJw+/z5vgbqwwH+ekpI+L08v0wUYmMkqfnykZxOyhtoCUD66pojDoPO60JPDj5qtbiydHwV7DsULvbc406wEe0pN8hKO5QIDAQAB
+
+# The attribute in Keycloak access token to be used to extract the user/principal name
+keycloak.principal_attribute=name
+
+# Use the resource_access block in Keycloak access token to extract the user/principal roles
+keycloak.use_resource_role_mappings=true
+
+# Authentication fallback Properties
+# check user password and group membership in login and group files
+# (as performed in FileLogin method), if user is not found in Keycloak.
+#
+# It use pa.[scheduler.core|RM].defaultloginfilename to authenticate user and
+# pa.[scheduler.core|RM].defaultgroupfilename files to check user membership.
+# In any case, no fallback is performed if user is found in Keycloak but has entered an incorrect password).
+# true or false.
+pa.keycloak.authentication.fallback=false
+
+# check user group membership in group file (as performed in FileLogin method)
+# if user is not found in its corresponding requested Keycloak group.
+# true or false.
+pa.keycloak.group.membership.fallback=false
+
+# check user tenant membership in tenant file (as performed in FileLogin method)
+# if tenant attribute is not defined or is empty for the corresponding requested Keycloak user.
+# true or false.
+pa.keycloak.tenant.membership.fallback=false
+----
+
 == User Permissions
 
 All users authenticated in the ProActive server have their own role according to granted permissions.
@@ -2338,6 +2499,7 @@ The following groups are defined by default in the `security.java.policy-server`
 * `citizen-ds` : this group gives enough permissions to software power users who can do moderate data analysis tasks (studio, catalog-portal, workflow-execution, job-analytics).
 * `expert-ds` : this group gives permissions to expert data scientists to collect and clean a wide range of data, and to analyze it to solve business problems (studio, scheduler, catalog-portal, workflow-execution, service-automation, job-analytics, job-gantt, job-planner-calendar-def, job-planner-calendar-def-workflows, job-planner-execution-planning, job-planner-gantt-chart, notification-portal).
 
+[_creating_new_groups]
 === Creating New Groups
 
 New groups can be defined by copying an existing group definition and edit its permissions.
