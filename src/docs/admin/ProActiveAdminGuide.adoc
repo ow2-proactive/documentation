@@ -2395,7 +2395,7 @@ The configuration file config/authentication/keycloak.cfg must be edited in orde
 * The property `keycloak.public.key` must have as value the content of public encryption key of Keycloak (e.g., public RSA key). This key is used to decrypt the access token returned by Keycloak.
 * The property `keycloak.principal_attribute` is the parameter in Keycloak access token based on which the user name is determined (e.g., `name` or `given_name`).
 * The property `keycloak.use_resource_role_mappings` is set to `true` when the user roles are determined based on the information block `resource_access` in Keycloak access token. When it is set to `false`, the user roles are determined based on the information block `realm_access` in Keycloak access token.
-* Using the fall back to file authentication: ProActive can be configured to use simultaneously file-based authentication and Keycloak-based access control. In this scenario, ProActive Scheduler checks at first user credentials (login/password) and group memberships in
+* Using the fallback to file authentication: ProActive can be configured to use simultaneously file-based authentication and Keycloak-based access control. In this scenario, ProActive Scheduler checks at first user credentials (login/password) and group memberships in
 the login and group files, as performed in the <<_file,File login method>>. If the user or group attribution is not found in the login/group files, the user credentials and roles will be checked via Keycloak. There are three configuration options to control the fallback mechanism:
 ** `pa.keycloak.authentication.fallback`: If set to `true` (which is the default value), the user credentials will be checked first in the login file, and then in the Keycloak server. If set to `false`, only the Keycloak server will be queried.
 ** `pa.keycloak.group.membership.fallback`: If set to `true` (which is the default value), group memberships will be read from the Keycloak server if the user exists, and then from the group file. In that sense, a user will be affected to groups defined in both file and Keycloak server. If set to `false`, only the Keycloak server will be queried.
@@ -2404,7 +2404,7 @@ the login and group files, as performed in the <<_file,File login method>>. If t
 [[_keycloak_proactive_privileges]]
 ===== Configuring the granted privileges for user roles
 ProActive has a set of predefined roles (also called groups), each one of them grants certain access rights and privileges to the users having the considered role.
-If the roles configured in Keycloak (for the ProActive client) do not already exist, the administrator of ProActive server have to create these roles with the appropriate privileges, as explained in the section <<_creating_new_groups,creating new groups>>.
+If the roles configured in Keycloak (for the ProActive client) do not already exist, the ProActive server's administrator has to create these roles with the appropriate privileges, as explained in the section <<_creating_new_groups,creating new groups>>.
 
 WARNING: The name of the roles to be created in ProActive must be the same as those configured in <<_keycloak_client_roles, Keycloak client for ProActive>>.
 For example, if the role `proactive-workflow-engineer` is configured in Keycloak, the role/group to be created in proActive must be as follows:
