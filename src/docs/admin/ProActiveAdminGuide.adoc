@@ -2337,7 +2337,7 @@ The Keycloak server's administrator have to configure a new client for ProActive
 A client is an external software application for which the access control is managed via Keycloak.
 In the section *General Settings* og the configuration, the parameters following must be properly set (as shown in the screenshot below):
 
-* The property `Client type` specifies the security protocol of the client application. It must be set to *OpenID Connect*.
+* The property `Client type` specifies the security protocol of the client application. It must be set to `OpenID Connect`.
 * The property `Client ID` specifies the ID of the client application (e.g., ProActive).
 * The property `Name` specifies display name of the client  (e.g., ProActive Workflows and Scheduling).
 * The property `Description` specifies description of the client (e.g., ProActive workflows engine).
