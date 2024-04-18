@@ -2330,11 +2330,11 @@ For advanced configurations, please refer to the https://www.keycloak.org/docume
 
 ===== Pre-requisites
 1. A Keycloak server must be up and in operational mode so ProActive can interact with it.
-2. The administrator of the Keycloak should select a security realm (or create a new one if needed).
+2. The Keycloak server's administrator should select a security realm (or create a new one if needed).
 
 ===== Configuring a new Keycloak client for ProActive
-The administrator of the Keycloak have to configure a new client for ProActive in the chosen realm.
-A client is an external software application to be protected using Keycloak.
+The Keycloak server's administrator have to configure a new client for ProActive in the chosen realm.
+A client is an external software application for which the access control is managed via Keycloak.
 In the section *General Settings* og the configuration, the parameters following must be properly set (as shown in the screenshot below):
 
 * The property `Client type` specifies the security protocol of the client application. It must be set to *OpenID Connect*.
@@ -2348,7 +2348,7 @@ image::KeycloakClientGeneralConfig.png[Keycloak Client General Configuration,600
 ===== Configuring the authentication mechanism of the client
 In the section *Capability config* of the client configuration, the parameters following must be properly set (as shown in the screenshot below):
 
-* The property `Client authentication` must be enabled (i.e., set to On).
+* The property `Client authentication` must be enabled (i.e., set to `On`).
 * The checkbox `Standard flow` must be ticked.
 * The checkbox `Direct access grants` must be ticked.
 
@@ -2360,7 +2360,7 @@ image::KeycloakClientAuthConfig.png[Keycloak Client Authentication Configuration
 In the *Roles* tab of the client configuration, click on the button *Create role* and add the following parameters for each user role needed in ProActive.
 
 * The property `Role name` specifies name of the role. It will be used later on when <<_keycloak_proactive_privileges, configuring ProActive privileges>>.
-* The property `Composite` should be set to false.
+* The property `Composite` should be set to `false`.
 * The property `Description` specifies description of the role.
 
 .Roles to be associated to the Keycloak client
@@ -2387,18 +2387,18 @@ The Keycloak authentication method must be selected for the scheduler and resour
 The configuration file config/authentication/keycloak.cfg must be edited in order the set the proper values of the following properties:
 
 * The property `keycloak.url` should be set to the URL of the Keycloak server (already configured for ProActive).
-* The property `keycloak.https.allow_any_certificate` must be set to true when the keycloak server operates in TLS mode and uses a non-trusted (e.g., self-signed) TLS/SSL certificate. Otherwise, this property is set to false.
+* The property `keycloak.https.allow_any_certificate` must be set to `true` when the keycloak server operates in TLS mode and uses a non-trusted (e.g., self-signed) TLS/SSL certificate. Otherwise, this property is set to `false`.
 * The property `keycloak.realm` must take the name of the Keycloak realm in which the ProActive client application is configured.
 * The property `keycloak.proactive.client_id` must take as value the name of the ProActive client application in Keycloak.
 * The property `keycloak.proactive.client_secret` must take as value the secret credential of the ProActive client application in Keycloak.
 * The property `keycloak.proactive.scope` must take as value the name of a scope configured in Keycloak. A scope defines the set of user information/parameters to be included in a Keycloak access token. If the value is empty, the default scope in Keycloak is used.
 * The property `keycloak.public.key` must have as value the content of public encryption key of Keycloak (e.g., public RSA key). This key is used to decrypt the access token returned by Keycloak.
 * The property `keycloak.principal_attribute` is the parameter in Keycloak access token based on which the user name is determined (e.g., `name` or `given_name`).
-* The property `keycloak.use_resource_role_mappings` is set to true when the user roles are determined based on the information block `resource_access` in Keycloak access token. When it is set to false, the user roles are determined based on the information block `realm_access` in Keycloak access token.
+* The property `keycloak.use_resource_role_mappings` is set to `true` when the user roles are determined based on the information block `resource_access` in Keycloak access token. When it is set to `false`, the user roles are determined based on the information block `realm_access` in Keycloak access token.
 * Using the fall back to file authentication: ProActive can be configured to use simultaneously file-based authentication and Keycloak-based access control. In this scenario, ProActive Scheduler checks at first user credentials (login/password) and group memberships in
 the login and group files, as performed in the <<_file,File login method>>. If the user or group attribution is not found in the login/group files, the user credentials and roles will be checked via Keycloak. There are three configuration options to control the fallback mechanism:
-** `pa.keycloak.authentication.fallback`: if set to `true`, the user credentials will be checked first in the login file, and then in the Keycloak server. If set to `false`, only the Keycloak server will be queried.
-** `pa.keycloak.group.membership.fallback`: if set to `true`, group memberships will be read from the Keycloak server if the user exists, and then from the group file. In that sense, a user will be affected to groups defined in both file and Keycloak server. If set to `false`, only the Keycloak server will be queried.
+** `pa.keycloak.authentication.fallback`: If set to `true` (which is the default value), the user credentials will be checked first in the login file, and then in the Keycloak server. If set to `false`, only the Keycloak server will be queried.
+** `pa.keycloak.group.membership.fallback`: If set to `true` (which is the default value), group memberships will be read from the Keycloak server if the user exists, and then from the group file. In that sense, a user will be affected to groups defined in both file and Keycloak server. If set to `false`, only the Keycloak server will be queried.
 ** `pa.keycloak.tenant.membership.fallback`: Must be always set to `false` for the current version of ProActive.
 
 [[_keycloak_proactive_privileges]]
@@ -2456,12 +2456,12 @@ keycloak.use_resource_role_mappings=true
 # pa.[scheduler.core|RM].defaultgroupfilename files to check user membership.
 # In any case, no fallback is performed if user is found in Keycloak but has entered an incorrect password).
 # true or false.
-pa.keycloak.authentication.fallback=false
+pa.keycloak.authentication.fallback=true
 
 # check user group membership in group file (as performed in FileLogin method)
 # if user is not found in its corresponding requested Keycloak group.
 # true or false.
-pa.keycloak.group.membership.fallback=false
+pa.keycloak.group.membership.fallback=true
 
 # check user tenant membership in tenant file (as performed in FileLogin method)
 # if tenant attribute is not defined or is empty for the corresponding requested Keycloak user.
