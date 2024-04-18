@@ -2317,7 +2317,7 @@ A user defined in the ProActive login file always has precedence over the same u
 https://www.keycloak.org/[Keycloak] is an access control solution that allows single sign-on with identity and access management aimed at modern applications and services.
 ProActive is able to connect to an existing Keycloak server, and perform user authentication and authorization against it.
 
-ProActive uses the OpenID Connect (OIDC) protocol to communicate with Keycloak and acquire an access tokens for a given user.
+ProActive uses the OpenID Connect (OIDC) protocol to communicate with Keycloak and acquire an access token for a given user.
 It further parses the obtained access token and extracts from it the user information, including the user role.
 Based on the user role, ProActive determines the set of privileges and authorizations to be granted to the user.
 
@@ -2384,7 +2384,7 @@ In order to enable ProActive access control against a Keycloak server, the follo
 The Keycloak authentication method must be selected for the scheduler and resource manager, as described in <<_select_authentication_method,Select authentication method>>.
 
 ===== Configuring ProActive properties for Keycloak
-The configuration file config/authentication/keycloak.cfg must be edited in order the set the proper values of the following properties:
+The configuration file *config/authentication/keycloak.cfg* must be edited in order the set the proper values of the following properties:
 
 * The property `keycloak.url` should be set to the URL of the Keycloak server (already configured for ProActive).
 * The property `keycloak.https.allow_any_certificate` must be set to `true` when the keycloak server operates in TLS mode and uses a non-trusted (e.g., self-signed) TLS/SSL certificate. Otherwise, this property is set to `false`.
