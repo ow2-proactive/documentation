@@ -2346,7 +2346,7 @@ In the section *General Settings* of the configuration, the parameters following
 image::KeycloakClientGeneralConfig.png[Keycloak Client General Configuration,600,400]
 
 ===== Configuring the authentication mechanism of the client
-In the section *Capability config* of the client configuration, the parameters following must be properly set (as shown in the screenshot below):
+In the section *Capability config* of the client configuration, the following parameters must be properly set (as shown in the screenshot below):
 
 * The property `Client authentication` must be enabled (i.e., set to `On`).
 * The checkbox `Standard flow` must be ticked.
