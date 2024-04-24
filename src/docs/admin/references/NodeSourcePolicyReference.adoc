@@ -328,15 +328,15 @@ In that case, the Dynamic Policy will use a *best-effort strategy* to handle the
 The *loadFactor* is the main parameter that allows to control the scale up/down of the DynamicPolicy. It decides how many new ProActive Nodes will be deployed when considering the current number of pending and running tasks. *loadFactor* is a ratio which computes the expected number of Nodes in the Node Source according to the formula:
 
 ----
-expectedNbNodes = Math.ceil((nbPendingTasks + nbBusyNodes) / loadFactor)
+expectedNbNodes = Ceiling((nbPendingTasks + nbBusyNodes) / loadFactor)
 ----
 
 Two additional parameters allow to fine-tune this formula:
 
- * loadFactorRoundingUp: when `false`, `Math.ceil` is replaced by `Math.floor` in the above formula (rounding down instead of rounding up).
+ * loadFactorRoundingUp: when `false`, `Ceiling()` is replaced by `Floor()` in the above formula (rounding down instead of rounding up).
  * loadFactorLegacyBehavior: when `true`, the formula is transformed to:
 ----
-expectedNbNodes = Math.ceil(nbPendingTasks / loadFactor + nbBusyNodes)
+expectedNbNodes = Ceiling(nbPendingTasks / loadFactor + nbBusyNodes)
 ----
 This means that new Nodes will be deployed as long as there are pending tasks remaining, regardless of the *loadFactor* value. In that case, *loadFactor* controls only how many new Nodes are deployed per policy cycle and not how many Nodes are present in the Node Source with regard to the number of tasks to run.
 
@@ -385,14 +385,21 @@ scheduler authentication.
 -   *refreshTime* - Time in milliseconds between each calculation of the number of
     needed nodes.
 
--   *loadFactor* - Threshold of pending tasks that triggers the deployment of new nodes.
-Used with the observed ratio: `Number of Pending Tasks / Available free nodes to execute them`. If the current ratio is above loadFactor, it will trigger a node deployment.
-For example, if loadFactor is `1`, as soon as one task is pending and no node is free to execute a task, the Node Source will deploy one new node. A loadFactor of `10` means that 1 new node will be deployed when up to 10 tasks are pending and no nodes are free for executing them.
+-   *loadFactor* - loadFactor allows to control the number of Nodes deployed in relation with the number of pending Tasks to be executed.
+loadFactor controls needed Nodes to execute pending Tasks according to the following formula:
+`neededNodes = Ceiling((pendingTasks + busyNodes) / loadFactor)`.
+The _Ceiling()_ function is used because neededNodes must be an integer. _Ceiling()_ rounds the decimal number to the nearest integer above the value (e.g. `Ceiling(3.5)=4`, see https://en.wikipedia.org/wiki/Floor_and_ceiling_functions).
+For example, if _loadFactor_ is `1` (the default), as soon as one task is pending and no Node is free to execute it, the Node Source will deploy one new Node.
+When _loadFactor_ is `10`, only 1 Node will be deployed to execute 1 to 10 pending tasks. When 10 tasks are pending, 1 Node will be deployed and execute the first pending task. After this task has finished its execution, the second task will run on the same Node, etc.
+If at some point 15 tasks are pending, and 1 Node is busy executing a task, a second Node will be deployed. Because, in that case `neededNodes = Ceiling(15(pending) + 1(busy)/10) = 2`.
++
+The behavior of *loadFactor* can be further controlled using *loadFactorRoundingUp* and *loadFactorLegacyBehavior* parameters (see below).
 
--   *loadFactorRoundingUp* - Boolean value which decides if `Number of pending tasks / loadFactor` should be rounded up (`true`) or down (`false`) when calculating the amount of nodes to deploy.
-For example if loadFactor is `10` and loadFactorRoundingUp is `true`, 1 new node will be deployed when 1 to 10 tasks are pending. If loadFactorRoundingUp is `false`, 1 new node will be deployed when 10 to 19 tasks are pending.
+-   *loadFactorRoundingUp* - Boolean value which decides if the https://en.wikipedia.org/wiki/Floor_and_ceiling_functions[_Ceiling()_] function or the https://en.wikipedia.org/wiki/Floor_and_ceiling_functions[_Floor()_] function should be used inside the *loadFactor* formula. When *loadFactorRoundingUp* is `true` (default), the _Ceiling()_ function will be used. This will *round up* the neededNodes calculation (described in the example above).
+When *loadFactorRoundingUp* is `false`, the _Floor()_ function will be used instead. This will *round down* the neededNodes calculation.
+In that case, when for example _loadFactor_ is `10`, a new Node will be deployed in the Node Source when at least 10 tasks are pending. If 9 Tasks are pending, `neededNodes = Floor(9(pending) + 0(busy)/10) = 0`. If 15 Tasks are pending, `neededNodes = Floor(15(pending) + 0(busy)/10) = 1`.
 
-- *loadFactorLegacyBehavior* - Boolean value which decides if the legacy _loadFactor_ behavior should be enabled (default to `false`). The Dynamic Policy used to apply the _loadFactor_ setting on pending tasks only. This meant that as long as pending tasks were present, new nodes could be deployed (up to the _maxNodes_ parameter). This behavior did not really satisfy the philosophy of _loadFactor_ which aims to deploy a limited number of nodes to handle a larger amount of short-lived tasks. The new mechanism takes into account both pending tasks and already deployed nodes. The legacy mechanism can be enabled for backward-compatibility reasons by setting _loadFactorLegacyBehavior_ to `true`.
+- *loadFactorLegacyBehavior* - Boolean value which decides if the legacy _loadFactor_ behavior should be enabled (default to `false`). When *loadFactorLegacyBehavior* is `true`, it modifies the *loadFactor* formula to: `neededNodes = Ceiling(pendingTasks / loadFactor) + busyNodes`. In that case, the *loadFactor* applies only to pendingTasks. This means that as long as pending tasks are present, new nodes will be deployed (up to the _maxNodes_ parameter). This behavior does not really satisfy the philosophy of *loadFactor* which aims to deploy a limited number of nodes to handle a larger amount of short-lived tasks. `loadFactorLegacyBehavior = true` should be used only for backward-compatibility reasons.
 
 -   *initDelay* - Delay in milliseconds to initialize the infrastructure (eg. in a azure cloud infrastructure this must
 cover the creation of Azure's initial resources such as network, storage account, etc.). This parameter is also used as a trigger for the *best-effort scale-up strategy* described above.
@@ -503,18 +510,20 @@ In this section we will present several canonical use cases that make use of nod
  * A primary cloud Dynamic Infrastructure + a secondary Cloud Dynamic Infrastructure.
  * A Static Infrastructure (on-premise or cloud) + a primary Cloud Dynamic Infrastructure + a secondary Cloud Dynamic Infrastructure.
 
+The last two cases are especially suitable when one is looking to *optimize the cloud cost* of one's infrastructure using preemptive Spot VMs. For example, your Jobs can be executed in priority on the low cost Spot VMs or static infrastructure (that can be lower-cost pre-reserved instances). Only when Spot VMs are becoming scarce or your workload exceeds your Spot quota, you will be automatically using the Standard VMs.
+
 ===== Single Cloud Dynamic Infrastructure
 
-In this use case the Resource Manager defines a single cloud infrastructure with a *DynamicPolicy* attached. As type of cloud infrastructure we can use for example an <<_azure_scale_set_infrastructure,Azure Scale Set Infrastructure>>, an <<_aws_autoscaling_infrastructure,AWS Autoscaling Infrastructure>>, a <<_gce_infrastructure,GCE Infrastructure>>, etc...
+In this use case, the Resource Manager defines a single cloud infrastructure with a *DynamicPolicy* attached. For the type of cloud infrastructure, we can use for example an <<_azure_scale_set_infrastructure,Azure Scale Set Infrastructure>>, an <<_aws_autoscaling_infrastructure,AWS Autoscaling Infrastructure>>, a <<_gce_infrastructure,GCE Infrastructure>>, etc...
 
-The configuration of the DynamicPolicy is this use case is fairly simple, we only need to set *globalScope* to `true` to ensure that Nodes will be dynamically deployed whenever `PENDING` tasks appear in the ProActive Scheduler queue. We control the cloud node source capacity using the *minNodes* and *maxNodes* parameters. And *minUptimes* will be adjusted to determine how long a `FREE` Node will remain before scaling down.
+The configuration of the DynamicPolicy in this use case is fairly simple, we only need to set *globalScope* to `true` to ensure that Nodes will be dynamically deployed whenever `PENDING` tasks appear in the ProActive Scheduler queue. We control the cloud node source capacity using the *minNodes* and *maxNodes* parameters. And *minUptimes* will be adjusted to determine how long a `FREE` Node will remain before scaling down.
 
 ===== Static Infrastructure and single Cloud Dynamic Infrastructure
 
-In this use case the Resource Manager defines two Node Sources:
+In this use case, the Resource Manager defines two Node Sources:
 
  * A first Node Source _'StaticNS'_ which will be controlled by a *StaticPolicy*. This Node Source can either use an on-premise infrastructure such as <<_ssh_infrastructure_v2,SSH Infrastructure V2>> or a cloud infrastructure such as  <<_azure_scale_set_infrastructure,Azure Scale Set Infrastructure>>).
- * A second Node Source _'DynamicNS'_ witch uses a cloud infrastructure and a *DynamicPolicy*.
+ * A second Node Source _'DynamicNS'_ which uses a cloud infrastructure and a *DynamicPolicy*.
 
 The general configuration mentioned in the previous scenario will be applied to _'DynamicNS'_. *globalScope* must be set to `true`. In addition, a *scaleNodesExpression* must be defined to ensure that the dynamic cloud Node Source will scale up when all Nodes of _'StaticNS'_ are used.
 
@@ -533,10 +542,10 @@ _'DynamicNS'_ will scale up when _temp3_ is zero and _temp4_ is greater than zer
 
 ===== Cloud Dynamic Infrastructure and Secondary Cloud Dynamic Infrastructure
 
-In this use case the Resource Manager defines two Node Sources:
+In this use case, the Resource Manager defines two Node Sources:
 
  * A first Node Source _'DynamicNS'_ which will be controlled by a *DynamicPolicy* and using cloud infrastructure such as  <<_azure_scale_set_infrastructure,Azure Scale Set Infrastructure>>).
- * A second Node Source _'DynamicNSExtended'_ witch uses a similar setup.
+ * A second Node Source _'DynamicNSExtended'_ which uses a similar setup.
 
 The configuration of _'DynamicNS'_ will be a basic configuration as described in <<_single_cloud_dynamic_infrastructure>> with *globalScope* `true`.
 
@@ -550,16 +559,16 @@ z(temp=nodeSources.get('DynamicNS')) + z(temp2=previousNodeSources.get('DynamicN
 
 We query _'DynamicNS_' info through 2 successive cycles (using *nodeSources* and *previousNodeSources*) to ensure that the observed state is stable. In _temp3_ we assign the minimum busy nodes amount in _'DynamicNS_' the two cycles.
 
-_'DynamicNS'_ will scale up when there are pending tasks in ProActiveScheduler queue. _'DynamicNSExtended'_ will scale up when the amount of `BUSY` Nodes in _'DynamicNS'_ is equal to the maximum number of Nodes configured, and will scale down otherwise.
+_'DynamicNS'_ will scale up when there are pending tasks in ProActive Scheduler queue. _'DynamicNSExtended'_ will scale up when the amount of `BUSY` Nodes in _'DynamicNS'_ is equal to the maximum number of Nodes configured, and will scale down otherwise.
 
 
 ===== Static Infrastructure, Primary Cloud Dynamic Infrastructure and Secondary Cloud Dynamic Infrastructure
 
-In this use case the Resource Manager defines three Node Sources:
+In this use case, the Resource Manager defines three Node Sources:
 
- * A first Node Source _'StaticNS'_ which will be controlled by a *StaticPolicy*. This Node Source can either use an on-prem infrastructure such as <<_ssh_infrastructure_v2,SSH Infrastructure V2>> or a cloud infrastructure such as  <<_azure_scale_set_infrastructure,Azure Scale Set Infrastructure>>).
- *  A second Node Source _'DynamicNS'_ which will be controlled by a *DynamicPolicy* and using cloud infrastructure such as  <<_azure_scale_set_infrastructure,Azure Scale Set Infrastructure>>).
-* A third Node Source _'DynamicNSExtended'_ witch uses a similar setup.
+ * A first Node Source _'StaticNS'_ which will be controlled by a *StaticPolicy*. This Node Source can either use an on-prem infrastructure such as <<_ssh_infrastructure_v2,SSH Infrastructure V2>> or a cloud infrastructure such as  <<_azure_scale_set_infrastructure,Azure Scale Set Infrastructure>>, or pre-reserved instances).
+ *  A second Node Source _'DynamicNS'_ which will be controlled by a *DynamicPolicy* and using cloud infrastructure such as  <<_azure_scale_set_infrastructure,Azure Scale Set Infrastructure>>, typically Spot VMs).
+* A third Node Source _'DynamicNSExtended'_ which uses a similar setup, but typically using Standards VMs.
 
 This use case is a combination of <<_static_infrastructure_and_single_cloud_dynamic_infrastructure>> and <<_cloud_dynamic_infrastructure_and_secondary_cloud_dynamic_infrastructure>>:
 
