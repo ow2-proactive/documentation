@@ -1,0 +1,117 @@
+{
+  "INSTALLATION_CONFIGURATION": {
+    "ARCHIVE_LOCATION": "<link_to_proactive_archive>",
+    "NEW_INSTALL_OR_UPGRADE": "true",
+    "LIBRARIES": "rsync,wget,curl,zip,unzip,sshpass,openssl,gpg,passwd,vim,git,cron,iputils-ping",
+    "INSTALLATION_DIRECTORY": "<path_to_empty_installation_directory>"
+  },
+  "HEALTH_CHECK_CONFIGURATION": {
+    "ENABLE_POST_INSTALLATION_HEALTH_CHECK": "true",
+    "RUN_HEALTH_CHECK_ONLY": "false"
+  },
+  "PWS_SERVER_CONFIGURATION": {
+    "PWS_HOST_ADDRESS": "<host_address>",
+    "PWS_PROTOCOL": "http",
+    "PWS_PORT": "8080",
+    "PWS_PAMR_PORT": "33647",
+    "PWS_JOB_CLEANUP_DAYS": "60",
+    "PWS_USER_NAME": "activeeon",
+    "PWS_USER_GROUP_NAME": "activeeon",
+    "PWS_USER_PASSWORD": "<encrypted_password>",
+    "PWS_LOGIN_ADMIN_PASSWORD": "<encrypted_password>",
+    "PWS_WORKER_NODES": "1"
+  },
+  "PUBLIC_ACCESS_CONFIGURATION": {
+    "ENABLE_PUBLIC_ACCESS": "false",
+    "PWS_PUBLIC_HOSTNAME": "<public_host_address>",
+    "PWS_PUBLIC_SCHEME": "https",
+    "PWS_PUBLIC_PORT": "8443"
+  },
+  "TLS_CERTIFICATE_CONFIGURATION": {
+    "ENABLE_TLS_CERTIFICATE_CONFIGURATION": "false",
+    "TLS_CERTIFICATE_PATH": "<path_to_fullchain.pem>",
+    "TLS_CERTIFICATE_KEY_PATH": "<path_to_privkey.pem>",
+    "TLS_CERTIFICATE_KEYSTORE_PASSWORD": "<encrypted_password>"
+  },
+  "LDAP_CONFIGURATION": {
+    "ENABLE_LDAP_AUTHENTICATION": "false",
+    "LDAP_SERVER_URLS": "<ldap_server_urls>",
+    "LDAP_USER_SUBTREE": "<ldap_user_subtree>",
+    "LDAP_GROUP_SUBTREE": "<ldap_group_subtree>",
+    "LDAP_BIND_LOGIN": "<ldap_bind_login>",
+    "LDAP_BIND_PASSWORD": "<encrypted_password>",
+    "LDAP_USER_FILTER": "<ldap_user_filter>",
+    "LDAP_GROUP_FILTER": "<ldap_group_filter>",
+    "LDAP_TEST_LOGIN": "<ldap_test_login>",
+    "LDAP_TEST_PASSWORD": "<encrypted_password>",
+    "LDAP_ADMIN_ROLES": "<ldap_admin_roles>",
+    "LDAP_USER_ROLES": "<ldap_user_roles>"
+  },
+  "PWS_USERS_CONFIGURATION": {
+    "ENABLE_USERS_CONFIGURATION": "false",
+    "PWS_USERS": [
+      {
+        "LOGIN": "test_admin",
+        "PASSWORD": "<encrypted_password>",
+        "GROUPS": "scheduleradmins,rmcoreadmins"
+      },
+      {
+        "LOGIN": "test_user",
+        "PASSWORD": "<encrypted_password>",
+        "GROUPS": "user"
+      }
+    ]
+  },
+  "EXTERNAL_DATABASE_CONFIGURATION": {
+    "ENABLE_EXTERNAL_DATABASE_CONFIGURATION": "false",
+    "DB_INSTALL_POSTGRES": "false",
+    "DB_TYPE": "postgresql",
+    "DB_DRIVER_LOCATION": "https://jdbc.postgresql.org/download/postgresql-42.7.2.jar",
+    "DB_APPLY_SCHEDULER_CONFIG_TO_ALL": "false",
+    "DB_SCHEDULER_CONFIG": {
+      "DB_SCHEDULER_HOSTNAME": "localhost",
+      "DB_SCHEDULER_PORT": "5432",
+      "DB_SCHEDULER_USERNAME": "scheduler",
+      "DB_SCHEDULER_PASSWORD": "<encrypted_password>",
+      "DB_SCHEDULER_DIALECT": "default",
+      "DB_SCHEDULER_SCHEMA_NAME": "default",
+      "DB_SCHEDULER_URL": "default"
+    },
+    "DB_RM_CONFIG": {
+      "DB_RM_HOSTNAME": "localhost",
+      "DB_RM_PORT": "5432",
+      "DB_RM_USERNAME": "rm",
+      "DB_RM_PASSWORD": "<encrypted_password>",
+      "DB_RM_DIALECT": "default",
+      "DB_RM_SCHEMA_NAME": "default",
+      "DB_RM_URL": "default"
+    },
+    "DB_CATALOG_CONFIG": {
+      "DB_CATALOG_HOSTNAME": "localhost",
+      "DB_CATALOG_PORT": "5432",
+      "DB_CATALOG_USERNAME": "catalog",
+      "DB_CATALOG_PASSWORD": "<encrypted_password>",
+      "DB_CATALOG_DIALECT": "default",
+      "DB_CATALOG_SCHEMA_NAME": "default",
+      "DB_CATALOG_URL": "default"
+    },
+    "DB_PSA_CONFIG": {
+      "DB_PSA_HOSTNAME": "localhost",
+      "DB_PSA_PORT": "5432",
+      "DB_PSA_USERNAME": "pca",
+      "DB_PSA_PASSWORD": "<encrypted_password>",
+      "DB_PSA_DIALECT": "default",
+      "DB_PSA_SCHEMA_NAME": "default",
+      "DB_PSA_URL": "default"
+    },
+    "DB_NOTIFICATION_CONFIG": {
+      "DB_NOTIFICATION_HOSTNAME": "localhost",
+      "DB_NOTIFICATION_PORT": "5432",
+      "DB_NOTIFICATION_USERNAME": "notification",
+      "DB_NOTIFICATION_PASSWORD": "<encrypted_password>",
+      "DB_NOTIFICATION_DIALECT": "default",
+      "DB_NOTIFICATION_SCHEMA_NAME": "default",
+      "DB_NOTIFICATION_URL": "default"
+    }
+  }
+}
