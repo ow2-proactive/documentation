@@ -192,12 +192,12 @@ WARNING: Once the upgrade is performed and the new version started for the first
 ProActive could be easily deployed and started within a fully containerized environment. For this purpose, we provide a ready-to-use Docker Compose configuration that enables you running ProActive Workflows and Scheduling as a containerized service.
 It starts the following services:
 
-*  ProActive Server container
-*  (Optional) ProActive PostgreSQL Database container. The Database container is not started when using our embedded HSQL Database.
+*  ProActive server container
+*  (Optional) ProActive PostgreSQL database container. The database container is not started when using our embedded HSQL Database.
 
-The Docker Compose configuration pulls the ProActive server and Database images from the https://dockerhub.activeeon.com/[Private Activeeon Docker Registry^].
+The Docker Compose configuration pulls the ProActive server and database images from the https://dockerhub.activeeon.com/[Private Activeeon Docker Registry^].
 
-These images can be used out of the box, on any operating system. You can customize the server and Database settings, located in the `.env` file according to your requirements.
+These images can be used out of the box, on any operating system. You can customize the server and database settings, located in the `.env` file according to your requirements.
 
 To be able to access the https://dockerhub.activeeon.com/[Private Activeeon Docker Registry^], a ProActive enterprise licence and access credentials are required.
 Please contact us at contact@activeeon.com to request access.
@@ -217,7 +217,7 @@ You can proceed to donwload it using the following command:
 
 
 
-==== Configure the Docker Compose input file
+==== Configure the Docker Compose Input File
 
 Before starting the ProActive installation, you need first to configure the installation input parameters using the Docker Compose environment file `.env`.
 
@@ -233,7 +233,7 @@ include::./references/automatedInstallScripts/.env[]
 ====
 '''
 
-===== Required Configuration
+===== Required configuration
 The `.env` file referenced above can be used as it is for a minimal installation. However, it requires the definition of five mandatory parameter values:
 
 - `DOCKER_IMAGE_PROACTIVE_NAMESPACE`: Defines the ProActive Docker image namespace (or repository) in the Activeeon private registry.
@@ -243,13 +243,13 @@ The `.env` file referenced above can be used as it is for a minimal installation
 - `PWS_HOST_ADDRESS`: Defines the internal hostname or IP address of the machine where ProActive will be installed.
 
 [[_compose_advanced_parameters]]
-===== Advanced Configuration
+===== Advanced configuration
 For more advanced configuration of the ProActive server, please refer to the parameters listed below:
 
 [[_compose_PWS_Server_Configuration_Properties]]
 *_PWS Server Configuration Properties_*
 
-This section outlines the global configuration options available to configure the ProActive Server.
+This section outlines the global configuration options available to configure the ProActive server.
 
 - `PWS_PROTOCOL`: The internal http protocol to use (http or https). By default, http.
 
@@ -259,24 +259,24 @@ This section outlines the global configuration options available to configure th
 
 - `PWS_JOB_CLEANUP_DAYS`: Remove jobs history older than (in days). By default, 30.
 
-- `PWS_USER_ID`: ID of the user starting the ProActive Server. By default, 1001.
+- `PWS_USER_ID`: ID of the user starting the ProActive server. By default, 1001.
 
-- `PWS_USER_GROUP_ID`: Group ID of the user starting the ProActive Server. By default, 1001.
+- `PWS_USER_GROUP_ID`: Group ID of the user starting the ProActive server. By default, 1001.
 
-- `PWS_USER_NAME`: Name of the user starting the ProActive Server. By default, activeeon.
+- `PWS_USER_NAME`: Name of the user starting the ProActive server. By default, activeeon.
 
-- `PWS_USER_GROUP_NAME`: Group of the user starting the ProActive Server. By default, activeeon.
+- `PWS_USER_GROUP_NAME`: Group of the user starting the ProActive server. By default, activeeon.
 
 - `PWS_LOGIN_ADMIN_PASSWORD`: Password of the ProActive 'admin' user. By default, activeeon.
 
-- `PWS_WORKER_NODES`: Number of ProActive agent nodes to deploy on the ProActive Server machine. By default, 4.
+- `PWS_WORKER_NODES`: Number of ProActive agent nodes to deploy on the ProActive server machine. By default, 4.
 
 [[_compose_Public_Access_Configuration_Properties]]
 *_Public Access Configuration Properties_*
 
-This section describes the public REST Urls to be set when you are running the ProActive Server behind a reverse proxy or in a cloud instance (e.g., Azure VM)
+This section describes the public REST Urls to be set when you are running the ProActive server behind a reverse proxy or in a cloud instance (e.g., Azure VM)
 
-- `ENABLE_PUBLIC_ACCESS`: Set to true when the ProActive Server is deployed behind a reverse proxy or inside a cloud instance. By default, false.
+- `ENABLE_PUBLIC_ACCESS`: Set to true when the ProActive server is deployed behind a reverse proxy or inside a cloud instance. By default, false.
 
 - `PWS_PUBLIC_HOSTNAME`: Public hostname used (e.g. public.myserver.mydomain) or IP address (e.g. 192.168.12.1).
 
@@ -287,7 +287,7 @@ This section describes the public REST Urls to be set when you are running the P
 [[_compose_TLS_Certificate_Configuration_Properties]]
 *_TLS Certificate Configuration Properties_*
 
-In case you would like to set up a TLS certificate for the ProActive Server, you can customize it in this section:
+In case you would like to set up a TLS certificate for the ProActive server, you can customize it in this section:
 
 
 - `ENABLE_TLS_CERTIFICATE_CONFIGURATION`: Set to true in case you have a valid certificate for the host address. By default, false.
@@ -303,42 +303,42 @@ NOTE: The pem/crt/pfx certificate as well as the key have to be placed in the ba
 [[_compose_LDAP_Configuration_Properties]]
 *_LDAP Configuration Properties_*
 
-In case you would like to set up the LDAP authentication for the ProActive Server, you can enable the LDAP configuration in this section.
+In case you would like to set up the LDAP authentication for the ProActive server, you can enable the LDAP configuration in this section.
 
 The given parameter values are only examples and actual parameters must match your LDAP organization. This section will require two accounts:
 
-An `LDAP_BIND_LOGIN` (given as a LDAP distinguished name) that will be used by the ProActive Server to execute LDAP queries (search queries only).
+An `LDAP_BIND_LOGIN` (given as a LDAP distinguished name) that will be used by the ProActive server to execute LDAP queries (search queries only).
 
 An `LDAP_TEST_LOGIN` (given as a LDAP user login name) that will be used to validate the configuration and guarantee that the connection to the LDAP server is working properly. This test account is only used during the installation.
 
-- `ENABLE_LDAP_AUTHENTICATION`: Set to true if you would like to enable the LDAP authentication to the ProActive Server. By default, false.
+- `ENABLE_LDAP_AUTHENTICATION`: Set to true if you would like to enable the LDAP authentication to the ProActive server. By default, false.
 
-- `LDAP_SERVER_URLS`: Url of the ldap server. Multiple urls can be provided separated by commas. Example: `ldaps://ldap-server.company.com`
+- `LDAP_SERVER_URLS`: Url of the LDAP server. Multiple urls can be provided separated by commas. Example: `ldaps://ldap-server.company.com`
 
 - `LDAP_USER_SUBTREE`: Scope in the LDAP tree where users can be found. Example: `ou=users,dc=activeeon,dc=com`
 
 - `LDAP_GROUP_SUBTREE`: Scope in the LDAP tree where groups can be found. Example: `ou=groups,dc=activeeon,dc=com`
 
-- `LDAP_BIND_LOGIN`: Login that will be used when binding to the ldap server (to search for a user and its group). The login should be provided using its ldap distinguished name. Example: `cn=admin,dc=activeeon,dc=com`
+- `LDAP_BIND_LOGIN`: Login that will be used when binding to the LDAP server (to search for a user and its group). The login should be provided using its LDAP distinguished name. Example: `cn=admin,dc=activeeon,dc=com`
 
 - `LDAP_BIND_PASSWORD`: Password associated with the bind login.
 
-- `LDAP_USER_FILTER`: Ldap filter used to search for a user. %s corresponds to the user login name that will be given as parameter to the filter. Example: `(&(objectclass=inetOrgPerson)(uid=%s))`
+- `LDAP_USER_FILTER`: LDAP filter used to search for a user. %s corresponds to the user login name that will be given as parameter to the filter. Example: `(&(objectclass=inetOrgPerson)(uid=%s))`
 
-- `LDAP_GROUP_FILTER`: Ldap filter used to search for all groups associated with a user. %s corresponds to the user distinguished name found by the user filter. Example: `(&(objectclass=groupOfUniqueNames)(uniqueMember=%s))`
+- `LDAP_GROUP_FILTER`: LDAP filter used to search for all groups associated with a user. %s corresponds to the user distinguished name found by the user filter. Example: `(&(objectclass=groupOfUniqueNames)(uniqueMember=%s))`
 
 - `LDAP_TEST_LOGIN`: A login name that will be used to test the user and group filter and validate the configuration. The test login name must be provided as a user id. Example: `activeeon`
 
 - `LDAP_TEST_PASSWORD`: Password associated with the test user.
 
-- `LDAP_ADMIN_ROLES`: List of existing ldap groups that will be associated with a ProActive administrator role. Multiple groups can be provided separated by commas. Example: `activeeon-admins`
+- `LDAP_ADMIN_ROLES`: List of existing LDAP groups that will be associated with a ProActive administrator role. Multiple groups can be provided separated by commas. Example: `activeeon-admins`
 
-- `LDAP_USER_ROLES`: List of existing ldap groups that will be associated with a ProActive standard user role. Multiple groups can be provided separated by commas. Example: `activeeon-operators`
+- `LDAP_USER_ROLES`: List of existing LDAP groups that will be associated with a ProActive standard user role. Multiple groups can be provided separated by commas. Example: `activeeon-operators`
 
 [[_compose_PWS_Users_Configuration_Properties]]
 *_PWS Users Configuration Properties_*
 
-In case you would like to create internal user accounts for the ProActive Server, you can enable the users configuration in this section:
+In case you would like to create internal user accounts for the ProActive server, you can enable the users configuration in this section:
 
 - `ENABLE_USERS_CONFIGURATION`: Set to true if you would like to create internal ProActive users via login/password. By default, false.
 
@@ -369,8 +369,8 @@ These parameters are only used when ProActive is started with a Postgres databas
 
 - `DB_NOTIFICATION_PASS`: Password of the `notification` user in the NOTIFICATION database. By default, notification.
 
-==== Docker Compose configuration with an embedded HSQL database
-Once you set the right configuration options in the `.env` file, you can use the Docker Compose configuration provided in the installation package (`docker-compose-hsqldb.yml`) to run the ProActive server container with an embedded HSQL Database.
+==== Docker Compose Configuration with an Embedded HSQL Database
+Once you set the right configuration options in the `.env` file, you can use the Docker Compose configuration provided in the installation package (`docker-compose-hsqldb.yml`) to run the ProActive server container with an embedded HSQL database.
 
 It will start one single container related to the ProActive server.
 
@@ -386,7 +386,7 @@ include::./references/automatedInstallScripts/docker-compose-hsqldb.yml[]
 ====
 '''
 
-===== Required Configuration
+===== Required configuration
 
 [[_compose_persistent_volumes]]
 You can use the YAML Docker Compose definition as it is. However, to persist containers’ data,
@@ -415,11 +415,11 @@ volumes:
 
 These folders will host the current installation files (`default`), the upgraded one (`previous`), and all previous upgraded installation files (`backup`).
 
-==== Docker Compose configuration with a PostgreSQL database
+==== Docker Compose Configuration with a PostgreSQL Database
 
-Once you set the right configuration options in the `.env` file, you can use the Docker Compose configuration provided in the installation package `docker-compose-pg.yml` to run the ProActive server container with an external PostgreSQL Database container.
+Once you set the right configuration options in the `.env` file, you can use the Docker Compose configuration provided in the installation package `docker-compose-pg.yml` to run the ProActive server container with an external PostgreSQL database container.
 
-It will start two containers, one for the server, and one for the Database.
+It will start two containers, one for the server, and one for the database.
 
 '''
 .*[underline blue]#Click here to display the docker-compose-pg.yml file#*
@@ -434,9 +434,9 @@ include::./references/automatedInstallScripts/docker-compose-pg.yml[]
 '''
 
 [[_compose_required_configuration]]
-===== Required Configuration
+===== Required configuration
 
-Same as for a Docker Compose installation using an embedded DB (See section <<_compose_persistent_volumes, persistent volumes with compose>>), you need to create and link an empty folder to host the Postgres `data` in addition to the basic three `default`, `previous`, and `backup` folders that host the ProActive installation(s).
+Same as for a Docker Compose installation using an embedded database (See section <<_compose_persistent_volumes, persistent volumes with compose>>), you need to create and link an empty folder to host the Postgres `data` in addition to the basic three `default`, `previous`, and `backup` folders that host the ProActive installation(s).
 
 ----
 $ mkdir -p /opt/proactive/default /opt/proactive/previous /opt/proactive/backup /opt/proactive/data
@@ -461,7 +461,7 @@ volumes:
       device: '/opt/proactive/data'
 ----
 
-==== Start ProActive using Docker Compose
+==== Start ProActive Using Docker Compose
 
 Login into the private Activeeon registry:
 ----
@@ -491,13 +491,13 @@ You can then access the ProActive Web Portals at `<PWS_PROTOCOL>://<PWS_HOST_ADD
 
 The user can access any of the four portals using the default credentials: `admin/<PWS_LOGIN_ADMIN_PASSWORD>`. `PWS_LOGIN_ADMIN_PASSWORD` is, by default, `activeeon` but you can customize it as well in the `.env` file.
 
-==== Prepare the database for the purge operation
+==== Prepare the Database for the Purge Operation
 
 In Postgres database, `vacuum` operations do not by default remove orphaned Large  Objects from the database. Identification and removal of these objects is performed by the `vacuumlo` command.
 As the ProActive database contains many large objects, it is essential to apply both `vacuumlo` and `vacuum` operations in order to control the disk space usage over time.
 The purge operation is automatically integrated and performed within the Postgres container using a `cron.daily` process.
 Though, prior to executing the purge operation, a preliminary configuration step is necessary (this preliminary step is done once for a given ProActive installation).
-The following commands allow to prepare the database for the automatic purge operations performed within the Postgres Database container.
+The following commands allow to prepare the database for the automatic purge operations performed within the Postgres database container.
 
 ----
 $ docker-compose stop proactive-server
@@ -508,7 +508,7 @@ $ docker-compose start proactive-server
 The installation of ProActive using Docker Compose is now over ! Your ProActive Scheduler is now running as a set of container services !
 
 [[_compose_upgrade]]
-==== Upgrade/Downgrade/Backup ProActive using Docker Compose
+==== Upgrade/Downgrade/Backup ProActive Using Docker Compose
 
 ProActive can be easily upgraded using Docker Compose. We support automatic upgrade, downgrade, and backup of ProActive server installations in Docker.
 
@@ -522,8 +522,8 @@ Docker Compose configuration relies on Docker container volumes to host ProActiv
 
 In the following, we are going to explain each procedure.
 
-===== ProActive Upgrade
-In order to upgrade the ProActive Server to a newer version, you have to edit the `.env` config file to provide a newer version. The current ProActive version is specified using the `DOCKER_IMAGE_PROACTIVE_TAG` option in the input installation file.
+===== ProActive upgrade
+In order to upgrade the ProActive server to a newer version, you have to edit the `.env` config file to provide a newer version. The current ProActive version is specified using the `DOCKER_IMAGE_PROACTIVE_TAG` option in the input installation file.
 
 For example, you can replace `DOCKER_IMAGE_PROACTIVE_TAG=13.0.0` by `DOCKER_IMAGE_PROACTIVE_TAG=13.0.8` to get a maintenance release of ProActive. It is also applicable for minor and major release versions.
 
@@ -537,11 +537,11 @@ $ docker-compose -f docker-compose-hsqldb.yml up -d
 The new version will be detected and the upgrade process will start at container startup.
 In fact, the current version will be automatically placed on the `proactive-previous` volume and the newer version will be placed on the `proactive-default` volume and started from there.
 
-===== ProActive Backup
+===== ProActive backup
 The backup of previous ProActive versions is also automatic and it is triggered on every upgrade. When a new upgrade is started, the `proactive-previous` volume is checked and if it is not empty, its content is automatically moved to the backup volume `proactive-backup`.
 Afterwards, the upgrade process starts as previously described.
 
-===== ProActive Downgrade
+===== ProActive downgrade
 Using Docker Compose we also support one-level automatic downgrade of ProActive installations located in `proactive-default` and `proactive-previous` volumes.
 To do so, you should provide the previous version of ProActive, as it is specified in the `proactive-previous` volume, to the `DOCKER_IMAGE_PROACTIVE_TAG` option in the `.env` file. This will allow to automatically swap the content of `proactive-default` and `proactive-previous` volumes.
 ProActive will be then started from the `proactive-default` volume which will contain the last previous version.
@@ -549,15 +549,15 @@ ProActive will be then started from the `proactive-default` volume which will co
 
 === Automated ProActive Installation with Kubernetes
 
-ProActive could be easily deployed and started on `AKS` (Azure) or `bare-metal` (On-prem) Kubernetes clusters. For this purpose, we provide a ready-to-use Kubernetes configuration that enables you running ProActive Workflows and Scheduling as a set of Pods.
-It allows you to start the following Pods:
+ProActive could be easily deployed and started on `AKS` (Azure) or `bare-metal` (On-prem) Kubernetes clusters. For this purpose, we provide a ready-to-use Kubernetes configuration that enables you running ProActive Workflows and Scheduling as a set of pods.
+It allows you to start the following pods:
 
-*  ProActive Server Pod
-* (Optional) ProActive Static Nodes Pod
-* (Optional) ProActive Dynamic Nodes Pod
-* (Optional) ProActive PostgreSQL Database Pod. The Database Pod is not started when using an embedded HSQL Database.
+*  ProActive server pod
+* (Optional) ProActive static nodes pod
+* (Optional) ProActive dynamic nodes pod
+* (Optional) ProActive PostgreSQL database pod. The database pod is not started when using an embedded HSQL database.
 
-The Kubernetes installation package pulls the ProActive Server, Node, and Database images from the https://dockerhub.activeeon.com/[Private Activeeon Docker Registry^].
+The Kubernetes installation package pulls the ProActive server, node, and database images from the https://dockerhub.activeeon.com/[Private Activeeon Docker Registry^].
 
 To be able to pull images from the https://dockerhub.activeeon.com/[Private Activeeon Docker Registry^], a ProActive enterprise licence and access credentials are required. Please contact us at contact@activeeon.com to request access and support.
 
@@ -567,7 +567,7 @@ Here are the installation steps you need to follow in order to have ProActive ru
 
 https://helm.sh[Helm^] is a Kubernetes deployment tool for automating creation, packaging, configuration, and deployment of applications and services to Kubernetes clusters.
 
-ProActive uses Helm Charts (i.e., Helm package definition) to create and configure the kubernetes deployments. Thus, https://helm.sh[Helm^] must be pre-installed in order to deploy the ProActive Pods.
+ProActive uses Helm Charts (i.e., Helm package definition) to create and configure the kubernetes deployments. Thus, https://helm.sh[Helm^] must be pre-installed in order to deploy the ProActive pods.
 
 Please refer to Helm's https://helm.sh/docs/[documentation^] to get started.
 
@@ -581,7 +581,7 @@ Once Helm is set up properly, proceed to download the Helm installation package 
 
 The next step is to configure the Helm Chart by setting up the right configuration in the input `values.yml` file of the Chart.
 
-==== Configure the Helm input file
+==== Configure the Helm Input File
 
 The `values.yaml`, which is included in the installation package, is necessary to provide the right configuration values before installing the Chart.
 
@@ -597,7 +597,7 @@ include::./references/automatedInstallScripts/values.yml[]
 ====
 '''
 
-===== Required Configuration
+===== Required configuration
 
 You can use default values in the `values.yaml` file. However, the following specific properties must be configured as described below:
 
@@ -608,24 +608,24 @@ You can use default values in the `values.yaml` file. However, the following spe
 ** `scheduler.tag`: The ProActive scheduler image version or tag.
 ** `node.repository`: A namespace of the ProActive node image located in the Activeeon private registry.
 ** `node.tag`: The ProActive node image version or tag.
-** `db.postgres.repository`: A namespace of the ProActive postgres image located in the Activeeon private registry.
+** `db.postgres.repository`: A namespace of the ProActive Postgres image located in the Activeeon private registry.
 ** `db.postgres.tag`: The ProActive Postgres image version or tag.
 - To ensure having dynamic ProActive Kubernetes nodes after server startup, you need to copy and paste the target (aks or on-prem) cluster configuration into the `files/kube.config` file of the Helm installation package.
 
 
-For an on-prem installation, the Kubernetes Node name to host the ProActive scheduler and database Pods:
+For an on-prem installation, the Kubernetes node name to host the ProActive scheduler and database pods:
 
 - `persistentVolumes.localVolumeConfig`:
 ** `scheduler.persistentVolume.nodeAffinity.nodeName`: Node name
 ** `database.persistentVolume.nodeAffinity.nodeName`: Node name
 
-For an on-prem installation, a directory must be created beforehand on the Node defined by the `nodeAffinity` (see `nodeAffinity` above) to host the ProActive scheduler and database Pods' data:
+For an on-prem installation, a directory must be created beforehand on the node defined by the `nodeAffinity` (see `nodeAffinity` above) to host the ProActive scheduler and database pods' data:
 
 - `persistentVolumes.localVolumeConfig`:
-** `scheduler.persistentVolume.localPath`: Absolut path to the empty directory created on the Node
-** `database.persistentVolume.localPath`: Absolut path to the empty directory created on the Node
+** `scheduler.persistentVolume.localPath`: Absolut path to the empty directory created on the node
+** `database.persistentVolume.localPath`: Absolut path to the empty directory created on the node
 
-===== Advanced Configuration
+===== Advanced configuration
 
 In addition to the required parameters, you can set more advanced parameters to your Helm chart. Many of the advanced parameters are already defined in <<_compose_advanced_parameters, Docker Compose advanced parameters section>>.
 
@@ -635,7 +635,7 @@ We will enumerate below few (but not all) important parameters that could be use
 - `ports`:
 ** `httpPort`: Http port. By default, 8080.
 ** `nodePort`: For on-prem installation, you can customize the Node Port. By default, 32000.
-- `database`: You can enable or not using a separate Postgres Pod for the database. By default, true.
+- `database`: You can enable or not using a separate Postgres pod for the database. By default, true.
 - `usersConfiguration`: For more details, see section <<_compose_PWS_Users_Configuration_Properties, PWS Users Configuration Properties>>.
 - `ldapConfiguration`: For more details, see section <<_compose_LDAP_Configuration_Properties, LDAP Configuration Properties>>.
 - `nodeSources`:
@@ -668,7 +668,7 @@ Set Cert manager controller:
 $ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.3/cert-manager.yaml
 ----
 
-==== Start ProActive using Helm
+==== Start ProActive Using Helm
 
 After setting the right configuration options in the `values.yaml` file, you can access the Helm installation package and then proceed to install the chart:
 
@@ -691,9 +691,9 @@ http://aks-cluster-load-balancer-ip-or-dns:8080
 
 The user can access any of the four portals using the default credentials: `admin/<proactiveAdminPassword>`. `proactiveAdminPassword` is defined in the `values.yaml`input file.
 
-Your ProActive Scheduler is now running as a set of Pods!
+Your ProActive Scheduler is now running as a set of pods!
 
-==== Upgrade ProActive using Helm
+==== Upgrade ProActive Using Helm
 The process of upgrading ProActive in a containerized environment is described in section <<_compose_upgrade>>.
 
 In this section, we will see how to upgrade ProActive in Kubernetes using Helm.
@@ -710,7 +710,7 @@ Once set, we upgrade the installed Helm release using the following command:
 helm upgrade pa-helm-chart . -f values.yaml
 ----
 
-The Scheduler and Node Pods will be recreated to download the new images and apply the upgrade progress during their startup.
+The Scheduler and node pods will be recreated to download the new images and apply the upgrade progress during their startup.
 
 === Automated ProActive Installation with Shell Scripts
 ProActive could be easily deployed and started automatically using Shell scripts. For this purpose, we provide a ready-to-use shell installer that enables you running ProActive Workflows and Scheduling as a Linux service.
@@ -722,10 +722,10 @@ We provide public access to the ProActive shell installation package that you ca
 
 The installation package contains 4 files:
 
-- The `inputConfig.json` file that includes the required parameters needed for the configuration tuning of the ProActive Server. It is formatted as a json file.
-- The `proactiveInstaller.sh` file, which is the main installation script. It parses the configuration provided in the `inputConfig.json` file, proceeds to the configuration, and finally starts up the ProActive Server.
-- The `apiHealthcheck.sh`, called by the `proactiveInstaller.sh` (at the end), to run REST API health check tests to verify the correct behavior of the ProActive Server after its startup.
-- The `install_configure_postgresql.sh` file, which installs the Postgres DB and configures the ProActive server to support the installed database.
+- The `inputConfig.json` file that includes the required parameters needed for the configuration tuning of the ProActive server. It is formatted as a json file.
+- The `proactiveInstaller.sh` file, which is the main installation script. It parses the configuration provided in the `inputConfig.json` file, proceeds to the configuration, and finally starts up the ProActive server.
+- The `apiHealthcheck.sh`, called by the `proactiveInstaller.sh` (at the end), to run REST API health check tests to verify the correct behavior of the ProActive server after its startup.
+- The `install_configure_postgresql.sh` file, which installs the Postgres database and configures the ProActive server to support the installed database.
 
 You can proceed to download the Shell installation package using the following command:
 
@@ -735,13 +735,13 @@ You can proceed to download the Shell installation package using the following c
 ++++
 '''
 
-In order to install the ProActive Server on your environment:
+In order to install the ProActive server on your environment:
 
 - You need first to configure the input parameters defined in the `inputConfig.json` (to better know how to configure the parameters, see next section: <<shell_Configure_the_installation_input_file, Configure the installation input file>>)
 - Run the `proactiveInstaller.sh` installation script (see section <<_shell_Starting_ProActive_using_Shell_scripts, Starting ProActive using Shell scripts>>)
 
 [[shell_Configure_the_installation_input_file]]
-==== Configure the installation input file
+==== Configure the Installation Input File
 
 The `inputConfig.json`, which is included in the installation package, is necessary to provide the right configuration values before installing ProActive.
 
@@ -773,7 +773,7 @@ $ jA0ECQMC1V3aYdEkNj3/0joBq9DUbBi2dnCCDtJPMosRdWh72KZ7Gm1cpctqOJnEKFGX1wO0v1qK 3
 
 Now, we will provide a detailed explanation of the ProActive configuration parameters as they are specified in the input script `inputConfig.json`.
 
-===== Required Configuration
+===== Required configuration
 You can use default values in the `inputConfig.json` file. However, the following specific properties must be configured as described below:
 
 - `INSTALLATION_CONFIGURATION`
@@ -783,17 +783,17 @@ You can use default values in the `inputConfig.json` file. However, the followin
 - `PWS_SERVER_CONFIGURATION`
 ** `PWS_HOST_ADDRESS`: Defines the internal hostname or IP address of the machine where ProActive will be installed.
 
-===== Advanced Configuration
+===== Advanced configuration
 
 For more advanced configuration of the ProActive server, please refer to the parameters listed below:
 
 - `INSTALLATION_CONFIGURATION`
-** `NEW_INSTALL_OR_UPGRADE`: Set to true when it is a first ProActive Server installation or an installation upgrade.
-** `LIBRARIES`: The libraries to be installed on the ProActive Server machine. The `proactiveInstaller.sh` script will install them. Default libraries mentioned are necessary for the installation.
+** `NEW_INSTALL_OR_UPGRADE`: Set to true when it is a first ProActive server installation or an installation upgrade.
+** `LIBRARIES`: The libraries to be installed on the ProActive server machine. The `proactiveInstaller.sh` script will install them. Default libraries mentioned are necessary for the installation.
 
 - `HEALTH_CHECK_CONFIGURATION`
 ** `ENABLE_POST_INSTALLATION_HEALTH_CHECK`: If enabled, the health check tests will be executed at the end of the `proactiveInstaller.sh` installation script. It is recommended to enable the health check tests.
-** `RUN_HEALTH_CHECK_ONLY`: If enabled, only health check tests will be executed. It supposes that the installation is already done and the ProActive Server is already running. It is recommended to not activate it unless you would like to run the health checks separately.
+** `RUN_HEALTH_CHECK_ONLY`: If enabled, only health check tests will be executed. It supposes that the installation is already done and the ProActive server is already running. It is recommended to not activate it unless you would like to run the health checks separately.
 
 - `PWS_SERVER_CONFIGURATION`
 
@@ -819,7 +819,7 @@ See details of `PWS_USERS_CONFIGURATION` in this section: <<_compose_PWS_Users_C
 
 - `EXTERNAL_DATABASE_CONFIGURATION`
 
-This section allows you to change the ProActive Server database configuration in order to connect to an external database. If set to false, it will use the embedded HSQL database.
+This section allows you to change the ProActive server database configuration in order to connect to an external database. If set to false, it will use the embedded HSQL database.
 ProActive requires the following components to be mapped to different database schemas: Resource Manager, Scheduler, Catalog, Service Automation and Notification Service.
 
 - `EXTERNAL_DATABASE_CONFIGURATION`
@@ -836,12 +836,12 @@ ProActive requires the following components to be mapped to different database s
 *** `DB_SCHEDULER_SCHEMA_NAME`: Override the default database schema name for the selected component. Defaults names are { Resource Manager : "rm", Scheduler : "scheduler", Catalog : "catalog", Service Automation : "pca", Notification Service : "notification" }.
 *** `DB_SCHEDULER_URL`: Sets the JDBC url that will be used to access the target component database. If set to default, the url will be inferred from --hostname, --port and optionally --schema-name options.
 
-The description of the configuration options for the remaining ProActive components (`DB_RM_CONFIG`, `DB_CATALOG_CONFIG`, `DB_PSA_CONFIG`, `DB_NOTIFICATION_CONFIG`) is the same as described for the scheduler DB above.
+The description of the configuration options for the remaining ProActive components (`DB_RM_CONFIG`, `DB_CATALOG_CONFIG`, `DB_PSA_CONFIG`, `DB_NOTIFICATION_CONFIG`) is the same as described for the scheduler database above.
 
 [[_shell_Starting_ProActive_using_Shell_scripts]]
-==== Starting ProActive using Shell scripts
+==== Starting ProActive Using Shell Scripts
 
-===== ProActive Server installation
+===== ProActive server installation
 
 After configuring the appropriate settings as outlined in the previous section, execute the `proactiveInstaller.sh` script along with the `PASSPHRASE` used to encrypt the passwords.
 
@@ -850,8 +850,8 @@ $ chmod +x proactiveInstaller.sh
 $ sudo ./proactiveInstaller.sh -p PASSPHRASE
 ----
 
-===== Server Monitoring and troubleshooting
-While running the installation script, the script will continuously display logs about the in-progress configuration and installation. When the server is starting, you can access the ProActive service logs located at `/var/log/proactive/scheduler` to monitor the ProActive Server startup status.
+===== Server monitoring and troubleshooting
+While running the installation script, the script will continuously display logs about the in-progress configuration and installation. When the server is starting, you can access the ProActive service logs located at `/var/log/proactive/scheduler` to monitor the ProActive server startup status.
 ----
 $ tail -f /var/log/proactive/scheduler
 ----
@@ -871,9 +871,9 @@ Packages successfully loaded
 
 ProActive started in 246.476727488 seconds
 ----
-===== ProActive Web Portals Access
+===== ProActive web portals access
 
-When the ProActive Server is up, you can access the ProActive Web portals at:
+When the ProActive server is up, you can access the ProActive Web portals at:
 
 If you are using a public address:
 `PWS_PUBLIC_SCHEME://PWS_PUBLIC_HOSTNAME:PWS_PUBLIC_PORT`
@@ -896,7 +896,7 @@ systemctl stop proactive-scheduler
 systemctl start proactive-scheduler
 ----
 
-==== Upgrade ProActive using Shell scripts
+==== Upgrade ProActive Using Shell Scripts
 The process of Upgrading ProActive described in section <<_compose_upgrade>>.
 
 In this section, we will see how to upgrade ProActive using the Provided Shell scripts.
@@ -1232,11 +1232,11 @@ In addition, prior to execute the purge operation, a preliminary configuration s
 
 In the following paragraphs, we describe the step by step procedure to perform the database purge operations:
 
-- **Start the ProActive Server to fill up the database**
+- **Start the ProActive server to fill up the database**
 
 Initially, the ProActive server has to be started **at least once** to fill up the ProActive database.
 
-- **Stop the ProActive Server**
+- **Stop the ProActive server**
 
 Then, once the ProActive server is up and the web portals become accessible, you have to stop the ProActive server.
 
@@ -1288,7 +1288,7 @@ alter table variable alter column value TYPE oid USING value::oid;
 \q
 ----
 
-- **Restart the ProActive Server**
+- **Restart the ProActive server**
 
 After editing the table columns as described above, you have to start again the ProActive server to take into account the new modifications made to the Postgres database.
 
