@@ -491,7 +491,8 @@ You can then access the ProActive Web Portals at `<PWS_PROTOCOL>://<PWS_HOST_ADD
 
 The user can access any of the four portals using the default credentials: `admin/<PWS_LOGIN_ADMIN_PASSWORD>`. `PWS_LOGIN_ADMIN_PASSWORD` is, by default, `activeeon` but you can customize it as well in the `.env` file.
 
-==== Prepare the Database for the Purge Operation
+[[_compose_purge]]
+==== Database Purge Operation in Docker Compose
 
 In Postgres database, `vacuum` operations do not by default remove orphaned Large  Objects from the database. Identification and removal of these objects is performed by the `vacuumlo` command.
 As the ProActive database contains many large objects, it is essential to apply both `vacuumlo` and `vacuum` operations in order to control the disk space usage over time.
@@ -499,9 +500,18 @@ The purge operation is automatically integrated and performed within the Postgre
 Though, prior to executing the purge operation, a preliminary configuration step is necessary (this preliminary step is done once for a given ProActive installation).
 The following commands allow to prepare the database for the automatic purge operations performed within the Postgres database container.
 
+Stop the ProActive server container:
 ----
 $ docker-compose stop proactive-server
+----
+
+Run the embedded script for table configuration within the database container:
+----
 $ docker exec -it proactive-database /bin/bash /tables-configuration.sh
+----
+
+Start the ProActive server again:
+----
 $ docker-compose start proactive-server
 ----
 
@@ -691,7 +701,28 @@ http://aks-cluster-load-balancer-ip-or-dns:8080
 
 The user can access any of the four portals using the default credentials: `admin/<proactiveAdminPassword>`. `proactiveAdminPassword` is defined in the `values.yaml`input file.
 
-Your ProActive Scheduler is now running as a set of pods!
+
+==== Database Purge Operation in Kubernetes
+The Postgres database purge process is required on any fresh ProActive installation using the Postgres database, and it explained in section: <<_compose_purge, Docker Compose Purge Operation>>.
+
+The following commands allow to prepare the database for the automatic purge operations performed within the Postgres database pod.
+
+Delete the ProActive Scheduler deployment in the namespace that was given to the `values.yaml` file. By default, `ae-dev` is used:
+----
+$ kubectl delete deploy -n ae-dev proactive-deployment
+----
+
+Run the embedded database pod script for table configuration. You need to replace `<proactive-db-id>` with your current ProActive database pod id:
+----
+$ kubectl exec -it -n ae-dev <proactive-db-id> -- /tables-configuration.sh
+----
+
+Start the Helm chart again:
+----
+$ helm upgrade pa-helm-chart . -f values.yaml
+----
+
+The installation of ProActive using Helm is now over ! Your ProActive Scheduler is now running as a set of pods !
 
 ==== Upgrade ProActive Using Helm
 The process of upgrading ProActive in a containerized environment is described in section <<_compose_upgrade>>.
