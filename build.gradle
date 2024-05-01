@@ -49,7 +49,7 @@ asciidoctor {
     resources {
         from("$projectDir/src/docs/") {
             include 'user/examples/**'
-            include 'admin/references/kubernetes/**'
+            include 'admin/references/automatedInstallScripts/**'
             include 'images/**'
             include 'tocbot/**'
             include 'highlight/**'

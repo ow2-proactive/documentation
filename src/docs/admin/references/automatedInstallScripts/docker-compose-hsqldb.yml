@@ -1,0 +1,48 @@
+version: '2.1'
+
+services:
+  proactive-server:
+    restart: on-failure
+    image: dockerhub.activeeon.com/${DOCKER_IMAGE_PROACTIVE_NAMESPACE}/proactive-scheduler:${DOCKER_IMAGE_PROACTIVE_TAG}
+    container_name: proactive-scheduler
+    networks:
+      - pa-network
+    ports:
+      - ${PWS_PORT}:${PWS_PORT}
+      - ${PWS_PAMR_PORT}:${PWS_PAMR_PORT}
+    env_file:
+      - .env
+    environment:
+      - PWS_PROTOCOL
+      - PWS_PORT
+    volumes:
+      - proactive-default:/opt/proactive/server/default
+      - proactive-previous:/opt/proactive/server/previous
+      - proactive-backup:/opt/proactive/server/backup
+    healthcheck:
+      test: [ "CMD", "curl", "-k", "-f", "${PWS_PROTOCOL}://proactive-server:${PWS_PORT}" ]
+      interval: 30s
+      timeout: 10s
+      retries: 30
+
+volumes:
+  proactive-default:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/opt/proactive/default'
+  proactive-previous:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/opt/proactive/previous'
+  proactive-backup:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/opt/proactive/backup'
+networks:
+  pa-network:

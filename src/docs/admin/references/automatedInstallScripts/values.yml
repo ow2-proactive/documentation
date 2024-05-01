@@ -1,0 +1,507 @@
+# Default values for Activeeon ProActive Chart
+# This is a YAML-formatted file
+# It declares variables to be passed into the ProActive Helm templates
+
+# We provide below a summary of the different configuration blocks
+# You can search for one of these terms to quickly jump into a specific block
+
+# Configuration Blocks Menu (in order):
+# *********** Common Configuration Properties ***************************
+# - target:
+# - namespace:
+# - imageCredentials:
+# *********** ProActive Scheduler Server Configuration Properties *******
+# - user:
+# - protocol:
+# - proactiveAdminPassword:
+# - housekeepingDays:
+# - serverWorkerNodes:
+# - ports:
+# - database:
+# - usersConfiguration:
+# - ldapConfiguration:
+# *********** Node Sources Configuration Properties *********************
+# - nodeSources:
+# *********** Kubernetes Resources Configuration Properties *************
+# - ingress:
+# - persistentVolumes:
+# - services:
+# - replicas:
+# - images:
+# - resources:
+# - volumeMounts:
+# - readinessProbe:
+# - livenessProbe:
+
+#***********************************************************************************************************************
+#**************************************** Common Configuration Properties **********************************************
+#***********************************************************************************************************************
+
+#**************************************** Target Kubernetes cluster ****************************************************
+# Supported target Kubernetes clusters: "on-prem" or "aks" clusters
+target:
+  # The 'cluster' property value could be "aks" or "on-prem"
+  cluster: <cluster>
+
+#**************************************** Namespace Configuration ******************************************************
+# Namespace to be used to create all ProActive installation resources
+# The namespace will be associated to every resource created by the helm chart
+namespace: ae-dev
+
+#******************************** Credentials of the Activeeon Private Docker Registry *********************************
+# If you do not have access, please contact contact@activeeon.com to request access
+imageCredentials:
+  registry: dockerhub.activeeon.com
+  username: <username>
+  password: <password>
+  email: support@activeeon.com
+
+#***********************************************************************************************************************
+#**************************************** ProActive Scheduler Server Configuration *************************************
+#***********************************************************************************************************************
+
+#**************************************** User Starting the ProActive Server *******************************************
+# On the Scheduler Pod startup, a new user is created to start the proactive server
+# The root user is only used to do the installation
+# The server is started by the following user
+user:
+  userName: activeeon
+  groupName: activeeon
+  uid: 1000
+  gid: 1000
+
+#**************************************** ProActive Web Protocol Configuration *****************************************
+# Protocol http or https to use to access the ProActive Server Web Portals (default: http)
+# The https requires for now some advanced manual configurations
+# The http protocol is recommended to be used
+protocol: http
+
+#**************************************** ProActive 'admin' Password Configuration *************************************
+# The admin user is an administrator of the platform
+# This account is used internally for the installation to perform some actions like getting the session id or creating worker nodes, etc.
+# It is used as well to access the ProActive web portals, at the login page
+# It important to provide a custom password and then access the web portals using the given password
+proactiveAdminPassword: activeeon
+
+#**************************************** Jobs Housekeeping Configuration **********************************************
+# The Scheduler provides a housekeeping mechanism that periodically removes finished jobs from the Scheduler and Workflow Execution portals
+# It also removes associated logs and all job data from the database to save space
+# The following property defines the number of days before jobs cleanup (default: 30)
+housekeepingDays: 30
+
+#**************************************** Server Worker Nodes Configuration ********************************************
+# Defines the number of worker agent nodes to be created on the Scheduler server Pod
+# It is recommended to not create too many nodes on the same Pod as the server to avoid performance overhead
+serverWorkerNodes: 1
+
+#**************************************** Ports Configuration **********************************************************
+# This section describes the ports to be used by this installation
+ports:
+  # Port to use to access the ProActive web portals (default: 8080)
+  # The web portals will be accessible through the external IP or DNS given by the load balancer service + httpPort
+  httpPort: &httpPort 8080
+  # Port to use for PAMR communication (default: 33647)
+  # It is recommended to use this default port
+  pamrPort: &pamrPort 33647
+  # Port to use to access the ProActive web portals on an on-prem installation (without a LoadBalancer)
+  # The web portals will be accessible through the cluster IP or DNS + nodePort
+  nodePort: &nodePort 32000
+
+#**************************************** Database Configuration *******************************************************
+# Database configuration properties
+database:
+  # Enable or disable using an external database
+  # If set to 'true', postgres database is used, 'false' sets the default embedded HSQL database
+  enabled: true
+  # Postgres database configuration
+  # The next properties are considered only if the external database is used
+  dialect: org.hibernate.dialect.PostgreSQL94Dialect
+  # Credentials, used only for postgres configuration
+  # They define the passwords of the catalog, notification, pca, rm, and scheduler databases
+  passwords:
+    catalogPassword: catalog
+    notificationPassword: notification
+    pcaPassword: pca
+    rmPassword: rm
+    schedulerPassword: scheduler
+    postgresPassword: postgres
+
+#**************************************** File Authentication Configuration ********************************************
+# This is the default authentication method provided by ProActive
+# The login, password, and groups could be provided in a JSON format
+# For more information about the groups and other authentication methods, visit: https://doc.activeeon.com/latest/admin/ProActiveAdminGuide.html#_file
+usersConfiguration:
+  addUsersConfiguration: true
+  users: [{ "LOGIN": "test_admin", "PASSWORD": "activeeon", "GROUPS": "scheduleradmins,rmcoreadmins" },
+          { "LOGIN": "test_user", "PASSWORD": "activeeon", "GROUPS": "user" }]
+
+#**************************************** LDAP Authentication Configuration ********************************************
+# In addition to file based authentication, we provide a second authentication method, the LDAP authentication
+ldapConfiguration:
+  # set ‘enableLdapConfiguration’ to true if you want to activate the ldap authentication in addition to the file based authentication
+  enableLdapConfiguration: false
+  # url of the ldap server. Multiple urls can be provided separated by commas
+  serverUrls: "<serverUrls>"
+  # Scope in the LDAP tree where users can be found
+  userSubtree: "<userSubtree>"
+  # Scope in the LDAP tree where groups can be found
+  groupSubtree: "<groupSubtree>"
+  # login that will be used when binding to the ldap server (to search for a user and its group). The login should be provided using its ldap distinguished name
+  bindLogin: "<bindLogin>"
+  # encrypted password associated with the bind login
+  bindPassword: "<bindPassword>"
+  # ldap filter used to search for a user. %s corresponds to the user login name that will be given as parameter to the filter
+  userFilter: "<userFilter>"
+  # ldap filter used to search for all groups associated with a user. %s corresponds to the user distinguished name found by the user filter
+  groupFilter: "<groupFilter>"
+  # a login name that will be used to test the user and group filter and validate the configuration. The test login name must be provided as a user id
+  testLogin: "<testLogin>"
+  # encrypted password associated with the test user
+  testPassword: "<testPassword>"
+  # list of existing ldap groups that will be associated with a ProActive administrator role. Multiple groups can be provided separated by commas
+  adminRoles: "<adminRoles>"
+  # list of existing ldap groups that will be associated with a ProActive standard user role. Multiple groups can be provided separated by commas
+  userRoles: "<userRoles>"
+
+#***********************************************************************************************************************
+#**************************************** Node Sources Configuration ***************************************************
+#***********************************************************************************************************************
+# The following section describe the worker pods to be created following the Scheduler server startup
+nodeSources:
+  # The 'dynamicK8s' configuration defines the worker nodes to be created dynamically depending on the workload
+  dynamicK8s:
+    # True, to set up a Dynamic Kubernetes Node Source at Server startup (false if not)
+    enabled: true
+    # Name of the Dynamic Kubernetes Node Source
+    name: Dynamic-Kube-Linux-Nodes
+    # Minimum number of nodes to be deployed by the node source
+    minNodes: 4
+    # Maximum number of nodes to be deployed
+    maxNodes: 15
+  # the 'staticLocal' configuration defines a fixed number of worker nodes to be created following the server startup
+  staticLocal:
+    # True, to set up a Static Kubernetes Node Source at Server startup (false if not)
+    enabled: true
+    # Name of the Static Kubernetes Node Source
+    name: Static-Kube-Linux-Nodes
+    # Number of nodes to be deployed
+    numberNodes: 4
+
+#***********************************************************************************************************************
+#**************************************** Kubernetes Resources Configuration *******************************************
+#***********************************************************************************************************************
+
+#**************************************** Ingress Configuration ********************************************************
+ingress:
+  # Specifies whether the Ingress resource should be enabled (true or false)
+  enabled: false
+  # Specifies the Ingress class name to be used. Use 'kubectl get ingressclass' to check the available ingress classes in your cluster
+  ingressClassName: public
+  # Specifies the hostname to be used by the Ingress service
+  hostname: <hostname>
+  # To configure the TLS certificate for the https mode. We provide three ways:
+  # - Provided certificate: a fullchain + private key have to be provided
+  # - Self Signed certificate using Cert Manager
+  # - Let's Encrypt certificate using Cert Manager
+  # You have to enable only one of these certification method exclusively
+  providedCertificate:
+    # Specifies whether a provided certificate should be used (true or false)
+    enabled: true
+    tls:
+      # The actual content of the TLS certificate file (encoded in Base64). Use for example 'cat fullchain.pem | base64' to get the encrypted certificate file content
+      crt: <fullchain.pem>
+      # The actual content of the TLS private key file (encoded in Base64). Use for example 'cat privkey.pem | base64' to get the encrypted private key file content
+      key: <privkey.pem>
+  clusterIssuer:
+    selfSigned:
+      # Specifies whether a self-signed certificate should be used (true or false)
+      enabled: false
+    letsEncrypt:
+      # Specifies whether Let's Encrypt should be used for obtaining certificates (true or false)
+      enabled: false
+      # The Let's Encrypt ACME server URL
+      server: https://acme-v02.api.letsencrypt.org/directory
+      # The email address to be associated with the Let's Encrypt account
+      email: test@test.com
+
+#**************************************** Persistent Volumes Configuration *********************************************
+
+persistentVolumes:
+  # The following properties define the required settings to create local Node persistent volumes
+  # The Local Node Volume will host the Scheduler Server installation files and the external database data
+  localVolumeConfig:
+    # Describes the storage class configuration
+    storageClass:
+      # Specifies the provisioner for the storage class as "kubernetes.io/no-provisioner."
+      provisioner: kubernetes.io/no-provisioner
+      # Sets the volume binding mode to "Immediate."
+      volumeBindingMode: Immediate
+    # Contains settings related to scheduling and placement of the persistent volumes.
+    scheduler:
+      persistentVolume:
+        # Specifies the storage capacity for the persistent volume
+        storage: 20Gi
+        # Defines the access modes for the persistent volume as ReadWriteMany
+        accessModes: ReadWriteMany
+        # Sets the reclaim policy for the persistent volume to "Delete."
+        persistentVolumeReclaimPolicy: Delete
+        # Specifies the local path for the persistent volume
+        localPath: <localPath>
+        #Defines node affinity settings
+        nodeAffinity:
+          # Specifies the node name
+          nodeName: <nodeName>
+      persistentVolumeClaim:
+        # Specifies the access modes for the persistent volume claim as ReadWriteMany
+        accessModes: ReadWriteMany
+        # Specifies the storage capacity for the persistent volume claim
+        storage: 20Gi
+    # Contains settings related to the database and placement of the persistent volumes
+    # It is used only when the postgres database is enabled
+    database:
+      persistentVolume:
+        storage: 20Gi
+        accessModes: ReadWriteMany
+        persistentVolumeReclaimPolicy: Delete
+        localPath: <localPath>
+        nodeAffinity:
+          nodeName: <nodeName>
+      persistentVolumeClaim:
+        accessModes: ReadWriteMany
+        storage: 20Gi
+
+  # The following properties define the required settings to create the Azure Disk for data persistence
+  # The Azure Disk will host the Scheduler Server installation files and the external database data
+  aksDiskVolumeConfig:
+    # The 'StorageClass' defines different classes of storage and their associated provisioning policies in a cluster
+    # It allows to abstract the underlying storage infrastructure and provide a way to dynamically provision and manage persistent volumes (PVs)
+    storageClass:
+      # The 'provisioner' specifies the CSI (Container Storage Interface) driver that is responsible for provisioning the storage
+      # In this case, 'disk.csi.azure.com' is the provisioner for Azure Disk storage
+      provisioner: disk.csi.azure.com
+      # The 'reclaimPolicy' determines what happens to the underlying Azure Disk resource when the associated PersistentVolume (PV) is deleted
+      # The 'Delete' policy means that the Azure Disk will be deleted when the PV is released
+      reclaimPolicy: Delete
+      # The 'allowVolumeExpansion' parameter indicates whether the storage volume associated with this StorageClass can be resized after creation
+      # Setting it to 'true' allows for volume expansion
+      allowVolumeExpansion: true
+      # The 'storageaccounttype' specifies the type of Azure storage account to be used for provisioning the Azure Disk
+      # In this case, 'StandardSSD_LRS' stands for Standard Solid State Drive (SSD) with Locally Redundant Storage (LRS)
+      storageaccounttype: StandardSSD_LRS
+      # The 'kind' specifies the type of the storage class
+      # In this case, it's set to 'Managed', which implies that the Azure Disk will be managed by the underlying cloud provider (Azure) rather than being manually managed
+      kind: Managed
+    # The scheduler persistent volume claim for Azure Disk provisioning
+    # For memory, PersistentVolumeClaim (PVC) is used to request and allocate storage resources for applications running within the cluster
+    scheduler:
+      persistentVolumeClaim:
+        # The 'storage' property specifies the desired storage capacity for the PVC
+        # In this case, it's set to 40Gi, which means you're requesting a PVC with a storage capacity of 40 gigabytes
+        storage: 40Gi
+        # The 'accessModes' property defines the access modes that the PVC requires
+        # In this case, ReadWriteOnce indicates that the volume can be mounted for read and write access by a single pod at a time
+        accessModes: ReadWriteOnce
+    # The external database (postgres) persistent volume claim for Azure Disk provisioning
+    # It is used only when the postgres database is enabled
+    database:
+      persistentVolumeClaim:
+        storage: 20Gi
+        accessModes: ReadWriteOnce
+
+#**************************************** Services Configuration *******************************************************
+# Define the kubernetes service properties required for the installation
+services:
+  scheduler:
+    # Scheduler Service to access the ProActive Web portals
+    webService:
+      # The 'name' property specifies the name of the Service port
+      # In this case, the Service port is named http
+      name: http
+      # The 'protocol' property defines the network protocol to use for the Service
+      # In this case, it's set to TCP
+      protocol: TCP
+      # The 'port' property specifies the port number on which the Service will be exposed externally
+      # The value *httpPort suggests that it's using a variable named httpPort (defined previously)
+      port: *httpPort
+      # The 'nodePort' property specifies the Node port number on which the Service will be exposed. It is used only on an on-prem installation
+      # The value *nodePort suggests that it's using a variable named nodePort (defined previously)
+      nodePort: *nodePort
+      # The 'targetPort' property specifies the port to which the traffic will be forwarded from the Service to the pods
+      # Again, *httpPort indicates the use of a variable named httpPort (defined previously)
+      targetPort: *httpPort
+    # Scheduler Service to ensure the communication between Nodes and Scheduler Pods
+    pamrService:
+      # The 'name' property specifies the name of the Service port
+      # In this case, the Service port is named pamr
+      name: pamr
+      # The 'protocol' property defines the network protocol to use for the Service
+      # In this case, it's set to TCP
+      protocol: TCP
+      # The 'port' property specifies the port number on which the Service will be exposed internally within the cluster
+      # The value *pamrPort suggests that it's using a variable named pamrPort (defined previously)
+      port: *pamrPort
+      # The 'type' property determines the type of the Service
+      # In this case, it's set to ClusterIP, which means the Service will be accessible only within the cluster and will have an internal IP
+      type: ClusterIP
+  # Database service required to enable the communication between the Scheduler and the database
+  # The following configuration is not needed and is not taken into account in case the external database is not used
+  dbService:
+    postgres:
+      # The 'protocol' property defines the network protocol to use for the Service
+      # In this case, it's set to TCP
+      protocol: TCP
+      # The 'port' property specifies the port number on which the Service will be exposed internally within the cluster
+      # In this case, it's set to 5432, which is used for PostgreSQL database connections
+      port: 5432
+      # The 'type' property determines the type of the Service
+      # In this case, it's set to ClusterIP, which means the Service will be accessible only within the cluster and will have an internal IP
+      type: ClusterIP
+
+#**************************************** Replicas Configuration *******************************************************
+# Replicas counts of scheduler, node, and database deployments
+replicas:
+  # The replica count for the scheduler has to be set to 1
+  scheduler:
+    replicaCount: 1
+  # The replica count for the node can be set 0 to N
+  # N depends on the number of worker nodes required
+  # The number of worker nodes depends on the workload
+  node:
+    replicaCount: 1
+  # The replica count for the database has to be set to 1
+  db:
+    replicaCount: 1
+
+#**************************************** Container Images Configuration ***********************************************
+# Docker images to be used to start the Server, Nodes, initContainers, dind, and database containers
+images:
+  # The scheduler image represents the container image of the ProActive scheduler server Pod
+  scheduler:
+    # 'dockerhub.activeeon.com' is the private Activeeon docker registry
+    # For example, dev is the namespace used to host the scheduler snapshot images
+    # proactive-scheduler is the image name
+    repository: dockerhub.activeeon.com/<namespace>/proactive-scheduler
+    # The 'tag' defines the scheduler version to be installed
+    # For example, 13.1.0-SNAPSHOT-2023-08-28 represents the scheduler snapshot version 13.1.0 released on 2023-08-28
+    # The tag could represent a snapshot release, a minor or major release, a release candidate, or a maintenance release
+    tag: <proactive_tag>
+    # The 'pullPolicy' determines the conditions under which the container image is fetched from the container registry
+    # It could be: IfNotPresent, Always, or Never
+    # We recommend to set it to 'always' to always pull the latest image updates
+    pullPolicy: Always
+  # The node image is used by the static worker nodes to instantiate static ProActive agents
+  # Custom user application images cannot be provided since the agent is prebuilt and installed in the ProActive Node image
+  node:
+    repository: dockerhub.activeeon.com/<namespace>/proactive-k8s-node
+    tag: <node_tag>
+    pullPolicy: Always
+  # The following image is used by the dynamic node source to instantiate dynamic work nodes (e.g., your application image name)
+  # This custom image requires 'wget' and 'curl' packages to be installed
+  # The agent will be installed on the fly on the desired container, at the Pod creation
+  # By default, we provide the following basic Linux image that includes standard Linux packages and libraries
+  dynamicNodeSource:
+    image: dockerhub.activeeon.com/public/proactive-k8s-dynamic-node:latest
+  # The initContainers are used to do simple Kubernetes service checks
+  # Bash scripts are executed to check the response of the service endpoints
+  # For example, the Node pod check if the server is up before creating the agent containers
+  initContainers:
+    repository: busybox
+    tag: latest
+    pullPolicy: IfNotPresent
+  # Dind image (aka Docker In Docker) allows to run a Docker container within an already running Docker container
+  # To make it possible to run containers in the node pod container, this image is required to create the docker daemon and give access to it by the parent node container
+  dind:
+    repository: docker
+    tag: 20.10.7-dind
+    pullPolicy: Always
+  # The database image is a custom postgres database image hosted in the Activeeon registry
+  # It initializes the database schema, add users, etc.
+  # You can have more information about the database configuration here: https://doc.activeeon.com/latest/admin/ProActiveAdminGuide.html#_example_configuration_with_postgresql
+  db:
+    postgres:
+      repository: dockerhub.activeeon.com/<namespace>/postgres-pa
+      tag: <postgres_tag>
+      pullPolicy: Always
+
+#**************************************** Pod Resources Configuration **************************************************
+# Define the resources to be allocated for the Scheduler, Nodes, and database Pods
+resources:
+  scheduler:
+    # As minimum requirements, the scheduler pod requires/requests a minimum of 4 CPU cores and 6G of Ram
+    requests:
+      cpu: 4000m #equivalent to 4 CPU cores
+      memory: 6G
+  # As minimum requirements, the node pod requires/requests a minimum of 2 CPU cores and 2G of Ram
+  node:
+    requests:
+      cpu: 2000m
+      memory: 2G
+  # As minimum requirements, the database pod requires/requests a minimum of 2 CPU cores and 4G of Ram
+  db:
+    postgres:
+      requests:
+        cpu: 2000m
+        memory: 4G
+
+#**************************************** Volume Mounts Configuration **************************************************
+# 'volumeMounts' where you define the various volume mounts that should be attached to the container
+volumeMounts:
+  # The scheduler pod has 3 volume mounts
+  scheduler:
+    # The 'default' volume mount hosts the scheduler installation files and logs
+    # It also hosts the internal database data
+    # It is recommended to not change these values
+    default:
+      # This specifies the directory path within the container where the volume should be mounted
+      mountPath: /opt/proactive/server/default
+    # The 'previous' volume mount hosts the previous installation files in case an upgrade was made
+    previous:
+      mountPath: /opt/proactive/server/previous
+    # The 'backup' volume mount hosts all previous installations in case multiple upgrades were made
+    backup:
+      mountPath: /opt/proactive/server/backup
+  # The 'db' volume mount hosts the postgres database data
+  db:
+    postgres:
+      mountPath: /var/lib/postgresql/data
+
+#**************************************** Readiness and Liveness Probes Configuration **********************************
+# Define the 'readinessProbe' rules for the Scheduler Pod
+# This configuration creates a readiness probe that checks the health of the container by sending an HTTP GET request
+readinessProbe:
+  # This specifies the type of probe to use, which is an HTTP GET request
+  # It checks the container's health by sending an HTTP request to a specific endpoint
+  httpGet:
+    # This indicates that the port for the HTTP GET request is taken from a variable named httpPort (previously defined)
+    port: *httpPort
+  # This property sets the number of seconds to wait before starting the first probe after the container starts
+  # In this case, it's set to 120 seconds
+  initialDelaySeconds: 120
+  # This property defines the number of seconds between successive probes
+  # The container will be probed every 5 seconds
+  periodSeconds: 5
+  # This property specifies how long the probe should wait for a response from the container before considering the probe as failed
+  # It's set to 3 seconds in this case
+  timeoutSeconds: 3
+
+# Define the 'livenessProbe' rules for the Scheduler Pod
+livenessProbe:
+  # This specifies the type of probe to use, which is an HTTP GET request
+  # It checks the container's health by sending an HTTP request to a specific endpoint
+  httpGet:
+    # This indicates that the port for the HTTP GET request is taken from a variable named httpPort (previously defined)
+    port: *httpPort
+  # This property specifies how long the probe should wait for a response from the container before considering the probe as failed
+  # It's set to 3 seconds in this case
+  timeoutSeconds: 3
+  # This property sets the number of consecutive probe failures required to consider the container as unhealthy
+  # In this case, it's set to 24 failures
+  failureThreshold: 24
+  # This property sets the number of consecutive successful probes required to consider the container as healthy again after it has been marked as unhealthy
+  # It's set to 1 success in this case
+  successThreshold: 1
+  # This property sets the number of seconds to wait before starting the first probe after the container starts
+  # In this case, it's set to 500 seconds
+  initialDelaySeconds: 500 # we give some time in order to let the scheduler start properly
+  # This specifies a 5-second interval between successive probe executions
+  periodSeconds: 5
