@@ -21,18 +21,20 @@ include::../Glossary.adoc[]
 [[_run_the_proactive_scheduler]]
 == Get Started
 
-ProActive Scheduler can be installed and started in two different ways, either manually or automatically.
+ProActive Scheduler can be installed and started either manually or automatically.
 
-For manual installation, you can install and start ProActive:
+For *manual installation*, you can install and start ProActive:
 
 * as a Java process, see section <<_process_Start_ProActive_Manually_as_a_Java_process>>.
 * as a system service, see section <<_service_Instal_and_start_ProActive_as_a_system_service>>.
 
-For automatic installation, you can install and start ProActive:
+For *automatic installation*, you can install and start ProActive:
 
-* using Docker Compose, see section <<compose_Automated_ProActive_Installation_with_Docker_Compose>>.
-* using Kubernetes, see section <<kube_Automated_ProActive_Installation_with_Kubernetes>>.
-* using Shell Scripts, see section <<shell_Automated_ProActive_Installation_with_shell>>.
+* using Docker Compose _(applicable to any machine with Docker and Docker Compose installed)_, see section <<compose_Automated_ProActive_Installation_with_Docker_Compose>>.
+* using Kubernetes _(applicable to any On-premises or AKS Kubernetes clusters)_ , see section <<kube_Automated_ProActive_Installation_with_Kubernetes>>.
+* using Shell Scripts _(applicable to both physical machines and cloud virtual machines)_, see section <<shell_Automated_ProActive_Installation_with_shell>>.
+
+We recommend using one of the *automated installation methods*, as they are faster and simpler.
 
 === Minimum requirements
 
