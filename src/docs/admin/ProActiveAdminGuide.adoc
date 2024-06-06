@@ -32,7 +32,7 @@ For *automatic installation*, you can install and start ProActive:
 
 * using Docker Compose _(applicable to any machine with Docker and Docker Compose installed)_, see section <<compose_Automated_ProActive_Installation_with_Docker_Compose>>.
 * using Kubernetes _(applicable to any On-premises or AKS Kubernetes clusters)_ , see section <<kube_Automated_ProActive_Installation_with_Kubernetes>>.
-* using Shell Scripts _(applicable to both physical machines and cloud virtual machines)_, see section <<shell_Automated_ProActive_Installation_with_shell>>.
+* using Shell Scripts _(applicable to both physical and cloud virtual machines)_, see section <<shell_Automated_ProActive_Installation_with_shell>>.
 
 We recommend using one of the *automated installation methods*, as they are faster and simpler.
 
