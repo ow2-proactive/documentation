@@ -21,8 +21,18 @@ include::../Glossary.adoc[]
 [[_run_the_proactive_scheduler]]
 == Get Started
 
-First, https://www.activeeon.com/community-downloads[Download^] ProActive Scheduler and *unzip* the archive. The extracted folder will be referenced as `PROACTIVE_HOME` in the rest of the documentation.
-The archive contains all required dependencies with no extra prerequisites. ProActive Scheduler can be started in two different ways. Either as a java process or as a system service.
+ProActive Scheduler can be installed and started in two different ways, either manually or automatically.
+
+For manual installation, you can install and start ProActive:
+
+* as a Java process, see section <<_process_Start_ProActive_Manually_as_a_Java_process>>.
+* as a system service, see section <<_service_Instal_and_start_ProActive_as_a_system_service>>.
+
+For automatic installation, you can install and start ProActive:
+
+* using Docker Compose, see section <<compose_Automated_ProActive_Installation_with_Docker_Compose>>.
+* using Kubernetes, see section <<kube_Automated_ProActive_Installation_with_Kubernetes>>.
+* using Shell Scripts, see section <<shell_Automated_ProActive_Installation_with_shell>>.
 
 === Minimum requirements
 
@@ -38,7 +48,11 @@ A medium-sized ProActive Scheduler installation uses 12 cores, 24 GB RAM. Large 
 
 Additionally, using local ProActive Nodes (deployed directly inside the ProActive server) or having other services running on the same machine as the server can impact the sizing.
 
-=== Start ProActive as a Java process
+[[_process_Start_ProActive_Manually_as_a_Java_process]]
+=== Start ProActive Manually as a Java process
+
+First, https://www.activeeon.com/community-downloads[Download^] ProActive Scheduler and *unzip* the archive. The extracted folder will be referenced as `PROACTIVE_HOME` in the rest of the documentation.
+The archive contains all required dependencies with no extra prerequisites.
 
 The first way to start a ProActive Scheduler is by running the `proactive-server` script. To do so, you can use the following command with no extra configuration.
 
@@ -99,7 +113,11 @@ When one of these options is used, the scheduler will start in the provided stat
 
 See <<_scheduler_life_cycle_management>> for an explanation of the different scheduler states.
 
+[[_service_Instal_and_start_ProActive_as_a_system_service]]
 === Install and start ProActive as a system service
+
+First, https://www.activeeon.com/community-downloads[Download^] ProActive Scheduler and *unzip* the archive. The extracted folder will be referenced as `PROACTIVE_HOME` in the rest of the documentation.
+The archive contains all required dependencies with no extra prerequisites.
 
 The second way to start a ProActive Scheduler is to install it as a system service. Depending on your operating system, the installation of ProActive can be done as follows.
 
@@ -188,6 +206,7 @@ If a problem occurs, check output in /var/log/proactive/scheduler
 
 WARNING: Once the upgrade is performed and the new version started for the first time, the ProActive server will upgrade <<_glossary_catalog,Catalog>> objects to the new version. This procedure ensures that any object modified manually by a user will not be upgraded.
 
+[[compose_Automated_ProActive_Installation_with_Docker_Compose]]
 === Automated ProActive Installation with Docker Compose
 ProActive could be easily deployed and started within a fully containerized environment. For this purpose, we provide a ready-to-use Docker Compose configuration that enables you running ProActive Workflows and Scheduling (PWS) as a containerized service.
 It starts the following services:
@@ -574,7 +593,7 @@ Using Docker Compose we also support one-level automatic downgrade of ProActive 
 To do so, you should provide the previous version of ProActive, as it is specified in the `proactive-previous` volume, to the `DOCKER_IMAGE_PROACTIVE_TAG` option in the `.env` file. This will allow to automatically swap the content of `proactive-default` and `proactive-previous` volumes.
 ProActive will be then started from the `proactive-default` volume which will contain the last previous version.
 
-
+[[kube_Automated_ProActive_Installation_with_Kubernetes]]
 === Automated ProActive Installation with Kubernetes
 
 ProActive could be easily deployed and started on `AKS` (Azure) or `bare-metal` (On-premises) Kubernetes clusters. For this purpose, we provide a ready-to-use Kubernetes configuration that enables you running ProActive Workflows and Scheduling (PWS) as a set of pods.
@@ -779,6 +798,7 @@ helm upgrade pa-helm-chart . -f values.yaml
 
 The Scheduler and node pods will be recreated to download the new images and apply the upgrade progress during their startup.
 
+[[shell_Automated_ProActive_Installation_with_shell]]
 === Automated ProActive Installation with Shell Scripts
 ProActive could be easily deployed and started automatically using Shell scripts. For this purpose, we provide a ready-to-use Shell installer that enables you running ProActive Workflows and Scheduling (PWS) as a Linux service.
 
