@@ -438,6 +438,8 @@ The expression can use the following given variables:
 * *busyNodesInNodeSource*: the current number of Nodes in BUSY state in the Node Source regardless of the *globalScope* configuration.
 * *deployingNodes*: the current number of Nodes in DEPLOYING state in the Node Source (does not consider the *globalScope* parameter).
 * *neededNodes*: the number of Nodes needed by pending tasks. This value contains all pending tasks when *globalScope* is `true` and only tasks which define the <<../user/ProActiveUserGuide.adoc#_node_source_generic_info,NODE_SOURCE>> or the <<../user/ProActiveUserGuide.adoc#_nodesourcename,NODESOURCENAME>> generic information when *globalScope* is `false`. Also, this value considers multi-node pending tasks (for example, a task can require using 3 Nodes).
+* *neededNodesPrevious*: the number of Nodes that were needed at the previous refresh cycle. This value can be used to check if tasks keep staying pending.
+
 * *temp*, *temp2*, *temp3*, *temp4*: each of these variables can be set to a temporary object used in the SpEL expression. Affectations should use the `z()` function described below. e.g. `z(temp=neededNodes+busyNodes)`
 
 * *tempMap*: an empty Hash Map structure which can be populated and used in the SpEL expression. Affectations to the map should use the `z()` function described below. e.g. `z(tempMap.put('key', 'value'))`.
