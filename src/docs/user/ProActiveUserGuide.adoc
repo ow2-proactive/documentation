@@ -3234,6 +3234,34 @@ include::./references/DataConnectors.adoc[]
 
 include::./references/ApplicationConnectors.adoc[]
 
+== Integration of ProActive Services in Third-party User Portals
+In this section, we will discuss how ProActive Services can be integrated into third-party user portals. We will cover the following topics:
+
+* Submission of a Workflow in a Dedicated Window: How to use an external window for workflow submission outside our software.
+* Monitoring the Execution of a Specific Job in a Dedicated Window: How to view monitoring data and workflow information after submission.
+
+=== Submission of a workflow in a dedicated window
+We offer an external window that can be accessed outside our software using the following URL format:
+
+----
+/automation-dashboard/#/submit?sessionid={sessionid}&name={workflowName}&bucket={bucketName}
+----
+
+* *sessionid*: This is the ID of the connection. It allows the user to bypass the login page and directly display the content.
+* *name*: The name of the workflow.
+* *bucket*: The name of the bucket.
+
+Additionally, there is the possibility to filter within the view. Here’s how it works:
+
+* If you provide a wildcard (e.g., %data, data%, or %data%) as the workflow name or bucket name, it will filter the bucket list and workflow names accordingly.
+* If both the workflow name and bucket name are provided without a wildcard (%), the window will display the edit variable submission.
+
+*Note*: The parameters are optional, and the order is not important.
+
+=== Monitoring the execution of a specific job in a dedicated window
+
+After submitting your workflow, you can view the monitoring data and the workflow info (result,
+log, tasks, etc.) by opening a dedicated window. This can be done by clicking on the 'See Job Details' button.
 
 == Addons
 
