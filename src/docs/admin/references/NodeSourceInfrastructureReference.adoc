@@ -967,7 +967,7 @@ If left unset, a new Virtual Network and subnet will be created inside the Resou
 - *storageType:* Specifies the type of storage used by the instances' operating system disk. Options include:
  ** `Standard_LRS`: HDD storage.
  ** `StandardSSD_LRS`: SSD storage.
- ** `Premium_LRS`: Premium SDD storage.
+ ** `Premium_LRS`: Premium SDD storage. Premium storage is only available for specific instance types. For example, it is available on _STANDARD_D4S_V3_ and not _STANDARD_D4_V3_ instances. Refer to Azure Resource Manager documentation for further information.
 - *instancePriority:* Defines the type of VM instances to be deployed for the Scale Set.
  It can be set to:
  ** Regular: Regular instances are standard virtual machines.
