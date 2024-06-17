@@ -3247,73 +3247,83 @@ We offer an external window that can be accessed outside our software using the 
 http(s)://your-server:port/#/submit?sessionid={sessionid}&name={workflowName}&bucket={bucketName}
 ----
 
-* *sessionid*: This is the ID of the connection. It allows the user to bypass the login page and directly display the content.
+* *sessionid*: The ID of the connection. It allows the user to bypass the login page and directly display the content, it can either be provided in the URL,
+or if not provided, the user will need to log in by entering their credentials.
 * *name*: The name of the workflow.
 * *bucket*: The name of the bucket.
-
-Additionally, there is the possibility to filter within the view. Here’s how it works:
-
-* If you provide a percentage symbol e.g., `%data`, `data%`, or `%data%` as the workflow name or bucket name, it will filter the bucket list and workflow names accordingly.
-
-image::submit_wf_view_with_filters.png[Submit Workflow View With Filters]
-
-* If both the workflow name and bucket name are provided without a percentage symbol (`%`), it will directly display the submission window to edit the variable values and submit.
-
-image::edit_vars_view.png[Edit Variables View]
 
 [NOTE]
 ====
 All parameters (`sessionid`, `name`, and `bucket`) are optional, and the order in which they are provided does not matter. Additionally, the percentage symbol `%` should be encoded as `%25` in the URL.
 ====
 
+There are four scenarios:
+
+* *Submit any workflow:* Let the user choose the bucket and workflow they want to submit.
+
+* *Submit any workflow from a specific bucket:* Provide the bucket name or a substring of it as a query parameter. You can be more precise by using the percentage symbol (`%`), as explained in the example below.
+
+* *Submit specific workflows from a specific buckets:* Provide both the bucket name and the workflow name as query parameters, using the percentage symbol (`%`), as shown in the example below.
+
+* *Submit a single workflow:* When both the bucket and workflow are determined exactly, do not use the percentage symbol (`%`).
+
 ==== Examples:
 
 Example 1:
 
 ----
-http(s)://your-server:port/#/submit?bucket=%25data%25
+http(s)://your-server:port/#/submit?
 ----
 
-This url display only the buckets with names that include the substring "data" within the name, not at the beginning or end, like *my-data-bucket* and *bucket-data-test*.
+This url display all buckets, let the user choose the bucket and workflow he/she wants to submit.
 
 Example 2:
 
 ----
-http(s)://your-server:port/#/submit?bucket=data%25
+http(s)://your-server:port/#/submit?bucket=%25data%25
 ----
-This one display only the buckets with names that end with "data", like *data-analysis*.
+
+This url display only the buckets with names that include the substring "data" within the name, like *my-data-bucket*, *data-analysis* and *bucket-data-test*.
 
 Example 3:
+
+----
+http(s)://your-server:port/#/submit?bucket=data%25
+----
+
+This one display only the buckets with names that start with "data", like *data-analysis*.
+
+Example 4:
 
 ----
 http(s)://your-server:port/#/submit?bucket=ai-deep-learning
 ----
 
-This url display all buckets with names that include the substring *ai-deep-learning* anywhere with the name, the position here doesn't matter.
+This url display all buckets with names that include the substring *ai-deep-learning* anywhere in the name, the position here doesn't matter.
 
-Example 4:
+Example 5:
 
 ----
 http(s)://your-server:port/#/submit?bucket=ai-deep-learning-workflows&name=%25train%25
 ----
 
-This url display all buckets with names include the substring *ai-deep-learning*, and workflows with names include the substring *train* (not at the beginning or end).
+This url display all buckets with names include the substring *ai-deep-learning*, and workflows with names include the substring *train*.
 
-Example 5:
+Example 6:
 
 ----
 http(s)://your-server:port/#/submit?bucket=ai-deep-learning-workflows&name=train%25
 ----
 
-This url display all buckets with names include the substring *ai-deep-learning*, and contain workflows with names end by *train*.
+This url display all buckets with names include the substring *ai-deep-learning*, and contain workflows with names start by *train*.
 
-Example 6:
+Example 8:
 
 ----
 http(s)://your-server:port/#/submit?bucket=ai-deep-learning-workflows&name=%25detection
 ----
 
-This url display all buckets with names include the substring *ai-deep-learning*, and contain workflows with names start by *detection*.
+This url display all buckets with names include the substring *ai-deep-learning*, and contain workflows with names end by *detection*.
 
 
 === Monitoring the execution of a specific job in a dedicated window
@@ -3323,7 +3333,7 @@ log, tasks, etc.) by opening a dedicated window. This can be done by clicking on
 
 image::edit_vars_view_1.png[Edit Variables View]
 
-Alternatively, you can use the following URL separately by retrieving your job ID and replacing {jobid} with your job ID:
+Alternatively, you can view the above content by using the following URL separately, replacing `{jobid}` with your job ID:
 
 ----
 http(s)://your-server:port/#/job-info?jobid={jobid}
