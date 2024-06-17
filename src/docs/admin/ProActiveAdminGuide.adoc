@@ -5394,9 +5394,9 @@ include::../common-footer.adoc[]
         helmInstaller.innerHTML = "$ wget <a href='https://www.activeeon.com/public_content/proactive-installers/dev/proactive-helm-installer-package-dev.zip'>https://www.activeeon.com/public_content/proactive-installers/dev/proactive-helm-installer-package-dev.zip</a>";
         shellInstaller.innerHTML = "$ wget <a href='https://www.activeeon.com/public_content/proactive-installers/dev/proactive-shell-installer-package-dev.zip'>https://www.activeeon.com/public_content/proactive-installers/dev/proactive-shell-installer-package-dev.zip</a>";
     } else {
-        composeInstaller.innerHTML = "$ wget <a href='https://www.activeeon.com/public_content/proactive-installers/" + confVersion + "/proactive-compose-installer-package-dev.zip'>https://www.activeeon.com/public_content/proactive-installers/" + confVersion + "/proactive-compose-installer-package-dev.zip</a>";
-        helmInstaller.innerHTML = "$ wget <a href='https://www.activeeon.com/public_content/proactive-installers/" + confVersion + "/proactive-helm-installer-package-dev.zip'>https://www.activeeon.com/public_content/proactive-installers/" + confVersion + "/proactive-helm-installer-package-dev.zip</a>";
-        shellInstaller.innerHTML = "$ wget <a href='https://www.activeeon.com/public_content/proactive-installers/" + confVersion + "/proactive-shell-installer-package-dev.zip'>https://www.activeeon.com/public_content/proactive-installers/" + confVersion + "/proactive-shell-installer-package-dev.zip</a>";
+        composeInstaller.innerHTML = "$ wget <a href='https://www.activeeon.com/public_content/proactive-installers/" + confVersion + "/proactive-compose-installer-package-" + confVersion + ".zip'>https://www.activeeon.com/public_content/proactive-installers/" + confVersion + "/proactive-compose-installer-package-" + confVersion + ".zip</a>";
+        helmInstaller.innerHTML = "$ wget <a href='https://www.activeeon.com/public_content/proactive-installers/" + confVersion + "/proactive-helm-installer-package-" + confVersion + ".zip'>https://www.activeeon.com/public_content/proactive-installers/" + confVersion + "/proactive-helm-installer-package-" + confVersion + ".zip</a>";
+        shellInstaller.innerHTML = "$ wget <a href='https://www.activeeon.com/public_content/proactive-installers/" + confVersion + "/proactive-shell-installer-package-" + confVersion + ".zip'>https://www.activeeon.com/public_content/proactive-installers/" + confVersion + "/proactive-shell-installer-package-" + confVersion + ".zip</a>";
     }
 </script>
 ++++
