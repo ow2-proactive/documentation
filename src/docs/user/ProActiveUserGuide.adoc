@@ -3261,11 +3261,19 @@ There are four scenarios:
 
 * *Submit any workflow:* Let the user choose the bucket and workflow they want to submit.
 
+image::submit_workflow_view1.png[Submit Workflow View]
+
 * *Submit any workflow from a specific bucket:* Provide the bucket name or a substring of it as a query parameter. You can be more precise by using the percentage symbol (`%`), as explained in the example below.
+
+image::submit_workflow_view2.png[Submit Workflow View]
 
 * *Submit specific workflows from a specific buckets:* Provide both the bucket name and the workflow name as query parameters, using the percentage symbol (`%`), as shown in the example below.
 
+image::submit_workflow_view3.png[Submit Workflow View]
+
 * *Submit a single workflow:* When both the bucket and workflow are determined exactly, do not use the percentage symbol (`%`).
+
+image::submit_workflow_view4.png[Submit Workflow View]
 
 ==== Examples:
 
