@@ -3244,7 +3244,7 @@ In this section, we will discuss how ProActive Services can be integrated into t
 We offer an external window that can be accessed outside our software using the following URL format:
 
 ----
-http(s)://your-server:port/#/submit?sessionid={sessionid}&name={workflowName}&bucket={bucketName}
+http(s)://your-server:port/automation-dashboard/#/submit?sessionid={sessionid}&name={workflowName}&bucket={bucketName}
 ----
 
 * *sessionid*: The ID of the connection. It allows the user to bypass the login page and directly display the content, it can either be provided in the URL,
@@ -3280,7 +3280,7 @@ image::submit_workflow_view4.png[Submit Workflow View]
 Example 1:
 
 ----
-http(s)://your-server:port/#/submit?
+http(s)://your-server:port/automation-dashboard/#/submit?
 ----
 
 This url display all buckets, let the user choose the bucket and workflow he/she wants to submit.
@@ -3288,7 +3288,7 @@ This url display all buckets, let the user choose the bucket and workflow he/she
 Example 2:
 
 ----
-http(s)://your-server:port/#/submit?bucket=%25data%25
+http(s)://your-server:port/automation-dashboard/#/submit?bucket=%25data%25
 ----
 
 This url display only the buckets with names that include the substring "data" within the name, like *my-data-bucket*, *data-analysis* and *bucket-data-test*.
@@ -3296,7 +3296,7 @@ This url display only the buckets with names that include the substring "data" w
 Example 3:
 
 ----
-http(s)://your-server:port/#/submit?bucket=data%25
+http(s)://your-server:port/automation-dashboard/#/submit?bucket=data%25
 ----
 
 This one display only the buckets with names that start with "data", like *data-analysis*.
@@ -3304,7 +3304,7 @@ This one display only the buckets with names that start with "data", like *data-
 Example 4:
 
 ----
-http(s)://your-server:port/#/submit?bucket=ai-deep-learning
+http(s)://your-server:port/automation-dashboard/#/submit?bucket=ai-deep-learning
 ----
 
 This url display all buckets with names that include the substring *ai-deep-learning* anywhere in the name, the position here doesn't matter.
@@ -3312,7 +3312,7 @@ This url display all buckets with names that include the substring *ai-deep-lear
 Example 5:
 
 ----
-http(s)://your-server:port/#/submit?bucket=ai-deep-learning-workflows&name=%25train%25
+http(s)://your-server:port/automation-dashboard/#/submit?bucket=ai-deep-learning-workflows&name=%25train%25
 ----
 
 This url display all buckets with names include the substring *ai-deep-learning*, and workflows with names include the substring *train*.
@@ -3320,7 +3320,7 @@ This url display all buckets with names include the substring *ai-deep-learning*
 Example 6:
 
 ----
-http(s)://your-server:port/#/submit?bucket=ai-deep-learning-workflows&name=train%25
+http(s)://your-server:port/automation-dashboard/#/submit?bucket=ai-deep-learning-workflows&name=train%25
 ----
 
 This url display all buckets with names include the substring *ai-deep-learning*, and contain workflows with names start by *train*.
@@ -3328,7 +3328,7 @@ This url display all buckets with names include the substring *ai-deep-learning*
 Example 8:
 
 ----
-http(s)://your-server:port/#/submit?bucket=ai-deep-learning-workflows&name=%25detection
+http(s)://your-server:port/automation-dashboard/#/submit?bucket=ai-deep-learning-workflows&name=%25detection
 ----
 
 This url display all buckets with names include the substring *ai-deep-learning*, and contain workflows with names end by *detection*.
