@@ -814,7 +814,7 @@ The installation package contains 4 files:
 - The `inputConfig.json` file that includes the required parameters needed for the configuration tuning of the ProActive server. It is formatted as a json file.
 - The `proactiveInstaller.sh` file, which is the main installation script. It parses the configuration provided in the `inputConfig.json` file, proceeds to the configuration, and finally starts up the ProActive server.
 - The `apiHealthcheck.sh`, called by the `proactiveInstaller.sh` (at the end), to run REST API health check tests to verify the correct behavior of the ProActive server after its startup.
-- The `install_configure_postgresql.sh` file, which installs the Postgres database and configures the ProActive server to support the installed database.
+- The `installPostgres` folder, which contains the required scripts to install and initialize the Postgres database depending on the underlying Linux distribution (Debian and Redhat9).
 
 You can proceed to download the Shell installation package using the following command:
 
@@ -913,6 +913,10 @@ ProActive requires the following components to be mapped to different database s
 
 - `EXTERNAL_DATABASE_CONFIGURATION`
 ** `ENABLE_EXTERNAL_DATABASE_CONFIGURATION`: Set to true if you want to connect to an external Postres database.
+** `DB_INSTALL_POSTGRES`: Set to true if you want to install the Postgres database.
+*** The supported operating systems for Postgres database installation are Debian and Redhat9. Postgres 12 will be installed on Debian distributions, and Postgres 13 will be installed on Redhat9 distributions.
+*** The setup and initialization of the Postgres database are automatically performed based on the current operating system.
+*** The passwords in the database initialization script located in `installPostgres/init.sql` must match the encrypted passwords specified in the `EXTERNAL_DATABASE_CONFIGURATION` sections of the database configuration. This includes the defined passwords in `DB_SCHEDULER_CONFIG`, `DB_RM_CONFIG`, `DB_CATALOG_CONFIG`, `DB_PSA_CONFIG`, and `DB_NOTIFICATION_CONFIG` sections.
 ** `DB_TYPE`: The external database to be used by ProActive, namely `postgresql`.
 ** `DB_DRIVER_LOCATION`: The Postgres driver location. It is recommended to keep the default value.
 ** `DB_APPLY_SCHEDULER_CONFIG_TO_ALL`: If set to true, the 5 ProActive components will be configured using the Scheduler DB configuration described below.
