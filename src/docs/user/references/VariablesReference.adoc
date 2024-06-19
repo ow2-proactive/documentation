@@ -29,8 +29,22 @@ The order in this list corresponds to the task life-cycle order.
 | result = "value";
 | The result will be the exit code.
 | -
-| <<_script_tasks,task>>
+| <<_script_tasks, task>>, <<_pre_post_clean, post>>
 | -
+
+| *Task result metadata*. Result metadata are additional information associated with the result. The map is write-only and always empty when the task is started. See <<_assigning_metadata_to_task_result,Assigning metadata to task result>>.
+| resultMetadata.put("key", "value");
+| Not available
+| -
+| <<_script_tasks, task>>, <<_pre_post_clean, post>>
+| bash, cmd, perl, php, vbscript
+
+| *Job result map*. Key/Value global job result. Each task can contribute to the job map. The map is write-only and always empty when the task is started (a task cannot see the operations on the map done by other tasks). See <<_result_map,Result Map>>.
+| resultMap.put("key", "value");
+| Not available
+| -
+| <<_pre_post_clean, pre>>, <<_script_tasks, task>>, <<_pre_post_clean, post>>
+| bash, cmd, perl, php, vbscript
 
 | *Task arguments*. Arguments of a script defined in the workflow. Available via all kind of scripts, when referencing an external file or directly as XML elements.
 | ... = args[0];
