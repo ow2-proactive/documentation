@@ -964,6 +964,10 @@ The non-default subscription must be accessible with your Azure Credentials prov
 If left unset, a new Virtual Network and subnet will be created inside the Resource Group.
 - *restrictStorageAccountToNetwork:* Optional parameter. If _true_ and a _targetNetwork_ is specified, the storage account created by the infrastructure will be restricted to the provided network. In that case, the ProActive server must be deployed inside the provided network, as otherwise access to the storage account from the server would not be possible. Additionally, _Microsoft.Storage_ must be enabled in the Service Endpoints section of the subnet configuration. More information about Service Endpoints is available in the https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-service-endpoints-overview[Azure Documentation].
 - *azureRegion:* Defines the Azure region where the Resource Group and the Scale Set will be created. For the list of the regions supported by your subscription, you can use the https://docs.microsoft.com/en-us/cli/azure/account?view=azure-cli-latest#az-account-list-locations[CLI command] `az account list-locations -o table`, the right name to use is the one in the column _name_. The region name should be in lowercase without spaces, e.g. for the region _West US 2_ use _westus2_. Default value is _westeurope_.
+- *storageType:* Specifies the type of storage used by the instances' operating system disk. Options include:
+ ** `Standard_LRS`: HDD storage.
+ ** `StandardSSD_LRS`: SSD storage.
+ ** `Premium_LRS`: Premium SDD storage. Premium storage is only available for specific instance types. For example, it is available on _STANDARD_D4S_V3_ and not _STANDARD_D4_V3_ instances. Refer to Azure Resource Manager documentation for further information.
 - *instancePriority:* Defines the type of VM instances to be deployed for the Scale Set.
  It can be set to:
  ** Regular: Regular instances are standard virtual machines.
