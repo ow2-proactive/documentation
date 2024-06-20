@@ -3237,41 +3237,50 @@ include::./references/ApplicationConnectors.adoc[]
 == Integration of ProActive Services in Third-party User Portals
 In this section, we will discuss how ProActive Services can be integrated into third-party user portals. We will cover the following topics:
 
-* Submission of a Workflow in a Dedicated Window: How to use an external window for workflow submission outside our software.
-* Monitoring the Execution of a Specific Job in a Dedicated Window: How to view monitoring data and workflow information after submission.
+* Submission of a Workflow in a Dedicated Window: How to use an external window for workflow submission outside our software, in your own portal.
+* Monitoring the Execution of a Specific Job in a Dedicated Window: How to view monitoring data and workflow information after submission and in your own portal.
 
 === Submission of a workflow in a dedicated window
-We offer an external window that can be accessed outside our software using the following URL format:
+We offer an external window that can be triggered outside our software, from inside your own portal, using the following URL format:
 
 ----
 http(s)://your-server:port/automation-dashboard/#/submit?sessionid={sessionid}&name={workflowName}&bucket={bucketName}
 ----
 
-* *sessionid*: The ID of the connection. It allows the user to bypass the login page and directly display the content, it can either be provided in the URL,
-or if not provided, the user will need to log in by entering their credentials.
+* *sessionid*: The ID of the connection. It allows the user to bypass the login page and directly display the content. It can be provided in the URL.
+If not provided, in case the user is already logged in our portal, it will not need to log again, if not, the user will need to log in by entering his credentials.
 * *name*: The name of the workflow.
 * *bucket*: The name of the bucket.
 
 [NOTE]
 ====
-All parameters (`sessionid`, `name`, and `bucket`) are optional, and the order in which they are provided does not matter. Additionally, the percentage symbol `%` should be encoded as `%25` in the URL.
+All parameters (`sessionid`, `name`, and `bucket`) are optional, and the order in which they are provided does not matter.
+Additionally, the percentage symbol `%` allows using jokers in both the bucket name and the workflow name. It has to be encoded as “%25“in the URL.
 ====
 
 There are four scenarios:
 
 * *Submit any workflow:* Let the user choose the bucket and workflow they want to submit.
 
+.http(s)://your-server:port/automation-dashboard/#/submit?
+
 image::submit_workflow_view1.png[Submit Workflow View]
 
-* *Submit any workflow from a specific bucket:* Provide the bucket name or a substring of it as a query parameter. You can be more precise by using the percentage symbol (`%`), as explained in the example below.
+* *Submit any workflow from a specific bucket:* Provide the bucket name or a substring of it as a query parameter. You can use filtering with jokers by using the percentage symbol `(%)`, as explained in the example below.
+
+.http(s)://your-server:port/automation-dashboard/#/submit?bucket=%25data
 
 image::submit_workflow_view2.png[Submit Workflow View]
 
 * *Submit specific workflows from a specific buckets:* Provide both the bucket name and the workflow name as query parameters, using the percentage symbol (`%`), as shown in the example below.
 
+.http(s)://your-server:port/automation-dashboard/#/submit?bucket=%25data&name=%25service
+
 image::submit_workflow_view3.png[Submit Workflow View]
 
-* *Submit a single workflow:* When both the bucket and workflow are determined exactly, do not use the percentage symbol (`%`).
+* *Submit a specific workflow:* When both the bucket and workflow are determined exactly, do not use the percentage symbol (`%`).
+
+.http(s)://your-server:port/automation-dashboard/#/submit?bucket=data-big-data&name=Docker_Swarm_HDFS_Spark_Service
 
 image::submit_workflow_view4.png[Submit Workflow View]
 
@@ -3315,7 +3324,7 @@ Example 5:
 http(s)://your-server:port/automation-dashboard/#/submit?bucket=ai-deep-learning-workflows&name=%25train%25
 ----
 
-This url display all buckets with names include the substring *ai-deep-learning*, and workflows with names include the substring *train*.
+This url display all buckets with names that include the substring *ai-deep-learning*, and workflows with names include the substring *train*.
 
 Example 6:
 
@@ -3323,7 +3332,7 @@ Example 6:
 http(s)://your-server:port/automation-dashboard/#/submit?bucket=ai-deep-learning-workflows&name=train%25
 ----
 
-This url display all buckets with names include the substring *ai-deep-learning*, and contain workflows with names start by *train*.
+This url display all buckets with names that include the substring *ai-deep-learning*, and contain workflows with names start by *train*.
 
 Example 8:
 
@@ -3331,21 +3340,33 @@ Example 8:
 http(s)://your-server:port/automation-dashboard/#/submit?bucket=ai-deep-learning-workflows&name=%25detection
 ----
 
-This url display all buckets with names include the substring *ai-deep-learning*, and contain workflows with names end by *detection*.
+This url display all buckets with names that include the substring *ai-deep-learning*, and contain workflows with names ending by *detection*.
 
 
 === Monitoring the execution of a specific job in a dedicated window
 
-After submitting your workflow, you can view the monitoring data and the workflow info (result,
-log, tasks, etc.) by opening a dedicated window. This can be done by clicking on the 'See Job Details' button.
+After submitting a workflow (with the method in the section above, or any other means like standard portals, API, etc.),
+you can view the monitoring data and the resulting Job info (progress, interactive graph, results, log, tasks, etc.) by opening a dedicated window.
+
+When using the method presented in the section above, this can be done by clicking on the 'See Job Details' button.
 
 image::edit_vars_view_1.png[Edit Variables View]
 
-Alternatively, you can view the above content by using the following URL separately, replacing `{jobid}` with your job ID:
+For any Job in the system, you can view the above content by using the following URL in your own portals, replacing `{jobid}` with the JobID you want to monitor:
 
 ----
 http(s)://your-server:port/#/job-info?jobid={jobid}
 ----
+
+Your user will get access to these kinds of window in fully interactive mode:
+
+image::job_details_view1.png[Job Details View]
+
+image::job_details_view2.png[Job Details View]
+
+image::job_details_view3.png[Job Details View]
+
+image::job_details_view4.png[Job Details View]
 
 == Addons
 
