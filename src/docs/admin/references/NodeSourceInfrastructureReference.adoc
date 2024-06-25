@@ -981,11 +981,6 @@ If left unset, a new Virtual Network and subnet will be created inside the Resou
 In both cases, ProActive will be able to automatically reschedule any workloads (Tasks) on other available Nodes provided by another Node Source, for instance another Azure Scale Set with regular instances.
  Learn more with the https://learn.microsoft.com/en-us/azure/virtual-machines/spot-vms[Azure Spot documentation, target="_blank"].
 - *maxPrice:* Defines the maximum price in USD that you are willing to pay for Low or Spot virtual machines in the scale set. By providing the value of -1, the VM won't be evicted for pricing reasons. The max price will be the current price, up to the price for standard VMs. You'll never be charged above the standard price.
-- *resourceGroupExistingName:*  Optional parameter. Defines the existing Resource Group name where only the Azure Scale Set and Storage Account should be created. This parameter should correspond to the existing Azure Resource Group in the specified *azureRegion*. +
- The Resource Group will be created with the Node Source unique name if the parameter *resourceGroupExistingName* is unset. +
- In case the parameter is set, several conditions have to be met:
- ** the deployment Scale Set template (to be specified in *armTemplateUrl*) should contain only a creation of next Azure resources inside Resource Group: the Scale Set and the Storage Account (no Azure Load Balancer, IP address, etc.)
- ** the target Azure Virtual Network should be provided by the user in the *targetNetwork* parameter.
 - *rmUrl:* Optional parameter. Provide your server's URL or public IP (e.g. try.activeeon.com). If left unset, the default Resource Manager URL will be fetched from the system properties.
 - *rmCredentials:* Optional parameter. Provide credentials to connect to the Resource Manager. If left blank, the credentials of the logged user will be used.
 - *deploymentTimeout:* Delay before the Resource Manager can declare a deploying node as lost. To be set in _minutes_. You can set it to a reasonable time after which you expect the node to be running or marked as lost otherwise (e.g. _10_ minutes). Default value is _120_.
@@ -1027,6 +1022,11 @@ Note that this user custom script will be run as root/admin user.
 * *_Windows:_* The commands will be included in a _.bat_ batch file and must therefore be DOS-compatible. As a guideline, here is an unofficial https://www.robvanderwoude.com/batchcommands.php[list of DOS commands] and a http://steve-jansen.github.io/guides/windows-batch-scripting/part-1-getting-started.html[scripting tutorial].
 - *jvmParameters:* Add JVM parameters to configure your ProActive node, use the format _-Dproperty=value_. The default values allow for a correct deployment of the node. You can add your own parameters but be aware that removing the current values might cause the deployment to fail. A non-exhaustive list of node-related JVM parameters can be found in your configuration file `$PROACTIVE_HOME/config/network/node.ini`
 - *armTemplateUrl:* Optional parameter, for advanced configuration only. This parameter is intended for users familiar with https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-authoring-templates[Azure Resource Management templates] willing to provide a custom resource configuration file. You should input a URL with a valid _.json_ ARM template. If set, this file will override https://gist.github.com/activeeon-bot/0ae94e182edfa6099314ad023d2d7bc4[ProActive's default ARM file].
+- *resourceGroupExistingName:*  Optional parameter. Defines the existing Resource Group name where only the Azure Scale Set and Storage Account should be created. This parameter should correspond to the existing Azure Resource Group in the specified *azureRegion*. +
+The Resource Group will be created with the Node Source unique name if the parameter *resourceGroupExistingName* is unset. +
+In case the parameter is set, several conditions have to be met:
+** the deployment Scale Set template (to be specified in *armTemplateUrl*) should contain only a creation of next Azure resources inside Resource Group: the Scale Set and the Storage Account (no Azure Load Balancer, IP address, etc.)
+** the target Azure Virtual Network should be provided by the user in the *targetNetwork* parameter.
 
 The following fields are the optional parameters of the Azure Billing Configuration section. The aim of this section is to configure the automatic cloud cost estimator. It is done by considering all the Azure resources related to your reservation (virtual machines, disks,..). This mechanism relies on the Azure Resource Usage and RateCard APIs (https://docs.microsoft.com/en-us/azure/cost-management-billing/manage/usage-rate-card-overview).
 
