@@ -4,6 +4,10 @@
 
 ++++
 <h5>Version <span id="versionId"/></h5>
+<script>
+document.getElementById('revnumber').innerHTML = ' The Activeeon team - contact@activeeon.com '
+document.getElementById('revnumber').style.textTransform = 'none';
+</script>
 ++++
 
 === ProActive Workflows & Scheduling (PWS)
