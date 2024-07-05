@@ -470,21 +470,22 @@ References:
 
 == MLOps Dashboard
 
-In the domain of machine learning operations (MLOps), the successful deployment and continuous monitoring of machine learning models are crucial for ensuring their reliability and performance. However, in addition to managing models, it is equally important to handle the infrastructure where the models are deployed. This is where an MLOps dashboard, designed specifically for model deployment, monitoring, and model servers, becomes a powerful asset.
+In the domain of machine learning operations (MLOps), the successful deployment and continuous monitoring of machine learning models are crucial for ensuring their reliability and performance. However, in addition to managing models, it is equally important to handle the infrastructure where the models are deployed. This is where an MLOps dashboard, designed specifically for model serving and monitoring becomes a powerful asset.
 
-An MLOps dashboard serves as a centralized hub for data scientists, engineers, and stakeholders involved in deploying and monitoring machine learning models. It provides a comprehensive view of the deployment pipelines, real-time performance metrics, and key indicators. Furthermore, it includes features specifically designed to manage and monitor the underlying model servers.
+An MLOps dashboard serves as a centralized hub for data scientists, engineers, and stakeholders involved in deploying and monitoring machine learning models. It provides a comprehensive view of the deployment pipelines and real-time performance metrics. Furthermore, it includes features specifically designed to manage and monitor the underlying model servers.
 
-Model servers, also known as serving infrastructure, are responsible for hosting the deployed machine learning models and providing predictions or inferences to applications or users. An MLOps dashboard equipped with model server management capabilities allows users to seamlessly handle the infrastructure aspect of model deployment.
+Model servers are responsible for hosting the deployed machine learning models and providing predictions or inferences to applications or users. An MLOps dashboard equipped with model server management capabilities allows users to seamlessly handle the infrastructure aspect of model deployment.
 
 The MLOps dashboard extends its monitoring capabilities by incorporating the monitoring of the underlying infrastructure's health and performance. It provides real-time insights into server metrics, resource utilization, and availability, allowing teams to promptly identify and address any infrastructure-related issues. This comprehensive monitoring capability ensures that the model servers are performing optimally and can handle the predicted workloads efficiently.
 
 Collaboration is also a key aspect of an MLOps dashboard. It enables seamless communication and collaboration among data scientists, engineers, and other stakeholders involved in both model deployment and server management. The dashboard allows users to share insights, discuss server performance trends, and provide feedback, fostering a collaborative environment that facilitates continuous improvement and innovation for both models and infrastructure.
 
-To facilitate this process, the MLOps dashboard provides three distinct tabs:
+To facilitate this process, the MLOps dashboard provides four distinct tabs:
 
-* <<Model Servers Monitoring>>
+* <<Model Servers and Monitoring>>
 * <<Models Resource Usage>>
 * <<Dashboard Resource Usage>>
+* <<Drift Notification>>
 
 They provide a comprehensive and intuitive interface for data scientists, engineers, DevOps, and all stakeholders involved in MLOps.
 
@@ -514,9 +515,11 @@ In the second part of the Model Servers Monitoring tab, there is a table listing
 
 2. *Info*: The Info column presents relevant variables and their corresponding values used to launch the model server. It includes details such as the Docker Image utilized, GPU Enabled status, Endpoint ID, Node Source, and whether it is Proxyfied or not.
 
-3. *Instance Name*: This column specifies the name given to the model server instance, enabling users to easily identify and differentiate between different instances.
+3. *Logs*: The Logs button provides access to detailed logs for model servers, allowing users to monitor and review the model server deployment, activity, and error messages.
 
-4. *Status*: The Status column indicates the current status of the model server instance. It provides important visibility into the current state of each model server instance, allowing users to quickly identify whether an instance is actively serving, has completed its task, or requires further attention due to issues encountered. It can take one of the following values:
+4. *Instance Name*: This column specifies the name given to the model server instance, enabling users to easily identify and differentiate between different instances.
+
+5. *Status*: The Status column indicates the current status of the model server instance. It provides important visibility into the current state of each model server instance, allowing users to quickly identify whether an instance is actively serving, has completed its task, or requires further attention due to issues encountered. It can take one of the following values:
 
 - Running: This status indicates that the model server instance is currently active and operational, ready to serve model predictions or inferences.
 
@@ -524,35 +527,35 @@ In the second part of the Model Servers Monitoring tab, there is a table listing
 
 - Finished with issues: The "Finished with issues" status indicates that the model server instance has encountered problems or issues during its operation. It suggests that the instance has completed its task, but there may have been complications or errors along the way that require attention or investigation.
 
-5. *Start Time*: The Start Time column indicates the datetime when the model server instance was initiated.
+6. *Start Time*: The Start Time column indicates the datetime when the model server instance was initiated.
 
-6. *Node*: This column identifies the specific node or machine where the model server instance is running, providing insights into the underlying infrastructure allocation.
+7. *Node*: This column identifies the specific node or machine where the model server instance is running, providing insights into the underlying infrastructure allocation.
 
-7. *GPUs*: The GPUs column displays the number of GPUs utilized by the corresponding model server instance. It highlights the GPU resource allocation for each instance, particularly useful for GPU-accelerated workloads.
+8. *GPUs*: The GPUs column displays the number of GPUs utilized by the corresponding model server instance. It highlights the GPU resource allocation for each instance, particularly useful for GPU-accelerated workloads.
 
-8. *Model Registry*: This column indicates the location or source where the deployed models are stored, facilitating easy access and retrieval.
+9. *Model Registry*: This column indicates the location or source where the deployed models are stored, facilitating easy access and retrieval.
 
-9. *Model Control Mode*: The Model Control Mode column specifies the mode of model control for the server instance, which can be Poll or None: where all actions can be performed using this mode such as deploying, undeploying, activating or deactivating models, or Explicit: where the models can be activated and deactivated but can not be deployed or undeployed. Using the Model Control Mode all models are loaded from the Model Registry in which models that can not be loaded are marked as UNAVAILABLE.
+10. *Model Control Mode*: The Model Control Mode column specifies the mode of model control for the server instance, which can be Poll or None: where all actions can be performed using this mode such as deploying, undeploying, activating or deactivating models, or Explicit: where the models can be activated and deactivated but can not be deployed or undeployed. Using the Model Control Mode all models are loaded from the Model Registry in which models that can not be loaded are marked as UNAVAILABLE.
 
-10. *Nb of models*: This column shows the count of models deployed on the specific model server instance, providing an overview of the model quantity hosted on that instance.
+11. *Nb of models*: This column shows the count of models deployed on the specific model server instance, providing an overview of the model quantity hosted on that instance.
 
-11. *Total Inferences*: The Total Inferences column represents the total number of inferences performed on the model server instance since its start.
+12. *Total Inferences*: The Total Inferences column represents the total number of inferences performed on the model server instance since its start.
 
-12. *TimeSpan Inferences*: This column displays the number of inferences performed on the model server instance within a specified timespan.
+13. *TimeSpan Inferences*: This column displays the number of inferences performed on the model server instance within a specified timespan.
 
-13. *Average Inference Time*: The Average Inference Time column indicates the average duration taken by the model server instance to process an inference.
+14. *Average Inference Time*: The Average Inference Time column indicates the average duration taken by the model server instance to process an inference.
 
-14. *Min Inference Time*: This column represents the minimum time taken for an inference on the model server instance.
+15. *Min Inference Time*: This column represents the minimum time taken for an inference on the model server instance.
 
-15. *Max Inference Time*: The Max Inference Time column displays the maximum time taken for an inference on the model server instance.
+16. *Max Inference Time*: The Max Inference Time column displays the maximum time taken for an inference on the model server instance.
 
-16. *Inference Rate*: This column presents the rate or frequency at which inferences are processed by the model server instance, indicating the throughput or performance of the server.
+17. *Inference Rate*: This column presents the rate or frequency at which inferences are processed by the model server instance, indicating the throughput or performance of the server.
 
-17. *Min Inference Rate*: The Min Inference Rate column shows the lowest inference rate observed on the model server instance.
+18. *Min Inference Rate*: The Min Inference Rate column shows the lowest inference rate observed on the model server instance.
 
-18. *Max Inference Rate*: This column represents the highest inference rate observed on the model server instance.
+19. *Max Inference Rate*: This column represents the highest inference rate observed on the model server instance.
 
-19. *Actions*: The Actions column contains buttons that allow users to interact with the model server instance. It includes options such as (1) Deploy a new Model on a running instance, (2) Stop a running model server instance, or (3) Re-Submit a stopped model server instance.
+20. *Actions*: The Actions column contains buttons that allow users to interact with the model server instance. It includes options such as (1) Deploy a new Model on a running instance, (2) Stop a running model server instance, or (3) Re-Submit a stopped model server instance.
 
 At the top of this tab, there is a "New Model Server Instance" button that allows users to launch a new model server. When clicked, a window will open, presenting variables that need to be specified by the user. There are two types of variables: General or Advanced. The Table below displays all the variables used to start a new model server.
 
@@ -708,6 +711,114 @@ In the second part of the "Dashboard Resource Usage" tab, there are time series 
   - eth0 transmit: shows the network traffic transmitted on the eth0 network interface.
   - lo transmit: indicates the network traffic transmitted on the loopback interface.
 
+=== Drift Notification
+The Drift Notification tab enables users to create and manage drift monitoring instances. It allows the user to detect when the deployed models experience data drift changes in the input data distribution that can affect model performance. By configuring drift notifications, users can receive alerts and take proactive measures to maintain model accuracy and reliability.
+
+image::MLOps_dashboard_tab4.png[align=center]
+
+This page includes a table listing all the drift monitoring instances. Each column in the table provides specific information about the drift monitoring instance. 
+
+1. *STATUS*: Indicates the current status of the drift monitoring instance, such as Active or Inactive. It helps users quickly identify which instances are currently operational.
+
+2. *ACTIONS*: Provides a set of actionable buttons that allow users to manage the drift monitoring instance. Actions include Activate, Deactivate and Remove buttons.
+
+3. *SEVERITY*: Displays the severity level of detected drift, such as INFO, WARNING, ERROR or CRITICAL. This helps prioritize which drift instances need immediate attention based on their potential impact on model performance.
+
+4. *FREQUENCY*: Specifies how often the drift monitoring is performed. This indicates the regularity with which the monitoring instance checks for data drift.
+
+5. *MONITORING_SCOPE*: Defines the scope of the monitoring instance, indicating whether it is Global, Per Model Server, or Per Deployed Model. This helps users understand the level at which drift monitoring is being applied, whether across all model servers, specific model servers, or individual deployed models.
+
+6. *NOTIFICATION_CHANNEL*: Indicates the channel through which notifications are sent when drift is detected. TIt ensures users are promptly informed about any significant drift events.
+
+7. *MODEL_SERVER_ID*: The unique identifier for the model server to be monitored. This helps in associating the drift monitoring instance with the correct model server. This is only used when choosing MONITORING_SCOPE as Per Model Server or Per Deployed Model.
+
+8. *MODEL_NAME*: The name of the model being monitored for drift. This helps users quickly identify which model's performance is being tracked and managed. This is only used when choosing MONITORING_SCOPE as Per Deployed Model.
+
+9. *TIME_FRAME*: Defines the time period over which the drift is assessed which targets a specific historical period for analysis. It provides context for the drift analysis and trends over time.
+
+10. *METRIC*: Specifies the metric used to measure drift, such as statistical tests or performance measures.
+
+11. *DRIFT_METHOD*: Indicates the method or algorithm used for detecting drift, such as HDDM_W, Page-Hinkley, or other statistical techniques.
+
+12. *DRIFT_METHOD_PARAMS*: Lists any parameters or configurations specific to the drift detection method, such as DRIFT_CONFIDENCE or WARNING_CONFIDENCE, or THRESHOLD, etc..
+
+At the top of this page, there is a "New Drift Monitoring Instance" button that allows users to create a new monitoring instance. When clicked, a window will open, presenting variables that need to be specified by the user.
+
+.New_Drift_Monitoring_Instance variables
+[cols="2,5,2"]
+|===
+|*Variable name* | *Description* | *Type* 
+3+^|*Workflow variables*
+| `MONITORING_SCOPE`
+| Monitoring scope for the drift notification.
+| List [Global, Per Model Server, Per Deployed Model] (default="Global").
+| `MODEL_SERVER_ID`
+| ID of the model server to be monitored.
+| List [model-server-xxx] (default=model-server-xxx).
+| `MODEL_NAME`
+| Name of the deployed model to be monitored.
+| List [model-name] (default=model-name).
+| `TIME_FRAME`
+| The temporal scope of the selected drift detection algorithm targets a specific historical period for analysis.
+| List [Last xx minutes/hours/days] (default="Last 5 minutes").
+|`METRIC`
+| List of available metrics for the drift monitoring.
+| List [avg_inference_time_ms, inference_rate_per_min
+] (default="avg_inference_time_ms").
+|`DRIFT_METHOD`
+| Name of the data drift detector to be used.
+| List [Interval Threshold based, Threshold based, Statistical Threshold, HDDM_W, Page-Hinkley] (default=HDDM_W).
+|`DRIFT_CONFIDENCE`
+|Appears when choosing HDDM_W. It indicates the significance level required to declare a drift, influencing the algorithm's sensitivity to changes in the data stream.
+| Float (default=0.001).
+|`WARNING_CONFIDENCE`
+| Appears when choosing HDDM_W. It Indicates significance level at which the algorithm issues a warning for potential drift.
+| Float (default=0.005).
+|`MIN_VALUE`
+| Appears when choosing Interval Threshold based. Minimum cutoff value of the interval threshold.
+| Float (default=0.0).
+|`MAX_VALUE`
+|Appears when choosing Interval Threshold based. Maximum cutoff value of the interval threshold.
+| Float (default=0.01).
+|`COMPARATOR`
+| Appears when choosing Threshold based . It is used to determine whether a value meets a specified threshold.
+| List [less than, less than or equal to, equal to, greater than or equal to, greater than] (default=greater than).
+|`VALUE`
+|Appears when choosing Threshold based. Metric value used as a threshold value for comparison.
+| Float (default=0.0).
+|`STATISTICAL_THRESHOLD`
+|Appears when choosing Statistical Threshold. The number of standard deviations to use as the cutoff.
+| Integer (default=2).
+|`MIN_INSTANCES`
+| Appears when choosing Page-Hinkley. Minimum number of instances before detecting change.
+| Integer (default=30).
+|`DELTA`
+| Appears when choosing Page-Hinkley. Magnitude of change that will cause a signal.
+| Float (default=0.005).
+|`THRESHOLD`
+| Appears when choosing Page-Hinkley. Threshold for the Page-Hinkley test.
+| Integer (default=50).
+|`ALPHA`
+| Appears when choosing Page-Hinkley. Forgetting factor, it determines the weight given to newer data.
+| Integer (default=50).
+| `SEVERITY`
+| The severity level for the notification.
+| List [INFO, WARNING, ERROR, CRITICAL] (default="WARNING").
+| `TIMEZONE`
+| The timezone which indicates the geographical region of the user.
+| List [timezone] (default="Europe/Paris").
+|`NOTIFICATION_CHANNEL`
+| Name of the channel to which the notification will be sent.
+| String (default="mlops-dashboard").
+|`INTERVAL NUMBER`
+| Time interval for scheduling drift analysis tasks.
+| Integer (default=5).
+|`INTERVAL PERIOD`
+| The time unit for the intervals used in drift analysis.
+| List[minutes, hours, days] (default="minutes").
+|===
+
+In case a drift in the input data occurs, a notification is sent to the dedicated channel specified in the NOTIFICATION_CHANNEL variable. This ensures that users are promptly informed about any significant changes in data distribution that may affect model performance.
 
 == Model as a Service for Machine Learning (MaaS_ML)
 
