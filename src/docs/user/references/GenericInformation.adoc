@@ -78,15 +78,25 @@ The following table describes all available generic information:
 |Manual
 |2020-06-20T18:00:00+02:00
 |<<_earliest_deadline_first_policy,JOB_DDL>>
-|job deadline used in <<../user/ProActiveUserGuide.html#_earliest_deadline_first_edf_policy,Earliest Deadline First Scheduling Policy>>
+|job deadline used in <<../admin/ProActiveAdminGuide.html#_earliest_deadline_first_edf_policy,Earliest Deadline First Scheduling Policy>>
 |job-level
 |Manual
 |+5:30:00
 |<<_earliest_deadline_first_policy,JOB_EXEC_TIME>>
-|job expected execution time used in <<../user/ProActiveUserGuide.html#_earliest_deadline_first_edf_policy,Earliest Deadline First Scheduling Policy>>
+|job expected execution time used in <<../admin/ProActiveAdminGuide.html#_earliest_deadline_first_edf_policy,Earliest Deadline First Scheduling Policy>>
 |job-level
 |Manual
 |1:00:00
+|<<_required_licenses,REQUIRED_LICENSES>>
+|comma-separated list of licenses used by this job or this task. See <<../admin/ProActiveAdminGuide.html#_license_policy,License Policy>>
+|job-level, task-level
+|Manual
+|software_A,software_B
+|<<_max_nodes_usage,MAX_NODES_USAGE>>
+|number of Nodes that this job and all its sub-jobs are allowed to use in parallel. See <<../admin/ProActiveAdminGuide.html#_node_usage_policy,Node Usage Policy>>
+|job-level
+|Manual
+|10
 |<<_walltime,WALLTIME>>
 |maximum execution time of a task
 |job-level, task-level
@@ -375,16 +385,41 @@ The format allows flexible combinations of the elements:
 
 ==== Earliest Deadline First Policy
 
-The <<../user/ProActiveUserGuide.html#_earliest_deadline_first_edf_policy,Earliest Deadline First Policy>> is a <<../user/ProActiveUserGuide.html#_scheduling_policies,Scheduling Policy>> which can be enabled in the ProActive Scheduler server.
+The <<../admin/ProActiveAdminGuide.adoc#_earliest_deadline_first_edf_policy,Earliest Deadline First Policy>> is a <<../admin/ProActiveAdminGuide.adoc#_scheduling_policies,Scheduling Policy>> which can be enabled in the ProActive Scheduler server.
 
 When enabled, this policy uses the following generic information to determine jobs deadlines and expected duration:
 
  * `JOB_DDL`: represents the job deadline in absolute (e.g. `2018-08-14T08:40:30+02:00`) or relative to submission (e.g. `+4:30`) format.
  * `JOB_EXEC_TIME`: represents job expected execution time in the format HH:mm:ss, mm:ss or ss (e.g. `4:30`)
 
-See <<../user/ProActiveUserGuide.html#_earliest_deadline_first_edf_policy,Earliest Deadline First Policy>> for further information.
+See <<../admin/ProActiveAdminGuide.adoc#_earliest_deadline_first_edf_policy,Earliest Deadline First Policy>> for further information.
 
 `JOB_DDL` and `JOB_EXEC_TIME` can be defined at *job-level* only.
+
+==== REQUIRED_LICENSES
+
+The <<../admin/ProActiveAdminGuide.adoc#_license_policy,License Policy>> is a <<../admin/ProActiveAdminGuide.adoc#_scheduling_policies,Scheduling Policy>> which can be enabled in the ProActive Scheduler server.
+
+When enabled, this policy uses the `REQUIRED_LICENSES` generic information to determine which software licenses are consumed by the job or by the task.
+
+`REQUIRED_LICENSES` is a comma-separated list of software names, which must match the names set in the <<../admin/ProActiveAdminGuide.adoc#_license_policy,License Policy>> configuration.
+
+`REQUIRED_LICENSES` can be defined at *job-level* or *task-level*.
+
+==== MAX_NODES_USAGE
+
+The <<../admin/ProActiveAdminGuide.adoc#_node_usage_policy,Node Usage Policy>> is a <<../admin/ProActiveAdminGuide.adoc#_scheduling_policies,Scheduling Policy>> which can be enabled in the ProActive Scheduler server.
+
+When enabled, this policy uses the `MAX_NODES_USAGE` generic information to determine how many Nodes a job and all its sub-jobs can use in parallel.
+
+`MAX_NODES_USAGE` expects an integer value containing the number of parallel Nodes. When enabled on a job, `MAX_NODES_USAGE` will be implicitly applied to all sub-jobs.
+For example, if _job_A_ defines _MAX_NODES_USAGE=10_ and is currently using 4 Nodes, then _job_B_ and _job_C_ both children of _job_A_, can use a total of 6 Nodes in parallel.
+
+A sub-job can override this behavior by setting `MAX_NODES_USAGE` in its definition, either to:
+ * a positive value. In that case, the sub-job will still have a maximum Node usage limit, but independently from its ancestor.
+ * a negative value. In that case, the sub-job will have no maximum Node usage limit.
+
+`MAX_NODES_USAGE` can be defined at *job-level* only.
 
 ==== DISABLE_PTK
 

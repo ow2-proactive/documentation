@@ -4865,18 +4865,38 @@ Further information can be found https://www.py4j.org/install.html[in the offici
 [[_scheduling_policies]]
 == Extending ProActive Scheduling Policy
 
-In order to decide which pending Tasks are executed, the ProActive Scheduler uses a <<_glossary_scheduling_policy,*Scheduling Policy*>>.
+In order to decide which pending Tasks will be scheduled for execution, the ProActive Scheduler uses a <<_glossary_scheduling_policy,*Scheduling Policy*>>.
 
-This policy allows, for example, to execute task in a First-In-First-Out order or according to priorities.
+This policy can:
 
-The default Scheduling Policy can be extended to perfectly fit with an organization scheduling constraints.
+  * Sort pending tasks according to a specific order.
+  * Exclude pending tasks until some conditions are met.
 
-Moreover, policy can be changed dynamically throught Java API `org.ow2.proactive.scheduler.common.Scheduler::changePolicy(String policyClassName)`.
+The default scheduling policy, called _ExtendedSchedulerPolicy_:
 
-In the following example, we show how a different policy can be used to control Task Scheduling.
+ * Excludes pending tasks when the <<../user/ProActiveUserGuide.adoc#_start_at,START_AT>> generic information is set, and the configured time is still in the future.
+ * Sort Pending tasks according to their corresponding <<../user/ProActiveUserGuide.adoc#_job_priority,Job Priority>>, and then by _First-In-First-Out_ order.
 
+The Scheduling Policy is configured inside `PROACTIVE_HOME/config/scheduler/settings.ini`:
+
+----
+pa.scheduler.policy=org.ow2.proactive.scheduler.policy.ExtendedSchedulerPolicy
+----
+
+The default policy can be extended to perfectly fit an organization scheduling constraints.
+
+In order to change the policy used by the ProActive Scheduler, simply replace the existing setting with the fully qualified class name of the alternate policy.
+
+In the following sections, we show several alternate policies that can be used. Each of these policies inherits from the _ExtendedSchedulerPolicy_, which means that they apply the default policy yet may override the default behavior in some cases.
 
 === Earliest deadline first (EDF) policy
+
+*Early Deadline First Policy* sorts jobs based on (by decreasing importance):
+
+ 1. job priority (from highest to lowest).
+ 2. presence of a deadline (those that have a deadline overtake those without a deadline).
+ 3. job started or not (jobs already started overtake those not already started), and jobs started first overtake those started last.
+ 4. For pending jobs, sort them according to the configured deadline (earliest deadlines overtake others).
 
 To use the earliest deadline first (EDF) policy,  edit the file `PROACTIVE_HOME/config/scheduler/settings.ini` and change the following line:
 
@@ -4890,10 +4910,14 @@ to:
 pa.scheduler.policy=org.ow2.proactive.scheduler.policy.edf.EDFPolicyExtended
 ----
 
+Each workflow can configure its deadline by using the <<../user/ProActiveUserGuide.adoc#_earliest_deadline_first_policy,JOB_DDL>> and <<../user/ProActiveUserGuide.adoc#_earliest_deadline_first_policy,JOB_EXEC_TIME>> generic information.
 
-=== License Policy Example
 
-To use the LicenseSchedulingPolicy, edit the file `PROACTIVE_HOME/config/scheduler/settings.ini` and change the following line:
+=== License Policy
+
+The *License Policy* allows limiting concurrent access to external resources such as software licenses (but can also be used in other scenarios, e.g. external database connections).
+
+To use the _LicenseSchedulingPolicy_, edit the file `PROACTIVE_HOME/config/scheduler/settings.ini` and change the following line:
 
 ----
 pa.scheduler.policy=org.ow2.proactive.scheduler.policy.ExtendedSchedulerPolicy
@@ -4905,7 +4929,7 @@ to:
 pa.scheduler.policy=org.ow2.proactive.scheduler.policy.license.LicenseSchedulingPolicy
 ----
 
-The LicenseSchedulingPolicy requires an extra configuration: the maximum number of licenses per software must be specified into
+The LicenseSchedulingPolicy requires an extra configuration: the maximum number of licenses per software/resource must be specified into
 `PROACTIVE_HOME/config/scheduler/license.properties` like this
 
 ----
@@ -4913,16 +4937,39 @@ software_A = 3
 software_B = 2
 ----
 
-From now, at a job or a task level, user can specify which software licenses are required, by adding the REQUIRED_LICENSES generic information,
-which value can be
+Users declare their usage of software licenses by adding the <<../user/ProActiveUserGuide.adoc#_required_licenses,REQUIRED_LICENSES>> generic information at job level or task level.
+
+`REQUIRED_LICENSES` expects a comma-separated list of software names defined in the above configuration file, e.g.:
 
 ----
 softwareA,softwareB
 ----
 
-As expected, if 10 tasks requiring software_A,software_B licenses are submitted, they will be executed 2 by 2, according to the software with the fewest licenses.
-The same logic is applied at the job level, whatever the number of tasks composing each job, since all tasks of the same job share the same license.
-Moreover, user can combine both levels.
+The behavior of `REQUIRED_LICENSES` is different when declared at job-level or task-level.
+
+At task-level, if 10 tasks requiring software_A,software_B licenses are pending, they will be executed 2 by 2, according to the software with the fewest licenses.
+
+At job-level, the *License Policy* considers that the whole job consumes one software license (no matter how many tasks this job contains). In the above example, it means that when 10 such jobs are pending, only 2 jobs will be allowed to start, the other jobs will remain pending until the first 2 jobs complete.
+
+It is also possible to combine - in the same workflow - `REQUIRED_LICENSES` at both levels.
+
+=== Node Usage Policy
+
+The *Node Usage Policy* allows limiting parallel usage of Nodes within workflows. This can be used for workflows that contain a large number of tasks when one wants to limit the number of Nodes that will be allocated to each workflow. This way, several large workflows can run concurrently instead of one workflow consuming all resources.
+
+To use the _NodeUsageSchedulingPolicy_, edit the file `PROACTIVE_HOME/config/scheduler/settings.ini` and change the following line:
+
+----
+pa.scheduler.policy=org.ow2.proactive.scheduler.policy.ExtendedSchedulerPolicy
+----
+
+to:
+
+----
+pa.scheduler.policy=org.ow2.proactive.scheduler.policy.limit.NodeUsageSchedulingPolicy
+----
+
+In order to configure the number of Nodes a workflow is allowed to use in parallel, set the <<../user/ProActiveUserGuide.adoc#_max_nodes_usage,MAX_NODES_USAGE>> generic information at job-level.
 
 == Addons
 
