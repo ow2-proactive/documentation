@@ -1704,6 +1704,7 @@ If this property is not specified, the default value is ``20``.
 The regular expression constraint is specified by the `property pa.scheduler.label.regex`.
 If this property is not specified, the default value is ``^[a-zA-Z0-9_/-]*$``.
 
+[[_glossary_custom_logo]]
 === Custom logo configuration
 
 image::generic_logo.png[align="center"]
