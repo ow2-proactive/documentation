@@ -416,6 +416,7 @@ When enabled, this policy uses the `MAX_NODES_USAGE` generic information to dete
 For example, if _job_A_ defines _MAX_NODES_USAGE=10_ and is currently using 4 Nodes, then _job_B_ and _job_C_ both children of _job_A_, can use a total of 6 Nodes in parallel.
 
 A sub-job can override this behavior by setting `MAX_NODES_USAGE` in its definition, either to:
+
  * a positive value. In that case, the sub-job will still have a maximum Node usage limit, but independently from its ancestor.
  * a negative value. In that case, the sub-job will have no maximum Node usage limit.
 
