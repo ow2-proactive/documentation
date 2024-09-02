@@ -12,9 +12,9 @@ image::PAIO-Open-Studio-ActiveEon.PNG[align=center]
 
 The ProActive AI Orchestration platform is an open source solution, and it can be tested online without installation on our try platforms https://try.activeeon.com/studio/#presets/1[here^].
 
-PAIO also encompasses a range of interfaces that serve as centralized hubs, offering real-time monitoring, collaboration, and decision-making capabilities across various stages of the machine learning operational pipeline. By providing insights into model performance, infrastructure health, and deployment status, these interfaces empower teams to optimize and enhance the reliability of their machine learning systems. 
+The MLOps Dashboard is a centralized platform that streamlines the management and monitoring of AI model deployments. It offers a detailed overview of deployment pipelines, real-time performance metrics allowing for efficient oversight of models and servers in production. The dashboard also tracks CPU and GPU resource usage for both individual models and the entire platform, ensuring optimal performance. Additionally, it includes robust functionalities for detecting and managing data drift, helping users maintain the accuracy and reliability of deployed models over time.
 
 image::MLOps_dashboard_model_servers.png[align=center]
 
-The *MLOps Dashboard* (screenshot above) serves as a centralized hub for data scientists, engineers, and stakeholders involved in deploying and monitoring machine learning models. It provides a comprehensive view of the deployment pipelines, real-time performance metrics, and key indicators. Furthermore, it includes features specifically designed to manage and monitor the underlying model servers.
+
 Refer to link:../PAIO/PAIOUserGuide.html#_mlops_dashboard[MLOps Dashboard] section for more information.
