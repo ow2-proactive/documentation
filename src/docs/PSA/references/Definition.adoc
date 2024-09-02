@@ -46,3 +46,5 @@ NOTE: To run multiple PSA services that share an endpoint, the same ENDPOINT_ID 
 Service_Name, Infrastructure_Name::
 Service_Name, Infrastructure_Name are Service specific. If a Service wants/needs them, they can be stored in the data associated to the service to give a name to the service, to identify the infrastructure where the Service Instance will be deployed.
 
+Label::
+An optional string given at the launch of a Service, and that can be used to more easily identify a given service in the Service Automation Portal.
