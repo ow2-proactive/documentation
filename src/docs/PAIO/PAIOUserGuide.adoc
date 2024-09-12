@@ -818,7 +818,9 @@ At the top of this page, there is a "New Drift Monitoring Instance" button that 
 | List[minutes, hours, days] (default="minutes").
 |===
 
-In case a drift in the input data occurs, a notification is sent to the dedicated channel specified in the NOTIFICATION_CHANNEL variable. This ensures that users are promptly informed about any significant changes in data distribution that may affect model performance.
+In case a drift in the input data occurs, a notification is sent to the dedicated channel specified in the NOTIFICATION_CHANNEL variable. This ensures that users are promptly informed about any significant changes in data distribution that may affect model performance. Here is an example of a drift notification from the ProActive Notification Portal:
+
+image::notification_example_tab4.png[align=center]
 
 == AutoFeat
 
