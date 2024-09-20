@@ -1473,6 +1473,8 @@ Motivations to enable SFTP on the Global Space can be to access a folder:
  * on a remote server, reachable via SSH.
  * on the local file system, in case this folder belongs to a different user from the ProActive server user.
 
+===== SFTP User Space configuration
+
 In order to configure the SFTP protocol for the User Space, the following properties in the `PROACTIVE_HOME/config/scheduler/settings.ini` file must be defined:
 
 ....
@@ -1481,11 +1483,48 @@ pa.scheduler.dataspace.defaultuser.impersonation=true
 ....
 The user spaces will always be mapped to each user HOME directory on the SFTP server. In order to have more flexible mappings, consider using the <<_vsftp_protocol>>.
 
+[NOTE]
+====
+It is also possible to configure the User Space without impersonation. In that case, all connections to the SFTP server will be done under a single user. In order to do this, `PROACTIVE_HOME/config/scheduler/settings.ini` will contain:
+....
+pa.scheduler.dataspace.defaultuser.url=sftp://username@your-server/path
+pa.scheduler.dataspace.defaultuser.impersonation=false
+....
+See <<_sftp_global_space_configuration>> for a detailed explanation of this configuration.
+====
+
+===== SFTP Global Space configuration
+
 In order to configure the SFTP protocol for the Global Space, the following property must be set:
 
 ....
 pa.scheduler.dataspace.defaultglobal.url=sftp://username:password@your-server/path
 ....
+
+`path` refers to a folder path relative to the HOME directory of `username`.
+
+It is also possible to use SSH public key authentication to avoid setting the password in the URL. In that case the configuration would look like:
+
+....
+pa.scheduler.dataspace.defaultglobal.url=sftp://username@your-server/path
+....
+
+An additional configuration will be needed to allow SFTP public key authentication:
+
+ * In `PROACTIVE_HOME/config/network/server.ini` and `PROACTIVE_HOME/config/network/node.ini`, add the following property:
++
+....
+proactive.dataspaces.sftp.useSystemPrivateKey=/path/to/private-key
+....
+
+ * In each <<_glossary_node_source,Node Source>> defined in the <<_glossary_resource_manager,Resource Manager>>, you must ensure that the java property `-Dproactive.dataspaces.sftp.useSystemPrivateKey=/path/to/private-key` is set for all Nodes deployed by the Node Source (this configuration is available in the Node Source parameters).
+
+ * Finally, you must ensure that:
+
+ ** The private key used does not contain a passphrase.
+ ** The associated public key is added to the `authorized_keys` of `username` on the SFTP server.
+ ** The private key is physically present on each <<_glossary_proactive_node,Node>> connected to the <<_glossary_resource_manager,Resource Manager>>. The private key location on the Node's file system must match the java property `proactive.dataspaces.sftp.useSystemPrivateKey` configuration for this Node (The private key location can differ from one Node to another).
+
 
 ==== VSFTP protocol
 
