@@ -132,8 +132,10 @@ In our case, you need to provide to nssm the Path to this script `$PROACTIVE_HOM
 
 ==== How to install ProActive on Linux
 
-Under Linux, the user has to run the `install.sh` script located under `$PROACTIVE_HOME/tools` folder as *root* and follow the installations steps provided in an interactive mode.
+Under Linux, the user has to run the `install.sh` script located under the `tools` folder as *root* and follow the installation steps provided in an interactive mode.
 Generally, it is recommended to keep the default configuration (internal account, protocol used, port , etc) unless you would like to setup a particular one.
+
+Below is an example of an installation procedure with default answers:
 
 ....
 $ sudo $PROACTIVE_HOME/tools/install.sh
@@ -167,19 +169,32 @@ Do you want to start the scheduler service now? [Y/n]  y
 If a problem occurs, check output in /var/log/proactive/scheduler
 ....
 
+The installation script will create a symbolic link called `default` under the root path chosen for the installation that will point to the current version folder.
+
+Accordingly, the ProActive server installation can be accessed using `/opt/proactive/default` path.
+
 Once the server is up, ProActive Web Portals are available at `\http://localhost:8080/`. The user can access to any of the four portals using the default credentials: *admin/admin*
 
 Your ProActive Scheduler is ready to execute <<_glossary_job,*Jobs*>>!
 
 ==== How to upgrade ProActive on Linux
-Before you upgrade to a new version of ProActive (ex 10.0), you first need to back up the configuration and data that you want to restore (DB, workflows, etc) from the old ProActive installation (ex 8.4). Basically, you have to back up the content of the following folders:
 
-*  `$PROACTIVE_HOME/data` which contains all databases (scheduler, catalog, rm) and workflows of the different users.
-*  `$PROACTIVE_HOME/config` which contains configuration files required to setup the server initial settings, define the network properties, manage the authentication, internal accounts, access permissions, etc.
+First, https://www.activeeon.com/community-downloads[Download^] ProActive Scheduler and *unzip* the archive inside a temporary folder that will be used only during the installation (for example `/home/user/temp`).
+Make sure that you don't extract the new version archive in the same folder as the current ProActive installation (e.g. not in `/opt/proactive`) as it would otherwise create conflicts.
 
-To upgrade ProActive, the user has to run the `install.sh` script located under `$PROACTIVE_HOME/tools` folder as *root* and follow the installations steps provided in an interactive mode.
-It is important to mention that the user has to choose the same directory as the old version where to make the ProActive Scheduler installation. This will enable the detection of the existing installation and then copying addons, data files and the configuration changes from the previous installation to the new one.
-In some cases, this operation can induce some conflicts that can be solved easily using Git tools.
+To upgrade ProActive, the user has to run the `install.sh` script located under the `tools` folder of the extracted new version as *root* or *sudo* and follow the installations steps provided in an interactive mode.
+
+When launching the installation script, the answer to the question *Directory where to install the scheduler* should point to the same base directory where the old version is installed (e.g. `/opt/proactive`).
+This will enable the detection of the existing installation and copying addons, data files and the configuration changes from the previous installation to the new one.
+Also, the existing version installed in `/opt/proactive` should not be removed prior to the upgrade. Otherwise, the porting of data and settings from the previous version to the new one would be impossible.
+
+The new version installation will also create a symbolic link called `default` under ProActive installation root directory that points to the new version, and a symbolic link called `previous` that points to the older version.
+
+It is thus possible to revert the upgrade if anything goes wrong simply by changing the `default` symbolic link target. In that case, The `previous` symbolic link can either be removed or pointed to an older installation.
+
+In some cases, this operation can induce some conflicts that can be solved easily using *Git* https://www.themoderncoder.com/fix-git-cherry-pick-merge-conflicts/[command-line tools].
+
+Below is an example of the upgrade installation procedure with default answers:
 
 ....
 $ sudo $PROACTIVE_HOME/tools/install.sh
