@@ -851,7 +851,7 @@ In order to install the ProActive server on your environment:
 [[shell_Configure_the_installation_input_file]]
 ==== Configure the Installation Input File
 
-The `inputConfig.json` file, included in the installation package, is necessary to provide the correct configuration values for installing ProActive.
+The `inputConfig.json` file, included in the installation package, is necessary to provide the specific configuration values for installing ProActive.
 
 This section explains the configuration parameters required, as specified in the `inputConfig.json` file.
 
@@ -943,10 +943,15 @@ The description of the configuration options for the remaining ProActive compone
 [[_shell_Starting_ProActive_using_Shell_scripts]]
 ==== Starting ProActive Using Shell Scripts
 
-
 After configuring the necessary settings as described in the previous section, you are ready to begin the installation of the ProActive server using the `proactiveInstaller.sh` script.
 
 The `proactiveInstaller.sh` script simplifies the installation and configuration process by automating key tasks such as password encryption and offering flexibility through offline and upgrade modes.
+
+Before exploring the installation options, it is important to note that `proactiveInstaller.sh` must be executed with root privileges, and you need to grant it execution permission:
+
+----
+$ sudo chmod +x proactiveInstaller.sh
+----
 
 To get an overview of all available options and some examples of installation commands, you can access the help menu by running:
 
@@ -967,6 +972,8 @@ Additional options include:
 
 - **Offline Mode** (`-o`): Ensures the installation process can be completed without internet access.
 - **Upgrade Mode** (`-u`): Allows upgrading an existing ProActive installation.
+
+The options `-o` and `-u` can be used with any installation mode (`-i`, `-a`, or `-p`).
 
 Below is the help output that showcases the available options and example commands:
 
@@ -1010,7 +1017,7 @@ In the following sections, we will present the three methods you can use to inst
 
 ===== ProActive server installation Using CLI Password Arguments
 
-This method provides a simple and minimal installation of the ProActive server without supporting advanced configurations (such as LDAP, Users, TLS, or database setup).
+This method provides a simple and minimal installation of the ProActive server without supporting advanced configurations (such as LDAP, additional Users, TLS, or database setup).
 
 It installs the required configuration of the ProActive server by passing passwords as command-line arguments. This allows you to supply the required credentials directly via the command line, avoiding the need for interactive password input during installation.
 
@@ -1037,12 +1044,12 @@ NOTE: It is important to ensure that the command-line interface where you provid
 NOTE: Ensure that the passphrase used is strong and secure since it will be used to encrypt sensitive passwords.
 
 ===== ProActive Server Installation with Interactive Password Input Mode
-This method offers an interactive way to install the ProActive server, guiding the user step-by-step through the necessary passwords to be given interactively.
+This method offers an interactive way to install the ProActive server, guiding the user step-by-step through the process of entering the necessary passwords.
 
-During this mode, you specify the installation mode using `-i` option (for interactive), and then the installer will ask you to provide the passphrase and the required passwords.
+To use this mode, specify the installation option `-i` for interactive mode, after which the installer will prompt you to enter the passphrase and the required passwords.
 It supports providing passwords for advanced installation such as LDAP, Users, TLS, or database setup.
 
-This mode is ideal for users who prefer a hands-on approach and want to avoid passing sensitive information directly through the command line, enhancing security.
+This approach is ideal for users who prefer a hands-on installation experience and want to avoid passing sensitive information directly through the command line, thereby enhancing security.
 
 Once provided, the installer will encrypt the passwords using the passphrase and store them in the `inputConfig.json` file in encrypted format.
 
@@ -1105,7 +1112,7 @@ If you want to start the ProActive server installation and configuration offline
 $ sudo ./proactiveInstaller.sh -a -f ./password-template.properties -o
 ----
 
-NOTE: After the installation is complete, it is recommended to delete the clear-text password file to enhance security.
+NOTE: After the installation is complete, it is recommended to delete all clear-text passwords to improve security. In case you want to proceed with an installation upgrade (`-u`), the `PASSPHRASE` value will be required.
 
 ===== Server monitoring and troubleshooting
 While running the installation script, the script will continuously display logs about the in-progress configuration and installation. When the server is starting, you can access the ProActive service logs located at `/var/log/proactive/scheduler` to monitor the ProActive server startup status:
