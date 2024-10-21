@@ -876,13 +876,14 @@ You can the use default parameter values as they are given in the `inputConfig.j
 - `PWS_SERVER_CONFIGURATION`
 ** `PWS_HOST_ADDRESS`: Defines the internal hostname or IP address of the machine where ProActive will be installed.
 
-===== Passwords configuration
-All password fields in the `inputConfig.json` file should be left empty. Their values will be provided at runtime. They will be then encrypted and inserted back into the `inputConfig.json` file.
-We provide a more detailed explanation of how to configure the password values in the next section <<_shell_Starting_ProActive_using_Shell_scripts, Starting ProActive using Shell scripts>>.
 
 ===== Advanced configuration
 
-For more advanced configuration of the ProActive server, please refer to the parameters listed below:
+In this section, we describe the advanced configuration of the ProActive server.
+
+**Important:** Please note that all password fields defined in the configuration sections listed below **should be left empty**. Their values will be provided at runtime. They will be then encrypted and inserted back into the `inputConfig.json` file.
+We provide a more detailed explanation of how to configure the password values in the next section <<_shell_Starting_ProActive_using_Shell_scripts, Starting ProActive using Shell scripts>>.
+
 
 - `INSTALLATION_CONFIGURATION`
 ** `NEW_INSTALL_OR_UPGRADE`: Set to true when it is a first ProActive server installation or an installation upgrade.
@@ -925,7 +926,6 @@ ProActive requires the following components to be mapped to different database s
 ** `DB_INSTALL_POSTGRES`: Set to true if you want to install the Postgres database.
 *** The supported operating systems for Postgres database installation are Debian and Redhat9. Postgres 12 will be installed on Debian distributions, and Postgres 13 will be installed on Redhat9 distributions.
 *** The setup and initialization of the Postgres database are automatically performed based on the current operating system.
-*** The passwords in the database initialization script located in `installPostgres/init.sql` must match the encrypted passwords specified in the `EXTERNAL_DATABASE_CONFIGURATION` sections of the database configuration. This includes the defined passwords in `DB_SCHEDULER_CONFIG`, `DB_RM_CONFIG`, `DB_CATALOG_CONFIG`, `DB_PSA_CONFIG`, and `DB_NOTIFICATION_CONFIG` sections.
 ** `DB_TYPE`: The external database to be used by ProActive, namely `postgresql`.
 ** `DB_DRIVER_LOCATION`: The Postgres driver location. It is recommended to keep the default value.
 ** `DB_APPLY_SCHEDULER_CONFIG_TO_ALL`: If set to true, the 5 ProActive components will be configured using the Scheduler DB configuration described below.
@@ -933,7 +933,7 @@ ProActive requires the following components to be mapped to different database s
 *** `DB_SCHEDULER_HOSTNAME`: Database hostname used (e.g. localhost, myserver) or IP address (e.g. 127.0.0.1, 192.168.12.1).
 *** `DB_SCHEDULER_PORT`: Database port used (e.g. 9001, 5432).
 *** `DB_SCHEDULER_USERNAME`: Database user name.
-*** `DB_SCHEDULER_PASSWORD`: Database user encrypted password.
+*** `DB_SCHEDULER_PASSWORD`: Database user encrypted password. This value should be left empty.
 *** `DB_SCHEDULER_DIALECT`: Override default database vendor dialect. Defaults are: {hsqldb=org.hibernate.dialect.HSQLDialect, postgresql=org.hibernate.dialect.PostgreSQL94Dialect}.
 *** `DB_SCHEDULER_SCHEMA_NAME`: Override the default database schema name for the selected component. Defaults names are { Resource Manager : "rm", Scheduler : "scheduler", Catalog : "catalog", Service Automation : "pca", Notification Service : "notification" }.
 *** `DB_SCHEDULER_URL`: Sets the JDBC url that will be used to access the target component database. If set to default, the url will be inferred from --hostname, --port and optionally --schema-name options.
@@ -1017,9 +1017,11 @@ In the following sections, we will present the three methods you can use to inst
 
 ===== ProActive server installation Using CLI Password Arguments
 
-This method provides a simple and minimal installation of the ProActive server without supporting advanced configurations (such as LDAP, additional Users, TLS, or database setup).
+This method provides a simple and minimal installation of the ProActive server. It does not support advanced ProActive configurations such as LDAP, additional Users, TLS, or database setup.
 
-It installs the required configuration of the ProActive server by passing passwords as command-line arguments. This allows you to supply the required credentials directly via the command line, avoiding the need for interactive password input during installation.
+It installs the required configuration of the ProActive server (with embedded database) by passing passwords as command-line arguments. This allows you to supply the required credentials directly via the command line, avoiding the need for interactive password input during installation.
+
+You need to set all advanced configurations such as LDAP, additional Users, TLS, or database setup to **false** since they are not supported during this installation mode.
 
 During this mode, you must provide a valid passphrase for password encryption using the `-p` option, followed by the two required passwords for a basic installation: the admin login password (`-admin_pwd`) and the user password (`-user_pwd`).
 
@@ -1159,6 +1161,42 @@ $ systemctl stop proactive-scheduler
 # start the ProActive Linux service
 $ systemctl start proactive-scheduler
 ----
+
+==== Postgres Database Purge Operation
+The Postgres database purge process is required on any fresh ProActive installation using the Postgres database, and it explained in section: <<_compose_purge, Docker Compose Purge Operation>>. If you are not using a Postgres database in your ProActive installation, please ignore this section.
+
+The following commands allow to prepare the database for the purge operations to be performed within the Postgres database.
+
+Provide execution permissions to the database purge scripts (provided in the installation package):
+----
+$ sudo chmod +x ./installPostgres/purge/tables-configuration.sh ./installPostgres/purge/purge-operation.sh
+----
+
+Stop the ProActive server:
+----
+$ sudo systemctl stop proactive-scheduler
+----
+
+While the ProActive server is stopped and the Postgres server is running, run the following script in order to alter the type of certain columns in several database tables (this is needed due to a PostgresSQL driver issue):
+----
+$ sudo ./installPostgres/purge/tables-configuration.sh
+----
+
+Start the ProActive server again:
+----
+$ sudo systemctl start proactive-scheduler
+----
+Now, while the ProActive server is running, you can use the given script `purge-operation.sh` to execute a full vacuum regularly using a cron expression for example:
+----
+$ sudo crontab -e
+----
+Add the cron expression to run the purge operations:
+----
+* 2 * * * ABSOLUTE_PATH_TO/installPostgres/purge/purge-operation.sh
+----
+This will run the purge operations every day at 2am as an example. You can configure it as you prefer.
+
+The installation of ProActive is now over !
 
 ==== Upgrade ProActive Using Shell Scripts
 The process of upgrading the ProActive server is described in this section: <<_compose_upgrade>>.
