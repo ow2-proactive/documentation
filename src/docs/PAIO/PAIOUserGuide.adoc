@@ -746,9 +746,9 @@ This page includes a table listing all the drift monitoring instances. Each colu
 
 //14. *MODEL_NAME*: The name of the model being monitored for drift. This helps users quickly identify which model's performance is being tracked and managed. This is only used when choosing MONITORING_SCOPE as Per Deployed Model.
 
-15. *TIME_FRAME*: Defines the time period over which the drift is assessed which targets a specific historical period for analysis. It provides context for the drift analysis and trends over time.
+12. *TIME_FRAME*: Defines the time period over which the drift is assessed which targets a specific historical period for analysis. It provides context for the drift analysis and trends over time.
 
-16. *METRIC*: Specifies the metric used to measure drift, such as statistical tests or performance measures.
+13. *METRIC*: Specifies the metric used to measure drift, such as statistical tests or performance measures.
 
 //11. *DRIFT_METHOD*: Indicates the method or algorithm used for detecting drift, such as HDDM_W, Page-Hinkley, or other statistical techniques.
 
