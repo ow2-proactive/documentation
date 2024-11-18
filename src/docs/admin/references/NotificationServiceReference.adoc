@@ -182,34 +182,29 @@ println "Reading the notification message: " + MESSAGE
 Those bindings are passed to the script regardless of the selected <<execution-mode, execution mode>>
 
 [[third-party-binding]]
-====== User scoped Third-party user parameter
+====== Third-party parameters
 
-When <<multiple-executions-mode,multiple execution mode>> is activated, the user which is notified can add
-an additional argument to the script. This parameter will be used inside the script as a new
-binding named `args[]` and is injected in script executions for *all user's subscriptions*.
+When <<multiple-executions-mode,multiple execution mode>> is activated, an arguments array is passed to the script.
+This array is accessible inside the script as a variable named `args[]` and it can contain two elements.
 
-To access the user parameter in the script, like for <<notification-bindings,notification bindings>>, simply read the array.
-
-Example in groovy:
-----
-println "User parameter equals: " + args[0];
-----
-
-The image below shows where a user may provide a parameter in the notification-portal.
+- The first parameter is defined in the User Settings and is global to all executions triggered by any of the user's subscriptions.
 
 [title="Third-party user parameter input"]
 image::notification-third-party-input.png[align="center"]
 
-====== Subscription scoped Third-party parameter
+Example in groovy with only the User Settings parameter:
+----
+println "User parameter equals: " + args[0];
+----
 
-In addition to the User scoped parameter, each subscription allows an extra parameter to be passed to script executions, defined for *each subscription*.
+- The second parameter, is defined at the subscription level. It is only passed to the script execution triggered by the subscription it belongs to.
+
+It will always be in second position.
 
 [title="Subscription Third-party parameter"]
 image::subscription-third-party-param.png[align="center"]
 
-The subscription specific parameter is an extra element in the args array shown just before.
-
-Example in groovy:
+Example in groovy with the User Settings and the Subscription parameter:
 ----
 println "User Settings parameter equals: " + args[0];
 println "Subscription defined parameter: " + args[1];
