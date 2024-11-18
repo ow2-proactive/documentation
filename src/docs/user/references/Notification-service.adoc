@@ -145,6 +145,11 @@ and activate the notification method to start receiving notification by this mea
 If a notification method parameter is deleted or changed and reused in the future, then a new confirmation
 request will be triggered.
 
+==== Third-Party parameter
+
+Users can provide subscription-specific third-party parameters, in contrast to the global third-party parameter in User Settings, which applies to all of a user’s subscriptions, the subscription-specific parameter is injected into each script execution triggered by the corresponding subscription.
+Executions for other subscriptions, whether for the same user or different users, will use the values defined in their own respective subscriptions.
+
 [[channels_section]]
 === Channels
 
