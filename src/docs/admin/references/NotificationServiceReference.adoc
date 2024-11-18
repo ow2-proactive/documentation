@@ -200,7 +200,7 @@ The image below shows where a user may provide a parameter in the notification-p
 [title="Third-party user parameter input"]
 image::notification-third-party-input.png[align="center"]
 
-====== Subscription scoped Third-party user
+====== Subscription scoped Third-party parameter
 
 In addition to the User scoped parameter, each subscription allows an extra parameter to be passed to script executions, defined for *each subscription*.
 
