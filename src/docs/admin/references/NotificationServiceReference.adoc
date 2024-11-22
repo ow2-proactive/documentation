@@ -295,3 +295,204 @@ and if they have a value depending on the event origin.
 | Y
 | Y
 |=====
+
+[[microsoft_teams_configuration]]
+==== Microsoft Teams notification method
+
+ProActive provides a ready to use Third-Party script that allows users to send notifications to multiple Teams channels.
+
+The script interacts with Microsoft Graph API to:
+
+ - Connect as a user
+ - Send a message to multiple teams channels
+
+Some configuration must be done in ProActive and Microsoft beforehand but it consists in a nutshell of:
+
+- Configuring the notification service to execute the correct script with the correct setup
+- Create or retrieve app information from the Microsoft admin center
+- Provide these information to the script
+- Update User Settings in the notification portal
+- Add channel URLs to subscriptions
+
+We will go into details on how to achieve this configuration now.
+
+===== Configuring the notification service
+
+All the following configuration takes place in the Notification Service's properties file located
+----
+PROACTIVE_INSTALL_FOLDER/dist/war/notification-service/WEB-INF/classes/application.properties
+----
+
+All the relevant properties are located at the end of the file. We will detail them now.
+
+----
+notification.script.path=dist/war/notification-service/WEB-INF/classes/microsoftTeamsMessage.groovy
+# URL of the script, it will be processed if notification.script.path is empty
+notification.script.url=
+#optional parameter for specifying Script Engine
+notification.script.engine=groovy
+#if false execute the script one time per event even if there are several subscribers
+#if true execute the script for each subscribers for each event
+notification.script.multiple.execution=true
+----
+
+- *notification.script.path*: The notification service can execute a single Third-Party script, for all users. This property specifies the script that will be executed.
+    It can't be dynamically updated and requires a server restart to be changed.
+- *notification.script.url:* Allows specifying the script url instead of using a path. Not used here
+- *notification.script.engine:* Specifies the engine used to execute the script. Here it must be set to groovy as we are executing a groovy script.
+- *notification.script.multiple.execution:* Sets the execution mode to single or multiple execution. Explained <<execution-mode,here>>
+    We will be using this script in multiple execution mode as we want each user to be able to send notifications using their microsoft accounts on different channels
+
+Once the properties are updated as the code snippet above, you can save the file.
+
+===== Configuring Microsoft 365
+Because the script queries the Microsoft Graph API (a REST API) to interact with microsoft Teams, it needs to connect to Microsoft as a user (retrieve an authentication token) through a registered app.
+
+This App is either already present or we can create a dedicated one for the ProActive Notification Service. +
+Steps on how to create the App are present in the following description.
+
+The Notification's Third-Party script needs 2 IDs and a secret, that are retrieved from the Microsoft Entra admin center:
+
+- A *tenantId* -> The ID of your organisation
+- A *clientId* -> The ID of the registered App
+- A *secret* -> The "password", encoded using a ProActive tool, used to authenticate the app when querying the Graph API
+
+====== Connect to the Microsoft entra center
+
+- Connect to your Microsoft 365 account from https://account.microsoft.com/account/Account[here]
+- Go to "My Apps" from the left menu
+
+image::microsoft-my-apps-button.png[align="center"]
+
+- Access the Admin center by clicking on the Admin app
+
+image::microsoft-apps-dashboard-admin.png[align="center"]
+
+- Access the Microsoft Entra admin center by clicking on "Identity" in the "Administration centers" left menu
+//TODO get screenshot image::microsoft-apps-dashboard-Entra-admin-button.png[align="center"]
+- Click on the "App Registration" sub menu in the "Applications" left menu
+
+image::entra-admin-center.png[align="center"]
+
+====== OPTIONAL: Create an App
+
+ 1. Click on the "New Registration" button
+image::create-app-button.png[align="center"]
+ 2. Provide a name for the App. Here we use the name NotificationService.
+ 3. Leave the default Supported account type in single tenant
+ 4. Finally, click on the "Register" button
+image::microsoft-entra-register-app.png[align="center"]
+
+====== Copy the tenantId and clientID
+
+- If you just created an App, you land on the App overview.
+- If you use an existing App, click on "All applications" and click on your app
+
+Copy and save the tenantId and clientId
+
+image::microsoft-app-tenant-client-id.png[align="center"]
+
+====== Give the app the necessary API permissions
+
+The App needs to have the authorisation to Read Users and Send messages to channels as shown below
+
+image::microsoft-app-api-permission.png[align="center"]
+
+To add these permissions:
+
+- From the App overview, click on the API permission left menu
+- Click on the "Add Permission button"
+- Click on "Microsoft Graph"
+
+image::microsoft-app-graph-permission.png[align="center"]
+
+- Click on "Delegated Permission" (because the authorisation is delegated to users, not the app itself)
+- In the search bar, enter ChannelMessage.Send, select the permission then click on "Add permission"
+
+image::microsoft-add-permission.png[align="center"]
+
+- Do the same for the permission User.Read
+- Click on "Grant admin consent for ..."
+
+image::microsoft-app-grant-admin-consent.png[align="center"]
+
+====== Create a secret
+
+To authenticate itself, the app uses a secret. It must be created on this portal.
+
+WARNING: After the secret is created, it can be read and copied once. If lost, it is definitely lost and a new secret must be created, encoded, and replaced in the Third-Party script.
+
+- If not already there, got to "App registration" and select the App
+- Click on the "Certificates & secrets" in the left menu
+- Click on "New client secret"
+- Provide a secret description and select an expiry date. +
+
+A new secret will need to be created and provided to the script after this date.
+
+IMPORTANT: Copy the secret value as it will be hidden right after. It will be encrypted in the next step.
+
+image::microsoft-copy-secret.png[align="center"]
+
+====== Encrypt the secret
+
+The last step is to encrypt the secret as we don't want to provide it in plain.
+We will also do this for the Microsoft 365 user password.
+
+An encryption tool is provided with ProActive and located in
+----
+PROACTIVE_INSTALL_FOLDER/tools
+----
+
+To encrypt the data:
+- Open a console an navigate to the tools folder of the ProActive installation
+- Execute the encrypt script with the -d option and the data as argument.
+
+Example:
+----
+encrypt -d J8o8Q~q1T54ExSZ262mjBc-zOifI3CfFwuS0GN5srcZN
+----
+
+The output is en encrypt String enclosed by the characters ENC()
+
+Output example:
+----
+ENC(RLqBfho9KuD561d51d8zd62frDF511F5FA51650hPKJGo2p+8mWodQ9C3rF5OcdVg8ea1JrGg=)
+----
+
+You will need the full output, including the enclosing ENC().
+
+===== Configuring the Third-Party script
+
+Now that we created and/or configured the App, we need to configure the script. +
+The data copied in the earlier steps is not user specific and needs to be provided directly in the script.
+
+The script is in the same location as the properties file:
+----
+PROACTIVE_INSTALL_FOLDER/dist/war/notification-service/WEB-INF/classes/microsoftTeamsMessage.groovy
+----
+
+In this script you will find this code block, starting line 55
+
+----
+// ===== Azure Configuration =====
+// The tenant ID (organization ID)
+String tenantId=""
+// Application ID (Client ID)
+String clientId = ""
+// The secret encrypted beforehand using the encrypt script found in PROACTIVE_INSTALL/tools
+String encryptedSecret = ""; // <----- starting with ENC(....)
+----
+
+If not already done, the secret needs to be encrypted as explained in the earlier steps.
+
+- Fill in the tenantId, the clientId and the encrypted secret. +
+- Save the file.
+
+===== Configuring the notification portal
+
+The remaining configuration lies in the notification portal where we need to:
+
+ . Update User Settings
+ . Create or Update subscriptions
+
+This part is explained in the user guide, section <<../user/ProActiveUserGuide.adoc#microsoft_teams,Configure Microsoft teams messages>>
