@@ -500,20 +500,20 @@ Presets are not individual event types like the ones described above; instead, t
 [[microsoft_teams]]
 === Microsoft teams notifications
 
-To receive Microsoft Teams notifications using the Notification Third-Party notification method, some configuration must be applied in the Microsoft and the Notification Service sides. +
-These configurations are described in the admin guide link:../admin/ProActiveAdminGuide.html#microsoft_teams_configuration[here] and is mandatory to be able to receive Teams notifications.
+To receive Microsoft Teams notifications using the Notification Service Third-Party notification method, some configuration must be applied on both the Microsoft and Notification Service sides. +
+These configurations are described in the admin guide link:../admin/ProActiveAdminGuide.html#microsoft_teams_configuration[here] and are mandatory to be able to receive Teams notifications.
 
 ==== Configure User Settings
 
-To be able to send Teams notification, the Third-Party script needs to connect and retrieve a token using a user's microsoft credentials.
+To send Teams notifications, the Third-Party script must connect and retrieve a token using a user's Microsoft credentials.
 
 The script reads these credentials from the User Settings.
 
-The Login is provided as plain text but the password must be encrypted before being saved in the User Settings.
+The login is provided as plain text but the password must be encrypted before being saved in the User Settings.
 
 You can see how to encrypt the password link:../admin/ProActiveAdminGuide.html#_encrypting_configuration_passwords[Here]
 
-Once the password encrypted:
+Once the password is encrypted:
 
 - Connect to ProActive and go to the <<_glossary_notification_portal,*Notification Portal*>>
 - Click on the Configuration tab then open the Settings drop-down
@@ -521,17 +521,17 @@ Once the password encrypted:
 
 image::notification-user-settings.png[align="center"]
 
-- Provide your microsoft login and you encrypted password with the ENC( prefix separated by a comma
+- Provide your Microsoft login and your encrypted password enclosed by ENC()
 - Click on save
 
 image::notification-settings-save.png[align="center"]
 
 ==== Get microsoft Teams channel URLs
 
-Each subscription that needs to send notification to teams have to provide channel URLs.
+Each subscription that needs to send notifications to Teams must provide channel URLs. +
 At least one must be provided and it defines the channel(s) where the notification is sent.
 
-You can easily retrieve channels URL from Microsoft Teams desktop App or Web browser:
+You can easily retrieve channel URLs from the Microsoft Teams desktop app or web browser:
 
 image::get-teams-channel.png[align="center"]
 
@@ -543,7 +543,7 @@ image::teams-copy-channel.png[align="center"]
 
 Users can decide which subscription notifies which channel.
 
-To do so, the Third-Party param input accepts a list of channel URL, separate by a carriage return or white spaces.
+To do so, the Third-Party param input accepts a list of channel URL, separated by a carriage return or whitespaces.
 
 Finally, the Third-Party notification method should be activated
 
