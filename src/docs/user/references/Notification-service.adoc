@@ -557,3 +557,32 @@ The principle is the same for unique service subscriptions.
 The result is a new message in teams channels
 
 image::microsoft-teams-channel-message.png[align="center"]
+
+[[slack_notifications]]
+=== Slack notifications
+
+To receive Slack notifications using the Notification Service Third-Party notification method, some configuration *must* be applied to the Notification Service. +
+
+This configuration is described in the Admin Guide link:../admin/ProActiveAdminGuide.html#slack_configuration[here].
+
+Once the configuration done, users only need to provide webhooks and activate the Third-Party notification method of subscriptions to start receive Slack notifications.
+
+==== User Settings webhooks
+
+Users can provide webhooks in their User Settings Third-Party parameter. These webhooks will always be notified by all notifications triggered by all subscriptions,
+unless the script is configured differently as explained in link:../admin/ProActiveAdminGuide.html#slack_configuration_script_mode[this section].
+
+To provide User Settings webhooks, simply add the webhooks in the Third-Party input as a comma separated list.
+
+image::notification-user-settings.png[align="center"]
+
+==== Subscription webhooks
+
+Webhooks provided in Subscriptions are notified only by Notifications created by the Subscription they belong to. +
+This allows to be notified of precise Events to specific channels.
+
+By default, the script notifies the User Settings webhooks *PLUS* the Subscription webhooks.
+
+To add Subscription webhooks, simply add webhooks separated by whitespaces or carriage returns in the Third-Party input as show above
+
+image::slack_notification_subscription.png[align="center"]
