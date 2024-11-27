@@ -502,3 +502,60 @@ The remaining configuration lies in the notification portal where we need to:
 - Create or Update subscriptions
 
 For detailed steps on updating user settings and managing subscriptions, refer to the ProActive User Guide, section <<../user/ProActiveUserGuide.adoc#microsoft_teams,Configure Microsoft Teams Messages>>.
+
+[[slack_configuration]]
+==== Slack notification method
+
+ProActive provides a ready to use script to send Notifications to Slack channels using the Third-Party notification method.
+
+There are two ways to use this script, depending on the selected <<execution-mode,Third-Party execution mode>>.
+
+1. Single execution (default mode): In this mode a list of webhooks must be hardcoded in the script as there is a single script execution, without any user parameter. +
+This means that all notification will be sent to the same channels, without the possibility to dynamically add of remove channels. +
+In such mode, a User only needs to activate the Third-Party notification method of a subscription to start notifying the Slack channels.
+2. Multi execution mode: Each notified user will trigger a script execution. +
+This mode allows users to:
+- Specify Slack webhooks in their User Settings. +
+These webhooks will be notified by all user's script executions of all their subscriptions
+- Specify Slack webhooks in each subscriptions Third-Party param. +
+These webhooks will be injected in each execution triggered by the subscription they belong to.
+
+Depending on the parameter mode set in the script, Subscriptions webhooks may override or be added to the ones provided the User Settings.
+
+This is detailed further in this guide.
+
+===== Configuring the notification service
+
+In this set-up we will be using the multiple execution mode, as described <<execution-mode,here>> with the script set to *ADD* subscription provided webhooks to User Settings webhooks
+
+===== Updating properties
+
+First, lets update the Notification Service properties. The file is located:
+
+----
+PROACTIVE_INSTALL_FOLDER/dist/war/notification-service/WEB-INF/classes/application.properties
+----
+
+These 3 properties that need an update are located at the end of the file and needs to be set as follow:
+
+----
+notification.script.path=dist/war/notification-service/WEB-INF/classes/slackNotification.groovy
+notification.script.engine=groovy
+notification.script.multiple.execution=true
+----
+
+The ProActive server needs a restart when these properties are updated.
+
+[[slack_configuration_script_mode]]
+===== Script configuration
+
+The Slack notification script can process User Settings and Subscriptions webhooks in two ways.
+
+- *ADD*: In this mode, the script will merge the webhooks from the User Settings and the webhooks from the Subscription
+- *OVERRIDE*: In this mode, webhooks from the Subscription replaces the ones from the User Settings, if provided.
+
+By default, the script is in the ADD mode, which is the one we will use in our configuration.
+
+===== Configuring the notification portal
+
+The last configuration steps takes place in the notification portal and are detailed in <<../user/ProActiveUserGuide.adoc#slack_notifications,this section>> of the User Guide
