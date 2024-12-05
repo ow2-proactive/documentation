@@ -3357,7 +3357,7 @@ image::edit_vars_view_1.png[align=center]
 For any Job in the system, you can view the above content by using the following URL in your own portals, replacing `{jobid}` with the JobID you want to monitor:
 
 ----
-http(s)://your-server:port/#/job-info?jobid={jobid}
+http(s)://your-server:port/automation-dashboard/#/job-info?jobid={jobid}
 ----
 
 [NOTE]
