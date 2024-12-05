@@ -10,8 +10,8 @@ We begin by presenting FTP, FTPS and SFTP connectors then, URL connector.
 
 The FTP, FTPS and SFTP file connector workflows consists of two tasks:
 
-* Import_from_FTP/SFTP_Server: Downloads files or folders recursively from an FTP/SFTP server to the data space.
-* Export_to_FTP/SFTP_Server: Uploads files or folders recursively from the data space (global or user space) to an FTP/SFTP server.
+* Import_from_FTP/FTPS/SFTP_Server: Downloads files or folders recursively from an FTP/FTPS/SFTP server to the data space (global or user space).
+* Export_to_FTP/FTPS/SFTP_Server: Uploads files or folders recursively from the data space (global or user space) to an FTP/FTPS/SFTP server.
 
 *Variables:*
 
@@ -27,36 +27,83 @@ The FTP, FTPS and SFTP connectors share the same list of variables with the exce
 | Yes
 | String
 | `localhost`
-| `USERNAME`
-| Username to use for the authentication.
-| Workflow, both Tasks
-| Yes
-|  String
-| e.g. toto
 | `PORT`
 | Listening port.
 | Workflow, both Tasks
 | No
 | Integer
-| e.g. 21, 22
+| e.g. `21, 22`
+| `USERNAME`
+| Username to use for the authentication.
+| Workflow, both Tasks
+| Yes
+|  String
+| e.g. `my_user`
 | `FILE_PATTERN`
 | Either a file name or a wildcard string pattern.
 | Task
 | Yes
 | String
-| e.g. file.txt, \*.txt, **
+| e.g. `file.txt, \*.txt, **`
 | `LOCAL_BASE`
-| Either a `global` path or a local `relative` path from which we export (or to which we import) file(s). It can be either a directory terminated by `/` or an empty value for the root.
+| Either an `absolute` path or a local `relative` path from which we export (or to which we import) file(s). It can be either a directory terminated by `/` or an empty value for the root.
 | Task
 | No
 | String
-| e.g. localDirectory/, /global/path/localDirectory/
+| e.g. `localDirectory/, /absolute/path/localDirectory/`
 | `REMOTE_BASE`
 | Remote `relative` path on the server to which we export (or from which we import) file(s). It can be either a path to a folder terminated by `/` or an empty value for the root.
 | Task
 | No
 | String
-| e.g. remoteDirectory/
+| e.g. `remoteDirectory/`
+|===
+
+The following table describe the specific workflow variables of the FTP Connector to Import/Export file(s) from/to an FTP server.
+
+.FTP Connector specific variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
+| `CREDENTIAL_KEY`
+| Third-party credential storing the password associated with the given user name.
+| Workflow, both Tasks
+| Yes
+|  String
+| ftp://${USERNAME}@${HOST}
+|===
+
+
+The following table describe the specific workflow variables of the SFTP Connector to Import/Export file(s) from/to an SFTP server.
+
+.SFTP Connector specific variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
+| `AUTHENTICATION_METHOD`
+| Authentication method to use either password or private key.
+| Workflow, both Tasks
+| Yes
+|  String
+| Values: `{SSH_PASSWORD, SSH_PRIVATE_KEY}`
+| `SSH_PASSWORD`
+| If AUTHENTICATION_METHOD = SSH_PASSWORD, it specifies the SSH password to be provided in the third-party credentials.
+| Workflow, both Tasks
+| Yes
+| String
+| `sftp://${USERNAME}@${HOST}`
+| `SSH_PRIVATE_KEY`
+| If AUTHENTICATION_METHOD = SSH_PRIVATE_KEY, it specifies the SSH private key to be provided in the third-party credentials.
+| Workflow, both Tasks
+| Yes
+| String
+| `ssh_key://${USERNAME}@${HOST}`
+| `PASSPHRASE`
+| If AUTHENTICATION_METHOD = SSH_PRIVATE_KEY, it specifies the SSH private key passphrase.
+| Workflow, both Tasks
+| Yes
+| String
+| e.g. `my_passhrase`
 |===
 
 The following table describe the specific workflow variables of the FTPS Connector to Import/Export file(s) from/to an FTP server over an SSL/TLS certificate.
@@ -76,25 +123,25 @@ The following table describe the specific workflow variables of the FTPS Connect
 | Workflow
 | No
 |  String
-| e.g. client_certificate_cred
+| e.g. `client_certificate_cred`
 | `CLIENT_PRIVATE_KEY_CRED`
 | The private key credential.
 | Workflow
 | No
 |  String
-| e.g. private_key_cred
+| e.g. `private_key_cred`
 | `CLIENT_PRIVATE_KEY_PASSWORD`
 | The password to protect the key.
 | Workflow
 | No
-|  String
-| e.g. my_password
+| String
+| e.g. `my_password`
 | `CLIENT_PRIVATE_KEY_ALIAS`
 | The alias of the key to use, may be null in which case the first key entry alias is used.
 | Workflow
 | No
 |  String
-| e.g. private_key_alias
+| e.g. `private_key_alias`
 | `SERVER_CERTIFICATE_VERIFICATION`
 | If true, enable to verify server certificate.
 | Workflow
@@ -111,8 +158,8 @@ The following table describe the specific workflow variables of the FTPS Connect
 | Public Server SSL certificate.
 | Workflow
 | No
-|  String
-| e.g. server_certificate_cred
+| String
+| e.g. `server_certificate_cred`
 |===
 
 *How to use this connector:*
@@ -134,19 +181,19 @@ The URL connector allows, in addition, to import data using HTTP and HTTPS proto
 | Task
 | Yes
 | String
-| e.g. http://www.pdf995.com/samples/pdf.pdf
+| e.g. `http://www.pdf995.com/samples/pdf.pdf`
 | `LOCAL_BASE`
 |  Local relative path to which we download file(s).
   LOCAL_RELATIVE_PATH can contain either a path to a file, a directory terminated by `/` or an empty value for the root.
 | Task
 | No
 | String
-| e.g. localDirectory/, example.zip
+| e.g. `localDirectory/, example.zip`
 | `EXTRACT_ARCHIVE`
 | If set to `true`, the imported file will be extracted if it is an archive.
 | Task
 | Yes
-| Boolean [true or false]
+| Boolean
 | false
 |===
 
@@ -184,7 +231,7 @@ All SQL connectors share the same list of variables. Consequently, we describe t
 | Workflow, both Tasks
 | No
 | Integer
-| e.g. 5432, 1521
+| e.g. `5432, 1521`
 | `USER`
 | Username to use for connecting to the database.
 | Workflow, both Tasks
@@ -196,7 +243,7 @@ All SQL connectors share the same list of variables. Consequently, we describe t
 | Workflow, both Tasks
 | Yes
 | String
-| e.g. MY_DATABASE
+| e.g. `MY_DATABASE`
 | `QUERY`
 | Requires an SQL query or a table name to fetch data from.
 | Import Task
@@ -223,7 +270,7 @@ Default: `CSV`
 | Export Task
 | Yes
 | String
-| e.g. MY_TABLE
+| e.g. `MY_TABLE`
 | `INSERT_MODE`
 | Indicates the behavior to follow when the table exists in the database amongst:
 
@@ -245,8 +292,7 @@ Default: `CSV`
 | Export Task
 | Yes
 | String
-| e.g. `path/to/data.csv` or
-\http://link/to/my/data/csv
+| e.g. `path/to/data.csv` or `http://link/to/my/data/csv`
 |===
 
 *How to use this task:*
@@ -281,11 +327,11 @@ In the import mode, the output containing the imported data takes one or many of
 ==== Database Connections Pooling
 To allow the persistence of a single connection across multiple SQL tasks (basically when running several tasks concurrently on the same machine),
 we have implemented the connection pooling feature to any external SQL database based on the https://github.com/brettwooldridge/HikariCP[HikariCP^] Framework.
-This feature is demonstrated through two workflow templates: SQL_Pooled_Connection_Query and SQL_Pooled_Connection_Update. Both are single-task workflows.
+This feature is illustrated using four workflow templates: SQL_Pooled_Connection_Query, SQL_Pooled_Connection_Update, SQL_Pooled_Connection_Procedure_Update and SQL_Pooled_Connection_Procedure_Query, each designed as a single-task workflow.
 
 *Variables:*
 
-The variables listed in the following table exist for both SQL_Pooled_Connection_Update and SQL_Pooled_Connection_Query workflows.
+The variables outlined in the table below are applicable to all four workflow templates.
 
 .Workflows' variables
 [cols="2,5,2,2,2,3"]
@@ -297,6 +343,12 @@ The variables listed in the following table exist for both SQL_Pooled_Connection
 | Yes
 | String
 | Values: `{postgresql, mysql, greenplum, sqlserver, oracle, hsqldb}`
+| `JDBC_DRIVER`
+| Name of the jdbc driver which provides access to data in the chosen relational DBMS.
+| Workflow
+| Yes
+| String
+| e.g. `postgresql-42.7.4.jar`.
 | `HOST`
 | Server host.
 | Workflow, Task
@@ -308,34 +360,62 @@ The variables listed in the following table exist for both SQL_Pooled_Connection
 | Workflow, Task
 | No
 | Integer
-| e.g. 5432, 1521
+| e.g. `5432, 1521`.
 | `USERNAME`
 | Username to use for connecting to the database.
 | Workflow, Task
 | Yes
 | String
-| e.g MY_USER
+| e.g `MY_USER`
 | `DATABASE`
 | Database name.
 | Workflow, Task
 | Yes
 | String
-| e.g. MY_DATABASE
+| e.g. `MY_DATABASE`
+| `SECURE_JDBC_PARAMETERS`
+| If secure communication is enabled for the Metadata Manager repository database, you must configure additional JDBC parameters.
+| Workflow
+| NO
+| String
+| e.g. `integratedSecurity=true;Domain=<MyDomain>;javaAuthentication=NTLM`
 | `POOL_PROPERTY`
 | HikariCP framework provides many data source properties that can be used to configure the DB pooled connection such as autoCommit, maximumPoolSize, maxLifetime, idleTimeout .... You can add as many properties as you want. For each one, please add a new task variable where the variable name is the property name having "POOL_"  as a prefix and the variable value is the property value. For more info, please refer to https://github.com/brettwooldridge/HikariCP.
 | Workflow, Task
 | No
 | String
-| e.g. POOL_autoCommit, POOL_maximumPoolSize
+| e.g. `POOL_autoCommit, POOL_maximumPoolSize`
+|===
+
+The following table describe the specific task variables of the SQL_Pooled_Connection_Procedure_Query and SQL_Pooled_Connection_Procedure_Update.
+
+.SQL_Pooled_Connection_Query and SQL_Pooled_Connection_Update Connectors specific variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
 | `SQL_STATEMENTS`
 | To change or update data, you have to use CREATE, INSERT , UPDATE , or DELETE statements. To query data, you have to perform SELECT statements.
-| Workflow, Task
+| Task
 | Yes
 | String
 | e.g. ```SELECT * FROM ...```, ```DROP TABLE ...```
 |===
 
-In addition to the aforementioned variables, SQL_Pooled_Connection_Query workflow has two more variables.
+The following table describe the specific task variables of the SQL_Pooled_Connection_Procedure_Query and SQL_Pooled_Connection_Procedure_Update.
+
+.SQL_Pooled_Connection_Procedure_Query and SQL_Pooled_Connection_Procedure_Update Connectors specific variables
+[cols="2,5,2,2,2,2"]
+|===
+| *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
+| `STORED_PROCEDURE`
+| A string representing the stored procedure name, optionally followed by its parameters. For example: myprocedure, myprocedure(), or myprocedure(1, 'test', true, 2023-01-01). Note that string parameters should be enclosed in single quotes ('').
+| Task
+| Yes
+| String
+| e.g. ```myprocedure```, ```myprocedure(1, 'test', true, 2023-01-01)```
+|===
+
+In addition to the aforementioned variables, SQL_Pooled_Connection_Query and SQL_Pooled_Connection_Procedure_Query workflow has three more variables.
 
 .SQL_Pooled_Connection_Query additional variables
 [cols="2,5,2,2,2,3"]
@@ -343,27 +423,30 @@ In addition to the aforementioned variables, SQL_Pooled_Connection_Query workflo
 | *Variable name* | *Description* | *Scope* | *Required?*  | *Type*  | *Default/Examples*
 | `OUTPUT_TYPE`
 | If set to `HTML`, it allows to preview the results in the Scheduler Portal in a HTML format. If set to `CSV`, it allows to download the results from the Scheduler Portal in a CSV format.
-| Workflow, Task
+| Task
 | Yes
 | String
 | Values: `{CSV, HTML}`.
-
-Default: `HTML`
-| `STORE_RESULT_VARIABLE`
-| if not empty, the value will be the name of a variable that contains the resultSet of the query (converted into a List of Maps). This variable can be used in other tasks.
-| Workflow, Task
+Default: `HTML`.
+| `OUTPUT_FILE`
+| Name of the file to be transferred inside the Data Space where the results of the executed procedure will be saved in CSV format.
+| Task
 | No
 | String
-| Values: `{CSV, HTML}`.
-
-Default: `HTML`
+| e.g. `result.csv`.
+| `STORE_RESULT_VARIABLE`
+| if not empty, the value will be the name of a variable that contains the resultSet of the query (converted into a List of Maps). This variable can be used in other tasks.
+| Task
+| No
+| String
+| e.g. `RESULT_VARIABLE`.
 |===
 
 *How to use these workflows:*
 
 The scheduler should be configured in non-fork mode to execute tasks in a single JVM rather than starting a dedicated JVM to run the task (In $PROACTIVE_HOME/config/scheduler/settings.ini, set pa.scheduler.task.fork=false).
 
-Data connectors workflows may need to add some third-party dependencies to their classpath (notably, JDBC jar libraries), so they can be executed properly. Please refer to the Admin guide documentation to learn how to add link:../admin/ProActiveAdminGuide.html#__add_custom_third_party_libraries_to_proactive_server_and_nodes_classpath].
+For proper execution, a data connector task requires adding third-party dependencies to its classpath, specifically JDBC jar libraries. Please refer to the Admin guide documentation to learn how to add link:../admin/ProActiveAdminGuide.html#_add_custom_third_party_libraries_to_proactive_server_and_nodes_classpath[third party libraries].
 
 In case the password is required, you have to add the following third-party credential: {key: `<mysql|postgresql|sqlserver|oracle|hsqldb:hsql>://<USERNAME>@<HOST>`, value: `PASSWORD`}. This is a one-time action and will ensure that your credentials are securely encrypted. Please refer to the User guide documentation to learn how to add link:../user/ProActiveUserGuide.html#_third_party_credentials[third-party credentials].
 
@@ -389,49 +472,49 @@ All NoSQL connector workflows are composed of two tasks:
 | Workflow, Import Task, Export Task
 | Yes
 | String
-| `localhost`
+| Default value: `localhost`
 | `MONGODB_PORT`
 | Listening port.
 | Workflow, Import Task, Export Task
 | No
 | Integer
-| 27018
+| Default value: `27018`
 | `MONGODB_USER`
 | Username to use for connecting to MongoDB server if authentication is required.
 | Workflow
 | No
 | String
-|
+| e.g. `my_user`
 | `MONGODB_DATABASE`
 | Database to use. In export mode, it is created if it does not exist.
 | Workflow, Import Task, Export Task
 | Yes
 | String
-| e.g. my_database
+| e.g. `my_database`
 | `MONGODB_COLLECTION`
 | Collection to use. In export mode, it is created if it does not exist.
 | Workflow, Import Task, Export Task
 | Yes
 | String
-| e.g. my_collection
+| e.g. `my_collection`
 | `MONGODB_QUERY`
 | Requires a NoSQL query to fetch data. If empty (`{}`), it will fetch all documents.
 | Import Task
 | No
 | String
-| {}
+| e.g. `{}`
 | `MONGODB_OUTPUT`
 | Relative path in the data space used to save the results in a JSON file.
 | Import Task
 | No
 | String
-| e.g. path/to/my/output.json
+| e.g. `path/to/my/output.json`
 | `LABEL`
 | If the imported data is labeled for machine learning, a label attribute can be specified using this variable.
 | Import Task
 | No
 | String
-| e.g. class
+| e.g. `class`
 
 | `MONGODB_INPUT`
 | A JSON Object/Array to be inserted in MongoDB. This variable can:
@@ -503,7 +586,7 @@ In the import mode, the output containing the imported data takes one or many of
 | Import Task
 | No
 | String
-| e.g. class
+| e.g. `class`
 | `CASSANDRA_TABLE`
 | Data is stored in tables containing rows of columns, similar to SQL definitions.. It is created if it does not exist.
 | Export Task
@@ -635,14 +718,14 @@ The Amazon S3 connector allows to upload and download data from S3. The connecto
 | Yes
 | String
 | e.g. 12DSS21EFGFR
-| `URL`
-| A valid URL to an existing S3 object that can be a file or a folder.
+| `S3_URL`
+| Specifies an S3 resource URL where the bucket name identifies the storage container and the key specifies a specific folder or file to download. In case the key is not specified, the entire bucket will be downloaded.
 | Import Task
 | Yes
 | String
-| e.g. https://s3.eu-west-2.amazonaws.com/activeeon-public/images/
+| e.g. https://s3.{region}.amazonaws.com/{bucket}/{key}
 
-or https://s3.eu-west-2.amazonaws.com/activeeon-public/images/logo.jpg
+or https://{bucket}.{region}.s3.amazonaws.com/{key}
 | `BUCKET`
 | S3 Bucket name. If it does not exist, a new bucket is created (if possible) and assigned the specified region `REGION`.
 | Export Task
@@ -838,19 +921,19 @@ Export_to_Snowflake: Export data from the data space (global or user space) to a
 | Workflow, both Tasks
 | Yes
 | Strings
-|e.g. MY_WAREHOUSE
+|e.g. `MY_WAREHOUSE`
 | `DATABASE`
 | Database name.
 | Workflow, both Tasks
 | Yes
 | String
-| e.g. MY_DATABASE
+| e.g. `MY_DATABASE`
 | `SCHEMA`
 | Name of the default schema to use for the database. After login, you can use USE SCHEMA to change the schema.
 | Workflow, both Tasks
 | Yes
 | String
-| e.g. PUBLIC
+| e.g. `PUBLIC`
 | `ROLE`
 | Name of the default role to use. After login, you can use USE ROLE to change the role.
 | Workflow, both Tasks
