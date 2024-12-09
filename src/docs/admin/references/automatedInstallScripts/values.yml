@@ -162,6 +162,10 @@ ldapConfiguration:
   adminRoles: "<adminRoles>"
   # list of existing ldap groups that will be associated with a ProActive standard user role. Multiple groups can be provided separated by commas
   userRoles: "<userRoles>"
+  # If enabled, the group filter will use as parameter the user uid instead of its distinguished name
+  groupFilterUseUid: false
+  # If enabled, StartTLS mode is activated
+  startTls: false
 
 #***********************************************************************************************************************
 #**************************************** Node Sources Configuration ***************************************************

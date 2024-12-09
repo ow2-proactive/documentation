@@ -384,6 +384,10 @@ You can then set up the right LDAP configuration using the following properties:
 
 - `LDAP_USER_ROLES`: List of existing LDAP groups that will be associated with a ProActive standard user role. Multiple groups can be provided separated by commas. Example: `activeeon-operators`
 
+- `LDAP_GROUP_FILTER_USE_UID`: If enabled, the group filter will use as parameter the user uid instead of its distinguished name. By default, false.
+
+- `LDAP_START_TLS`: If enabled, StartTLS mode is activated. By default, false.
+
 [[_compose_PWS_Users_Configuration_Properties]]
 *_PWS Users Configuration Properties_*
 
