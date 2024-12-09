@@ -45,7 +45,9 @@
     "LDAP_TEST_LOGIN": "<ldap_test_login>",
     "LDAP_TEST_PASSWORD": "",
     "LDAP_ADMIN_ROLES": "<ldap_admin_roles>",
-    "LDAP_USER_ROLES": "<ldap_user_roles>"
+    "LDAP_USER_ROLES": "<ldap_user_roles>",
+    "LDAP_GROUP_FILTER_USE_UID": "false",
+    "LDAP_START_TLS": "false"
   },
   "PWS_USERS_CONFIGURATION": {
     "ENABLE_USERS_CONFIGURATION": "false",
