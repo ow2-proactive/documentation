@@ -1971,7 +1971,9 @@ If this property is not specified, the default value is ``^[a-zA-Z0-9_/-]*$``.
 
 image::generic_logo.png[align="center"]
 
-To be able to edit the default logo displayed in ProActive portals, you have to replace the following file `PROACTIVE_HOME/dist/war/getstarted/assets/image/custom-logo.png` with your company custom logo.
+You can change the customer logo interactively in the Automation Dashboard portal (Catalog, Workflow Execution, etc...) using the `Change Customer Logo` menu item from the Help menu located in the top left corner.
+
+Alternatively, you can change the logo using command line by replacing the image `PROACTIVE_HOME/dist/war/getstarted/assets/image/custom-logo.png` with your company custom logo.
 
 You can use the command SCP to copy the file from your local machine to the ProActive server machine. The dimensions of the custom logo are automatically adapted.
 
