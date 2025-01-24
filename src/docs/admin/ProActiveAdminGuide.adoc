@@ -2391,6 +2391,66 @@ pa.scheduler.core.defaulttenantfilename=config/authentication/tenant.cfg
 Users and passwords accounts are stored in `PROACTIVE_HOME/config/authentication/login.cfg`.
 Each line has to follow the format *user:encrypted password*.
 
+Default passwords for admin and user accounts are `admin/admin` and `user/pwd`. Make sure to change these passwords and remove any unnecessary account present in the default login file.
+
+`rm`, `scheduler` and `watcher` are internal accounts which must remain.
+
+Example:
+
+----
+admin:$2a$12$2IVFh1cV6/m8yUuYF4e/tO7jyGHK3R7L5dVb/.84ibvWh1i/16n8K
+rm:$2a$12$reLZNyffRQmZ1ACZNn85x.rosnt4AXEnsn/tfEq6bxw0mCT2Qwbl6
+scheduler:$2a$12$.cmyzTeCiFo8pxr6k9mCF.rNqwUMS2OY2zwlRh1lTQbjkqePd9O5q
+user:$2a$12$GWJnc6LaQNNHoCtusN626efZiCEWCA5rBPA7jBeLiWgERmxOlTs8C
+watcher:$2a$12$ko6Hf7SX.dqTY.zYKFUBLOrM1Kx8Ujuvb8uGAVKUTgvRmzZYCXdUG
+----
+
+WARNING: The format of encrypted passwords has evolved since ProActive 14.1.0. Passwords are now stored in hash/salt format,
+while they were before ciphered using hybrid encryption. During an upgrade from a prior version, if using one of the automated
+upgrade methods such as <<_how_to_upgrade_proactive_on_linux>>, the password encryption will be automatically updated.
+If a different method is used, the following command can be used to convert passwords to the new format:
+`PROACTIVE_HOME/tools/regenerate-passwords -ns -ltn -d`
+
+===== Password Strength
+
+Creating users or modify an existing user's password should be done using the `PROACTIVE_HOME/tools/proactive-users` command line. See <<_command_line>>.
+
+It is possible to control the acceptable password strength by using the following options in `PROACTIVE_HOME/config/scheduler/settings.ini`:
+
+----
+# Enable password strength check, used when a user is created or modified
+pa.scheduler.password.strength.enable=false
+
+# Regular expression used to control the password strength (default is 8 to 32 characters with at least a uppercase letter, a lowercase letter, a digit and a special character)
+pa.scheduler.password.strength.regexp=^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}\\[\\]:;<>,.?/~_+\\-=|]).{8,32}$
+----
+
+The default regular expression configured ensures that passwords must be between 8 to 32 characters long and have at least a uppercase letter, a lowercase letter, a digit and a symbol.
+
+In order to enable this feature, simply set `pa.scheduler.password.strength.enable=true` and modify `pa.scheduler.password.strength.regexp` according to your needs.
+
+WARNING: this configuration ensures that a valid password is entered when creating a user or modifying an existing user password through the `tools/proactive-users` command line. It does not impact existing users current passwords.
+
+===== Users Login Regular Expression
+
+The following settings are enabled by default to control login attempts and prevent special characters injection in third-party authentication frameworks (LDAP, Active Directory, etc).
+
+In `PROACTIVE_HOME/config/rm/settings.ini`:
+
+----
+pa.rm.username.regexp=^[A-Za-z0-9_\\-@.]+$
+----
+
+In `PROACTIVE_HOME/config/scheduler/settings.ini`:
+
+----
+pa.scheduler.username.regexp=^[A-Za-z0-9_\\-@.]+$
+----
+
+This ensures that login contains only alphanumeric characters and only the symbols *_*,*-*,*@* and *.*
+
+In case these regular expressions do not match your existing user's login names, you should modify these settings.
+
 ==== Groups
 
 Users group membership is stored in `PROACTIVE_HOME/config/authentication/group.cfg`. For each user registered in login.cfg,
@@ -2811,9 +2871,29 @@ There are two configuration options to control this mechanism (present in the `l
 ** The pa.ldap.tenant.attr configuration is not defined.
 ** The pa.ldap.tenant.attr configuration is defined, but the configured attribute is empty for the user.
 
+==== Shadow Accounts
+
+Shadow accounts are an optional feature that can be enabled in the LDAP configuration file.
+
+When enabled, whenever a user logs in successfully using LDAP credentials, an internal shadow account with a randomly generated password will be created.
+
+This shadow account's credentials will be used internally by ProActive whenever the user submits a job, plans a job through the *Job Planner*, starts a service using *Cloud Automation*, etc.
+
+Shadow accounts ensure that LDAP user credentials are never stored inside the ProActive server.
+
+In order to enable shadow accounts, set the following property in `PROACTIVE_HOME/config/authentication/ldap.cfg`:
+
+----
+# When enabled, a shadow internal user will be created after a successful LDAP login
+# This prevents LDAP passwords to be stored internally by the ProActive server
+pa.ldap.authentication.shadow.users=true
+----
+
+WARNING: When shadow accounts are configured, `pa.ldap.authentication.fallback` and `pa.ldap.group.membership.fallback` must be set to `true`.
+
 ==== Specific example of LDAP configuration
 
-Below is an example of LDAP configuration which summarizes the LDAP properties frequently configured in the file `config/authentication/ldap.cfg`.
+Below is an example of LDAP configuration which summarizes the LDAP properties frequently configured in the file `PROACTIVE_HOME/config/authentication/ldap.cfg`.
 [source,properties]
 ----
 # URL of a ldap used for authentication
@@ -2855,6 +2935,10 @@ pa.ldap.group.membership.fallback=true
 
 # check user tenant membership in tenant file
 pa.ldap.tenant.membership.fallback=true
+
+# When enabled, a shadow internal user will be created after a successful LDAP login
+# This prevents LDAP passwords to be stored internally by the ProActive server
+pa.ldap.authentication.shadow.users=false
 ----
 
 [[_ldap_with_multiple_domains]]
