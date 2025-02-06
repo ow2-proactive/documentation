@@ -65,6 +65,49 @@ image::calendar_wf_association_8.png[align="center"]
 
 This page can also be opened when clicking on the "plan" button on the <<_glossary_workflow_studio, *Studio*>> or the <<_glossary_scheduler_web_interface, *Scheduler Portal*>>.
 
+=== Activating the Execution Deviation Detection
+
+==== Introduction
+
+The <<_glossary_job_planner, *Job Planner*>> features a Deviation Detection for planned workflows.
+This feature allows to detect when a planned job deviates more or less than a user defined threshold from its average execution time.
+It can detect if a job takes too long or too short to execute.
+
+NOTE: The average execution time for each association is constantly updated with new executions time regardless if there is a deviation detection configured. This means that average execution times will level over time.
+
+==== Configuration
+
+To start receiving planned jobs execution deviation notifications, follow these two steps:
+
+===== 1: Configure the <<_glossary_notification_service, *Notification Service*>>
+
+The Notification Service requires a one time setup.
+Once configured, Execution Deviation Time notifications will be received for all Planned Workflows that defines a Deviation Detection in their Calendar association.
+
+    - Go to the <<_glossary_notification_portal,*Notification Portal*>>.
+    - On the Subscriptions Tab, open the Job Planner Subscription.
+    - Add the Execution Time Deviation event to the subscription.
+    - Activate the Portal <<_glossary_notification_methods,*Notification Methods*>> and/or any other desired notification method.
+    - Activate the Subscription.
+
+The Subscription is now configured to receive Execution Time Deviation notifications sent by the <<_glossary_job_planner, *Job Planner*>>.
+
+===== 2: Configure the Workflow Calendar associations
+
+Each Calendar Workflow association defines its own Deviation Detection configuration.
+To access the Deviation Detection configuration, right click an association and click on the _Manage Deviation_ menu item.
+
+From the Manage Deviation Time modal you can:
+
+    - Activate or deactivate the deviation detection.
+    - Activate the too long and the too short deviation detection: Detect if the job takes more or less time than its average to execute.
+    - Select the Deviation Unit: The detection threshold is either a percentage (ie: 20%) or an absolute time (ie: 5 minutes).
+    - Select the threshold value: The limit value that triggers the deviation notification.
+
+Example of configuration:
+
+image::association_deviation_config.png[align="center"]
+
 == Execution Planning visualisation and GANTT
 
 On the <<_glossary_job_planner_portal, *Job Planner Portal*>>, Execution Planning page, you can see the recurrence of <<_glossary_calendars_definition,*Calendar Definitions*>> .
