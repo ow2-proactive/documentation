@@ -157,7 +157,7 @@ downloadSchedulerWebProperties.dependsOn downloadSchedulerProperties
 downloadCatalogProperties.dependsOn downloadSchedulerWebProperties
 asciidoctor.dependsOn downloadCatalogProperties
 htmlSanityCheck.dependsOn asciidoctor
-xsdDoc.dependsOn htmlSanityCheck
+xsdDoc.dependsOn asciidoctor
 
 build.dependsOn(['xsdDoc'])
 defaultTasks 'clean', 'build'
