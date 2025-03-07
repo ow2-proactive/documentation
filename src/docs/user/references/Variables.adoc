@@ -202,7 +202,8 @@ Examples: PA:MODEL_FROM_URL(file:///srv/machines_list_model.txt), if the file ma
 ** *PA:USER_FILE* : variable whose value is the relative path of a file in the <<_global_and_user_spaces, User Data Space>>. At workflow submission, the scheduler server verifies that the file exists in the user dataspace. In addition, this model enables the user to graphically browse the user dataspace to select a file as an input data for the workflow.
 ** *PA:GLOBAL_FOLDER* : variable whose value is the relative path of a folder in the <<_global_and_user_spaces, Global Data Space>>. At workflow submission, the scheduler server verifies that the folder exists in the global dataspace. Note, the variable value should not end with a slash to avoid the problem of duplicate slash in its usage.
 ** *PA:USER_FOLDER* : variable whose value is the relative path of a folder in the <<_global_and_user_spaces, User Data Space>>. At workflow submission, the scheduler server verifies that the folder exists in the user dataspace. Note, the variable value should not end with a slash to avoid the problem of duplicate slash in its usage.
-** *PA:SPEL(SpEL expression)* : variable syntax will be evaluated by a https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[SpEL] expression. Refer to the next paragraph.
+** *PA:SPEL(SpEL expression)* : variable syntax will be evaluated by a https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[SpEL] expression. Refer to <<_spring_expression_language_model>>.
+** *PA:SPEL2(error message,SpEL expression)* : variable syntax will be evaluated by a https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[SpEL] expression. This model allows in addition to provide a user-friendly error message pPlease note that the error message must not contain any comma character). Refer to <<_spring_expression_language_model>>.
 
 --
 ====== Variable Model (Type) using a type defined dynamically in another Variable +
@@ -310,7 +311,9 @@ The exact name of the target Node Source must be provided (check is case-sensiti
 
 ====== Spring Expression Language Model
 
-The `PA:SPEL(expr)` model allows to define expressions able to validate a variable value or not. Additionally, this model can be used to validate multiple variable values or to dynamically update other variables.
+The `PA:SPEL(expr)` or `PA:SPEL2(message,expr)` models allows defining expressions able to validate a variable value or not. Additionally, these models can be used to validate multiple variable values or to dynamically update other variables.
+The `PA:SPEL2` model allows in addition to provide an error message, which will be displayed to the user when the value entered does not satisfy the SpEL expression. Please note that the error message must not contain any comma character.
+
 The syntax of the SpEL expression is defined by the https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[Spring Expression Language reference]. +
 
 For security concerns, we apply a restriction on the authorized class types. Besides the commonly used data types (Boolean, String, Long, Double, etc.), we authorize the use of *ImmutableSet*, *ImmutableMap*, *ImmutableList*, *Math*, *Date* types, *JSONParser* and *ObjectMapper* for `JSON` type and *DocumentBuilderFactory* for `XML` type.
