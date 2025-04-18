@@ -2250,15 +2250,11 @@ Before being able to use *domains* in login information, the list of allowed dom
 IMPORTANT: When configuring allowed domains, it is important to include an empty domain name. This is because ProActive uses internal accounts that do not belong to any domain.
 Failing to do so would prevent the ProActive server from starting. An empty domain is included by using the syntax `",domain1,domain2"`.
 
-There are two properties to configure:
+The following property must be configured to define allowed domains:
 
- * in `PROACTIVE_HOME/config/rm/settings.ini`
+ * in `PROACTIVE_HOME/config/shared/settings.ini`
 ----
-pa.rm.allowed.domains=,domain1,domain2
-----
-* in `PROACTIVE_HOME/config/scheduler/settings.ini`
-----
-pa.scheduler.allowed.domains=,domain1,domain2
+pa.allowed.domains=,domain1,domain2
 ----
 
 => Allows using either domain1, domain2 or an empty domain name.
@@ -2303,11 +2299,15 @@ After tenants definition is configured, it is necessary to configure in the ProA
 
 *Tenants Job isolation* is the ability to hide submitted <<_glossary_job,jobs>> across tenants.
 
+By default, the scheduler displays all submitted jobs (though job logs, results, etc are visible only by job owners or administrators).
+
+Tenant isolation allows to restrict jobs displayed on the scheduler portal to the job owner's tenant.
+
 For example, when _user1_ belonging to _tenant1_ submits a job to the ProActive Scheduler, then _user2_ belonging to _tenant2_ will not see this job activity on the <<_glossary_scheduler_web_interface,Scheduler>> or <<_glossary_workflow_automation_portal,Workflow Execution>> portals.
 
 In order to configure Tenants Job isolation, the setting `pa.scheduler.core.tenant.filter` must be set to `true` in `PROACTIVE_HOME/config/scheduler/settings.ini`.
 
-When this configuration is enabled, standard users will only see jobs according to the user's tenant. Admin users will still be able to see jobs coming from all tenants.
+When this configuration is enabled, standard users will only see jobs according to the user's tenant. Users that belong to an administrator group with the permission `org.ow2.proactive.scheduler.permissions.TenantAllAccessPermission` enabled will be able to see jobs belonging to any tenant (see ).
 
 NOTE: It is not mandatory to configure tenant isolation. Tenants can simply be used as additional information associated with each user submitted jobs.
 
@@ -2317,16 +2317,139 @@ image::TenantSPUsers.png[Scheduler Portal for "users" tenant]
 .Scheduler Portal for "Experts" tenant
 image::TenantSPExperts.png[Scheduler Portal for "experts" tenant]
 
-.Scheduler Portal for Admin users
+.Scheduler Portal for Global Administrator
 image::TenantSPAdmins.png[Admins Tenant View]
 
-===== Tenants Node Source Isolation
+===== Tenants Resource Manager Isolation
 
-Apart from job isolation, it is also possible to restrict <<_glossary_node_source,Node Sources>> across tenants.
+Apart from scheduler job isolation, it is also possible to isolate the <<_glossary_resource_manager,Resource Manager>> and <<_glossary_node_source,Node Sources>> across tenants.
 
-Restricting a Node Source to a specific tenant can be done by using the `nodeUsers` parameter which is common to all <<_glossary_node_source_policy,Node Source Policies>>.
+By default, the Resource Manager displays all Nodes and Node Sources, regardless of tenants.
+Tenant isolation allows to restrict the Nodes and Node Souces that will be visible on the Resource Manager portal.
 
-See <<_policy_common_parameters,Policy Common Parameters>> for more information.
+In this scenario, the Resource Manager may contain:
+
+ * Node Sources that belong to a single tenant and thus only visible to members of this tenant.
+ * Node Sources that don't belong to any tenant and thus visible to all users, regardless of tenant membership.
+
+Statistics - such as the number of nodes and nodes history - displayed in the Resource Manager portal will match the user's visibility access.
+
+In order to enable Resource Manager tenants isolation, the following properties must be configured in `PROACTIVE_HOME/config/rm/settings.ini`:
+----
+pa.rm.tenant.filter=true
+pa.rm.jmx.tenant.names=tenant1,tenant2
+----
+
+`pa.rm.jmx.tenant.names` contains the list of tenants names. This setting is mandatory to allow Resource Manager statistics isolation.
+
+When the above properties are configured, the following behavior applies:
+
+ * A Node Source created by an administrator who belongs to a given tenant will be visible only to members of the same tenants. This Node Source will contain Nodes that are restricted to a single tenant.
+ * A Node Source created by an administrator who does not belong to any tenant will be visible to all users, regardless of tenants. This Node Source will contain Nodes that are shared across tenants.
+
+From a given user point of view, the following applies:
+
+ * A user who does not belong to any tenant will only see shared Node Sources.
+ * A user who belongs to a tenant will see shared Node Sources and Node Sources associated with the same tenant.
+ * A user or administrator who has the permission `org.ow2.proactive.scheduler.permissions.TenantAllAccessPermission` will see all Node Sources.
+
+In order to create a Node Source restricted to a tenant, it is necessary to create a Resource Manager administrator group attached to this tenant.
+
+The command line tool <<_copy_role_command,Copy Role>> can be used to create such group. For example, the following command duplicates the core Resource Manager administrator role to the group `tenant1admin` belonging to tenant `tenant1`:
+
+----
+tools/copy-role -S rmcoreadmins -D tenant1admin
+----
+
+Below are different views of the Resource Manager for:
+
+ * A global administrator with `org.ow2.proactive.scheduler.permissions.TenantAllAccessPermission`
+
+.Resource Manager Portal view of Global Administrator
+image::RMAllTenant.png[RM All Tenant View]
+
+In this view the Global Administrator sees all Node Sources, and the Resource Manager statistics contain all Nodes.
+
+ * A `tenant1` Resource Manager administrator
+
+.Resource Manager Portal view of `tenant1` Administrator
+image::RMTenant1View.png[RM Tenant1 View]
+
+In this view the `tenant1` administrator sees only the shared Node Source and a Node Source belonging to `tenant1`. The Resource Manager statistics contain only these Nodes.
+
+* A `tenant2` Resource Manager administrator
+
+.Resource Manager Portal view of `tenant2` Administrator
+image::RMTenant2View.png[RM Tenant2 View]
+
+In this view the `tenant2` administrator sees only the shared Node Source and a Node Source belonging to `tenant2`. The Resource Manager statistics contain only these Nodes.
+
+NOTE: It is also possible to give tenant access to a Node Source by using the `nodeUsers` parameter which is common to all <<_glossary_node_source_policy,Node Source Policies>>. See <<_policy_common_parameters,Policy Common Parameters>> for more information.
+
+===== Tenants Catalog Isolation
+
+The last service that can benefit from tenant isolation is the <<_glossary_catalog,ProActive Catalog>>.
+
+By default, the ProActive Catalog contains buckets which can either be *public* or *restricted to a user group*.
+
+In a multi-tenant architecture, the default behavior can be problematic as:
+
+ * Any *public* bucket created by users of a tenant will be also visible by the other tenants users. Modifications applied by other tenants users could also impact the bucket creator processes.
+ * Similarly, default buckets that are included inside the ProActive release, may be modified by users coming from different tenants, possibly impacting the other tenants processes.
+
+In order to address these issues, ProActive catalog features a tenant isolation configuration. The following property must be set in `PROACTIVE_HOME/dist/war/catalog/WEB-INF/classes/application.properties`:
+
+----
+pa.catalog.tenant.filtering=true
+----
+
+When Catalog tenant isolation is enabled, the following behavior applies:
+
+ * Any *public* bucket created by users of a tenant will only be visible to users of the same tenant.
+ * Any *public* bucket created by users who do not belong to any tenant will be visible by all users.
+ * A bucket can be restricted to a single user group. This is also possible without tenant isolation configured.
+ * A bucket restricted to a single user group can have *grant* rules as described in <<../user/ProActiveUserGuide.adoc#_catalog_rbac_management,Catalog RBAC Management>>.
+It is possible for example to create a *tenant read grant* for a group-restricted bucket.
+
+Accordingly, when installing the ProActive server with catalog tenant isolation, we should:
+
+ * Ensure that default buckets coming with ProActive release are restricted to the global administrator group `server-admins` of the user `admin`. See <<_default_groupsroles>>.
+ * Add tenant read *grants* to the default buckets that need to be visible to the tenants users. See  <<../user/ProActiveUserGuide.adoc#_catalog_rbac_management,Catalog RBAC Management>>.
+The list of buckets to include should contain __a-minimum__: `basic-examples`, `calendars`, `control-notification`, `control-signal`, `control-templates`, `event-rules`, `scripts` and `service-automation`.
+
+In order to automatically restrict the default buckets to `server-admins`, you need to edit the script `PROACTIVE_HOME/tools/LoadPackage.groovy` and change the following line:
+
+----
+    private String BUCKET_OWNER = "GROUP:public-objects"
+----
+
+to
+
+----
+    private String BUCKET_OWNER = "GROUP:server-admins"
+----
+
+This change must be done before starting the ProActive server for the first time. As the ProActive Catalog will be populated by this script with default buckets at first start of the server.
+
+Below are examples of the Catalog Portal view with tenant isolation enabled as seen by different users.
+
+* A global administrator with `org.ow2.proactive.scheduler.permissions.TenantAllAccessPermission`
+
+.Catalog Portal view of Global Administrator
+image::CatalogAllTenant.png[Catalog All Tenant View]
+
+* A `tenant1` user
+
+.Catalog Portal view of Tenant1 user
+image::CatalogTenant1View.png[Catalog Tenant1 View]
+
+
+* A `tenant2` user
+
+.Catalog Portal view of Tenant2 user
+image::CatalogTenant2View.png[Catalog Tenant2 View]
+
+
 
 === Select authentication method
 
@@ -2415,19 +2538,22 @@ If a different method is used, the following command can be used to convert pass
 
 Creating users or modify an existing user's password should be done using the `PROACTIVE_HOME/tools/proactive-users` command line. See <<_command_line>>.
 
-It is possible to control the acceptable password strength by using the following options in `PROACTIVE_HOME/config/scheduler/settings.ini`:
+It is possible to control the acceptable password strength by using the following options in `PROACTIVE_HOME/config/shared/settings.ini`:
 
 ----
 # Enable password strength check, used when a user is created or modified
-pa.scheduler.password.strength.enable=false
+pa.password.strength.enable=false
 
 # Regular expression used to control the password strength (default is 8 to 32 characters with at least a uppercase letter, a lowercase letter, a digit and a special character)
-pa.scheduler.password.strength.regexp=^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}\\[\\]:;<>,.?/~_+\\-=|]).{8,32}$
+pa.password.strength.regexp=^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}\\[\\]:;<>,.?/~_+\\-=|]).{8,32}$
+
+# Textual error message when password strength is not met
+pa.password.strength.message=The password must be 8 to 32 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one symbol.
 ----
 
 The default regular expression configured ensures that passwords must be between 8 to 32 characters long and have at least a uppercase letter, a lowercase letter, a digit and a symbol.
 
-In order to enable this feature, simply set `pa.scheduler.password.strength.enable=true` and modify `pa.scheduler.password.strength.regexp` according to your needs.
+In order to enable this feature, simply set `pa.password.strength.enable=true` and modify `pa.password.strength.regexp` and `pa.password.strength.message` according to your needs.
 
 WARNING: this configuration ensures that a valid password is entered when creating a user or modifying an existing user password through the `tools/proactive-users` command line. It does not impact existing users current passwords.
 
@@ -2435,16 +2561,10 @@ WARNING: this configuration ensures that a valid password is entered when creati
 
 The following settings are enabled by default to control login attempts and prevent special characters injection in third-party authentication frameworks (LDAP, Active Directory, etc).
 
-In `PROACTIVE_HOME/config/rm/settings.ini`:
+In `PROACTIVE_HOME/config/shared/settings.ini`:
 
 ----
-pa.rm.username.regexp=^[A-Za-z0-9_\\-@.]+$
-----
-
-In `PROACTIVE_HOME/config/scheduler/settings.ini`:
-
-----
-pa.scheduler.username.regexp=^[A-Za-z0-9_\\-@.]+$
+pa.username.regexp=^[A-Za-z0-9_\\-@.]+$
 ----
 
 This ensures that login contains only alphanumeric characters and only the symbols *_*,*-*,*@* and *.*
@@ -2967,30 +3087,16 @@ config\authentication\ldap-domain2.cfg
 +
 3. Follow the steps described in chapter <<_select_authentication_method>> to configure `RMMultiLDAPLoginMethod` and `SchedulerMultiLDAPLoginMethod`.
 +
-4. In `config\rm\settings.ini`, uncomment the property `pa.rm.multi.ldap.config` and define it according to the ldap configuration files you created and their corresponding domain names:
+4. In `config\shared\settings.ini`, uncomment the property `pa.multi.ldap.config` and define it according to the ldap configuration files you created and their corresponding domain names:
 +
 ----
-pa.rm.multi.ldap.config=domain1:config/authentication/ldap-domain1.cfg,domain2:config/authentication/ldap-domain2.cfg
+pa.multi.ldap.config=domain1:config/authentication/ldap-domain1.cfg,domain2:config/authentication/ldap-domain2.cfg
 ----
 +
 Uncomment also the property `pa.rm.allowed.domains` and configure with the list of domains that will be available.
 +
 ----
-pa.rm.allowed.domains=,domain1,domains2
-----
-+
-This expression must start with a comma, it allows login with an empty domain, necessary for internal ProActive users.
-+
-5. In `config\scheduler\settings.ini`, uncomment the property `pa.scheduler.multi.ldap.config` and define it according to the ldap configuration files you created and their corresponding domain names:
-+
-----
-pa.scheduler.multi.ldap.config=domain1:config/authentication/ldap-domain1.cfg,domain2:config/authentication/ldap-domain2.cfg
-----
-+
-Uncomment also the property `pa.scheduler.allowed.domains` and configure with the list of domains that will be available.
-+
-----
-pa.scheduler.allowed.domains=,domain1,domains2
+pa.allowed.domains=,domain1,domains2
 ----
 +
 This expression must start with a comma, it allows login with an empty domain, necessary for internal ProActive users.
@@ -3232,7 +3338,8 @@ The following groups are defined by default in the `security.java.policy-server`
 * `nsadmins`: this group gives the permission to create, edit or remove Node Sources in the resource manager.
 * `providers`: this group gives only the permission to add nodes to the resource manager or to an existing Node Source.
 * `rmcoreadmins` : this group gives full interaction capability with the resource manager (create, edit, remove Node Sources, add nodes, etc).
-* `server-admins` : this group combine the rights of `rmcoreadmins` and `scheduleradmins` groups.
+* `server-admins` : this group combine the rights of `rmcoreadmins` and `scheduleradmins` groups. Additionally, this group has access to all tenants, is a catalog service administrator, and can manage users, groups or defined tenants.
+Accordingly, `server-admins` is a _global administrator_ role.
 * `admin` : this group gives full permission on every aspect, this group is [.underline]#deprecated# and is kept for backward compatibility purpose only (use the above `server-admins` for a global administrator instead).
 * `watchers` : this group allows receiving notification events from the scheduler and resource manager, but cannot perform any action. It is mostly used internally.
 * `citizen-ds` : this group gives enough permissions to software power users who can do moderate data analysis tasks (studio, catalog-portal, workflow-execution, job-analytics).
@@ -3416,10 +3523,7 @@ permission org.ow2.proactive.scheduler.permissions.ChangePolicyPermission;
 ----
 _Administrative_ permission that allows changing the scheduler's <<_scheduling_policies,Scheduling Policy>>.
 
-----
-permission org.ow2.proactive.scheduler.permissions.TenantAllAccessPermission;
-----
-_Administrative_ permission that allows access to all tenants when tenant isolation is enabled. See <<_tenants>>.
+
 
 Finally, the following permissions are needed for _administrative_ access to the scheduler:
 
@@ -3482,6 +3586,32 @@ _Mandatory_ permission that defines which portals are accessible for members of 
 ** `event-orchestration`: allow access to the <<_glossary_event_orchestration_portal,Event Orchestration portal>>.
 ** `service-automation`: allow access to the <<_glossary_service_automation_portal,Service Automation portal>>.
 ** `notification-portal`: allow access to the <<_glossary_notification_portal,Notification portal>>.
+
+==== Tenant access
+
+----
+permission org.ow2.proactive.scheduler.permissions.TenantAllAccessPermission;
+----
+_Administrative_ permission that allows access to all tenants when tenant isolation is enabled. See <<_tenants>>.
+
+==== Users and Group Management
+
+----
+permission org.ow2.proactive.permissions.ChangePasswordPermission;
+----
+Permission that allows a user to change his own password. Only valid for internal accounts, not for accounts imported from external authentication frameworks such as LDAP.
+
+----
+permission org.ow2.proactive.permissions.ManageUsersPermission;
+----
+_Administrative_ permission that allows to manager internal users, groups or defined tenants.
+
+==== Catalog permissions
+
+----
+permission org.ow2.proactive.scheduler.permissions.CatalogAllAccessPermission;
+----
+This permission gives _administrative_ access to the <<_glossary_catalog,ProActive Catalog>>. A member of a group with such permission has administrator access to any catalog bucket or object.
 
 ==== Service Automation permissions
 
