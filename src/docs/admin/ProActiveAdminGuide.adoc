@@ -2320,6 +2320,47 @@ image::TenantSPExperts.png[Scheduler Portal for "experts" tenant]
 .Scheduler Portal for Global Administrator
 image::TenantSPAdmins.png[Admins Tenant View]
 
+===== Tenants Global Space Isolation
+
+As described in the <<../user/ProActiveUserGuide.adoc#_data_spaces,Data Spaces>> chapter, the *User* and *Global Spaces* are server-side file storage spaces that can be accessed by either workflow tasks or the ProActive portals.
+
+By default, the <<../user/ProActiveUserGuide.adoc#_global_and_user_spaces,Global Space>> is public and any user can download/upload files from/to it.
+
+In a multi-tenant configuration, this default behavior can be problematic as users belonging to one tenant may not want their files to be accessed or modifed by another tenant's users.
+
+In order to isolate global space accross tenants, simply set `pa.scheduler.core.tenant.filter` to `true` in `PROACTIVE_HOME/config/scheduler/settings.ini`.
+
+This is the same configuration as <<_tenants_job_isolation>>, so both job and global spaces will be isolated when this setting is applied.
+
+The default location of the Global Space on the ProActive server is at `PROACTIVE_HOME/data/defaultglobal`. See <<_data_spaces_configuration>> for more information about this configuration.
+
+In case tenant isolation is enabled, each tenant will have a dedicated subfolder in the global space, e.g. `PROACTIVE_HOME/data/defaultglobal/tenant1`, `PROACTIVE_HOME/data/defaultglobal/tenant2`, etc.
+
+Each connected user of tenant1 will have its root global space at `PROACTIVE_HOME/data/defaultglobal/tenant1` and will only see files inside this directory.
+
+Users that belong to an administrator group with the permission `org.ow2.proactive.scheduler.permissions.TenantAllAccessPermission` enabled will have their root global space at `PROACTIVE_HOME/data/defaultglobal`. They will thus see several subfolders, one for each tenant, allowing these administrators full access to each tenant global spaces files.
+
+TIP: During the installation of ProActive, the Global Space is populated by default files used by several workflows inside the ProActive Catalog library. This includes for example JDBC drivers, default input files, etc. It is therefore recommended to copy the default content of `PROACTIVE_HOME/data/defaultglobal` inside each tenant folder.
+
+Below are examples view of the Global Space by different users (we did not follow the advice above to make the screenshot more understandable):
+
+.Global Space View for Global Administrator
+image::TenantGSAdmin.png[Global Space View for Global Administrator]
+
+Here we can see the default global space files along with _tenant1_ and _tenant2_ subfolders.
+
+.Global Space View for Tenant1 Users
+image::TenantGSTenant1.png[Global Space View for Tenant1 Users]
+
+Here we see only some files created by Tenant1 users.
+
+.Global Space View for Tenant2 Users
+image::TenantGSTenant2.png[Global Space View for Tenant2 Users]
+
+Here we see only some files created by Tenant2 users.
+
+
+
 ===== Tenants Resource Manager Isolation
 
 Apart from scheduler job isolation, it is also possible to isolate the <<_glossary_resource_manager,Resource Manager>> and <<_glossary_node_source,Node Sources>> across tenants.
